@@ -1,25 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Header } from "./components/layout/header";
+import { Sidebar } from "./components/layout/sidebar";
+import { Main } from "./components/layout/main";
+import { Flex } from "@chakra-ui/react";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header>Page Header</Header>
+      <Sidebar>Page Side bar</Sidebar>
+      <Main>
+        <Flex height="200vh" w="100%" bg="blue.100">
+          Contents
+        </Flex>
+      </Main>
+    </>
   );
 }
 
