@@ -10,7 +10,7 @@ export const LayoutStory = () => {
       <Header>Page Header</Header>
       <Sidebar>Page Side bar</Sidebar>
       <Main>
-        <Flex height="200vh" w="100%">
+        <Flex height="200vh" w="100%" bg="darkblue">
           Contents
         </Flex>
       </Main>

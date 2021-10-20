@@ -9,7 +9,7 @@ export const Sidebar: React.FC = (props) => {
       position="fixed"
       left="0"
       top="60px"
-      bg="blue.200"
+      bg="pink"
     >
       {props.children}
     </Flex>

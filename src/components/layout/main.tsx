@@ -12,7 +12,7 @@ export const Main: React.FC = (props) => {
       height="calc(100vh - 60px)"
       border="1px solid colors.brand.100"
       overflow="auto"
-      bg="brand.100"
+      // bg="brand.100"
     >
       {props.children}
     </Flex>
