@@ -5,7 +5,7 @@ export const Header: React.FC = (props) => {
     <Flex
       w="100%"
       h="60px"
-      bg="skyblue"
+      bg="white"
       border="1px solid gray"
       position="fixed"
       top="0"
