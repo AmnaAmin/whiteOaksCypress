@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
 
 import React, { useState } from "react";
 import {
@@ -92,88 +92,82 @@ const BarDefaultColors = {
   bottom: "#979AC2",
 };
 
-export const Main: React.FC = (props) => {
+const Main: React.FC = (props) => {
   const [focusBarIndex, setFocusBarIndex] = useState(null);
+
   return (
-    <Flex
-      h="70vh"
-      p="10px"
-      // bg="white"
-      position="relative"
-      top="60px"
-      left="230px"
-      right="0"
-      bottom="0"
-      border="1px solid colors.brand.100"
-    >
-      {/* zIndex={1}
-      position="relative"
-      right="0"
-      top="60px"
-      left="350px"
-      bottom="0"
-      p="20px"
-      overflow="auto"
-      h="calc(100vh - 60px)" */}
-
-      <ReBarChart
-        width={900}
-        height={400}
-        style={{ backgroundColor: "white" }}
-        data={data}
-        onMouseMove={(state) => {
-          if (state.isTooltipActive) {
-            setFocusBarIndex(state.activeTooltipIndex);
-          } else {
-            setFocusBarIndex(null);
-          }
-        }}
+    <div className="Main_parent">
+      <Flex
+        h="100vh"
+        p="10px"
+        // bg="white"
+        position="absolute"
+        top="50px"
+        left="257px"
+        right="0"
+        bottom="0"
+        border="1px solid colors.brand.100"
       >
-        <XAxis dataKey="name" />
-        1000
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <CartesianGrid stroke="#f5f5f5" />
-        <defs>
-          <linearGradient
-            id={`bar-color`}
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="100%"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0" stopColor={BarDefaultColors.top} />
-            <stop offset="1" stopColor={BarDefaultColors.bottom} />
-          </linearGradient>
+        <ReBarChart
+          width={915}
+          height={400}
+          style={{ backgroundColor: "white" }}
+          data={data}
+          onMouseMove={(state) => {
+            if (state.isTooltipActive) {
+              setFocusBarIndex(state.activeTooltipIndex);
+            } else {
+              setFocusBarIndex(null);
+            }
+          }}
+        >
+          <XAxis dataKey="name" />
+          1000
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <CartesianGrid stroke="#f5f5f5" />
+          <defs>
+            <linearGradient
+              id={`bar-color`}
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="100%"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0" stopColor={BarDefaultColors.top} />
+              <stop offset="1" stopColor={BarDefaultColors.bottom} />
+            </linearGradient>
 
-          <linearGradient
-            id={`bar-hover`}
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="100%"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0" stopColor={"yellow"} />
-            <stop offset="1" stopColor={"yellow"} />
-          </linearGradient>
-        </defs>
-        <Bar dataKey="pv" barSize={40} radius={[20, 20, 0, 0]}>
-          {data.map((entry, index) => {
-            const isFocused = focusBarIndex === index;
-            return (
-              <>
-                <Cell
-                  key={`cell-${index}`}
-                  fill={isFocused ? `url(#bar-hover)` : `url(#bar-color)`}
-                />
-              </>
-            );
-          })}
-        </Bar>
-      </ReBarChart>
-    </Flex>
+            <linearGradient
+              id={`bar-hover`}
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="100%"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0" stopColor={"yellow"} />
+              <stop offset="1" stopColor={"yellow"} />
+            </linearGradient>
+          </defs>
+          <Bar dataKey="pv" barSize={40} radius={[20, 20, 0, 0]}>
+            {data.map((entry, index) => {
+              const isFocused = focusBarIndex === index;
+              return (
+                <>
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={isFocused ? `url(#bar-hover)` : `url(#bar-color)`}
+                  />
+                </>
+              );
+            })}
+          </Bar>
+        </ReBarChart>
+      </Flex>
+    </div>
   );
 };
+export default Main;

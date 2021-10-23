@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/layout";
 
-export const Sidebar: React.FC = (props) => {
+const Sidebar: React.FC = (props) => {
   return (
     <Flex
       border="1px solid gray"
@@ -16,3 +16,4 @@ export const Sidebar: React.FC = (props) => {
     </Flex>
   );
 };
+export default Sidebar;

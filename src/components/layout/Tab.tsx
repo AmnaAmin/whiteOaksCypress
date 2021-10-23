@@ -16,12 +16,12 @@ export const Tab = (props: Show) => {
     <>
       <Box
         bg="#FFFFFF"
-        border="1px solid"
+        border="2px solid"
         w="120px"
         h="65px"
         borderRadius="4px"
         p="5px"
-        _hover={{ borderColor: "red" }}
+        _hover={{ borderColor: "#8E0E00" }}
         // position="absolute"
         // top="0"
       >

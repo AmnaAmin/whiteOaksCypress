@@ -7,7 +7,7 @@ import { Avatar } from "@chakra-ui/react";
 import { Wrap, WrapItem } from "@chakra-ui/react";
 import { Flex } from "@chakra-ui/layout";
 
-export const Header: React.FC = (props) => {
+const Header: React.FC = (props) => {
   return (
     <Flex
       // w="100%"
@@ -48,6 +48,7 @@ export const Header: React.FC = (props) => {
           mr={40}
           fontSize="large"
           color="#757F9A"
+          alignItems="center"
         >
           <WrapItem px="20px">Help</WrapItem>
           <WrapItem px="20px">Support</WrapItem>
@@ -56,22 +57,25 @@ export const Header: React.FC = (props) => {
             <BsBell color="gray.100" />
           </WrapItem>
 
-          <WrapItem px="20px">
+          <WrapItem px="20px" display="flex" alignItems="center">
             <Avatar
-              size="2xl"
+              size="xs"
               name="Christian Nwamba"
               src="https://bit.ly/code-beast"
               borderRadius="50%"
               _hover={{
                 boxShadow: "1px 0px 4px 1px grey;",
               }}
+              h="40px"
             />
-            <h3 style={{ paddingLeft: "10px", fontWeight: "bolder" }}>
+            <text style={{ paddingLeft: "10px", fontWeight: "bolder" }}>
               Dan Abrahmov
-            </h3>
+            </text>
           </WrapItem>
         </Wrap>
       </Box>
     </Flex>
   );
 };
+
+export default Header;
