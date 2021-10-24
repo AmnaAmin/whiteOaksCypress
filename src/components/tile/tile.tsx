@@ -7,23 +7,20 @@ import { WrapItem } from "@chakra-ui/layout";
 type Show = {
   name: string;
   num: number;
-  icons?: object;
+  IconElement: React.ElementType;
 };
 
-export const Tab = (props: Show) => {
-  const View: any = props.icons;
+export const Tile = (props: Show) => {
+  const { IconElement } = props;
+
   return (
     <>
       <Box
         bg="#FFFFFF"
-        border="2px solid"
         w="120px"
         h="65px"
         borderRadius="4px"
-        p="5px"
         _hover={{ borderColor: "#8E0E00" }}
-        // position="absolute"
-        // top="0"
       >
         <Box fontSize="small" color="#8e9eab">
           {props.name}
@@ -41,7 +38,7 @@ export const Tab = (props: Show) => {
             borderRadius="60%"
             color="#8E0E00"
           >
-            {<View />}
+            <IconElement />
           </WrapItem>
         </Wrap>
       </Box>
