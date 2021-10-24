@@ -1,20 +1,22 @@
-import { Flex } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
+import React, { useState } from "react";
 
-export const Main: React.FC = (props) => {
+const Main: React.FC = (props) => {
+  const [focusBarIndex, setFocusBarIndex] = useState(null);
+
   return (
     <Flex
-      p="15px"
-      position="fixed"
-      top="60px"
-      left="300px"
+      h="100vh"
+      p="30px"
+      position="absolute"
+      top="70px"
+      left="345px"
       right="0"
       bottom="0"
-      height="calc(100vh - 60px)"
       border="1px solid colors.brand.100"
-      overflow="auto"
-      // bg="brand.100"
     >
       {props.children}
     </Flex>
   );
 };
+export default Main;

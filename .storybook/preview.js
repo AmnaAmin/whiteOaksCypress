@@ -18,7 +18,7 @@ export const parameters = {
 export const decorators = [
   (Story) => (
     <ChakraProvider theme={theme}>
-      <div style={{ margin: "3em" }}>
+      <div style={{ padding: "3em", backgroundColor: "#ddd", height: "100vh" }}>
         <Story />
       </div>
     </ChakraProvider>
