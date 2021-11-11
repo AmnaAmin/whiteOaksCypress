@@ -6,11 +6,11 @@ const Main: React.FC = (props) => {
 
   return (
     <Flex
-      h="100vh"
+      h="95vh"
       p="30px"
       position="absolute"
       top="70px"
-      left="345px"
+      left="230px"
       right="0"
       bottom="0"
       border="1px solid colors.brand.100"
