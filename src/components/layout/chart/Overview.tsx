@@ -73,23 +73,25 @@ const data = [
 
 const Overview = () => {
   return (
-    <BarChart width={630} height={300} data={data} barGap={"50%"} barSize={100}>
-      <Legend
-        wrapperStyle={{ bottom: "342px" }}
-        iconType="circle"
-        iconSize={10}
-      />
-      <CartesianGrid stroke="#EFF3F9" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
+    <ResponsiveContainer width={630} height={300}>
+      <BarChart data={data} barGap={"50%"} barSize={100}>
+        <Legend
+          wrapperStyle={{ bottom: "342px" }}
+          iconType="circle"
+          iconSize={10}
+        />
+        <CartesianGrid stroke="#EFF3F9" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
 
-      <Bar dataKey="Active" fill="#68B8EF" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="Active" fill="#68B8EF" radius={[4, 4, 0, 0]} />
 
-      <Bar dataKey="Closed" fill="#FB8832" radius={[4, 4, 0, 0]} />
-      <Bar dataKey="Paid" fill="#949AC2" radius={[4, 4, 0, 0]} />
-      <Bar dataKey="Canceled" fill="#F7685B" radius={[4, 4, 0, 0]} />
-    </BarChart>
+        <Bar dataKey="Closed" fill="#FB8832" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="Paid" fill="#949AC2" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="Canceled" fill="#F7685B" radius={[4, 4, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
   );
 };
 

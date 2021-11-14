@@ -4,7 +4,15 @@ import Dashboard from "../Icons/Dashboard";
 import Project from "../Icons/Project";
 import VendorDetail from "../Icons/VendorDetails";
 import { MenuItem } from "../Sidebar/menu-item";
-import { Box, Flex, Spacer, VStack, Text, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Spacer,
+  VStack,
+  Text,
+  Button,
+  HStack,
+} from "@chakra-ui/react";
 import { Progress } from "@chakra-ui/react";
 import Line from "../Sidebar/line";
 import Main from "../main";
@@ -12,6 +20,8 @@ import Overview from "../chart/Overview";
 import PaidChart from "../chart/Chart";
 import { Card } from "../card/card";
 import { Dropdown } from "../Drop-down/Dropdown";
+import { ProgressData } from "../progressData";
+const ProgressValue = [1, 5];
 
 export const Home = () => {
   return (
@@ -32,7 +42,7 @@ export const Home = () => {
       {/* ////////////////////////////////////////////////////////////////////// */}
       <Main>
         <VStack>
-          <Card w="100%">
+          <Card w={{ base: "100%" }}>
             <VStack alignItems="start">
               <Button
                 color="rgba(42, 180, 80, 1)"
@@ -53,20 +63,36 @@ export const Home = () => {
               >
                 Vendor Score
               </Text>
-
-              <Progress
-                value={60}
-                w="233px"
-                borderRadius="2px"
-                isIndeterminate
-              />
+              <Flex
+                // border="1px solid"
+                w="20vw"
+                padding=" 16px 0px 0px 0px"
+              >
+                <Progress value={60} w="233px" borderRadius="2px" />
+                <Spacer />
+                <Box>
+                  <ProgressData
+                    firstValue={ProgressValue[0]}
+                    secondValue={ProgressValue[1]}
+                  />
+                </Box>
+              </Flex>
             </VStack>
           </Card>
-          <Text w="100%" fontSize="22px" fontWeight={700} color=" #334D6E">
+          <Text
+            w={{ base: "100%" }}
+            fontSize="22px"
+            fontWeight={700}
+            color=" #334D6E"
+          >
             WO Status Graph
           </Text>
-          <Flex justifyContent="space-evenly">
-            <Card rounded="13px" w="60%" h="394px">
+          <Flex
+            // border="1px solid"
+            w={{ sm: "100%" }}
+            direction={{ base: "column", md: "column", lg: "row" }}
+          >
+            <Card rounded="13px" w={{ base: "99%", md: "99%", lg: "60%" }}>
               <Flex mb="40px" mt="30px">
                 <Text
                   color="#4F4F4F"
@@ -81,7 +107,12 @@ export const Home = () => {
               <Overview />
             </Card>
             <Spacer />
-            <Card rounded="13px" w="60%" h="394px" ml="30px">
+            <Card
+              rounded="13px"
+              w={{ base: "99%", md: "99%", lg: "60%" }}
+              ml={{ base: "0px", md: "0px", lg: "30px" }}
+              mt={{ base: "30px", md: "30px", lg: "0px" }}
+            >
               <Flex w="100%" mb="50px">
                 <Text
                   fontSize="24px"
@@ -90,6 +121,7 @@ export const Home = () => {
                   pos="relative"
                   left={73}
                   top=" 14px"
+                  width={["80px", "80px", "80px", "80px"]}
                 >
                   PAID
                 </Text>
