@@ -5,9 +5,9 @@ import ProjectSummary from "../components/NewProject/layout/ProjectSummary/Proje
 export const Home = () => {
   return (
     <>
-      <Box>
+      <Box overflow={{ xl: "unset", lg: "hidden", md: "hidden", sm: "hidden" }}>
         <Header />
-        <Box marginLeft="220px" w="1600px">
+        <Box w="1600px">
           <ProjectSummary />
         </Box>
       </Box>

@@ -30,13 +30,15 @@ export const Dropdown = () => {
   return (
     <Select placeholder="Select option" variant="unstyled">
       <option value="en">
-        <Image
-          boxSize="2rem"
-          borderRadius="full"
-          src="https://cdn.britannica.com/79/4479-050-6EF87027/flag-Stars-and-Stripes-May-1-1795.jpg"
-          alt="Fluffybuns the destroyer"
-          mr="12px"
-        />
+        {
+          <Image
+            boxSize="2rem"
+            borderRadius="full"
+            src="https://cdn.britannica.com/79/4479-050-6EF87027/flag-Stars-and-Stripes-May-1-1795.jpg"
+            alt="Fluffybuns the destroyer"
+            mr="12px"
+          />
+        }
         <span>English</span>
       </option>
       <option value="en">
