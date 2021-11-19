@@ -1,8 +1,5 @@
 import React from "react";
 import Sidebar from "../Sidebar/sidebar";
-import Dashboard from "../Icons/Dashboard";
-import Project from "../Icons/Project";
-import VendorDetail from "../Icons/VendorDetails";
 import { MenuItem } from "../Sidebar/menu-item";
 import {
   Box,
@@ -12,6 +9,9 @@ import {
   Text,
   Button,
   HStack,
+  SimpleGrid,
+  Container,
+  Stack,
 } from "@chakra-ui/react";
 import { Progress } from "@chakra-ui/react";
 import Line from "../Sidebar/line";
@@ -20,29 +20,34 @@ import Overview from "../chart/Overview";
 import PaidChart from "../chart/Chart";
 import { Card } from "../card/card";
 import { Dropdown } from "../Drop-down/Dropdown";
-import { ProgressData } from "../progressData";
-const ProgressValue = [1, 5];
+import { ProgressData } from "../Progress/progressData";
+import Progressbar from "../Progress/progressbar";
+import {
+  MdOutlineDashboard,
+  MdOutlineViewAgenda,
+  MdPersonOutline,
+} from "react-icons/md";
+
+const ProgressValue = [12, 5];
 
 export const Home = () => {
   return (
     <>
-      {/* //////////////////////////////////////////////////Sidebar///////////// */}
       <Sidebar>
         <VStack alignItems="start" spacing="20px">
-          <MenuItem title="Dashboard" Icon={Dashboard} />
-          <MenuItem title="Project" Icon={Project} />
-          <MenuItem title="Vendor Details" Icon={VendorDetail} />
+          <MenuItem title="Dashboard" Icon={MdOutlineDashboard} />
+          <MenuItem title="Project" Icon={MdOutlineViewAgenda} />
+          <MenuItem title="Vendor Details" Icon={MdPersonOutline} />
         </VStack>
         <Flex justifyContent="center" mt={10}>
           <Line />
         </Flex>
       </Sidebar>
-      {/* ////////////////////////////////////////////////////////////// */}
-      {/* //////////Main? */}
-      {/* ////////////////////////////////////////////////////////////////////// */}
+
       <Main>
-        <VStack>
-          <Card w={{ base: "100%" }}>
+        <VStack w="100%">
+          {/* ///////////////////////////////////////////////////////////////////////  card vendor score */}
+          <Card w={{ base: "510px", md: "100%" }} border="1px dotted green">
             <VStack alignItems="start">
               <Button
                 color="rgba(42, 180, 80, 1)"
@@ -58,17 +63,13 @@ export const Home = () => {
               <Text
                 fontFamily="sans-serif"
                 fontStyle="normal"
-                fontWeight="300"
+                fontWeight={300}
                 fontSize="29px"
               >
                 Vendor Score
               </Text>
-              <Flex
-                // border="1px solid"
-                w="20vw"
-                padding=" 16px 0px 0px 0px"
-              >
-                <Progress value={60} w="233px" borderRadius="2px" />
+              <Flex w="22em">
+                <Progressbar />
                 <Spacer />
                 <Box>
                   <ProgressData
@@ -79,20 +80,31 @@ export const Home = () => {
               </Flex>
             </VStack>
           </Card>
-          <Text
-            w={{ base: "100%" }}
-            fontSize="22px"
-            fontWeight={700}
-            color=" #334D6E"
-          >
-            WO Status Graph
-          </Text>
+          {/* //////////////////////////////////////////////////////////////////////////////////////////  text wo status graph*/}
+          <Box w={{ base: "200px", md: "100%" }}>
+            <Text
+              fontSize="22px"
+              fontWeight={700}
+              paddingInlineStart="14px"
+              border="1px solid blue"
+            >
+              WO Status Graph
+            </Text>
+          </Box>
+          {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// charts overview and paid */}
           <Flex
-            // border="1px solid"
-            w={{ sm: "100%" }}
+            border="1px solid pink"
             direction={{ base: "column", md: "column", lg: "row" }}
+            w={{ base: "510px", md: "100%" }}
           >
-            <Card rounded="13px" w={{ base: "99%", md: "99%", lg: "60%" }}>
+            <Card
+              rounded="13px"
+              w={{
+                base: "500px",
+                md: "100%",
+                lg: "100%",
+              }}
+            >
               <Flex mb="40px" mt="30px">
                 <Text
                   color="#4F4F4F"
@@ -106,10 +118,15 @@ export const Home = () => {
               </Flex>
               <Overview />
             </Card>
+            {/* /////////////////////////////////////////////////////////////////////////////////////////////////////// ////////////////////////////  */}
             <Spacer />
             <Card
               rounded="13px"
-              w={{ base: "99%", md: "99%", lg: "60%" }}
+              w={{
+                base: "500px",
+                md: "100%",
+                lg: "100%",
+              }}
               ml={{ base: "0px", md: "0px", lg: "30px" }}
               mt={{ base: "30px", md: "30px", lg: "0px" }}
             >
@@ -132,7 +149,9 @@ export const Home = () => {
               </Flex>
               <PaidChart />
             </Card>
+            {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
           </Flex>
+          {/* /////////////////////////////////////////////////////////////////////////////////////////////// */}
         </VStack>
       </Main>
     </>

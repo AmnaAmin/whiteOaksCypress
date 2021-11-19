@@ -58,45 +58,45 @@ const data = [
 const PaidChart: React.FC = () => {
   return (
     <>
-      <AreaChart
-        width={630}
-        height={250}
-        data={data}
-        margin={{ top: 30, right: 30, left: 0, bottom: 30 }}
-      >
-        <defs>
-          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor="rgba(78, 135, 248, 0.3)"
-              stopOpacity={0.8}
-            />
-            <stop
-              offset="95%"
-              stopColor="rgba(78, 135, 248, 0.003)"
-              stopOpacity={0}
-            />
-          </linearGradient>
-        </defs>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart
+          data={data}
+          margin={{ top: 30, right: 30, left: 0, bottom: 30 }}
+        >
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop
+                offset="5%"
+                stopColor="rgba(78, 135, 248, 0.3)"
+                stopOpacity={0.8}
+              />
+              <stop
+                offset="95%"
+                stopColor="rgba(78, 135, 248, 0.003)"
+                stopOpacity={0}
+              />
+            </linearGradient>
+          </defs>
 
-        <XAxis
-          dataKey="name"
-          axisLine={false}
-          tickLine={false}
-          padding={{ left: 10 }}
-          width={0}
-        />
-        <YAxis hide={false} type="number" axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            padding={{ left: 10 }}
+            width={0}
+          />
+          <YAxis hide={false} type="number" axisLine={false} tickLine={false} />
 
-        <Tooltip />
-        <Area
-          type="monotone"
-          dataKey="uv"
-          stroke="#8884d8"
-          fillOpacity={1}
-          fill="url(#colorUv)"
-        />
-      </AreaChart>
+          <Tooltip />
+          <Area
+            type="monotone"
+            dataKey="uv"
+            stroke="#8884d8"
+            fillOpacity={1}
+            fill="url(#colorUv)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </>
   );
 };
