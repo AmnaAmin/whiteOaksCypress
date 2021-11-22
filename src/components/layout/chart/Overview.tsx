@@ -1,5 +1,5 @@
 // import { fas } from '@fortawesome/free-solid-svg-icons';
-import React from "react";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  DataKey,
 } from "recharts";
 
 const data = [
@@ -73,13 +74,14 @@ const data = [
 
 const Overview = () => {
   return (
-    <ResponsiveContainer width={630} height={300}>
-      <BarChart data={data} barGap={"50%"} barSize={100}>
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data} barSize={100}>
         <Legend
-          wrapperStyle={{ bottom: "342px" }}
+          // wrapperStyle={{ bottom: "113%" }}
           iconType="circle"
           iconSize={10}
         />
+
         <CartesianGrid stroke="#EFF3F9" />
         <XAxis dataKey="name" />
         <YAxis />

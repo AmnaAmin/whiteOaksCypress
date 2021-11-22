@@ -26,13 +26,13 @@ const Sidebar: React.FC = (props) => {
         <DrawerBody>
           <Box
             boxShadow="1px 1px 12px rgb(0 0 0 / 10%)"
-            h="calc(100% - 10%)"
+            h="calc(100% - 100px)"
             w="193px"
             position="fixed"
             left="3px"
             top="70px"
-            bg="white"
             paddingLeft="10px"
+            bg="white"
             zIndex={10}
             display={{ base: "none", md: "unset" }}
           >
