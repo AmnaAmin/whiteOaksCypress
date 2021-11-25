@@ -1,0 +1,58 @@
+steps:
+
+  - command:
+    # - auto/generate_release_notes.sh
+    - auto/build.sh
+    - auto/deploy_dev.sh
+    # - auto/generate_version_file.sh
+    label: ":package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
+    branches: dev* devops*
+    agents:
+      queue: "wo:nonprod"
+    env:
+      BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
+      ENV: "dev"
+
+  - wait
+
+  - command: 
+    - git clone https://github.com/DevTek-ai/whiteoaks-ui-automation.git
+    - cd whiteoaks-ui-automation\Katalon Scripts\WhiteOaks
+    - katalon-test.sh
+    plugins:
+    - docker-compose#v2.1.0:
+        run: katalon
+    - junit-annotate#v1.4.1:
+        artifacts: "report/*.xml"
+          
+  - command:
+    # - auto/generate_release_notes.sh
+    - auto/build.sh
+    - auto/deploy_qa.sh
+    # - auto/generate_version_file.sh
+    label: ":package: & :rocket: Build & Deploy QA: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
+    branches: release/*
+    agents:
+      queue: "wo:nonprod"
+    env:
+      BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
+      ENV: "qa"    
+
+  - wait
+
+  - block: ":green_button: Deploy to PROD"
+    prompt: "Deploy WO to PROD environment?"
+    branches: "master"
+
+  - command:
+    # - auto/generate_release_notes.sh
+    - auto/build.sh
+    - auto/deploy_prod.sh
+    # - auto/generate_version_file.sh
+    label: ":package: & :rocket: Build & Deploy PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
+    branches: master
+    agents:
+      queue: "wo:prod"
+    env:
+      BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
+      ENV: "prod"    
