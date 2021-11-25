@@ -1,9 +1,8 @@
 steps:
-
   - command:
-    # - auto/generate_release_notes.sh
-    - auto/build.sh
-    - auto/deploy_dev.sh
+      # - auto/generate_release_notes.sh
+      - auto/build.sh
+      - auto/deploy_dev.sh
     # - auto/generate_version_file.sh
     label: ":package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: dev* devops*
@@ -15,20 +14,20 @@ steps:
 
   - wait
 
-  - command: 
-    - git clone https://github.com/DevTek-ai/whiteoaks-ui-automation.git
-    - cd whiteoaks-ui-automation\Katalon Scripts\WhiteOaks
-    - katalon-test.sh
-    plugins:
-    - docker-compose#v2.1.0:
-        run: katalon
-    - junit-annotate#v1.4.1:
-        artifacts: "report/*.xml"
-          
+  # - command:
+  #   - git clone https://github.com/DevTek-ai/whiteoaks-ui-automation.git
+  #   - cd whiteoaks-ui-automation\Katalon Scripts\WhiteOaks
+  #   - katalon-test.sh
+  #   plugins:
+  #   - docker-compose#v2.1.0:
+  #       run: katalon
+  #   - junit-annotate#v1.4.1:
+  #       artifacts: "report/*.xml"
+
   - command:
-    # - auto/generate_release_notes.sh
-    - auto/build.sh
-    - auto/deploy_qa.sh
+      # - auto/generate_release_notes.sh
+      - auto/build.sh
+      - auto/deploy_qa.sh
     # - auto/generate_version_file.sh
     label: ":package: & :rocket: Build & Deploy QA: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: release/*
@@ -36,7 +35,7 @@ steps:
       queue: "wo:nonprod"
     env:
       BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
-      ENV: "qa"    
+      ENV: "qa"
 
   - wait
 
@@ -45,9 +44,9 @@ steps:
     branches: "master"
 
   - command:
-    # - auto/generate_release_notes.sh
-    - auto/build.sh
-    - auto/deploy_prod.sh
+      # - auto/generate_release_notes.sh
+      - auto/build.sh
+      - auto/deploy_prod.sh
     # - auto/generate_version_file.sh
     label: ":package: & :rocket: Build & Deploy PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: master
@@ -55,4 +54,4 @@ steps:
       queue: "wo:prod"
     env:
       BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
-      ENV: "prod"    
+      ENV: "prod"
