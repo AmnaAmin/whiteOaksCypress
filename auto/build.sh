@@ -9,7 +9,7 @@ echo "🛠 Building project..."
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   aws --version
   npm install
-  npm run build:prod  
+  npm run build 
   ls target/classes/static
   mkdir output
   cp -r target/classes/static/* output
