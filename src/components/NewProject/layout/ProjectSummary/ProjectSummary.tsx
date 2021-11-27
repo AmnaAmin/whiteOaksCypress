@@ -1,6 +1,6 @@
-import { Box, HStack, VStack, Text, Flex } from "@chakra-ui/layout";
-
+import { HStack, Text, Flex } from "@chakra-ui/layout";
 import { ProjectCard } from "./ProjectCard";
+//
 import SummaryIconFirst, {
   SummaryIconFifth,
   SummaryIconForth,
@@ -9,91 +9,84 @@ import SummaryIconFirst, {
   TopIconFirst,
   TopIconSecond,
 } from "../../../../Icons/ProjectIcon";
-import { RepeatClockIcon } from "@chakra-ui/icons";
 
 export const ProjectSummary = () => {
   return (
     <Flex
-      boxShadow="1px 1px 12px rgb(0 0 0 /10%)"
+      boxShadow="1px 0px 70px rgb(0 0 0 / 10%)"
+      // boxShadow="1px 1px 12px rgba(0,0,0,0.2)"
       border="1px solid white"
       borderRadius="10px"
-      bgColor="white"
-      marginTop="82px"
-      w={{ base: "30em", md: "50em", lg: "60em", xl: "100em" }}
+      bgColor={{ base: "unset", md: "white" }}
       direction="column"
-      h={{ base: "250px", md: "180px", lg: "206px" }}
-      marginLeft={{ xl: "200px", lg: "150px", md: "80px", base: "10px" }}
-      marginRight={{ md: "30%", base: "20%" }}
+      h={{ base: "auto", md: "196px" }}
+      // marginLeft={{ base: "1%", md: "1%", lg: "200px", xl: "300px" }}
+      boxSizing="border-box"
+      mb="10px"
     >
       <Text
-        h="55px"
-        paddingLeft="30px"
-        paddingTop="5px"
+        h="38px"
+        paddingLeft={{ base: "40px", md: "30px" }}
+        marginTop="15px"
+        marginBottom="8px"
         fontSize="22px"
         fontWeight="600"
       >
         Project Summary
       </Text>
-
       <HStack
-        p={{ sm: "0px", lg: "0px", xl: "0px 30px 0px 30px" }}
-        justifyContent={{
-          xl: "space-between",
-          lg: "space-between",
-          md: "space-between",
-          base: "unset",
-        }}
-        display={{ xl: "flex", lg: "flex", md: "flex", base: "grid" }}
-        alignItems={{ base: "center", md: "center" }}
-        paddingLeft={{ md: "unset", base: "unset", lg: "15px" }}
+        p="0px 30px 0px 30px"
+        justifyContent="space-between"
+        display={{ base: "grid", md: "flex" }}
+        alignItems="center"
+        paddingLeft="15px"
         marginLeft="6px"
-        gridTemplateColumns={{ base: " Repeat(3,1fr)" }}
+        gridTemplateColumns={{ base: " Repeat(2,1fr)" }}
         gridTemplateRows={{ base: "Repeat(3,1fr) " }}
-        gridRowGap={{ base: "40px" }}
+        gridRowGap={{ base: "10px" }}
       >
         <ProjectCard
           TopIcon={TopIconFirst}
           BigIcon={SummaryIconFirst}
           number={15}
           name="Active Wo"
-          color={" #FBF3DC"}
-          iconColor={"#FBECED"}
+          color={"#EDF2F7"}
+          iconColor={"#FED7D7"}
         />
         <ProjectCard
           TopIcon={TopIconSecond}
           BigIcon={SummaryIconSecond}
           number={15}
           name="Past Due"
-          color={"#E3F0DF"}
-          iconColor={"#E7F8EC"}
+          color={"#EBF8FF"}
+          iconColor={"#C6F6D5"}
         />
         <ProjectCard
           TopIcon={TopIconFirst}
           BigIcon={SummaryIconThird}
           number={18}
           name="Completed & invoiced"
-          color={"#ECF2FE"}
-          iconColor={"#FBECED"}
+          color={"#FAF5FF"}
+          iconColor={"#FED7D7"}
         />
         <ProjectCard
           TopIcon={TopIconSecond}
           BigIcon={SummaryIconForth}
           number={23}
-          name="Completed & Not paid"
-          color={" #FAE6E5"}
-          iconColor={"#E7F8EC"}
+          name="Completed & not paid"
+          color={" #FFF5F5"}
+          iconColor={"#C6F6D5"}
         />
         <ProjectCard
           TopIcon={TopIconFirst}
           BigIcon={SummaryIconFifth}
           name="Upcoming Payments"
-          color={"#ECF2FE"}
-          iconColor={"#E7F8EC"}
+          color={" #F0FFF4"}
+          iconColor={"#C6F6D5"}
           numbertext="$57k"
         />
       </HStack>
     </Flex>
   );
 };
-
 export default ProjectSummary;
