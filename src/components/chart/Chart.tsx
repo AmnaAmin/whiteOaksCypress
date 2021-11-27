@@ -1,11 +1,9 @@
-import { number } from "prop-types";
 import React from "react";
 import {
   AreaChart,
   Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";

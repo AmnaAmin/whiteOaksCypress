@@ -1,4 +1,3 @@
-import { AspectRatio, Box } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 const HeaderDropdown = () => {
   return (

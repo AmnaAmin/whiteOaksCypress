@@ -1,9 +1,6 @@
-// import { fas } from '@fortawesome/free-solid-svg-icons';
-import React from "react";
 import {
   BarChart,
   Bar,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,

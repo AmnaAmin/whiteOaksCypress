@@ -1,6 +1,6 @@
 import React from "react";
-//
-import { Box, Divider, Text, Heading } from "@chakra-ui/react";
+
+import { Box, Text, Heading } from "@chakra-ui/react";
 import Slider from "react-slick";
 import { Card } from "../card/card";
 import "slick-carousel/slick/slick.css";
@@ -9,8 +9,6 @@ import "slick-carousel/slick/slick-theme.css";
 export const SimpleSlider: React.FC<{
   heading: string;
 }> = (props) => {
-  const { heading, ...rest } = props;
-
   const settings = {
     // dots: true,
     infinite: true,

@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Spacer,
-  VStack,
-  Text,
-  Button,
-  HStack,
-  SimpleGrid,
-  Container,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Flex, Spacer, VStack, Text } from "@chakra-ui/react";
 
 import Overview from "../chart/Overview";
 import PaidChart from "../chart/Chart";

@@ -1,21 +1,9 @@
 import { Box } from "@chakra-ui/layout";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-import { GiHamburgerMenu } from "react-icons/gi";
+// import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+// import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 import { RiLayoutColumnLine, RiCalendarFill } from "react-icons/ri";
-import {
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
-  Button,
-  Input,
-  VStack,
-} from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { MenuItem } from "./menu-item";
 const Sidebar: React.FC = (props) => {
   // const { isOpen, onOpen, onClose, onToggle } = useDisclosure();

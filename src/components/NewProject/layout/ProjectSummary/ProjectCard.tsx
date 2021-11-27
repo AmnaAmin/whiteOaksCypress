@@ -1,8 +1,7 @@
-import { ColorMode } from "@chakra-ui/color-mode";
-import { Box, HStack, VStack } from "@chakra-ui/layout";
+import { Box, HStack } from "@chakra-ui/layout";
 import { Flex } from "@chakra-ui/react";
 import React from "react";
-type cardprops = {
+type CardProps = {
   TopIcon: React.ElementType;
   BigIcon: React.ElementType;
   number?: number;
@@ -11,7 +10,7 @@ type cardprops = {
   iconColor: any;
   numbertext?: string;
 };
-export const ProjectCard = (props: cardprops) => {
+export const ProjectCard = (props: CardProps) => {
   const { TopIcon, BigIcon } = props;
   return (
     <HStack>

@@ -1,7 +1,6 @@
 import React from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
 import { Link, LinkProps } from "@chakra-ui/layout";
-import { transform } from "lodash";
 
 export const MenuItem: React.FC<
   LinkProps & { Icon: React.ElementType; title: string }
