@@ -2,13 +2,12 @@ import {
   Flex,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { Avatar, AvatarBadge, AvatarGroup } from "@chakra-ui/react";
+import { Avatar } from "@chakra-ui/react";
 import { Box, Link, VStack } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
@@ -58,7 +57,7 @@ export const Avatars = () => {
               _active={{ bgColor: "brown", color: "white" }}
             >
               <AiFillTool />
-              <a>Settings</a>
+              <Link>Settings</Link>
             </MenuItem>
 
             <MenuItem
@@ -67,7 +66,7 @@ export const Avatars = () => {
               margin="0px"
             >
               <AiFillLock />
-              <a>Password</a>
+              <Link>Password</Link>
             </MenuItem>
 
             <MenuItem
@@ -76,7 +75,7 @@ export const Avatars = () => {
               margin="0px"
             >
               <AiFillQuestionCircle />
-              <a>Help</a>
+              <Link>Help</Link>
             </MenuItem>
 
             <MenuItem
@@ -85,7 +84,7 @@ export const Avatars = () => {
               margin="0px"
             >
               <AiFillMail />
-              <a>Support</a>
+              <Link>Support</Link>
             </MenuItem>
 
             <MenuItem
@@ -94,7 +93,7 @@ export const Avatars = () => {
               margin="0px"
             >
               <FaSignOutAlt />
-              <a>Sign out</a>
+              <Link>Sign out</Link>
             </MenuItem>
           </MenuList>
         </Menu>
@@ -107,7 +106,3 @@ export const Avatars = () => {
 };
 
 export default Avatars;
-
-// "sm" | "md" | "lg" | "xl" | "2xl" | "xs" | "full" | "2xs"
-// Default
-// "md
