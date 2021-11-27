@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/layout";
 import { Header } from "../components/NewProject/layout/Header/Header";
 import ProjectSummary from "../components/NewProject/layout/ProjectSummary/ProjectSummary";
 
-export const Home = () => {
+export const Now = () => {
   return (
     <>
       <Box overflow={{ xl: "unset", lg: "hidden", md: "hidden", sm: "hidden" }}>
@@ -15,4 +15,4 @@ export const Home = () => {
   );
 };
 
-export default Home;
+export default Now;
