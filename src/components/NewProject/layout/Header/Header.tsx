@@ -3,28 +3,37 @@ import { Box, HStack, Text, Flex, VStack } from "@chakra-ui/react";
 import Avatars from "./Avatar";
 import LogoIcon from "../../../../Icons/Header-logo";
 import BellIcon from "../../../../Icons/Bell-icon";
+import HeaderDropdown from "./DropDown";
 // import LenguegeDropDown from './LenguegeDropDown';
 
 export const Header: React.FC = () => {
   return (
     <HStack
-      boxShadow="1px 1px 12px rgb(0 0 0 /10%)"
+      boxShadow="1px 1px 2px rgba(0,0,0,0.2)"
       position="fixed"
       width="100%"
-      h="60px"
+      h="75px"
       left={0}
       top={0}
       right={0}
       bgColor="white"
+      zIndex={7}
     >
-      <Box>
+      <Box ml="35px">
         <LogoIcon />
       </Box>
       <Flex w="100%" justifyContent="flex-end" alignItems="center">
         {/* <VStack>
           <LenguegeDropDown />
         </VStack> */}
-        <Box paddingRight="46px" _selected={{ color: "blue" }}>
+        <Box
+          paddingRight="46px"
+          _selected={{ color: "blue" }}
+          display="flex"
+          alignItems="center"
+        >
+          <HeaderDropdown />
+
           <BellIcon />
         </Box>
         <Box alignItems="center">
