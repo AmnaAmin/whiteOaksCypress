@@ -1,6 +1,6 @@
-import React from "react";
+import React, { SVGAttributes } from "react";
 
-function LogoIcon() {
+function LogoIcon(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -9,6 +9,7 @@ function LogoIcon() {
       height="37"
       fill="none"
       viewBox="0 0 131 37"
+      {...props}
     >
       <path fill="url(#pattern0)" d="M0 0H131V37H0z"></path>
       <defs>

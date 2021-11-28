@@ -1,6 +1,6 @@
-import React from "react";
+import React, { SVGAttributes } from "react";
 
-function SummaryIconFirst() {
+function SummaryIconFirst(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +8,7 @@ function SummaryIconFirst() {
       height="29"
       fill="none"
       viewBox="0 0 29 29"
+      {...props}
     >
       <mask id="path-1-inside-1_228:1237" fill="#fff">
         <path d="M22.6 8.178l-6.156-6.156a.798.798 0 00-.616-.263H7.035c-.967 0-1.759.791-1.759 1.758v21.105c0 .967.792 1.759 1.759 1.759h14.07c.967 0 1.758-.792 1.758-1.76V8.794a.798.798 0 00-.264-.615zm-6.772-4.309l4.925 4.924h-4.925V3.87zm5.277 20.753H7.035V3.517h7.035v5.276c0 .968.791 1.76 1.758 1.76h5.277v14.069z"></path>
@@ -29,7 +30,7 @@ function SummaryIconFirst() {
   );
 }
 
-function SummaryIconSecond() {
+function SummaryIconSecond(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -37,6 +38,7 @@ function SummaryIconSecond() {
       height="24"
       fill="none"
       viewBox="0 0 24 24"
+      {...props}
     >
       <path
         fill="#374151"
@@ -46,7 +48,7 @@ function SummaryIconSecond() {
   );
 }
 
-function SummaryIconThird() {
+function SummaryIconThird(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -54,6 +56,7 @@ function SummaryIconThird() {
       height="25"
       fill="none"
       viewBox="0 0 25 25"
+      {...props}
     >
       <path
         fill="#374151"
@@ -71,7 +74,7 @@ function SummaryIconThird() {
   );
 }
 
-function SummaryIconForth() {
+function SummaryIconForth(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -79,6 +82,7 @@ function SummaryIconForth() {
       height="20"
       fill="none"
       viewBox="0 0 26 20"
+      {...props}
     >
       <path
         fill="#374151"
@@ -96,7 +100,7 @@ function SummaryIconForth() {
   );
 }
 
-function SummaryIconFifth() {
+function SummaryIconFifth(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -104,6 +108,7 @@ function SummaryIconFifth() {
       height="27"
       fill="none"
       viewBox="0 0 27 27"
+      {...props}
     >
       <path
         fill="#374151"
@@ -115,7 +120,7 @@ function SummaryIconFifth() {
 
 //top icon in card=>start
 
-function TopIconFirst() {
+function TopIconFirst(props: SVGAttributes<SVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -123,6 +128,7 @@ function TopIconFirst() {
       height="10"
       fill="none"
       viewBox="0 0 14 10"
+      {...props}
     >
       <path
         stroke="#E11D48"
