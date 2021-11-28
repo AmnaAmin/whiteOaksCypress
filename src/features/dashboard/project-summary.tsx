@@ -7,7 +7,7 @@ import SummaryIconFirst, {
   SummaryIconThird,
   TopIconFirst,
   TopIconSecond,
-} from "icons/ProjectIcon";
+} from "icons/project-icons";
 export const ProjectSummary = () => {
   return (
     <Flex

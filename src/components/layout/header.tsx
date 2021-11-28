@@ -13,7 +13,7 @@ import {
   useColorModeValue as mode,
   VStack,
 } from "@chakra-ui/react";
-import LogoIcon from "icons/header-logo";
+import LogoIcon from "icons/Header-logo";
 import { FaAngleDown } from "react-icons/fa";
 import { BsBell } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
