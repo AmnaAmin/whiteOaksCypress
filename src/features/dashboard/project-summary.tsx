@@ -1,4 +1,4 @@
-import { Box, HStack, VStack, Text, Flex } from "@chakra-ui/layout";
+import { HStack, Text, Flex } from "@chakra-ui/layout";
 import { ProjectCard } from "./project-card";
 import SummaryIconFirst, {
   SummaryIconFifth,

@@ -1,5 +1,5 @@
-import { ColorMode } from "@chakra-ui/color-mode";
-import { Box, HStack, VStack } from "@chakra-ui/layout";
+// import { ColorMode } from "@chakra-ui/color-mode";
+import { Box, HStack } from "@chakra-ui/layout";
 import { Flex } from "@chakra-ui/react";
 import React from "react";
 type cardprops = {

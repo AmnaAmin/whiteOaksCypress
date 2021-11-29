@@ -1,13 +1,4 @@
-import {
-  VStack,
-  Text,
-  Flex,
-  Spacer,
-  Box,
-  Tag,
-  Progress,
-} from "@chakra-ui/react";
-import React from "react";
+import { VStack, Text, Flex, Box, Tag, Progress } from "@chakra-ui/react";
 import { Card } from "../card/card";
 import { ProgressData } from "../Progress/progressData";
 import { SimpleSlider } from "./SimpleSlider";

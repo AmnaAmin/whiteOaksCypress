@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex, Spacer, VStack, Text } from "@chakra-ui/react";
 
 import Overview from "components/chart/Overview";
-import PaidChart from "components/chart/Chart";
+import PaidChart from "components/chart/paid-chart";
 import { Card } from "components/card/card";
 import { Layout } from "components/layout";
 import ProjectSummary from "features/dashboard/project-summary";
@@ -13,6 +13,7 @@ import ProjectSummary from "features/dashboard/project-summary";
 // import { ProjectSummary } from "../layout/ProjectSummary/ProjectSummary";
 // import { Dropdown } from "../Drop-down/Dropdown";
 import { VendorScore } from "components/VendorScore/vendor-score";
+import { Dropdown } from "components/dropdown-menu/Dropdown";
 
 export const Dashboard = () => {
   return (
@@ -86,15 +87,12 @@ export const Dashboard = () => {
                     </Text>
                     <Spacer />
                     <Box pos="relative" top="25px" right={30}>
-                      {/* <Dropdown /> */}
+                      <Dropdown />
                     </Box>
                   </Flex>
                   <PaidChart />
                 </Card>
-                {/* //////////////////////////////////////////////////////////////////////////////////////////////////////////////// Paid Chart end/////// */}
               </Flex>
-              {/* //////////////////// */}
-              {/* ///////////////////////////////////////////// */}
             </VStack>
           </>
         </Box>
