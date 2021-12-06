@@ -7,7 +7,7 @@ export const ProgressData: React.FC<{
 }> = (props) => {
   const { firstValue, secondValue } = props;
   return (
-    <Flex pos="relative" fontFamily="system-ui" color=" #334D6E" w="100%">
+    <Flex pos="relative" color="blackAlpha.700" w="100%">
       <Box fontSize="22px" fontWeight={800}>
         {firstValue}
       </Box>

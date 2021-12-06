@@ -1,15 +1,19 @@
 import "./App.css";
-import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
-import { Home } from "./components/home/Home";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Dashboard } from "./pages/dashboard";
+import { Examples } from "pages/examples";
+import { Projects } from "pages/projects";
 
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/">
-          <Home />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/examples/*" element={<Examples />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/vendors" element={<Projects />} />
+      </Routes>
     </Router>
   );
 }

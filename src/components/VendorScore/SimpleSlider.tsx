@@ -6,6 +6,21 @@ import { Card } from "../card/card";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const defaultData = [
+  {
+    title: "COI WC",
+    date: new Date(),
+  },
+  {
+    title: "COI WC",
+    date: new Date(),
+  },
+  {
+    title: "COI WC",
+    date: new Date(),
+  },
+];
+
 export const SimpleSlider: React.FC<{
   heading: string;
 }> = (props) => {
@@ -18,29 +33,28 @@ export const SimpleSlider: React.FC<{
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
   return (
     <Card
       bg=" 
       #EBF8FF"
-      w={{ base: "30em", md: "100%", lg: "100%", xl: "95%" }}
+      w="100%"
+      display="block"
       boxShadow="1px 1px 7px rgba(0,0,0,0.2)"
     >
-      <Box>
+      <Box w="100%">
         <Heading textAlign="start" fontWeight={700} fontSize="20px">
           {props.heading}
         </Heading>
-        <Slider {...settings}>
+        <Box w="100%">
+          {/* <Slider {...settings}> */}
           <Box textAlign="start">
             <Text>h1</Text>
             <Text>h2</Text>
             <Text>h3</Text>
           </Box>
-          <Box textAlign="start">
-            <Text>h1</Text>
-            <Text>h2</Text>
-            <Text>h3</Text>
-          </Box>
-        </Slider>
+          {/* </Slider> */}
+        </Box>
       </Box>
     </Card>
   );
