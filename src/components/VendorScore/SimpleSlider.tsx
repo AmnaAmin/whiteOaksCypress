@@ -1,39 +1,13 @@
 import React from "react";
 
 import { Box, Text, Heading } from "@chakra-ui/react";
-import Slider from "react-slick";
 import { Card } from "../card/card";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const defaultData = [
-  {
-    title: "COI WC",
-    date: new Date(),
-  },
-  {
-    title: "COI WC",
-    date: new Date(),
-  },
-  {
-    title: "COI WC",
-    date: new Date(),
-  },
-];
-
 export const SimpleSlider: React.FC<{
   heading: string;
 }> = (props) => {
-  const settings = {
-    // dots: true,
-    infinite: true,
-    // centerMode: true,
-    centerPadding: "60px",
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
   return (
     <Card
       bg=" 
