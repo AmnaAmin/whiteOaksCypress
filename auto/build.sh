@@ -6,10 +6,17 @@ PARENT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 
 echo "🛠 Building project..."
 
+
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   aws --version
   npm install
-  npm run build
+
+if [ "prod" = $ENV ]; then
+  npm run build:prod
+else 
+  npm run build  
+fi
+
   ls build
   mkdir output
   cp -r build/* output
