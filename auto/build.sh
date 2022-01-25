@@ -13,7 +13,7 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
 if [ "prod" = $ENV ]; then
   npm run build:prod
 else 
-  npm run build  
+  npm run webpack:build
 fi
 
   ls build
