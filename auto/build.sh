@@ -9,10 +9,16 @@ echo "🛠 Building project..."
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   aws --version
   npm install
-  npm run webpack:prod  
-  ls target/classes/static
+
+if [ "prod" = $ENV ]; then
+  npm run build:prod
+else 
+  npm run build  
+fi
+
+  ls build
   mkdir output
-  cp -r target/classes/static/* output
+  cp -r build/* output
   zip -r output.zip output
   buildkite-agent artifact upload output.zip
 else
