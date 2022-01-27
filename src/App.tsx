@@ -11,13 +11,13 @@ function App() {
   );
   console.log(process.env.PUBLIC_URL);
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
-        <Route path="/examples/*" element={<Examples />} />
+        <Route path="/vendorportal/examples/*" element={<Examples />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/vendors" element={<Projects />} />
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/vendorportal/" element={<Dashboard />} />
       </Routes>
     </Router>
   );
