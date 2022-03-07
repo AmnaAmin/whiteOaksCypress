@@ -1,22 +1,21 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
-import React from "react";
-
+import { Flex, Text } from '@chakra-ui/react';
+import React from 'react';
 export const ProgressData: React.FC<{
   firstValue: number;
   secondValue: number;
-}> = (props) => {
+}> = props => {
   const { firstValue, secondValue } = props;
   return (
-    <Flex pos="relative" color="blackAlpha.700" w="100%">
-      <Box fontSize="22px" fontWeight={800}>
+    <Flex pos="relative" color="blackAlpha.700" w="100%" alignItems="center">
+      <Text fontSize="xx-large" fontWeight={800} mb="4px">
         {firstValue}
-      </Box>
-      <Text fontWeight={800} fontSize="22px" w="3em">
+      </Text>
+      <Text fontSize="22px" px="1" fontWeight="bold">
         out of
       </Text>
-      <Box fontWeight={800} fontSize="22px">
+      <Text fontSize="22px" fontWeight="bold">
         {secondValue}
-      </Box>
+      </Text>
     </Flex>
   );
 };

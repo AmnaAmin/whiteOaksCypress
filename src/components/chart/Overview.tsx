@@ -1,3 +1,6 @@
+import { Box } from "@chakra-ui/react";
+import { useVendorsPerMonth } from "utils/vendor-dashboard";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -8,84 +11,102 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { GenericObjectType } from "types/common.types";
 
-const data = [
-  {
-    name: "Jun",
-    Active: 100,
-    Closed: 100,
-    Paid: 0,
-    Canceled: 0,
-  },
-  {
-    name: "Jul",
-    Active: 2000,
-    Closed: 2400,
-    Paid: 0,
-    Canceled: 0,
-  },
-  {
-    name: " Aug",
-    Active: 1800,
-    Closed: 0,
-    Paid: 2400,
-    Canceled: 0,
-  },
-  {
-    name: " Sep",
-    Active: 1100,
-    Closed: 2400,
-    Paid: 0,
-    Canceled: 400,
-  },
-  {
-    name: " Oct",
-    Active: 4000,
-    Closed: 100,
-    Paid: 2400,
-    Canceled: 400,
-  },
-  {
-    name: " Nov",
-    Active: 100,
-    Closed: 2400,
-    Paid: 2400,
-    Canceled: 400,
-  },
-  {
-    name: " Dec",
-    Active: 4000,
-    Closed: 2400,
-    Paid: 2400,
-    Canceled: 400,
-  },
-  {
-    name: "Jan",
-    Active: 4000,
-    Closed: 2400,
-    Paid: 2400,
-    Canceled: 400,
-  },
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
+const monthsShort: GenericObjectType = {
+  January: "Jan",
+  February: "Feb",
+  March: "Mar",
+  April: "Apr",
+  May: "May",
+  June: "Jun",
+  July: "Jul",
+  August: "Aug",
+  September: "Sep",
+  October: "Oct",
+  November: "Nov",
+  December: "Dec",
+};
 
-const Overview = () => {
+const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
+  const { data: vendorEntity } = useVendorsPerMonth(vendorId);
+  const vendorData = months.map((key) => ({
+    name: monthsShort[key],
+    Active: vendorEntity?.[key]?.Active || 0,
+    Closed: vendorEntity?.[key]?.Completed || 0,
+    Paid: vendorEntity?.[key]?.Paid || 0,
+    Canceled: vendorEntity?.[key]?.Cancelled || 0,
+  }));
+
   return (
-    <ResponsiveContainer width="90%" height={350}>
-      <BarChart data={data} barGap={"50%"} barSize={100}>
+    <ResponsiveContainer width="98%" height={310}>
+      <BarChart data={vendorData} barSize={50}>
         <CartesianGrid stroke="#EFF3F9" />
-        <XAxis dataKey="name" height={60} />
-        <YAxis />
-        <Tooltip />
-        <Legend
-          // wrapperStyle={{ bottom: "393px" }}
-          iconType="circle"
-          iconSize={10}
-          margin={{ left: 20 }}
+        <XAxis
+          dataKey="name"
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: "#A0AEC0", fontSize: "15px", fontWeight: 500 }}
+          tickMargin={15}
         />
+
+        <YAxis
+          type="number"
+          domain={[0, (dataMax: number) => 40]}
+          tickSize={8}
+          tickCount={3}
+          axisLine={false}
+          tick={{ fontStyle: "italic", fill: "#979797" }}
+          tickFormatter={(tick) => {
+            return `${tick}%`;
+          }}
+        />
+
+        <Tooltip />
+
         <Bar dataKey="Active" fill="#68B8EF" radius={[4, 4, 0, 0]} />
         <Bar dataKey="Closed" fill="#FB8832" radius={[4, 4, 0, 0]} />
         <Bar dataKey="Paid" fill="#949AC2" radius={[4, 4, 0, 0]} />
         <Bar dataKey="Canceled" fill="#F7685B" radius={[4, 4, 0, 0]} />
+        <Legend
+          wrapperStyle={{
+            lineHeight: "31px",
+            position: "relative",
+            bottom: "calc(100% + 100px)",
+            left: "80px",
+          }}
+          height={40}
+          iconType="circle"
+          iconSize={10}
+          align="center"
+          formatter={(value) => {
+            return (
+              <Box
+                display="inline-flex"
+                marginInlineEnd="28px"
+                mt={{ base: "30px", sm: "30px", md: 0 }}
+              >
+                <Box as="span" color="#9C9C9C" fontSize="14px" fontWeight={400}>
+                  {value}
+                </Box>
+              </Box>
+            );
+          }}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

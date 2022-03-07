@@ -1,5 +1,5 @@
-import { useBoolean, useBreakpointValue } from "@chakra-ui/react";
-import * as React from "react";
+import { useBoolean, useBreakpointValue } from '@chakra-ui/react';
+import * as React from 'react';
 
 export const useMobileMenuState = () => {
   const [isOpen, actions] = useBoolean();
@@ -11,7 +11,6 @@ export const useMobileMenuState = () => {
     } else {
       actions.on();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile]);
 
   return { isOpen, ...actions };

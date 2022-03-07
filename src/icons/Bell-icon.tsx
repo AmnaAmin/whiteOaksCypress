@@ -1,14 +1,8 @@
-import React from "react";
+import React from 'react';
 
 function BellIcon() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="20"
-      fill="none"
-      viewBox="0 0 16 20"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="none" viewBox="0 0 16 20">
       <path
         fill="#fff"
         stroke="#334D6E"
