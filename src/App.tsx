@@ -15,7 +15,9 @@ export default function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Router>{user ? <AuthenticatedApp /> : <UnAuthenticatedApp />}</Router>
+      <Router basename={process.env.PUBLIC_URL}>
+        {user ? <AuthenticatedApp /> : <UnAuthenticatedApp />}
+      </Router>
     </ChakraProvider>
   );
 }
