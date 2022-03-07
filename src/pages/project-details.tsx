@@ -1,0 +1,215 @@
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  useDisclosure,
+} from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  Spacer,
+  Stack,
+} from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
+
+import { Layout } from "../components/layout";
+import { TransactionsTable } from "../features/projects/transactions/transactions-table";
+import { AddNewTransactionModal } from "../features/projects/transactions/add-update-transaction";
+import { VendorDocumentsTable } from "../features/projects/documents/documents-table";
+import { WorkOrdersTable } from "../features/projects/work-orders-table";
+import { AlertsTable } from "../features/projects/alerts/alerts-table";
+import { AlertStatusModal } from "../features/projects/alerts/alert-status";
+import { UploadDocumentModal } from "../features/projects/documents/upload-document";
+import { AiOutlineUpload } from "react-icons/ai";
+import { useParams } from "react-router";
+import { TransactionInfoCard } from "../features/projects/transactions/transaction-info-card";
+// import { t } from 'i18next';
+import { useTranslation } from "react-i18next";
+import { STATUS } from "../features/projects/status";
+import { useProject } from "utils/projects";
+import { ProjectType } from "types/project.type";
+import { Document } from "types/vendor.types";
+
+export const ProjectDetails: React.FC = (props) => {
+  const { t } = useTranslation();
+  const { projectId } = useParams<"projectId">();
+  const { projectData, isLoading } = useProject(projectId);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [alertRow, selectedAlertRow] = useState(null);
+  const [latestUploadedDoc, setLatestUploadedDoc] = useState<Document | null>(
+    null
+  );
+  const {
+    isOpen: isOpenTransactionModal,
+    onClose: onTransactionModalClose,
+    onOpen: onTransactionModalOpen,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenWorkOrderModal,
+    onClose: onWorkOrderModalClose,
+    onOpen: onWorkOrderModalOpen,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDocumentModal,
+    onClose: onDocumentModalClose,
+    onOpen: onDocumentModalOpen,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenAlertModal,
+    onClose: onAlertModalClose,
+    onOpen: onAlertModalOpen,
+  } = useDisclosure();
+  return (
+    <>
+      <Stack
+        w="100%"
+        spacing={8}
+        ref={tabsContainerRef}
+        h="calc(100vh - 160px)"
+      >
+        <TransactionInfoCard
+          projectData={projectData as ProjectType}
+          isLoading={isLoading}
+        />
+
+        <Stack w={{ base: "971px", xl: "100%" }} spacing={5}>
+          <Tabs
+            variant="enclosed"
+            onChange={(index) => setTabIndex(index)}
+            mt="7"
+          >
+            <TabList>
+              <Tab _selected={{ color: "white", bg: "button.300" }}>
+                {t("transaction")}
+              </Tab>
+
+              <Tab minW={180} _selected={{ color: "white", bg: "button.300" }}>
+                {t("vendorWorkOrders")}
+              </Tab>
+
+              <Tab _selected={{ color: "white", bg: "button.300" }}>
+                {" "}
+                {t("documents")}
+              </Tab>
+
+              <Tab _selected={{ color: "white", bg: "button.300" }}>
+                {" "}
+                {t("alerts")}
+              </Tab>
+
+              <Box
+                w="100%"
+                display="flex"
+                justifyContent="end"
+                position="relative"
+                bottom="2"
+              >
+                {tabIndex === 2 && (
+                  <Button
+                    onClick={onDocumentModalOpen}
+                    bg="#4E87F8"
+                    color="#FFFFFF"
+                    size="md"
+                    _hover={{ bg: "royalblue" }}
+                  >
+                    <Box
+                      pos="relative"
+                      right="6px"
+                      fontWeight="bold"
+                      pb="3.3px"
+                    >
+                      <AiOutlineUpload />
+                    </Box>
+                    {t("upload")}
+                  </Button>
+                )}
+                {tabIndex === 3 && (
+                  <Button
+                    bg="#4E87F8"
+                    color="#FFFFFF"
+                    size="md"
+                    _hover={{ bg: "royalblue" }}
+                  >
+                    <Box
+                      pos="relative"
+                      right="6px"
+                      fontWeight="bold"
+                      pb="3.3px"
+                    ></Box>
+                    {t("resolve")}
+                  </Button>
+                )}
+                {tabIndex === 0 && (
+                  <Button
+                    bg="#4E87F8"
+                    color="#FFFFFF"
+                    size="md"
+                    _hover={{ bg: "royalblue" }}
+                    onClick={onTransactionModalOpen}
+                  >
+                    {t("newTransaction")}
+                  </Button>
+                )}
+              </Box>
+            </TabList>
+
+            <TabPanels mt="31px" h="100%">
+              <TabPanel p="0px" h="100%">
+                <Box h="100%">
+                  <TransactionsTable ref={tabsContainerRef} />
+                </Box>
+              </TabPanel>
+              <TabPanel p="0px">
+                <Box h="100%" w="100%">
+                  <WorkOrdersTable ref={tabsContainerRef} />
+                </Box>
+              </TabPanel>
+              <TabPanel p="0px">
+                <Box h="100%" w="100%">
+                  <VendorDocumentsTable
+                    ref={tabsContainerRef}
+                    latestUploadedDoc={latestUploadedDoc as Document}
+                  />
+                </Box>
+              </TabPanel>
+              <TabPanel p="0px">
+                <Box h="100%" w="100%">
+                  <AlertsTable
+                    onRowClick={(e, row) => {
+                      selectedAlertRow(row.values);
+                      onAlertModalOpen();
+                    }}
+                  />
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Stack>
+      </Stack>
+      <AlertStatusModal
+        isOpen={isOpenAlertModal}
+        onClose={onAlertModalClose}
+        alert={alertRow}
+      />
+      <UploadDocumentModal
+        isOpen={isOpenDocumentModal}
+        onClose={onDocumentModalClose}
+        projectId={projectId}
+        setLatestUploadedDoc={(val) => {
+          setLatestUploadedDoc(val);
+        }}
+      />
+      <AddNewTransactionModal
+        isOpen={isOpenTransactionModal}
+        onClose={onTransactionModalClose}
+      />
+    </>
+  );
+};

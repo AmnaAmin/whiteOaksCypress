@@ -1,14 +1,23 @@
+import React from "react";
 import { HStack, Text, Flex } from "@chakra-ui/layout";
-import { ProjectCard } from "./project-card";
+import { ProjectSummaryCard } from "./project-summary-card";
+import { BiTrendingDown, BiTrendingUp } from "react-icons/bi";
+import { useVendorCards } from "utils/vendor-dashboard";
+// import { formatCurrencyNumberCompact } from '../../../shared/util/string-utils';
 import SummaryIconFirst, {
   SummaryIconFifth,
   SummaryIconForth,
   SummaryIconSecond,
   SummaryIconThird,
-  TopIconFirst,
-  TopIconSecond,
-} from "icons/project-icons";
+} from "../../icons/project-icons";
+import { useTranslation } from "react-i18next";
+import "components/translation/i18n";
+import numeral from "numeral";
+
 export const ProjectSummary = () => {
+  const { data: cards } = useVendorCards();
+  const { t } = useTranslation();
+
   return (
     <Flex
       boxShadow="1px 0px 70px rgb(0 0 0 / 10%)"
@@ -17,11 +26,11 @@ export const ProjectSummary = () => {
       bg="whiteAlpha.900"
       direction="column"
       boxSizing="border-box"
-      py={{ base: "7", lg: "7" }}
+      py="7"
       px={{ base: "3", lg: "7" }}
     >
-      <Text h="55px" marginBottom="8px" fontSize="22px" fontWeight="600">
-        Project Summary
+      <Text fontSize="22px" fontWeight="600">
+        {t("projectSummary")}
       </Text>
       <HStack
         justifyContent="space-between"
@@ -33,47 +42,54 @@ export const ProjectSummary = () => {
           lg: "repeat(3,1fr)",
           xl: "repeat(5,1fr)",
         }}
-        gridRowGap={{ base: "5px" }}
+        gridRowGap={{ base: "20px" }}
       >
-        <ProjectCard
-          UpdownIcon={TopIconFirst}
+        <ProjectSummaryCard
+          UpdownIcon={BiTrendingUp}
           BigIcon={SummaryIconFirst}
-          number={15}
-          name="Active Wo"
-          Iconbgcolor={" #FBF3DC"}
-          TopnumberbgColor={"#FBECED"}
+          number={cards?.find((c) => c.label === "active")?.count}
+          name={t("activeWO")}
+          Iconbgcolor={"gray.100"}
+          TopnumberbgColor={"red.100"}
+          numberColor={"rose.500"}
         />
-        <ProjectCard
-          UpdownIcon={TopIconSecond}
+        <ProjectSummaryCard
+          UpdownIcon={BiTrendingDown}
           BigIcon={SummaryIconSecond}
-          number={15}
-          name="Past Due"
-          Iconbgcolor={"#E3F0DF"}
-          TopnumberbgColor={"#E7F8EC"}
+          number={cards?.find((c) => c.label === "pastDue")?.count}
+          name={t("pastDue")}
+          Iconbgcolor={"blue.50"}
+          TopnumberbgColor={"green.100"}
+          numberColor={"green.500"}
         />
-        <ProjectCard
-          UpdownIcon={TopIconFirst}
+        <ProjectSummaryCard
+          UpdownIcon={BiTrendingUp}
           BigIcon={SummaryIconThird}
-          number={18}
-          name="Completed & invoiced"
-          Iconbgcolor={"#ECF2FE"}
-          TopnumberbgColor={"#FBECED"}
+          number={cards?.find((c) => c.label === "completedAndInvoiced")?.count}
+          name={t("completedInvoiced")}
+          Iconbgcolor={"purple.50"}
+          TopnumberbgColor={"red.100"}
+          numberColor={"rose.500"}
         />
-        <ProjectCard
-          UpdownIcon={TopIconSecond}
+        <ProjectSummaryCard
+          UpdownIcon={BiTrendingDown}
           BigIcon={SummaryIconForth}
-          number={23}
-          name="Completed & Not paid"
-          Iconbgcolor={" #FAE6E5"}
-          TopnumberbgColor={"#E7F8EC"}
+          number={cards?.find((c) => c.label === "notInvoiced")?.count}
+          name={t("completednotPaid")}
+          Iconbgcolor={"red.50"}
+          TopnumberbgColor={"green.100"}
+          numberColor={"green.500"}
         />
-        <ProjectCard
-          UpdownIcon={TopIconFirst}
+        <ProjectSummaryCard
+          UpdownIcon={BiTrendingDown}
           BigIcon={SummaryIconFifth}
-          name="Upcoming Payments"
-          Iconbgcolor={"#ECF2FE"}
-          TopnumberbgColor={"#E7F8EC"}
-          numbertext="$57k"
+          name={t("upcomingPayments")}
+          Iconbgcolor={"green.50"}
+          TopnumberbgColor={"green.100"}
+          numberColor={"green.500"}
+          numbertext={numeral(
+            cards?.find((c) => c.label === "upcomingInvoiceTotal")?.count
+          ).format("($0.00a)")} // HK|WOA-1736
         />
       </HStack>
     </Flex>

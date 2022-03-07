@@ -1,26 +1,21 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import { Dashboard } from "./pages/dashboard";
-import { Examples } from "pages/examples";
-import { Projects } from "pages/projects";
+import { ChakraProvider } from "@chakra-ui/react";
 
-function App() {
-  alert(
-    `AuthenticationToken: ${localStorage.getItem("jhi-authenticationToken")}`
-  );
-  console.log(process.env.PUBLIC_URL);
+import { theme } from "theme/theme";
+
+import { useAuth } from "utils/auth-context";
+import AuthenticatedApp from "authenticated-app";
+import UnAuthenticatedApp from "unauthenticated-app";
+
+export default function App() {
+  const { data } = useAuth();
+  const user = data?.user;
+
   return (
-    <Router basename={process.env.PUBLIC_URL}>
-      <Routes>
-        <Route path="/vendorportal/examples/*" element={<Examples />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/vendors" element={<Projects />} />
-        <Route path="/" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <ChakraProvider theme={theme}>
+      <Router>{user ? <AuthenticatedApp /> : <UnAuthenticatedApp />}</Router>
+    </ChakraProvider>
   );
 }
-
-export default App;

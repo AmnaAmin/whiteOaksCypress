@@ -1,11 +1,54 @@
-import { VStack, Text, Flex, Box, Tag, Progress } from "@chakra-ui/react";
+import React from "react";
+import {
+  VStack,
+  Text,
+  Flex,
+  Box,
+  Tag,
+  Progress,
+  Heading,
+} from "@chakra-ui/react";
+
 import { Card } from "../card/card";
-import { ProgressData } from "../Progress/progressData";
 import { SimpleSlider } from "./SimpleSlider";
+import { useVendorEntity } from "utils/vendor-dashboard";
+import { useTranslation } from "react-i18next";
+import "components/translation/i18n";
+import { LicenseDocument } from "types/vendor.types";
+import { dateFormat } from "utils/date-time-utils";
 
-const ProgressValue = [1, 5];
+const LicenseType: { [key: number]: string } = {
+  1: "Electrical",
+  2: "Plumbing",
+  3: "General Contractor",
+  4: "Roofing",
+  5: "Architecture",
+  6: "Mechanical",
+};
 
-export const VendorScore = () => {
+export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
+  const { data: vendorEntity } = useVendorEntity(vendorId);
+  const scoreProgress = (vendorEntity?.score ?? 0 / 5) * 100;
+  const { t } = useTranslation();
+
+  const defaultData = [
+    {
+      title: "COI WC",
+      date: vendorEntity?.coiWcExpirationDate,
+    },
+    {
+      title: "COI GL",
+      date: vendorEntity?.coiglExpirationDate,
+    },
+    {
+      title: "Agreement Signed",
+      date: vendorEntity?.agreementSignedDate,
+    },
+    {
+      title: "Auto Insurance",
+      date: vendorEntity?.autoInsuranceExpirationDate,
+    },
+  ].filter((item) => item.date);
   return (
     <>
       <Card w="100%" mb="22px">
@@ -17,40 +60,63 @@ export const VendorScore = () => {
         >
           <VStack py="4" alignItems="start">
             <Tag size="md" color="green.500" bg="green.100">
-              Active
+              {vendorEntity?.statusLabel}
             </Tag>
-            <Text fontSize="22px">Vendor Score</Text>
-            <Flex alignItems="center" w="100%">
+            <Heading fontSize="22px">{t("vendorScore")}</Heading>
+            <Flex alignItems="baseline" w="100%">
               <Box flex="1" maxW="200px" mr="10px">
-                <Progress value={60} borderRadius="2px" />
-              </Box>
-
-              <Box w="100px">
-                <ProgressData
-                  firstValue={ProgressValue[0]}
-                  secondValue={ProgressValue[1]}
+                <Progress
+                  value={scoreProgress}
+                  borderRadius="2px"
+                  colorScheme="barColor"
+                  height="11px"
                 />
+              </Box>
+              <Box px="2">
+                <Flex
+                  pos="relative"
+                  fontWeight={800}
+                  color="gray.800"
+                  w="100%"
+                  alignItems="center"
+                >
+                  <Text fontSize="30px" mb="4px">
+                    {vendorEntity?.score}
+                  </Text>
+                  <Text fontSize="16px" px="1">
+                    out of 5
+                  </Text>
+                </Flex>
               </Box>
             </Flex>
           </VStack>
-
           <Flex
-            w="100%"
             justifyContent="space-between"
+            overflow="auto"
             direction={{
               base: "column",
               md: "row",
             }}
           >
             <Box
+              overflow="hidden"
+              padding={2}
               flex="1"
-              mr={{ base: "0", md: "15px" }}
+              mr={{ base: "0", md: "10px" }}
               mb={{ base: "15px", md: "0" }}
             >
-              <SimpleSlider heading={"Insurance"} />
+              <SimpleSlider heading={t("insurance")} data={defaultData} />
             </Box>
-            <Box flex="1">
-              <SimpleSlider heading={"License"} />
+            <Box flex="1" overflow="hidden" padding={2}>
+              <SimpleSlider
+                heading={t("license")}
+                data={vendorEntity?.licenseDocuments
+                  ?.sort((curr: any, pre: any) => pre.id - curr.id)
+                  .map((licenseDocument: LicenseDocument) => ({
+                    title: LicenseType[licenseDocument.licenseType],
+                    date: dateFormat(licenseDocument.licenseExpirationDate),
+                  }))}
+              />
             </Box>
           </Flex>
         </Box>
