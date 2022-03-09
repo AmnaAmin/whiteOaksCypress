@@ -19,7 +19,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaAngleDown, FaAngleUp, FaBell } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useAuth } from "utils/auth-context";
-import LogoIcon from "icons/header-logo";
+// import LogoIcon from "../../icons/header-logo";
 import { RouterLink } from "../router-link/router-link";
 
 // const Notification = React.lazy(() => import("./notification")); // Lazy-loaded
@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             onClick={toggleMenu}
             display={{ base: "inline", lg: "none" }}
           />
-          <LogoIcon />
+          {/* <LogoIcon /> */}
         </Flex>
 
         <HStack spacing="5">
