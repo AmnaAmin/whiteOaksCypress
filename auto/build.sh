@@ -6,6 +6,8 @@ PARENT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 
 echo "🛠 Building project..."
 
+export NODE_OPTIONS=--max_old_space_size=6144
+
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
 
