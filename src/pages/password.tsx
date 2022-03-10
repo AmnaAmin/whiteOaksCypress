@@ -197,7 +197,7 @@ const VendorProfilePassword = () => {
                 Password Strength
               </FormLabel>
 
-              <SimpleGrid columns={3} rows={1} gap={5} w="215px">
+              <SimpleGrid columns={3} row={1} gap={5} w="215px">
                 <Progress
                   colorScheme={colorScheme}
                   w="71px"

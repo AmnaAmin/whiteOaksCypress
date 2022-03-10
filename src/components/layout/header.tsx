@@ -129,8 +129,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           {/** User Dropdown Menu */}
           <Menu placement="bottom">
             <MenuButton
-              variant="text"
-              colorScheme="blue"
+              // variant="text"
+              // colorScheme="blue"
               bgSize="auto"
               w={{ base: "50px", md: "auto" }}
               onClick={() => {

@@ -159,7 +159,7 @@ export const Settings = React.forwardRef((props, ref) => {
         <Box
           id="footer"
           w="100%"
-          align="end"
+          // align="end"
           mt={25}
           padding="10px"
           borderTop="1px solid #E2E8F0"

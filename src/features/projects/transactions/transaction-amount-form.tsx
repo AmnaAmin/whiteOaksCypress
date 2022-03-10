@@ -187,7 +187,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           <Box
             color="barColor.100"
             border="1px solid #e2e8f0"
-            a
+            // a
             borderRadius="4px"
             fontSize="16px"
           >

@@ -156,7 +156,7 @@ export const UploadDocumentModal: React.FC<any> = ({
                   <Box
                     color="barColor.100"
                     border="1px solid #e2e8f0"
-                    a
+                    // a
                     borderRadius="3px"
                     fontSize="16px"
                   >

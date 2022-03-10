@@ -192,8 +192,8 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                     <>
                       <Flex
                         justifyContent={"space-between"}
-                        variant="outline"
-                        size="lg"
+                        // variant="outline"
+                        // size="lg"
                         rounded={4}
                         bg="gray.100"
                       >
@@ -220,7 +220,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
         <Box
           id="footer"
           w="100%"
-          align="end"
+          // align="end"
           padding="10px"
           borderTop="1px solid #E2E8F0"
           minH="60px"

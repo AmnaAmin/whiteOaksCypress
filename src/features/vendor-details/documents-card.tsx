@@ -156,7 +156,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             </Flex>
           </HStack>
 
-          <Box minh="96px" mt={12}>
+          <Box minH="96px" mt={12}>
             <Text fontSize="16px" fontWeight={600} color="#2D3748">
               {t("agreementSignedDate")}
             </Text>
@@ -214,7 +214,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             <Divider border="1px solid " />
           </HStack>
 
-          <Box minh="96px" mt={12}>
+          <Box minH="96px" mt={12}>
             <Text fontSize="16px" fontWeight={600} color="#2D3748">
               {t("autoInsuranceExpDate")}
             </Text>
@@ -267,7 +267,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
           <Divider border="1px solid " />
 
-          <Box minh="96px" mt={8}>
+          <Box minH="96px" mt={8}>
             <Text fontSize="16px" fontWeight={600} color="#2D3748">
               {t("COIGLExpDate")}
             </Text>
@@ -319,7 +319,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
           <Divider border="1px solid " />
 
-          <Box minh="96px" mt={8}>
+          <Box minH="96px" mt={8}>
             <Text fontSize="16px" fontWeight={600} color="#2D3748">
               {t("COIWCExpDate")}
             </Text>
@@ -374,7 +374,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
           id="footer"
           w="100%"
           minH="60px"
-          align="end"
+          // align="end"
           padding="10px"
           pt={10}
           borderTop="1px solid #E2E8F0"
