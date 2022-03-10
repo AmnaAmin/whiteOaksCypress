@@ -19,6 +19,7 @@ else
 fi
 
   ls build
+  rm -rf output
   mkdir output
   cp -r build/* output
   zip -r output.zip output
