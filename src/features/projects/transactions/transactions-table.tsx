@@ -1,17 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {
-  Box,
-  Td,
-  Tr,
-  Text,
-  Flex,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  Tag,
-} from "@chakra-ui/react";
-import { TransactionData } from "components/table/make-data";
+import { Box, Td, Tr, Text, Flex, useDisclosure, Tag } from "@chakra-ui/react";
 import { useColumnWidthResize } from "utils/hooks/useColumnsWidthResize";
 import ReactTable, { RowProps } from "components/table/react-table";
 import { useTransactions } from "utils/transactions";
@@ -43,7 +31,6 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 };
 
-const serverData = TransactionData(1000);
 const COLUMNS = [
   {
     Header: "ID",
@@ -125,8 +112,8 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<"projectId">();
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>();
-  const { transactions = [], isLoading } = useTransactions(projectId);
-  const { columns, resizeElementRef } = useColumnWidthResize(COLUMNS, ref);
+  const { transactions = [] } = useTransactions(projectId);
+  const { columns } = useColumnWidthResize(COLUMNS, ref);
   const {
     isOpen: isOpenEditModal,
     onOpen: onEditModalOpen,

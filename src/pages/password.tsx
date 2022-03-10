@@ -15,7 +15,6 @@ import {
   SimpleGrid,
   InputRightElement,
   InputGroup,
-  InputLeftElement,
   useToast,
 } from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
@@ -25,14 +24,9 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import zxcvbn from "zxcvbn";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Layout } from "../components/layout";
 import { PasswordFormValues } from "../types/account.types";
 import { successMessage } from "utils/api-messages";
-import {
-  PasswordFormValidationSchema,
-  usePasswordFormValidationResolver,
-  useYupValidationResolver,
-} from "utils/form-validation";
+import { PasswordFormValidationSchema } from "utils/form-validation";
 import { usePasswordUpdateMutation } from "utils/user-account";
 
 const textStyle = {
@@ -89,13 +83,10 @@ const VendorProfilePassword = () => {
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm<PasswordFormValues>({
     resolver: yupResolver(PasswordFormValidationSchema),
   });
-
-  const values = watch();
 
   const onsubmit = ({ newPassword, currentPassword }: PasswordFormValues) => {
     const payload = { newPassword, currentPassword };

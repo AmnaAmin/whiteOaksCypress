@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "https://dev2.woaharvest.com",
+  "homepage": "/vendorportal/",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.17",
     "@chakra-ui/react": "^1.6.12",

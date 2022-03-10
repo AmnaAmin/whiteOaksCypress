@@ -6,19 +6,9 @@ import {
   TabPanel,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  Badge,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  Spacer,
-  Stack,
-} from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import { Box, Button, Stack } from "@chakra-ui/react";
+import React, { useRef, useState } from "react";
 
-import { Layout } from "../components/layout";
 import { TransactionsTable } from "../features/projects/transactions/transactions-table";
 import { AddNewTransactionModal } from "../features/projects/transactions/add-update-transaction";
 import { VendorDocumentsTable } from "../features/projects/documents/documents-table";
@@ -31,7 +21,6 @@ import { useParams } from "react-router";
 import { TransactionInfoCard } from "../features/projects/transactions/transaction-info-card";
 // import { t } from 'i18next';
 import { useTranslation } from "react-i18next";
-import { STATUS } from "../features/projects/status";
 import { useProject } from "utils/projects";
 import { ProjectType } from "types/project.type";
 import { Document } from "types/vendor.types";
@@ -50,11 +39,6 @@ export const ProjectDetails: React.FC = (props) => {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
-  } = useDisclosure();
-  const {
-    isOpen: isOpenWorkOrderModal,
-    onClose: onWorkOrderModalClose,
-    onOpen: onWorkOrderModalOpen,
   } = useDisclosure();
   const {
     isOpen: isOpenDocumentModal,

@@ -42,10 +42,7 @@ import {
 import { dateFormat } from "utils/date-time-utils";
 import { useFieldShowHideDecision } from "./hooks";
 import { TransactionAmountForm } from "./transaction-amount-form";
-import {
-  useUserProfile,
-  useUserRolesSelector,
-} from "utils/redux-common-selectors";
+import { useUserProfile } from "utils/redux-common-selectors";
 import { useTranslation } from "react-i18next";
 import { Account } from "types/account.types";
 
@@ -122,7 +119,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         createChangeOrder(payload, queryOptions);
       }
     },
-    [projectId, transaction]
+    [createChangeOrder, onClose, projectId, transaction, updateChangeOrder]
   );
 
   const resetExpectedCompletionDateFields = useCallback(
@@ -154,7 +151,14 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
       setValue("against", againstOptions?.[0]);
       resetExpectedCompletionDateFields(againstOptions?.[0]);
     }
-  }, [transaction, againstOptions.length, setValue]);
+  }, [
+    transaction,
+    againstOptions.length,
+    setValue,
+    againstOptions,
+    reset,
+    resetExpectedCompletionDateFields,
+  ]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">

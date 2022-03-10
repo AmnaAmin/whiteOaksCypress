@@ -5,21 +5,19 @@ import { TradeList } from "../features/vendor-details/trades";
 import { MarketList } from "../features/vendor-details/markets";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { Box, Stack } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
-import { Layout } from "../components/layout";
+import React, { useState } from "react";
 import { License } from "../features/vendor-details/license";
 import { DocumentsCard } from "../features/vendor-details/documents-card";
 // import { t } from 'i18next';
 import { useTranslation } from "react-i18next";
 import "components/translation/i18n";
 import { Account } from "types/account.types";
-import { VendorProfile, VendorProfilePayload } from "types/vendor.types";
+import { VendorProfile } from "types/vendor.types";
 
 export const VendorProfilePage: React.FC = (props) => {
   const { t } = useTranslation();
-  const tabsContainerRef = useRef();
   const { vendorId } = useUserProfile() as Account;
-  const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId);
+  const { data: vendorProfileData } = useVendorProfile(vendorId);
   const [tabIndex, setTabIndex] = useState(0);
 
   const setNextTab = () => {

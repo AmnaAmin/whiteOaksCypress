@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, Td, Tr, Text, Flex, Tag } from "@chakra-ui/react";
-import { projectData } from "components/table/make-data";
-import { useColumnWidthResize } from "utils/hooks/useColumnsWidthResize";
+import React, { useEffect, useState } from "react";
+import { Box, Td, Tr, Text, Flex } from "@chakra-ui/react";
 import ReactTable, { RowProps } from "../../components/table/react-table";
 import { Link } from "react-router-dom";
 import { useProjects } from "utils/projects";
@@ -109,7 +107,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
 }) => {
-  const { projects, isLoading } = useProjects();
+  const { projects } = useProjects();
   const [filterProjects, setFilterProjects] = useState(projects);
 
   useEffect(() => {

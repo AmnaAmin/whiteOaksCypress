@@ -24,7 +24,6 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({
   const { markets } = useMarkets();
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation();
   const {
-    register,
     handleSubmit,
     control,
     reset,

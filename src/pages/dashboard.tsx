@@ -5,33 +5,22 @@ import {
   Spacer,
   VStack,
   Text,
-  Collapse,
   useDisclosure,
   Heading,
-  Stack,
 } from "@chakra-ui/react";
 
-import { Layout } from "../components/layout";
 import { ProjectSummary } from "../features/dashboard/project-summary";
 import { VendorScore } from "../components/VendorScore/vendor-score";
 import { Card } from "../components/card/card";
 import Overview from "../components/chart/Overview";
 import PaidChart from "../components/chart/paid-chart";
-import {
-  usePaidWOAmountByYearAndMonthTotal,
-  useVendorEntity,
-  useWoByVendorsPerMonth,
-} from "utils/vendor-dashboard";
-import Numeral from "numeral";
+import { usePaidWOAmountByYearAndMonthTotal } from "utils/vendor-dashboard";
 import Dropdown from "../components/dropdown-menu/Dropdown";
 
-import { first } from "lodash";
 import { MonthOption, monthOptions } from "utils/date-time-utils";
 import { useTranslation } from "react-i18next";
 import "components/translation/i18n";
 import { numberWithCommas } from "utils";
-
-const amount = Numeral(72422).format("$0,0");
 
 export const Dashboard: React.FC = () => {
   const vendorId = 4;
@@ -39,8 +28,8 @@ export const Dashboard: React.FC = () => {
   //   (state: IRootState) => state.authentication.account,
   //   shallowEqual
   // );
-  const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
-  const { isOpen, onToggle } = useDisclosure();
+  // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
+  const { onToggle } = useDisclosure();
   const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0]);
   const { data: paidTotal = "" } = usePaidWOAmountByYearAndMonthTotal(
     paidOption?.year ?? "",

@@ -1,9 +1,6 @@
 import { Box, Heading, useColorModeValue } from "@chakra-ui/react";
-import * as React from "react";
-import { useAuth } from "utils/auth-context";
 import { Card } from "../features/login-form-centered/Card";
 import { LoginForm } from "../features/login-form-centered/LoginForm";
-import { Logo } from "../features/login-form-centered/Logo";
 
 export const Login = () => {
   return (

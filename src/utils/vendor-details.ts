@@ -4,11 +4,8 @@ import _ from "lodash";
 import { useMutation, useQuery } from "react-query";
 import {
   License,
-  LicenseDocument,
-  LicenseFormValues,
   Market,
   Trade,
-  Vendor,
   VendorMarketFormValues,
   VendorProfile,
   VendorProfileDetailsFormData,
@@ -230,7 +227,7 @@ export const readFileContent = async (file: File) => {
 export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
   const licenses: License[] = [];
   vendor.licenseDocuments &&
-    vendor.licenseDocuments.map((license) => {
+    vendor.licenseDocuments.forEach((license) => {
       const licenseObject = {
         licenseType: license.licenseType,
         licenseNumber: license.licenseNumber,

@@ -24,7 +24,6 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({
   const { data: trades } = useTrades();
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation();
   const {
-    register,
     handleSubmit,
     control,
     reset,

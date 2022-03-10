@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import * as yup from "yup";
-import { PasswordFormValues } from "../types/account.types";
 
 export const useYupValidationResolver = (validationSchema) =>
   useCallback(

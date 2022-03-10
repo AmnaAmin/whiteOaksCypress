@@ -1,13 +1,10 @@
 import {
   ProjectType,
   ProjectWorkOrderType,
-  ProjectColumnType,
   ProjectAlertType,
 } from "types/project.type";
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { projectColumnData } from "../components/table/make-data";
+import { useQuery } from "react-query";
 import { useClient } from "utils/auth-context";
-import { TableColumnSetting } from "../types/table-column.types";
 
 const PROJECTS_QUERY_KEY = "projects";
 export const useProjects = () => {

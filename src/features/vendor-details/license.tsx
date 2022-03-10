@@ -5,16 +5,13 @@ import {
   HStack,
   VStack,
   Center,
-  Link,
-  Input,
   Divider,
   Flex,
-  border,
 } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
 import { MdOutlineCancel } from "react-icons/md";
 import "react-datepicker/dist/react-datepicker.css";
-import { useFieldArray, useForm, FieldValues } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import {
   licenseTypes,
   useSaveVendorDetails,
@@ -26,13 +23,7 @@ import { FormSelect } from "../../components/react-hook-form-fields/select";
 import { FormInput } from "../../components/react-hook-form-fields/input";
 import { FormDatePicker } from "../../components/react-hook-form-fields/date-picker";
 import { FormFileInput } from "../../components/react-hook-form-fields/file-input";
-import {
-  Vendor,
-  LicenseFormValues,
-  VendorProfile,
-} from "../../types/vendor.types";
-import { Card } from "components/card/card";
-// import { t } from 'i18next';
+import { LicenseFormValues, VendorProfile } from "../../types/vendor.types";
 import { useTranslation } from "react-i18next";
 import "components/translation/i18n";
 
@@ -68,7 +59,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 
   useEffect(() => {
     reset(defaultValues);
-  }, [props.vendor, reset]);
+  }, [defaultValues, props.vendor, reset]);
 
   const {
     fields: licenseFields,
@@ -87,7 +78,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
       console.log("Value Change", value);
     });
     return () => subscription.unsubscribe();
-  }, [watchAllFields]);
+  }, [watch, watchAllFields]);
 
   const onSubmit = useCallback(
     async (values) => {
@@ -102,7 +93,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
         },
       });
     },
-    [props.vendor, props.setNextTab]
+    [props, saveLicenses]
   );
 
   return (
