@@ -1,31 +1,15 @@
 import {
-  Stack,
   Box,
   HStack,
   Text,
   Flex,
   SimpleGrid,
   Button,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
   Checkbox,
-  Grid,
-  GridItem,
 } from "@chakra-ui/react";
 import React from "react";
-import { CalendarIcon } from "@chakra-ui/icons";
 
-import DatePicker from "components/form/date-picker";
-import InputView from "components/input-view/input-view";
-
-import WorkOrderStatus from "../work-order-status";
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from "react-icons/bi";
-import { t } from "i18next";
-import { isDisabled } from "@chakra-ui/utils";
 import { useTranslation } from "react-i18next";
 
 type WODates = {

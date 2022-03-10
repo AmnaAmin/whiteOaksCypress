@@ -1,18 +1,12 @@
 import React from "react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Center,
   CenterProps,
   Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Progress,
   Text,
 } from "@chakra-ui/react";
-import { useProject } from "utils/projects";
 import { dateFormat } from "utils/date-time-utils";
 import Status from "../status";
 // import { t } from 'i18next';

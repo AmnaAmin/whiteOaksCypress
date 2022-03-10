@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { workOrderData } from "components/table/make-data";
 import { useColumnWidthResize } from "utils/hooks/useColumnsWidthResize";
 import ReactTable, { RowProps } from "../../components/table/react-table";
-import { currencyFormatter } from "utils/stringFormatters";
 import WorkOrderStatus from "./work-order-status";
 import { useProjectWorkOrders } from "utils/projects";
 import { dateFormat } from "utils/date-time-utils";
 import WorkOrderDetails from "./modals/work-order-details";
 import { useTranslation } from "react-i18next";
 import { ProjectWorkOrderType } from "types/project.type";
-
-const serverData = workOrderData(1000);
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -64,7 +60,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
     projectId
   );
 
-  const { columns, resizeElementRef } = useColumnWidthResize(
+  const { columns } = useColumnWidthResize(
     [
       {
         Header: "WO Status",

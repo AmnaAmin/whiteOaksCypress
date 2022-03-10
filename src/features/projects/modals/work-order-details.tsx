@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   useDisclosure,
   Modal,
@@ -7,8 +7,6 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
-  Button,
   Text,
   Tabs,
   TabList,
@@ -16,10 +14,8 @@ import {
   Tab,
   TabPanel,
   Stack,
-  Box,
   Divider,
   Center,
-  Flex,
 } from "@chakra-ui/react";
 import { ProjectWorkOrderType } from "../../../types/project.type";
 import WorkOrderDetailTab from "./work-order-detail-tab";
@@ -37,14 +33,11 @@ const WorkOrderDetails = ({
 }) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure();
-  const [tabIndex, setTabIndex] = useState(0);
-
-  console.log({ workOrder });
 
   const onClose = useCallback(() => {
     onCloseDisclosure();
     close();
-  }, []);
+  }, [close, onCloseDisclosure]);
 
   useEffect(() => {
     if (workOrder) {
@@ -52,7 +45,7 @@ const WorkOrderDetails = ({
     } else {
       onCloseDisclosure();
     }
-  }, [workOrder]);
+  }, [onCloseDisclosure, onOpen, workOrder]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="none">
@@ -79,7 +72,7 @@ const WorkOrderDetails = ({
         <Divider mb={3} />
         <ModalBody>
           <Stack spacing={5}>
-            <Tabs variant="enclosed" onChange={(index) => setTabIndex(index)}>
+            <Tabs variant="enclosed">
               <TabList>
                 <Tab
                   minW={180}

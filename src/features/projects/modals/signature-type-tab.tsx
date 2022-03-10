@@ -21,11 +21,14 @@ export const SignatureTab = (props) => {
     handleSubmit,
   } = useForm({});
 
-  const onSubmit = useCallback((values) => {
-    console.log(values);
-    setSignature(values.signature);
-    onClose();
-  }, []);
+  const onSubmit = useCallback(
+    (values) => {
+      console.log(values);
+      setSignature(values.signature);
+      onClose();
+    },
+    [onClose, setSignature]
+  );
 
   return (
     <Stack>

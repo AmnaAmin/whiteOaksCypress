@@ -11,10 +11,8 @@ import {
   Spacer,
   Button,
   FormControl,
-  SimpleGrid,
   FormLabel,
   FormErrorMessage,
-  ButtonGroup,
   Grid,
   GridItem,
   useToast,
@@ -22,7 +20,6 @@ import {
 import { Icon } from "@chakra-ui/react";
 import {
   BiBriefcase,
-  BiCreditCard,
   BiCreditCardFront,
   BiMapPin,
   BiTrip,
@@ -31,21 +28,18 @@ import {
 import { HiOutlineLocationMarker, HiOutlineMap } from "react-icons/hi";
 import { Controller, useForm } from "react-hook-form";
 import {
-  Vendor,
   VendorProfile,
   VendorProfileDetailsFormData,
 } from "types/vendor.types";
 import {
   parseAPIDataToFormData,
   parseFormDataToAPIData,
-  useVendorProfile,
   useVendorProfileUpdateMutation,
   usePaymentMethods,
 } from "utils/vendor-details";
 // import { t } from 'i18next';
 import { useTranslation } from "react-i18next";
 import "components/translation/i18n";
-import axios from "axios";
 
 const textStyle = {
   color: "#2D3748",
@@ -130,7 +124,7 @@ export const Details: React.FC<{
   useEffect(() => {
     if (!vendorProfileData) return;
     reset(parseAPIDataToFormData(vendorProfileData));
-  }, [vendorProfileData]);
+  }, [reset, vendorProfileData]);
 
   const submitForm = useCallback(
     (formData: VendorProfileDetailsFormData) => {
@@ -151,7 +145,7 @@ export const Details: React.FC<{
         },
       });
     },
-    [updateVendorProfileDetails, vendorProfileData]
+    [toast, updateVendorProfileDetails, vendorProfileData]
   );
 
   return (

@@ -14,7 +14,7 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { BiText } from "react-icons/bi";
 import { SignatureTab } from "./signature-type-tab";
 import { useTranslation } from "react-i18next";
@@ -30,12 +30,12 @@ const SignatureModal = ({
 }) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure();
-  const [tabIndex, setTabIndex] = useState(0);
+  // const [tabIndex, setTabIndex] = useState(0);
 
   const onClose = useCallback(() => {
     onCloseDisclosure();
     close();
-  }, []);
+  }, [close, onCloseDisclosure]);
 
   useEffect(() => {
     if (open) {
@@ -43,7 +43,7 @@ const SignatureModal = ({
     } else {
       onCloseDisclosure();
     }
-  }, [open]);
+  }, [open, onOpen, onCloseDisclosure]);
 
   return (
     <Modal
@@ -59,7 +59,7 @@ const SignatureModal = ({
         <Divider mb={3} />
         <ModalBody h="50vh" overflow="scroll">
           <Stack w={{ base: "900px", xl: "100%" }} spacing={5}>
-            <Tabs variant="enclosed" onChange={(index) => setTabIndex(index)}>
+            <Tabs variant="enclosed">
               <TabList>
                 <Tab
                   minW={105}

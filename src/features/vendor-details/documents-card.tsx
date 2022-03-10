@@ -1,28 +1,11 @@
 import React, { useMemo, useCallback, useEffect } from "react";
-import {
-  Box,
-  Link,
-  Button,
-  Divider,
-  Flex,
-  HStack,
-  Text,
-  VStack,
-  Input,
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  Center,
-} from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { BiDownload, BiFile } from "react-icons/bi";
-import DatePicker from "react-datepicker";
-import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import { FormDatePicker } from "../../components/react-hook-form-fields/date-picker";
 import { FormFileInput } from "../../components/react-hook-form-fields/file-input";
 import {
-  Vendor,
   DocumentsCardFormValues,
   VendorProfile,
 } from "../../types/vendor.types";
@@ -84,7 +67,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
   useEffect(() => {
     reset(defaultValues);
-  }, [props, reset]);
+  }, [defaultValues, props, reset]);
 
   const documents = getValues();
 
@@ -95,7 +78,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
       console.log("Value Change", value);
     });
     return () => subscription.unsubscribe();
-  }, [watchAllFields]);
+  }, [watch, watchAllFields]);
 
   const onSubmit = useCallback(
     async (values) => {
@@ -118,7 +101,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
         },
       });
     },
-    [props.vendor, props.setNextTab]
+    [props, saveDocuments]
   );
 
   return (

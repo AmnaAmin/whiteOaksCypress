@@ -1,13 +1,5 @@
-import React, { useMemo, useCallback, useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  Avatar,
-  Text,
-  Flex,
-  border,
-} from "@chakra-ui/react";
+import React, { useCallback, useEffect } from "react";
+import { Box, Button, HStack, Avatar, Text, Flex } from "@chakra-ui/react";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
@@ -26,7 +18,7 @@ import { useTranslation } from "react-i18next";
 export const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings();
   const { data: account, refetch } = useAccountDetails();
-  const [lang, setLanguage] = useState(account?.langKey);
+  // const [lang, setLanguage] = useState(account?.langKey);
   const { i18n, t } = useTranslation();
 
   const settingsDefaultValue = (account) => {
@@ -44,7 +36,7 @@ export const Settings = React.forwardRef((props, ref) => {
     refetch();
     const element = document.getElementById("Avatar");
     element?.classList.add("form-file-input");
-  }, []);
+  }, [refetch]);
 
   const {
     register,
@@ -52,7 +44,6 @@ export const Settings = React.forwardRef((props, ref) => {
     handleSubmit,
     control,
     watch,
-    getValues,
     reset,
   } = useForm<SettingsValues>();
 
@@ -61,7 +52,7 @@ export const Settings = React.forwardRef((props, ref) => {
       const defaultSettings = settingsDefaultValue(account);
       reset(defaultSettings);
     }
-  }, [account]);
+  }, [account, reset]);
 
   /* debug purpose */
   const watchAllFields = watch();
@@ -70,31 +61,34 @@ export const Settings = React.forwardRef((props, ref) => {
       console.log("Value Change", value);
     });
     return () => subscription.unsubscribe();
-  }, [watchAllFields]);
+  }, [watch, watchAllFields]);
 
-  const onSubmit = useCallback(async (values) => {
-    let fileContents: any = null;
-    if (values.profilePicture && values.profilePicture[0]) {
-      fileContents = await readFileContent(values.profilePicture[0]);
-    }
-    const settingsPayload = {
-      firstName: values.firstName,
-      lastName: values.lastName,
-      langKey: values.language,
-      login: values.email,
-      avatarName:
-        values.profilePicture && values.profilePicture[0]
-          ? values.profilePicture[0].type
-          : null,
-      avatar: fileContents,
-    };
-    saveSettings(settingsPayload);
-    setTimeout(() => {
-      refetch();
-    }, 2000); // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
-    setLanguage(values.language);
-    i18n.changeLanguage(values.language);
-  }, []);
+  const onSubmit = useCallback(
+    async (values) => {
+      let fileContents: any = null;
+      if (values.profilePicture && values.profilePicture[0]) {
+        fileContents = await readFileContent(values.profilePicture[0]);
+      }
+      const settingsPayload = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        langKey: values.language,
+        login: values.email,
+        avatarName:
+          values.profilePicture && values.profilePicture[0]
+            ? values.profilePicture[0].type
+            : null,
+        avatar: fileContents,
+      };
+      saveSettings(settingsPayload);
+      setTimeout(() => {
+        refetch();
+      }, 2000); // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
+      // setLanguage(values.language);
+      i18n.changeLanguage(values.language);
+    },
+    [i18n, refetch, saveSettings]
+  );
 
   return (
     <Box>

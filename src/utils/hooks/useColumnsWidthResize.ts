@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { Column } from 'react-table';
-import { useCaptureElementResize } from './useCaptureElementResize';
+import { useMemo } from "react";
+import { Column } from "react-table";
+import { useCaptureElementResize } from "./useCaptureElementResize";
 
 /** @Hack: to capture the table container element width and based on that we decide to calculate the columns widths 
  passed to react-table for accurate calculation on in different resolutions of screen. Here we have one caveat.
@@ -12,14 +12,18 @@ export const useColumnWidthResize = (columns: Column[], ref?: any) => {
 
   const updatedColumns = useMemo(() => {
     const staticColumnWidth = columns.reduce(
-      (totalWidth, column) => (column.width ? totalWidth + (column.width as number) : totalWidth),
+      (totalWidth, column) =>
+        column.width ? totalWidth + (column.width as number) : totalWidth,
       0
     );
-    const noOfColumnsWithoutWidth = columns.filter(column => !column.width).length;
+    const noOfColumnsWithoutWidth = columns.filter((column) => !column.width)
+      .length;
     const calculateColumnWidth = () =>
-      noOfColumnsWithoutWidth > 0 && size?.width ? (size?.width - staticColumnWidth) / noOfColumnsWithoutWidth : 250;
+      noOfColumnsWithoutWidth > 0 && size?.width
+        ? (size?.width - staticColumnWidth) / noOfColumnsWithoutWidth
+        : 250;
 
-    return columns.map(column => {
+    return columns.map((column) => {
       if (!column.width) {
         const newWidth = calculateColumnWidth();
         return { ...column, width: newWidth };

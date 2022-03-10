@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 /** @Hack: to capture the table container element width and based on that we decide to calculate the columns widths 
  passed to react-table for accurate calculation on in different resolutions of screen. Here we have one caveat.
@@ -16,16 +16,16 @@ export const useCaptureElementResize = (ref?: any) => {
       setSize(containerRef?.current?.getBoundingClientRect());
     };
 
-    window.addEventListener('resize', measuer);
+    window.addEventListener("resize", measuer);
 
     setTimeout(() => {
       measuer();
     }, 500);
 
     return () => {
-      window.removeEventListener('resize', measuer);
+      window.removeEventListener("resize", measuer);
     };
-  }, [resizeElementRef, ref?.current]);
+  }, [resizeElementRef, ref]);
 
   return { resizeElementRef: ref || resizeElementRef, size };
 };
