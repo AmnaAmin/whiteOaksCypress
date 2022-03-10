@@ -17,9 +17,7 @@ if [ "prod" = $ENV ]; then
 else 
   npm run webpack:build
 fi
-
   ls build
-  rm -rf output
   mkdir output
   cp -r build/* output
   zip -r output.zip output
