@@ -33,12 +33,12 @@ export const Projects = () => {
 
   return (
     <>
-      <Box mb={4}>
+      <Box>
         <Heading color="#4A5568" fontSize={20} fontWeight={800}>
           {t("projectsHeading")}
         </Heading>
       </Box>
-      <VStack w="100%" h="calc(100vh - 160px)">
+      <VStack w="100%" h="calc(100vh - 190px)">
         <Box mb={7} w="100%">
           <ProjectFilters
             onSelectCard={setSelectedCard}
@@ -46,7 +46,7 @@ export const Projects = () => {
           />
         </Box>
         <Stack
-          w={{ base: "100%", xl: "100%" }}
+          w="100%"
           direction="row"
           justify="flex-end"
           pb="10px"
@@ -77,7 +77,12 @@ export const Projects = () => {
           )}
         </Stack>
 
-        <Box w="100%" flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+        <Box
+          w="100%"
+          h={500}
+          flex={1}
+          boxShadow="1px 0px 70px rgb(0 0 0 / 10%)"
+        >
           <ProjectsTable
             selectedCard={selectedCard as string}
             setTableInstance={setProjectTableInstance}
