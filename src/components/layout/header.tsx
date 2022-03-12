@@ -47,14 +47,22 @@ const UserInfo: React.FC = () => {
       >
         <Flex alignItems="center">
           <Text
-            fontSize="md"
+            fontSize="12px"
             pr="1"
-            color={mode("blackAlpha.800", "whiteAlpha.800")}
+            fontWeight={500}
+            fontFamily="Inter"
+            fontStyle="normal"
+            color="#4A5568"
           >
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="sm" color={mode("blackAlpha.700", "whiteAlpha.700")}>
+        <Text
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={500}
+          color=" #A0AEC0"
+        >
           {isAdmin ? "Admin" : "User"}
         </Text>
       </VStack>
@@ -139,7 +147,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             >
               <UserInfo />
             </MenuButton>
-            <MenuList minWidth="243px">
+            <MenuList minWidth="279px">
               <MenuItem>
                 <RouterLink to="/settings">Settings</RouterLink>
               </MenuItem>
@@ -158,7 +166,12 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 </Box>
               </MenuItem>
             </MenuList>
-            <Box position="relative" bottom=" 8.5px" right=" 16px">
+            <Box
+              position="relative"
+              bottom=" 8.5px"
+              right=" 16px"
+              color="#4A5568"
+            >
               {show ? <FaAngleDown /> : <FaAngleUp />}
             </Box>
           </Menu>

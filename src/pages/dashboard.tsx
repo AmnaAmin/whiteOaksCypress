@@ -49,10 +49,13 @@ export const Dashboard: React.FC = () => {
 
       <Box w="100%">
         <Text
-          fontSize="22px"
+          fontSize="20px"
           fontWeight={700}
+          fontStyle="normal"
+          color="#4A5568"
           paddingInlineStart="14px"
           m="15px 0 10px"
+          lineHeight="28px"
         >
           {t("WOstatusGraph")}
         </Text>
@@ -68,12 +71,13 @@ export const Dashboard: React.FC = () => {
         pb="10px"
       >
         <Card rounded="13px" flex={1}>
-          <Flex mb="70px" mt="20px">
+          <Flex mb="40px" mt="20px">
             <Text
-              color="#2D3748"
-              fontWeight="bold"
-              fontSize="20px"
-              lineHeight="26px"
+              color="#4A5568"
+              fontStyle="normal"
+              fontWeight={600}
+              fontSize="18px"
+              lineHeight="28px"
               ml="17px"
             >
               {t("overview")}
@@ -90,32 +94,45 @@ export const Dashboard: React.FC = () => {
           mt={{ base: "30px", xl: 0 }}
         >
           <Flex mb="40px">
-            <Text
+            <Box
               pos="relative"
               onClick={onToggle}
-              fontSize="24px"
-              fontWeight={700}
-              left={50}
-              top="32px"
-              color="#1B2559"
+              lineHeight="28px"
+              fontStyle="normal"
+              fontSize="18px"
+              color="#4A5568"
+              fontWeight={600}
+              left="24px"
+              top="39px"
             >
               {t("paid")}
               <Box
                 bg="white"
                 padding="20px 40px 20px 40px"
                 mt="10px"
+                mb="4px"
                 boxShadow="0px 18px 40px rgba(112, 144, 176, 0.12)"
                 rounded="8px"
               >
-                <Text fontWeight="normal" fontSize="12px" color="#A3AED0">
+                <Text
+                  fontWeight={500}
+                  fontStyle="normal"
+                  fontSize="12px"
+                  color="#A3AED0"
+                >
                   {t("paidSmall")}
                 </Text>
 
-                <Heading fontSize="22px">
+                <Heading
+                  fontSize="18px"
+                  fontWeight={600}
+                  fontStyle="normal"
+                  color="#4A5568"
+                >
                   ${numberWithCommas(paidTotal)}
                 </Heading>
               </Box>
-            </Text>
+            </Box>
             <Spacer />
             <Box pos="relative" top="30px" right={35} w="180px">
               <Dropdown

@@ -1,9 +1,24 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { FaAngleDown } from "react-icons/fa";
-import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Box,
+  HStack,
+  Stack,
+} from "@chakra-ui/react";
 import Flags from "country-flag-icons/react/3x2";
 import { useSaveLanguage, useAccountDetails } from "utils/vendor-details";
+
+const languageStyle = {
+  paddingRight: "5px",
+  fontWeight: 500,
+  fontSize: "14px",
+  color: "#4A5568",
+};
 
 const DropdownLanguage = () => {
   const { i18n } = useTranslation();
@@ -48,54 +63,46 @@ const DropdownLanguage = () => {
         bgSize="auto"
         w={{ base: "50px", md: "auto" }}
       >
-        {account?.langKey === "en" ? (
-          <div
-            style={{
-              width: "30px",
-              height: "20px",
-              paddingRight: "5px",
-              display: "inline",
-            }}
-          >
-            <Flags.US
-              title="United States of America"
-              className="..."
-              style={{
-                width: "30px",
-                height: "20px",
-                paddingRight: "5px",
-                display: "inline",
-              }}
-            />
-            English
-          </div>
-        ) : (
-          <div
-            style={{
-              width: "30px",
-              height: "20px",
-              paddingRight: "5px",
-              display: "inline",
-            }}
-          >
-            <Flags.ES
-              title="Espanol"
-              className="..."
-              style={{
-                width: "30px",
-                height: "20px",
-                paddingRight: "5px",
-                display: "inline",
-              }}
-            />
-            Espanol
-          </div>
-        )}
+        <Stack direction="row" alignItems="center" spacing={-1}>
+          {account?.langKey === "en" ? (
+            <Box sx={languageStyle} display="inline-flex">
+              <Flags.US
+                title="United States of America"
+                className="..."
+                style={{
+                  width: "30px",
+                  height: "20px",
+                  paddingRight: "5px",
+                  display: "inline",
+                }}
+              />
+              English
+            </Box>
+          ) : (
+            <Box sx={languageStyle} display="inline-flex">
+              <Flags.ES
+                title="Espanol"
+                className="..."
+                style={{
+                  width: "30px",
+                  height: "20px",
+                  paddingRight: "5px",
+                  display: "inline",
+                }}
+              />
+              Espanol
+            </Box>
+          )}
+          <FaAngleDown
+            fontSize="0.9rem"
+            display="inline-flex"
+            color="#4A5568"
+          />
+        </Stack>
       </MenuButton>
 
-      <FaAngleDown fontSize="0.9rem" style={{ display: "inline" }} />
       <MenuList>
-        <MenuItem value="en" onClick={handleLangChange}>
+        <MenuItem value="en" onClick={handleLangChange} sx={languageStyle}>
           <Flags.US
             title="United Kingdom"
             className="..."
@@ -103,7 +110,7 @@ const DropdownLanguage = () => {
           />
           English
         </MenuItem>
-        <MenuItem value="es" onClick={handleLangChange}>
+        <MenuItem value="es" onClick={handleLangChange} sx={languageStyle}>
           <Flags.ES
             title="Español"
             className="..."

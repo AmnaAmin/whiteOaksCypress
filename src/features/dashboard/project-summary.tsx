@@ -22,14 +22,20 @@ export const ProjectSummary = () => {
     <Flex
       boxShadow="1px 0px 70px rgb(0 0 0 / 10%)"
       border="1px solid white"
-      borderRadius="10px"
+      borderRadius="15px"
       bg="whiteAlpha.900"
       direction="column"
       boxSizing="border-box"
       py="7"
       px={{ base: "3", lg: "7" }}
     >
-      <Text fontSize="22px" fontWeight="600">
+      <Text
+        fontSize="20px"
+        fontStyle="normal"
+        fontWeight={700}
+        color="#4A5568"
+        mb="25px"
+      >
         {t("projectSummary")}
       </Text>
       <HStack
@@ -43,6 +49,7 @@ export const ProjectSummary = () => {
           xl: "repeat(5,1fr)",
         }}
         gridRowGap={{ base: "20px" }}
+        mb="30px"
       >
         <ProjectSummaryCard
           UpdownIcon={BiTrendingUp}

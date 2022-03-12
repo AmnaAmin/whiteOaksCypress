@@ -36,21 +36,35 @@ export const SimpleSlider: React.FC<{
   }, [props.data]);
   return (
     <Card
+      rounded="15px"
       height="100%"
-      bg="#F7FAFE"
+      bg="#EBF8FF"
       w="100%"
       padding="15px 30px"
       display="block"
       boxShadow="1px 1px 7px rgba(0,0,0,0.2)"
     >
       <div>
-        <Heading textAlign="start" fontWeight={700} fontSize="20px">
+        <Heading
+          textAlign="start"
+          fontStyle="normal"
+          fontWeight={700}
+          fontSize="20px"
+          color="#4A5568"
+        >
           {props.heading}
         </Heading>
         {slider.length > 0 ? (
           <Slider {...settings}>
             {slider.map((slide, i) => (
-              <Box key={i} textAlign="start" fontWeight={500}>
+              <Box
+                key={i}
+                textAlign="start"
+                fontSize="16px"
+                fontStyle="normal"
+                fontWeight={400}
+                color="#4A5568"
+              >
                 {slide?.map((item: any) => (
                   <SliderItem
                     key={item.title}
@@ -70,7 +84,15 @@ export const SimpleSlider: React.FC<{
             fontWeight="normal"
           >
             <RiErrorWarningFill fontSize="30px" color="#718096" />
-            <Text ml="10px">You dont have any {props.heading} expiration</Text>
+            <Text
+              ml="10px"
+              fontWeight={400}
+              fontSize="14px"
+              fontStyle="normal"
+              color=" #2D3748"
+            >
+              You dont have any {props.heading} expiration
+            </Text>
           </Flex>
         )}
       </div>
