@@ -20,12 +20,8 @@ export const Projects = () => {
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(
     TableNames.project
   );
-  const {
-    tableColumns,
-    resizeElementRef,
-    settingColumns,
-    isLoading,
-  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project);
+  const { tableColumns, resizeElementRef, settingColumns, isLoading } =
+    useTableColumnSettings(PROJECT_COLUMNS, TableNames.project);
   const [selectedCard, setSelectedCard] = useState<string>("");
   const setProjectTableInstance = (tableInstance) => {
     setInstance(tableInstance);
@@ -37,8 +33,10 @@ export const Projects = () => {
 
   return (
     <>
-      <Box mb={7}>
-        <Heading>{t("projectsHeading")}</Heading>
+      <Box mb={4}>
+        <Heading color="#4A5568" fontSize={20} fontWeight={800}>
+          {t("projectsHeading")}
+        </Heading>
       </Box>
       <VStack w="100%" h="calc(100vh - 160px)">
         <Box mb={7} w="100%">
