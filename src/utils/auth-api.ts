@@ -1,5 +1,5 @@
 // import { User } from "../types/user";
-const localStorageKey = "__auth_provider_token__";
+const localStorageKey = "jhi-authenticationToken";
 
 async function client(
   endpoint: string,

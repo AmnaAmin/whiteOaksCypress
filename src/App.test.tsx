@@ -1,9 +1,10 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render } from "utils/test-utils";
+import App from "./App";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe("Application level Test cases", () => {
+  test("Render app should redirect to /vendorDashboard", async () => {
+    await render(<App />, { route: "/" });
+
+    expect(global.window.location.pathname).toEqual("/vendorDashboard");
+  });
 });

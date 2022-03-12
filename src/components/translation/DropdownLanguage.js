@@ -44,7 +44,7 @@ const DropdownLanguage = () => {
       <MenuButton
         onChange={handleLangChange}
         variant="text"
-        colorScheme="blue"
+        // colorScheme="blue"
         bgSize="auto"
         w={{ base: "50px", md: "auto" }}
       >

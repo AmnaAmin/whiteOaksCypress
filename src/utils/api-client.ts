@@ -1,19 +1,19 @@
-import * as authApi from './auth-api';
+import * as authApi from "./auth-api";
 
 async function client(endpoint: string, httpConfig: any | undefined = {}) {
   const { data, token, headers: customHeaders, ...customConfig } = httpConfig;
   const config = {
-    method: data ? 'POST' : 'GET',
+    method: data ? "POST" : "GET",
     body: data ? JSON.stringify(data) : undefined,
     headers: {
       Authorization: token ? `Bearer ${token}` : undefined,
-      'Content-Type': data ? 'application/json' : undefined,
+      "Content-Type": data ? "application/json" : undefined,
       ...customHeaders,
     },
     ...customConfig,
   };
 
-  return window.fetch(endpoint, config).then(async response => {
+  return window.fetch(endpoint, config).then(async (response) => {
     const contentType = response.headers.get(`content-type`);
 
     if (response.status === 401) {
@@ -21,10 +21,10 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       // refresh the page for them
       // @ts-ignore
       // window.location.assign(window.location)
-      return Promise.reject({ message: 'Please re-authenticate.' });
+      return Promise.reject({ message: "Please re-authenticate." });
     }
 
-    if (response.statusText === 'No Content') {
+    if (response.statusText === "No Content") {
       return null;
     }
 
@@ -32,7 +32,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       return null;
     }
 
-    if (contentType && contentType.includes('application/json')) {
+    if (contentType && contentType.includes("application/json")) {
       const data = await response.json();
 
       if (response.ok) {

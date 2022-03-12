@@ -90,7 +90,7 @@ export const Dashboard: React.FC = () => {
           mt={{ base: "30px", xl: 0 }}
         >
           <Flex mb="40px">
-            <Text
+            <Box
               pos="relative"
               onClick={onToggle}
               fontSize="24px"
@@ -115,7 +115,7 @@ export const Dashboard: React.FC = () => {
                   ${numberWithCommas(paidTotal)}
                 </Heading>
               </Box>
-            </Text>
+            </Box>
             <Spacer />
             <Box pos="relative" top="30px" right={35} w="180px">
               <Dropdown

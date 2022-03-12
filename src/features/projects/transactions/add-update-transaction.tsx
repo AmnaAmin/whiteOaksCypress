@@ -151,14 +151,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
       setValue("against", againstOptions?.[0]);
       resetExpectedCompletionDateFields(againstOptions?.[0]);
     }
-  }, [
-    transaction,
-    againstOptions.length,
-    setValue,
-    againstOptions,
-    reset,
-    resetExpectedCompletionDateFields,
-  ]);
+  }, [transaction, againstOptions.length, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">

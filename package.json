@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "https://dev2.woaharvest.com",
-  "homepage": "/vendorportal/",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.17",
     "@chakra-ui/react": "^1.6.12",
@@ -21,6 +20,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "axios": "^0.26.0",
+    "babel-loader": "8.1.0",
     "country-flag-icons": "^1.4.14",
     "cross-env": "^7.0.3",
     "date-fns": "^2.28.0",
@@ -50,10 +50,10 @@
     "slick-carousel": "^1.8.1",
     "typescript": "4.4.4",
     "web-vitals": "^1.0.1",
+    "webpack": "4.44.2",
+    "whatwg-fetch": "^3.6.2",
     "xlsx": "^0.17.4",
     "yup": "^0.32.11",
-    "babel-loader": "8.1.0",
-    "webpack": "4.44.2",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
@@ -62,15 +62,17 @@
     "webpack:build:main": "react-scripts build",
     "webpack:prod:main": "react-scripts build",
     "webpack:prod": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "DEBUG_PRINT_LIMIT=100000 react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
-    "plugins":["react-hooks"],
-    "rules":{
-      "react-hooks/exhaustive-deps":0
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": 0
     },
     "extends": [
       "react-app",
@@ -121,6 +123,10 @@
     "@types/react-slick": "^0.23.7",
     "@types/react-table": "^7.7.9",
     "@types/recharts": "^1.8.23",
-    "@types/zxcvbn": "^4.4.1"
+    "@types/zxcvbn": "^4.4.1",
+    "msw": "^0.39.1"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
