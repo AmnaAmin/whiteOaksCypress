@@ -36,21 +36,33 @@ export const SimpleSlider: React.FC<{
   }, [props.data]);
   return (
     <Card
-      height="100%"
-      bg="#F7FAFE"
+      minH="144px"
+      bg="#EBF8FF"
       w="100%"
       padding="15px 30px"
       display="block"
       boxShadow="1px 1px 7px rgba(0,0,0,0.2)"
     >
       <div>
-        <Heading textAlign="start" fontWeight={700} fontSize="20px">
+        <Heading
+          color="#4A5568"
+          textAlign="start"
+          fontWeight={700}
+          fontSize="20px"
+        >
           {props.heading}
         </Heading>
         {slider.length > 0 ? (
           <Slider {...settings}>
             {slider.map((slide, i) => (
-              <Box key={i} textAlign="start" fontWeight={500}>
+              <Box
+                key={i}
+                textAlign="start"
+                fontWeight={400}
+                mt={3}
+                color=" #4A5568"
+                fontSize={16}
+              >
                 {slide?.map((item: any) => (
                   <SliderItem
                     key={item.title}

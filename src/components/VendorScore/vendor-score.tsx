@@ -96,13 +96,15 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             direction={{
               base: "column",
               md: "row",
+              lg: "column",
+              xl: "row",
             }}
           >
             <Box
               overflow="hidden"
               padding={2}
               flex="1"
-              mr={{ base: "0", md: "10px" }}
+              mr={{ base: "0", md: "10px", lg: "0", xl: "10px" }}
               mb={{ base: "15px", md: "0" }}
             >
               <SimpleSlider heading={t("insurance")} data={defaultData} />
