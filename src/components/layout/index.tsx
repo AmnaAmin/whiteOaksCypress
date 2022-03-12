@@ -27,16 +27,14 @@ export const Layout: React.FC = (props) => {
         maxW="full"
         pt="65px"
         position="relative"
-        sx={{ "--sidebar-width": "15.5rem" }}
+        sx={{ "--sidebar-width": "12.6rem" }}
       >
         <Flex
-          // bg={mode('white', 'black')}
           position="fixed"
-          top="60px"
+          top="54px"
           bottom="0"
           left={isOpen ? "0" : "calc((var(--sidebar-width)+100) * -1)"}
           transition="left 0.5s ease-in-out"
-          // boxShadow={isOpen ? 'xl' : '0'}
           zIndex="dropdown"
         >
           <Box
@@ -50,21 +48,23 @@ export const Layout: React.FC = (props) => {
           >
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
-                <SidebarLink
-                  pathTo="/vendorDashboard"
-                  title="Dashboard"
-                  icon={<FaHome />}
-                />
-                <SidebarLink
-                  pathTo="/projects"
-                  title="Projects"
-                  icon={<FaAlignCenter />}
-                />
-                <SidebarLink
-                  pathTo="/vendors"
-                  title="Vendor Profile"
-                  icon={<FaUser />}
-                />
+                <VStack align="start" spacing={5}>
+                  <SidebarLink
+                    pathTo="/vendorDashboard"
+                    title="Dashboard"
+                    icon={<FaHome />}
+                  />
+                  <SidebarLink
+                    pathTo="/projects"
+                    title="Projects"
+                    icon={<FaAlignCenter />}
+                  />
+                  <SidebarLink
+                    pathTo="/vendors"
+                    title="Profile"
+                    icon={<FaUser />}
+                  />
+                </VStack>
               </Sidebar>
             </Box>
           </Box>
@@ -74,14 +74,17 @@ export const Layout: React.FC = (props) => {
             leftIcon={
               isOpen ? <AiOutlineVerticalRight /> : <AiOutlineVerticalLeft />
             }
-            variant="unstyled"
-            size="sm"
+            variant="solid"
+            size="xs"
             onClick={toggle}
+            fontSize="16px"
             bg="#F3F8FF"
             color="#A0AEC0"
-            fontSize="18px"
+            w="20px"
+            h="21px"
             p="0.5"
-            // display={{ base: 'inline', lg: 'none' }}
+            rounded={0}
+            mt="14px"
           />
         </Flex>
 
