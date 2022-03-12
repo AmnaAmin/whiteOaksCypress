@@ -46,7 +46,7 @@ export const Projects = () => {
           />
         </Box>
         <Stack
-          w={{ base: "971px", xl: "100%" }}
+          w={{ base: "100%", xl: "100%" }}
           direction="row"
           justify="flex-end"
           pb="10px"
