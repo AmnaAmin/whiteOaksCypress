@@ -50,7 +50,7 @@ function DefaultColumnFilter({
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
       }}
       placeholder={`Search ${count} records...`}
-      css={{ borderRadius: "20px !important" }}
+      css={{ borderRadius: "6px !important" }}
     />
   );
 }
@@ -130,7 +130,10 @@ export const TableHeader = ({ headerGroups }) => {
               <Th
                 key={`th_td_${column.id}`}
                 {...column.getHeaderProps(column.getSortByToggleProps())}
-                color="blackAlpha.700"
+                color="#718096"
+                fontWeight={700}
+                fontStyle="normal"
+                fontSize="12px"
                 p="0"
               >
                 <Flex py="2" px="2" pl="7" alignItems="center">

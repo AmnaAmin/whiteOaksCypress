@@ -179,13 +179,19 @@ export const LienWaiverTab: React.FC<any> = (props) => {
         <FormControl>
           <VStack align="start" spacing="30px">
             <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box flex="4" minW="59em">
+              <Box flex="4" minW="59em" outline="1px solid green">
                 <HelpText>{getHelpText()}</HelpText>
               </Box>
               <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (
                   <Flex alignItems={"center"}>
-                    <FormLabel margin={0} fontSize={"lg"}>
+                    <FormLabel
+                      margin={0}
+                      fontSize="16px"
+                      fontStyle="normal"
+                      fontWeight={600}
+                      color="gray.700"
+                    >
                       Recent LW:
                     </FormLabel>
 

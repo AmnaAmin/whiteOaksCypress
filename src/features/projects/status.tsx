@@ -1,34 +1,47 @@
-import React from 'react';
-import { Tag, TagLabel } from '@chakra-ui/react';
+import React from "react";
+import { Tag, TagLabel } from "@chakra-ui/react";
 
 export enum STATUS {
-  Paid = 'paid',
-  Active = 'active',
-  Approved = 'approved',
-  Completed = 'completed',
-  PastDue = 'past due',
-  Pending = 'pending',
-  Denied = 'denied',
-  Cancelled = 'cancelled',
+  Paid = "paid",
+  Active = "active",
+  Approved = "approved",
+  Completed = "completed",
+  PastDue = "past due",
+  Pending = "pending",
+  Denied = "denied",
+  Cancelled = "cancelled",
 }
 
 const STATUS_COLOR = {
-  [STATUS.Paid]: { color: '#6B46C1', backgroundColor: '#E9D8FD' },
-  [STATUS.Active]: { color: '#2AB450', backgroundColor: '#E7F8EC' },
-  [STATUS.Approved]: { color: '#2AB450', backgroundColor: '#E7F8EC' },
-  [STATUS.Completed]: { color: '#2B6CB0', backgroundColor: '#BEE3F8' },
-  [STATUS.PastDue]: { color: '#C05621', backgroundColor: '#FEEBCB' },
-  [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
-  [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
-  [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
+  [STATUS.Paid]: { color: "#6B46C1", backgroundColor: "#E9D8FD" },
+  [STATUS.Active]: { color: "#2AB450", backgroundColor: "#E7F8EC" },
+  [STATUS.Approved]: { color: "#2AB450", backgroundColor: "#E7F8EC" },
+  [STATUS.Completed]: { color: "#2B6CB0", backgroundColor: "#BEE3F8" },
+  [STATUS.PastDue]: { color: "#C05621", backgroundColor: "#FEEBCB" },
+  [STATUS.Pending]: { color: "#C05621", backgroundColor: "#FEEBCB" },
+  [STATUS.Denied]: { color: "#E53E3E", backgroundColor: "#FED7D7" },
+  [STATUS.Cancelled]: { color: "#E53E3E", backgroundColor: "#FED7D7" },
 };
 
 const Status = ({ value, id }: { value: string; id: string }) => {
   const style = STATUS_COLOR[id?.toLocaleLowerCase()];
 
   return (
-    <Tag size="lg" borderRadius="full" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
-      <TagLabel>{value}</TagLabel>
+    <Tag
+      size="lg"
+      rounded="6px"
+      variant="solid"
+      backgroundColor={style?.backgroundColor}
+      color={style?.color}
+    >
+      <TagLabel
+        fontSize="12px"
+        fontStyle="normal"
+        fontWeight={500}
+        lineHeight="16px"
+      >
+        {value}
+      </TagLabel>
     </Tag>
   );
 };
