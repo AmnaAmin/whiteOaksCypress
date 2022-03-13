@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -15,11 +15,11 @@ import {
   GridItem,
   ModalProps,
   ModalCloseButton,
-} from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
-import Select from "components/form/react-select";
-import { disabledInputStyle } from "theme/common-style";
-import { useParams } from "react-router";
+} from '@chakra-ui/react'
+import { Controller, useForm } from 'react-hook-form'
+import Select from 'components/form/react-select'
+import { disabledInputStyle } from 'theme/common-style'
+import { useParams } from 'react-router'
 import {
   AGAINST_DEFAULT_VALUE,
   parseChangeOrderAPIPayload,
@@ -33,54 +33,51 @@ import {
   useTransaction,
   useTransactionTypes,
   useWorkOrderChangeOrders,
-} from "utils/transactions";
+} from 'utils/transactions'
 import {
   FormValues,
   SelectOption,
   TransactionTypeValues,
-} from "types/transaction.type";
-import { dateFormat } from "utils/date-time-utils";
-import { useFieldShowHideDecision } from "./hooks";
-import { TransactionAmountForm } from "./transaction-amount-form";
-import { useUserProfile } from "utils/redux-common-selectors";
-import { useTranslation } from "react-i18next";
-import { Account } from "types/account.types";
+} from 'types/transaction.type'
+import { dateFormat } from 'utils/date-time-utils'
+import { useFieldShowHideDecision } from './hooks'
+import { TransactionAmountForm } from './transaction-amount-form'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { useTranslation } from 'react-i18next'
+import { Account } from 'types/account.types'
 
 type AddUpdateTransactionFormProps = {
-  onClose: () => void;
-  selectedTransactionId?: number;
-};
+  onClose: () => void
+  selectedTransactionId?: number
+}
 
 const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
   onClose,
   selectedTransactionId,
 }) => {
-  const { t } = useTranslation();
-  const { projectId } = useParams<"projectId">();
-  const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>();
-  const { transaction } = useTransaction(selectedTransactionId);
-  const { transactionTypeOptions } = useTransactionTypes();
-  const { againstOptions, workOrdersKeyValues } = useProjectWorkOrders(
-    projectId
-  );
-  const { workOrderSelectOptions } = useProjectWorkOrdersWithChangeOrders(
-    projectId
-  );
-  const { changeOrderSelectOptions } = useWorkOrderChangeOrders(
-    selectedWorkOrderId
-  );
-  const { mutate: createChangeOrder } = useChangeOrderMutation(projectId);
-  const { mutate: updateChangeOrder } = useChangeOrderUpdateMutation(projectId);
+  const { t } = useTranslation()
+  const { projectId } = useParams<'projectId'>()
+  const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
+  const { transaction } = useTransaction(selectedTransactionId)
+  const { transactionTypeOptions } = useTransactionTypes()
+  const { againstOptions, workOrdersKeyValues } =
+    useProjectWorkOrders(projectId)
+  const { workOrderSelectOptions } =
+    useProjectWorkOrdersWithChangeOrders(projectId)
+  const { changeOrderSelectOptions } =
+    useWorkOrderChangeOrders(selectedWorkOrderId)
+  const { mutate: createChangeOrder } = useChangeOrderMutation(projectId)
+  const { mutate: updateChangeOrder } = useChangeOrderUpdateMutation(projectId)
 
-  const { login = "" } = useUserProfile() as Account;
+  const { login = '' } = useUserProfile() as Account
 
   const defaultValues: FormValues = useMemo(() => {
-    return transactionDefaultFormValues(login);
-  }, [login]);
+    return transactionDefaultFormValues(login)
+  }, [login])
 
   const formReturn = useForm<FormValues>({
     defaultValues,
-  });
+  })
   const {
     handleSubmit,
     register,
@@ -89,69 +86,70 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
     control,
     reset,
     getValues,
-  } = formReturn;
+  } = formReturn
 
   const {
     isShowExpectedCompletionDateField,
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
-  } = useFieldShowHideDecision(control);
+  } = useFieldShowHideDecision(control)
 
   const onSubmit = useCallback(
     (values: FormValues) => {
       const queryOptions = {
         onSuccess() {
-          onClose();
+          onClose()
         },
-      };
+      }
 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
         const payload = parseChangeOrderUpdateAPIPayload(
           values,
           transaction,
-          projectId
-        );
-        updateChangeOrder({ ...payload, id: transaction.id }, queryOptions);
+          projectId,
+        )
+        updateChangeOrder({ ...payload, id: transaction.id }, queryOptions)
       } else {
-        const payload = parseChangeOrderAPIPayload(values, projectId);
-        createChangeOrder(payload, queryOptions);
+        const payload = parseChangeOrderAPIPayload(values, projectId)
+        createChangeOrder(payload, queryOptions)
       }
     },
-    [createChangeOrder, onClose, projectId, transaction, updateChangeOrder]
-  );
+    [createChangeOrder, onClose, projectId, transaction, updateChangeOrder],
+  )
 
   const resetExpectedCompletionDateFields = useCallback(
     (againstOption: SelectOption) => {
       if (againstOption && againstOption?.value !== AGAINST_DEFAULT_VALUE) {
         const expectedCompletionDate = dateFormat(
           workOrdersKeyValues?.[againstOption.value]
-            .workOrderExpectedCompletionDate ?? ""
-        );
-        setValue("expectedCompletionDate", expectedCompletionDate);
+            .workOrderExpectedCompletionDate ?? '',
+        )
+        setValue('expectedCompletionDate', expectedCompletionDate)
       } else {
-        setValue("expectedCompletionDate", "");
-        setValue("newExpectedCompletionDate", "");
+        setValue('expectedCompletionDate', '')
+        setValue('newExpectedCompletionDate', '')
       }
     },
-    [workOrdersKeyValues, setValue]
-  );
+    [workOrdersKeyValues, setValue],
+  )
 
   useEffect(() => {
     if (transaction && againstOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
       const formValues = parseTransactionToFormValues(
         transaction,
-        againstOptions
-      );
+        againstOptions,
+      )
 
-      reset(formValues);
+      reset(formValues)
     } else if (againstOptions) {
-      setValue("against", againstOptions?.[0]);
-      resetExpectedCompletionDateFields(againstOptions?.[0]);
+      setValue('against', againstOptions?.[0])
+      resetExpectedCompletionDateFields(againstOptions?.[0])
     }
-  }, [transaction, againstOptions.length, setValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transaction, againstOptions.length, setValue])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
@@ -159,10 +157,10 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         <GridItem>
           <FormControl isInvalid={!!errors.transactionType}>
             <FormLabel fontSize="lg" htmlFor="transactionType">
-              {t("transactionType")}
+              {t('transactionType')}
             </FormLabel>
             <Controller
-              rules={{ required: "This is required" }}
+              rules={{ required: 'This is required' }}
               control={control}
               name="transactionType"
               render={({ field, fieldState }) => {
@@ -179,13 +177,13 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
                           reset({
                             ...defaultValues,
                             transactionType: option,
-                            against: getValues("against"),
-                          });
+                            against: getValues('against'),
+                          })
                           resetExpectedCompletionDateFields(
-                            getValues("against") as SelectOption
-                          );
+                            getValues('against') as SelectOption,
+                          )
                         } else {
-                          field.onChange(option);
+                          field.onChange(option)
                         }
                       }}
                     />
@@ -193,7 +191,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
                       {fieldState.error?.message}
                     </FormErrorMessage>
                   </>
-                );
+                )
               }}
             />
           </FormControl>
@@ -202,21 +200,21 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         <GridItem>
           <FormControl isInvalid={!!errors.against}>
             <FormLabel fontSize="lg" htmlFor="aginst">
-              {t("against")}
+              {t('against')}
             </FormLabel>
             <Controller
               control={control}
               name="against"
-              rules={{ required: "This is required" }}
+              rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <Select
                     {...field}
                     options={againstOptions}
                     isDisabled={!!transaction}
-                    onChange={(againstOption) => {
-                      resetExpectedCompletionDateFields(againstOption);
-                      field.onChange(againstOption);
+                    onChange={againstOption => {
+                      resetExpectedCompletionDateFields(againstOption)
+                      field.onChange(againstOption)
                     }}
                   />
                   <FormErrorMessage>
@@ -232,7 +230,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
           <GridItem>
             <FormControl isInvalid={!!errors.workOrder}>
               <FormLabel fontSize="lg" htmlFor="workOrder">
-                {t("workOrder")}
+                {t('workOrder')}
               </FormLabel>
               <Controller
                 control={control}
@@ -243,9 +241,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
                     <Select
                       options={workOrderSelectOptions}
                       {...field}
-                      onChange={(option) => {
-                        setSelectedWorkOrderId(option.value);
-                        field.onChange(option);
+                      onChange={option => {
+                        setSelectedWorkOrderId(option.value)
+                        field.onChange(option)
                       }}
                     />
                     <FormErrorMessage>
@@ -261,7 +259,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
           <GridItem>
             <FormControl isInvalid={!!errors.changeOrder}>
               <FormLabel fontSize="lg" htmlFor="changeOrder">
-                {t("changeOrder")}
+                {t('changeOrder')}
               </FormLabel>
               <Controller
                 control={control}
@@ -284,7 +282,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
           <GridItem>
             <FormControl isInvalid={!!errors.expectedCompletionDate}>
               <FormLabel fontSize="lg" htmlFor="expectedCompletionDate">
-                {t("expectedCompletionDate")}
+                {t('expectedCompletionDate')}
               </FormLabel>
               <Input
                 id="expectedCompletionDate"
@@ -292,7 +290,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
                 size="lg"
                 _disabled={disabledInputStyle}
                 disabled
-                {...register("expectedCompletionDate")}
+                {...register('expectedCompletionDate')}
               />
               <FormErrorMessage>
                 {errors.expectedCompletionDate &&
@@ -306,13 +304,13 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
           <GridItem>
             <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
               <FormLabel fontSize="lg" htmlFor="newExpectedCompletionDate">
-                {t("newExpectedCompletionDate")}
+                {t('newExpectedCompletionDate')}
               </FormLabel>
               <Input
                 id="newExpectedCompletionDate"
                 type="date"
                 size="lg"
-                {...register("newExpectedCompletionDate")}
+                {...register('newExpectedCompletionDate')}
               />
               <FormErrorMessage>
                 {errors.newExpectedCompletionDate &&
@@ -325,7 +323,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         <GridItem>
           <FormControl isInvalid={!!errors.dateCreated}>
             <FormLabel fontSize="lg" htmlFor="dateCreated">
-              {t("dateCreated")}
+              {t('dateCreated')}
             </FormLabel>
             <Input
               id="dateCreated"
@@ -333,8 +331,8 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
               size="lg"
               _disabled={disabledInputStyle}
               disabled
-              {...register("dateCreated", {
-                required: "This is required",
+              {...register('dateCreated', {
+                required: 'This is required',
               })}
             />
             <FormErrorMessage>
@@ -346,7 +344,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         <GridItem>
           <FormControl isInvalid={!!errors.createdBy}>
             <FormLabel fontSize="lg" htmlFor="createdBy">
-              {t("createdBy")}
+              {t('createdBy')}
             </FormLabel>
             <Input
               id="createdBy"
@@ -355,8 +353,8 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
               placeholder="createdBy"
               _disabled={disabledInputStyle}
               disabled
-              {...register("createdBy", {
-                required: "This is required",
+              {...register('createdBy', {
+                required: 'This is required',
               })}
             />
             <FormErrorMessage>
@@ -368,34 +366,34 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
 
       <TransactionAmountForm formReturn={formReturn} />
     </form>
-  );
-};
+  )
+}
 
-type CustomModalProps = Pick<ModalProps, "isOpen" | "onClose">;
-type AddNewTransactionProps = CustomModalProps;
+type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
+type AddNewTransactionProps = CustomModalProps
 type UpdateTransactionProps = CustomModalProps & {
-  selectedTransactionId: number;
-};
+  selectedTransactionId: number
+}
 
 export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
-          {t("newTransaction")}
+          {t('newTransaction')}
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: "none" }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} />
         <ModalBody px="6" py="8">
           <AddUpdateTransactionForm onClose={onClose} />
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
           <Button onClick={onClose} variant="text">
-            {t("close")}
+            {t('close')}
           </Button>
 
           <Button
@@ -404,13 +402,13 @@ export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({
             form="newTransactionForm"
             ml="3"
           >
-            {t("save")}
+            {t('save')}
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
 
 export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
   isOpen,
@@ -426,7 +424,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
           Update Transaction
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: "none" }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} />
 
         <ModalBody px="6" py="8">
           <AddUpdateTransactionForm
@@ -450,5 +448,5 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
         </ModalFooter>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
