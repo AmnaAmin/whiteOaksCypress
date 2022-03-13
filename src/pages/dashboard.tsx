@@ -22,9 +22,11 @@ import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { numberWithCommas } from 'utils'
 import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
 
 export const Dashboard: React.FC = () => {
-  const { vendorId } = useUserProfile()
+  const { vendorId } = useUserProfile() as Account
+
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   const { onToggle } = useDisclosure()
   const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
