@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Box,
   Flex,
@@ -7,39 +7,39 @@ import {
   Text,
   useDisclosure,
   Heading,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
-import { ProjectSummary } from "../features/dashboard/project-summary";
-import { VendorScore } from "../components/VendorScore/vendor-score";
-import { Card } from "../components/card/card";
-import Overview from "../components/chart/Overview";
-import PaidChart from "../components/chart/paid-chart";
-import { usePaidWOAmountByYearAndMonthTotal } from "utils/vendor-dashboard";
-import Dropdown from "../components/dropdown-menu/Dropdown";
+import { ProjectSummary } from '../features/dashboard/project-summary'
+import { VendorScore } from '../components/VendorScore/vendor-score'
+import { Card } from '../components/card/card'
+import Overview from '../components/chart/Overview'
+import PaidChart from '../components/chart/paid-chart'
+import { usePaidWOAmountByYearAndMonthTotal } from 'utils/vendor-dashboard'
+import Dropdown from '../components/dropdown-menu/Dropdown'
 
-import { MonthOption, monthOptions } from "utils/date-time-utils";
-import { useTranslation } from "react-i18next";
-import "components/translation/i18n";
-import { numberWithCommas } from "utils";
+import { MonthOption, monthOptions } from 'utils/date-time-utils'
+import { useTranslation } from 'react-i18next'
+import 'components/translation/i18n'
+import { numberWithCommas } from 'utils'
 
 export const Dashboard: React.FC = () => {
-  const vendorId = 4;
+  const vendorId = 4
   // const { vendorId } = useSelector(
   //   (state: IRootState) => state.authentication.account,
   //   shallowEqual
   // );
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
-  const { onToggle } = useDisclosure();
-  const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0]);
-  const { data: paidTotal = "" } = usePaidWOAmountByYearAndMonthTotal(
-    paidOption?.year ?? "",
-    paidOption?.month ?? ""
-  );
-  const { t } = useTranslation();
+  const { onToggle } = useDisclosure()
+  const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
+  const { data: paidTotal = '' } = usePaidWOAmountByYearAndMonthTotal(
+    paidOption?.year ?? '',
+    paidOption?.month ?? '',
+  )
+  const { t } = useTranslation()
 
   return (
     <VStack w="100%" zIndex={2}>
-      <Box w={{ base: "100%" }}>
+      <Box w={{ base: '100%' }}>
         <VendorScore vendorId={vendorId} />
       </Box>
 
@@ -54,14 +54,14 @@ export const Dashboard: React.FC = () => {
           paddingInlineStart="14px"
           m="15px 0 10px"
         >
-          {t("WOstatusGraph")}
+          {t('WOstatusGraph')}
         </Text>
       </Box>
 
       <Flex
         direction={{
-          base: "column",
-          xl: "row",
+          base: 'column',
+          xl: 'row',
         }}
         justifyContent="stretch"
         w="100%"
@@ -76,7 +76,7 @@ export const Dashboard: React.FC = () => {
               lineHeight="26px"
               ml="17px"
             >
-              {t("overview")}
+              {t('overview')}
             </Text>
           </Flex>
           <Overview vendorId={vendorId} />
@@ -86,8 +86,8 @@ export const Dashboard: React.FC = () => {
           p={0}
           rounded="13px"
           flex={1}
-          ml={{ base: 0, xl: "12px" }}
-          mt={{ base: "30px", xl: 0 }}
+          ml={{ base: 0, xl: '12px' }}
+          mt={{ base: '30px', xl: 0 }}
         >
           <Flex mb="40px">
             <Box
@@ -99,7 +99,7 @@ export const Dashboard: React.FC = () => {
               top="32px"
               color="#1B2559"
             >
-              {t("paid")}
+              {t('paid')}
               <Box
                 bg="white"
                 padding="20px 40px 20px 40px"
@@ -108,7 +108,7 @@ export const Dashboard: React.FC = () => {
                 rounded="8px"
               >
                 <Text fontWeight="normal" fontSize="12px" color="#A3AED0">
-                  {t("paidSmall")}
+                  {t('paidSmall')}
                 </Text>
 
                 <Heading fontSize="22px">
@@ -130,5 +130,5 @@ export const Dashboard: React.FC = () => {
         </Card>
       </Flex>
     </VStack>
-  );
-};
+  )
+}
