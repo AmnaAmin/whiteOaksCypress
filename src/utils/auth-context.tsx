@@ -5,6 +5,7 @@ import { client } from "./api-client";
 import { useAsync } from "./hooks";
 import { getToken, removeToken, setToken } from "./storage.utils";
 import { Account } from "types/account.types";
+import { Box, Spinner } from "@chakra-ui/react";
 
 type AuthState = {
   user: Account;
@@ -18,6 +19,7 @@ async function bootstrapAppData() {
     const response = await client("/api/account", { token });
     state = { user: response?.data, token };
   }
+
   return state;
 }
 
@@ -32,14 +34,21 @@ export interface AuthContextProps {
 
 const AuthContext = React.createContext<AuthContextProps>({});
 AuthContext.displayName = "AuthContext";
-
 interface AuthProviderProps {
   children: JSX.Element;
 }
 function AuthProvider(props: AuthProviderProps) {
   const token = getToken();
 
-  const { data, isLoading, isIdle, run, setData } = useAsync({});
+  const {
+    data,
+    isLoading,
+    isIdle,
+    run,
+    setData,
+    isError,
+    isSuccess,
+  } = useAsync({});
 
   const { queryCache }: any = useQueryClient();
 
@@ -91,16 +100,33 @@ function AuthProvider(props: AuthProviderProps) {
   );
 
   if (isLoading || isIdle) {
-    return <div />;
+    return (
+      <Box
+        h="100vh"
+        w="100vw"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Box>
+    );
   }
 
-  // if (isError) {
-  //   return <Box error={error}>{error.detail}</Box>;
-  // }
+  if (isError) {
+    return <Box>Error Ocurred during app bootstrapping</Box>;
+  }
 
-  // if (isSuccess) {
-  return <AuthContext.Provider value={value} {...props} />;
-  // }
+  if (isSuccess) {
+    return <AuthContext.Provider value={value} {...props} />;
+  }
 
   // throw new Error(`Unhandled status: ${status}`);
 }

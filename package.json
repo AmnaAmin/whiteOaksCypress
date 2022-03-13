@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "https://dev2.woaharvest.com",
-  "homepage": "/vendorportal/",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.17",
     "@chakra-ui/react": "^1.6.12",
@@ -62,10 +61,15 @@
     "webpack:build:main": "react-scripts build",
     "webpack:prod:main": "react-scripts build",
     "webpack:prod": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "DEBUG_PRINT_LIMIT=100000 react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "typescript": "tsc --project tsconfig.json --noEmit",
+    "eslint": "eslint src --color",
+    "prettier": "prettier src -check",
+    "lint-staged": "lint-staged --config lint-staged.js",
+    "husky-install": "husky install"
   },
   "eslintConfig": {
     "plugins": [
@@ -123,6 +127,21 @@
     "@types/react-slick": "^0.23.7",
     "@types/react-table": "^7.7.9",
     "@types/recharts": "^1.8.23",
-    "@types/zxcvbn": "^4.4.1"
+    "@types/zxcvbn": "^4.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.3",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.5",
+    "msw": "^0.39.1",
+    "prettier": "^2.3.0"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
