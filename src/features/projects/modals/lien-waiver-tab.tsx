@@ -179,7 +179,7 @@ export const LienWaiverTab: React.FC<any> = (props) => {
         <FormControl>
           <VStack align="start" spacing="30px">
             <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box flex="4" minW="59em" outline="1px solid green">
+              <Box flex="4" minW="59em">
                 <HelpText>{getHelpText()}</HelpText>
               </Box>
               <Flex pos="absolute" top={0} right={0} flex="1">
@@ -357,10 +357,25 @@ export const LienWaiverTab: React.FC<any> = (props) => {
         </FormControl>
         <Divider />
         <ModalFooter mt={3}>
-          <Button variant="ghost" mr={3} onClick={onClose}>
+          <Button
+            variant="ghost"
+            mr={3}
+            onClick={onClose}
+            color="gray.700"
+            fontStyle="normal"
+            fontWeight={600}
+            fontSize="18px"
+          >
             {t("close")}
           </Button>
-          <Button colorScheme="blue" mr={3} type="submit">
+          <Button
+            colorScheme="CustomPrimaryColor"
+            mr={3}
+            type="submit"
+            fontStyle="normal"
+            fontWeight={600}
+            fontSize="18px"
+          >
             {t("save")}
           </Button>
         </ModalFooter>

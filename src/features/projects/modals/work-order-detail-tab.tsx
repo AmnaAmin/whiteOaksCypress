@@ -227,10 +227,10 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
         borderTop="1px solid #CBD5E0"
         pt={5}
       >
-        <Button variant="ghost" mr={3} size="lg">
+        <Button variant="ghost" mr={3}>
           {t("close")}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg">
+        <Button colorScheme="CustomPrimaryColor" mr={3}>
           {t("save")}
         </Button>
       </Flex>

@@ -25,6 +25,13 @@ import { useProject } from "utils/projects";
 import { ProjectType } from "types/project.type";
 import { Document } from "types/vendor.types";
 
+const projectTabStyle = {
+  fontSize: "14px",
+  fontWeight: 400,
+  fontStyle: "normal",
+  color: "gray.600",
+};
+
 export const ProjectDetails: React.FC = (props) => {
   const { t } = useTranslation();
   const { projectId } = useParams<"projectId">();
@@ -32,9 +39,8 @@ export const ProjectDetails: React.FC = (props) => {
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const [tabIndex, setTabIndex] = useState(0);
   const [alertRow, selectedAlertRow] = useState(null);
-  const [latestUploadedDoc, setLatestUploadedDoc] = useState<Document | null>(
-    null
-  );
+  const [latestUploadedDoc, setLatestUploadedDoc] =
+    useState<Document | null>(null);
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -70,20 +76,33 @@ export const ProjectDetails: React.FC = (props) => {
             mt="7"
           >
             <TabList>
-              <Tab _selected={{ color: "white", bg: "button.300" }}>
+              <Tab
+                _selected={{ color: "white", bg: "button.300" }}
+                sx={projectTabStyle}
+              >
                 {t("transaction")}
               </Tab>
 
-              <Tab minW={180} _selected={{ color: "white", bg: "button.300" }}>
+              <Tab
+                _selected={{ color: "white", bg: "button.300" }}
+                whiteSpace="nowrap"
+                sx={projectTabStyle}
+              >
                 {t("vendorWorkOrders")}
               </Tab>
 
-              <Tab _selected={{ color: "white", bg: "button.300" }}>
+              <Tab
+                _selected={{ color: "white", bg: "button.300" }}
+                sx={projectTabStyle}
+              >
                 {" "}
                 {t("documents")}
               </Tab>
 
-              <Tab _selected={{ color: "white", bg: "button.300" }}>
+              <Tab
+                _selected={{ color: "white", bg: "button.300" }}
+                sx={projectTabStyle}
+              >
                 {" "}
                 {t("alerts")}
               </Tab>

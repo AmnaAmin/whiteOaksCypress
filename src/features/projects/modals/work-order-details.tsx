@@ -75,8 +75,8 @@ const WorkOrderDetails = ({
               size="lg"
               rounded="6px"
               variant="solid"
-              color="green.500"
-              bg="green.50"
+              color="green.600"
+              bg="green.100"
             >
               <TagLabel
                 fontSize="12px"

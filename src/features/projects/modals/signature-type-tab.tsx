@@ -45,7 +45,13 @@ export const SignatureTab = (props) => {
                   <FormInput
                     errorMessage={errors.signature && errors.signature?.message}
                     label="Type Your Name Here"
-                    labelStyle={{ textAlign: "center", fontSize: "16px" }}
+                    labelStyle={{
+                      textAlign: "center",
+                      fontSize: "16px",
+                      fontWeight: 700,
+                      color: "gray.800",
+                      marginBottom: "20px",
+                    }}
                     placeholder=""
                     register={register}
                     controlStyle={{ w: "50em" }}
@@ -66,10 +72,25 @@ export const SignatureTab = (props) => {
         </FormControl>
         <Divider />
         <ModalFooter mt={3}>
-          <Button variant="ghost" mr={3} onClick={onClose}>
+          <Button
+            variant="ghost"
+            mr={3}
+            onClick={onClose}
+            color="gray.700"
+            fontStyle="normal"
+            fontWeight={600}
+            fontSize="18px"
+          >
             {t("close")}
           </Button>
-          <Button colorScheme="blue" mr={3} type="submit">
+          <Button
+            colorScheme="CustomPrimaryColor"
+            mr={3}
+            type="submit"
+            fontStyle="normal"
+            fontWeight={600}
+            fontSize="18px"
+          >
             {t("apply")}
           </Button>
         </ModalFooter>

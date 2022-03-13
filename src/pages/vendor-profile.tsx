@@ -14,6 +14,13 @@ import "components/translation/i18n";
 import { Account } from "types/account.types";
 import { VendorProfile } from "types/vendor.types";
 
+const profileTabStyle = {
+  fontSize: "16px",
+  fontWeight: 600,
+  fontStyle: "normal",
+  color: "gray.500",
+};
+
 export const VendorProfilePage: React.FC = (props) => {
   const { t } = useTranslation();
   const { vendorId } = useUserProfile() as Account;
@@ -32,19 +39,34 @@ export const VendorProfilePage: React.FC = (props) => {
         onChange={(index) => setTabIndex(index)}
       >
         <TabList>
-          <Tab _selected={{ color: "white", bg: "button.300" }}>
+          <Tab
+            _selected={{ color: "white", bg: "button.300" }}
+            sx={profileTabStyle}
+          >
             {t("details")}
           </Tab>
-          <Tab _selected={{ color: "white", bg: "button.300" }}>
+          <Tab
+            _selected={{ color: "white", bg: "button.300" }}
+            sx={profileTabStyle}
+          >
             {t("documents")}
           </Tab>
-          <Tab _selected={{ color: "white", bg: "button.300" }}>
+          <Tab
+            _selected={{ color: "white", bg: "button.300" }}
+            sx={profileTabStyle}
+          >
             {t("license")}
           </Tab>
-          <Tab _selected={{ color: "white", bg: "button.300" }}>
+          <Tab
+            _selected={{ color: "white", bg: "button.300" }}
+            sx={profileTabStyle}
+          >
             {t("trade")}
           </Tab>
-          <Tab _selected={{ color: "white", bg: "button.300" }}>
+          <Tab
+            _selected={{ color: "white", bg: "button.300" }}
+            sx={profileTabStyle}
+          >
             {t("market")}
           </Tab>
         </TabList>
