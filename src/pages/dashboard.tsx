@@ -21,13 +21,10 @@ import { MonthOption, monthOptions } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { numberWithCommas } from 'utils'
+import { useUserProfile } from 'utils/redux-common-selectors'
 
 export const Dashboard: React.FC = () => {
-  const vendorId = 4
-  // const { vendorId } = useSelector(
-  //   (state: IRootState) => state.authentication.account,
-  //   shallowEqual
-  // );
+  const { vendorId } = useUserProfile()
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   const { onToggle } = useDisclosure()
   const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
