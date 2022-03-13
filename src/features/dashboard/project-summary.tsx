@@ -15,7 +15,7 @@ import "components/translation/i18n";
 import numeral from "numeral";
 
 export const ProjectSummary = () => {
-  const { data: cards } = useVendorCards();
+  const { data: cards, isLoading } = useVendorCards();
   const { t } = useTranslation();
 
   return (
@@ -52,6 +52,7 @@ export const ProjectSummary = () => {
         mb="30px"
       >
         <ProjectSummaryCard
+          isLoading={isLoading}
           UpdownIcon={BiTrendingUp}
           BigIcon={SummaryIconFirst}
           number={cards?.find((c) => c.label === "active")?.count}
@@ -61,6 +62,7 @@ export const ProjectSummary = () => {
           numberColor={"rose.500"}
         />
         <ProjectSummaryCard
+          isLoading={isLoading}
           UpdownIcon={BiTrendingDown}
           BigIcon={SummaryIconSecond}
           number={cards?.find((c) => c.label === "pastDue")?.count}
@@ -70,6 +72,7 @@ export const ProjectSummary = () => {
           numberColor={"green.500"}
         />
         <ProjectSummaryCard
+          isLoading={isLoading}
           UpdownIcon={BiTrendingUp}
           BigIcon={SummaryIconThird}
           number={cards?.find((c) => c.label === "completedAndInvoiced")?.count}
@@ -79,6 +82,7 @@ export const ProjectSummary = () => {
           numberColor={"rose.500"}
         />
         <ProjectSummaryCard
+          isLoading={isLoading}
           UpdownIcon={BiTrendingDown}
           BigIcon={SummaryIconForth}
           number={cards?.find((c) => c.label === "notInvoiced")?.count}
@@ -88,6 +92,7 @@ export const ProjectSummary = () => {
           numberColor={"green.500"}
         />
         <ProjectSummaryCard
+          isLoading={isLoading}
           UpdownIcon={BiTrendingDown}
           BigIcon={SummaryIconFifth}
           name={t("upcomingPayments")}

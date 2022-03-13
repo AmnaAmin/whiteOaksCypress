@@ -22,7 +22,7 @@ import { useAuth } from "utils/auth-context";
 import LogoIcon from "icons/header-logo";
 import { RouterLink } from "../router-link/router-link";
 
-// const Notification = React.lazy(() => import("./notification")); // Lazy-loaded
+// const Notification = React.lazy(() => import("./notification"));
 
 const UserInfo: React.FC = () => {
   const { data } = useAuth();
