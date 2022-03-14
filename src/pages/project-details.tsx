@@ -5,51 +5,50 @@ import {
   Tab,
   TabPanel,
   useDisclosure,
-} from "@chakra-ui/react";
-import { Box, Button, Stack } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+} from '@chakra-ui/react'
+import { Box, Button, Stack } from '@chakra-ui/react'
+import React, { useRef, useState } from 'react'
 
-import { TransactionsTable } from "../features/projects/transactions/transactions-table";
-import { AddNewTransactionModal } from "../features/projects/transactions/add-update-transaction";
-import { VendorDocumentsTable } from "../features/projects/documents/documents-table";
-import { WorkOrdersTable } from "../features/projects/work-orders-table";
-import { AlertsTable } from "../features/projects/alerts/alerts-table";
-import { AlertStatusModal } from "../features/projects/alerts/alert-status";
-import { UploadDocumentModal } from "../features/projects/documents/upload-document";
-import { AiOutlineUpload } from "react-icons/ai";
-import { useParams } from "react-router";
-import { TransactionInfoCard } from "../features/projects/transactions/transaction-info-card";
+import { TransactionsTable } from '../features/projects/transactions/transactions-table'
+import { AddNewTransactionModal } from '../features/projects/transactions/add-update-transaction'
+import { VendorDocumentsTable } from '../features/projects/documents/documents-table'
+import { WorkOrdersTable } from '../features/projects/work-orders-table'
+import { AlertsTable } from '../features/projects/alerts/alerts-table'
+import { AlertStatusModal } from '../features/projects/alerts/alert-status'
+import { UploadDocumentModal } from '../features/projects/documents/upload-document'
+import { AiOutlineUpload } from 'react-icons/ai'
+import { useParams } from 'react-router'
+import { TransactionInfoCard } from '../features/projects/transactions/transaction-info-card'
 // import { t } from 'i18next';
-import { useTranslation } from "react-i18next";
-import { useProject } from "utils/projects";
-import { ProjectType } from "types/project.type";
-import { Document } from "types/vendor.types";
+import { useTranslation } from 'react-i18next'
+import { useProject } from 'utils/projects'
+import { ProjectType } from 'types/project.type'
+import { Document } from 'types/vendor.types'
 
-export const ProjectDetails: React.FC = (props) => {
-  const { t } = useTranslation();
-  const { projectId } = useParams<"projectId">();
-  const { projectData, isLoading } = useProject(projectId);
-  const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const [tabIndex, setTabIndex] = useState(0);
-  const [alertRow, selectedAlertRow] = useState(null);
-  const [latestUploadedDoc, setLatestUploadedDoc] = useState<Document | null>(
-    null
-  );
+export const ProjectDetails: React.FC = props => {
+  const { t } = useTranslation()
+  const { projectId } = useParams<'projectId'>()
+  const { projectData, isLoading } = useProject(projectId)
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const [tabIndex, setTabIndex] = useState(0)
+  const [alertRow, selectedAlertRow] = useState(null)
+  const [latestUploadedDoc, setLatestUploadedDoc] =
+    useState<Document | null>(null)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
-  } = useDisclosure();
+  } = useDisclosure()
   const {
     isOpen: isOpenDocumentModal,
     onClose: onDocumentModalClose,
     onOpen: onDocumentModalOpen,
-  } = useDisclosure();
+  } = useDisclosure()
   const {
     isOpen: isOpenAlertModal,
     onClose: onAlertModalClose,
     onOpen: onAlertModalOpen,
-  } = useDisclosure();
+  } = useDisclosure()
   return (
     <>
       <Stack
@@ -63,29 +62,29 @@ export const ProjectDetails: React.FC = (props) => {
           isLoading={isLoading}
         />
 
-        <Stack w={{ base: "971px", xl: "100%" }} spacing={5}>
+        <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs
             variant="enclosed"
-            onChange={(index) => setTabIndex(index)}
+            onChange={index => setTabIndex(index)}
             mt="7"
           >
             <TabList>
-              <Tab _selected={{ color: "white", bg: "button.300" }}>
-                {t("transaction")}
+              <Tab _selected={{ color: 'white', bg: 'button.300' }}>
+                {t('transaction')}
               </Tab>
 
-              <Tab minW={180} _selected={{ color: "white", bg: "button.300" }}>
-                {t("vendorWorkOrders")}
+              <Tab minW={180} _selected={{ color: 'white', bg: 'button.300' }}>
+                {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab _selected={{ color: "white", bg: "button.300" }}>
-                {" "}
-                {t("documents")}
+              <Tab _selected={{ color: 'white', bg: 'button.300' }}>
+                {' '}
+                {t('documents')}
               </Tab>
 
-              <Tab _selected={{ color: "white", bg: "button.300" }}>
-                {" "}
-                {t("alerts")}
+              <Tab _selected={{ color: 'white', bg: 'button.300' }}>
+                {' '}
+                {t('alerts')}
               </Tab>
 
               <Box
@@ -101,7 +100,7 @@ export const ProjectDetails: React.FC = (props) => {
                     bg="#4E87F8"
                     color="#FFFFFF"
                     size="md"
-                    _hover={{ bg: "royalblue" }}
+                    _hover={{ bg: 'royalblue' }}
                   >
                     <Box
                       pos="relative"
@@ -111,7 +110,7 @@ export const ProjectDetails: React.FC = (props) => {
                     >
                       <AiOutlineUpload />
                     </Box>
-                    {t("upload")}
+                    {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
@@ -119,7 +118,7 @@ export const ProjectDetails: React.FC = (props) => {
                     bg="#4E87F8"
                     color="#FFFFFF"
                     size="md"
-                    _hover={{ bg: "royalblue" }}
+                    _hover={{ bg: 'royalblue' }}
                   >
                     <Box
                       pos="relative"
@@ -127,7 +126,7 @@ export const ProjectDetails: React.FC = (props) => {
                       fontWeight="bold"
                       pb="3.3px"
                     ></Box>
-                    {t("resolve")}
+                    {t('resolve')}
                   </Button>
                 )}
                 {tabIndex === 0 && (
@@ -135,10 +134,10 @@ export const ProjectDetails: React.FC = (props) => {
                     bg="#4E87F8"
                     color="#FFFFFF"
                     size="md"
-                    _hover={{ bg: "royalblue" }}
+                    _hover={{ bg: 'royalblue' }}
                     onClick={onTransactionModalOpen}
                   >
-                    {t("newTransaction")}
+                    {t('newTransaction')}
                   </Button>
                 )}
               </Box>
@@ -167,8 +166,8 @@ export const ProjectDetails: React.FC = (props) => {
                 <Box h="100%" w="100%">
                   <AlertsTable
                     onRowClick={(e, row) => {
-                      selectedAlertRow(row.values);
-                      onAlertModalOpen();
+                      selectedAlertRow(row.values)
+                      onAlertModalOpen()
                     }}
                   />
                 </Box>
@@ -186,8 +185,8 @@ export const ProjectDetails: React.FC = (props) => {
         isOpen={isOpenDocumentModal}
         onClose={onDocumentModalClose}
         projectId={projectId}
-        setLatestUploadedDoc={(val) => {
-          setLatestUploadedDoc(val);
+        setLatestUploadedDoc={val => {
+          setLatestUploadedDoc(val)
         }}
       />
       <AddNewTransactionModal
@@ -195,5 +194,5 @@ export const ProjectDetails: React.FC = (props) => {
         onClose={onTransactionModalClose}
       />
     </>
-  );
-};
+  )
+}

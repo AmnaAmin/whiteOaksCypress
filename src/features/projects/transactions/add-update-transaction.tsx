@@ -15,6 +15,11 @@ import {
   GridItem,
   ModalProps,
   ModalCloseButton,
+  Box,
+  Heading,
+  Text,
+  Stack,
+  Divider,
 } from '@chakra-ui/react'
 import { Controller, useForm } from 'react-hook-form'
 import Select from 'components/form/react-select'
@@ -45,6 +50,8 @@ import { TransactionAmountForm } from './transaction-amount-form'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
+
+const date = new Date().toLocaleDateString()
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -155,8 +162,13 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
       <Grid templateColumns="repeat(2, 1fr)" gap={6}>
         <GridItem>
-          <FormControl isInvalid={!!errors.transactionType}>
-            <FormLabel fontSize="lg" htmlFor="transactionType">
+          <FormControl isInvalid={!!errors.transactionType} maxW={250}>
+            <FormLabel
+              fontSize="14px"
+              color="gray.600"
+              fontWeight={500}
+              htmlFor="transactionType"
+            >
               {t('transactionType')}
             </FormLabel>
             <Controller
@@ -198,7 +210,30 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         </GridItem>
 
         <GridItem>
-          <FormControl isInvalid={!!errors.against}>
+          <Stack>
+            <Text
+              fontSize="14px"
+              fontWeight={500}
+              color="gray.600"
+              fontStyle="normal"
+            >
+              {t('against')}
+            </Text>
+            <Text
+              fontSize="14px"
+              fontWeight={500}
+              color="gray.400"
+              fontStyle="normal"
+            >
+              ADT Renovation
+            </Text>
+            <Box w="250px" color="gray.200" pt="12px">
+              <Divider />
+            </Box>
+            {/* <Divider w="250px" color="gray.200" /> */}
+          </Stack>
+
+          {/* <FormControl isInvalid={!!errors.against}>
             <FormLabel fontSize="lg" htmlFor="aginst">
               {t('against')}
             </FormLabel>
@@ -223,7 +258,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
                 </>
               )}
             />
-          </FormControl>
+          </FormControl> */}
         </GridItem>
 
         {isShowWorkOrderSelectField && (
@@ -280,7 +315,29 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
 
         {isShowExpectedCompletionDateField && (
           <GridItem>
-            <FormControl isInvalid={!!errors.expectedCompletionDate}>
+            <Stack>
+              <Text
+                fontSize="14px"
+                fontWeight={500}
+                color="gray.600"
+                fontStyle="normal"
+              >
+                {t('expectedCompletionDate')}
+              </Text>
+              <Text
+                fontSize="14px"
+                fontWeight={400}
+                color="gray.400"
+                fontStyle="normal"
+              >
+                {date}
+              </Text>
+              <Box w="250px" color="gray.200" pt="12px">
+                <Divider />
+              </Box>
+              {/* <Divider w="250px" color="gray.200" /> */}
+            </Stack>
+            {/* <FormControl isInvalid={!!errors.expectedCompletionDate}>
               <FormLabel fontSize="lg" htmlFor="expectedCompletionDate">
                 {t('expectedCompletionDate')}
               </FormLabel>
@@ -296,20 +353,28 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
                 {errors.expectedCompletionDate &&
                   errors.expectedCompletionDate.message}
               </FormErrorMessage>
-            </FormControl>
+            </FormControl> */}
           </GridItem>
         )}
 
         {isShowNewExpectedCompletionDateField && (
           <GridItem>
             <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
-              <FormLabel fontSize="lg" htmlFor="newExpectedCompletionDate">
+              <FormLabel
+                fontSize="14px"
+                fontStyle="normal"
+                fontWeight={500}
+                color="gray.600"
+                htmlFor="newExpectedCompletionDate"
+              >
                 {t('newExpectedCompletionDate')}
               </FormLabel>
               <Input
+                borderLeft=" 2px solid #4E87F8"
                 id="newExpectedCompletionDate"
                 type="date"
-                size="lg"
+                size="md"
+                color="gray.400"
                 {...register('newExpectedCompletionDate')}
               />
               <FormErrorMessage>
@@ -321,7 +386,29 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
         )}
 
         <GridItem>
-          <FormControl isInvalid={!!errors.dateCreated}>
+          <Stack>
+            <Text
+              fontSize="14px"
+              fontWeight={500}
+              color="gray.600"
+              fontStyle="normal"
+            >
+              {t('dateCreated')}
+            </Text>
+            <Text
+              fontSize="14px"
+              fontWeight={400}
+              color="gray.400"
+              fontStyle="normal"
+            >
+              {date}
+            </Text>
+            <Box w="250px" color="gray.200" pt="12px">
+              <Divider />
+            </Box>
+            {/* <Divider w="250px" color="gray.200" /> */}
+          </Stack>
+          {/* <FormControl isInvalid={!!errors.dateCreated}>
             <FormLabel fontSize="lg" htmlFor="dateCreated">
               {t('dateCreated')}
             </FormLabel>
@@ -338,11 +425,33 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
             <FormErrorMessage>
               {errors.dateCreated && errors.dateCreated.message}
             </FormErrorMessage>
-          </FormControl>
+          </FormControl> */}
         </GridItem>
 
         <GridItem>
-          <FormControl isInvalid={!!errors.createdBy}>
+          <Stack>
+            <Text
+              fontSize="14px"
+              fontWeight={500}
+              color="gray.600"
+              fontStyle="normal"
+            >
+              {t('createdBy')}
+            </Text>
+            <Text
+              fontSize="14px"
+              fontWeight={400}
+              color="gray.400"
+              fontStyle="normal"
+            >
+              vendor@devtek.ai
+            </Text>
+            <Box w="250px" color="gray.200" pt="12px">
+              <Divider />
+            </Box>
+            {/* <Divider w="250px" color="gray.200" /> */}
+          </Stack>
+          {/* <FormControl isInvalid={!!errors.createdBy}>
             <FormLabel fontSize="lg" htmlFor="createdBy">
               {t('createdBy')}
             </FormLabel>
@@ -360,7 +469,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({
             <FormErrorMessage>
               {errors.createdBy && errors.createdBy.message}
             </FormErrorMessage>
-          </FormControl>
+          </FormControl> */}
         </GridItem>
       </Grid>
 
