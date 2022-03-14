@@ -6,38 +6,38 @@ import {
   Button,
   ModalFooter,
   Divider,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
-import React from "react";
-import { BiDollarCircle, BiFile, BiCalendar } from "react-icons/bi";
-import InputView from "components/input-view/input-view";
-import { currencyFormatter } from "utils/stringFormatters";
-import { dateFormat } from "utils/date-time-utils";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { BiDollarCircle, BiFile, BiCalendar } from 'react-icons/bi'
+import InputView from 'components/input-view/input-view'
+import { currencyFormatter } from 'utils/stringFormatters'
+import { dateFormat } from 'utils/date-time-utils'
+import { useTranslation } from 'react-i18next'
 
 type InvoiceAndPaymentData = {
-  dateInvoiceSubmitted: string;
-  paymentTermDate: string;
-  datePaymentProcessed: string;
-  expectedPaymentDate: string;
-  paymentTerm: string;
-  workOrderPayDateVariance: string;
-  datePaid: string;
-  clientOriginalApprovedAmount: number;
-  invoiceAmount: number;
-  finalInvoiceAmount: number;
-  dateLeanWaiverSubmitted: string;
-  datePermitsPulled: string;
-};
+  dateInvoiceSubmitted: string
+  paymentTermDate: string
+  datePaymentProcessed: string
+  expectedPaymentDate: string
+  paymentTerm: string
+  workOrderPayDateVariance: string
+  datePaid: string
+  clientOriginalApprovedAmount: number
+  invoiceAmount: number
+  finalInvoiceAmount: number
+  dateLeanWaiverSubmitted: string
+  datePermitsPulled: string
+}
 
 const InvoicingAndPaymentTab = ({
   invoiceAndPaymentData,
   onClose,
 }: {
-  invoiceAndPaymentData: InvoiceAndPaymentData;
-  onClose: () => void;
+  invoiceAndPaymentData: InvoiceAndPaymentData
+  onClose: () => void
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
   return (
     <Stack>
       <HStack mt={30} spacing="10px">
@@ -155,7 +155,7 @@ const InvoicingAndPaymentTab = ({
             InputElem={
               <Text>
                 {currencyFormatter(
-                  invoiceAndPaymentData?.clientOriginalApprovedAmount
+                  invoiceAndPaymentData?.clientOriginalApprovedAmount,
                 )}
               </Text>
             }
@@ -177,11 +177,11 @@ const InvoicingAndPaymentTab = ({
       <Divider />
       <ModalFooter>
         <Button variant="ghost" onClick={onClose}>
-          {t("close")}
+          {t('close')}
         </Button>
       </ModalFooter>
     </Stack>
-  );
-};
+  )
+}
 
-export default InvoicingAndPaymentTab;
+export default InvoicingAndPaymentTab
