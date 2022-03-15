@@ -1,17 +1,19 @@
-import React from 'react';
-import { Box, HStack, Flex, Text } from '@chakra-ui/react';
+import React from 'react'
+import { Box, HStack, Flex, Text } from '@chakra-ui/react'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 type cardprops = {
-  UpdownIcon: React.ElementType;
-  BigIcon: React.ElementType;
-  number?: number;
-  name: string;
-  Iconbgcolor: any;
-  TopnumberbgColor: any;
-  numbertext?: string;
-  numberColor: string;
-};
+  UpdownIcon: React.ElementType
+  BigIcon: React.ElementType
+  number?: number
+  name: string
+  Iconbgcolor: any
+  TopnumberbgColor: any
+  numbertext?: string
+  numberColor: string
+  isLoading?: boolean
+}
 export const ProjectSummaryCard = (props: cardprops) => {
-  const { UpdownIcon, BigIcon, numberColor } = props;
+  const { UpdownIcon, BigIcon, numberColor, isLoading } = props
   return (
     <HStack>
       <Flex alignItems="end" justifyContent="end">
@@ -36,15 +38,19 @@ export const ProjectSummaryCard = (props: cardprops) => {
             </Box>
             &nbsp;XX%
           </Box>
-          <Box fontWeight="600" fontSize="24px" height="40px">
-            {props.number}
-            {props.numbertext}
-          </Box>
+          {isLoading ? (
+            <BlankSlate width="100%" />
+          ) : (
+            <Box fontWeight="600" fontSize="24px" height="40px">
+              {props.number}
+              {props.numbertext}
+            </Box>
+          )}
           <Text lineHeight="1" fontWeight="normal" fontSize="20px" color="gray.400">
             {props.name}
           </Text>
         </Flex>
       </Flex>
     </HStack>
-  );
-};
+  )
+}

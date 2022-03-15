@@ -1,45 +1,33 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Flex,
-  Spacer,
-  VStack,
-  Text,
-  useDisclosure,
-  Heading,
-} from "@chakra-ui/react";
+import React, { useState } from 'react'
+import { Box, Flex, Spacer, VStack, Text, useDisclosure, Heading } from '@chakra-ui/react'
 
-import { ProjectSummary } from "../features/dashboard/project-summary";
-import { VendorScore } from "../components/VendorScore/vendor-score";
-import { Card } from "../components/card/card";
-import Overview from "../components/chart/Overview";
-import PaidChart from "../components/chart/paid-chart";
-import { usePaidWOAmountByYearAndMonthTotal } from "utils/vendor-dashboard";
-import Dropdown from "../components/dropdown-menu/Dropdown";
+import { ProjectSummary } from '../features/dashboard/project-summary'
+import { VendorScore } from '../components/VendorScore/vendor-score'
+import { Card } from '../components/card/card'
+import Overview from '../components/chart/Overview'
+import PaidChart from '../components/chart/paid-chart'
+import { usePaidWOAmountByYearAndMonthTotal } from 'utils/vendor-dashboard'
+import Dropdown from '../components/dropdown-menu/Dropdown'
 
-import { MonthOption, monthOptions } from "utils/date-time-utils";
-import { useTranslation } from "react-i18next";
-import "components/translation/i18n";
-import { numberWithCommas } from "utils";
+import { MonthOption, monthOptions } from 'utils/date-time-utils'
+import { useTranslation } from 'react-i18next'
+import 'components/translation/i18n'
+import { numberWithCommas } from 'utils'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
 
 export const Dashboard: React.FC = () => {
-  const vendorId = 4;
-  // const { vendorId } = useSelector(
-  //   (state: IRootState) => state.authentication.account,
-  //   shallowEqual
-  // );
+  const { vendorId } = useUserProfile() as Account
+
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
-  const { onToggle } = useDisclosure();
-  const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0]);
-  const { data: paidTotal = "" } = usePaidWOAmountByYearAndMonthTotal(
-    paidOption?.year ?? "",
-    paidOption?.month ?? ""
-  );
-  const { t } = useTranslation();
+  const { onToggle } = useDisclosure()
+  const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
+  const { data: paidTotal = '' } = usePaidWOAmountByYearAndMonthTotal(paidOption?.year ?? '', paidOption?.month ?? '')
+  const { t } = useTranslation()
 
   return (
     <VStack w="100%" zIndex={2}>
-      <Box w={{ base: "100%" }}>
+      <Box w={{ base: '100%' }}>
         <VendorScore vendorId={vendorId} />
       </Box>
 
@@ -48,20 +36,15 @@ export const Dashboard: React.FC = () => {
       </Box>
 
       <Box w="100%">
-        <Text
-          fontSize="22px"
-          fontWeight={700}
-          paddingInlineStart="14px"
-          m="15px 0 10px"
-        >
-          {t("WOstatusGraph")}
+        <Text fontSize="22px" fontWeight={700} paddingInlineStart="14px" m="15px 0 10px">
+          {t('WOstatusGraph')}
         </Text>
       </Box>
 
       <Flex
         direction={{
-          base: "column",
-          xl: "row",
+          base: 'column',
+          xl: 'row',
         }}
         justifyContent="stretch"
         w="100%"
@@ -69,28 +52,16 @@ export const Dashboard: React.FC = () => {
       >
         <Card rounded="13px" flex={1}>
           <Flex mb="70px" mt="20px">
-            <Text
-              color="#2D3748"
-              fontWeight="bold"
-              fontSize="20px"
-              lineHeight="26px"
-              ml="17px"
-            >
-              {t("overview")}
+            <Text color="#2D3748" fontWeight="bold" fontSize="20px" lineHeight="26px" ml="17px">
+              {t('overview')}
             </Text>
           </Flex>
           <Overview vendorId={vendorId} />
         </Card>
 
-        <Card
-          p={0}
-          rounded="13px"
-          flex={1}
-          ml={{ base: 0, xl: "12px" }}
-          mt={{ base: "30px", xl: 0 }}
-        >
+        <Card p={0} rounded="13px" flex={1} ml={{ base: 0, xl: '12px' }} mt={{ base: '30px', xl: 0 }}>
           <Flex mb="40px">
-            <Text
+            <Box
               pos="relative"
               onClick={onToggle}
               fontSize="24px"
@@ -99,7 +70,7 @@ export const Dashboard: React.FC = () => {
               top="32px"
               color="#1B2559"
             >
-              {t("paid")}
+              {t('paid')}
               <Box
                 bg="white"
                 padding="20px 40px 20px 40px"
@@ -108,21 +79,15 @@ export const Dashboard: React.FC = () => {
                 rounded="8px"
               >
                 <Text fontWeight="normal" fontSize="12px" color="#A3AED0">
-                  {t("paidSmall")}
+                  {t('paidSmall')}
                 </Text>
 
-                <Heading fontSize="22px">
-                  ${numberWithCommas(paidTotal)}
-                </Heading>
+                <Heading fontSize="22px">${numberWithCommas(paidTotal)}</Heading>
               </Box>
-            </Text>
+            </Box>
             <Spacer />
             <Box pos="relative" top="30px" right={35} w="180px">
-              <Dropdown
-                options={monthOptions}
-                onChange={setPaidOption}
-                defaultValue={paidOption}
-              />
+              <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
 
@@ -130,5 +95,5 @@ export const Dashboard: React.FC = () => {
         </Card>
       </Flex>
     </VStack>
-  );
-};
+  )
+}
