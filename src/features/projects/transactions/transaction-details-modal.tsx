@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -22,22 +22,22 @@ import {
   Grid,
   GridItem,
   ModalCloseButton,
-} from "@chakra-ui/react";
-import { useTransaction } from "utils/transactions";
-import { BiCalendar, BiUser } from "react-icons/bi";
-import { dateFormat } from "utils/date-time-utils";
+} from '@chakra-ui/react'
+import { useTransaction } from 'utils/transactions'
+import { BiCalendar, BiUser } from 'react-icons/bi'
+import { dateFormat } from 'utils/date-time-utils'
 // import { t } from 'i18next';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next'
 
-type CustomModalProps = Pick<ModalProps, "isOpen" | "onClose">;
+type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
 type AddNewTransactionProps = CustomModalProps & {
-  selectedTransactionId: number;
-};
+  selectedTransactionId: number
+}
 
 const InfoCard: React.FC<{
-  title: string;
-  subTitle: string;
-  Icon?: React.ElementType;
+  title: string
+  subTitle: string
+  Icon?: React.ElementType
 }> = ({ title, subTitle, Icon }) => {
   return (
     <Flex>
@@ -49,16 +49,16 @@ const InfoCard: React.FC<{
         </Text>
       </Flex>
     </Flex>
-  );
-};
+  )
+}
 
 export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
   isOpen,
   onClose,
   selectedTransactionId,
 }) => {
-  const { t } = useTranslation();
-  const { transaction } = useTransaction(selectedTransactionId);
+  const { t } = useTranslation()
+  const { transaction } = useTransaction(selectedTransactionId)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
@@ -67,7 +67,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
           {transaction?.name}
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: "none" }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} />
 
         <ModalBody px="6" py="8">
           <VStack
@@ -81,7 +81,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
           >
             <Box borderBottom="1px solid" borderColor="gray.200" p={7}>
               <InfoCard
-                title={t("transactionType")}
+                title={t('transactionType')}
                 subTitle={transaction?.transactionTypeLabel as string}
               />
             </Box>
@@ -95,28 +95,28 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             >
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
-                  title={t("dateCreated")}
+                  title={t('dateCreated')}
                   subTitle={dateFormat(transaction?.createdDate as string)}
                   Icon={BiCalendar}
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
-                  title={t("createdBy")}
+                  title={t('createdBy')}
                   subTitle={transaction?.createdBy as string}
                   Icon={BiUser}
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
-                  title={t("dateModified")}
+                  title={t('dateModified')}
                   subTitle={dateFormat(transaction?.modifiedDate as string)}
                   Icon={BiCalendar}
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
-                  title={t("modifiedBy")}
+                  title={t('modifiedBy')}
                   subTitle={transaction?.modifiedBy as string}
                   Icon={BiUser}
                 />
@@ -128,14 +128,13 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             <Table colorScheme="gray">
               <Thead bg="gray.50">
                 <Tr>
-                  <Th>{t("description")}</Th>
-                  <Th>{t("amount")}</Th>
+                  <Th>{t('description')}</Th>
+                  <Th>{t('amount')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {transaction?.lineItems?.map((t) => {
-                  const amount =
-                    Number(t.whiteoaksCost) || Number(t.vendorCost);
+                {transaction?.lineItems?.map(t => {
+                  const amount = Number(t.whiteoaksCost) || Number(t.vendorCost)
                   return (
                     <Tr key={t.id}>
                       <Td>{t.description}</Td>
@@ -143,18 +142,24 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                         {amount < 0 ? `-$${Math.abs(amount)}` : `$${amount}`}
                       </Td>
                     </Tr>
-                  );
+                  )
                 })}
               </Tbody>
             </Table>
           </Box>
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} colorScheme="button">
-            {t("close")}
+          <Button
+            onClick={onClose}
+            colorScheme="CustomPrimaryColor"
+            fontSize="16px"
+            fontWeight={600}
+            fontStyle="normal"
+          >
+            {t('close')}
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
