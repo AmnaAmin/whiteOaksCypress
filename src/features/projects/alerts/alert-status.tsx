@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,60 +14,60 @@ import {
   Center,
   VStack,
   HStack,
-} from "@chakra-ui/react";
-import { RiErrorWarningLine } from "react-icons/ri";
+} from '@chakra-ui/react'
+import { RiErrorWarningLine } from 'react-icons/ri'
 import {
   BiListMinus,
   BiMapPin,
   BiWorld,
   BiUser,
   BiCalendar,
-} from "react-icons/bi";
+} from 'react-icons/bi'
 
 type AlertStatusProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  alert: any;
-};
+  isOpen: boolean
+  onClose: () => void
+  alert: any
+}
 
 const alertStatusInfo = [
   {
-    id: "projectId",
-    title: "Project Id",
-    value: "2793",
+    id: 'projectId',
+    title: 'Project Id',
+    value: '2793',
     icon: BiListMinus,
   },
   {
-    id: "address",
-    title: "Address",
-    value: "133 CUMBERLAND GREEN DR",
+    id: 'address',
+    title: 'Address',
+    value: '133 CUMBERLAND GREEN DR',
     icon: BiMapPin,
   },
   {
-    id: "city",
-    title: "City",
-    value: "Cary",
+    id: 'city',
+    title: 'City',
+    value: 'Cary',
     icon: BiWorld,
   },
   {
-    id: "state",
-    title: "State/Zipcode",
-    value: "NC / 27513",
+    id: 'state',
+    title: 'State/Zipcode',
+    value: 'NC / 27513',
     icon: BiUser,
   },
   {
-    id: "woStartDate",
-    title: "Work Order Start Date",
-    value: "2021-10-24",
+    id: 'woStartDate',
+    title: 'Work Order Start Date',
+    value: '2021-10-24',
     icon: BiCalendar,
   },
   {
-    id: "woCompletionDate",
-    title: "Work Order Completion Date",
-    value: "2021-11-22",
+    id: 'woCompletionDate',
+    title: 'Work Order Completion Date',
+    value: '2021-11-22',
     icon: BiCalendar,
   },
-];
+]
 
 const AlertCard = () => {
   return (
@@ -107,8 +107,8 @@ const AlertCard = () => {
         </Center>
       </Flex>
     </Box>
-  );
-};
+  )
+}
 
 const AlertInfo = () => {
   return (
@@ -124,8 +124,8 @@ const AlertInfo = () => {
             <HStack spacing="10px" align="start">
               <Box mt="2px">
                 {React.createElement(al.icon, {
-                  fontSize: "20px",
-                  opacity: "0.4",
+                  fontSize: '20px',
+                  opacity: '0.4',
                 })}
               </Box>
               <VStack align="start">
@@ -138,11 +138,11 @@ const AlertInfo = () => {
               </VStack>
             </HStack>
           </GridItem>
-        );
+        )
       })}
     </>
-  );
-};
+  )
+}
 export const AlertStatusModal: React.FC<AlertStatusProps> = ({
   isOpen,
   onClose,
@@ -191,5 +191,5 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({
         </Modal>
       )}
     </>
-  );
-};
+  )
+}
