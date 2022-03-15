@@ -66,13 +66,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader
-          bg="gray.50"
-          borderBottom="1px solid #eee"
-          fontSize="18px"
-          fontWeight={700}
-          color="gray.700"
-        >
+        <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="18px" fontWeight={700} color="gray.700">
           {transaction?.name}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
@@ -88,19 +82,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             boxShadow="sm"
           >
             <Box borderBottom="1px solid" borderColor="gray.200" p={7}>
-              <InfoCard
-                title={t('transactionType')}
-                subTitle={transaction?.transactionTypeLabel as string}
-              />
+              <InfoCard title={t('transactionType')} subTitle={transaction?.transactionTypeLabel as string} />
             </Box>
 
-            <Grid
-              templateColumns="215px 1fr"
-              rowGap={7}
-              columnGap={12}
-              px={7}
-              pb={12}
-            >
+            <Grid templateColumns="215px 1fr" rowGap={7} columnGap={12} px={7} pb={12}>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
                   title={t('dateCreated')}
@@ -109,11 +94,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
-                <InfoCard
-                  title={t('createdBy')}
-                  subTitle={transaction?.createdBy as string}
-                  Icon={BiUser}
-                />
+                <InfoCard title={t('createdBy')} subTitle={transaction?.createdBy as string} Icon={BiUser} />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
@@ -123,11 +104,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
-                <InfoCard
-                  title={t('modifiedBy')}
-                  subTitle={transaction?.modifiedBy as string}
-                  Icon={BiUser}
-                />
+                <InfoCard title={t('modifiedBy')} subTitle={transaction?.modifiedBy as string} Icon={BiUser} />
               </GridItem>
             </Grid>
           </VStack>
@@ -136,20 +113,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             <Table colorScheme="gray">
               <Thead bg="gray.50">
                 <Tr>
-                  <Th
-                    fontSize="12px"
-                    fontWeight={700}
-                    color="gray.700"
-                    textTransform="capitalize"
-                  >
+                  <Th fontSize="12px" fontWeight={700} color="gray.700" textTransform="capitalize">
                     {t('description')}
                   </Th>
-                  <Th
-                    fontSize="12px"
-                    fontWeight={700}
-                    color="gray.700"
-                    textTransform="capitalize"
-                  >
+                  <Th fontSize="12px" fontWeight={700} color="gray.700" textTransform="capitalize">
                     {t('amount')}
                   </Th>
                 </Tr>
@@ -173,7 +140,13 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
           </Box>
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} colorScheme="button">
+          <Button
+            onClick={onClose}
+            colorScheme="CustomPrimaryColor"
+            fontSize="16px"
+            fontWeight={600}
+            fontStyle="normal"
+          >
             {t('close')}
           </Button>
         </ModalFooter>

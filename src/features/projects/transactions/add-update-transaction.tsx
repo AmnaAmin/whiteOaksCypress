@@ -547,7 +547,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
           </Button>
 
           <Button
-            colorScheme="button"
+            colorScheme="CustomPrimaryColor"
             type="submit"
             form="newTransactionForm"
             ml="3"
