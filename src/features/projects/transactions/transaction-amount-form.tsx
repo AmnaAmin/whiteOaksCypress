@@ -19,12 +19,7 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlineFileText, AiOutlinePlus } from 'react-icons/ai'
-import {
-  Controller,
-  useFieldArray,
-  useWatch,
-  UseFormReturn,
-} from 'react-hook-form'
+import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
 import { useTotalAmount } from './hooks'
 import { FormValues, TransactionTypeValues } from 'types/transaction.type'
@@ -38,9 +33,7 @@ type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
 }
 
-export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
-  formReturn,
-}) => {
+export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [document, setDocument] = useState<File | null>(null)
@@ -78,17 +71,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   })
 
   const [checkedItems, setCheckedItems] = React.useState<GenericObjectType>(
-    transaction.reduce(
-      (final, current) => ({ ...final, [current.id]: false }),
-      {},
-    ),
+    transaction.reduce((final, current) => ({ ...final, [current.id]: false }), {}),
   )
-  const allChecked = isValidAndNonEmptyObject(checkedItems)
-    ? Object.values(checkedItems).every(Boolean)
-    : false
-  const someChecked = isValidAndNonEmptyObject(checkedItems)
-    ? Object.values(checkedItems).some(Boolean)
-    : false
+  const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
+  const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
 
   const totalAmount = useTotalAmount(control)
@@ -141,13 +127,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     if (transactionFields.length === indexes.length) {
       setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
     }
-  }, [
-    checkedItems,
-    removeTransactionField,
-    transactionFields,
-    onDeleteConfirmationModalClose,
-    setValue,
-  ])
+  }, [checkedItems, removeTransactionField, transactionFields, onDeleteConfirmationModalClose, setValue])
 
   return (
     <>
@@ -177,12 +157,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           </Button>
         </Box>
 
-        <input
-          type="file"
-          ref={inputRef}
-          style={{ display: 'none' }}
-          onChange={onFileChange}
-        ></input>
+        <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
         {document ? (
           <Box
             color="barColor.100"
@@ -192,13 +167,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             fontSize="16px"
           >
             <HStack spacing="5px" h="31px" padding="10px" align="center">
-              <Box
-                as="span"
-                maxWidth="500px"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-              >
+              <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                 {document?.name}
               </Box>
               <MdOutlineCancel
@@ -234,15 +203,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             <Tr>
               {transactionFields?.length > 1 && (
                 <Th px="3">
-                  <Checkbox
-                    isChecked={allChecked}
-                    isIndeterminate={isIndeterminate}
-                    onChange={toggleAllCheckboxes}
-                  />
+                  <Checkbox isChecked={allChecked} isIndeterminate={isIndeterminate} onChange={toggleAllCheckboxes} />
                 </Th>
               )}
-              <Th>{t('description')}</Th>
-              <Th>{t('amount')}</Th>
+              <Th fontWeight={700} fontSize="12px" color="gray.600" fontStyle="normal" textTransform="capitalize">
+                {t('description')}
+              </Th>
+              <Th fontWeight={700} fontSize="12px" color="gray.600" fontStyle="normal" textTransform="capitalize">
+                {t('amount')}
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -262,22 +231,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   </Td>
                 )}
                 <Td>
-                  <FormControl
-                    isInvalid={!!errors.transaction?.[index].description}
-                  >
+                  <FormControl isInvalid={!!errors.transaction?.[index].description}>
                     <Input
                       type="text"
                       size="lg"
                       placeholder="description"
-                      {...register(
-                        `transaction.${index}.description` as const,
-                        { required: 'This is required' },
-                      )}
+                      {...register(`transaction.${index}.description` as const, { required: 'This is required' })}
                     />
 
-                    <FormErrorMessage>
-                      {errors?.transaction?.[index]?.description?.message ?? ''}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
                   </FormControl>
                 </Td>
                 <Td maxW="120">
@@ -297,20 +259,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                               size="lg"
                               placeholder="amount"
                               onChange={event => {
-                                const inputValue = Number(
-                                  event.currentTarget.value,
-                                )
+                                const inputValue = Number(event.currentTarget.value)
                                 field.onChange(
-                                  TransactionTypeValues.draw ===
-                                    getValues('transactionType')?.value
+                                  TransactionTypeValues.draw === getValues('transactionType')?.value
                                     ? -1 * Math.abs(inputValue)
                                     : inputValue,
                                 )
                               }}
                             />
-                            <FormErrorMessage>
-                              {fieldState.error?.message}
-                            </FormErrorMessage>
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                           </>
                         )
                       }}
@@ -324,7 +281,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       </Box>
 
       <Flex pt="3" flexDirection="row-reverse">
-        <Text>{totalAmount}</Text>
+        <Text color="gray.600" fontSize="16px" fontWeight={600} fontStyle="normal">
+          {totalAmount}
+        </Text>
       </Flex>
 
       <ConfirmationBox
