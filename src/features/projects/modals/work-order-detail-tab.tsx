@@ -136,7 +136,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
               ProductName="Debrish Trash"
               Details="Remove Trash from Outdoor"
               Quantity="2"
-              Price="$45000000"
+              Price="$450"
               Status="Not Completed"
               Images="Upload"
             />
