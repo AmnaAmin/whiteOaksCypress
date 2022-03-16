@@ -46,7 +46,7 @@ const TableBodyChilde: React.FC<{
     <SimpleGrid
       columns={7}
       // gap={10}
-      spacing={10}
+      spacing={5}
       p={3}
       pl={8}
       h="72px"
@@ -119,7 +119,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
         </Flex>
         <Box border="1px solid #E2E8F0">
           <Box bg=" #F7FAFC" h="40px">
-            <SimpleGrid columns={7} p={3} pl={8} gap={10} color="#718096" fontSize={12} fontWeight={700}>
+            <SimpleGrid columns={7} p={3} pl={8} gap={4} color="#718096" fontSize={12} fontWeight={700}>
               <Text>SKU</Text>
               <Text>ProductName</Text>
               <Text>Details</Text>
