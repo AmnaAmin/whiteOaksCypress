@@ -1,147 +1,141 @@
-import React, { useCallback, useState } from "react";
-import { Box, Td, Tr, Text, Flex, useDisclosure, Tag } from "@chakra-ui/react";
-import { useColumnWidthResize } from "utils/hooks/useColumnsWidthResize";
-import ReactTable, { RowProps } from "components/table/react-table";
-import { useTransactions } from "utils/transactions";
-import { useParams } from "react-router";
-import { dateFormat } from "utils/date-time-utils";
-import { UpdateTransactionModal } from "./add-update-transaction";
-import { TransactionTypeValues } from "types/transaction.type";
-import { TransactionDetailsModal } from "./transaction-details-modal";
-import { t } from "i18next";
+import React, { useCallback, useState } from 'react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, Tag } from '@chakra-ui/react'
+import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import ReactTable, { RowProps } from 'components/table/react-table'
+import { useTransactions } from 'utils/transactions'
+import { useParams } from 'react-router'
+import { dateFormat } from 'utils/date-time-utils'
+import { UpdateTransactionModal } from './add-update-transaction'
+import { TransactionTypeValues } from 'types/transaction.type'
+import { TransactionDetailsModal } from './transaction-details-modal'
+import { t } from 'i18next'
 
 const STATUS_TAG_COLOR_SCHEME = {
   denied: {
-    bg: "purple.100",
-    color: "purple.600",
+    bg: 'purple.100',
+    color: 'purple.600',
   },
 
   approved: {
-    bg: "green.100",
-    color: "green.600",
+    bg: 'green.100',
+    color: 'green.600',
   },
   cancelled: {
-    bg: "red.100",
-    color: "red.400",
+    bg: 'red.100',
+    color: 'red.400',
   },
 
   pending: {
-    bg: "orange.100",
-    color: "orange.600",
+    bg: 'orange.100',
+    color: 'orange.600',
   },
-};
+}
 
 const COLUMNS = [
   {
-    Header: "ID",
-    accessor: "name",
+    Header: 'ID',
+    accessor: 'name',
   },
   {
-    Header: t("type"),
-    accessor: "transactionTypeLabel",
+    Header: t('type'),
+    accessor: 'transactionTypeLabel',
   },
   {
-    Header: t("trade"),
-    accessor: "skillName",
+    Header: t('trade'),
+    accessor: 'skillName',
   },
   {
-    Header: t("totalAmount"),
-    accessor: "transactionTotal",
+    Header: t('totalAmount'),
+    accessor: 'transactionTotal',
   },
   {
-    Header: t("status"),
-    accessor: "status",
+    Header: t('status'),
+    accessor: 'status',
     Cell(cellInfo) {
+      const value = (cellInfo.value || '').toLowerCase()
       return (
         <Tag
           textTransform="capitalize"
-          fontWeight={"normal"}
+          fontWeight={500}
           lineHeight={2}
-          {...STATUS_TAG_COLOR_SCHEME[(cellInfo.value || "").toLowerCase()]}
+          fontSize={12}
+          rounded={6}
+          {...STATUS_TAG_COLOR_SCHEME[value]}
         >
-          {cellInfo.value}
+          {value}
         </Tag>
-      );
+      )
     },
   },
   {
-    Header: t("submit"),
-    accessor: "modifiedDate",
+    Header: t('submit'),
+    accessor: 'modifiedDate',
     Cell({ value }) {
-      return <Box>{dateFormat(value)}</Box>;
+      return <Box>{dateFormat(value)}</Box>
     },
   },
   {
-    Header: t("approvedBy"),
-    accessor: "approvedBy",
+    Header: t('approvedBy'),
+    accessor: 'approvedBy',
   },
-];
+]
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
       _hover={{
-        background: "#eee",
+        background: '#eee',
       }}
       {...row.getRowProps({
         style,
       })}
-      onClick={(event) => onRowClick(event, row)}
+      onClick={event => onRowClick(event, row)}
     >
-      {row.cells.map((cell) => {
+      {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px" pl="2">
-              <Text
-                noOfLines={2}
-                title={cell.value}
-                padding="0 15px"
-                color="blackAlpha.700"
-              >
-                {cell.render("Cell")}
+              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.700">
+                {cell.render('Cell')}
               </Text>
             </Flex>
           </Td>
-        );
+        )
       })}
     </Tr>
-  );
-};
+  )
+}
 
 export const TransactionsTable = React.forwardRef((props, ref) => {
-  const { projectId } = useParams<"projectId">();
-  const [selectedTransactionId, setSelectedTransactionId] = useState<number>();
-  const { transactions = [] } = useTransactions(projectId);
-  const { columns } = useColumnWidthResize(COLUMNS, ref);
-  const {
-    isOpen: isOpenEditModal,
-    onOpen: onEditModalOpen,
-    onClose: onEditModalClose,
-  } = useDisclosure();
+  const { projectId } = useParams<'projectId'>()
+  const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const { transactions = [] } = useTransactions(projectId)
+  const { columns } = useColumnWidthResize(COLUMNS, ref)
+  const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
     isOpen: isOpenTransactionDetailsModal,
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
-  } = useDisclosure();
+  } = useDisclosure()
 
   const onRowClick = useCallback(
     (_, row) => {
-      const { original } = row;
+      const { original } = row
       const isEditableByVendorTransactionType =
         original.transactionType === TransactionTypeValues.changeOrder ||
-        original.transactionType === TransactionTypeValues.draw;
+        original.transactionType === TransactionTypeValues.draw
 
-      setSelectedTransactionId(original.id);
+      setSelectedTransactionId(original.id)
 
-      if (original.status === "PENDING" && isEditableByVendorTransactionType) {
-        onEditModalOpen();
+      if (original.status === 'PENDING' && isEditableByVendorTransactionType) {
+        onEditModalOpen()
       } else {
-        onTransactionDetailsModalOpen();
+        onTransactionDetailsModalOpen()
       }
     },
-    [onEditModalOpen, onTransactionDetailsModalOpen]
-  );
+    [onEditModalOpen, onTransactionDetailsModalOpen],
+  )
 
   return (
     <Box h="100%">
@@ -165,5 +159,5 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         selectedTransactionId={selectedTransactionId as number}
       />
     </Box>
-  );
-});
+  )
+})

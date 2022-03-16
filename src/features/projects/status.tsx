@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tag, TagLabel } from '@chakra-ui/react';
+import React from 'react'
+import { Tag, TagLabel } from '@chakra-ui/react'
 
 export enum STATUS {
   Paid = 'paid',
@@ -21,16 +21,25 @@ const STATUS_COLOR = {
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
-};
+}
 
 const Status = ({ value, id }: { value: string; id: string }) => {
-  const style = STATUS_COLOR[id?.toLocaleLowerCase()];
+  const style = STATUS_COLOR[id?.toLocaleLowerCase()]
 
   return (
-    <Tag size="lg" borderRadius="full" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
-      <TagLabel>{value}</TagLabel>
+    <Tag
+      textTransform="capitalize"
+      size="lg"
+      borderRadius="full"
+      variant="solid"
+      backgroundColor={style?.backgroundColor}
+      color={style?.color}
+      fontSize={12}
+      fontWeight={500}
+    >
+      <TagLabel>{value.toLowerCase()}</TagLabel>
     </Tag>
-  );
-};
+  )
+}
 
-export default Status;
+export default Status
