@@ -1,28 +1,22 @@
-import React, { useEffect } from "react";
-import { Box, Button, Flex, useToast } from "@chakra-ui/react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import {
-  VendorProfile,
-  VendorProfilePayload,
-  VendorTradeFormValues,
-} from "types/vendor.types";
+import React, { useEffect } from 'react'
+import { Box, Button, Flex, useToast } from '@chakra-ui/react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { VendorProfile, VendorProfilePayload, VendorTradeFormValues } from 'types/vendor.types'
 import {
   parseTradeAPIDataToFormValues,
   parseTradeFormValuesToAPIPayload,
   useTrades,
   useVendorProfileUpdateMutation,
-} from "utils/vendor-details";
-import { CheckboxButton } from "components/form/checkbox-button";
-import { useTranslation } from "react-i18next";
+} from 'utils/vendor-details'
+import { CheckboxButton } from 'components/form/checkbox-button'
+import { useTranslation } from 'react-i18next'
 // import 'components/translation/i18n';
 
-export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({
-  vendorProfileData,
-}) => {
-  const { t } = useTranslation();
-  const toast = useToast();
-  const { data: trades } = useTrades();
-  const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation();
+export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData }) => {
+  const { t } = useTranslation()
+  const toast = useToast()
+  const { data: trades } = useTrades()
+  const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
   const {
     handleSubmit,
     control,
@@ -32,41 +26,35 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({
     defaultValues: {
       trades: [],
     },
-  });
+  })
 
   const { fields: tradeCheckboxes } = useFieldArray({
     control,
-    name: "trades",
-  });
+    name: 'trades',
+  })
 
   useEffect(() => {
     if (trades?.length) {
-      const tradeFormValues = parseTradeAPIDataToFormValues(
-        trades,
-        vendorProfileData
-      );
+      const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData)
 
-      reset(tradeFormValues);
+      reset(tradeFormValues)
     }
-  }, [trades, vendorProfileData, reset]);
+  }, [trades, vendorProfileData, reset])
 
   const onSubmit = (formValues: VendorTradeFormValues) => {
-    const vendorProfilePayload: VendorProfilePayload = parseTradeFormValuesToAPIPayload(
-      formValues,
-      vendorProfileData
-    );
+    const vendorProfilePayload: VendorProfilePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData)
 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
         toast({
-          title: "Update Vendor Profile Trades",
-          description: "Vendor profile trades has been saved successfully.",
-          status: "success",
+          title: 'Update Vendor Profile Trades',
+          description: 'Vendor profile trades has been saved successfully.',
+          status: 'success',
           isClosable: true,
-        });
+        })
       },
-    });
-  };
+    })
+  }
 
   return (
     <Box>
@@ -85,35 +73,35 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({
                         name={name}
                         key={name}
                         isChecked={value.checked}
-                        onChange={(event) => {
-                          const checked = event.target.checked;
-                          onChange({ ...checkbox, checked });
+                        onChange={event => {
+                          const checked = event.target.checked
+                          onChange({ ...checkbox, checked })
                         }}
                       >
                         {value.skill}
                       </CheckboxButton>
-                    );
+                    )
                   }}
                 />
-              );
+              )
             })}
           </Flex>
         </Box>
-        <Flex
-          borderTop="1px solid #E2E8F0"
-          textAlign="end"
-          pt="20px"
-          pr="5%"
-          w="100%"
-          h="130px"
-          mt="20px"
-          justifyContent="end"
-        >
-          <Button type="submit" colorScheme="button">
-            {t("save")}
+        <Flex borderTop="2px solid #E2E8F0" textAlign="end" w="100%" h="130px" justifyContent="end">
+          <Button
+            mt="16px"
+            mr="60px"
+            type="submit"
+            colorScheme="CustomPrimaryColor"
+            size="md"
+            fontWeight={600}
+            fontStyle="normal"
+            fontSize="16px"
+          >
+            {t('save')}
           </Button>
         </Flex>
       </form>
     </Box>
-  );
-};
+  )
+}
