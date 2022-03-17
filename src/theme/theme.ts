@@ -97,7 +97,6 @@ export const theme = extendTheme({
       800: '#FC8181',
       900: '#FC8181',
     },
-
     CustomPrimaryColor: {
       50: '#4E87F8',
       100: '#4E87F8',

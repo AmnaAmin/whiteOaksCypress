@@ -18,6 +18,13 @@ import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
 import { Document } from 'types/vendor.types'
 
+const projectTabStyle = {
+  fontSize: '14px',
+  fontWeight: 400,
+  fontStyle: 'normal',
+  color: 'gray.600',
+}
+
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
@@ -41,15 +48,26 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab _selected={{ color: 'white', bg: 'button.300' }}>{t('transaction')}</Tab>
+              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+                {t('transaction')}
+              </Tab>
 
-              <Tab minW={180} _selected={{ color: 'white', bg: 'button.300' }}>
+              <Tab
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: 'button.300' }}
+                whiteSpace="nowrap"
+                sx={projectTabStyle}
+              >
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }}> {t('documents')}</Tab>
+              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+                {t('documents')}
+              </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }}> {t('alerts')}</Tab>
+              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+                {t('alerts')}
+              </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (

@@ -15,6 +15,13 @@ import {
 import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
 
+const labelStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  fontStyle: 'normal',
+  color: 'gray.600',
+}
+
 type DocumentsProps = {
   setNextTab: () => void
   vendor: VendorProfile
@@ -24,10 +31,10 @@ const downloadableDocument = (link, text) => {
   return (
     <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
       <Flex>
-        <BiDownload fontSize="20px" />
-        <Box ml="5px" fontSize="lg">
+        <BiDownload fontSize="sm" />
+        <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
           {text}
-        </Box>
+        </Text>
       </Flex>
     </a>
   )
@@ -97,18 +104,21 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
     <Box>
       <form className="Documents Form" id="documentForm" onSubmit={handleSubmit(onSubmit)}>
         <Box w="100%">
-          <HStack bg="white" h="96px" mt="5" mb="5">
-            <Flex ml="4" minWidth="24em" alignContent="center">
+          <HStack direction="row" spacing={24}>
+            <Flex minWidth="250px" alignSelf="baseline" mt="8px">
               <Box width="25px" fontSize="20px">
                 <BiFile color="#718096" />
               </Box>
               <Box fontSize="16px" fontWeight={600}>
-                <Text>{t('W9DocumentDate')}</Text>
-                <Text color="#718096"> {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}</Text>
+                <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
+                <Text color="gray.600" fontStyle="normal" fontWeight={400} fontSize="14px">
+                  {' '}
+                  {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}
+                </Text>
               </Box>
             </Flex>
             <Flex>
-              <Box>
+              <Box pr="30px">
                 <FormFileInput
                   errorMessage={errors.w9Document && errors.w9Document?.message}
                   label={''}
@@ -116,23 +126,33 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   register={register}
                   isRequired={documents.w9DocumentUrl ? false : true}
                 >
-                  <Button rounded="none" roundedLeft={5} fontSize={16} fontWeight={400} bg="gray.100" h="36px" w={120}>
+                  <Button
+                    rounded="none"
+                    roundedLeft={5}
+                    fontSize="16px"
+                    fontWeight={400}
+                    color="gray.600"
+                    bg="gray.100"
+                    h="36px"
+                    w={120}
+                  >
                     {t('chooseFile')}
                   </Button>
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document')}
+                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document.png')}
                 {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
               </Box>
             </Flex>
           </HStack>
+          <Box w="940px">
+            <Divider border="1px solid " />
+          </Box>
 
-          <Box minH="96px" mt={12}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('agreementSignedDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Box mt={12}>
+            <Text sx={labelStyle}>{t('agreementSignedDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box h="40px">
                 <FormDatePicker
                   errorMessage={errors.agreementSignedDate && errors.agreementSignedDate?.message}
@@ -140,11 +160,11 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`agreementSignedDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
               <Flex>
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.agreement && errors.agreement?.message}
                     label={''}
@@ -166,25 +186,24 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')}
+                  {downloadableDocument(documents.agreementUrl, 'Agreement signed.jpeg')}
                   {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
 
-          <HStack mt={5} mb={8}>
-            <Text fontSize="16px" fontWeight={600} w="150px" color="#2D3748">
-              Insurrances
-            </Text>
+          <Box w="940px">
             <Divider border="1px solid " />
-          </HStack>
+          </Box>
 
-          <Box minH="96px" mt={12}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('autoInsuranceExpDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Text fontSize="16px" fontWeight={500} color="gray.600" mt={6}>
+            Insurances
+          </Text>
+
+          <Box mt={6}>
+            <Text sx={labelStyle}>{t('autoInsuranceExpDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box>
                 <FormDatePicker
                   errorMessage={errors.autoInsuranceExpDate && errors.autoInsuranceExpDate?.message}
@@ -192,11 +211,11 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`autoInsuranceExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
               <Flex>
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.insurance && errors.insurance?.message}
                     label={''}
@@ -218,20 +237,20 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')}
+                  {downloadableDocument(documents.insuranceUrl, 'Auto insurance.jpeg')}
                   {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
 
-          <Divider border="1px solid " />
+          <Box w="940px">
+            <Divider border="1px solid " />
+          </Box>
 
-          <Box minH="96px" mt={8}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('COIGLExpDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Box mt={8}>
+            <Text sx={labelStyle}>{t('COIGLExpDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box>
                 <FormDatePicker
                   errorMessage={errors.coiGlExpDate && errors.coiGlExpDate?.message}
@@ -239,12 +258,12 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`coiGlExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
 
               <Flex w="100%" pr="20px">
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.coiGlExpFile && errors.coiGlExpFile?.message}
                     label={''}
@@ -266,20 +285,20 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')}
+                  {downloadableDocument(documents.insuranceUrl, 'COI GL.jpeg')}
                   {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
 
-          <Divider border="1px solid " />
+          <Box w="940px">
+            <Divider border="1px solid " />
+          </Box>
 
-          <Box minH="96px" mt={8}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('COIWCExpDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Box mt={8}>
+            <Text sx={labelStyle}>{t('COIWCExpDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box>
                 <FormDatePicker
                   errorMessage={errors.coiWcExpDate && errors.coiWcExpDate?.message}
@@ -287,12 +306,12 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`coiWcExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
 
               <Flex w="100%" pr="20px">
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.coiWcExpFile && errors.coiWcExpFile?.message}
                     label={''}
@@ -314,26 +333,22 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')}
+                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COI WC.png')}
+
                   {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
         </Box>
-        <Box id="footer" w="100%" minH="60px" borderTop="1px solid #E2E8F0">
-          <Button
-            mt="16px"
-            mr="60px"
-            float={'right'}
-            colorScheme="CustomPrimaryColor"
-            size="md"
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={600}
-            type="submit"
-          >
-            {t('next')}
+        <Box w="1065px">
+          <Divider border="1px solid " />
+        </Box>
+        <Box id="footer" w="1065px" pt={5}>
+          <Button size="md" float={'right'} ml="5px" colorScheme="CustomPrimaryColor" type="submit">
+            <Text fontSize="16px" fontStyle="normal" fontWeight={600}>
+              {t('next')}
+            </Text>
           </Button>
         </Box>
       </form>
