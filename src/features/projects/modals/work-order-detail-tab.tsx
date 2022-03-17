@@ -1,10 +1,8 @@
 import { Box, HStack, Text, Flex, SimpleGrid, Button, Checkbox } from '@chakra-ui/react'
-import React, { ReactElement } from 'react'
+import React from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import reactSelect from 'react-select'
-import { isDisabled } from '@chakra-ui/utils'
 
 type WODates = {
   workOrderIssueDate: string
