@@ -295,8 +295,7 @@ i18n.use(initReactI18next).init({
         amountOfCheck: 'Monto del cheque $ ',
         checkPayableTo: 'Cheque a Nombre de',
         affectees: 'Este documento no afecta a ninguno de los siguientes.',
-        disputedClaims:
-          'Reclamaciones en disputa por extras por la cantidad de: $ ',
+        disputedClaims: 'Reclamaciones en disputa por extras por la cantidad de: $ ',
         claimantsSignature: 'Firma del Reclamante',
         claimantsTitle: 'Título del reclamante',
         dateOfSignature: 'Fecha de la Firma',
@@ -356,8 +355,7 @@ i18n.use(initReactI18next).init({
         documentsUpload: 'Carga de Documentos',
         autoInsuranceExpDate: 'Fecha de Vencimiento del Seguro de Automóvil',
         uploadInsurance: 'Subir Seguro',
-        downloadAutoInsuranceDocument:
-          'Descargar Documento de Seguro de Automóvil',
+        downloadAutoInsuranceDocument: 'Descargar Documento de Seguro de Automóvil',
         COIGLExpDate: 'Fecha de Vencimiento COI GL',
         chooseFile: 'Elija el Archivo',
         downloadCOIGLDocument: 'Descargar Documento COI GL',
