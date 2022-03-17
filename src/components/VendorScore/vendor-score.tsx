@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  VStack,
-  Text,
-  Flex,
-  Box,
-  Tag,
-  Progress,
-  Heading,
-} from '@chakra-ui/react'
+import { VStack, Text, Flex, Box, Tag, Progress, Heading } from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -64,23 +56,11 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             {isLoading ? (
               <BlankSlate width="60px" />
             ) : (
-              <Tag
-                rounded="6px"
-                size="lg"
-                color="green.500"
-                bg="green.100"
-                fontStyle="normal"
-                fontWeight={500}
-              >
+              <Tag rounded="6px" size="lg" color="green.500" bg="green.100" fontStyle="normal" fontWeight={500}>
                 {vendorEntity?.statusLabel}
               </Tag>
             )}
-            <Heading
-              color="#4A5568"
-              fontWeight={700}
-              fontStyle="normal"
-              fontSize="20px"
-            >
+            <Heading color="#4A5568" fontWeight={700} fontStyle="normal" fontSize="20px">
               {t('vendorScore')}
             </Heading>
             <Flex alignItems="baseline" w="100%">
@@ -89,11 +69,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               ) : (
                 <>
                   <Box flex="1" maxW="200px" mr="10px">
-                    <Progress
-                      value={scoreProgress}
-                      colorScheme="barColor"
-                      height="8px"
-                    />
+                    <Progress value={scoreProgress} colorScheme="barColor" height="8px" />
                   </Box>
                   <Box px="2">
                     <Flex
@@ -124,13 +100,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               md: 'row',
             }}
           >
-            <Box
-              overflow="hidden"
-              padding={2}
-              flex="1"
-              mr={{ base: '0', md: '10px' }}
-              mb={{ base: '15px', md: '0' }}
-            >
+            <Box overflow="hidden" padding={2} flex="1" mr={{ base: '0', md: '10px' }} mb={{ base: '15px', md: '0' }}>
               {isLoading ? (
                 <BlankSlate width="100%" h="130px" rounded="2xl" />
               ) : (

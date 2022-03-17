@@ -61,7 +61,7 @@ export const CHANGE_ORDERS = [
     clientApprovedDate: null,
     paidDate: null,
   },
-];
+]
 
 export const WORK_ORDERS = [
   {
@@ -104,7 +104,7 @@ export const WORK_ORDERS = [
     vendorAddress: '16 Mount Bethel Rd, Ste 193',
     durationCategory: '7',
   },
-];
+]
 
 export const DOCUMENTS = [
   {
@@ -128,11 +128,11 @@ export const DOCUMENTS = [
     fileType: '28 Outlook Ln_Subcontract_White Oaks - SIGNED.pdf',
     documentTypelabel: 'Work Order',
   },
-];
+]
 
-export const ALERT_HISTORIES = [];
+export const ALERT_HISTORIES = []
 
-export const FIRST_PROJECT_ID = 2951;
+export const FIRST_PROJECT_ID = 2951
 export const PROJECTS = [
   {
     id: FIRST_PROJECT_ID,
@@ -409,7 +409,7 @@ export const PROJECTS = [
     hoaPhone: '',
     paid: 'No',
   },
-];
+]
 
 export const VENDOR_CARDS = [
   {
@@ -440,4 +440,4 @@ export const VENDOR_CARDS = [
     label: 'pendingTransactionsWorkOrderCount',
     count: 14,
   },
-];
+]

@@ -17,13 +17,7 @@ export const ProjectSummaryCard = (props: cardprops) => {
   return (
     <HStack>
       <Flex alignItems="end" justifyContent="end">
-        <Box
-          bg={props.Iconbgcolor}
-          borderRadius="4px"
-          padding="15px 15px 7px 15px"
-          marginRight="10px"
-          h="55px"
-        >
+        <Box bg={props.Iconbgcolor} borderRadius="4px" padding="15px 15px 7px 15px" marginRight="10px" h="55px">
           <BigIcon />
         </Box>
         <Flex fontSize="32px" direction="column" w="auto">
@@ -50,24 +44,12 @@ export const ProjectSummaryCard = (props: cardprops) => {
           {isLoading ? (
             <BlankSlate width="100%" />
           ) : (
-            <Box
-              fontWeight="800"
-              fontSize="20px"
-              fontStyle="normal"
-              color="#4A5568"
-              height="40px"
-            >
+            <Box fontWeight="800" fontSize="20px" fontStyle="normal" color="#4A5568" height="40px">
               {props.number}
               {props.numbertext}
             </Box>
           )}
-          <Text
-            lineHeight="1"
-            fontWeight={500}
-            fontSize="18px"
-            color="#A0AEC0"
-            pb="5px"
-          >
+          <Text lineHeight="1" fontWeight={500} fontSize="18px" color="#A0AEC0" pb="5px">
             {props.name}
           </Text>
         </Flex>
