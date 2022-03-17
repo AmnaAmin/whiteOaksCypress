@@ -34,7 +34,10 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 noOfLines={2}
                 title={cell.value}
                 padding="0 15px"
-                color="blackAlpha.700"
+                color="gray.600"
+                fontStyle="normal"
+                fontSize="12px"
+                fontWeight={400}
               >
                 {cell.render("Cell")}
               </Text>
@@ -51,14 +54,14 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const { projectId } = useParams<"projectId">();
 
-  const [
-    selectedWorkOrder,
-    setSelectedWorkOrder,
-  ] = useState<ProjectWorkOrderType>();
+  const [selectedWorkOrder, setSelectedWorkOrder] =
+    useState<ProjectWorkOrderType>();
 
-  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(
-    projectId
-  );
+  const {
+    data: workOrders,
+    isLoading,
+    refetch,
+  } = useProjectWorkOrders(projectId);
 
   const { columns } = useColumnWidthResize(
     [

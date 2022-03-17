@@ -1,12 +1,4 @@
-import {
-  Stack,
-  Box,
-  HStack,
-  Text,
-  Button,
-  ModalFooter,
-  Divider,
-} from '@chakra-ui/react'
+import { Stack, Box, HStack, Text, Button, ModalFooter, Divider } from '@chakra-ui/react'
 
 import React from 'react'
 import { BiDollarCircle, BiFile, BiCalendar } from 'react-icons/bi'
@@ -45,20 +37,14 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Payment Term Date"
-            InputElem={
-              <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>}
           />
         </Box>
         <Box w="25%">
           <InputView
             Icon={<BiFile />}
             label="Pay Date Variance"
-            InputElem={
-              <Text>
-                {dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}
-              </Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}</Text>}
           />
         </Box>
         <Box w="25%">
@@ -73,9 +59,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Paid"
-            InputElem={
-              <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>}
           />
         </Box>
       </HStack>
@@ -84,11 +68,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="LW Date"
-            InputElem={
-              <Text>
-                {dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}
-              </Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>}
           />
         </Box>
 
@@ -96,11 +76,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Permit Date"
-            InputElem={
-              <Text>
-                {dateFormat(invoiceAndPaymentData?.datePermitsPulled)}
-              </Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>}
           />
         </Box>
 
@@ -108,11 +84,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Payment Processed"
-            InputElem={
-              <Text>
-                {dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}
-              </Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>}
           />
         </Box>
 
@@ -120,11 +92,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Invoice Submitted:"
-            InputElem={
-              <Text>
-                {dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}
-              </Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>}
           />
         </Box>
       </HStack>
@@ -133,11 +101,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Expected Pay"
-            InputElem={
-              <Text>
-                {dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}
-              </Text>
-            }
+            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>}
           />
         </Box>
 
@@ -152,13 +116,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             label="WO Original Amount:"
             Icon={<BiDollarCircle />}
-            InputElem={
-              <Text>
-                {currencyFormatter(
-                  invoiceAndPaymentData?.clientOriginalApprovedAmount,
-                )}
-              </Text>
-            }
+            InputElem={<Text>{currencyFormatter(invoiceAndPaymentData?.clientOriginalApprovedAmount)}</Text>}
           />
         </Box>
 
@@ -175,8 +133,8 @@ const InvoicingAndPaymentTab = ({
         </Box> */}
       </HStack>
       <Divider />
-      <ModalFooter>
-        <Button variant="ghost" onClick={onClose}>
+      <ModalFooter pb="15px" pt="15px">
+        <Button colorScheme="CustomPrimaryColor" onClick={onClose}>
           {t('close')}
         </Button>
       </ModalFooter>

@@ -50,7 +50,7 @@ function DefaultColumnFilter({
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
       }}
       placeholder={`Search ${count} records...`}
-      css={{ borderRadius: "20px !important" }}
+      css={{ borderRadius: "6px !important" }}
     />
   );
 }
@@ -130,11 +130,18 @@ export const TableHeader = ({ headerGroups }) => {
               <Th
                 key={`th_td_${column.id}`}
                 {...column.getHeaderProps(column.getSortByToggleProps())}
-                color="blackAlpha.700"
                 p="0"
               >
                 <Flex py="2" px="2" pl="7" alignItems="center">
-                  <Text fontSize="md" mr="2" lineHeight="17px" noOfLines={2}>
+                  <Text
+                    fontSize="12px"
+                    color="#718096"
+                    fontWeight={700}
+                    fontStyle="normal"
+                    mr="2"
+                    lineHeight="17px"
+                    noOfLines={2}
+                  >
                     {column.render("Header")}
                   </Text>
                   {column.isSorted ? (
@@ -159,7 +166,6 @@ export const TableHeader = ({ headerGroups }) => {
             <Th
               key={`th_td_${column.id}`}
               {...column.getHeaderProps()}
-              color="blackAlpha.700"
               py={4}
               px={4}
               pl="5"

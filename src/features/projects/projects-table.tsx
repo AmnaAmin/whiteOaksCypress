@@ -80,9 +80,10 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
                   noOfLines={2}
                   title={cell.value}
                   padding="0 15px"
-                  color="black.500"
-                  fontSize="sm"
-                  fontWeight="300"
+                  color="gray.500"
+                  fontSize="12px"
+                  fontStyle="normal"
+                  fontWeight="400"
                 >
                   {cell.render("Cell")}
                 </Text>

@@ -15,7 +15,9 @@ import {
   TabPanel,
   Stack,
   Divider,
-  Center,
+  HStack,
+  TagLabel,
+  Tag,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from '../../../types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
@@ -23,6 +25,13 @@ import { LienWaiverTab } from './lien-waiver-tab'
 import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
+
+const TabStyle = {
+  fontWeight: 600,
+  fontSize: '16px',
+  fontStyle: 'normal',
+  color: 'gray.500',
+}
 
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
   const { t } = useTranslation()
@@ -47,10 +56,16 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
       <ModalContent w={1200}>
         <ModalHeader h={68} pt={4} pb={4} display="flex" alignItems="center">
-          <Text>{t('editVendorWorkOrder')}</Text>
-          <Center color="green.400" bg="green.50" boxShadow="0px 0px 4px -2px " ml={8} w={73} h="32px" borderRadius={6}>
-            Active
-          </Center>
+          <HStack spacing={3}>
+            <Text fontWeight={700} fontSize="18px" fontStyle="normal" color="gray.700">
+              {t('editVendorWorkOrder')}
+            </Text>
+            <Tag size="lg" rounded="6px" variant="solid" color="green.600" bg="green.100">
+              <TagLabel fontSize="12px" fontStyle="normal" fontWeight={500} lineHeight="16px">
+                Active
+              </TagLabel>
+            </Tag>
+          </HStack>
         </ModalHeader>
 
         <ModalCloseButton m={3} _focus={{ outline: 'none' }} />
@@ -63,15 +78,15 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                 <Tab
                   _focus={{ border: 'none' }}
                   minW={180}
-                  fontWeight={600}
+                  sx={TabStyle}
                   _selected={{ color: 'white', bg: 'button.300' }}
                 >
                   {t('workOrderDetails')}
                 </Tab>
-                <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} fontWeight={600}>
+                <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
                   {t('lienWaiver')}
                 </Tab>
-                <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} fontWeight={600}>
+                <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
                   {t('Payments')}
                 </Tab>
               </TabList>

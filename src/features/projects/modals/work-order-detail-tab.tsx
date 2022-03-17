@@ -16,13 +16,13 @@ const CalenderCard = props => {
   return (
     <Flex borderBottom="1px solid  #E2E8F0" pt={6} pb={8}>
       <Box pr={4}>
-        <BiCalendar size={20} color="#718096" />
+        <BiCalendar size={23} color="#718096" />
       </Box>
       <Box lineHeight="24px">
-        <Text fontWeight={700} fontSize={16}>
+        <Text fontWeight={700} fontSize="15.6px" fontStyle="normal" color="gray.700">
           {props.title}
         </Text>
-        <Text color="#718096" fontSize={14}>
+        <Text color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -52,6 +52,7 @@ const TableBodyChilde: React.FC<{
       alignItems="center"
       fontWeight={400}
       fontSize={14}
+      fontStyle="normal"
     >
       <Text>{SKU}</Text>
       <Text>{ProductName}</Text>
@@ -101,7 +102,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
 
       <Box p={6}>
         <Flex justifyContent="space-between" pt={2} pb={8} alignItems="center">
-          <Text fontSize={18} fontWeight={700}>
+          <Text fontSize="18px" fontWeight={700} color="gray.700">
             Assigned Line Items
           </Text>
 
@@ -187,10 +188,10 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </Box>
 
       <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg">
+        <Button variant="ghost" mr={3}>
           {t('close')}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg">
+        <Button colorScheme="CustomPrimaryColor" mr={3}>
           {t('save')}
         </Button>
       </Flex>
