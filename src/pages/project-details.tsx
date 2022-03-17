@@ -48,20 +48,25 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
                 {t('transaction')}
               </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }} whiteSpace="nowrap" sx={projectTabStyle}>
+              <Tab
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: 'button.300' }}
+                whiteSpace="nowrap"
+                sx={projectTabStyle}
+              >
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
                 {' '}
                 {t('documents')}
               </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
                 {' '}
                 {t('alerts')}
               </Tab>

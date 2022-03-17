@@ -75,13 +75,18 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
           <Stack spacing={5}>
             <Tabs variant="enclosed">
               <TabList>
-                <Tab minW={180} sx={TabStyle} _selected={{ color: 'white', bg: 'button.300' }}>
+                <Tab
+                  _focus={{ border: 'none' }}
+                  minW={180}
+                  sx={TabStyle}
+                  _selected={{ color: 'white', bg: 'button.300' }}
+                >
                   {t('workOrderDetails')}
                 </Tab>
-                <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
+                <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
                   {t('lienWaiver')}
                 </Tab>
-                <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
+                <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
                   {t('Payments')}
                 </Tab>
               </TabList>
