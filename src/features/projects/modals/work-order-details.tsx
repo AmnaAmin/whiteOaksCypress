@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from 'react'
 import {
   useDisclosure,
   Modal,
@@ -18,43 +18,37 @@ import {
   HStack,
   TagLabel,
   Tag,
-} from "@chakra-ui/react";
-import { ProjectWorkOrderType } from "../../../types/project.type";
-import WorkOrderDetailTab from "./work-order-detail-tab";
-import { LienWaiverTab } from "./lien-waiver-tab";
-import InvoicingAndPaymentTab from "./invoicing-and-payment-tab";
+} from '@chakra-ui/react'
+import { ProjectWorkOrderType } from '../../../types/project.type'
+import WorkOrderDetailTab from './work-order-detail-tab'
+import { LienWaiverTab } from './lien-waiver-tab'
+import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 // import { t } from 'i18next';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next'
 
 const TabStyle = {
   fontWeight: 600,
-  fontSize: "16px",
-  fontStyle: "normal",
-  color: "gray.500",
-};
+  fontSize: '16px',
+  fontStyle: 'normal',
+  color: 'gray.500',
+}
 
-const WorkOrderDetails = ({
-  workOrder,
-  onClose: close,
-}: {
-  workOrder: ProjectWorkOrderType;
-  onClose: () => void;
-}) => {
-  const { t } = useTranslation();
-  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure();
+const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
+  const { t } = useTranslation()
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   const onClose = useCallback(() => {
-    onCloseDisclosure();
-    close();
-  }, [close, onCloseDisclosure]);
+    onCloseDisclosure()
+    close()
+  }, [close, onCloseDisclosure])
 
   useEffect(() => {
     if (workOrder) {
-      onOpen();
+      onOpen()
     } else {
-      onCloseDisclosure();
+      onCloseDisclosure()
     }
-  }, [onCloseDisclosure, onOpen, workOrder]);
+  }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="none">
@@ -63,58 +57,32 @@ const WorkOrderDetails = ({
       <ModalContent w={1200}>
         <ModalHeader h={68} pt={4} pb={4} display="flex" alignItems="center">
           <HStack spacing={3}>
-            <Text
-              fontWeight={700}
-              fontSize="18px"
-              fontStyle="normal"
-              color="gray.700"
-            >
-              {t("editVendorWorkOrder")}
+            <Text fontWeight={700} fontSize="18px" fontStyle="normal" color="gray.700">
+              {t('editVendorWorkOrder')}
             </Text>
-            <Tag
-              size="lg"
-              rounded="6px"
-              variant="solid"
-              color="green.600"
-              bg="green.100"
-            >
-              <TagLabel
-                fontSize="12px"
-                fontStyle="normal"
-                fontWeight={500}
-                lineHeight="16px"
-              >
+            <Tag size="lg" rounded="6px" variant="solid" color="green.600" bg="green.100">
+              <TagLabel fontSize="12px" fontStyle="normal" fontWeight={500} lineHeight="16px">
                 Active
               </TagLabel>
             </Tag>
           </HStack>
         </ModalHeader>
 
-        <ModalCloseButton m={3} _focus={{ outline: "none" }} />
+        <ModalCloseButton m={3} _focus={{ outline: 'none' }} />
 
         <Divider mb={3} />
         <ModalBody>
           <Stack spacing={5}>
             <Tabs variant="enclosed">
               <TabList>
-                <Tab
-                  minW={180}
-                  sx={TabStyle}
-                  _selected={{ color: "white", bg: "button.300" }}
-                >
-                  {t("workOrderDetails")}
+                <Tab minW={180} sx={TabStyle} _selected={{ color: 'white', bg: 'button.300' }}>
+                  {t('workOrderDetails')}
                 </Tab>
-                <Tab
-                  _selected={{ color: "white", bg: "button.300" }}
-                  sx={TabStyle}
-                >
-                  {t("lienWaiver")}
+                <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
+                  {t('lienWaiver')}
                 </Tab>
-                <Tab
-                  _selected={{ color: "white", bg: "button.300" }}
-                  sx={TabStyle}
-                >
-                  {t("Payments")}
+                <Tab _selected={{ color: 'white', bg: 'button.300' }} sx={TabStyle}>
+                  {t('Payments')}
                 </Tab>
               </TabList>
 
@@ -124,10 +92,8 @@ const WorkOrderDetails = ({
                     // onClose={onClose}
                     woDates={{
                       workOrderIssueDate: workOrder?.workOrderIssueDate,
-                      workOrderCompletionDateVariance:
-                        workOrder?.workOrderCompletionDateVariance,
-                      workOrderExpectedCompletionDate:
-                        workOrder?.workOrderExpectedCompletionDate,
+                      workOrderCompletionDateVariance: workOrder?.workOrderCompletionDateVariance,
+                      workOrderExpectedCompletionDate: workOrder?.workOrderExpectedCompletionDate,
                       workOrderStartDate: workOrder?.workOrderStartDate,
                       woStatus: {
                         id: String(workOrder?.status),
@@ -145,20 +111,16 @@ const WorkOrderDetails = ({
                     invoiceAndPaymentData={{
                       dateInvoiceSubmitted: workOrder?.dateInvoiceSubmitted,
                       paymentTermDate: workOrder?.paymentTermDate,
-                      datePaymentProcessed:
-                        workOrder?.datePaymentProcessed ?? "",
+                      datePaymentProcessed: workOrder?.datePaymentProcessed ?? '',
                       expectedPaymentDate: workOrder?.expectedPaymentDate,
                       paymentTerm: workOrder?.paymentTerm,
-                      workOrderPayDateVariance:
-                        workOrder?.workOrderPayDateVariance ?? "",
-                      datePaid: workOrder?.datePaid ?? "",
-                      clientOriginalApprovedAmount:
-                        workOrder?.clientOriginalApprovedAmount,
+                      workOrderPayDateVariance: workOrder?.workOrderPayDateVariance ?? '',
+                      datePaid: workOrder?.datePaid ?? '',
+                      clientOriginalApprovedAmount: workOrder?.clientOriginalApprovedAmount,
                       invoiceAmount: workOrder?.invoiceAmount,
                       finalInvoiceAmount: workOrder?.finalInvoiceAmount,
-                      dateLeanWaiverSubmitted:
-                        workOrder?.dateLeanWaiverSubmitted ?? "",
-                      datePermitsPulled: workOrder?.datePermitsPulled ?? "",
+                      dateLeanWaiverSubmitted: workOrder?.dateLeanWaiverSubmitted ?? '',
+                      datePermitsPulled: workOrder?.datePermitsPulled ?? '',
                     }}
                   />
                 </TabPanel>
@@ -168,7 +130,7 @@ const WorkOrderDetails = ({
         </ModalBody>
       </ModalContent>
     </Modal>
-  );
-};
+  )
+}
 
-export default WorkOrderDetails;
+export default WorkOrderDetails

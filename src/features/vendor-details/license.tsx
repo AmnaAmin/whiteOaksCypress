@@ -1,49 +1,41 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  VStack,
-  Center,
-  Divider,
-  Flex,
-} from "@chakra-ui/react";
-import { MdAdd } from "react-icons/md";
-import { MdOutlineCancel } from "react-icons/md";
-import "react-datepicker/dist/react-datepicker.css";
-import { useFieldArray, useForm } from "react-hook-form";
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { Box, Button, HStack, VStack, Center, Divider, Flex } from '@chakra-ui/react'
+import { MdAdd } from 'react-icons/md'
+import { MdOutlineCancel } from 'react-icons/md'
+import 'react-datepicker/dist/react-datepicker.css'
+import { useFieldArray, useForm } from 'react-hook-form'
 import {
   licenseTypes,
   useSaveVendorDetails,
   parseLicenseValues,
   licenseDefaultFormValues,
   createVendorPayload,
-} from "utils/vendor-details";
-import { FormSelect } from "../../components/react-hook-form-fields/select";
-import { FormInput } from "../../components/react-hook-form-fields/input";
-import { FormDatePicker } from "../../components/react-hook-form-fields/date-picker";
-import { FormFileInput } from "../../components/react-hook-form-fields/file-input";
-import { LicenseFormValues, VendorProfile } from "../../types/vendor.types";
-import { useTranslation } from "react-i18next";
-import "components/translation/i18n";
+} from 'utils/vendor-details'
+import { FormSelect } from '../../components/react-hook-form-fields/select'
+import { FormInput } from '../../components/react-hook-form-fields/input'
+import { FormDatePicker } from '../../components/react-hook-form-fields/date-picker'
+import { FormFileInput } from '../../components/react-hook-form-fields/file-input'
+import { LicenseFormValues, VendorProfile } from '../../types/vendor.types'
+import { useTranslation } from 'react-i18next'
+import 'components/translation/i18n'
 
 type LicenseProps = {
-  setNextTab: () => void;
-  vendor: VendorProfile;
-};
+  setNextTab: () => void
+  vendor: VendorProfile
+}
 
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { t } = useTranslation();
-  const [startDate] = useState(new Date());
-  const { mutate: saveLicenses } = useSaveVendorDetails();
+  const { t } = useTranslation()
+  const [startDate] = useState(new Date())
+  const { mutate: saveLicenses } = useSaveVendorDetails()
 
   const defaultValues: LicenseFormValues = useMemo(() => {
     if (props.vendor) {
-      return { licenses: licenseDefaultFormValues(props.vendor) };
+      return { licenses: licenseDefaultFormValues(props.vendor) }
     }
 
-    return { licenses: [] };
-  }, [props.vendor]);
+    return { licenses: [] }
+  }, [props.vendor])
 
   const {
     register,
@@ -55,11 +47,11 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
     reset,
   } = useForm<LicenseFormValues>({
     defaultValues,
-  });
+  })
 
   useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, props.vendor, reset]);
+    reset(defaultValues)
+  }, [defaultValues, props.vendor, reset])
 
   const {
     fields: licenseFields,
@@ -67,52 +59,45 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
     remove: removeLicense,
   } = useFieldArray({
     control,
-    name: "licenses",
-  });
-  const licenseValues = getValues()?.licenses;
+    name: 'licenses',
+  })
+  const licenseValues = getValues()?.licenses
 
   /* debug purpose */
-  const watchAllFields = watch();
+  const watchAllFields = watch()
   React.useEffect(() => {
-    const subscription = watch((value) => {
-      console.log("Value Change", value);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, watchAllFields]);
+    const subscription = watch(value => {
+      console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
 
   const onSubmit = useCallback(
-    async (values) => {
-      const results = await parseLicenseValues(values);
-      const vendorPayload = createVendorPayload(
-        { licenseDocuments: results },
-        props.vendor
-      );
+    async values => {
+      const results = await parseLicenseValues(values)
+      const vendorPayload = createVendorPayload({ licenseDocuments: results }, props.vendor)
       saveLicenses(vendorPayload, {
         onSuccess() {
-          props.setNextTab();
+          props.setNextTab()
         },
-      });
+      })
     },
-    [props, saveLicenses]
-  );
+    [props, saveLicenses],
+  )
 
   return (
     <Box>
-      <form
-        className="License Form"
-        id="licenseForm"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="License Form" id="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
           ml="13px"
           bg="#4E87F8"
           color="#FFFFFF"
           size="lg"
-          _hover={{ bg: "royalblue" }}
+          _hover={{ bg: 'royalblue' }}
           onClick={() =>
             append({
-              licenseType: "",
-              licenseNumber: "",
+              licenseType: '',
+              licenseNumber: '',
               expiryDate: startDate.toDateString(),
               expirationFile: null,
             })
@@ -121,7 +106,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
           <Box pos="relative" right="6px">
             <MdAdd />
           </Box>
-          {t("addLicense")}
+          {t('addLicense')}
         </Button>
         <VStack align="start" minH="60vh" spacing="20px" ml="8px">
           {licenseFields.map((license, index) => {
@@ -133,65 +118,53 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   </Center>
                 </Box>
                 <FormSelect
-                  errorMessage={
-                    errors.licenses &&
-                    errors.licenses[index]?.licenseType?.message
-                  }
-                  label={t("licenseType")}
+                  errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
+                  label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
                   options={licenseTypes}
-                  rules={{ required: "This is required field" }}
-                  controlStyle={{ w: "20em" }}
+                  rules={{ required: 'This is required field' }}
+                  controlStyle={{ w: '20em' }}
                   elementStyle={{
-                    bg: "white",
-                    borderLeft: "1.5px solid #4E87F8",
+                    bg: 'white',
+                    borderLeft: '1.5px solid #4E87F8',
                   }}
                 />
                 <FormInput
-                  errorMessage={
-                    errors.licenses &&
-                    errors.licenses[index]?.licenseNumber?.message
-                  }
-                  label={t("licenseNumber")}
+                  errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
+                  label={t('licenseNumber')}
                   placeholder="License Number"
                   register={register}
-                  controlStyle={{ w: "20em" }}
+                  controlStyle={{ w: '20em' }}
                   elementStyle={{
-                    bg: "white",
-                    borderLeft: "1.5px solid #4E87F8",
+                    bg: 'white',
+                    borderLeft: '1.5px solid #4E87F8',
                   }}
-                  rules={{ required: "This is required field" }}
+                  rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                 />
                 <FormDatePicker
-                  errorMessage={
-                    errors.licenses &&
-                    errors.licenses[index]?.expiryDate?.message
-                  }
-                  label={t("expiryDate")}
+                  errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
+                  label={t('expiryDate')}
                   name={`licenses.${index}.expiryDate`}
                   control={control}
-                  rules={{ required: "This is required field" }}
-                  style={{ w: "20em" }}
+                  rules={{ required: 'This is required field' }}
+                  style={{ w: '20em' }}
                   defaultValue={startDate}
                 />
                 <VStack>
                   <FormFileInput
-                    errorMessage={
-                      errors.licenses &&
-                      errors.licenses[index]?.expirationFile?.message
-                    }
-                    label={t("fileInput")}
+                    errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
+                    label={t('fileInput')}
                     name={`licenses.${index}.expirationFile`}
                     register={register}
-                    style={{ w: "20em" }}
+                    style={{ w: '20em' }}
                     isRequired={true}
                     downloadableFile={licenseValues?.[index].downloadableFile}
                   >
                     <>
                       <Flex
-                        justifyContent={"space-between"}
+                        justifyContent={'space-between'}
                         // variant="outline"
                         // size="lg"
                         rounded={4}
@@ -206,7 +179,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                           h="36px"
                           w={120}
                         >
-                          {t("chooseFile")}
+                          {t('chooseFile')}
                         </Button>
                         <Divider orientation="vertical" />
                       </Flex>
@@ -214,32 +187,28 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   </FormFileInput>
                 </VStack>
               </HStack>
-            );
+            )
           })}
         </VStack>
-        <Box
-          id="footer"
-          w="100%"
-          // align="end"
-          padding="10px"
-          borderTop="1px solid #E2E8F0"
-          minH="60px"
-        >
-          <Button float={"right"} ml="5px" colorScheme="button" type="submit">
-            {t("next")}
-          </Button>
+        <Box>
+          <Divider border="1px solid" />
+        </Box>
+        <Box id="footer" w="100%" minH="60px">
           <Button
-            onClick={() => {
-              reset();
-            }}
-            float={"right"}
-            bg="#FFFFFF"
-            color="#00000"
+            mt="16px"
+            mr="60px"
+            float={'right'}
+            colorScheme="CustomPrimaryColor"
+            size="md"
+            fontSize="16px"
+            fontStyle="normal"
+            fontWeight={600}
+            type="submit"
           >
-            {t("cancel")}
+            {t('next')}
           </Button>
         </Box>
       </form>
     </Box>
-  );
-});
+  )
+})
