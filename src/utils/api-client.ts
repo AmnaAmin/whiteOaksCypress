@@ -1,49 +1,49 @@
-import * as authApi from "./auth-api";
+import * as authApi from './auth-api'
 
 async function client(endpoint: string, httpConfig: any | undefined = {}) {
-  const { data, token, headers: customHeaders, ...customConfig } = httpConfig;
+  const { data, token, headers: customHeaders, ...customConfig } = httpConfig
   const config = {
-    method: data ? "POST" : "GET",
+    method: data ? 'POST' : 'GET',
     body: data ? JSON.stringify(data) : undefined,
     headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-      "Content-Type": data ? "application/json" : undefined,
+      Authorization: token ? 'Bearer ' + token : undefined,
+      'Content-Type': data ? 'application/json' : undefined,
       ...customHeaders,
     },
     ...customConfig,
-  };
+  }
 
-  return window.fetch(endpoint, config).then(async (response) => {
-    const contentType = response.headers.get(`content-type`);
+  return window.fetch(endpoint, config).then(async response => {
+    const contentType = response.headers.get(`content-type`)
 
     if (response.status === 401) {
-      await authApi.logout();
+      await authApi.logout()
       // refresh the page for them
       // @ts-ignore
       // window.location.assign(window.location)
-      return Promise.reject({ message: "Please re-authenticate." });
+      return Promise.reject({ message: 'Please re-authenticate.' })
     }
 
-    if (response.statusText === "No Content") {
-      return null;
+    if (response.statusText === 'No Content') {
+      return null
     }
 
     if (response.status === 204) {
-      return null;
+      return null
     }
 
-    if (contentType && contentType.includes("application/json")) {
-      const data = await response.json();
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json()
 
       if (response.ok) {
-        return { data, headers: response.headers };
+        return { data, headers: response.headers }
       } else {
-        return Promise.reject(data);
+        return Promise.reject(data)
       }
     }
 
-    return Promise.resolve({ data: null });
-  });
+    return Promise.resolve({ data: null })
+  })
 }
 
-export { client };
+export { client }
