@@ -4,7 +4,6 @@ import { Box, BoxProps } from '@chakra-ui/react'
 export const Card: React.FC<BoxProps> = props => {
   return (
     <Box
-      borderRadius="6px "
       bg="white"
       p="15px"
       //  boxShadow="1px 1px 12px rgba(0,0,0,0.2)"

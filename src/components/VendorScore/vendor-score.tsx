@@ -45,7 +45,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
 
   return (
     <>
-      <Card w="100%" mb="22px">
+      <Card w="100%" mb="22px" rounded="15px">
         <Box
           justifyContent="space-evenly"
           display="grid"
@@ -56,25 +56,34 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             {isLoading ? (
               <BlankSlate width="60px" />
             ) : (
-              <Tag size="md" color="green.500" bg="green.100">
+              <Tag rounded="6px" size="lg" color="green.500" bg="green.100" fontStyle="normal" fontWeight={500}>
                 {vendorEntity?.statusLabel}
               </Tag>
             )}
-            <Heading fontSize="22px">{t('vendorScore')}</Heading>
+            <Heading color="#4A5568" fontWeight={700} fontStyle="normal" fontSize="20px">
+              {t('vendorScore')}
+            </Heading>
             <Flex alignItems="baseline" w="100%">
               {isLoading ? (
                 <BlankSlate width="90%" />
               ) : (
                 <>
                   <Box flex="1" maxW="200px" mr="10px">
-                    <Progress value={scoreProgress} borderRadius="2px" colorScheme="barColor" height="11px" />
+                    <Progress value={scoreProgress} colorScheme="barColor" height="8px" />
                   </Box>
                   <Box px="2">
-                    <Flex pos="relative" fontWeight={800} color="gray.800" w="100%" alignItems="center">
-                      <Text fontSize="30px" mb="4px" data-testid="vendor-score">
+                    <Flex
+                      pos="relative"
+                      fontStyle="normal"
+                      fontWeight={700}
+                      color="#4A5568"
+                      w="100%"
+                      alignItems="center"
+                    >
+                      <Text fontSize="24px" data-testid="vendor-score">
                         {vendorEntity?.score}
                       </Text>
-                      <Text fontSize="16px" px="1">
+                      <Text fontSize="20px" px="1">
                         out of 5
                       </Text>
                     </Flex>

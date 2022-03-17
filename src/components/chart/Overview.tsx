@@ -53,26 +53,33 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   }));
 
   return (
-    <ResponsiveContainer width="98%" height={310}>
+    <ResponsiveContainer width="98%" height={330}>
       <BarChart data={vendorData} barSize={50}>
         <CartesianGrid stroke="#EFF3F9" />
         <XAxis
           dataKey="name"
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "#A0AEC0", fontSize: "15px", fontWeight: 500 }}
-          tickMargin={15}
+          tick={{
+            fill: "#4A5568",
+            fontSize: "12px",
+            fontWeight: 400,
+            fontStyle: "normal",
+          }}
+          tickMargin={20}
         />
 
         <YAxis
           type="number"
-          domain={[0, (dataMax: number) => 40]}
+          // domain={[0, (dataMax: number) => 40]}
           tickSize={8}
           tickCount={3}
           axisLine={false}
-          tick={{ fontStyle: "italic", fill: "#979797" }}
-          tickFormatter={(tick) => {
-            return `${tick}%`;
+          tick={{
+            fontSize: "12px",
+            fontStyle: "normal",
+            fontWeight: 400,
+            fill: "#4A5568",
           }}
         />
 
@@ -86,7 +93,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           wrapperStyle={{
             lineHeight: "31px",
             position: "relative",
-            bottom: "calc(100% + 100px)",
+            bottom: "calc(100% + 73px)",
             left: "80px",
           }}
           height={40}
@@ -100,7 +107,13 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                 marginInlineEnd="28px"
                 mt={{ base: "30px", sm: "30px", md: 0 }}
               >
-                <Box as="span" color="#9C9C9C" fontSize="14px" fontWeight={400}>
+                <Box
+                  as="span"
+                  color="#4A5568"
+                  fontSize="12px"
+                  fontStyle="normal"
+                  fontWeight={400}
+                >
                   {value}
                 </Box>
               </Box>

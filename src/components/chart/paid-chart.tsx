@@ -46,17 +46,28 @@ const PaidChart: React.FC<PaidChartProps> = ({ filterChart }) => {
           tickFormatter={(tick) => {
             return `ID${tick}`;
           }}
-          axisLine={false}
+          axisLine={{ stroke: "#EBEBEB" }}
           tickLine={false}
-          tick={{ fill: "#979797", fontSize: "14px", fontWeight: 700 }}
+          tick={{
+            fill: " #4A5568",
+            fontSize: "12px",
+            fontWeight: 400,
+            fontStyle: "normal",
+          }}
         />
         <YAxis
           hide={false}
           type="number"
-          axisLine={false}
+          axisLine={{ stroke: "#EBEBEB" }}
           tickLine={false}
           tickCount={5}
-          tick={{ fill: "#979797", fontWeight: 700, fontSize: "13px" }}
+          dx={-15}
+          tick={{
+            fill: "#4A5568",
+            fontWeight: 400,
+            fontSize: "12px",
+            fontStyle: "normal",
+          }}
           tickFormatter={(tick) => {
             return ` ${"$" + round(tick / 1000, 2) + "k"} `;
           }}
