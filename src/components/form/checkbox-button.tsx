@@ -1,14 +1,14 @@
-import React from 'react';
-import { Box, useCheckbox, CheckboxProps, BoxProps } from '@chakra-ui/react';
+import React from 'react'
+import { Box, useCheckbox, CheckboxProps, BoxProps } from '@chakra-ui/react'
 
 export const CheckboxButton: React.FC<CheckboxProps> = props => {
-  const { getInputProps, getCheckboxProps } = useCheckbox(props);
+  const { getInputProps, getCheckboxProps } = useCheckbox(props)
 
-  const checkboxInput = getInputProps();
-  const checkbox = getCheckboxProps() as BoxProps;
+  const checkboxInput = getInputProps()
+  const checkbox = getCheckboxProps() as BoxProps
 
   return (
-    <Box as="label" key={props.key}>
+    <Box as="label">
       <input {...checkboxInput} />
       <Box
         {...checkbox}
@@ -28,5 +28,5 @@ export const CheckboxButton: React.FC<CheckboxProps> = props => {
         {props.children}
       </Box>
     </Box>
-  );
-};
+  )
+}
