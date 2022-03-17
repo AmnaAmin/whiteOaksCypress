@@ -45,7 +45,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     <Modal isOpen={isOpen} onClose={onClose} size="none">
       <ModalOverlay />
 
-      <ModalContent w="70%">
+      <ModalContent w={1200}>
         <ModalHeader h={68} pt={4} pb={4} display="flex" alignItems="center">
           <Text>{t('editVendorWorkOrder')}</Text>
           <Center color="green.400" bg="green.50" boxShadow="0px 0px 4px -2px " ml={8} w={73} h="32px" borderRadius={6}>
