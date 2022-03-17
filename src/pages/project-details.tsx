@@ -62,12 +62,10 @@ export const ProjectDetails: React.FC = props => {
               </Tab>
 
               <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
-                {' '}
                 {t('documents')}
               </Tab>
 
               <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
-                {' '}
                 {t('alerts')}
               </Tab>
 

@@ -1,13 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Box,
-  Flex,
-  Spacer,
-  VStack,
-  Text,
-  useDisclosure,
-  Heading,
-} from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, useDisclosure, Heading } from '@chakra-ui/react'
 
 import { ProjectSummary } from '../features/dashboard/project-summary'
 import { VendorScore } from '../components/VendorScore/vendor-score'
@@ -30,10 +22,7 @@ export const Dashboard: React.FC = () => {
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   const { onToggle } = useDisclosure()
   const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
-  const { data: paidTotal = '' } = usePaidWOAmountByYearAndMonthTotal(
-    paidOption?.year ?? '',
-    paidOption?.month ?? '',
-  )
+  const { data: paidTotal = '' } = usePaidWOAmountByYearAndMonthTotal(paidOption?.year ?? '', paidOption?.month ?? '')
   const { t } = useTranslation()
 
   return (
@@ -47,12 +36,7 @@ export const Dashboard: React.FC = () => {
       </Box>
 
       <Box w="100%">
-        <Text
-          fontSize="22px"
-          fontWeight={700}
-          paddingInlineStart="14px"
-          m="15px 0 10px"
-        >
+        <Text fontSize="22px" fontWeight={700} paddingInlineStart="14px" m="15px 0 10px">
           {t('WOstatusGraph')}
         </Text>
       </Box>
@@ -68,26 +52,14 @@ export const Dashboard: React.FC = () => {
       >
         <Card rounded="13px" flex={1}>
           <Flex mb="70px" mt="20px">
-            <Text
-              color="#2D3748"
-              fontWeight="bold"
-              fontSize="20px"
-              lineHeight="26px"
-              ml="17px"
-            >
+            <Text color="#2D3748" fontWeight="bold" fontSize="20px" lineHeight="26px" ml="17px">
               {t('overview')}
             </Text>
           </Flex>
           <Overview vendorId={vendorId} />
         </Card>
 
-        <Card
-          p={0}
-          rounded="13px"
-          flex={1}
-          ml={{ base: 0, xl: '12px' }}
-          mt={{ base: '30px', xl: 0 }}
-        >
+        <Card p={0} rounded="13px" flex={1} ml={{ base: 0, xl: '12px' }} mt={{ base: '30px', xl: 0 }}>
           <Flex mb="40px">
             <Box
               pos="relative"
@@ -110,18 +82,12 @@ export const Dashboard: React.FC = () => {
                   {t('paidSmall')}
                 </Text>
 
-                <Heading fontSize="22px">
-                  ${numberWithCommas(paidTotal)}
-                </Heading>
+                <Heading fontSize="22px">${numberWithCommas(paidTotal)}</Heading>
               </Box>
             </Box>
             <Spacer />
             <Box pos="relative" top="30px" right={35} w="180px">
-              <Dropdown
-                options={monthOptions}
-                onChange={setPaidOption}
-                defaultValue={paidOption}
-              />
+              <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
 
