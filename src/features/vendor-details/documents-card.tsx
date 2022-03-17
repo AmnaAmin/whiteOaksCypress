@@ -101,9 +101,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 
   return (
-    <Box
-    // width="1050px"
-    >
+    <Box>
       <form className="Documents Form" id="documentForm" onSubmit={handleSubmit(onSubmit)}>
         <Box w="100%">
           <HStack direction="row" spacing={24}>
@@ -188,7 +186,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.agreementUrl, 'Agreement signed.Jpeg')}
+                  {downloadableDocument(documents.agreementUrl, 'Agreement signed.jpeg')}
                   {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
                 </Box>
               </Flex>
@@ -335,7 +333,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COI WC.Png')}
+                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COI WC.png')}
 
                   {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
                 </Box>
