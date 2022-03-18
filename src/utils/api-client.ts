@@ -20,7 +20,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       await authApi.logout()
       // refresh the page for them
       // @ts-ignore
-      // window.location.assign(window.location)
+      window.location.href = '/login'
       return Promise.reject({ message: 'Please re-authenticate.' })
     }
 
