@@ -70,7 +70,7 @@ function register(payload: unknown) {
 
 async function logout() {
   window.localStorage.removeItem(localStorageKey)
-  window.location.href = '/login'
+  window.location.assign(window.location.host)
 
   return Promise.resolve()
 }
