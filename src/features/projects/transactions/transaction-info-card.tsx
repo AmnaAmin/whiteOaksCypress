@@ -26,8 +26,10 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
       padding={5}
       flex={rest.flex || 1}
       {...rest}
+      fontSize={14}
+      color="#4A5568"
     >
-      <Box fontSize="14px" fontWeight={500}>
+      <Box fontWeight={500}>
         <Text color="#A0AEC0">{title}</Text>
         {isLoading ? (
           <Progress size="sm" isIndeterminate colorScheme="gray" />
