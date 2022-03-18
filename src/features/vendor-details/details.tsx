@@ -30,6 +30,7 @@ import {
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const textStyle = {
   color: '#2D3748',
@@ -43,8 +44,9 @@ type FieldInfoCardProps = {
   title: string
   value: string
   icon?: React.ElementType
+  testid?: string
 }
-const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon }) => {
+const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
   return (
     <Box>
       <HStack alignItems="start">
@@ -53,7 +55,7 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon }) => 
           <Text color="#2D3748" fontWeight={700} fontSize="16px" lineHeight="24px" fontStyle="normal">
             {title}
           </Text>
-          <Text color="#4A5568" fontSize="13px" fontWeight={400} fontStyle="normal" pb="20px">
+          <Text data-testid={testid} color="#4A5568" fontSize="13px" fontWeight={400} fontStyle="normal" pb="20px">
             {value}
           </Text>
         </VStack>
@@ -68,42 +70,15 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon }) => 
 export const Details: React.FC<{
   vendorProfileData: VendorProfile
 }> = props => {
-  const toast = useToast()
   const { vendorProfileData } = props
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<VendorProfileDetailsFormData>({
-    defaultValues: {
-      primaryContact: '',
-      secondaryContact: '',
-      businessPhoneNumber: '',
-      businessNumberExtention: '',
-      secondaryNumber: '',
-      secondaryNumberExtenstion: '',
-      primaryEmail: '',
-      secondaryEmail: '',
-    },
-  })
-
+  const toast = useToast()
   const { t } = useTranslation()
   const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  const { data: payments } = usePaymentMethods()
-
-  useEffect(() => {
-    if (!vendorProfileData) return
-    reset(parseAPIDataToFormData(vendorProfileData))
-  }, [reset, vendorProfileData])
+  const { data: payments, isLoading } = usePaymentMethods()
 
   const submitForm = useCallback(
     (formData: VendorProfileDetailsFormData) => {
-      console.log('formData', formData)
       const payload = parseFormDataToAPIData(vendorProfileData, formData)
-
-      console.log('payload', payload)
 
       updateVendorProfileDetails(payload, {
         onSuccess() {
@@ -124,7 +99,12 @@ export const Details: React.FC<{
     <Flex h="100%" direction="column">
       <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap="10px" w="100%" mb="30px">
         <GridItem>
-          <FieldInfoCard title={t('businessName')} value={`${vendorProfileData?.companyName}`} icon={BiBriefcase} />
+          <FieldInfoCard
+            testid="businessName"
+            title={t('businessName')}
+            value={`${vendorProfileData?.companyName}`}
+            icon={BiBriefcase}
+          />
         </GridItem>
         <GridItem>
           <FieldInfoCard title={t('capacity')} value={`${vendorProfileData?.capacity}`} icon={BiUser} />
@@ -136,17 +116,26 @@ export const Details: React.FC<{
             icon={BiCreditCardFront}
           />
         </GridItem>
-        <GridItem>
-          <FieldInfoCard
-            title={t('paymentMethods')}
-            value={payments?.map(payment => payment.value).toString()}
-            icon={BiCreditCardFront}
-          />
-        </GridItem>
+        {isLoading ? (
+          <BlankSlate />
+        ) : (
+          <GridItem>
+            <FieldInfoCard
+              title={t('paymentMethods')}
+              value={payments?.map(payment => payment.value).toString()}
+              icon={BiCreditCardFront}
+            />
+          </GridItem>
+        )}
       </Grid>
       <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap="10px" w="100%" mb="40px">
         <GridItem>
-          <FieldInfoCard title={t('streetAddress')} value={`${vendorProfileData?.streetAddress}`} icon={BiMapPin} />
+          <FieldInfoCard
+            testid="streetAddress"
+            title={t('streetAddress')}
+            value={`${vendorProfileData?.streetAddress}`}
+            icon={BiMapPin}
+          />
         </GridItem>
         <GridItem>
           <FieldInfoCard title={t('state')} value={`${vendorProfileData?.state}`} icon={BiTrip} />
@@ -158,192 +147,229 @@ export const Details: React.FC<{
           <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
         </GridItem>
       </Grid>
-
-      {/** Note: Using chakra component Box for form element in order to style */}
-      <Box as="form" onSubmit={handleSubmit(submitForm)}>
-        <Flex direction="column" h="100%">
-          <Box flex="1">
-            <Box w="50%" mb="22px">
-              <Stack spacing={4} direction={['row']}>
-                <FormControl w="320px" isInvalid={!!errors.primaryContact}>
-                  <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="320px"
-                    h="40px"
-                    borderLeft="2px solid #4E87F8"
-                    {...register('primaryContact', {
-                      required: 'This is required',
-                    })}
-                    id="primaryContact"
-                    type="text"
-                  />
-                  <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.secondaryContact}>
-                  <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="320px"
-                    h="40px"
-                    {...register('secondaryContact')}
-                    id="secondaryContact"
-                    type="text"
-                  />
-                  <FormErrorMessage>{errors.secondaryContact && errors.secondaryContact.message}</FormErrorMessage>
-                </FormControl>
-              </Stack>
-            </Box>
-
-            <Box mb="22px" w="50%">
-              <Stack direction="row" spacing={4}>
-                <FormControl isInvalid={!!errors.businessPhoneNumber}>
-                  <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="320px"
-                    h="40px"
-                    borderLeft="2px solid #4E87F8"
-                    mb="5px"
-                    {...register('businessPhoneNumber', {
-                      required: 'This is required',
-                    })}
-                    id="businessPhoneNumber"
-                    type="text"
-                  />
-                  <FormErrorMessage>
-                    {errors.businessPhoneNumber && errors.businessPhoneNumber.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl w="100px" isInvalid={!!errors.businessNumberExtention}>
-                  <FormLabel sx={textStyle}>Ext</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="96px"
-                    h="40px"
-                    {...register('businessNumberExtention')}
-                    id="businessNumberExtention"
-                    type="text"
-                  />
-                  <FormErrorMessage>
-                    {errors.businessNumberExtention && errors.businessNumberExtention.message}
-                  </FormErrorMessage>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.secondaryNumber}>
-                  <FormLabel sx={textStyle}>{t('secondaryNo')}</FormLabel>
-                  <Controller
-                    name="secondaryNumber"
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <Input
-                          {...field}
-                          bg="#FFFFFF"
-                          w="320px"
-                          h="40px"
-                          id="SecondaryNo"
-                          placeholder="(___)-___-____"
-                          autoComplete="cc-number"
-                          type="text"
-                          inputMode="text"
-                          onChange={event => {
-                            const value = event.currentTarget.value
-                            const denormarlizedValue = value.split('-').join('')
-
-                            const maskValue = denormarlizedValue
-                              ?.replace(/\D/g, '')
-                              .match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
-                            const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
-                              maskValue?.[3] || '____'
-                            }`
-                            field.onChange(actualValue)
-                          }}
-                        />
-                      )
-                    }}
-                  />
-                  <FormErrorMessage>{errors.secondaryNumber && errors.secondaryNumber.message}</FormErrorMessage>
-                </FormControl>
-
-                <FormControl w="100px" isInvalid={!!errors.secondaryNumberExtenstion}>
-                  <FormLabel sx={textStyle}>Ext</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="96px"
-                    h="40px"
-                    id="Ext"
-                    {...register('secondaryNumberExtenstion')}
-                    type="text"
-                  />
-                  <FormErrorMessage>
-                    {errors.secondaryNumberExtenstion && errors.secondaryNumberExtenstion.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </Stack>
-            </Box>
-
-            <Box w="50%" mb="22px">
-              <Stack direction="row" spacing={4}>
-                {/* Primary Email => Input */}
-
-                <FormControl w="320px" isInvalid={!!errors.primaryEmail}>
-                  <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="320px"
-                    h="40px"
-                    borderLeft="2px solid #4E87F8"
-                    {...register('primaryEmail', {
-                      required: 'primaryEmail is required',
-                    })}
-                    id="primaryEmail"
-                    type="text"
-                  />
-                  <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.secondaryEmail}>
-                  <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
-                  <Input
-                    bg="#FFFFFF"
-                    w="320px"
-                    {...register('secondaryEmail')}
-                    h="40px"
-                    id="secondaryEmail"
-                    type="text"
-                  />
-                  <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
-                </FormControl>
-              </Stack>
-            </Box>
-          </Box>
-
-          <Stack mt="100px" w="100%">
-            <Box>
-              <Divider border="1px solid" />
-            </Box>
-
-            <Box w="100%" minH="60px">
-              <Button
-                mt="10px"
-                mr="60px"
-                float={'right'}
-                colorScheme="CustomPrimaryColor"
-                size="md"
-                fontSize="16px"
-                fontStyle="normal"
-                fontWeight={600}
-                type="submit"
-              >
-                {t('save')}
-              </Button>
-            </Box>
-          </Stack>
-        </Flex>
-      </Box>
+      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} />
     </Flex>
+  )
+}
+
+export const DetailsForm = ({ submitForm, vendorProfileData }) => {
+  const { t } = useTranslation()
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<VendorProfileDetailsFormData>({
+    defaultValues: {
+      primaryContact: '',
+      secondaryContact: '',
+      businessPhoneNumber: '',
+      businessNumberExtention: '',
+      secondaryNumber: '',
+      secondaryNumberExtenstion: '',
+      primaryEmail: '',
+      secondaryEmail: '',
+    },
+  })
+
+  useEffect(() => {
+    if (!vendorProfileData) return
+    reset(parseAPIDataToFormData(vendorProfileData))
+  }, [reset, vendorProfileData])
+
+  return (
+    <>
+      {!vendorProfileData ? (
+        <BlankSlate />
+      ) : (
+        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm">
+          <Flex direction="column" h="100%">
+            <Box flex="1">
+              <Box w="50%" mb="22px">
+                <Stack spacing={4} direction={['row']}>
+                  <FormControl w="320px" isInvalid={!!errors.primaryContact}>
+                    <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="320px"
+                      h="40px"
+                      borderLeft="2px solid #4E87F8"
+                      {...register('primaryContact', {
+                        required: 'This is required',
+                      })}
+                      id="primaryContact"
+                      type="text"
+                      data-testid="primaryContact"
+                    />
+                    <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.secondaryContact}>
+                    <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="320px"
+                      h="40px"
+                      {...register('secondaryContact')}
+                      id="secondaryContact"
+                      type="text"
+                    />
+                    <FormErrorMessage>{errors.secondaryContact && errors.secondaryContact.message}</FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Box>
+
+              <Box mb="22px" w="50%">
+                <Stack direction="row" spacing={4}>
+                  <FormControl isInvalid={!!errors.businessPhoneNumber}>
+                    <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="320px"
+                      h="40px"
+                      borderLeft="2px solid #4E87F8"
+                      mb="5px"
+                      {...register('businessPhoneNumber', {
+                        required: 'This is required',
+                      })}
+                      id="businessPhoneNumber"
+                      type="text"
+                      data-testid="businessPhoneNumber"
+                    />
+                    <FormErrorMessage>
+                      {errors.businessPhoneNumber && errors.businessPhoneNumber.message}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl w="100px" isInvalid={!!errors.businessNumberExtention}>
+                    <FormLabel sx={textStyle}>Ext</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="96px"
+                      h="40px"
+                      {...register('businessNumberExtention')}
+                      id="businessNumberExtention"
+                      type="text"
+                    />
+                    <FormErrorMessage>
+                      {errors.businessNumberExtention && errors.businessNumberExtention.message}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.secondaryNumber}>
+                    <FormLabel sx={textStyle}>{t('secondaryNo')}</FormLabel>
+                    <Controller
+                      name="secondaryNumber"
+                      control={control}
+                      render={({ field }) => {
+                        return (
+                          <Input
+                            {...field}
+                            bg="#FFFFFF"
+                            w="320px"
+                            h="40px"
+                            id="SecondaryNo"
+                            placeholder="(___)-___-____"
+                            autoComplete="cc-number"
+                            type="text"
+                            inputMode="text"
+                            onChange={event => {
+                              const value = event.currentTarget.value
+                              const denormarlizedValue = value.split('-').join('')
+
+                              const maskValue = denormarlizedValue
+                                ?.replace(/\D/g, '')
+                                .match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+                              const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
+                                maskValue?.[3] || '____'
+                              }`
+                              field.onChange(actualValue)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                    <FormErrorMessage>{errors.secondaryNumber && errors.secondaryNumber.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl w="100px" isInvalid={!!errors.secondaryNumberExtenstion}>
+                    <FormLabel sx={textStyle}>Ext</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="96px"
+                      h="40px"
+                      id="Ext"
+                      {...register('secondaryNumberExtenstion')}
+                      type="text"
+                    />
+                    <FormErrorMessage>
+                      {errors.secondaryNumberExtenstion && errors.secondaryNumberExtenstion.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Box>
+
+              <Box w="50%" mb="22px">
+                <Stack direction="row" spacing={4}>
+                  {/* Primary Email => Input */}
+
+                  <FormControl w="320px" isInvalid={!!errors.primaryEmail}>
+                    <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="320px"
+                      h="40px"
+                      borderLeft="2px solid #4E87F8"
+                      {...register('primaryEmail', {
+                        required: 'This is required',
+                      })}
+                      id="primaryEmail"
+                      data-testid="primaryEmail"
+                      type="text"
+                    />
+                    <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.secondaryEmail}>
+                    <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
+                    <Input
+                      bg="#FFFFFF"
+                      w="320px"
+                      {...register('secondaryEmail')}
+                      h="40px"
+                      id="secondaryEmail"
+                      type="text"
+                    />
+                    <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Box>
+            </Box>
+
+            <Stack mt="100px" w="100%">
+              <Box>
+                <Divider border="1px solid" />
+              </Box>
+              <Box w="100%" minH="60px">
+                <Button
+                  mt="10px"
+                  mr="60px"
+                  float={'right'}
+                  colorScheme="CustomPrimaryColor"
+                  size="md"
+                  fontSize="16px"
+                  fontStyle="normal"
+                  fontWeight={600}
+                  type="submit"
+                >
+                  {t('save')}
+                </Button>
+              </Box>
+            </Stack>
+          </Flex>
+        </Box>
+      )}
+    </>
   )
 }
