@@ -69,7 +69,7 @@ function register(payload: unknown) {
 }
 
 async function logout() {
-  window.location.href = window.location.host
+  window.location.href = window.location.origin
 
   return Promise.resolve()
 }
