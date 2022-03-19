@@ -7,8 +7,8 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Vendor Score',
-        insurance: 'Insurance',
-        license: 'License',
+        licenseExpiration: 'License Expiration',
+        insuranceExpiration: 'Insurance Expiration',
         projectSummary: 'Project Summary',
         activeWO: 'Active Wo',
         pastDue: 'Past Due',
