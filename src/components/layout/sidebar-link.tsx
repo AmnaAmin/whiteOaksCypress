@@ -21,14 +21,14 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
   const { isLinkSelected } = useCheckPathSelected(pathTo)
   const selectedLinkStyle = useMemo(() => {
     return {
-      color: 'brand.500',
+      color: '#4E87F8',
     }
   }, [])
   const linkState = isLinkSelected
     ? {
         ...selectedLinkStyle,
         borderLeftColor: '#4E87F8',
-        bgGradient: 'linear(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%);',
+        bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%)',
       }
     : {}
 
@@ -44,9 +44,6 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       py="2"
       borderLeft="4px solid transparent"
       cursor="pointer"
-      _hover={{
-        ...selectedLinkStyle,
-      }}
       className="group"
       fontWeight="medium"
       {...linkState}
