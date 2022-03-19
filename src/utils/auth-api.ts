@@ -69,7 +69,7 @@ function register(payload: unknown) {
 }
 
 async function logout() {
-  window.localStorage.removeItem(localStorageKey)
+  window.location.href = window.location.origin
 
   return Promise.resolve()
 }

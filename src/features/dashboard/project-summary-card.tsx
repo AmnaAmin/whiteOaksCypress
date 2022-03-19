@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, HStack, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text, Center, Icon } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 type cardprops = {
   UpdownIcon: React.ElementType
@@ -7,53 +7,35 @@ type cardprops = {
   number?: number
   name: string
   Iconbgcolor: any
-  TopnumberbgColor: any
   numbertext?: string
-  numberColor: string
+  updownIconColor: string
   isLoading?: boolean
 }
 export const ProjectSummaryCard = (props: cardprops) => {
-  const { UpdownIcon, BigIcon, numberColor, isLoading } = props
+  const { UpdownIcon, BigIcon, updownIconColor, isLoading } = props
   return (
-    <HStack>
-      <Flex alignItems="end" justifyContent="end">
-        <Box bg={props.Iconbgcolor} borderRadius="4px" padding="15px 15px 7px 15px" marginRight="10px" h="55px">
-          <BigIcon />
-        </Box>
-        <Flex fontSize="32px" direction="column" w="auto">
-          <Box
-            bg={props.TopnumberbgColor}
-            fontSize="12px"
-            fontStyle="normal"
-            fontWeight={400}
-            marginRight="20px"
-            w="57px"
-            h="24px"
-            borderRadius="6px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            color={numberColor}
-            mb="5px"
-          >
-            <Box fontSize="18px">
-              <UpdownIcon />
-            </Box>
-            &nbsp;XX%
-          </Box>
-          {isLoading ? (
-            <BlankSlate width="100%" />
-          ) : (
-            <Box fontWeight="800" fontSize="20px" fontStyle="normal" color="#4A5568" height="40px">
+    <Flex>
+      <Center bg={props.Iconbgcolor} borderRadius="4px" marginRight="10px" p={3} h={45} w={45} rounded={50}>
+        <Icon as={BigIcon} fontSize={20} />
+      </Center>
+      <Flex fontSize="32px" direction="column" w="auto" lineHeight={1.2}>
+        {isLoading ? (
+          <BlankSlate width="100%" />
+        ) : (
+          <Flex alignItems="center">
+            <Box fontWeight={600} fontSize={18} fontStyle="normal" color="gray.600">
               {props.number}
               {props.numbertext}
             </Box>
-          )}
-          <Text lineHeight="1" fontWeight={500} fontSize="18px" color="#A0AEC0" pb="5px">
-            {props.name}
-          </Text>
-        </Flex>
+            <Box fontSize={20} color={updownIconColor} pl={1.5}>
+              <UpdownIcon />
+            </Box>
+          </Flex>
+        )}
+        <Text fontWeight={400} fontSize={16} color="gray.600" pb={3}>
+          {props.name}
+        </Text>
       </Flex>
-    </HStack>
+    </Flex>
   )
 }

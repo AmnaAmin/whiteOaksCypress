@@ -48,11 +48,17 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab
+                aria-labelledby="transaction-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: 'button.300' }}
+                sx={projectTabStyle}
+              >
                 {t('transaction')}
               </Tab>
 
               <Tab
+                aria-labelledby="work-order-tab"
                 _focus={{ border: 'none' }}
                 _selected={{ color: 'white', bg: 'button.300' }}
                 whiteSpace="nowrap"
@@ -61,17 +67,28 @@ export const ProjectDetails: React.FC = props => {
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab
+                aria-labelledby="documents-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: 'button.300' }}
+                sx={projectTabStyle}
+              >
                 {t('documents')}
               </Tab>
 
-              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab
+                aria-labelledby="alerts-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: 'button.300' }}
+                sx={projectTabStyle}
+              >
                 {t('alerts')}
               </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (
                   <Button
+                    aria-labelledby="upload-document-button"
                     onClick={onDocumentModalOpen}
                     bg="#4E87F8"
                     color="#FFFFFF"
@@ -79,7 +96,7 @@ export const ProjectDetails: React.FC = props => {
                     _hover={{ bg: 'royalblue' }}
                   >
                     <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <AiOutlineUpload />
+                      <AiOutlineUpload aria-label="upload-document-button" />
                     </Box>
                     {t('upload')}
                   </Button>
