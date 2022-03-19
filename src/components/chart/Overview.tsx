@@ -45,7 +45,16 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
 
   return (
     <ResponsiveContainer width="98%" height={335}>
-      <BarChart data={vendorData} barSize={50}>
+      <BarChart
+        data={vendorData}
+        barSize={50}
+        margin={{
+          top: 14,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
         <CartesianGrid stroke="#EFF3F9" />
         <XAxis
           dataKey="name"
@@ -61,8 +70,8 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
         />
 
         <YAxis
+          tickLine={{ stroke: '#4F4F4F' }}
           type="number"
-          // domain={[0, (dataMax: number) => 40]}
           tickSize={8}
           tickCount={3}
           axisLine={false}
@@ -74,23 +83,22 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           }}
         />
 
-        <Tooltip />
+        <Tooltip contentStyle={{ borderRadius: '6px' }} />
 
-        <Bar dataKey="Active" fill="#68B8EF" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="Closed" fill="#FB8832" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="Paid" fill="#949AC2" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="Canceled" fill="#F7685B" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
+        <Bar dataKey="Closed" fill="#FB8832" radius={[10, 10, 0, 0]} />
+        <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
+        <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
         <Legend
           wrapperStyle={{
             lineHeight: '31px',
             position: 'relative',
-            bottom: 'calc(100% + 73px)',
-            left: '80px',
+            bottom: 'calc(100% + 50px)',
+            left: 50,
           }}
-          height={40}
           iconType="circle"
           iconSize={10}
-          align="center"
+          align="right"
           formatter={value => {
             return (
               <Box display="inline-flex" marginInlineEnd="40px">

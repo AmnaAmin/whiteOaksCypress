@@ -17,7 +17,18 @@ const PaidChart: React.FC<PaidChartProps> = ({ filterChart }) => {
   const { data } = usePaidWOAmountByYearAndMonth(filterChart.year, filterChart.month)
   return (
     <ResponsiveContainer width="90%" height={305}>
-      <BarChart width={630} height={250} data={data} barSize={21}>
+      <BarChart
+        width={630}
+        height={250}
+        data={data}
+        barSize={21}
+        margin={{
+          top: 0,
+          right: 0,
+          left: 15,
+          bottom: 5,
+        }}
+      >
         <defs>
           <linearGradient id="colorUv" x1="40%" y1="40%" x2="40%" y2="100%" gradientUnits="userSpaceOnUse">
             <stop offset="0" stopColor=" #F6AD55" />
@@ -37,6 +48,7 @@ const PaidChart: React.FC<PaidChartProps> = ({ filterChart }) => {
             fontWeight: 400,
             fontStyle: 'normal',
           }}
+          tickMargin={20}
         />
         <YAxis
           hide={false}
@@ -55,7 +67,7 @@ const PaidChart: React.FC<PaidChartProps> = ({ filterChart }) => {
             return ` ${'$' + round(tick / 1000, 2) + 'k'} `
           }}
         />
-        <Tooltip />
+        <Tooltip contentStyle={{ borderRadius: '6px' }} />
 
         <Bar dataKey="count" fill="url(#colorUv)" radius={[5, 5, 0, 0]} />
       </BarChart>

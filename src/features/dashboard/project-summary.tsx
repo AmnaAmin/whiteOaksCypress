@@ -24,6 +24,7 @@ export const ProjectSummary = () => {
       borderRadius="15px"
       bg="whiteAlpha.900"
       direction="column"
+      mb="15px"
       boxSizing="border-box"
       py={{ base: '6', xl: '9' }}
       pr={{ base: '3', xl: '12' }}
