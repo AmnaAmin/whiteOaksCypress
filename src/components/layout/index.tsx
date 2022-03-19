@@ -19,7 +19,7 @@ export const Layout: React.FC = props => {
       <Container maxW="full" pt="65px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
         <Flex
           position="fixed"
-          top="55px"
+          top="69px"
           bottom="0"
           left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
           transition="left 0.5s ease-in-out"
