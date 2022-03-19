@@ -27,8 +27,8 @@ const Status = ({ value, id }: { value: string; id: string }) => {
   const style = STATUS_COLOR[id?.toLocaleLowerCase()]
 
   return (
-    <Tag size="lg" rounded="6px" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
-      <TagLabel fontSize="12px" fontStyle="normal" fontWeight={500} lineHeight="16px">
+    <Tag size="md" rounded="6px" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
+      <TagLabel fontSize="12px" fontStyle="normal" fontWeight={500} lineHeight="16px" p="4px">
         {value}
       </TagLabel>
     </Tag>

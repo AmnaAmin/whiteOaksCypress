@@ -56,12 +56,12 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
       <ModalContent w={1200}>
         <ModalHeader h={68} pt={4} pb={4} display="flex" alignItems="center">
-          <HStack spacing={3}>
+          <HStack spacing={4}>
             <Text fontWeight={700} fontSize="18px" fontStyle="normal" color="gray.700">
               {t('editVendorWorkOrder')}
             </Text>
-            <Tag size="lg" rounded="6px" variant="solid" color="green.600" bg="green.100">
-              <TagLabel fontSize="12px" fontStyle="normal" fontWeight={500} lineHeight="16px">
+            <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
+              <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
                 Active
               </TagLabel>
             </Tag>

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, Tag } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, Tag, TagLabel } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useTransactions } from 'utils/transactions'
@@ -17,8 +17,8 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 
   approved: {
-    bg: 'green.100',
-    color: 'green.600',
+    bg: '#E7F8EC',
+    color: '#2AB450',
   },
   cancelled: {
     bg: 'red.100',
@@ -26,8 +26,8 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 
   pending: {
-    bg: 'orange.100',
-    color: 'orange.600',
+    bg: '#FEEBCB',
+    color: '#C05621',
   },
 }
 
@@ -54,16 +54,14 @@ const COLUMNS = [
     Cell(cellInfo) {
       return (
         <Tag
-          textTransform="capitalize"
-          fontWeight={500}
-          fontSize="12px"
           rounded="6px"
-          fontStyle="normal"
-          lineHeight="16px"
-          size="lg"
+          textTransform="capitalize"
+          size="md"
           {...STATUS_TAG_COLOR_SCHEME[(cellInfo.value || '').toLowerCase()]}
         >
-          {cellInfo.value}
+          <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
+            {cellInfo.value}
+          </TagLabel>
         </Tag>
       )
     },
