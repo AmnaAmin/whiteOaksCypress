@@ -13,14 +13,6 @@ const queryClient = new QueryClient()
 const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 
 describe('Vendor Profile Market Test Cases', () => {
-  it('Market API should return data', async () => {
-    const { result, waitFor } = renderHook(() => useMarkets(), { wrapper })
-
-    await waitFor(() => {
-      expect(result?.current).not.toBeUndefined()
-    })
-  })
-
   it('Market Data is rendered', async () => {
     await render(<App />, { route: '/vendors' })
 

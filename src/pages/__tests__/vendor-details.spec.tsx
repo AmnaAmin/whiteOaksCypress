@@ -14,38 +14,20 @@ const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{chi
 /* Details Tab Test Cases */
 
 describe('Vendor Profile Test Cases', () => {
-  test('App should redirect to /vendors', async () => {
+  test('App should redirect to /vendors with default details tab open', async () => {
     await render(<App />, { route: '/vendors' })
 
     expect(global.window.location.pathname).toEqual('/vendors')
-  })
-
-  test('Vendor details opens details tab', async () => {
-    await render(<App />, { route: '/vendors' })
-
     const openTab = screen.getByRole('tab', { selected: true })
     expect(openTab.innerHTML).toEqual('Details')
   })
 
-  it('Vendor Details API should return data', async () => {
-    const { result, waitFor } = renderHook(() => useVendorProfile(258), { wrapper })
-
-    await waitFor(() => {
-      return expect(result?.current?.data?.id).not.toBeUndefined()
-    })
-  })
-
-  it('Vendor Business name is not empty/null', async () => {
-    await render(<App />, { route: '/vendors' })
-
-    const businessName = screen.getByTestId('businessName')
-    expect(businessName.innerHTML).not.toEqual('')
-  })
-
-  it('Vendor Street Address is not empty/null', async () => {
+  it('Vendor details is not empty/null', async () => {
     await render(<App />, { route: '/vendors' })
 
     const streetAddress = screen.getByTestId('streetAddress')
+    const businessName = screen.getByTestId('businessName')
+    expect(businessName.innerHTML).not.toEqual('')
     expect(streetAddress.innerHTML).not.toEqual('')
   })
 
@@ -53,7 +35,11 @@ describe('Vendor Profile Test Cases', () => {
     await render(<App />, { route: '/vendors' })
 
     const primaryContact = screen.getByTestId('primaryContact')
+    const businessPhoneNumber = screen.getByTestId('businessPhoneNumber')
+    const primaryEmail = screen.getByTestId('primaryEmail')
     expect(primaryContact).toBeInTheDocument()
+    expect(businessPhoneNumber).toBeInTheDocument()
+    expect(primaryEmail).toBeInTheDocument()
   })
 
   it('Validating primary contact field', async () => {

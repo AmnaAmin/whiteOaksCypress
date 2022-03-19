@@ -13,14 +13,6 @@ const queryClient = new QueryClient()
 const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 
 describe('Vendor Profile Trade Test Cases', () => {
-  it('Trade API should return data', async () => {
-    const { result, waitFor } = renderHook(() => useTrades(), { wrapper })
-
-    await waitFor(() => {
-      return expect(result?.current?.data).not.toBeUndefined()
-    })
-  })
-
   it('Trade Data is rendered', async () => {
     await render(<App />, { route: '/vendors' })
 
@@ -33,18 +25,6 @@ describe('Vendor Profile Trade Test Cases', () => {
       expect(screen.getAllByTestId(/^tradeChecks/).length).toBeGreaterThan(0)
       const openTab = screen.getByRole('tab', { selected: true })
       expect(openTab.innerHTML).toEqual('Trade')
-    })
-  })
-
-  it('Trade Data is rendered', async () => {
-    await render(<App />, { route: '/vendors' })
-
-    const tradetab = screen.getByTestId('tradetab')
-    act(() => {
-      fireEvent.click(tradetab)
-    })
-    await waitFor(() => {
-      expect(screen.getAllByTestId(/^tradeChecks/).length).toBeGreaterThan(0)
     })
   })
 
