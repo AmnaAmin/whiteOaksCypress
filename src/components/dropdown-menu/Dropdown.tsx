@@ -79,10 +79,8 @@ const chakraStyles = {
     }
   },
   // Add the chakra style for when a TagCloseButton has focus
-  multiValueRemove: (
-    provided,
-    { isFocused, selectProps: { multiValueRemoveFocusStyle } },
-  ) => (isFocused ? multiValueRemoveFocusStyle : {}),
+  multiValueRemove: (provided, { isFocused, selectProps: { multiValueRemoveFocusStyle } }) =>
+    isFocused ? multiValueRemoveFocusStyle : {},
   control: () => ({}),
   menuList: () => ({}),
   option: () => ({}),
@@ -93,14 +91,7 @@ const chakraStyles = {
 
 const chakraComponents = {
   // Control components
-  Control({
-    children,
-    innerRef,
-    innerProps,
-    isDisabled,
-    isFocused,
-    selectProps: { size, isInvalid },
-  }) {
+  Control({ children, innerRef, innerProps, isDisabled, isFocused, selectProps: { size, isInvalid } }) {
     const inputStyles = useMultiStyleConfig('Input', { size })
 
     const heights = {
@@ -134,13 +125,7 @@ const chakraComponents = {
       </StylesProvider>
     )
   },
-  MultiValueContainer: ({
-    children,
-    innerRef,
-    innerProps,
-    data,
-    selectProps,
-  }) => (
+  MultiValueContainer: ({ children, innerRef, innerProps, data, selectProps }) => (
     <Tag
       ref={innerRef}
       {...innerProps}
@@ -223,14 +208,7 @@ const chakraComponents = {
       </Box>
     )
   },
-  Option({
-    innerRef,
-    innerProps,
-    children,
-    isFocused,
-    isDisabled,
-    selectProps: { size },
-  }) {
+  Option({ innerRef, innerProps, children, isFocused, isDisabled, selectProps: { size } }) {
     const { item } = useStyles() as any
     return (
       <Box
@@ -272,8 +250,7 @@ const ChakraReactSelect = ({
   const inputProps = useFormControl({ isDisabled, isInvalid })
 
   // The chakra theme styles for TagCloseButton when focused
-  const closeButtonFocus =
-    chakraTheme.components.Tag.baseStyle.closeButton._focus
+  const closeButtonFocus = chakraTheme.components.Tag.baseStyle.closeButton._focus
   const multiValueRemoveFocusStyle = {
     background: closeButtonFocus.bg,
     boxShadow: chakraTheme.shadows[closeButtonFocus.boxShadow],
@@ -281,10 +258,7 @@ const ChakraReactSelect = ({
 
   // The chakra UI global placeholder color
   // https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/src/styles.ts#L13
-  const placeholderColor = useColorModeValue(
-    chakraTheme.colors.gray[400],
-    chakraTheme.colors.whiteAlpha[400],
-  )
+  const placeholderColor = useColorModeValue(chakraTheme.colors.gray[400], chakraTheme.colors.whiteAlpha[400])
 
   // Ensure that the size used is one of the options, either `sm`, `md`, or `lg`
   let realSize = size
