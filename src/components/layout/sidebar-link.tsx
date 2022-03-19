@@ -37,12 +37,12 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       as={Link}
       to={pathTo}
       marginEnd="2"
-      color="#4A5568"
+      color="gray.600"
       fontSize="sm"
       display="block"
-      px="5"
-      py="1"
-      borderLeft="6px solid transparent"
+      px="2"
+      py="2"
+      borderLeft="4px solid transparent"
       cursor="pointer"
       _hover={{
         ...selectedLinkStyle,
@@ -56,7 +56,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
         <Box _groupHover={{ opacity: 1 }} fontSize="16px">
           {icon}
         </Box>
-        <Text fontSize="18px" fontWeight={500} lineHeight="24px" fontStyle="normal" pt="2px">
+        <Text fontSize="18px" fontWeight={500} lineHeight="28px" fontStyle="normal" pt="2px">
           {title}
         </Text>
       </HStack>

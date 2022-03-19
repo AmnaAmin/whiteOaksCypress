@@ -1,21 +1,14 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  useColorModeValue as mode,
-  VStack,
-} from "@chakra-ui/react";
-import { Header } from "./header";
-import { Sidebar } from "./sidebar";
-import { SidebarLink } from "./sidebar-link";
-import { FaAlignCenter, FaHome, FaUser } from "react-icons/fa";
-import { useMobileMenuState } from "utils/hooks/useMobileMenuState";
-import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from "react-icons/ai";
+import React from 'react'
+import { Box, Button, Container, Flex, Stack, useColorModeValue as mode, VStack } from '@chakra-ui/react'
+import { Header } from './header'
+import { Sidebar } from './sidebar'
+import { SidebarLink } from './sidebar-link'
+import { FaAlignCenter, FaHome, FaUser } from 'react-icons/fa'
+import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
+import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
 
-export const Layout: React.FC = (props) => {
-  const { isOpen, toggle } = useMobileMenuState();
+export const Layout: React.FC = props => {
+  const { isOpen, toggle } = useMobileMenuState()
 
   return (
     <VStack width="100%">
@@ -23,17 +16,12 @@ export const Layout: React.FC = (props) => {
         <Header toggleMenu={toggle} />
       </Box>
 
-      <Container
-        maxW="full"
-        pt="65px"
-        position="relative"
-        sx={{ "--sidebar-width": "12.6rem" }}
-      >
+      <Container maxW="full" pt="65px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
         <Flex
           position="fixed"
           top="55px"
           bottom="0"
-          left={isOpen ? "0" : "calc((var(--sidebar-width)+100) * -1)"}
+          left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
           transition="left 0.5s ease-in-out"
           zIndex="dropdown"
         >
@@ -43,37 +31,29 @@ export const Layout: React.FC = (props) => {
             flex="1"
             width="var(--sidebar-width)"
             py="5"
-            bg={mode("white", "black")}
-            boxShadow={isOpen ? "xl" : "0"}
+            bg={mode('white', 'black')}
+            boxShadow={isOpen ? 'xl' : '0'}
           >
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
-                <VStack align="start" spacing={5}>
-                  <SidebarLink
-                    pathTo="/vendorDashboard"
-                    title="Dashboard"
-                    icon={<FaHome />}
-                  />
-                  <SidebarLink
-                    pathTo="/projects"
-                    title="Projects"
-                    icon={<FaAlignCenter />}
-                  />
-                  <SidebarLink
-                    pathTo="/vendors"
-                    title="Profile"
-                    icon={<FaUser />}
-                  />
-                </VStack>
+                <Stack align="start" spacing={3}>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/vendorDashboard" title="Dashboard" icon={<FaHome />} />
+                  </Box>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/projects" title="Projects" icon={<FaAlignCenter />} />
+                  </Box>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/vendors" title="Profile" icon={<FaUser />} />
+                  </Box>
+                </Stack>
               </Sidebar>
             </Box>
           </Box>
           <Button
-            display={{ base: "none", lg: "unset" }}
-            _focus={{ outline: "none" }}
-            leftIcon={
-              isOpen ? <AiOutlineVerticalRight /> : <AiOutlineVerticalLeft />
-            }
+            display={{ base: 'none', lg: 'unset' }}
+            _focus={{ outline: 'none' }}
+            leftIcon={isOpen ? <AiOutlineVerticalRight /> : <AiOutlineVerticalLeft />}
             variant="solid"
             size="xs"
             onClick={toggle}
@@ -91,11 +71,10 @@ export const Layout: React.FC = (props) => {
         <Box
           // @ts-ignore
           marginStart={{
-            base: "0",
-            lg:
-              "var(--sidebar-width)" && isOpen ? "var(--sidebar-width)" : null,
+            base: '0',
+            lg: 'var(--sidebar-width)' && isOpen ? 'var(--sidebar-width)' : null,
           }}
-          transition={isOpen ? "0.5s" : "1s"}
+          transition={isOpen ? '0.5s' : '1s'}
           height="calc(100vh - 65px)"
           p="1rem"
           w="(calc(100% - var(--sidebar-width)"
@@ -104,5 +83,5 @@ export const Layout: React.FC = (props) => {
         </Box>
       </Container>
     </VStack>
-  );
-};
+  )
+}
