@@ -64,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const [showNotification, setShowNotification] = useState(false)
 
   return (
-    <Box py="1.5" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} boxShadow="base" w="100%">
+    <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
