@@ -1,16 +1,17 @@
 import { render, screen } from 'utils/test-utils'
 import { fireEvent, waitFor, render as directRender } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
-import { useVendorProfile } from 'utils/vendor-details'
+import { useVendorProfile, useTrades } from 'utils/vendor-details'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { act } from 'react-dom/test-utils'
-import user from '@testing-library/user-event'
 import App from 'App'
 import { DetailsForm } from '../../features/vendor-details/details'
 import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
 
 const queryClient = new QueryClient()
 const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+
+/* Details Tab Test Cases */
 
 describe('Vendor Profile Test Cases', () => {
   test('App should redirect to /vendors', async () => {

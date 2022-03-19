@@ -8,10 +8,11 @@ export const CheckboxButton: React.FC<CheckboxProps> = props => {
   const checkbox = getCheckboxProps() as BoxProps
 
   return (
-    <Box as="label">
+    <Box as="label" data-testid={props['data-testid']}>
       <input {...checkboxInput} />
       <Box
         {...checkbox}
+        className="checkboxButton"
         cursor="pointer"
         borderWidth="1px"
         borderRadius="md"

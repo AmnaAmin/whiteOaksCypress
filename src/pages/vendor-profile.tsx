@@ -48,10 +48,20 @@ export const VendorProfilePage: React.FC = props => {
             <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
               {t('license')}
             </Tab>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              data-testid="tradetab"
+              _selected={{ color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('trade')}
             </Tab>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              data-testid="markettab"
+              _selected={{ color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('market')}
             </Tab>
           </TabList>

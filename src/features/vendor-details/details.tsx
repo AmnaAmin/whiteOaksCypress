@@ -362,6 +362,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   fontStyle="normal"
                   fontWeight={600}
                   type="submit"
+                  data-testid="saveDetails"
                 >
                   {t('save')}
                 </Button>
