@@ -1,5 +1,5 @@
-import { SVGAttributes } from "react";
-import { Box } from "@chakra-ui/react";
+import { SVGAttributes } from 'react'
+import { Box } from '@chakra-ui/react'
 
 function LogoIcon(props: SVGAttributes<SVGElement>) {
   return (
@@ -15,16 +15,8 @@ function LogoIcon(props: SVGAttributes<SVGElement>) {
       >
         <path fill="url(#pattern0)" d="M0 0H131V37H0z"></path>
         <defs>
-          <pattern
-            id="pattern0"
-            width="1"
-            height="1"
-            patternContentUnits="objectBoundingBox"
-          >
-            <use
-              transform="matrix(.00467 0 0 .01654 0 -.005)"
-              xlinkHref="#image0_228:1260"
-            ></use>
+          <pattern id="pattern0" width="1" height="1" patternContentUnits="objectBoundingBox">
+            <use transform="matrix(.00467 0 0 .01654 0 -.005)" xlinkHref="#image0_228:1260"></use>
           </pattern>
           <image
             id="image0_228:1260"
@@ -35,7 +27,7 @@ function LogoIcon(props: SVGAttributes<SVGElement>) {
         </defs>
       </svg>
     </Box>
-  );
+  )
 }
 
-export default LogoIcon;
+export default LogoIcon
