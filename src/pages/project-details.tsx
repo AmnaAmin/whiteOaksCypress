@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
 import { Document } from 'types/vendor.types'
+import { BiAddToQueue } from 'react-icons/bi'
 
 const projectTabStyle = {
   fontSize: '14px',
@@ -109,12 +110,19 @@ export const ProjectDetails: React.FC = props => {
                 )}
                 {tabIndex === 0 && (
                   <Button
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="md"
-                    _hover={{ bg: 'royalblue' }}
+                    pos="relative"
+                    top="2"
+                    bg="none"
+                    color="#4E87F8"
+                    fontSize="14px"
+                    fontStyle="normal"
+                    fontWeight={500}
+                    _focus={{ border: 'none' }}
+                    _active={{ bg: 'none' }}
+                    _hover={{ bg: 'none' }}
                     onClick={onTransactionModalOpen}
                   >
+                    <Icon as={BiAddToQueue} mr="1" boxSize={4} />
                     {t('newTransaction')}
                   </Button>
                 )}

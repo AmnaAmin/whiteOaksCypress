@@ -42,7 +42,7 @@ const UserInfo: React.FC = () => {
       />
       <VStack alignItems="start" spacing="0.3" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="12px" pr="1" fontWeight={500} fontFamily="Inter" fontStyle="normal" color="#4A5568">
+          <Text fontSize="12px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
             {userName}
           </Text>
         </Flex>

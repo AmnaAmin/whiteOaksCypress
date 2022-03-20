@@ -276,7 +276,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     controlStyle={{ w: '20em' }}
                     elementStyle={{
                       bg: 'white',
-                      borderLeft: '1.5px solid #4E87F8',
+                      borderLeft: '2px solid #4E87F8',
                     }}
                     rules={{ required: 'This is required field' }}
                     name={`claimantTitle`}
@@ -291,7 +291,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                     controlStyle={{ w: '20em' }}
                     elementStyle={{
                       bg: 'white',
-                      borderLeft: '1.5px solid #4E87F8',
+                      borderWidth: '0 0 1px 0',
+                      borderColor: 'gray.100',
+                      rounded: '0',
                     }}
                     rules={{ required: 'This is required field' }}
                     readOnly
@@ -307,6 +309,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             variant="ghost"
             mr={3}
             onClick={onClose}
+            size="lg"
             color="gray.700"
             fontStyle="normal"
             fontWeight={600}
@@ -316,6 +319,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           </Button>
           <Button
             colorScheme="CustomPrimaryColor"
+            size="lg"
             mr={3}
             type="submit"
             fontStyle="normal"

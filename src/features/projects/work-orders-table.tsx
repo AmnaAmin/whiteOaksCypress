@@ -34,9 +34,9 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 noOfLines={2}
                 title={cell.value}
                 padding="0 15px"
-                color="gray.600"
+                color="#4A5568"
                 fontStyle="normal"
-                fontSize="12px"
+                fontSize="14px"
                 fontWeight={400}
               >
                 {cell.render('Cell')}

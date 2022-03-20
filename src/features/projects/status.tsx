@@ -28,8 +28,15 @@ const Status = ({ value, id }: { value: string; id: string }) => {
 
   return (
     <Tag size="md" rounded="6px" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
-      <TagLabel fontSize="12px" fontStyle="normal" fontWeight={500} lineHeight="16px" p="4px">
-        {value}
+      <TagLabel
+        fontSize="14px"
+        fontStyle="normal"
+        fontWeight={400}
+        lineHeight="20px"
+        p="2px"
+        textTransform="capitalize"
+      >
+        {value.toLocaleLowerCase()}
       </TagLabel>
     </Tag>
   )

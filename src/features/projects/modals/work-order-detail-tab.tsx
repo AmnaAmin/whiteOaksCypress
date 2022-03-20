@@ -14,12 +14,12 @@ type WODates = {
 
 const CalenderCard = props => {
   return (
-    <Flex borderBottom="1px solid  #E2E8F0" pt={6} pb={8}>
+    <Flex pt={6} pb={8}>
       <Box pr={4}>
         <BiCalendar size={23} color="#718096" />
       </Box>
-      <Box lineHeight="24px">
-        <Text fontWeight={700} fontSize="15.6px" fontStyle="normal" color="gray.700">
+      <Box lineHeight="20px">
+        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
         <Text color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
@@ -51,8 +51,9 @@ const TableBodyChilde: React.FC<{
       borderBottom="1px solid #E2E8F0"
       alignItems="center"
       fontWeight={400}
-      fontSize={14}
+      fontSize="14px"
       fontStyle="normal"
+      color="gray.600"
     >
       <Text>{SKU}</Text>
       <Text>{ProductName}</Text>
@@ -61,14 +62,14 @@ const TableBodyChilde: React.FC<{
       <Text minW="60px">{Price}</Text>
       <Box>
         <Checkbox
+          rounded="6px"
           isDisabled={disabled}
           colorScheme="none"
           iconColor="green.400"
           h="32px"
           w="145px"
-          m={0}
-          color="green.400"
-          bg="green.50"
+          color="#2AB450"
+          bg="#E7F8EC"
           boxShadow="0px 0px 4px -2px "
           justifyContent="center"
           fontSize={14}
@@ -78,8 +79,15 @@ const TableBodyChilde: React.FC<{
         </Checkbox>
       </Box>
 
-      <Box color="#4E87F8" overflow="hidden">
-        <Button _focus={{ outline: 'none' }} variant="unstyled" leftIcon={<BiUpload />} textDecorationLine="underline">
+      <Box overflow="hidden" ml="2">
+        <Button
+          _focus={{ outline: 'none' }}
+          variant="unstyled"
+          leftIcon={<BiUpload />}
+          fontWeight={400}
+          fontSize="14px"
+          color="#4E87F8"
+        >
           {Images}
         </Button>
       </Box>
@@ -92,7 +100,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
 
   return (
     <Box>
-      <SimpleGrid columns={5} spacing={8} mt="31px">
+      <SimpleGrid columns={5} spacing={8} mt="31px" borderBottom="1px solid  #E2E8F0">
         <CalenderCard title="WO Issued" date="11/14/2021" />
         <CalenderCard title="Expected Start " date="11/14/2021" />
         <CalenderCard title="Expected Completion" date="11/14/2021" />
@@ -101,17 +109,34 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </SimpleGrid>
 
       <Box p={6}>
-        <Flex justifyContent="space-between" pt={2} pb={8} alignItems="center">
-          <Text fontSize="18px" fontWeight={700} color="gray.700">
+        <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
+          <Text fontSize="16px" fontWeight={500} color="gray.600">
             Assigned Line Items
           </Text>
 
           <HStack>
-            <Button leftIcon={<BiDownload />} mr={5} border="1px solid #4E87F8" color="#4E87F8" colorScheme="white">
+            <Button
+              leftIcon={<BiDownload />}
+              mr={5}
+              color="#4E87F8"
+              _focus={{ border: 'none' }}
+              bg="white"
+              fontStyle="normal"
+              fontWeight={600}
+              fontSize="14px"
+            >
               Download as PDF
             </Button>
 
-            <Button leftIcon={<BiCheck />} border="1px solid #4E87F8" color="#4E87F8" colorScheme="white">
+            <Button
+              leftIcon={<BiCheck />}
+              color="#4E87F8"
+              _focus={{ border: 'none' }}
+              bg="white"
+              fontStyle="normal"
+              fontWeight={600}
+              fontSize="14px"
+            >
               Mark All Completed
             </Button>
           </HStack>
@@ -188,10 +213,10 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </Box>
 
       <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3}>
+        <Button variant="ghost" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal">
           {t('close')}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3}>
+        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal">
           {t('save')}
         </Button>
       </Flex>
