@@ -23,12 +23,12 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
     <Center
       flexDir="column"
       borderRight="1px solid #E5E5E5"
-      padding={5}
+      px={5}
       flex={rest.flex || 1}
       {...rest}
     >
-      <Box fontSize="14px" fontWeight={500}>
-        <Text color="#A0AEC0">{title}</Text>
+      <Box fontSize="14px" fontWeight={500} color="gray.500">
+        <Text color="gray.600">{title}</Text>
         {isLoading ? (
           <Progress size="sm" isIndeterminate colorScheme="gray" />
         ) : (
@@ -47,6 +47,7 @@ export const TransactionInfoCard: React.FC<{
 
   return (
     <Flex
+      py={6}
       h={{ base: "unset", xl: "97px" }}
       w="100%"
       bg="white"
