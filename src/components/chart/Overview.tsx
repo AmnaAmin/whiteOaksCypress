@@ -44,7 +44,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   }))
 
   return (
-    <ResponsiveContainer width="98%" height={335}>
+    <ResponsiveContainer width="98%" height={360}>
       <BarChart
         data={vendorData}
         barSize={50}
