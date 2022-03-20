@@ -1,7 +1,7 @@
 import { rest } from 'msw'
 import { VENDOR_DATA, WO_BY_VENDORS_PER_MONTH } from './data'
 
-export const vendorDashboardHanlders = [
+export const vendorDashboardHandlers = [
   rest.get('/api/vendors/:vendorId', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(VENDOR_DATA))
   }),
