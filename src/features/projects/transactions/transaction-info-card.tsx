@@ -8,9 +8,9 @@ import { ProjectType } from 'types/project.type'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
-    <Center flexDir="column" borderRight="1px solid #E5E5E5" padding={5} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="14px" fontWeight={500}>
-        <Text color="#A0AEC0">{title}</Text>
+    <Center flexDir="column" borderRight="1px solid #E5E5E5" flex={rest.flex || 1} {...rest} px={5}>
+      <Box fontSize="14px" fontWeight={500} color="gray.500">
+        <Text color="gray.600">{title}</Text>
         {isLoading ? <Progress size="sm" isIndeterminate colorScheme="gray" /> : children}
       </Box>
     </Center>
@@ -24,13 +24,7 @@ export const TransactionInfoCard: React.FC<{
   const { t } = useTranslation()
 
   return (
-    <Flex
-      h={{ base: 'unset', xl: '97px' }}
-      w="100%"
-      bg="white"
-      borderRadius="4px"
-      box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-    >
+    <Flex py={6} minH="97px" w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
       <InfoStructureCard title={t('projectID')} isLoading={isLoading}>
         <Text>{projectData?.id}</Text>
       </InfoStructureCard>
@@ -53,7 +47,7 @@ export const TransactionInfoCard: React.FC<{
       <InfoStructureCard isLoading={isLoading} title={t('contactNo')}>
         <Text>{projectData?.projectManagerPhoneNumber}</Text>
       </InfoStructureCard>
-      <InfoStructureCard isLoading={isLoading} title={t('address')} flex={2}>
+      <InfoStructureCard isLoading={isLoading} title={t('address')} flex={2} border="none">
         {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
       </InfoStructureCard>
     </Flex>
