@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { Box, BoxProps, useColorModeValue as mode } from '@chakra-ui/react';
+import * as React from 'react'
+import { Box, BoxProps, useColorModeValue as mode } from '@chakra-ui/react'
 
 export const Sidebar: React.FC<BoxProps> = props => {
   return (
     <Box
       overflowY="auto"
       maxH="full"
+      mt="12px"
       lineHeight="taller"
       {...props}
       sx={{
@@ -23,5 +24,5 @@ export const Sidebar: React.FC<BoxProps> = props => {
         },
       }}
     />
-  );
-};
+  )
+}

@@ -1,88 +1,77 @@
 // import { User } from "../types/user";
-const localStorageKey = "jhi-authenticationToken";
+const localStorageKey = 'jhi-authenticationToken'
 
-async function client(
-  endpoint: string,
-  data: unknown,
-  headers = { "Content-Type": "application/json" }
-) {
+async function client(endpoint: string, data: unknown, headers = { 'Content-Type': 'application/json' }) {
   const config = {
-    method: "POST",
-    body: typeof data === "string" ? data : JSON.stringify(data),
+    method: 'POST',
+    body: typeof data === 'string' ? data : JSON.stringify(data),
     headers,
-  };
+  }
   return window
     .fetch(`/api/${endpoint}`, config)
-    .then(async (response) => {
-      let data;
-      const contentType = response.headers.get("content-type");
-      const isJson = contentType && contentType.includes("application/json");
+    .then(async response => {
+      let data
+      const contentType = response.headers.get('content-type')
+      const isJson = contentType && contentType.includes('application/json')
 
       // For reason unknown acction confirm api does not return json response
-      if (endpoint === "account/confirm") {
+      if (endpoint === 'account/confirm') {
         if (response.ok) {
-          return response.body;
+          return response.body
         } else {
-          return Promise.reject(response);
+          return Promise.reject(response)
         }
       }
 
       if (isJson) {
-        data = await response.json();
+        data = await response.json()
       } else {
-        data = await response.text();
+        data = await response.text()
       }
 
       if (response.ok) {
-        return data;
+        return data
       } else {
-        return Promise.reject(data);
+        return Promise.reject(data)
       }
     })
-    .then((error) => {
-      return error;
-    });
+    .then(error => {
+      return error
+    })
 }
 
 function handleUserResponse(user: any) {
-  window.localStorage.setItem(localStorageKey, user.id_token);
-  return user;
+  window.localStorage.setItem(localStorageKey, user.id_token)
+  return user
 }
 
 function login({ email, password }: { email: string; password: string }) {
-  return client("authenticate", {
+  return client('authenticate', {
     username: email,
     password,
     firebaseToken: null,
     rememberMe: false,
-  }).then(handleUserResponse);
+  }).then(handleUserResponse)
 }
 
 function forgetPassword(email: string) {
-  const headers = { "Content-Type": "text/plain" };
+  const headers = { 'Content-Type': 'text/plain' }
 
-  return client("account/reset-password/init", `${email}`, headers);
+  return client('account/reset-password/init', `${email}`, headers)
 }
 
 function resetPassword(payload: { newPassword: string; key: string }) {
-  return client("account/reset-password/finish", payload);
+  return client('account/reset-password/finish', payload)
 }
 
 function register(payload: unknown) {
-  return client("account/confirm", payload);
+  return client('account/confirm', payload)
 }
 
 async function logout() {
-  window.localStorage.removeItem(localStorageKey);
+  window.location.href = window.location.origin
 
-  return Promise.resolve();
+  return Promise.resolve()
 }
 
-export {
-  login,
-  forgetPassword,
-  resetPassword,
-  register,
-  logout,
-  localStorageKey,
-};
+export { login, forgetPassword, resetPassword, register, logout, localStorageKey }

@@ -17,12 +17,14 @@ const WorkOrderStatus = ({ value, id }: { value: string; id: string }) => {
   return (
     <Tag
       size="lg"
-      borderRadius="full"
+      borderRadius="6px"
       variant="solid"
       backgroundColor={WORK_ORDER_STATUS_COLOR[id]?.backgroundColor ?? '#6B46C1'}
       color={WORK_ORDER_STATUS_COLOR[id]?.color ?? '#E9D8FD'}
     >
-      <TagLabel>{value}</TagLabel>
+      <TagLabel fontSize="12px" fontWeight={500} fontStyle="normal" lineHeight="16px">
+        {value}
+      </TagLabel>
     </Tag>
   )
 }

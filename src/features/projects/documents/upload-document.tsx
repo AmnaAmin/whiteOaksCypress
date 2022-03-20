@@ -24,12 +24,7 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { Document } from 'types/vendor.types'
 
-export const UploadDocumentModal: React.FC<any> = ({
-  isOpen,
-  onClose,
-  projectId,
-  setLatestUploadedDoc,
-}) => {
+export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId, setLatestUploadedDoc }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [document, setDocument] = useState<File | null>(null)
@@ -132,13 +127,7 @@ export const UploadDocumentModal: React.FC<any> = ({
         <ModalBody>
           <FormControl mt="35px" isInvalid={isError}>
             <VStack align="start">
-              <FormLabel
-                fontSize="16px"
-                fontStyle="normal"
-                fontWeight={500}
-                color="gray.700"
-                htmlFor="documentType"
-              >
+              <FormLabel fontSize="16px" fontStyle="normal" fontWeight={500} color="gray.700" htmlFor="documentType">
                 {t('documentType')}{' '}
               </FormLabel>
               <HStack spacing="20px">
@@ -160,12 +149,7 @@ export const UploadDocumentModal: React.FC<any> = ({
                     </option>
                   ))}
                 </Select>
-                <input
-                  type="file"
-                  ref={inputRef}
-                  style={{ display: 'none' }}
-                  onChange={onFileChange}
-                ></input>
+                <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
                 {document ? (
                   <Box
                     color="barColor.100"
@@ -174,19 +158,8 @@ export const UploadDocumentModal: React.FC<any> = ({
                     borderRadius="3px"
                     fontSize="16px"
                   >
-                    <HStack
-                      spacing="5px"
-                      h="37px"
-                      padding="10px"
-                      align="center"
-                    >
-                      <Box
-                        as="span"
-                        maxWidth="500px"
-                        whiteSpace="nowrap"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                      >
+                    <HStack spacing="5px" h="37px" padding="10px" align="center">
+                      <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                         {document.name}
                       </Box>
                       <MdOutlineCancel
@@ -215,17 +188,11 @@ export const UploadDocumentModal: React.FC<any> = ({
                   </Button>
                 )}
               </HStack>
-              {isError && (
-                <FormErrorMessage>Document type is required</FormErrorMessage>
-              )}
+              {isError && <FormErrorMessage>Document type is required</FormErrorMessage>}
             </VStack>
           </FormControl>
         </ModalBody>
-        <ModalFooter
-          display="flex"
-          alignItems="center"
-          borderTop="1px solid #E2E8F0"
-        >
+        <ModalFooter display="flex" alignItems="center" borderTop="1px solid #E2E8F0">
           <Button
             variant="ghost"
             onClick={() => {

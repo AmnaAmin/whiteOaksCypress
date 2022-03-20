@@ -61,7 +61,7 @@ export const CHANGE_ORDERS = [
     clientApprovedDate: null,
     paidDate: null,
   },
-];
+]
 
 export const WORK_ORDERS = [
   {
@@ -104,7 +104,7 @@ export const WORK_ORDERS = [
     vendorAddress: '16 Mount Bethel Rd, Ste 193',
     durationCategory: '7',
   },
-];
+]
 
 export const DOCUMENTS = [
   {
@@ -128,11 +128,11 @@ export const DOCUMENTS = [
     fileType: '28 Outlook Ln_Subcontract_White Oaks - SIGNED.pdf',
     documentTypelabel: 'Work Order',
   },
-];
+]
 
-export const ALERT_HISTORIES = [];
+export const ALERT_HISTORIES = []
 
-export const FIRST_PROJECT_ID = 2951;
+export const FIRST_PROJECT_ID = 2951
 export const PROJECTS = [
   {
     id: FIRST_PROJECT_ID,
@@ -409,7 +409,7 @@ export const PROJECTS = [
     hoaPhone: '',
     paid: 'No',
   },
-];
+]
 
 export const VENDOR_CARDS = [
   {
@@ -440,4 +440,67 @@ export const VENDOR_CARDS = [
     label: 'pendingTransactionsWorkOrderCount',
     count: 14,
   },
-];
+]
+
+export const PROJECT_VENDOR = {
+  id: FIRST_PROJECT_ID,
+  vendorId: 258,
+  name: 'Test Automation Project via Admin',
+  vendorWOStatus: '34',
+  vendorWOStatusValue: 'PAST DUE',
+  vendorWOExpectedPaymentDate: null,
+  vendorWOId: 6269,
+  vendorWODateInvoiceSubmitted: null,
+  vendorWODateCompleted: null,
+  clientName: 'First Key Homes',
+  region: 'South',
+  projectManager: 'Andre  Williams',
+  projectManagerPhoneNumber: '(240)-938-7468',
+  market: 'Triangle',
+  changeordersTotal: '321.0000',
+  numberOfWorkOrders: 1,
+  numberOfCompletedWorkOrders: 0,
+  numberOfPaidWorkOrders: 0,
+  workOrderInvoiceTotal: 44000,
+  firstWorkOrderDate: '2022-02-21T11:49:50Z',
+  upcomingInvoiceTotal: null,
+  approvedChangedOrderDraw: 44200,
+  projectStatus: 'ACTIVE',
+  projectStatusId: 8,
+  superFirstName: null,
+  woaInvoiceDate: null,
+  woaPaidDate: null,
+  projectClosedDate: null,
+  pendingTransactions: 5,
+  invoiceSubmitted: 0,
+  pastDueWorkorders: 1,
+  code: 'NC',
+  superLastName: 'test name',
+  superPhoneNumber: '(234)-555-5444',
+  superEmailAddress: 'super@gmail.com',
+  lockBoxCode: '87',
+  hoaEmailAddress: 'hoa@gmail.com',
+  gatedCommunity: null,
+  gateCode: '99',
+  clientStartDate: '2021-02-28T19:00:00Z',
+  clientDueDate: '2021-12-16T19:00:00Z',
+  clientWalkthroughDate: null,
+  clientSignoffDate: null,
+  createdBy: 'autoops603@yopmail.com',
+  createdDate: '2022-02-21T11:49:14Z',
+  modifiedBy: 'autoops603@yopmail.com',
+  modifiedDate: '2022-02-21T11:50:08Z',
+  projectType: 64,
+  projectTypeLabel: 'Commercial',
+  expectedPaymentDate: null,
+  woaStartDate: '2021-03-16T19:00:00Z',
+  woaCompletionDate: null,
+  projectManagerId: 34,
+  propertyId: 9,
+  streetAddress: '3 LYLE CT',
+  city: 'DURHAM',
+  state: 'NC',
+  zipCode: '27704',
+  hoaPhone: '(345)-434-3342',
+  paid: 'No',
+}
