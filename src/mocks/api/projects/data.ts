@@ -504,3 +504,25 @@ export const PROJECT_VENDOR = {
   hoaPhone: '(345)-434-3342',
   paid: 'No',
 }
+
+export const NEW_DOCUMENT = {
+  id: 14922,
+  fileObject: null,
+  fileObjectContentType: 'image/png',
+  s3Url:
+    'https://dev2.woaharvest.com/documents/vendor@devtek.ai.1647701774600.project.3205.admin.1622554927504.triggers.PNG',
+  documentType: 56,
+  createdBy: 'vendor@devtek.ai',
+  createdDate: '2022-03-19T14:56:15.157659Z',
+  modifiedBy: 'vendor@devtek.ai',
+  modifiedDate: '2022-03-19T14:56:15.157659Z',
+  propertyId: null,
+  projectId: 3205,
+  vendorId: 258,
+  workOrderId: null,
+  changeOrderId: null,
+  vendorName: null,
+  workOrderName: null,
+  fileType: 'admin.1622554927504.triggers.PNG',
+  documentTypelabel: null,
+}
