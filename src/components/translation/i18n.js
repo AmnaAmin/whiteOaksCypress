@@ -1,5 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -7,18 +7,18 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Vendor Score',
-        insurance: 'Insurance',
-        license: 'License',
+        licenseExpiration: 'License Expiration',
+        insuranceExpiration: 'Insurance Expiration',
         projectSummary: 'Project Summary',
         activeWO: 'Active Wo',
         pastDue: 'Past Due',
         completedInvoiced: 'Invoiced',
         completednotPaid: 'Declined Invoices',
-        upcomingPayments: 'Upcoming Payments',
+        upcomingPayments: 'Upcoming Pay',
         WOstatusGraph: 'WO Status Graph',
-        overview: 'OVERVIEW',
-        paid: 'PAID',
-        paidSmall: 'paid',
+        overview: 'Overview',
+        paid: 'Paid',
+        paidSmall: 'Paid',
         January: 'January',
         Februray: 'Februray',
         March: 'March',
@@ -384,6 +384,6 @@ i18n.use(initReactI18next).init({
   react: {
     useSuspense: false,
   },
-});
+})
 
-export default i18n;
+export default i18n

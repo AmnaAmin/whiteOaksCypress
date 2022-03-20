@@ -1,98 +1,93 @@
-import React from "react";
-import { HStack, Text, Flex } from "@chakra-ui/layout";
-import { ProjectSummaryCard } from "./project-summary-card";
-import { BiTrendingDown, BiTrendingUp } from "react-icons/bi";
-import { useVendorCards } from "utils/vendor-dashboard";
+import { Flex } from '@chakra-ui/layout'
+import { ProjectSummaryCard } from './project-summary-card'
+import { useVendorCards } from 'utils/vendor-dashboard'
 // import { formatCurrencyNumberCompact } from '../../../shared/util/string-utils';
 import SummaryIconFirst, {
   SummaryIconFifth,
   SummaryIconForth,
   SummaryIconSecond,
   SummaryIconThird,
-} from "../../icons/project-icons";
-import { useTranslation } from "react-i18next";
-import "components/translation/i18n";
-import numeral from "numeral";
+} from '../../icons/project-icons'
+import { useTranslation } from 'react-i18next'
+import 'components/translation/i18n'
+import numeral from 'numeral'
+import { BsArrowDownShort, BsArrowUpShort } from 'react-icons/bs'
 
 export const ProjectSummary = () => {
-  const { data: cards } = useVendorCards();
-  const { t } = useTranslation();
+  const { data: cards, isLoading } = useVendorCards()
+  const { t } = useTranslation()
 
   return (
     <Flex
-      boxShadow="1px 0px 70px rgb(0 0 0 / 10%)"
+      boxShadow="0px 1px 7px 0px rgb(0 0 0 / 10%)"
       border="1px solid white"
-      borderRadius="10px"
+      borderRadius="15px"
       bg="whiteAlpha.900"
       direction="column"
       boxSizing="border-box"
-      py="7"
-      px={{ base: "3", lg: "7" }}
+      py={{ base: '6', xl: '9' }}
+      pr={{ base: '3', xl: '12' }}
+      pl={{ base: '3', xl: '16' }}
     >
-      <Text fontSize="22px" fontWeight="600">
-        {t("projectSummary")}
-      </Text>
-      <HStack
-        justifyContent="space-between"
+      <Flex
+        justifyContent="center"
         alignItems="center"
         display="grid"
         gridTemplateColumns={{
-          base: "repeat(2,1fr)",
-          md: "repeat(3,1fr)",
-          lg: "repeat(3,1fr)",
-          xl: "repeat(5,1fr)",
+          base: 'repeat(2,1fr)',
+          md: 'repeat(,1fr)',
+          lg: 'repeat(4,1fr)',
+          xl: 'repeat(5,1fr)',
         }}
-        gridRowGap={{ base: "20px" }}
+        gridRowGap={{ base: '20px' }}
       >
         <ProjectSummaryCard
-          UpdownIcon={BiTrendingUp}
+          isLoading={isLoading}
+          UpdownIcon={BsArrowDownShort}
           BigIcon={SummaryIconFirst}
-          number={cards?.find((c) => c.label === "active")?.count}
-          name={t("activeWO")}
-          Iconbgcolor={"gray.100"}
-          TopnumberbgColor={"red.100"}
-          numberColor={"rose.500"}
+          number={cards?.find(c => c.label === 'active')?.count}
+          name={t('activeWO')}
+          Iconbgcolor={'#FBF3DC'}
+          updownIconColor={'#E53E3E'}
         />
         <ProjectSummaryCard
-          UpdownIcon={BiTrendingDown}
+          isLoading={isLoading}
+          UpdownIcon={BsArrowDownShort}
           BigIcon={SummaryIconSecond}
-          number={cards?.find((c) => c.label === "pastDue")?.count}
-          name={t("pastDue")}
-          Iconbgcolor={"blue.50"}
-          TopnumberbgColor={"green.100"}
-          numberColor={"green.500"}
+          number={cards?.find(c => c.label === 'pastDue')?.count}
+          name={t('pastDue')}
+          Iconbgcolor={'#EAF3E7'}
+          updownIconColor={'#E53E3E'}
         />
         <ProjectSummaryCard
-          UpdownIcon={BiTrendingUp}
+          isLoading={isLoading}
+          UpdownIcon={BsArrowUpShort}
           BigIcon={SummaryIconThird}
-          number={cards?.find((c) => c.label === "completedAndInvoiced")?.count}
-          name={t("completedInvoiced")}
-          Iconbgcolor={"purple.50"}
-          TopnumberbgColor={"red.100"}
-          numberColor={"rose.500"}
+          number={cards?.find(c => c.label === 'completedAndInvoiced')?.count}
+          name={t('completedInvoiced')}
+          Iconbgcolor={'#E8F0FF'}
+          updownIconColor={'#48BB78'}
         />
         <ProjectSummaryCard
-          UpdownIcon={BiTrendingDown}
+          isLoading={isLoading}
+          UpdownIcon={BsArrowDownShort}
           BigIcon={SummaryIconForth}
-          number={cards?.find((c) => c.label === "notInvoiced")?.count}
-          name={t("completednotPaid")}
-          Iconbgcolor={"red.50"}
-          TopnumberbgColor={"green.100"}
-          numberColor={"green.500"}
+          number={cards?.find(c => c.label === 'notInvoiced')?.count}
+          name={t('completednotPaid')}
+          Iconbgcolor={'#FAE6E5'}
+          updownIconColor={'#E53E3E'}
         />
         <ProjectSummaryCard
-          UpdownIcon={BiTrendingDown}
+          isLoading={isLoading}
+          UpdownIcon={BsArrowUpShort}
           BigIcon={SummaryIconFifth}
-          name={t("upcomingPayments")}
-          Iconbgcolor={"green.50"}
-          TopnumberbgColor={"green.100"}
-          numberColor={"green.500"}
-          numbertext={numeral(
-            cards?.find((c) => c.label === "upcomingInvoiceTotal")?.count
-          ).format("($0.00a)")} // HK|WOA-1736
+          name={t('upcomingPayments')}
+          Iconbgcolor={'#ECF2FE'}
+          updownIconColor={'#48BB78'}
+          numbertext={numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0.00a)')} // HK|WOA-1736
         />
-      </HStack>
+      </Flex>
     </Flex>
-  );
-};
-export default ProjectSummary;
+  )
+}
+export default ProjectSummary

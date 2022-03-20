@@ -1,15 +1,15 @@
-import { Box, Center, Flex, HStack, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, Flex, HStack, Text } from '@chakra-ui/react'
+import React from 'react'
 
 type multitypes = {
-  id: number | string;
-  title: string;
-  number: string | number;
-  IconElement: React.ReactNode;
-  selectedCard: string;
-  onSelectCard: (string) => void;
-  disabled?: boolean;
-};
+  id: number | string
+  title: string
+  number: string | number
+  IconElement: React.ReactNode
+  selectedCard: string
+  onSelectCard: (string) => void
+  disabled?: boolean
+}
 
 export const ProjectCard = (props: multitypes) => {
   return (
@@ -21,29 +21,16 @@ export const ProjectCard = (props: multitypes) => {
         bg="#FFFFFF"
         justifyContent="space-between"
         border="2px solid transparent"
-        pointerEvents={props.disabled ? "none" : "auto"}
-        onClick={() =>
-          props.onSelectCard(props.selectedCard !== props.id && props.id)
-        }
-        borderColor={props.selectedCard === props.id ? "brand.300" : ""}
+        pointerEvents={props.disabled ? 'none' : 'auto'}
+        onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
+        borderColor={props.selectedCard === props.id ? 'brand.300' : ''}
       >
         <HStack w="95%" justifyContent="space-between">
           <Box>
-            <Text
-              fontSize="18px"
-              color="#A0AEC0"
-              fontWeight="500"
-              marginTop="4px"
-              paddingLeft={"20px"}
-            >
+            <Text fontSize="18px" color="#A0AEC0" fontWeight="500" marginTop="4px" paddingLeft={'20px'}>
               {props.title}
             </Text>
-            <Text
-              fontWeight="800"
-              color="#4A5568"
-              fontSize="20px"
-              padding="8px 0 10px 20px"
-            >
+            <Text fontWeight="800" color="#4A5568" fontSize="20px" padding="8px 0 10px 20px">
               {props.number}
             </Text>
           </Box>
@@ -53,5 +40,5 @@ export const ProjectCard = (props: multitypes) => {
         </HStack>
       </Flex>
     </Box>
-  );
-};
+  )
+}
