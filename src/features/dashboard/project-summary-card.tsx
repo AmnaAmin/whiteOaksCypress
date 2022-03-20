@@ -14,7 +14,7 @@ type cardprops = {
 export const ProjectSummaryCard = (props: cardprops) => {
   const { UpdownIcon, BigIcon, updownIconColor, isLoading } = props
   return (
-    <Flex>
+    <Flex p={{ base: '15px', sm: '20px' }} justifyContent={{ base: 'unset', xl: 'center' }}>
       <Center bg={props.Iconbgcolor} borderRadius="4px" marginRight="10px" p={3} h={45} w={45} rounded={50}>
         <Icon as={BigIcon} fontSize={20} />
       </Center>
