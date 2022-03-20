@@ -8,16 +8,8 @@ import { ProjectType } from 'types/project.type'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
-    <Center
-      flexDir="column"
-      borderRight="1px solid #E5E5E5"
-      padding={5}
-      flex={rest.flex || 1}
-      {...rest}
-      fontSize={14}
-      color="#4A5568"
-    >
-      <Box fontWeight={500}>
+    <Center flexDir="column" borderRight="1px solid #E5E5E5" padding={5} flex={rest.flex || 1} {...rest}>
+      <Box fontSize="14px" fontWeight={500}>
         <Text color="#A0AEC0">{title}</Text>
         {isLoading ? <Progress size="sm" isIndeterminate colorScheme="gray" /> : children}
       </Box>

@@ -52,18 +52,17 @@ const COLUMNS = [
     Header: t('status'),
     accessor: 'status',
     Cell(cellInfo) {
+      const value = (cellInfo.value || '').toLowerCase()
       return (
         <Tag
           textTransform="capitalize"
           fontWeight={500}
-          fontSize="12px"
-          rounded="6px"
-          fontStyle="normal"
-          lineHeight="16px"
-          size="lg"
-          {...STATUS_TAG_COLOR_SCHEME[(cellInfo.value || '').toLowerCase()]}
+          lineHeight={2}
+          fontSize={12}
+          rounded={6}
+          {...STATUS_TAG_COLOR_SCHEME[value]}
         >
-          {cellInfo.value}
+          {value}
         </Tag>
       )
     },
@@ -97,15 +96,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px" pl="2">
-              <Text
-                fontSize="12px"
-                fontStyle="normal"
-                fontWeight={400}
-                noOfLines={2}
-                title={cell.value}
-                padding="0 15px"
-                color="#4A5568"
-              >
+              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.700">
                 {cell.render('Cell')}
               </Text>
             </Flex>
