@@ -1,43 +1,48 @@
-import React, { useMemo } from 'react';
-import { Box, BoxProps, createIcon, HStack, Text, useColorModeValue as mode } from '@chakra-ui/react';
-import {} from '@chakra-ui/theme-tools';
-import { useLocation } from 'react-router';
-import { Link } from 'react-router-dom';
+import React, { useMemo } from 'react'
+import { Box, BoxProps, createIcon, HStack, Text } from '@chakra-ui/react'
+import {} from '@chakra-ui/theme-tools'
+import { useLocation } from 'react-router'
+import { Link } from 'react-router-dom'
 
 interface SidebarLinkProps extends BoxProps {
-  icon?: React.ReactElement;
-  title: string;
-  pathTo: string;
+  icon?: React.ReactElement
+  title: string
+  pathTo: string
 }
 
 const useCheckPathSelected = (pathTo: string) => {
-  const { pathname } = useLocation();
-  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard';
-  return { isLinkSelected };
-};
+  const { pathname } = useLocation()
+  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard'
+  return { isLinkSelected }
+}
 
 export const SidebarLink: React.FC<SidebarLinkProps> = props => {
-  const { pathTo, title, icon = <ArrowRight />, ...rest } = props;
-  const { isLinkSelected } = useCheckPathSelected(pathTo);
+  const { pathTo, title, icon = <ArrowRight />, ...rest } = props
+  const { isLinkSelected } = useCheckPathSelected(pathTo)
   const selectedLinkStyle = useMemo(() => {
     return {
       color: 'brand.500',
-    };
-  }, []);
+    }
+  }, [])
   const linkState = isLinkSelected
-    ? { ...selectedLinkStyle, borderLeftColor: mode('brand.200', 'brand.500'), bgGradient: 'linear(to-r, brand.50, brand.50, transparent)' }
-    : {};
+    ? {
+        ...selectedLinkStyle,
+        borderLeftColor: '#4E87F8',
+        bgGradient: 'linear(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%);',
+      }
+    : {}
 
   return (
     <Box
       as={Link}
       to={pathTo}
       marginEnd="2"
+      color="#4A5568"
       fontSize="sm"
       display="block"
       px="5"
       py="1"
-      borderLeft="8px solid transparent"
+      borderLeft="6px solid transparent"
       cursor="pointer"
       _hover={{
         ...selectedLinkStyle,
@@ -48,16 +53,16 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       {...rest}
     >
       <HStack>
-        <Box _groupHover={{ opacity: 1 }} fontSize="15px">
+        <Box _groupHover={{ opacity: 1 }} fontSize="16px">
           {icon}
         </Box>
-        <Text fontSize="18px" fontWeight={400} lineHeight="28px">
+        <Text fontSize="18px" fontWeight={500} lineHeight="24px" fontStyle="normal" pt="2px">
           {title}
         </Text>
       </HStack>
     </Box>
-  );
-};
+  )
+}
 
 const ArrowRight = createIcon({
   viewBox: '0 0 16 16',
@@ -67,4 +72,4 @@ const ArrowRight = createIcon({
       fill="currentcolor"
     />
   ),
-});
+})

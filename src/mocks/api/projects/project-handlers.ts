@@ -1,0 +1,17 @@
+import { rest } from 'msw'
+import { PROJECTS, VENDOR_CARDS, PROJECT_VENDOR } from './data'
+
+export const projectHandlers = [
+  rest.get('/api/projects/:projectId/vendor', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(PROJECT_VENDOR))
+  }),
+  rest.get('/api/projects', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(PROJECTS))
+  }),
+  rest.get('/api/vendorCards', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(VENDOR_CARDS))
+  }),
+  rest.get('/api/project/column/project', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({}))
+  }),
+]
