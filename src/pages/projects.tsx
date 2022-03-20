@@ -51,7 +51,7 @@ export const Projects = () => {
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </Stack>
 
-        <Box w="100%" flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+        <Box w="100%" h={500} flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
           <ProjectsTable
             selectedCard={selectedCard as string}
             setTableInstance={setProjectTableInstance}
