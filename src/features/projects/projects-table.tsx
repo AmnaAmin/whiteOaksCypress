@@ -44,6 +44,9 @@ export const PROJECT_COLUMNS = [
     Cell({ value, row }) {
       return dateFormat(value)
     },
+    getCellExportValue(row, col) {
+      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+    },
   },
 ]
 
