@@ -55,7 +55,7 @@ const COLUMNS = [
       const value = (cellInfo.value || '').toLowerCase()
       return (
         <Tag rounded="6px" textTransform="capitalize" size="md" {...STATUS_TAG_COLOR_SCHEME[value]}>
-          <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="2px">
+          <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
             {value}
           </TagLabel>
         </Tag>
@@ -97,6 +97,8 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 fontWeight={400}
                 noOfLines={2}
                 title={cell.value}
+                mt="10px"
+                mb="10px"
                 padding="0 15px"
                 color="#4A5568"
               >

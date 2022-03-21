@@ -39,6 +39,8 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
                 padding="0 15px"
                 fontWeight={400}
                 fontStyle="normal"
+                mt="10px"
+                mb="10px"
                 fontSize="14px"
                 color="#4A5568"
               >

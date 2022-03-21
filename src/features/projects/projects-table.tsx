@@ -74,6 +74,8 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
                   title={cell.value}
                   padding="0 15px"
                   color="gray.600"
+                  mb="20px"
+                  mt="10px"
                   fontSize="14px"
                   fontStyle="normal"
                   fontWeight="400"

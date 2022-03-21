@@ -122,10 +122,15 @@ export const TableHeader = ({ headerGroups }) => {
                     color="#4A5568"
                     fontWeight={500}
                     fontStyle="normal"
+                    textTransform="capitalize"
                     mr="2"
-                    mt="2"
+                    mt="20px"
+                    mb="20px"
                     lineHeight="20px"
                     noOfLines={2}
+                    isTruncated
+                    display="inline-block"
+                    title={column.render('Header')}
                   >
                     {column.render('Header')}
                   </Text>

@@ -21,7 +21,7 @@ import { BiAddToQueue } from 'react-icons/bi'
 
 const projectTabStyle = {
   fontSize: '14px',
-  fontWeight: 400,
+  fontWeight: 500,
   fontStyle: 'normal',
   color: 'gray.600',
 }
@@ -52,7 +52,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="transaction-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
               >
                 {t('transaction')}
@@ -61,7 +61,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="work-order-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 whiteSpace="nowrap"
                 sx={projectTabStyle}
               >
@@ -71,7 +71,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="documents-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
               >
                 {t('documents')}
@@ -80,7 +80,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="alerts-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
               >
                 {t('alerts')}

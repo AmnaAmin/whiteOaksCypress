@@ -36,6 +36,8 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 padding="0 15px"
                 color="#4A5568"
                 fontStyle="normal"
+                mt="10px"
+                mb="10px"
                 fontSize="14px"
                 fontWeight={400}
               >
