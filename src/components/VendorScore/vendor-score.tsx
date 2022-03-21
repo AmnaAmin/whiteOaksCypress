@@ -28,6 +28,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
     {
       title: 'COI WC',
       date: vendorEntity?.coiWcExpirationDate,
+      testId: 'coi-wc-expiration-date',
     },
     {
       title: 'COI GL',
@@ -118,6 +119,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                     .map((licenseDocument: LicenseDocument) => ({
                       title: LicenseType[licenseDocument.licenseType],
                       date: dateFormat(licenseDocument.licenseExpirationDate),
+                      testId: LicenseType[licenseDocument.licenseType],
                     }))}
                 />
               )}

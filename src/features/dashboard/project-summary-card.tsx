@@ -10,6 +10,7 @@ type cardprops = {
   numbertext?: string
   updownIconColor: string
   isLoading?: boolean
+  testId?: string
 }
 export const ProjectSummaryCard = (props: cardprops) => {
   const { UpdownIcon, BigIcon, updownIconColor, isLoading } = props
@@ -23,7 +24,7 @@ export const ProjectSummaryCard = (props: cardprops) => {
           <BlankSlate width="100%" />
         ) : (
           <Flex alignItems="center">
-            <Box fontWeight={600} fontSize={18} fontStyle="normal" color="gray.600">
+            <Box data-testId={props.testId} fontWeight={600} fontSize={18} fontStyle="normal" color="gray.600">
               {props.number}
               {props.numbertext}
             </Box>
