@@ -25,6 +25,8 @@ const chooseFileByLabel = (labelRegExp: RegExp) => {
   expect(screen.getByText(/dummy-file\.png/)).toBeInTheDocument()
 }
 
+jest.setTimeout(30000)
+
 describe('Porject Details: Document tab test cases', () => {
   test('Should render project details page and switch to document tab', async () => {
     await renderProjectDetailsAndSwitchToDocumentTab()
@@ -53,9 +55,9 @@ describe('Porject Details: Document tab test cases', () => {
 
     userEvent.click(screen.getByText(/Save/i))
 
-    await waitForElementToBeRemoved(() => [screen.getByText('Upload', { selector: 'header' })], { timeout: 10000 })
+    await waitForElementToBeRemoved(() => [screen.getByText('Upload', { selector: 'header' })], { timeout: 5000 })
 
-    expect(screen.getByText('New document has been uploaded successfully.')).toBeInTheDocument()
+    expect(screen.getByText(/New document has been uploaded successfully./i)).toBeInTheDocument()
     expect(screen.getByText(/dummy-file\.png/i)).toBeInTheDocument()
   })
 

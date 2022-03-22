@@ -9,12 +9,18 @@ export const ReactQueryProviderWrapper = ({ children }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 )
 
-const AllTheProviders: React.FC = ({ children }) => {
+export const AllTheProviders: React.FC = ({ children }) => {
   return <Providers>{children}</Providers>
 }
 
 type CustomRenderOptions = RenderOptions & {
   route?: string
+}
+
+export const tick = (): Promise<void> => {
+  return new Promise(resolve => {
+    setTimeout(resolve, 0)
+  })
 }
 
 export const waitForLoadingToFinish = () =>
