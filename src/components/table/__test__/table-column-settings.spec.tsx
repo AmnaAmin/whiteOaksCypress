@@ -172,11 +172,6 @@ const columnSettings = [
     userId: 'vendor@devtek.ai',
   },
 ]
-function tick(): Promise<void> {
-  return new Promise(resolve => {
-    setTimeout(resolve, 0)
-  })
-}
 
 describe('Table columns setting modal Test Cases', () => {
   test('Setting Modal should render properly', async () => {
@@ -191,8 +186,6 @@ describe('Table columns setting modal Test Cases', () => {
     const firstItem = allItems[0] as ChildNode
     const secondItem = allItems[1] as ChildNode
 
-    console.log('FirstColumn', firstItem.textContent)
-    console.log('SecondColumn', secondItem.textContent)
     fireEvent.dragStart(firstItem)
     fireEvent.dragOver(secondItem)
     fireEvent.dragEnter(secondItem)
@@ -200,7 +193,7 @@ describe('Table columns setting modal Test Cases', () => {
     fireEvent.dragEnd(secondItem)
 
     // await waitFor(() => expect(screen.getByTestId('draggable-item-0').textContent).toEqual('Type'))
-    await tick()
-    screen.debug(undefined, 1000000)
+    // await tick()
+    // screen.debug(undefined, 1000000)
   })
 })

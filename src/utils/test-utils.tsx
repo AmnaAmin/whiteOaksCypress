@@ -17,6 +17,12 @@ type CustomRenderOptions = RenderOptions & {
   route?: string
 }
 
+export const tick = (): Promise<void> => {
+  return new Promise(resolve => {
+    setTimeout(resolve, 0)
+  })
+}
+
 export const waitForLoadingToFinish = () =>
   waitForElementToBeRemoved(
     () => [...screen.queryAllByLabelText(/loading/i), ...screen.queryAllByText(/Loading.../i)],
