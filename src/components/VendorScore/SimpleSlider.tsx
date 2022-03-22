@@ -8,6 +8,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { dateFormat } from 'utils/date-time-utils'
 import { chunk } from 'lodash'
 import { RiErrorWarningFill } from 'react-icons/ri'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const isDateExpired = (date: string) => {
   const currentDate = new Date()
@@ -18,6 +19,7 @@ const isDateExpired = (date: string) => {
 
 export const SimpleSlider: React.FC<{
   heading: string
+  isLoading: boolean
   data?: any[]
 }> = props => {
   const settings = {
@@ -53,37 +55,41 @@ export const SimpleSlider: React.FC<{
       display="block"
       boxShadow="1px 1px 7px rgba(0,0,0,0.1)"
     >
-      <Box>
-        <Heading
-          textAlign="start"
-          fontStyle="normal"
-          fontWeight={500}
-          fontSize="18px"
-          color="gray.600"
-          pb={3}
-          ml={{ base: 'unset', lg: '2', xl: '5' }}
-        >
-          {props.heading}
-        </Heading>
-        {slider.length > 0 ? (
-          <Slider {...settings}>
-            {slider.map((slide, i) => (
-              <Box key={i} textAlign="start" fontSize="16px" fontStyle="normal" fontWeight={400} color="#4A5568">
-                {slide?.map((item: any) => (
-                  <SliderItem key={item.title} title={item.title} date={item.date} />
-                ))}
-              </Box>
-            ))}
-          </Slider>
-        ) : (
-          <Flex marginTop="25px" justifyContent="center" alignItems="center" fontSize="15px" fontWeight="normal">
-            <RiErrorWarningFill fontSize="30px" color="#718096" />
-            <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
-              You dont have any {props.heading} expiration
-            </Text>
-          </Flex>
-        )}
-      </Box>
+      {props.isLoading ? (
+        <BlankSlate width="100%" h="95px" />
+      ) : (
+        <Box>
+          <Heading
+            textAlign="start"
+            fontStyle="normal"
+            fontWeight={500}
+            fontSize="18px"
+            color="#4A5568"
+            pb={3}
+            ml={{ base: 'unset', lg: '2', xl: '5' }}
+          >
+            {props.heading}
+          </Heading>
+          {slider.length > 0 ? (
+            <Slider {...settings}>
+              {slider.map((slide, i) => (
+                <Box key={i} textAlign="start" fontSize="16px" fontStyle="normal" fontWeight={400} color="#4A5568">
+                  {slide?.map((item: any) => (
+                    <SliderItem key={item.title} title={item.title} date={item.date} />
+                  ))}
+                </Box>
+              ))}
+            </Slider>
+          ) : (
+            <Flex marginTop="25px" justifyContent="center" alignItems="center" fontSize="15px" fontWeight="normal">
+              <RiErrorWarningFill fontSize="30px" color="#718096" />
+              <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
+                You dont have any {props.heading} expiration
+              </Text>
+            </Flex>
+          )}
+        </Box>
+      )}
     </Card>
   )
 }

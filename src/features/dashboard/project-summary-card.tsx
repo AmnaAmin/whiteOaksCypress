@@ -24,7 +24,7 @@ export const ProjectSummaryCard = (props: cardprops) => {
       </Center>
       <Flex fontSize="32px" direction="column" w="auto" lineHeight={1.2}>
         {isLoading ? (
-          <BlankSlate width="100%" />
+          <BlankSlate width="100%" h="10px" />
         ) : (
           <Flex alignItems="center">
             <Box fontWeight={600} fontSize={18} fontStyle="normal" color="gray.600">
