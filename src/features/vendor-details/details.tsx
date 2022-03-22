@@ -122,7 +122,11 @@ export const Details: React.FC<{
           <GridItem>
             <FieldInfoCard
               title={t('paymentMethods')}
-              value={payments?.map(payment => payment.value).toString()}
+              value={
+                vendorProfileData?.paymentOptions?.length > 0
+                  ? vendorProfileData.paymentOptions.map(po => po.name).toString()
+                  : payments?.map(payment => payment.value).toString()
+              }
               icon={BiCreditCardFront}
             />
           </GridItem>

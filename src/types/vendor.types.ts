@@ -1,273 +1,274 @@
-import { SelectOption } from "./transaction.type";
+import { SelectOption } from './transaction.type'
 
 export type VendorSkill = {
-  id: number;
-  skill: string;
-  createdBy: string;
-  createdDate: string;
-  modifiedBy: string;
-  modifiedDate: string;
-  workOrders: null;
-};
+  id: number
+  skill: string
+  createdBy: string
+  createdDate: string
+  modifiedBy: string
+  modifiedDate: string
+  workOrders: null
+}
 
 export type VendorMarket = {
-  id: number;
-  code: string;
-  metropolitanServiceArea: string;
-  createdBy: string;
-  createdDate: string;
-  modifiedBy: string;
-  modifiedDate: string;
-  properties: string | null;
+  id: number
+  code: string
+  metropolitanServiceArea: string
+  createdBy: string
+  createdDate: string
+  modifiedBy: string
+  modifiedDate: string
+  properties: string | null
   state: {
-    id: number;
-    name: string;
-    region: string;
-    code: string;
-    createdBy: string;
-    createdDate: string;
-    modifiedBy: string;
-    modifiedDate: string;
-  };
-};
+    id: number
+    name: string
+    region: string
+    code: string
+    createdBy: string
+    createdDate: string
+    modifiedBy: string
+    modifiedDate: string
+  }
+}
 
 export type Vendor = {
-  id: number;
-  companyName: string;
-  capacity: number;
-  score: number;
-  statusLabel: string;
-  status: number;
-  ownerName: string;
-  einNumber: string;
-  secondName: string;
-  secondEmailAddress: string;
-  secondPhoneNumber: string;
-  secondPhoneNumberExtension: string;
-  businessEmailAddress: string;
-  businessPhoneNumber: string;
-  businessPhoneNumberExtension: string;
-  coiglExpirationDate: string | string | null;
-  coiWcExpirationDate: string | null;
-  autoInsuranceExpirationDate: string | null;
-  agreementSignedDate: string | null;
-  vendorAgreementSigned: boolean;
-  isSsn: false;
-  ssnNumber: string | null;
-  otherInsuranceExpirationDate: string | null;
-  streetAddress: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  createdBy: string;
-  createdDate: string;
-  w9DocumentDate: string;
-  modifiedBy: string;
-  modifiedDate: string;
-  vendorMetrics: string | null;
-  changeOrders: string | null;
-  workOrders: string | null;
-  users: string | null;
-  documents: any[] | null;
-  vendorSkills: VendorSkill[];
-  markets: VendorMarket[];
-  projects: any[];
-};
+  id: number
+  companyName: string
+  capacity: number
+  score: number
+  statusLabel: string
+  status: number
+  ownerName: string
+  einNumber: string
+  secondName: string
+  secondEmailAddress: string
+  secondPhoneNumber: string
+  secondPhoneNumberExtension: string
+  businessEmailAddress: string
+  businessPhoneNumber: string
+  businessPhoneNumberExtension: string
+  coiglExpirationDate: string | string | null
+  coiWcExpirationDate: string | null
+  autoInsuranceExpirationDate: string | null
+  agreementSignedDate: string | null
+  vendorAgreementSigned: boolean
+  isSsn: false
+  ssnNumber: string | null
+  otherInsuranceExpirationDate: string | null
+  streetAddress: string
+  city: string
+  state: string
+  zipCode: string
+  createdBy: string
+  createdDate: string
+  w9DocumentDate: string
+  modifiedBy: string
+  modifiedDate: string
+  vendorMetrics: string | null
+  changeOrders: string | null
+  workOrders: string | null
+  users: string | null
+  documents: any[] | null
+  vendorSkills: VendorSkill[]
+  paymentOptions: any[]
+  markets: VendorMarket[]
+  projects: any[]
+}
 
-type Override<T1, T2> = Omit<T1, keyof T2> & T2;
+type Override<T1, T2> = Omit<T1, keyof T2> & T2
 
 export type VendorProfile = Override<
   Vendor,
   {
-    licenseDocuments: LicenseDocument[];
-    markets: Market[];
-    vendorSkills: Trade[];
+    licenseDocuments: LicenseDocument[]
+    markets: Market[]
+    vendorSkills: Trade[]
   }
->;
+>
 
 export type VendorProfilePayload = {
-  id: number;
-  companyName: string;
-  status: number;
-  einNumber: string;
-  secondEmailAddress: string;
-  secondPhoneNumber: string;
-  secondName: string | null;
-  statusLabel: string;
-  ownerName: string;
-  businessEmailAddress: string;
-  businessPhoneNumber: string;
-  coiglExpirationDate: string | null;
-  coiWcExpirationDate: string | null;
-  autoInsuranceExpirationDate: string | null;
-  vendorAgreementSigned: boolean;
-  otherInsuranceExpirationDate: string | null;
-  agreementSignedDate: string | null;
-  capacity: number;
-  score: number;
-  streetAddress: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  createdBy: string;
-  createdDate: string | null;
-  modifiedBy: string;
-  modifiedDate: string | null;
-  ssnNumber: string | null;
-  w9DocumentDate: string | null;
-  isSsn: boolean;
-  businessPhoneNumberExtension: string;
-  secondPhoneNumberExtension: string;
-  licenseDocuments: LicenseDocument[];
-  vendorSkills: Trade[];
-  markets: Array<Market>;
-  projects: any[];
+  id: number
+  companyName: string
+  status: number
+  einNumber: string
+  secondEmailAddress: string
+  secondPhoneNumber: string
+  secondName: string | null
+  statusLabel: string
+  ownerName: string
+  businessEmailAddress: string
+  businessPhoneNumber: string
+  coiglExpirationDate: string | null
+  coiWcExpirationDate: string | null
+  autoInsuranceExpirationDate: string | null
+  vendorAgreementSigned: boolean
+  otherInsuranceExpirationDate: string | null
+  agreementSignedDate: string | null
+  capacity: number
+  score: number
+  streetAddress: string
+  city: string
+  state: string
+  zipCode: string
+  createdBy: string
+  createdDate: string | null
+  modifiedBy: string
+  modifiedDate: string | null
+  ssnNumber: string | null
+  w9DocumentDate: string | null
+  isSsn: boolean
+  businessPhoneNumberExtension: string
+  secondPhoneNumberExtension: string
+  licenseDocuments: LicenseDocument[]
+  vendorSkills: Trade[]
+  markets: Array<Market>
+  projects: any[]
   documents: {
-    id?: number;
-    fileType: string;
-    fileObjectContentType: string;
-    documentType: number;
-    fileObject: string;
-  }[];
-};
+    id?: number
+    fileType: string
+    fileObjectContentType: string
+    documentType: number
+    fileObject: string
+  }[]
+}
 
 export type LicenseDocument = {
-  id: number;
-  licenseType: number;
-  licenseNumber: string;
-  licenseExpirationDate: string;
-  fileObject: string;
-  createdDate: string;
-  s3Url: string;
-  vendor: Vendor[];
-  fileType: string;
-};
+  id: number
+  licenseType: number
+  licenseNumber: string
+  licenseExpirationDate: string
+  fileObject: string
+  createdDate: string
+  s3Url: string
+  vendor: Vendor[]
+  fileType: string
+}
 
 export type License = {
-  licenseType?: any;
-  licenseNumber?: string;
-  expiryDate?: null | string;
-  expirationFile?: any;
-  downloadableFile?: any;
-};
+  licenseType?: any
+  licenseNumber?: string
+  expiryDate?: null | string
+  expirationFile?: any
+  downloadableFile?: any
+}
 export type LicenseFormValues = {
-  licenses?: License[];
-};
+  licenses?: License[]
+}
 
 export type VendorEntity = Vendor & {
-  licenseDocuments: LicenseDocument[];
-};
+  licenseDocuments: LicenseDocument[]
+}
 
 export type Document = {
-  documentType: string;
-  fileObject: string;
-  fileObjectContentType: string;
-  fileType: string;
-  path?: string;
-  projectId?: number;
-  vendorId?: number;
-  s3Url?: string;
-  createdBy?: string;
-  createdDate?: string;
-  modifiedBy?: string;
-  modifiedDate?: string;
-  vendorName?: string;
-  workOrderName?: string;
-};
+  documentType: string
+  fileObject: string
+  fileObjectContentType: string
+  fileType: string
+  path?: string
+  projectId?: number
+  vendorId?: number
+  s3Url?: string
+  createdBy?: string
+  createdDate?: string
+  modifiedBy?: string
+  modifiedDate?: string
+  vendorName?: string
+  workOrderName?: string
+}
 
 export type VendorProfileDetailsFormData = {
-  primaryContact: string;
-  secondaryContact: string;
-  businessPhoneNumber: string;
-  businessNumberExtention: string;
-  secondaryNumber: string;
-  secondaryNumberExtenstion: string;
-  primaryEmail: string;
-  secondaryEmail: string;
-};
+  primaryContact: string
+  secondaryContact: string
+  businessPhoneNumber: string
+  businessNumberExtention: string
+  secondaryNumber: string
+  secondaryNumberExtenstion: string
+  primaryEmail: string
+  secondaryEmail: string
+}
 
 export type VendorTrade = {
-  id: number;
-  metropolitanServiceArea: string;
-  createdBy: string;
-  createdDate: string | null;
-  modifiedBy: string;
-  modifiedDate: string | null;
-  stateId: number;
-  stateName: string;
-};
+  id: number
+  metropolitanServiceArea: string
+  createdBy: string
+  createdDate: string | null
+  modifiedBy: string
+  modifiedDate: string | null
+  stateId: number
+  stateName: string
+}
 
 export type Trade = {
-  createdBy: string;
-  createdDate: string | null;
-  id: number;
-  modifiedBy: string;
-  modifiedDate: string | null;
-  skill: string;
-};
+  createdBy: string
+  createdDate: string | null
+  id: number
+  modifiedBy: string
+  modifiedDate: string | null
+  skill: string
+}
 
 type TradeFormValues = Trade & {
-  checked: boolean;
-};
+  checked: boolean
+}
 
 export type VendorTradeFormValues = {
-  trades: TradeFormValues[];
-};
+  trades: TradeFormValues[]
+}
 
 export type Market = {
-  createdBy: string;
-  createdDate: string | null;
-  id: number;
-  metropolitanServiceArea: string;
-  modifiedBy: string;
-  modifiedDate: string | null;
-  stateId: number;
-  stateName: string;
-};
+  createdBy: string
+  createdDate: string | null
+  id: number
+  metropolitanServiceArea: string
+  modifiedBy: string
+  modifiedDate: string | null
+  stateId: number
+  stateName: string
+}
 
 type MarketFormValues = Market & {
-  checked: boolean;
-};
+  checked: boolean
+}
 
 export type VendorMarketFormValues = {
-  markets: MarketFormValues[];
-};
+  markets: MarketFormValues[]
+}
 
 export type DocumentsCardFormValues = {
-  agreementSignedDate?: string | Date;
-  agreementUrl?: string;
-  agreement?: File;
-  w9DocumentDate?: string | Date;
-  w9Document?: File;
-  autoInsuranceExpDate?: string | Date;
-  insuranceUrl?: string;
-  insurance?: File;
-  coiGlExpDate?: string | Date;
-  coiGlExpFile?: File;
-  coiGLExpUrl?: string;
-  coiWcExpDate?: string | Date;
-  coiWcExpFile?: File;
-  coiWcExpUrl?: string;
-  w9DocumentUrl?: string;
-};
+  agreementSignedDate?: string | Date
+  agreementUrl?: string
+  agreement?: File
+  w9DocumentDate?: string | Date
+  w9Document?: File
+  autoInsuranceExpDate?: string | Date
+  insuranceUrl?: string
+  insurance?: File
+  coiGlExpDate?: string | Date
+  coiGlExpFile?: File
+  coiGLExpUrl?: string
+  coiWcExpDate?: string | Date
+  coiWcExpFile?: File
+  coiWcExpUrl?: string
+  w9DocumentUrl?: string
+}
 
 export type settings = {
-  firstName: string;
-  lastName: string;
-  fileObject: string;
-  fileObjectContentType: string;
-  fileType: string;
-  path?: string;
-  vendorId?: number;
-  s3Url?: string;
-  email: string;
-  language?: any;
-};
+  firstName: string
+  lastName: string
+  fileObject: string
+  fileObjectContentType: string
+  fileType: string
+  path?: string
+  vendorId?: number
+  s3Url?: string
+  email: string
+  language?: any
+}
 
 export type SettingsValues = {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  language?: any;
-  profilePicture?: any;
-};
+  firstName?: string
+  lastName?: string
+  email?: string
+  language?: any
+  profilePicture?: any
+}
