@@ -37,7 +37,7 @@ const Status = ({ value, id }: { value: string; id: string }) => {
       fontSize={12}
       fontWeight={500}
     >
-      <TagLabel>{value.toLowerCase()}</TagLabel>
+      <TagLabel>{value?.toLowerCase()}</TagLabel>
     </Tag>
   )
 }

@@ -7,6 +7,7 @@ import { ProjectFilters } from '../features/projects/project-fliters'
 import { ProjectsTable, PROJECT_COLUMNS } from '../features/projects/projects-table'
 import { TableNames } from '../types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -32,23 +33,32 @@ export const Projects = () => {
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
         </Box>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" pb="10px" spacing={5}>
-          <Button
-            bg="#4E87F8"
-            color="white"
-            _hover={{ bg: 'royalblue' }}
-            size="md"
-            onClick={() => {
-              if (projectTableInstance) {
-                projectTableInstance?.exportData('xlsx', false)
-              }
-            }}
-          >
-            <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-              <BsBoxArrowUp />
-            </Box>
-            {t('export')}
-          </Button>
-          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          {isLoading ? (
+            <>
+              <BlankSlate size="md" mr="3" />
+              <BlankSlate size="md" />
+            </>
+          ) : (
+            <>
+              <Button
+                bg="#4E87F8"
+                color="white"
+                _hover={{ bg: 'royalblue' }}
+                size="md"
+                onClick={() => {
+                  if (projectTableInstance) {
+                    projectTableInstance?.exportData('xlsx', false)
+                  }
+                }}
+              >
+                <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                  <BsBoxArrowUp />
+                </Box>
+                {t('export')}
+              </Button>
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </>
+          )}
         </Stack>
 
         <Box w="100%" h={500} flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
