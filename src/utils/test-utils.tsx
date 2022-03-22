@@ -9,7 +9,7 @@ export const ReactQueryProviderWrapper = ({ children }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 )
 
-const AllTheProviders: React.FC = ({ children }) => {
+export const AllTheProviders: React.FC = ({ children }) => {
   return <Providers>{children}</Providers>
 }
 

@@ -1,16 +1,12 @@
 import { render, screen } from 'utils/test-utils'
 import { fireEvent, waitFor, render as directRender } from '@testing-library/react'
-import { renderHook } from '@testing-library/react-hooks'
-import { useMarkets } from 'utils/vendor-details'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { act } from 'react-dom/test-utils'
 import App from 'App'
 import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
 import { MARKETS } from '../../mocks/api/vendor-profile/data'
 import { MarketForm } from '../../features/vendor-details/markets'
 
-const queryClient = new QueryClient()
-const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+jest.setTimeout(30000)
 
 describe('Vendor Profile Market Test Cases', () => {
   it('Market Data is rendered', async () => {

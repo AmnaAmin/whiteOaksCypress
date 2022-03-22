@@ -6,7 +6,6 @@ import { useAsync } from './hooks'
 import { getToken, removeToken, setToken } from './storage.utils'
 import { Account } from 'types/account.types'
 import { PageLoader } from 'components/page-level-loader'
-import { Box } from '@chakra-ui/react'
 
 type AuthState = {
   user: Account
@@ -41,7 +40,7 @@ interface AuthProviderProps {
 function AuthProvider(props: AuthProviderProps) {
   const token = getToken()
 
-  const { data, isLoading, isIdle, run, setData, isError, isSuccess } = useAsync({})
+  const { data, isLoading, isIdle, run, setData } = useAsync({})
 
   const { queryCache }: any = useQueryClient()
 
@@ -93,13 +92,13 @@ function AuthProvider(props: AuthProviderProps) {
     return <PageLoader />
   }
 
-  if (isError) {
-    return <Box>Error Ocurred during app bootstrapping</Box>
-  }
+  // if (isError) {
+  //   return <Box>Error Ocurred during app bootstrapping</Box>
+  // }
 
-  if (isSuccess) {
-    return <AuthContext.Provider value={value} {...props} />
-  }
+  // if (isSuccess) {
+  return <AuthContext.Provider value={value} {...props} />
+  // }
 
   // throw new Error(`Unhandled status: ${status}`);
 }
