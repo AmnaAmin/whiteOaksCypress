@@ -44,6 +44,9 @@ export const PROJECT_COLUMNS = [
     Cell({ value, row }) {
       return dateFormat(value)
     },
+    getCellExportValue(row, col) {
+      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+    },
   },
 ]
 
@@ -64,9 +67,9 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
         style,
       })}
     >
-      {row.cells.map(cell => {
+      {row.cells.map((cell, index) => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0" bg="transparent">
+          <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
             <Link to={`/project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text

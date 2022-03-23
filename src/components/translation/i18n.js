@@ -7,8 +7,8 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Vendor Score',
-        insurance: 'Insurance',
-        license: 'License',
+        licenseExpiration: 'License Expiration',
+        insuranceExpiration: 'Insurance Expiration',
         projectSummary: 'Project Summary',
         activeWO: 'Active Wo',
         pastDue: 'Past Due',
@@ -60,9 +60,9 @@ i18n.use(initReactI18next).init({
         upload: 'Upload',
         resolve: 'Resolve',
         contactName: 'Contact Name:',
-        projectID: 'Project ID:',
-        contactNo: 'Contact No:',
-        WODueDate: 'WO Due Date:',
+        projectID: 'Project ID',
+        contactNo: 'Contact No',
+        WODueDate: 'WO Due Date',
         trade: 'Trade',
         totalAmount: 'Total Amount',
         submit: 'Submit',

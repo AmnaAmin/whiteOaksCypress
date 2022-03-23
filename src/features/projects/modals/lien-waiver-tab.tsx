@@ -39,7 +39,6 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [] } = useDocuments({
     projectId,
-    wendorId: lienWaiverData.id,
   })
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)

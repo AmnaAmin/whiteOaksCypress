@@ -25,20 +25,15 @@ export const ProjectSummary = () => {
       bg="whiteAlpha.900"
       direction="column"
       boxSizing="border-box"
-      py={{ base: '6', xl: '9' }}
-      pr={{ base: '3', xl: '12' }}
-      pl={{ base: '3', xl: '16' }}
+      px={{ base: '5px', md: '25px', xl: 'unset' }}
+      minH={123}
+      justifyContent="center"
     >
       <Flex
         justifyContent="center"
         alignItems="center"
         display="grid"
-        gridTemplateColumns={{
-          base: 'repeat(2,1fr)',
-          md: 'repeat(,1fr)',
-          lg: 'repeat(4,1fr)',
-          xl: 'repeat(5,1fr)',
-        }}
+        gridTemplateColumns={{ base: 'repeat(auto-fit, minmax(125px,1fr))', sm: 'repeat(auto-fit, minmax(200px,1fr))' }}
         gridRowGap={{ base: '20px' }}
       >
         <ProjectSummaryCard
