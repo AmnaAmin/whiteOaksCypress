@@ -19,6 +19,7 @@ export const ProjectCard = (props: multitypes) => {
         minH="112px"
         borderRadius="8px"
         bg="#FFFFFF"
+        alignItems="center"
         justifyContent="space-between"
         border="1px solid transparent"
         borderBottom="5px solid transparent"
@@ -26,7 +27,7 @@ export const ProjectCard = (props: multitypes) => {
         onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
         borderColor={props.selectedCard === props.id ? '#4E87F8' : ''}
       >
-        <Flex alignItems="center" height="100%">
+        <Flex height="100%">
           <Text marginLeft={'20px'}> {props.IconElement}</Text>
           <Box marginRight={{ base: '5px', md: '24px', xl: '24px' }}>
             <Text fontSize="16px" fontWeight="400" marginTop="4px" paddingLeft={'20px'} color="gray.600">
