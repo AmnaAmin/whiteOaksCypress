@@ -62,7 +62,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             minH={156}
           >
             {isLoading ? (
-              <BlankSlate width="60px" />
+              <BlankSlate width="60px" h="8px" />
             ) : (
               <Tag rounded="6px" size="lg" color="#2AB450" bg="#E7F8EC" fontStyle="normal" fontWeight={500}>
                 {vendorEntity?.statusLabel}
@@ -73,7 +73,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               color="#4A5568"
               fontWeight={500}
               fontStyle="normal"
-              fontSize="20px"
+              fontSize="18px"
               justifyContent="space-between"
               w="100%"
             >
@@ -89,7 +89,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             </Flex>
             <Flex w="100%">
               {isLoading ? (
-                <BlankSlate width="90%" />
+                <BlankSlate width="100%" />
               ) : (
                 <>
                   <Box w="100%">
@@ -107,26 +107,19 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             gridGap="15px"
           >
             <Box>
-              {isLoading ? (
-                <BlankSlate width="100%" h="156px" rounded="2xl" />
-              ) : (
-                <SimpleSlider heading={t('License Expiration')} data={defaultData} />
-              )}
+              <SimpleSlider heading={t('License Expiration')} data={defaultData} isLoading={isLoading} />
             </Box>
             <Box>
-              {isLoading ? (
-                <BlankSlate width="100%" h="156px" rounded="2xl" />
-              ) : (
-                <SimpleSlider
-                  heading={t('Insurance Expiration')}
-                  data={vendorEntity?.licenseDocuments
-                    ?.sort((curr: any, pre: any) => pre.id - curr.id)
-                    .map((licenseDocument: LicenseDocument) => ({
-                      title: LicenseType[licenseDocument.licenseType],
-                      date: dateFormat(licenseDocument.licenseExpirationDate),
-                    }))}
-                />
-              )}
+              <SimpleSlider
+                isLoading={isLoading}
+                heading={t('Insurance Expiration')}
+                data={vendorEntity?.licenseDocuments
+                  ?.sort((curr: any, pre: any) => pre.id - curr.id)
+                  .map((licenseDocument: LicenseDocument) => ({
+                    title: LicenseType[licenseDocument.licenseType],
+                    date: dateFormat(licenseDocument.licenseExpirationDate),
+                  }))}
+              />
             </Box>
           </Flex>
         </Box>
