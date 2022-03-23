@@ -107,6 +107,8 @@ const chakraComponents = {
           sx={{
             ...inputStyles.field,
             color: 'gray.700',
+            bg: 'white',
+            border: 'none',
             fontWeight: 400,
             fontsize: '16px',
             p: 0,
@@ -186,11 +188,9 @@ const chakraComponents = {
         sx={{
           ...list,
           // maxH: `${maxHeight}px`,
-          color: 'gray.400',
-          fontsize: '16px',
-          fontWeight: 400,
-          h: '110px',
+          h: '100px',
           minW: '100%',
+          bg: '#FFFFFF',
           overflowY: 'auto',
           borderRadius: borderRadii[size],
         }}
@@ -216,9 +216,10 @@ const chakraComponents = {
         sx={{
           ...item,
           w: '100%',
+          color: 'gray.600',
+          fontWeight: 400,
           textAlign: 'start',
           bg: isFocused ? item._focus.bg : 'transparent',
-          fontSize: size,
           ...(isDisabled && item._disabled),
         }}
         ref={innerRef}
