@@ -16,7 +16,7 @@ type PaidChartProps = {
 const PaidChart: React.FC<PaidChartProps> = ({ filterChart }) => {
   const { data } = usePaidWOAmountByYearAndMonth(filterChart.year, filterChart.month)
   return (
-    <ResponsiveContainer width="90%" height={270}>
+    <ResponsiveContainer width="90%" height={305}>
       <BarChart width={630} height={250} data={data} barSize={21}>
         <defs>
           <linearGradient id="colorUv" x1="40%" y1="40%" x2="40%" y2="100%" gradientUnits="userSpaceOnUse">

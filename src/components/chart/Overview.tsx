@@ -44,7 +44,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   }))
 
   return (
-    <ResponsiveContainer width="98%" height={330}>
+    <ResponsiveContainer width="98%" height={335}>
       <BarChart data={vendorData} barSize={50}>
         <CartesianGrid stroke="#EFF3F9" />
         <XAxis
@@ -93,7 +93,10 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           align="center"
           formatter={value => {
             return (
-              <Box display="inline-flex" marginInlineEnd="28px" mt={{ base: '30px', sm: '30px', md: 0 }}>
+
+              <Box display="inline-flex" marginInlineEnd="40px">
+
+     
                 <Box as="span" color="#4A5568" fontSize="12px" fontStyle="normal" fontWeight={400}>
                   {value}
                 </Box>
