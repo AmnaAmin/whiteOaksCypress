@@ -42,11 +42,11 @@ const UserInfo: React.FC = () => {
       />
       <VStack alignItems="start" spacing="0.3" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="md" pr="1" color={mode('blackAlpha.800', 'whiteAlpha.800')}>
+          <Text fontSize="12px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="sm" color={mode('blackAlpha.700', 'whiteAlpha.700')}>
+        <Text fontSize="14px" fontStyle="normal" fontWeight={500} color="#A0AEC0">
           {isAdmin ? 'Admin' : 'User'}
         </Text>
       </VStack>
@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             >
               <UserInfo />
             </MenuButton>
-            <MenuList minWidth="243px">
+            <MenuList minWidth="279px">
               <MenuItem>
                 <RouterLink to="/settings">Settings</RouterLink>
               </MenuItem>
@@ -128,12 +128,12 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <RouterLink to="/support">Support</RouterLink>
               </MenuItem>
               <MenuItem>
-                <Box onClick={logout} fontSize="sm">
+                <Box onClick={logout} fontSize="sm" width="100%">
                   Signout
                 </Box>
               </MenuItem>
             </MenuList>
-            <Box position="relative" bottom=" 8.5px" right=" 16px">
+            <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
               {show ? <FaAngleDown /> : <FaAngleUp />}
             </Box>
           </Menu>

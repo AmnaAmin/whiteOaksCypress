@@ -341,11 +341,11 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             </HStack>
           </Box>
         </Box>
-        <Box w="1065px">
+        <Box>
           <Divider border="1px solid " />
         </Box>
-        <Box id="footer" w="1065px" pt={5}>
-          <Button size="md" float={'right'} ml="5px" colorScheme="CustomPrimaryColor" type="submit">
+        <Box id="footer" mr="60px" pt={5}>
+          <Button size="md" float={'right'} colorScheme="CustomPrimaryColor" type="submit">
             <Text fontSize="16px" fontStyle="normal" fontWeight={600}>
               {t('next')}
             </Text>

@@ -16,7 +16,6 @@ import { TransactionInfoCard } from '../features/projects/transactions/transacti
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
-import { Document } from 'types/vendor.types'
 
 const projectTabStyle = {
   fontSize: '14px',
@@ -32,7 +31,6 @@ export const ProjectDetails: React.FC = props => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
   const [alertRow, selectedAlertRow] = useState(null)
-  const [latestUploadedDoc, setLatestUploadedDoc] = useState<Document | null>(null)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -79,7 +77,7 @@ export const ProjectDetails: React.FC = props => {
                     _hover={{ bg: 'royalblue' }}
                   >
                     <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <AiOutlineUpload />
+                      <AiOutlineUpload aria-label="upload-document-button" />
                     </Box>
                     {t('upload')}
                   </Button>
@@ -117,7 +115,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px">
                 <Box h="100%" w="100%">
-                  <VendorDocumentsTable ref={tabsContainerRef} latestUploadedDoc={latestUploadedDoc as Document} />
+                  <VendorDocumentsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px">
@@ -135,14 +133,7 @@ export const ProjectDetails: React.FC = props => {
         </Stack>
       </Stack>
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
-      <UploadDocumentModal
-        isOpen={isOpenDocumentModal}
-        onClose={onDocumentModalClose}
-        projectId={projectId}
-        setLatestUploadedDoc={val => {
-          setLatestUploadedDoc(val)
-        }}
-      />
+      <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )

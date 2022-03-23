@@ -69,7 +69,9 @@ function register(payload: unknown) {
 }
 
 async function logout() {
-  window.localStorage.removeItem(localStorageKey)
+  if (window.location.pathname !== '/login') {
+    window.location.href = window.location.origin + '/login'
+  }
 
   return Promise.resolve()
 }

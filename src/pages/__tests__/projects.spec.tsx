@@ -1,5 +1,8 @@
-import { render } from 'utils/test-utils'
+import { fireEvent, render, screen } from 'utils/test-utils'
 import App from 'App'
+import userEvent from '@testing-library/user-event'
+
+jest.setTimeout(30000)
 
 describe('Vendor Projects Test Cases', () => {
   test('App should redirect to /projects', async () => {
@@ -7,6 +10,25 @@ describe('Vendor Projects Test Cases', () => {
 
     expect(global.window.location.pathname).toEqual('/projects')
 
-    // screen.debug(undefined, 100000);
+    userEvent.click(screen.getByTestId('column-settings-button'))
+    expect(screen.getByText('Column Settings', { selector: 'header' })).toBeInTheDocument()
+
+    const list = screen.getByTestId('column-settings-list')
+    const allItems = document.querySelectorAll('#column-settings-list > div')
+    const firstItem = allItems[0].firstChild as ChildNode
+    // const secondItem = allItems[1].firstChild as ChildNode
+
+    fireEvent.dragStart(firstItem)
+    fireEvent.dragOver(list)
+    fireEvent.dragEnter(list)
+    fireEvent.drop(firstItem)
+    fireEvent.dragEnd(list)
+
+    // await jest.setTimeout(5000)
+    // expect(screen.getByTestId('draggable-item-0').textContent).toEqual('Type')
+
+    // expect(firstItem).toBeInTheDocument()
+
+    // screen.debug(undefined, 100000)
   })
 })

@@ -361,7 +361,6 @@ export const usePaymentMethods = () => {
       obj.id = obj.lookupId
       obj.lookupValueId = temp
       obj.name = obj.value
-      console.log(obj)
       return obj
     })
     return response?.data

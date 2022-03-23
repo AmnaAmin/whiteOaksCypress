@@ -128,7 +128,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
               <Text>Images</Text>
             </SimpleGrid>
           </Box>
-          <Box h={367.5} overflow="scroll">
+          <Box h={367} overflow="auto">
             <TableBodyChilde
               disabled={true}
               SKU="#8383"

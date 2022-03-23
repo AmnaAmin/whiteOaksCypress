@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Box, BoxProps, useColorModeValue as mode } from "@chakra-ui/react";
+import * as React from 'react'
+import { Box, BoxProps, useColorModeValue as mode } from '@chakra-ui/react'
 
-export const Sidebar: React.FC<BoxProps> = (props) => {
+export const Sidebar: React.FC<BoxProps> = props => {
   return (
     <Box
       overflowY="auto"
@@ -10,19 +10,19 @@ export const Sidebar: React.FC<BoxProps> = (props) => {
       lineHeight="taller"
       {...props}
       sx={{
-        "--sidebar-width": "12rem",
+        '--sidebar-width': '12rem',
 
-        "&::-webkit-scrollbar-track": {
-          bg: "transparent",
+        '&::-webkit-scrollbar-track': {
+          bg: 'transparent',
         },
-        "&::-webkit-scrollbar": {
-          width: "4px",
+        '&::-webkit-scrollbar': {
+          width: '4px',
         },
-        "&::-webkit-scrollbar-thumb": {
-          bg: mode("blue.600", "gray.700"),
-          borderRadius: "20px",
+        '&::-webkit-scrollbar-thumb': {
+          bg: mode('blue.600', 'gray.700'),
+          borderRadius: '20px',
         },
       }}
     />
-  );
-};
+  )
+}
