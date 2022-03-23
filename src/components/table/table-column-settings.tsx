@@ -14,6 +14,8 @@ import {
   HStack,
   Checkbox,
   useDisclosure,
+  Center,
+  Text,
 } from '@chakra-ui/react'
 import { FaAtom } from 'react-icons/fa'
 import { BiGridVertical } from 'react-icons/bi'
@@ -105,12 +107,22 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         {t('setting')}
       </Button>
 
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="4xl">
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
-        <ModalContent h="70vh">
-          <ModalHeader>Column Settings</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody h="50vh" overflow="scroll">
+        <ModalContent h="737px">
+          <ModalHeader
+            bg="#F7FAFC"
+            borderBottom="1px solid #E2E8F0"
+            fontSize="16px"
+            fontStyle="normal"
+            fontWeight={500}
+            color="gray.600"
+            mb="6"
+          >
+            Column Settings
+          </ModalHeader>
+          <ModalCloseButton _focus={{ border: 'none' }} />
+          <ModalBody h="50vh" overflowY="scroll">
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
                 {provided => (
@@ -125,29 +137,44 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                       <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
                         {(provided, snapshot) => (
                           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <ListItem
-                              data-testid={`draggable-item-${index}`}
-                              border="1px"
-                              borderColor="#A0AEC0"
-                              borderRadius="8"
-                              m="2"
-                              p="5"
-                              fontSize="1em"
-                              fontWeight={600}
-                              backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                            >
-                              <HStack spacing="24px">
-                                <BiGridVertical fontSize="1.6rem" color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'} />
-                                <Checkbox
-                                  size="lg"
-                                  marginStart="0.625rem"
-                                  onChange={() => onCheck(index)}
-                                  isChecked={!hide}
-                                >
-                                  {field}
-                                </Checkbox>
-                              </HStack>
-                            </ListItem>
+                            <Center>
+                              <ListItem
+                                data-testid={`draggable-item-${index}`}
+                                border="2px"
+                                borderColor="gray.300"
+                                borderRadius="8"
+                                w="485px"
+                                m="1.5"
+                                p="4"
+                                fontSize="1em"
+                                fontWeight={600}
+                                backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                              >
+                                <HStack spacing="24px">
+                                  <BiGridVertical
+                                    fontSize="1.6rem"
+                                    color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
+                                  />
+                                  <Checkbox
+                                    size="lg"
+                                    marginStart="0.625rem"
+                                    onChange={() => onCheck(index)}
+                                    isChecked={!hide}
+                                    colorScheme="CustomPrimaryColor"
+                                  >
+                                    <Text
+                                      ml="12px"
+                                      color="gray.600"
+                                      fontStyle="normal"
+                                      fontWeight={500}
+                                      fontSize="14px"
+                                    >
+                                      {field}
+                                    </Text>
+                                  </Checkbox>
+                                </HStack>
+                              </ListItem>
+                            </Center>
                           </div>
                         )}
                       </Draggable>
@@ -160,10 +187,17 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" onClick={onClose}>
+            <Button variant="ghost" onClick={onClose} color="gray.600" fontWeight={500}>
               Close
             </Button>
-            <Button colorScheme="blue" mr={3} onClick={saveModal}>
+            <Button
+              colorScheme="CustomPrimaryColor"
+              fontSize="14px"
+              fontWeight={500}
+              fontStyle="normal"
+              mr={3}
+              onClick={saveModal}
+            >
               Save
             </Button>
           </ModalFooter>
