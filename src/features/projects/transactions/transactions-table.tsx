@@ -110,7 +110,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
-  const { transactions = [] } = useTransactions(projectId)
+  const { transactions = [], isLoading } = useTransactions(projectId)
   const { columns } = useColumnWidthResize(COLUMNS, ref)
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
@@ -140,6 +140,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   return (
     <Box h="100%">
       <ReactTable
+        isLoading={isLoading}
         columns={columns}
         data={transactions}
         TableRow={TransactionRow}

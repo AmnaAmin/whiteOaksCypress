@@ -5,7 +5,7 @@ import { client } from './api-client'
 import { useAsync } from './hooks'
 import { getToken, removeToken, setToken } from './storage.utils'
 import { Account } from 'types/account.types'
-import { PageLoader } from 'components/page-level-loader'
+import { ViewLoader } from 'components/page-level-loader'
 
 type AuthState = {
   user: Account
@@ -89,7 +89,7 @@ function AuthProvider(props: AuthProviderProps) {
   const value = React.useMemo(() => ({ data, login, logout, register, token }), [login, logout, register, token, data])
 
   if (isLoading || isIdle) {
-    return <PageLoader />
+    return <ViewLoader />
   }
 
   // if (isError) {
