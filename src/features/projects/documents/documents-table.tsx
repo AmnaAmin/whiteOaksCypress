@@ -32,7 +32,17 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text
+                noOfLines={2}
+                title={cell.value}
+                padding="0 15px"
+                fontWeight={400}
+                fontStyle="normal"
+                mt="10px"
+                mb="10px"
+                fontSize="14px"
+                color="#4A5568"
+              >
                 {cell.render('Cell')}
               </Text>
             </Flex>

@@ -91,13 +91,16 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        data-testid="column-settings-button"
-        bg="#4E87F8"
-        color="white"
-        size="md"
-        _hover={{ bg: 'royalblue' }}
+        bg="none"
+        color="#4E87F8"
+        fontSize="12px"
+        fontStyle="normal"
+        fontWeight={500}
+        _hover={{ bg: 'none' }}
+        _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
+        data-testid="column-settings-button"
       >
         <Box pos="relative" right="6px">
           <FaAtom />

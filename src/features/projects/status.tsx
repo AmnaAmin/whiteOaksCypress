@@ -27,17 +27,17 @@ const Status = ({ value, id }: { value: string; id: string }) => {
   const style = STATUS_COLOR[id?.toLocaleLowerCase()]
 
   return (
-    <Tag
-      textTransform="capitalize"
-      size="lg"
-      borderRadius="full"
-      variant="solid"
-      backgroundColor={style?.backgroundColor}
-      color={style?.color}
-      fontSize={12}
-      fontWeight={500}
-    >
-      <TagLabel>{value?.toLowerCase()}</TagLabel>
+    <Tag size="md" rounded="6px" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
+      <TagLabel
+        fontSize="14px"
+        fontStyle="normal"
+        fontWeight={400}
+        lineHeight="20px"
+        p="2px"
+        textTransform="capitalize"
+      >
+        {value?.toLocaleLowerCase()}
+      </TagLabel>
     </Tag>
   )
 }

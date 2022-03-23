@@ -48,6 +48,7 @@ export const SignatureTab = props => {
                       fontSize: '20px',
                       fontWeight: 700,
                       px: '2em',
+                      marginBottom: '10px',
                     }}
                     rules={{ required: 'This is required field' }}
                     name={`signature`}

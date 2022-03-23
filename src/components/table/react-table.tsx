@@ -119,13 +119,19 @@ export const TableHeader = ({ headerGroups }) => {
               <Th key={`th_td_${column.id}`} {...column.getHeaderProps(column.getSortByToggleProps())} p="0">
                 <Flex py="2" px="2" pl="7" alignItems="center">
                   <Text
-                    fontSize="12px"
-                    color="#718096"
-                    fontWeight={700}
+                    fontSize="14px"
+                    color="#4A5568"
+                    fontWeight={500}
                     fontStyle="normal"
+                    textTransform="capitalize"
                     mr="2"
-                    lineHeight="17px"
+                    mt="20px"
+                    mb="20px"
+                    lineHeight="20px"
                     noOfLines={2}
+                    isTruncated
+                    display="inline-block"
+                    title={column.render('Header')}
                   >
                     {column.render('Header')}
                   </Text>

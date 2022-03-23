@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, Tag } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, Tag, TagLabel } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useTransactions } from 'utils/transactions'
@@ -17,8 +17,8 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 
   approved: {
-    bg: 'green.100',
-    color: 'green.600',
+    bg: '#E7F8EC',
+    color: '#2AB450',
   },
   cancelled: {
     bg: 'red.100',
@@ -26,8 +26,8 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 
   pending: {
-    bg: 'orange.100',
-    color: 'orange.600',
+    bg: '#FEEBCB',
+    color: '#C05621',
   },
 }
 
@@ -54,15 +54,10 @@ const COLUMNS = [
     Cell(cellInfo) {
       const value = (cellInfo.value || '').toLowerCase()
       return (
-        <Tag
-          textTransform="capitalize"
-          fontWeight={500}
-          lineHeight={2}
-          fontSize={12}
-          rounded={6}
-          {...STATUS_TAG_COLOR_SCHEME[value]}
-        >
-          {value}
+        <Tag rounded="6px" textTransform="capitalize" size="md" {...STATUS_TAG_COLOR_SCHEME[value]}>
+          <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
+            {value}
+          </TagLabel>
         </Tag>
       )
     },
@@ -96,7 +91,17 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px" pl="2">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.700">
+              <Text
+                fontSize="14px"
+                fontStyle="normal"
+                fontWeight={400}
+                noOfLines={2}
+                title={cell.value}
+                mt="10px"
+                mb="10px"
+                padding="0 15px"
+                color="#4A5568"
+              >
                 {cell.render('Cell')}
               </Text>
             </Flex>

@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
@@ -16,10 +16,11 @@ import { TransactionInfoCard } from '../features/projects/transactions/transacti
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
+import { BiAddToQueue } from 'react-icons/bi'
 
 const projectTabStyle = {
   fontSize: '14px',
-  fontWeight: 400,
+  fontWeight: 500,
   fontStyle: 'normal',
   color: 'gray.600',
 }
@@ -46,24 +47,38 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab
+                aria-labelledby="transaction-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                sx={projectTabStyle}
+              >
                 {t('transaction')}
               </Tab>
 
               <Tab
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 whiteSpace="nowrap"
                 sx={projectTabStyle}
               >
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab
+                aria-labelledby="documents-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                sx={projectTabStyle}
+              >
                 {t('documents')}
               </Tab>
 
-              <Tab _focus={{ border: 'none' }} _selected={{ color: 'white', bg: 'button.300' }} sx={projectTabStyle}>
+              <Tab
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                sx={projectTabStyle}
+              >
                 {t('alerts')}
               </Tab>
 
@@ -90,12 +105,19 @@ export const ProjectDetails: React.FC = props => {
                 )}
                 {tabIndex === 0 && (
                   <Button
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="md"
-                    _hover={{ bg: 'royalblue' }}
+                    pos="relative"
+                    top="2"
+                    bg="none"
+                    color="#4E87F8"
+                    fontSize="14px"
+                    fontStyle="normal"
+                    fontWeight={500}
+                    _focus={{ border: 'none' }}
+                    _active={{ bg: 'none' }}
+                    _hover={{ bg: 'none' }}
                     onClick={onTransactionModalOpen}
                   >
+                    <Icon as={BiAddToQueue} mr="1" boxSize={4} />
                     {t('newTransaction')}
                   </Button>
                 )}

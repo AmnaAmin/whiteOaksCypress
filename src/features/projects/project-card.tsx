@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import React from 'react'
 
 type multitypes = {
@@ -20,24 +20,23 @@ export const ProjectCard = (props: multitypes) => {
         borderRadius="8px"
         bg="#FFFFFF"
         justifyContent="space-between"
-        border="2px solid transparent"
+        border="1px solid transparent"
+        borderBottom="5px solid transparent"
         pointerEvents={props.disabled ? 'none' : 'auto'}
         onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
-        borderColor={props.selectedCard === props.id ? 'brand.300' : ''}
+        borderColor={props.selectedCard === props.id ? '#4E87F8' : ''}
       >
-        <HStack w="95%" justifyContent="space-between">
-          <Box>
-            <Text fontSize="18px" color="#A0AEC0" fontWeight="500" marginTop="4px" paddingLeft={'20px'}>
+        <Flex alignItems="center" height="100%">
+          <Text marginLeft={'20px'}> {props.IconElement}</Text>
+          <Box marginRight={{ base: '5px', md: '24px', xl: '24px' }}>
+            <Text fontSize="16px" fontWeight="400" marginTop="4px" paddingLeft={'20px'} color="gray.600">
               {props.title}
             </Text>
-            <Text fontWeight="800" color="#4A5568" fontSize="20px" padding="8px 0 10px 20px">
+            <Text fontWeight="600" fontSize="18px" fontStyle="normal" color="gray.600" paddingLeft={'20px'}>
               {props.number}
             </Text>
           </Box>
-          <Flex h="100%" pt={5}>
-            {props.IconElement}
-          </Flex>
-        </HStack>
+        </Flex>
       </Flex>
     </Box>
   )
