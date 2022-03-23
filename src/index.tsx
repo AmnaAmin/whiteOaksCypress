@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
-import { Providers } from "providers";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+import { Providers } from 'providers'
 
 // import { theme } from "./theme";
 
@@ -11,5 +11,5 @@ ReactDOM.render(
       <App />
     </Providers>
   </React.StrictMode>,
-  document.getElementById("root")
-);
+  document.getElementById('root'),
+)

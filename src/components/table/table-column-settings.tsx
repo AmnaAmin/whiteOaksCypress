@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,106 +14,101 @@ import {
   HStack,
   Checkbox,
   useDisclosure,
-} from "@chakra-ui/react";
-import { FaAtom } from "react-icons/fa";
-import { BiGridVertical } from "react-icons/bi";
+} from '@chakra-ui/react'
+import { FaAtom } from 'react-icons/fa'
+import { BiGridVertical } from 'react-icons/bi'
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { t } from "i18next";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { t } from 'i18next'
 // import { useTranslation } from 'react-i18next';
-import "components/translation/i18n";
+import 'components/translation/i18n'
 
 type ColumnType = {
-  id?: number;
-  field: string;
-  order: number;
-  hide: boolean;
-  contentKey;
-};
-
-interface TableColumnSettingsProps {
-  onSave: (col: ColumnType[]) => void;
-  columns: ColumnType[];
-  isOpen?: boolean;
-  disabled?: boolean;
+  id?: number
+  field: string
+  order: number
+  hide: boolean
+  contentKey
 }
 
-const TableColumnSettings = ({
-  onSave,
-  columns,
-  disabled = false,
-}: TableColumnSettingsProps) => {
-  const [columnRecords, setColumnRecords] = useState(columns);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+interface TableColumnSettingsProps {
+  onSave: (col: ColumnType[]) => void
+  columns: ColumnType[]
+  isOpen?: boolean
+  disabled?: boolean
+}
+
+const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnSettingsProps) => {
+  const [columnRecords, setColumnRecords] = useState(columns)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   // const { t } = useTranslation();
 
   const saveModal = useCallback(() => {
-    console.log("columnRecords", columnRecords);
+    console.log('columnRecords', columnRecords)
     const columnsPayload = columnRecords.map((item, index) => ({
       ...item,
       order: index,
-    }));
+    }))
 
-    console.log("columnPayload", columnsPayload);
+    console.log('columnPayload', columnsPayload)
 
-    onClose();
-    onSave(columnsPayload);
-  }, [columnRecords, onClose, onSave]);
+    onClose()
+    onSave(columnsPayload)
+  }, [columnRecords, onClose, onSave])
 
   useEffect(() => {
-    setColumnRecords(columns);
-  }, [columns]);
+    setColumnRecords(columns)
+  }, [columns])
 
   const handleOnDragEnd = useCallback(
-    (result) => {
-      if (!result.destination) return;
+    result => {
+      if (!result.destination) return
 
-      const items = Array.from(columnRecords);
+      const items = Array.from(columnRecords)
       const {
         source: { index: sourceIndex },
         destination: { index: destinationIndex },
-      } = result;
+      } = result
 
-      const [reorderedItem] = items.splice(sourceIndex, 1);
-      items.splice(destinationIndex, 0, reorderedItem);
+      const [reorderedItem] = items.splice(sourceIndex, 1)
+      items.splice(destinationIndex, 0, reorderedItem)
 
-      console.log("items", items);
-      setColumnRecords(items);
+      console.log('items', items)
+      setColumnRecords(items)
     },
-    [columnRecords]
-  );
+    [columnRecords],
+  )
 
-  const onCheck = useCallback((index) => {
-    setColumnRecords((columnRecords) => {
-      const items = Array.from(columnRecords);
-      items[index].hide = !items[index].hide;
+  const onCheck = useCallback(index => {
+    setColumnRecords(columnRecords => {
+      const items = Array.from(columnRecords)
+      items[index].hide = !items[index].hide
 
-      return items;
-    });
-  }, []);
+      return items
+    })
+  }, [])
 
   return (
     <>
       <Button
-        bg="#4E87F8"
-        color="white"
-        size="md"
-        _hover={{ bg: "royalblue" }}
+        bg="none"
+        color="#4E87F8"
+        fontSize="12px"
+        fontStyle="normal"
+        fontWeight={500}
+        _hover={{ bg: 'none' }}
+        _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
+        data-testid="column-settings-button"
       >
         <Box pos="relative" right="6px">
           <FaAtom />
         </Box>
-        {t("setting")}
+        {t('setting')}
       </Button>
 
-      <Modal
-        blockScrollOnMount={false}
-        isOpen={isOpen}
-        onClose={onClose}
-        size="4xl"
-      >
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
         <ModalContent h="70vh">
           <ModalHeader>Column Settings</ModalHeader>
@@ -121,61 +116,47 @@ const TableColumnSettings = ({
           <ModalBody h="50vh" overflow="scroll">
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                    <List spacing={1}>
-                      {columnRecords.map(({ field, id, hide }, index) => (
-                        <Draggable
-                          key={id}
-                          draggableId={`${id}_${index}`}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
+                {provided => (
+                  <List
+                    spacing={1}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    id="column-settings-list"
+                    data-testid="column-settings-list"
+                  >
+                    {columnRecords.map(({ field, id, hide }, index) => (
+                      <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
+                        {(provided, snapshot) => (
+                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <ListItem
+                              data-testid={`draggable-item-${index}`}
+                              border="1px"
+                              borderColor="#A0AEC0"
+                              borderRadius="8"
+                              m="2"
+                              p="5"
+                              fontSize="1em"
+                              fontWeight={600}
+                              backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                             >
-                              <ListItem
-                                border="1px"
-                                borderColor="#A0AEC0"
-                                borderRadius="8"
-                                m="2"
-                                p="5"
-                                fontSize="1em"
-                                fontWeight={600}
-                                backgroundColor={
-                                  snapshot.isDragging
-                                    ? "#f0fff4"
-                                    : "transparent"
-                                }
-                              >
-                                <HStack spacing="24px">
-                                  <BiGridVertical
-                                    fontSize="1.6rem"
-                                    color={
-                                      snapshot.isDragging
-                                        ? "#4b85f8"
-                                        : "#A0AEC0"
-                                    }
-                                  />
-                                  <Checkbox
-                                    size="lg"
-                                    marginStart="0.625rem"
-                                    onChange={() => onCheck(index)}
-                                    isChecked={!hide}
-                                  >
-                                    {field}
-                                  </Checkbox>
-                                </HStack>
-                              </ListItem>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </List>
+                              <HStack spacing="24px">
+                                <BiGridVertical fontSize="1.6rem" color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'} />
+                                <Checkbox
+                                  size="lg"
+                                  marginStart="0.625rem"
+                                  onChange={() => onCheck(index)}
+                                  isChecked={!hide}
+                                >
+                                  {field}
+                                </Checkbox>
+                              </HStack>
+                            </ListItem>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
-                  </div>
+                  </List>
                 )}
               </Droppable>
             </DragDropContext>
@@ -192,7 +173,7 @@ const TableColumnSettings = ({
         </ModalContent>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default TableColumnSettings;
+export default TableColumnSettings

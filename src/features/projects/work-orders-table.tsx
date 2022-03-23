@@ -1,32 +1,32 @@
-import React, { useState } from "react";
-import { Box, Td, Tr, Text, Flex, Spinner, Center } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
-import { useColumnWidthResize } from "utils/hooks/useColumnsWidthResize";
-import ReactTable, { RowProps } from "../../components/table/react-table";
-import WorkOrderStatus from "./work-order-status";
-import { useProjectWorkOrders } from "utils/projects";
-import { dateFormat } from "utils/date-time-utils";
-import WorkOrderDetails from "./modals/work-order-details";
-import { useTranslation } from "react-i18next";
-import { ProjectWorkOrderType } from "types/project.type";
+import React, { useState } from 'react'
+import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
+import { useParams } from 'react-router-dom'
+import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import ReactTable, { RowProps } from '../../components/table/react-table'
+import WorkOrderStatus from './work-order-status'
+import { useProjectWorkOrders } from 'utils/projects'
+import { dateFormat } from 'utils/date-time-utils'
+import WorkOrderDetails from './modals/work-order-details'
+import { useTranslation } from 'react-i18next'
+import { ProjectWorkOrderType } from 'types/project.type'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
       _hover={{
-        background: "#eee",
+        background: '#eee',
       }}
-      onClick={(e) => {
+      onClick={e => {
         if (onRowClick) {
-          onRowClick(e, row);
+          onRowClick(e, row)
         }
       }}
       {...row.getRowProps({
         style,
       })}
     >
-      {row.cells.map((cell) => {
+      {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
@@ -34,83 +34,81 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 noOfLines={2}
                 title={cell.value}
                 padding="0 15px"
-                color="blackAlpha.700"
+                color="#4A5568"
+                fontStyle="normal"
+                mt="10px"
+                mb="10px"
+                fontSize="14px"
+                fontWeight={400}
               >
-                {cell.render("Cell")}
+                {cell.render('Cell')}
               </Text>
             </Flex>
           </Td>
-        );
+        )
       })}
     </Tr>
-  );
-};
+  )
+}
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const { projectId } = useParams<"projectId">();
+  const { projectId } = useParams<'projectId'>()
 
-  const [
-    selectedWorkOrder,
-    setSelectedWorkOrder,
-  ] = useState<ProjectWorkOrderType>();
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(
-    projectId
-  );
+  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
 
   const { columns } = useColumnWidthResize(
     [
       {
-        Header: "WO Status",
-        accessor: "statusLabel",
-        Cell: ({ value, row }) => (
-          <WorkOrderStatus value={value} id={(row.original as any).status} />
-        ),
+        Header: 'WO Status',
+        accessor: 'statusLabel',
+        Cell: ({ value, row }) => <WorkOrderStatus value={value} id={(row.original as any).status} />,
       },
       {
-        Header: t("trade") as string,
-        accessor: "skillName",
+        Header: t('trade') as string,
+        accessor: 'skillName',
       },
       {
-        Header: t("name") as string,
-        accessor: "companyName",
+        Header: t('name') as string,
+        accessor: 'companyName',
       },
       {
-        Header: t("email") as string,
-        accessor: "businessEmailAddress",
+        Header: t('email') as string,
+        accessor: 'businessEmailAddress',
       },
       {
-        Header: t("phone") as string,
-        accessor: "businessPhoneNumber",
+        Header: t('phone') as string,
+        accessor: 'businessPhoneNumber',
       },
       {
-        Header: t("issue") as string,
-        accessor: "workOrderIssueDate",
+        Header: t('issue') as string,
+        accessor: 'workOrderIssueDate',
         Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: t("expectedCompletion") as string,
-        accessor: "workOrderExpectedCompletionDate",
+        Header: t('expectedCompletion') as string,
+        accessor: 'workOrderExpectedCompletionDate',
         Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: t("completed") as string,
-        accessor: "workOrderDateCompleted",
+        Header: t('completed') as string,
+        accessor: 'workOrderDateCompleted',
         Cell: ({ value }) => dateFormat(value),
       },
     ],
-    ref
-  );
+    ref,
+  )
 
   return (
     <Box>
       <WorkOrderDetails
         workOrder={selectedWorkOrder as ProjectWorkOrderType}
         onClose={() => {
-          setSelectedWorkOrder(undefined);
-          refetch();
+          setSelectedWorkOrder(undefined)
+          refetch()
         }}
       />
       {isLoading && (
@@ -129,5 +127,5 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
         />
       )}
     </Box>
-  );
-});
+  )
+})

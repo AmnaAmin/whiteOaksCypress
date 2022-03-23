@@ -68,6 +68,7 @@ export type Vendor = {
   users: string | null
   documents: any[] | null
   vendorSkills: VendorSkill[]
+  paymentOptions: any[]
   markets: VendorMarket[]
   projects: any[]
 }

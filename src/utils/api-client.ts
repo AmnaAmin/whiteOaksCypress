@@ -6,7 +6,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
     method: data ? 'POST' : 'GET',
     body: data ? JSON.stringify(data) : undefined,
     headers: {
-      Authorization: token ? 'Bearer ' + token : undefined,
+      Authorization: token ? `Bearer ${token}` : undefined,
       'Content-Type': data ? 'application/json' : undefined,
       ...customHeaders,
     },
@@ -20,7 +20,6 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       await authApi.logout()
       // refresh the page for them
       // @ts-ignore
-      // window.location.assign(window.location)
       return Promise.reject({ message: 'Please re-authenticate.' })
     }
 
