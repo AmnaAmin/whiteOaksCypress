@@ -1,5 +1,3 @@
-import { SelectOption } from './transaction.type'
-
 export type VendorSkill = {
   id: number
   skill: string

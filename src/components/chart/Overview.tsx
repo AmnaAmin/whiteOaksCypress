@@ -93,10 +93,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           align="center"
           formatter={value => {
             return (
-
               <Box display="inline-flex" marginInlineEnd="40px">
-
-     
                 <Box as="span" color="#4A5568" fontSize="12px" fontStyle="normal" fontWeight={400}>
                   {value}
                 </Box>
