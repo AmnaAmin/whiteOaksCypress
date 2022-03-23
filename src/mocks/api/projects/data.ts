@@ -63,6 +63,79 @@ export const CHANGE_ORDERS = [
   },
 ]
 
+export const makeChangeOrderObject = (changeOrder, payload) => {
+  const transactionType = payload.transactionType === 30 ? 'DR' : 'CO'
+  const totalWhiteoaksCost = payload.lineItems.reduce((sum, current) => current.whiteoaksCost + sum, 0)
+
+  return {
+    ...changeOrder,
+    name: `${transactionType}-${changeOrder.vendor}-${payload.createdDate1}`,
+    totalWhiteoaksCost: totalWhiteoaksCost,
+    transactionTotal: totalWhiteoaksCost,
+    id: changeOrder.id + 1,
+  }
+}
+
+export const WORK_ORDERS_WITH_CHANGE_ORDERS = [
+  {
+    id: 6269,
+    workOrderCompletionDateVariance: null,
+    workOrderPayDateVariance: null,
+    clientApprovedAmount: 55000,
+    clientOriginalApprovedAmount: 55000,
+    paymentTerm: '20',
+    vendorId: 258,
+    projectId: 3205,
+    projectCoordinatorId: null,
+    capacity: 1,
+    status: 34,
+    statusLabel: 'Active',
+    createdBy: 'autoops603@yopmail.com',
+    createdDate: '2022-02-21T11:49:50Z',
+    datePermitsPulled: null,
+    decline: false,
+    vendorSkillId: 11,
+    skillName: 'General Labor',
+    companyName: '360 Management Services',
+    businessPhoneNumber: '(813)-356-8780',
+    businessEmailAddress: '360mgntsvcs@gmail.com',
+    workOrderIssueDate: '2022-02-21T11:49:50Z',
+    workOrderExpectedCompletionDate: '2022-03-10T00:00:00Z',
+    workOrderDateCompleted: null,
+    workOrderStartDate: '2021-03-20T00:00:00Z',
+    permitsPulled: null,
+    invoiceAmount: 44000,
+    finalInvoiceAmount: 44200,
+    leanWaiverSubmitted: true,
+    dateInvoiceSubmitted: null,
+    dateLeanWaiverSubmitted: '2022-03-12T11:26:44Z',
+    datePaymentProcessed: null,
+    expectedPaymentDate: null,
+    paymentTermDate: null,
+    datePaid: null,
+    paid: false,
+    marketName: 'Triangle',
+    claimantName: '360 Management Services',
+    customerName: 'White Oaks Aligned, LLC',
+    owner: null,
+    makerOfCheck: 'White Oaks Aligned, LLC',
+    amountOfCheck: 44200,
+    checkPayableTo: '360 Management Services',
+    notAffectedFor: null,
+    disputedClaimAmount: null,
+    claimantTitle: 'title 123',
+    dateOfSignature: '2022-03-12T10:13:28Z',
+    propertyAddress: '3 LYLE CT',
+    vendorAddress: '702 Tuscany St',
+    durationCategory: '7',
+    warrantyLink: null,
+    invoiceLink: null,
+    permitLink: null,
+    leanwieverLink:
+      'https://dev2.woaharvest.com/documents/vendor@devtek.ai.1647084403815.project.3205.Lien-Waver-Form.pdf',
+  },
+]
+
 export const WORK_ORDERS = [
   {
     id: 4784,

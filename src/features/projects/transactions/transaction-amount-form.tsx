@@ -233,8 +233,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                 <Td>
                   <FormControl isInvalid={!!errors.transaction?.[index].description}>
                     <Input
+                      data-testid={`transaction-description-${index}`}
                       type="text"
-                      size="lg"
+                      size="md"
                       placeholder="description"
                       {...register(`transaction.${index}.description` as const, { required: 'This is required' })}
                     />
@@ -255,8 +256,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                           <>
                             <Input
                               {...field}
+                              data-testid={`transaction-amount-${index}`}
                               type="number"
-                              size="lg"
+                              size="md"
                               placeholder="amount"
                               onChange={event => {
                                 const inputValue = Number(event.currentTarget.value)
@@ -281,7 +283,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
       </Box>
 
       <Flex pt="3" flexDirection="row-reverse">
-        <Text color="gray.600" fontSize="16px" fontWeight={600} fontStyle="normal">
+        <Text data-testid="total-amount" color="gray.600" fontSize="16px" fontWeight={600} fontStyle="normal">
           {totalAmount}
         </Text>
       </Flex>

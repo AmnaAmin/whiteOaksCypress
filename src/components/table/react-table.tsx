@@ -15,6 +15,7 @@ import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex } from '@cha
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -187,6 +188,27 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   )
 }
 
+const TableLoadingState: React.FC<TableInstance> = ({ rows, prepareRow }) => {
+  return (
+    <Tbody>
+      {rows.map(row => {
+        prepareRow(row)
+        return (
+          <Tr {...row.getRowProps()}>
+            {row.cells.map(cell => {
+              return (
+                <Td {...cell.getCellProps()}>
+                  <BlankSlate size="sm" width="100%" />
+                </Td>
+              )
+            })}
+          </Tr>
+        )
+      })}
+    </Tbody>
+  )
+}
+
 type TableExtraProps = {
   name?: string
   TableRow?: React.ElementType
@@ -195,8 +217,10 @@ type TableExtraProps = {
   tableHeight: string | number
   setTableInstance?: (i) => void
   onRowClick?: (e, row) => void
+  isLoading?: boolean
 }
 
+const emptyRows = [{}, {}, {}]
 export function Table(props: Props & TableExtraProps): ReactElement {
   const {
     TableRow,
@@ -205,9 +229,10 @@ export function Table(props: Props & TableExtraProps): ReactElement {
     tableHeight,
     onRowClick,
     setTableInstance,
+    isLoading,
     ...restProps
   } = props
-  const tableInstance = useCustomTable(restProps)
+  const tableInstance = useCustomTable({ ...restProps, data: isLoading ? emptyRows : restProps.data })
 
   useEffect(() => {
     setTableInstance?.(tableInstance)
@@ -216,7 +241,11 @@ export function Table(props: Props & TableExtraProps): ReactElement {
   return (
     <ChakraTable w="100%" bg="#FFFFFF" h={tableHeight} boxShadow="sm" rounded="md" {...tableInstance.getTableProps()}>
       <TableHead {...tableInstance} />
-      <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
+      {isLoading ? (
+        <TableLoadingState {...tableInstance} />
+      ) : (
+        <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
+      )}
     </ChakraTable>
   )
 }
