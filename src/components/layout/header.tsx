@@ -46,7 +46,7 @@ const UserInfo: React.FC = () => {
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="14px" fontStyle="normal" fontWeight={500} color=" #A0AEC0">
+        <Text fontSize="14px" fontStyle="normal" fontWeight={500} color="#A0AEC0">
           {isAdmin ? 'Admin' : 'User'}
         </Text>
       </VStack>
@@ -64,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const [showNotification, setShowNotification] = useState(false)
 
   return (
-    <Box py="1.5" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} boxShadow="base" w="100%">
+    <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button

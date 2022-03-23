@@ -6,7 +6,6 @@ import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
-import { Document } from '../../../types/vendor.types'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 
@@ -54,12 +53,11 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
-export const VendorDocumentsTable = React.forwardRef((props: { latestUploadedDoc: Document }, ref) => {
+export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
     projectId,
-    latestUploadedDoc: props.latestUploadedDoc,
   })
 
   const { columns } = useColumnWidthResize(

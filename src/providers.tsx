@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ChakraProvider } from '@chakra-ui/react'
 import { AuthProvider } from 'utils/auth-context'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { theme } from 'theme/theme'
 
 const queryConfig = {
@@ -26,6 +27,8 @@ export const Providers: React.FC = ({ children }) => {
         {/* @ts-ignore */}
         <AuthProvider>{children}</AuthProvider>
       </ChakraProvider>
+
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

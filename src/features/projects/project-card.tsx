@@ -16,7 +16,7 @@ export const ProjectCard = (props: multitypes) => {
     <Box as="label" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
       <Flex
         boxShadow=" 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
-        h="112px"
+        minH="112px"
         borderRadius="8px"
         bg="#FFFFFF"
         justifyContent="space-between"

@@ -100,6 +100,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
+        data-testid="column-settings-button"
       >
         <Box pos="relative" right="6px">
           <FaAtom />
@@ -116,44 +117,46 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
                 {provided => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                    <List spacing={1}>
-                      {columnRecords.map(({ field, id, hide }, index) => (
-                        <Draggable key={id} draggableId={`${id}_${index}`} index={index}>
-                          {(provided, snapshot) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                              <ListItem
-                                border="1px"
-                                borderColor="#A0AEC0"
-                                borderRadius="8"
-                                m="2"
-                                p="5"
-                                fontSize="1em"
-                                fontWeight={600}
-                                backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                              >
-                                <HStack spacing="24px">
-                                  <BiGridVertical
-                                    fontSize="1.6rem"
-                                    color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
-                                  />
-                                  <Checkbox
-                                    size="lg"
-                                    marginStart="0.625rem"
-                                    onChange={() => onCheck(index)}
-                                    isChecked={!hide}
-                                  >
-                                    {field}
-                                  </Checkbox>
-                                </HStack>
-                              </ListItem>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </List>
+                  <List
+                    spacing={1}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    id="column-settings-list"
+                    data-testid="column-settings-list"
+                  >
+                    {columnRecords.map(({ field, id, hide }, index) => (
+                      <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
+                        {(provided, snapshot) => (
+                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <ListItem
+                              data-testid={`draggable-item-${index}`}
+                              border="1px"
+                              borderColor="#A0AEC0"
+                              borderRadius="8"
+                              m="2"
+                              p="5"
+                              fontSize="1em"
+                              fontWeight={600}
+                              backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                            >
+                              <HStack spacing="24px">
+                                <BiGridVertical fontSize="1.6rem" color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'} />
+                                <Checkbox
+                                  size="lg"
+                                  marginStart="0.625rem"
+                                  onChange={() => onCheck(index)}
+                                  isChecked={!hide}
+                                >
+                                  {field}
+                                </Checkbox>
+                              </HStack>
+                            </ListItem>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
-                  </div>
+                  </List>
                 )}
               </Droppable>
             </DragDropContext>

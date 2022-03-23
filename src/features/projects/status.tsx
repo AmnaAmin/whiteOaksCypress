@@ -36,7 +36,7 @@ const Status = ({ value, id }: { value: string; id: string }) => {
         p="2px"
         textTransform="capitalize"
       >
-        {value.toLocaleLowerCase()}
+        {value?.toLocaleLowerCase()}
       </TagLabel>
     </Tag>
   )

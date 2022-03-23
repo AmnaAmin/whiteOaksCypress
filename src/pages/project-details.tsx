@@ -16,7 +16,6 @@ import { TransactionInfoCard } from '../features/projects/transactions/transacti
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
-import { Document } from 'types/vendor.types'
 import { BiAddToQueue } from 'react-icons/bi'
 
 const projectTabStyle = {
@@ -33,7 +32,6 @@ export const ProjectDetails: React.FC = props => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
   const [alertRow, selectedAlertRow] = useState(null)
-  const [latestUploadedDoc, setLatestUploadedDoc] = useState<Document | null>(null)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -59,7 +57,6 @@ export const ProjectDetails: React.FC = props => {
               </Tab>
 
               <Tab
-                aria-labelledby="work-order-tab"
                 _focus={{ border: 'none' }}
                 _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 whiteSpace="nowrap"
@@ -78,7 +75,6 @@ export const ProjectDetails: React.FC = props => {
               </Tab>
 
               <Tab
-                aria-labelledby="alerts-tab"
                 _focus={{ border: 'none' }}
                 _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
@@ -89,7 +85,6 @@ export const ProjectDetails: React.FC = props => {
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (
                   <Button
-                    aria-labelledby="upload-document-button"
                     onClick={onDocumentModalOpen}
                     bg="#4E87F8"
                     color="#FFFFFF"
@@ -142,7 +137,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px">
                 <Box h="100%" w="100%">
-                  <VendorDocumentsTable ref={tabsContainerRef} latestUploadedDoc={latestUploadedDoc as Document} />
+                  <VendorDocumentsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px">
@@ -160,14 +155,7 @@ export const ProjectDetails: React.FC = props => {
         </Stack>
       </Stack>
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
-      <UploadDocumentModal
-        isOpen={isOpenDocumentModal}
-        onClose={onDocumentModalClose}
-        projectId={projectId}
-        setLatestUploadedDoc={val => {
-          setLatestUploadedDoc(val)
-        }}
-      />
+      <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )
