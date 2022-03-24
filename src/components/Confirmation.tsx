@@ -45,13 +45,21 @@ export function ConfirmationBox({
           borderBottom="2px solid #E2E8F0"
           fontWeight={500}
           color="gray.600"
+          fontSize="16px"
+          fontStyle="normal"
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton _focus={{ border: 'none' }} />
+        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
 
         <ModalBody>
-          <Text color="gray.500" mb="3">
+          <Text
+            color="gray.500"
+            fontSize="14px"
+            fontWeight={400}
+            fontStyle="normal"
+            mb="2"
+          >
             Are you sure you want to {content}?
           </Text>
         </ModalBody>
@@ -62,16 +70,17 @@ export function ConfirmationBox({
               mr={5}
               onClick={onClose}
               color="gray.600"
-              fontSize="16px"
+              fontSize="14px"
               fontWeight={500}
             >
               Cancel
             </Button>
             <Button
+              size="md"
               onClick={onConfirm}
               isLoading={isLoading}
               colorScheme="CustomPrimaryColor"
-              rounded="8px"
+              rounded="6px"
               fontSize="16px"
               fontWeight={500}
             >
