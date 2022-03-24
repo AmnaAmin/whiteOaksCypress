@@ -329,7 +329,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
       <ConfirmationBox
         title="Delete Transaction Row"
-        content="delete selected rows."
+        content="delete selected rows"
         isOpen={isDeleteConfirmationModalOpen}
         onClose={onDeleteConfirmationModalClose}
         onConfirm={deleteRows}
