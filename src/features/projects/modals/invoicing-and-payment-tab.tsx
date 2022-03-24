@@ -134,7 +134,14 @@ const InvoicingAndPaymentTab = ({
       </HStack>
       <Divider />
       <ModalFooter pb="15px" pt="15px">
-        <Button colorScheme="CustomPrimaryColor" onClick={onClose}>
+        <Button
+          colorScheme="CustomPrimaryColor"
+          onClick={onClose}
+          size="lg"
+          fontStyle="normal"
+          fontSize="18px"
+          fontWeight={600}
+        >
           {t('close')}
         </Button>
       </ModalFooter>

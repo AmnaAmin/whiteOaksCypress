@@ -11,6 +11,7 @@ describe('Vendor Projects Test Cases', () => {
     expect(global.window.location.pathname).toEqual('/projects')
 
     userEvent.click(screen.getByTestId('column-settings-button'))
+
     expect(screen.getByText('Column Settings', { selector: 'header' })).toBeInTheDocument()
 
     const list = screen.getByTestId('column-settings-list')
