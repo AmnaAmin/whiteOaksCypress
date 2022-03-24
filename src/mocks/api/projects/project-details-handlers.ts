@@ -31,6 +31,9 @@ export const projectDetailHandlers = [
   rest.get('/api/change-orders', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(getData('/transactions')))
   }),
+  rest.get('/api/change-orders/:transactionId', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(getData('/transactions')[1]))
+  }),
   rest.post('/api/change-orders', (req, res, ctx) => {
     const newChangeOrder = makeChangeOrderObject(CHANGE_ORDERS[0], req.body)
     appendData('/transactions', newChangeOrder)

@@ -1,6 +1,15 @@
 import userEvent from '@testing-library/user-event'
 import App from 'App'
-import { act, render, screen, selectOption, waitForElementToBeRemoved, waitForLoadingToFinish } from 'utils/test-utils'
+import { dateFormat } from 'utils/date-time-utils'
+import {
+  act,
+  getByText,
+  render,
+  screen,
+  selectOption,
+  waitForElementToBeRemoved,
+  waitForLoadingToFinish,
+} from 'utils/test-utils'
 
 const renderProjectDetailsAndSwitchToDocumentTab = async () => {
   await render(<App />, { route: '/project-details/2951' })
@@ -27,7 +36,7 @@ const chooseFileByLabel = (labelRegExp: RegExp) => {
 
 jest.setTimeout(50000)
 
-describe('Porject Details: Transaction tab test cases', () => {
+describe.only('Porject Details: Transaction tab test cases', () => {
   test('User opening new transaction modal flow from loading project details page', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
@@ -86,7 +95,7 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('CO-ADT Renovations Inc-03/23/2022')).toBeInTheDocument()
+    expect(await screen.findByText(`CO-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
     expect(screen.getByText('3000')).toBeInTheDocument()
   })
 
@@ -120,8 +129,27 @@ describe('Porject Details: Transaction tab test cases', () => {
     })
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('DR-ADT Renovations Inc-03/23/2022')).toBeInTheDocument()
+    expect(await screen.findByText(`DR-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
     expect(screen.getByText('-400')).toBeInTheDocument()
+  })
+
+  test.only('Update transaction by clicking on transaction row which will open Update Transaction modal', async () => {
+    await render(<App />, { route: '/project-details/2951' })
+
+    const pendingTransaction = screen.getByText(/PENDING/i)
+    expect(pendingTransaction).toBeInTheDocument()
+
+    userEvent.click(pendingTransaction)
+
+    await waitForLoadingToFinish()
+
+    expect(screen.getByText(/Update Transaction/, { selector: 'header' })).toBeInTheDocument()
+
+    expect(getByText(screen.getByTestId('transaction-type'), /Draw/i)).toBeInTheDocument()
+    // screen.debug(undefined, 100000)
+
+    // await waitForElementToBeRemoved(() => [...screen.getAllByText('Select')])
+    // expect(screen.getByText(/360 Management Services (General Labor)/i)).toBeInTheDocument()
   })
 })
 

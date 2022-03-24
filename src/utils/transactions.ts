@@ -158,6 +158,9 @@ export const useProjectWorkOrders = (projectId?: string) => {
     againstOptions = workOrderOptions || againstOptions
   }
 
+  console.log('againstOptions')
+  console.log(againstOptions)
+  console.log('isLoading', rest.isLoading)
   return {
     workOrdersKeyValues,
     againstOptions,

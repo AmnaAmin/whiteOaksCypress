@@ -128,7 +128,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   )
 
   useEffect(() => {
-    if (transaction && againstOptions) {
+    if (transaction && againstOptions && againstOptions.length > 0) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
       const formValues = parseTransactionToFormValues(transaction, againstOptions)
 
@@ -199,7 +199,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             </Box>
           </Stack> */}
 
-            <FormControl isInvalid={!!errors.against}>
+            <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
               <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
                 {t('against')}
               </FormLabel>
