@@ -1,5 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import App from 'App'
+import { dateFormat } from 'utils/date-time-utils'
 import { act, render, screen, selectOption, waitForElementToBeRemoved, waitForLoadingToFinish } from 'utils/test-utils'
 
 const renderProjectDetailsAndSwitchToDocumentTab = async () => {
@@ -86,7 +87,7 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('CO-ADT Renovations Inc-03/23/2022')).toBeInTheDocument()
+    expect(await screen.findByText(`CO-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
     expect(screen.getByText('3000')).toBeInTheDocument()
   })
 
@@ -120,7 +121,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     })
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('DR-ADT Renovations Inc-03/23/2022')).toBeInTheDocument()
+    expect(await screen.findByText(`DR-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
     expect(screen.getByText('-400')).toBeInTheDocument()
   })
 })

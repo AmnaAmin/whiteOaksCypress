@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalCloseButton,
   ModalBody,
   Button,
   Grid,
@@ -65,25 +66,28 @@ const alertStatusInfo = [
 
 const AlertCard = () => {
   return (
-    <Box
-      borderRadius="8px"
-      minH="7.25em"
-      boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
-    >
+    <Box borderRadius="8px" boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)">
       <Flex>
-        <Center flexGrow={0.75} bg="blue.500" color="white" borderLeftRadius="8px">
+        <Center flexGrow={0.3} bg="#4E87F8" color="white" borderLeftRadius="8px">
           <RiErrorWarningLine fontSize="30px" />
         </Center>
         <VStack align="start" flexGrow={3} padding="12px" maxW="28em">
-          <Box fontSize="16px" fontWeight="bold" color="gray.800">
+          <Box fontSize="14px" fontWeight={600} color="gray.600">
             WARNING - 11 JOEL CT GREEN DR
           </Box>
-          <Box fontSize="14px">Project Project manager Changed from NateFeleciano to Jonathan Kelly.</Box>
-          <Box color="gray.500" cursor="pointer">
-            Close
+          <Box fontSize="14px" fontWeight={400} color="gray.500" pb="4">
+            Project Project manager Changed from NateFeleciano to Jonathan Kelly.
           </Box>
         </VStack>
-        <Center flexGrow={1} color="blue.600" cursor="pointer" borderLeft="1px solid #E2E8F0">
+        <Center
+          flexGrow={1}
+          color="#4E87F8"
+          cursor="pointer"
+          borderLeft="1px solid #E2E8F0"
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+        >
           Resolve
         </Center>
       </Flex>
@@ -101,14 +105,14 @@ const AlertInfo = () => {
               <Box mt="2px">
                 {React.createElement(al.icon, {
                   fontSize: '20px',
-                  opacity: '0.4',
+                  color: '#718096',
                 })}
               </Box>
               <VStack align="start">
-                <Box fontSize="16px" fontWeight="bold" color="gray.700">
+                <Box fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600">
                   {al.title}
                 </Box>
-                <Box fontSize="14px" color="gray.600">
+                <Box fontSize="14px" fontStyle="normal" color="gray.500" fontWeight={400}>
                   {al.value}
                 </Box>
               </VStack>
@@ -125,23 +129,54 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
       {alert && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent minW="46em">
-            <ModalHeader bg="gray.50" borderBottom="1px solid #eee" borderTop="2px solid #4E87F8">
-              {alert.name}
+          <ModalContent minW="46em" bg="#FFFFFF" rounded="0">
+            <ModalHeader
+              bg="gray.50"
+              borderBottom="1px solid #eee"
+              borderTop="2px solid #4E87F8"
+              fontSize="16px"
+              fontWeight={500}
+              color="gray.600"
+              mb="3"
+            >
+              {/* {alert.name} */}
+              11 Joel CT
             </ModalHeader>
+            <ModalCloseButton size="lg" _focus={{ border: 'none' }} />
             <ModalBody>
-              <Box border="1px solid #E2E8F0" margin="20px 10px 10px 10px" minH="33em" borderRadius="8px">
-                {<AlertCard />}
-                <Grid templateColumns="repeat(2, 1fr)" gap={6} margin="20px">
+              <Box
+                margin="20px 10px 10px 10px"
+                minH="31.6em"
+                borderRadius="8px"
+                boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
+              >
+                <Grid templateColumns="repeat(2, 1fr)" gap={6} margin="20px" mb="10" pr="28">
                   {<AlertInfo />}
                 </Grid>
+                <Box>{<AlertCard />}</Box>
               </Box>
             </ModalBody>
-            <ModalFooter display="flex" alignItems="center">
-              <Button variant="ghost" onClick={onClose}>
+            <ModalFooter display="flex" alignItems="center" mb="3" mr="5">
+              <Button
+                variant="ghost"
+                onClick={onClose}
+                fontSize="14px"
+                fontWeight={500}
+                fontStyle="normal"
+                color="gray.600"
+                mr="5"
+              >
                 Close
               </Button>
-              <Button colorScheme="button" type="submit" form="newTransactionForm" ml="3">
+              <Button
+                fontSize="14px"
+                fontWeight={500}
+                fontStyle="normal"
+                colorScheme="CustomPrimaryColor"
+                rounded="6px"
+                type="submit"
+                form="newTransactionForm"
+              >
                 Save
               </Button>
             </ModalFooter>

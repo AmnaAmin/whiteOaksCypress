@@ -111,7 +111,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
               </Box>
               <Box fontSize="16px" fontWeight={600}>
                 <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
-                <Text color="gray.500" fontStyle="normal" fontWeight={400} fontSize="14px">
+                <Text color="gray.600" fontStyle="normal" fontWeight={400} fontSize="14px">
+                  {' '}
                   {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}
                 </Text>
               </Box>
@@ -128,8 +129,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   <Button
                     rounded="none"
                     roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
+                    fontSize="16px"
+                    fontWeight={400}
                     color="gray.600"
                     bg="gray.100"
                     h="36px"
@@ -159,7 +160,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`agreementSignedDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
               <Flex>
@@ -174,9 +175,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize="14px"
-                      fontWeight={500}
-                      color="gray.600"
+                      fontSize={16}
+                      fontWeight={400}
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -197,7 +197,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             <Divider border="1px solid " />
           </Box>
 
-          <Text fontSize="18px" fontWeight={500} color="gray.600" mt={6}>
+          <Text fontSize="16px" fontWeight={500} color="gray.600" mt={6}>
             Insurances
           </Text>
 
@@ -211,7 +211,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`autoInsuranceExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
               <Flex>
@@ -226,9 +226,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize="14px"
-                      fontWeight={500}
-                      color="gray.600"
+                      fontSize={16}
+                      fontWeight={400}
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -259,7 +258,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`coiGlExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
 
@@ -275,9 +274,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize="14px"
-                      fontWeight={500}
-                      color="gray.600"
+                      fontSize={16}
+                      fontWeight={400}
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -308,7 +306,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`coiWcExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  style={{ width: '250px' }}
                 />
               </Box>
 
@@ -324,9 +322,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize="14px"
-                      fontWeight={500}
-                      color="gray.600"
+                      fontSize={16}
+                      fontWeight={400}
                       bg="gray.100"
                       h="36px"
                       w={120}

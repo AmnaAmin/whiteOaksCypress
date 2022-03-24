@@ -31,7 +31,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = useProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const [alertRow, selectedAlertRow] = useState(null)
+  const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -98,8 +98,16 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
+                  <Button
+                    color="#4E87F8"
+                    size="md"
+                    onClick={onAlertModalOpen}
+                    _focus={{ border: 'none' }}
+                    _hover={{ bg: 'none' }}
+                    _active={{ bg: 'none' }}
+                    bg="none"
+                    pt="4"
+                  >
                     {t('resolve')}
                   </Button>
                 )}
