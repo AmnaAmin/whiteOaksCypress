@@ -46,13 +46,10 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   // const { t } = useTranslation();
 
   const saveModal = useCallback(() => {
-    console.log('columnRecords', columnRecords)
     const columnsPayload = columnRecords.map((item, index) => ({
       ...item,
       order: index,
     }))
-
-    console.log('columnPayload', columnsPayload)
 
     onClose()
     onSave(columnsPayload)
@@ -75,7 +72,6 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
       const [reorderedItem] = items.splice(sourceIndex, 1)
       items.splice(destinationIndex, 0, reorderedItem)
 
-      console.log('items', items)
       setColumnRecords(items)
     },
     [columnRecords],

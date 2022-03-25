@@ -5,6 +5,7 @@ import {
   DOCUMENTS,
   makeChangeOrderObject,
   NEW_DOCUMENT,
+  UPDATE_TRANSACTION,
   WORK_ORDERS,
   WORK_ORDERS_WITH_CHANGE_ORDERS,
 } from './data'
@@ -30,6 +31,15 @@ export const projectDetailHandlers = [
   // Transaction Tab APIs
   rest.get('/api/change-orders', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(getData('/transactions')))
+  }),
+  rest.get('/api/change-orders/:transactionId', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(UPDATE_TRANSACTION))
+  }),
+  rest.put('/api/change-orders', (req, res, ctx) => {
+    const newChangeOrder = makeChangeOrderObject(CHANGE_ORDERS[1], req.body)
+    CHANGE_ORDERS[1] = newChangeOrder
+    pushData('/transactions', CHANGE_ORDERS)
+    return res(ctx.status(201), ctx.json(newChangeOrder))
   }),
   rest.post('/api/change-orders', (req, res, ctx) => {
     const newChangeOrder = makeChangeOrderObject(CHANGE_ORDERS[0], req.body)
