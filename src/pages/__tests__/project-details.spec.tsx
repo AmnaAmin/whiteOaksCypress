@@ -37,7 +37,7 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     // userEvent.click(screen.getByText('Transaction', { selector: 'button' }))
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByTestId('new-transaction-button')
     expect(newTransactionButton).toBeInTheDocument()
     expect(screen.getByText(/WO-ADT Renovations Inc-11\/13\/2021/i)).toBeInTheDocument()
     expect(screen.getAllByRole('row').length).toEqual(4)
@@ -94,7 +94,7 @@ describe('Porject Details: Transaction tab test cases', () => {
   test('New transaction with Transaction Type "Draw" flow', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByTestId('new-transaction-button')
 
     // Open new Transaction Modal
     userEvent.click(newTransactionButton)

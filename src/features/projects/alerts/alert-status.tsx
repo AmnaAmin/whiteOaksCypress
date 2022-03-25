@@ -129,7 +129,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
       {alert && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent minW="46em" bg="#FFFFFF" rounded="0">
+          <ModalContent minW="45em" bg="#FFFFFF" rounded="0">
             <ModalHeader
               bg="gray.50"
               borderBottom="1px solid #eee"
