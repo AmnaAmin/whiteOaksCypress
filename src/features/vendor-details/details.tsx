@@ -74,7 +74,7 @@ export const Details: React.FC<{
   const toast = useToast()
   const { t } = useTranslation()
   const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  const { data: payments, isLoading } = usePaymentMethods()
+  // const { data: payments, isLoading } = usePaymentMethods()
 
   const submitForm = useCallback(
     (formData: VendorProfileDetailsFormData) => {
@@ -116,21 +116,17 @@ export const Details: React.FC<{
             icon={BiCreditCardFront}
           />
         </GridItem>
-        {isLoading ? (
-          <BlankSlate />
-        ) : (
-          <GridItem>
-            <FieldInfoCard
-              title={t('paymentMethods')}
-              value={
-                vendorProfileData?.paymentOptions?.length > 0
-                  ? vendorProfileData.paymentOptions.map(po => po.name).toString()
-                  : payments?.map(payment => payment.value).toString()
-              }
-              icon={BiCreditCardFront}
-            />
-          </GridItem>
-        )}
+        <GridItem>
+          <FieldInfoCard
+            title={t('paymentMethods')}
+            value={
+              vendorProfileData?.paymentOptions?.length > 0
+                ? vendorProfileData.paymentOptions.map(po => po.name).toString()
+                : 'none'
+            }
+            icon={BiCreditCardFront}
+          />
+        </GridItem>
       </Grid>
       <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap="10px" w="100%" mb="40px">
         <GridItem>
