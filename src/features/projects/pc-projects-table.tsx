@@ -8,7 +8,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { Column } from 'react-table'
 import { t } from 'i18next'
 
-export const PROJECT_COLUMNS = [
+export const PCPROJECT_COLUMNS = [
   {
     Header: 'ID',
     accessor: 'id',
