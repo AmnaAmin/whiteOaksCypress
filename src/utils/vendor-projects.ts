@@ -28,6 +28,15 @@ export const useUploadDocument = () => {
           isClosable: true,
         })
       },
+      onError(error) {
+        toast({
+          title: 'Upload New Document',
+          description: 'Error occured during uploading new document',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
     },
   )
 }
@@ -47,10 +56,10 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
 }
 
 export const documentTypes = [
-  { id: 56, value: 'Drawings' },
-  { id: 57, value: 'NOC' },
-  { id: 39, value: 'Original SOW' },
-  { id: 58, value: 'Other' },
-  { id: 19, value: 'Photos' },
-  { id: 18, value: 'Reciept' },
+  { value: 56, label: 'Drawings' },
+  { value: 57, label: 'NOC' },
+  { value: 39, label: 'Original SOW' },
+  { value: 58, label: 'Other' },
+  { value: 19, label: 'Photos' },
+  { value: 18, label: 'Reciept' },
 ]

@@ -36,8 +36,9 @@ const chakraStyles = {
     ...provided,
     pointerEvents: 'auto',
     background: '#F7FAFC',
-    borderRadius: '4px',
+    borderRadius: '6px',
     fontFamily: 'Inter',
+    borderLeft: '2px solid #4E87F8',
   }),
   input: provided => ({
     ...provided,
@@ -118,6 +119,7 @@ const chakraComponents = {
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,
+
               bg: 'gray.50',
               borderColor: 'gray.200',
             },

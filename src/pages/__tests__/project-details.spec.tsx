@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import App from 'App'
-import { act, render, screen, selectOption, waitForElementToBeRemoved, waitForLoadingToFinish } from 'utils/test-utils'
+import { dateFormat } from 'utils/date-time-utils'
+import { act, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
 
 const renderProjectDetailsAndSwitchToDocumentTab = async () => {
   await render(<App />, { route: '/project-details/2951' })
@@ -86,7 +87,7 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('CO-ADT Renovations Inc-03/23/2022')).toBeInTheDocument()
+    expect(await screen.findByText(`CO-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
     expect(screen.getByText('3000')).toBeInTheDocument()
   })
 
@@ -97,6 +98,8 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     // Open new Transaction Modal
     userEvent.click(newTransactionButton)
+
+    await waitForLoadingToFinish()
 
     // User first select Transaction type, one of ['Change Order', 'Draw']
     await selectOption(screen.getByTestId('transaction-type'), 'Draw')
@@ -120,7 +123,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     })
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('DR-ADT Renovations Inc-03/23/2022')).toBeInTheDocument()
+    expect(await screen.findByText(`DR-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
     expect(screen.getByText('-400')).toBeInTheDocument()
   })
 })
@@ -145,18 +148,23 @@ describe('Porject Details: Document tab test cases', () => {
     userEvent.click(uploadDocumentButton)
 
     // Fill document form
-    userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
-    const selectedOption = screen.getByRole('option', { name: 'Drawings' }) as HTMLOptionElement
-    expect(selectedOption.selected).toBe(true)
+    // userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
+    // const selectedOption = screen.getByRole('option', { name: 'Drawings' }) as HTMLOptionElement
+    // expect(selectedOption.selected).toBe(true)
+    // User first select Transaction type, one of ['Change Order', 'Draw']
+    await selectOption(screen.getByTestId('document-type'), 'Drawings')
 
+    // act(() => {
     chooseFileByLabel(/Choose File/i)
+    // })
 
-    userEvent.click(screen.getByText(/Save/i))
+    await userEvent.click(screen.getByText(/Save/i))
 
-    await waitForElementToBeRemoved(() => [screen.getByText('Upload', { selector: 'header' })], { timeout: 5000 })
+    // await waitForElementToBeRemoved(() => [screen.getByText('Upload', { selector: 'header' })], { timeout: 5000 })
+    // await waitForLoadingToFinish()
 
-    expect(screen.getByText(/New document has been uploaded successfully./i)).toBeInTheDocument()
-    expect(screen.getByText(/dummy-file\.png/i)).toBeInTheDocument()
+    expect(await screen.findByText(/New document has been uploaded successfully./i)).toBeInTheDocument()
+    expect(await screen.findByText(/dummy-file\.png/i)).toBeInTheDocument()
   })
 
   test('Upload document Empty fields validation', async () => {
@@ -165,7 +173,9 @@ describe('Porject Details: Document tab test cases', () => {
     const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
     userEvent.click(uploadDocumentButton)
 
-    userEvent.click(screen.getByText(/Save/i))
+    act(() => {
+      userEvent.click(screen.getByText(/Save/i))
+    })
     expect(screen.getByText(/Document type is required/i)).toBeInTheDocument()
   })
 })

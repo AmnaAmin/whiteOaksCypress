@@ -84,13 +84,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (
-                  <Button
-                    onClick={onDocumentModalOpen}
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="md"
-                    _hover={{ bg: 'royalblue' }}
-                  >
+                  <Button onClick={onDocumentModalOpen} fontSize={14} fontWeight={600} color="#4E87F8" size="md">
                     <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
                       <AiOutlineUpload aria-label="upload-document-button" />
                     </Box>

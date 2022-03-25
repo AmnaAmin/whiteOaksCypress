@@ -18,9 +18,8 @@ const queryConfig = {
   },
 }
 
-const queryClient = new QueryClient(queryConfig)
-
 export const Providers: React.FC = ({ children }) => {
+  const queryClient = new QueryClient(queryConfig)
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
