@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Box, Button, HStack, VStack, Center, Divider, Flex } from '@chakra-ui/react'
+import { Box, Button, HStack, VStack, Center, Divider, Flex, Text } from '@chakra-ui/react'
 import { MdAdd } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -194,18 +194,10 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
           <Divider border="1px solid" />
         </Box>
         <Box id="footer" w="100%" minH="60px">
-          <Button
-            mt="16px"
-            mr="60px"
-            float={'right'}
-            colorScheme="CustomPrimaryColor"
-            size="md"
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={600}
-            type="submit"
-          >
-            {t('next')}
+          <Button mt="16px" mr="60px" float={'right'} colorScheme="CustomPrimaryColor" size="md" type="submit">
+            <Text fontSize="14px" fontStyle="normal" fontWeight={500}>
+              {t('next')}
+            </Text>
           </Button>
         </Box>
       </form>

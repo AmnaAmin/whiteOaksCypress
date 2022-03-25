@@ -322,18 +322,10 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
           </Box>
         </Box>
         <Box id="footer" w="100%" minH="60px" borderTop="1px solid #E2E8F0">
-          <Button
-            mt="16px"
-            mr="60px"
-            float={'right'}
-            colorScheme="CustomPrimaryColor"
-            size="md"
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={600}
-            type="submit"
-          >
-            {t('next')}
+          <Button mt="16px" mr="60px" float={'right'} colorScheme="CustomPrimaryColor" size="md" type="submit">
+            <Text fontSize="14px" fontStyle="normal" fontWeight={500}>
+              {t('next')}
+            </Text>
           </Button>
         </Box>
       </form>

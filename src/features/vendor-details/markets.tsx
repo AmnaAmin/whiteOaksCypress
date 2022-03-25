@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
+import { Box, Button, Flex, useToast, Text } from '@chakra-ui/react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { VendorMarketFormValues, VendorProfile, VendorProfilePayload } from 'types/vendor.types'
 import {
@@ -89,17 +89,10 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ ven
           </Flex>
         </Box>
         <Flex borderTop="2px solid #E2E8F0" textAlign="end" w="100%" h="130px" justifyContent="end">
-          <Button
-            mt="16px"
-            mr="60px"
-            type="submit"
-            colorScheme="CustomPrimaryColor"
-            size="md"
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={600}
-          >
-            {t('save')}
+          <Button mt="16px" mr="60px" type="submit" colorScheme="CustomPrimaryColor" size="md">
+            <Text fontSize="14px" fontStyle="normal" fontWeight={500}>
+              {t('save')}
+            </Text>
           </Button>
         </Flex>
       </form>

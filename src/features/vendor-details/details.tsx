@@ -327,18 +327,10 @@ export const Details: React.FC<{
             </Box>
 
             <Box w="100%" minH="60px">
-              <Button
-                mt="10px"
-                mr="60px"
-                float={'right'}
-                colorScheme="CustomPrimaryColor"
-                size="md"
-                fontSize="16px"
-                fontStyle="normal"
-                fontWeight={600}
-                type="submit"
-              >
-                {t('save')}
+              <Button mt="10px" mr="60px" float={'right'} colorScheme="CustomPrimaryColor" size="md" type="submit">
+                <Text fontSize="14px" fontStyle="normal" fontWeight={500}>
+                  {t('save')}
+                </Text>
               </Button>
             </Box>
           </Stack>
