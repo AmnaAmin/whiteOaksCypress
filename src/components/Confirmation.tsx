@@ -37,7 +37,7 @@ export function ConfirmationBox({
       isCentered={true}
       closeOnEsc={false}
       closeOnOverlayClick={false}
-      size="xl"
+      size="lg"
     >
       <ModalOverlay />
       <ModalContent rounded="6">
@@ -47,6 +47,7 @@ export function ConfirmationBox({
           color="gray.600"
           fontSize="16px"
           fontStyle="normal"
+          mb="5"
         >
           {title}
         </ModalHeader>
@@ -64,16 +65,11 @@ export function ConfirmationBox({
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
-          <ModalFooter py="5">
-            <Button
-              variant="unstyled"
-              mr={5}
-              onClick={onClose}
-              color="gray.600"
-              fontSize="14px"
-              fontWeight={500}
-            >
-              Cancel
+          <ModalFooter>
+            <Button variant="unstyled" mr={5} onClick={onClose}>
+              <Text color="gray.600" fontSize="14px" fontWeight={400}>
+                Cancel
+              </Text>
             </Button>
             <Button
               size="md"
@@ -81,10 +77,10 @@ export function ConfirmationBox({
               isLoading={isLoading}
               colorScheme="CustomPrimaryColor"
               rounded="6px"
-              fontSize="16px"
-              fontWeight={500}
             >
-              Delete
+              <Text fontSize="14px" fontWeight={500}>
+                Delete
+              </Text>
             </Button>
           </ModalFooter>
         </Flex>
