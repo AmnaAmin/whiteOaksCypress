@@ -14,7 +14,6 @@ export const SignatureTab = props => {
 
   const onSubmit = useCallback(
     values => {
-      console.log(values)
       setSignature(values.signature)
       onClose()
     },

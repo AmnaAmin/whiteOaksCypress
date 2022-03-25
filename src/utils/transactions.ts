@@ -158,9 +158,6 @@ export const useProjectWorkOrders = (projectId?: string) => {
     againstOptions = workOrderOptions || againstOptions
   }
 
-  console.log('againstOptions')
-  console.log(againstOptions)
-  console.log('isLoading', rest.isLoading)
   return {
     workOrdersKeyValues,
     againstOptions,
@@ -405,8 +402,8 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         toast({
-          title: 'New Transaction.',
-          description: 'Transaction has been created successfully.',
+          title: 'Update Transaction.',
+          description: 'Transaction has been updated successfully.',
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -424,7 +421,6 @@ export const useTransaction = (transactionId?: number) => {
     async () => {
       const response = await client(`change-orders/${transactionId}`, {})
 
-      console.log('response', response)
       return response?.data
     },
     {

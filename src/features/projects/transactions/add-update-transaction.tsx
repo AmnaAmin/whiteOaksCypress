@@ -128,7 +128,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   )
 
   useEffect(() => {
-    if (transaction && againstOptions && againstOptions.length > 0) {
+    if (transaction && againstOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
       const formValues = parseTransactionToFormValues(transaction, againstOptions)
 
@@ -460,7 +460,13 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
             Close
           </Button>
 
-          <Button colorScheme="CustomPrimaryColor" type="submit" form="newTransactionForm" ml="3">
+          <Button
+            data-testid="update-transaction"
+            colorScheme="CustomPrimaryColor"
+            type="submit"
+            form="newTransactionForm"
+            ml="3"
+          >
             Save
           </Button>
         </ModalFooter>
