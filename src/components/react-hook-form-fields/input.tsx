@@ -27,8 +27,9 @@ type InputProps = {
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
   <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage}>
     <FormLabel
-      fontWeight={props.weight || 700}
-      fontSize={props.size || '16px'}
+      color="gray.600"
+      fontWeight={props.weight || 500}
+      fontSize={props.size || '14px'}
       {...props.labelStyle}
       htmlFor={props.name}
     >
