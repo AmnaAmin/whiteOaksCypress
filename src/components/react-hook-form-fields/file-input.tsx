@@ -20,6 +20,7 @@ type FileInputProps = {
   isRequired?: boolean
   downloadableFile?: { name: string; url: string }
   id?: any
+  testId?: string
 }
 
 const validateFiles = (value: FileList) => {

@@ -124,7 +124,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   label={''}
                   name={`w9Document`}
                   register={register}
-                  testId="fileInput"
+                  testId="fileInputW9Document"
                   isRequired={documents.w9DocumentUrl ? false : true}
                 >
                   <Button

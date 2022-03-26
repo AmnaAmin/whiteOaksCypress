@@ -42,10 +42,20 @@ export const VendorProfilePage: React.FC = props => {
             <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
               {t('details')}
             </Tab>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              data-testid="documents"
+              _selected={{ color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('documents')}
             </Tab>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              data-testid="license"
+              _selected={{ color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('license')}
             </Tab>
             <Tab
