@@ -3,19 +3,21 @@ import { fireEvent, waitFor, render as directRender } from '@testing-library/rea
 import { act } from 'react-dom/test-utils'
 import App from 'App'
 import userEvent from '@testing-library/user-event'
+import { DocumentsForm } from '../../features/vendor-details/documents-card'
+import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
 
 jest.setTimeout(30000)
 
-const chooseFilebyTestId = id => {
-  const inputEl = screen.getByTestId('fileInputW9Document')
+const chooseFilebyTestId = (id, filename) => {
+  const inputEl = screen.getByTestId(id)
   // Create dummy file then upload
-  const file = new File(['(⌐□_□)'], 'dummy-file.png', {
+  const file = new File(['(⌐□_□)'], filename, {
     type: 'image/png',
   })
 
   userEvent.upload(inputEl, file)
 
-  expect(screen.getByText(/dummy-file\.png/)).toBeInTheDocument()
+  expect(screen.getByText(new RegExp(filename))).toBeInTheDocument()
 }
 
 describe('Vendor Profile Documents', () => {
@@ -41,7 +43,7 @@ describe('Vendor Profile Documents', () => {
       fireEvent.click(documents)
     })
 
-    expect(screen.getByTestId('w9DocumentDate').innerHTML).toEqual(' 01/10/2022')
+    expect(screen.getByTestId('w9DocumentDate').innerHTML).toEqual('01/10/2022')
     expect((screen.getByTestId('agreementSignedDate') as HTMLInputElement).value).toEqual('01/02/2021')
     expect((screen.getByTestId('coiGlExpDate') as HTMLInputElement).value).toEqual('07/06/2021')
     expect((screen.getByTestId('coiWcExpDate') as HTMLInputElement).value).toEqual('06/19/2021')
@@ -51,13 +53,58 @@ describe('Vendor Profile Documents', () => {
     expect(screen.getByTestId('coiWcExpLink') as HTMLAnchorElement).toHaveAttribute('download')
   })
 
-  it('w9 document uploads successfully', async () => {
+  it('documents upload successfully', async () => {
     await render(<App />, { route: '/vendors' })
 
     const documents = screen.getByTestId('documents')
     act(() => {
       fireEvent.click(documents)
     })
-    chooseFilebyTestId('fileInputW9Document')
+    chooseFilebyTestId('fileInputW9Document', 'w9document.png')
+    chooseFilebyTestId('fileInputAgreement', 'agreement.png')
+    chooseFilebyTestId('fileInputInsurance', 'insurance.png')
+    chooseFilebyTestId('fileInputCoiGlExp', 'coiGlExp.png')
+    chooseFilebyTestId('fileInputCoiWcExp', 'colWcExp.png')
+  })
+
+  it('W9 document is required for submitting form', async () => {
+    const mockSave = jest.fn()
+    directRender(<DocumentsForm vendor={VENDOR_DATA} onSubmit={mockSave} />)
+    /* data from api doesnot have w9 document, hence submit will not be called */
+    act(() => {
+      fireEvent.submit(screen.getByTestId('saveDocumentCards'))
+    })
+    await waitFor(() => expect(mockSave).toBeCalledTimes(0))
+
+    /* upload w9 document and call submit*/
+    chooseFilebyTestId('fileInputW9Document', 'w9document.png')
+    act(() => {
+      fireEvent.submit(screen.getByTestId('saveDocumentCards'))
+    })
+    await waitFor(() => expect(mockSave).toBeCalledTimes(1))
+  })
+
+  it('With a change in date, document upload is required', async () => {
+    const mockSave = jest.fn()
+    directRender(<DocumentsForm vendor={VENDOR_DATA} onSubmit={mockSave} />)
+    /* change date field, without uploading corresponding document - submit will not be called */
+    act(() => {
+      fireEvent.change(screen.getByTestId('agreementSignedDate'), {
+        target: { value: 'Fri Mar 11 2022 00:00:00 GMT+0500 (Pakistan Standard Time)' },
+      })
+    })
+    await waitFor(() => {
+      act(() => {
+        fireEvent.submit(screen.getByTestId('saveDocumentCards'))
+      })
+    })
+    await waitFor(() => expect(mockSave).toBeCalledTimes(0))
+    /* upload w9 document and agreement */
+    chooseFilebyTestId('fileInputW9Document', 'w9document.png')
+    chooseFilebyTestId('fileInputAgreement', 'agreement.png')
+    act(() => {
+      fireEvent.submit(screen.getByTestId('saveDocumentCards'))
+    })
+    await waitFor(() => expect(mockSave).toBeCalledTimes(1))
   })
 })
