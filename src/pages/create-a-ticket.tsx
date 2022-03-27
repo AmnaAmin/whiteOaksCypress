@@ -29,6 +29,7 @@ import {
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from '../types/support.types'
 import { Account } from 'types/account.types'
+import { BiDownload } from 'react-icons/bi'
 
 export const CreateATicket = () => {
   const toast = useToast()
@@ -80,6 +81,19 @@ export const CreateATicket = () => {
         })
       },
     })
+  }
+
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+        <Flex>
+          <BiDownload fontSize="sm" />
+          <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
+            {text}
+          </Text>
+        </Flex>
+      </a>
+    )
   }
 
   return (
@@ -233,23 +247,27 @@ export const CreateATicket = () => {
               rules={{ required: 'This is required field' }}
               render={({ field, fieldState }) => {
                 return (
-                  <>
-                    <ChooseFileField
-                      name={field.name}
-                      value={field.value?.name}
-                      isError={!!fieldState.error?.message}
-                      onChange={(file: any) => {
-                        onFileChange(file)
-                        field.onChange(file)
-                      }}
-                      onClear={() => setValue(field.name, null)}
-                    >
-                      <Text color="#4E87F8" fontWeight={500} fontSize="14px" fontStyle="normal">
-                        Choose File
-                      </Text>
-                    </ChooseFileField>
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
+                  <HStack spacing={5} alignItems="baseline">
+                    <Box>
+                      <ChooseFileField
+                        name={field.name}
+                        value={field.value?.name}
+                        isError={!!fieldState.error?.message}
+                        onChange={(file: any) => {
+                          onFileChange(file)
+                          field.onChange(file)
+                        }}
+                        onClear={() => setValue(field.name, null)}
+                      >
+                        <Text color="#4E87F8" fontWeight={500} fontSize="14px" fontStyle="normal">
+                          Choose File
+                        </Text>
+                      </ChooseFileField>
+
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </Box>
+                    <Box>{downloadDocument(document, 'doc3.Png')}</Box>
+                  </HStack>
                 )
               }}
             />

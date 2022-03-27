@@ -113,7 +113,7 @@ const chakraComponents = {
             overflow: 'hidden',
             h: 'auto',
             minH: heights[size],
-            // borderLeft: '2px solid #4E87F8',
+            borderLeft: '2px solid #4E87F8',
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,

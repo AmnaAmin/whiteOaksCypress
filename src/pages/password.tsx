@@ -30,8 +30,8 @@ import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'
 
 const textStyle = {
-  color: '#2D3748',
-  fontSize: '16px',
+  color: '#4A5568',
+  fontSize: '14px',
   fontWeight: 500,
   lineHeight: '24px',
   whiteSpace: 'noWrap',
@@ -103,12 +103,13 @@ const VendorProfilePassword = () => {
 
   return (
     <Stack mt="40px" ml="20px">
-      <Text fontSize="20px" lineHeight="28px" fontWeight={700} fontStyle="normal" mb="20px">
-        Password for [vendor@devtek.ai]
+      <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
+        {/* Password for [vendor@devtek.ai] */}
+        Password
       </Text>
 
       <form onSubmit={handleSubmit(onsubmit)}>
-        <VStack spacing={7} h="600px" align="start">
+        <VStack spacing={7} h="45vh" align="start">
           <FormControl isInvalid={!!errors.currentPassword} w="215px">
             <FormLabel sx={textStyle}>Current Password</FormLabel>
 
@@ -122,7 +123,14 @@ const VendorProfilePassword = () => {
                 borderLeft="2px solid #4E87F8"
               />
               <InputRightElement>
-                <Button h="1.75rem" size="sm" onClick={handleClick} bg="#FFFFFF" _hover={{ bg: '#FFFFFF' }}>
+                <Button
+                  h="1.75rem"
+                  size="sm"
+                  onClick={handleClick}
+                  bg="#FFFFFF"
+                  _hover={{ bg: '#FFFFFF' }}
+                  _focus={{ border: 'none' }}
+                >
                   {show ? <BsEye /> : <BsEyeSlash />}
                 </Button>
               </InputRightElement>
@@ -131,8 +139,8 @@ const VendorProfilePassword = () => {
             <FormErrorMessage>{errors.currentPassword && errors.currentPassword.message}</FormErrorMessage>
           </FormControl>
 
-          <HStack>
-            <FormControl isInvalid={!!errors.newPassword} w="215px">
+          <HStack pb="8">
+            <FormControl isInvalid={!!errors.newPassword} w="215px" h="60px">
               <FormLabel sx={textStyle}>New Password</FormLabel>
 
               <InputGroup size="lg">
@@ -154,15 +162,24 @@ const VendorProfilePassword = () => {
                   }}
                 />
                 <InputRightElement>
-                  <Button h="1.75rem" size="sm" onClick={handleClickSecond} bg="#FFFFFF" _hover={{ bg: '#FFFFFF' }}>
+                  <Button
+                    h="1.75rem"
+                    size="sm"
+                    onClick={handleClickSecond}
+                    bg="#FFFFFF"
+                    _hover={{ bg: '#FFFFFF' }}
+                    _focus={{ border: 'none' }}
+                  >
                     {showSecondField ? <BsEye /> : <BsEyeSlash />}
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              <FormErrorMessage>{errors.newPassword && errors.newPassword.message}</FormErrorMessage>
+              <Box>
+                <FormErrorMessage>{errors.newPassword && errors.newPassword.message}</FormErrorMessage>
+              </Box>
             </FormControl>
 
-            <FormControl isInvalid={!!errors.confirmPassword} w="215px">
+            <FormControl isInvalid={!!errors.confirmPassword} w="215px" h="60px">
               <FormLabel sx={textStyle}>New password confirmation</FormLabel>
 
               <InputGroup size="lg">
@@ -175,12 +192,21 @@ const VendorProfilePassword = () => {
                   borderLeft="2px solid #4E87F8"
                 />
                 <InputRightElement>
-                  <Button h="1.75rem" size="sm" onClick={handleClickThird} bg="#FFFFFF" _hover={{ bg: '#FFFFFF' }}>
+                  <Button
+                    h="1.75rem"
+                    size="sm"
+                    onClick={handleClickThird}
+                    bg="#FFFFFF"
+                    _hover={{ bg: '#FFFFFF' }}
+                    _focus={{ border: 'none' }}
+                  >
                     {showThirdField ? <BsEye /> : <BsEyeSlash />}
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
+              <Box>
+                <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
+              </Box>
             </FormControl>
           </HStack>
 
@@ -219,12 +245,14 @@ const VendorProfilePassword = () => {
         </VStack>
 
         <Box>
-          <Divider />
+          <Divider border="1px solid" />
         </Box>
         <HStack pt="10px">
           <Spacer />
-          <Button bg="#4E87F8" color="white" size="lg" _hover={{ bg: '#4E87F8' }} type="submit" mt="20px">
-            Save
+          <Button colorScheme="CustomPrimaryColor" size="md" type="submit" mr="5" mt="5">
+            <Text fontSize="14px" fontWeight={500} fontStyle="normal">
+              Save
+            </Text>
           </Button>
         </HStack>
       </form>
