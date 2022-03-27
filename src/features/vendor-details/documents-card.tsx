@@ -102,10 +102,10 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 
   return (
-    <Box>
+    <Box w="100%">
       <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-        <Box w="100%">
-          <HStack direction="row" spacing={24}>
+        <Box w="940px">
+          <HStack direction="row" spacing="60px">
             <Flex minWidth="250px" alignSelf="baseline" mt="8px">
               <Box width="25px" fontSize="20px">
                 <BiFile color="#718096" />
@@ -124,7 +124,6 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   label={''}
                   name={`w9Document`}
                   register={register}
-                  testId="fileInput"
                   isRequired={documents.w9DocumentUrl ? false : true}
                 >
                   <Button
@@ -369,16 +368,16 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
               </Flex>
             </HStack>
           </Box>
-        </Box>
-        <Box>
-          <Divider border="1px solid " />
-        </Box>
-        <Box id="footer" mr="60px" pt={5}>
-          <Button size="md" float={'right'} colorScheme="CustomPrimaryColor" type="submit">
-            <Text fontSize="16px" fontStyle="normal" fontWeight={600}>
-              {t('next')}
-            </Text>
-          </Button>
+          <Box>
+            <Divider border="1px solid " />
+          </Box>
+          <Box id="footer" pt={5}>
+            <Button size="md" float={'right'} colorScheme="CustomPrimaryColor" type="submit">
+              <Text fontSize="16px" fontStyle="normal" fontWeight={600}>
+                {t('next')}
+              </Text>
+            </Button>
+          </Box>
         </Box>
       </form>
     </Box>

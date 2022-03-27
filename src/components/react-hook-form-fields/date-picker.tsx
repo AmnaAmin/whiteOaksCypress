@@ -5,9 +5,9 @@ import {
   FormControl,
   FormLabel,
   InputGroup,
-  InputRightElement,
   Box,
   Portal,
+  InputLeftElement,
 } from '@chakra-ui/react'
 import { AiOutlineCalendar } from 'react-icons/ai'
 import DatePicker from 'react-datepicker'
@@ -34,8 +34,8 @@ const CalendarContainer = ({ children }) => {
 }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
-  <FormControl {...props.style} size={props.size || 'lg'}>
-    <FormLabel htmlFor={props.name} fontSize={props.size || 'lg'}>
+  <FormControl {...props.style} size={props.size || 'lg'} w="215px">
+    <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
       {props.label}
     </FormLabel>
     <Controller
@@ -71,6 +71,8 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
     <Input
       bg="white"
       size="md"
+      color="#718096"
+      textAlign="center"
       onChange={props.onChange}
       onClick={props.onClick}
       placeholder={props.placeholder}
@@ -79,10 +81,10 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
       ref={ref}
       data-testid={props.testId}
     />
-    <InputRightElement className="InputLeft" pointerEvents="none">
-      <Box color="gray.400" fontSize="16px" mt="2px">
-        <AiOutlineCalendar size={20} cursor="pointer" color="black" />
+    <InputLeftElement className="InputLeft" pointerEvents="none">
+      <Box color="gray.400" fontSize="14px">
+        <AiOutlineCalendar size={20} cursor="pointer" color="#A0AEC0" />
       </Box>
-    </InputRightElement>
+    </InputLeftElement>
   </InputGroup>
 ))

@@ -25,10 +25,11 @@ type InputProps = {
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
-  <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage}>
+  <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage} w="215px">
     <FormLabel
-      fontWeight={props.weight || 700}
-      fontSize={props.size || '16px'}
+      fontWeight={props.weight || 500}
+      fontSize={props.size || '14px'}
+      color="#4A5568"
       {...props.labelStyle}
       htmlFor={props.name}
     >
@@ -43,6 +44,8 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
       <Input
         type="text"
         bg="white"
+        fontWeight={400}
+        color="#718096"
         size={props.size || 'md'}
         placeholder={props.placeholder}
         disabled={props.disabled}

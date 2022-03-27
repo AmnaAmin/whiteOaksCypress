@@ -16,10 +16,10 @@ import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const profileTabStyle = {
-  fontSize: '16px',
-  fontWeight: 600,
+  fontSize: '14px',
+  fontWeight: 500,
   fontStyle: 'normal',
-  color: 'gray.500',
+  color: '#4A5568',
 }
 
 export const VendorProfilePage: React.FC = props => {
@@ -39,18 +39,30 @@ export const VendorProfilePage: React.FC = props => {
       ) : (
         <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('details')}
             </Tab>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('documents')}
             </Tab>
-            <Tab _selected={{ color: 'white', bg: 'button.300' }} _focus={{ border: 'none' }} sx={profileTabStyle}>
+            <Tab
+              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _focus={{ border: 'none' }}
+              sx={profileTabStyle}
+            >
               {t('license')}
             </Tab>
             <Tab
               data-testid="tradetab"
-              _selected={{ color: 'white', bg: 'button.300' }}
+              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -58,7 +70,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="markettab"
-              _selected={{ color: 'white', bg: 'button.300' }}
+              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >

@@ -73,7 +73,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>
-      <Box h="65vh">
+      <Box h="65vh" mt={14}>
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
