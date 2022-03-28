@@ -21,12 +21,7 @@ import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-
 import { HiOutlineLocationMarker, HiOutlineMap } from 'react-icons/hi'
 import { Controller, useForm } from 'react-hook-form'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import {
-  parseAPIDataToFormData,
-  parseFormDataToAPIData,
-  useVendorProfileUpdateMutation,
-  usePaymentMethods,
-} from 'utils/vendor-details'
+import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateMutation } from 'utils/vendor-details'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
