@@ -14,16 +14,16 @@ export const PCPROJECT_COLUMNS = [
     accessor: 'id',
   },
   {
-    Header: 'FPM',
-    accessor: 'FPM',
+    Header: 'Project Coordinator',
+    accessor: 'projectCoordinator',
   },
   {
     Header: 'General Labor',
-    accessor: 'generalLabor',
+    accessor: 'generalLabourName',
   },
   {
     Header: 'Status',
-    accessor: 'status',
+    accessor: 'projectStatus',
     Cell: ({ value, row }) => <Status value={value} id={row.original.vendorWOStatusValue} />,
   },
   {
