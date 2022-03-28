@@ -24,7 +24,7 @@ export const PCPROJECT_COLUMNS = [
   {
     Header: 'Status',
     accessor: 'projectStatus',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.vendorWOStatusValue} />,
+    Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
   },
   {
     Header: 'Address',
@@ -108,8 +108,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
       ),
     )
   }, [selectedCard, projects])
