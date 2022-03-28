@@ -21,7 +21,7 @@ const chooseFilebyTestId = (id, filename) => {
 }
 
 describe('Vendor Profile Documents', () => {
-  it('Documents Tab and data is rendered', async () => {
+  it('Documents tab displays and data is rendered', async () => {
     await render(<App />, { route: '/vendors' })
 
     const documents = screen.getByTestId('documents')
@@ -33,38 +33,15 @@ describe('Vendor Profile Documents', () => {
       expect(screen.getByTestId('documentForm')).toBeInTheDocument()
       const openTab = screen.getByRole('tab', { selected: true })
       expect(openTab.innerHTML).toEqual('Documents')
+      expect(screen.getByTestId('w9DocumentDate').innerHTML).toEqual('01/10/2022')
+      expect((screen.getByTestId('agreementSignedDate') as HTMLInputElement).value).toEqual('01/02/2021')
+      expect((screen.getByTestId('coiGlExpDate') as HTMLInputElement).value).toEqual('07/06/2021')
+      expect((screen.getByTestId('coiWcExpDate') as HTMLInputElement).value).toEqual('06/19/2021')
+      expect(screen.getByTestId('agreementLink') as HTMLAnchorElement).toHaveAttribute('download')
+      expect(screen.getByTestId('autoInsuranceLink') as HTMLAnchorElement).toHaveAttribute('download')
+      expect(screen.getByTestId('coiGlExpLink') as HTMLAnchorElement).toHaveAttribute('download')
+      expect(screen.getByTestId('coiWcExpLink') as HTMLAnchorElement).toHaveAttribute('download')
     })
-  })
-  it('Documents Data is rendered', async () => {
-    await render(<App />, { route: '/vendors' })
-
-    const documents = screen.getByTestId('documents')
-    act(() => {
-      fireEvent.click(documents)
-    })
-
-    expect(screen.getByTestId('w9DocumentDate').innerHTML).toEqual('01/10/2022')
-    expect((screen.getByTestId('agreementSignedDate') as HTMLInputElement).value).toEqual('01/02/2021')
-    expect((screen.getByTestId('coiGlExpDate') as HTMLInputElement).value).toEqual('07/06/2021')
-    expect((screen.getByTestId('coiWcExpDate') as HTMLInputElement).value).toEqual('06/19/2021')
-    expect(screen.getByTestId('agreementLink') as HTMLAnchorElement).toHaveAttribute('download')
-    expect(screen.getByTestId('autoInsuranceLink') as HTMLAnchorElement).toHaveAttribute('download')
-    expect(screen.getByTestId('coiGlExpLink') as HTMLAnchorElement).toHaveAttribute('download')
-    expect(screen.getByTestId('coiWcExpLink') as HTMLAnchorElement).toHaveAttribute('download')
-  })
-
-  it('documents upload successfully', async () => {
-    await render(<App />, { route: '/vendors' })
-
-    const documents = screen.getByTestId('documents')
-    act(() => {
-      fireEvent.click(documents)
-    })
-    chooseFilebyTestId('fileInputW9Document', 'w9document.png')
-    chooseFilebyTestId('fileInputAgreement', 'agreement.png')
-    chooseFilebyTestId('fileInputInsurance', 'insurance.png')
-    chooseFilebyTestId('fileInputCoiGlExp', 'coiGlExp.png')
-    chooseFilebyTestId('fileInputCoiWcExp', 'colWcExp.png')
   })
 
   it('W9 document is required for submitting form', async () => {
