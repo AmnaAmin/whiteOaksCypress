@@ -353,13 +353,14 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   float={'right'}
                   colorScheme="CustomPrimaryColor"
                   size="md"
-                  fontSize="16px"
+                  fontSize="14px"
                   fontStyle="normal"
-                  fontWeight={600}
+                  fontWeight={500}
                   type="submit"
                   data-testid="saveDetails"
                 >
-                  {t('save')}
+                  {/* {t('save')} */}
+                  Next
                 </Button>
               </Box>
             </Stack>

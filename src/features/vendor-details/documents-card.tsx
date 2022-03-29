@@ -370,14 +370,20 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             </HStack>
           </Box>
         </Box>
-        <Box>
-          <Divider border="1px solid " />
-        </Box>
-        <Box id="footer" mr="60px" pt={5}>
-          <Button size="md" float={'right'} colorScheme="CustomPrimaryColor" type="submit">
-            <Text fontSize="16px" fontStyle="normal" fontWeight={600}>
-              {t('next')}
-            </Text>
+        <Box id="footer" w="100%" minH="60px" borderTop="1px solid #E2E8F0">
+          <Button
+            mt="16px"
+            mr="60px"
+            float={'right'}
+            colorScheme="CustomPrimaryColor"
+            size="md"
+            type="submit"
+            fontSize="14px"
+            fontStyle="normal"
+            fontWeight={500}
+          >
+            {/* {t('next')} */}
+            Next
           </Button>
         </Box>
       </form>
