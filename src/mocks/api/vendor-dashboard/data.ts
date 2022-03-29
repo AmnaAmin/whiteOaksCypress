@@ -407,7 +407,7 @@ export const VENDOR_DATA = {
       documentTypelabel: 'Certificate Of Insurance-Worker Comp',
     },
   ],
-};
+}
 
 export const WO_BY_VENDORS_PER_MONTH = {
   January: {
@@ -415,4 +415,4 @@ export const WO_BY_VENDORS_PER_MONTH = {
     Completed: 1,
     Cancelled: 1,
   },
-};
+}

@@ -1,11 +1,4 @@
-import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
@@ -23,7 +16,14 @@ import { TransactionInfoCard } from '../features/projects/transactions/transacti
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
-import { Document } from 'types/vendor.types'
+import { BiAddToQueue } from 'react-icons/bi'
+
+const projectTabStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  fontStyle: 'normal',
+  color: 'gray.600',
+}
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -32,68 +32,57 @@ export const ProjectDetails: React.FC = props => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
   const [alertRow, selectedAlertRow] = useState(null)
-  const [latestUploadedDoc, setLatestUploadedDoc] =
-    useState<Document | null>(null)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
-  const {
-    isOpen: isOpenDocumentModal,
-    onClose: onDocumentModalClose,
-    onOpen: onDocumentModalOpen,
-  } = useDisclosure()
-  const {
-    isOpen: isOpenAlertModal,
-    onClose: onAlertModalClose,
-    onOpen: onAlertModalOpen,
-  } = useDisclosure()
+  const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
+  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
   return (
     <>
-      <Stack
-        w="100%"
-        spacing={8}
-        ref={tabsContainerRef}
-        h="calc(100vh - 160px)"
-      >
-        <TransactionInfoCard
-          projectData={projectData as ProjectType}
-          isLoading={isLoading}
-        />
+      <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
+        <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs
-            variant="enclosed"
-            onChange={index => setTabIndex(index)}
-            mt="7"
-          >
+          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab _selected={{ color: 'white', bg: 'button.300' }}>
+              <Tab
+                aria-labelledby="transaction-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                sx={projectTabStyle}
+              >
                 {t('transaction')}
               </Tab>
 
-              <Tab minW={180} _selected={{ color: 'white', bg: 'button.300' }}>
+              <Tab
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                whiteSpace="nowrap"
+                sx={projectTabStyle}
+              >
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }}>
-                {' '}
+              <Tab
+                aria-labelledby="documents-tab"
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                sx={projectTabStyle}
+              >
                 {t('documents')}
               </Tab>
 
-              <Tab _selected={{ color: 'white', bg: 'button.300' }}>
-                {' '}
+              <Tab
+                _focus={{ border: 'none' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                sx={projectTabStyle}
+              >
                 {t('alerts')}
               </Tab>
 
-              <Box
-                w="100%"
-                display="flex"
-                justifyContent="end"
-                position="relative"
-                bottom="2"
-              >
+              <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
@@ -102,41 +91,33 @@ export const ProjectDetails: React.FC = props => {
                     size="md"
                     _hover={{ bg: 'royalblue' }}
                   >
-                    <Box
-                      pos="relative"
-                      right="6px"
-                      fontWeight="bold"
-                      pb="3.3px"
-                    >
-                      <AiOutlineUpload />
+                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                      <AiOutlineUpload aria-label="upload-document-button" />
                     </Box>
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="md"
-                    _hover={{ bg: 'royalblue' }}
-                  >
-                    <Box
-                      pos="relative"
-                      right="6px"
-                      fontWeight="bold"
-                      pb="3.3px"
-                    ></Box>
+                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
+                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
                     {t('resolve')}
                   </Button>
                 )}
                 {tabIndex === 0 && (
                   <Button
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="md"
-                    _hover={{ bg: 'royalblue' }}
+                    pos="relative"
+                    top="2"
+                    bg="none"
+                    color="#4E87F8"
+                    fontSize="14px"
+                    fontStyle="normal"
+                    fontWeight={500}
+                    _focus={{ border: 'none' }}
+                    _active={{ bg: 'none' }}
+                    _hover={{ bg: 'none' }}
                     onClick={onTransactionModalOpen}
                   >
+                    <Icon as={BiAddToQueue} mr="1" boxSize={4} />
                     {t('newTransaction')}
                   </Button>
                 )}
@@ -156,10 +137,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px">
                 <Box h="100%" w="100%">
-                  <VendorDocumentsTable
-                    ref={tabsContainerRef}
-                    latestUploadedDoc={latestUploadedDoc as Document}
-                  />
+                  <VendorDocumentsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px">
@@ -176,23 +154,9 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
       </Stack>
-      <AlertStatusModal
-        isOpen={isOpenAlertModal}
-        onClose={onAlertModalClose}
-        alert={alertRow}
-      />
-      <UploadDocumentModal
-        isOpen={isOpenDocumentModal}
-        onClose={onDocumentModalClose}
-        projectId={projectId}
-        setLatestUploadedDoc={val => {
-          setLatestUploadedDoc(val)
-        }}
-      />
-      <AddNewTransactionModal
-        isOpen={isOpenTransactionModal}
-        onClose={onTransactionModalClose}
-      />
+      <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
+      <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
+      <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )
 }

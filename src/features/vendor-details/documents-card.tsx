@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from 'react'
+import React, { useMemo, useCallback, useEffect, useState } from 'react'
 import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -15,19 +15,26 @@ import {
 import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
 
+const labelStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  fontStyle: 'normal',
+  color: 'gray.600',
+}
+
 type DocumentsProps = {
   setNextTab: () => void
   vendor: VendorProfile
 }
 
-const downloadableDocument = (link, text) => {
+const downloadableDocument = (link, text, testid?) => {
   return (
-    <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+    <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
       <Flex>
-        <BiDownload fontSize="20px" />
-        <Box ml="5px" fontSize="lg">
+        <BiDownload fontSize="sm" />
+        <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
           {text}
-        </Box>
+        </Text>
       </Flex>
     </a>
   )
@@ -35,6 +42,7 @@ const downloadableDocument = (link, text) => {
 
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const { mutate: saveDocuments } = useSaveVendorDetails()
+  const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const defaultValue = vendor => {
     return documentCardsDefaultValues(vendor)
@@ -44,7 +52,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
     if (props.vendor) {
       return defaultValue(props.vendor)
     }
-
+    setChangeDateFields([])
     return {}
   }, [props.vendor])
 
@@ -68,7 +76,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const watchAllFields = watch()
   React.useEffect(() => {
     const subscription = watch(value => {
-      console.log('Value Change', value)
+      // console.log('Value Change', value)
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
@@ -95,44 +103,57 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
   return (
     <Box>
-      <form className="Documents Form" id="documentForm" onSubmit={handleSubmit(onSubmit)}>
+      <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
         <Box w="100%">
-          <HStack bg="white" h="96px" mt="5" mb="5">
-            <Flex ml="4" minWidth="24em" alignContent="center">
+          <HStack direction="row" spacing={24}>
+            <Flex minWidth="250px" alignSelf="baseline" mt="8px">
               <Box width="25px" fontSize="20px">
                 <BiFile color="#718096" />
               </Box>
               <Box fontSize="16px" fontWeight={600}>
-                <Text>{t('W9DocumentDate')}</Text>
-                <Text color="#718096"> {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}</Text>
+                <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
+                <Text color="gray.500" fontStyle="normal" fontWeight={400} fontSize="14px" data-testid="w9DocumentDate">
+                  {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}
+                </Text>
               </Box>
             </Flex>
             <Flex>
-              <Box>
+              <Box pr="30px">
                 <FormFileInput
                   errorMessage={errors.w9Document && errors.w9Document?.message}
                   label={''}
                   name={`w9Document`}
                   register={register}
+                  testId="fileInput"
                   isRequired={documents.w9DocumentUrl ? false : true}
                 >
-                  <Button rounded="none" roundedLeft={5} fontSize={16} fontWeight={400} bg="gray.100" h="36px" w={120}>
+                  <Button
+                    rounded="none"
+                    roundedLeft={5}
+                    fontSize="14px"
+                    fontWeight={500}
+                    color="gray.600"
+                    bg="gray.100"
+                    h="36px"
+                    w={120}
+                  >
                     {t('chooseFile')}
                   </Button>
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document')}
+                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document.png', 'w9DocumentLink')}
                 {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
               </Box>
             </Flex>
           </HStack>
+          <Box w="940px">
+            <Divider border="1px solid " />
+          </Box>
 
-          <Box minH="96px" mt={12}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('agreementSignedDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Box mt={12}>
+            <Text sx={labelStyle}>{t('agreementSignedDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box h="40px">
                 <FormDatePicker
                   errorMessage={errors.agreementSignedDate && errors.agreementSignedDate?.message}
@@ -140,23 +161,30 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`agreementSignedDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  testId="agreementSignedDate"
+                  onChange={e => {
+                    if (!changedDateFields.includes('agreementSignedDate')) {
+                      setChangeDateFields([...changedDateFields, 'agreementSignedDate'])
+                    }
+                  }}
                 />
               </Box>
               <Flex>
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.agreement && errors.agreement?.message}
                     label={''}
                     name={`agreement`}
                     register={register}
-                    isRequired={false}
+                    isRequired={changedDateFields.includes('agreementSignedDate')}
                   >
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize={16}
-                      fontWeight={400}
+                      fontSize="14px"
+                      fontWeight={500}
+                      color="gray.600"
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -166,25 +194,24 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')}
+                  {downloadableDocument(documents.agreementUrl, 'Agreement signed.jpeg', 'agreementLink')}
                   {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
 
-          <HStack mt={5} mb={8}>
-            <Text fontSize="16px" fontWeight={600} w="150px" color="#2D3748">
-              Insurrances
-            </Text>
+          <Box w="940px">
             <Divider border="1px solid " />
-          </HStack>
+          </Box>
 
-          <Box minH="96px" mt={12}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('autoInsuranceExpDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Text fontSize="18px" fontWeight={500} color="gray.600" mt={6}>
+            Insurances
+          </Text>
+
+          <Box mt={6}>
+            <Text sx={labelStyle}>{t('autoInsuranceExpDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box>
                 <FormDatePicker
                   errorMessage={errors.autoInsuranceExpDate && errors.autoInsuranceExpDate?.message}
@@ -192,23 +219,30 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`autoInsuranceExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  testId="autoInsuranceExpDate"
+                  onChange={e => {
+                    if (!changedDateFields.includes('autoInsuranceExpDate')) {
+                      setChangeDateFields([...changedDateFields, 'autoInsuranceExpDate'])
+                    }
+                  }}
                 />
               </Box>
               <Flex>
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.insurance && errors.insurance?.message}
                     label={''}
                     name={`insurance`}
                     register={register}
-                    isRequired={false}
+                    isRequired={changedDateFields.includes('autoInsuranceExpDate')}
                   >
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize={16}
-                      fontWeight={400}
+                      fontSize="14px"
+                      fontWeight={500}
+                      color="gray.600"
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -218,20 +252,20 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')}
+                  {downloadableDocument(documents.insuranceUrl, 'Auto insurance.jpeg', 'autoInsuranceLink')}
                   {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
 
-          <Divider border="1px solid " />
+          <Box w="940px">
+            <Divider border="1px solid " />
+          </Box>
 
-          <Box minH="96px" mt={8}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('COIGLExpDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Box mt={8}>
+            <Text sx={labelStyle}>{t('COIGLExpDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box>
                 <FormDatePicker
                   errorMessage={errors.coiGlExpDate && errors.coiGlExpDate?.message}
@@ -239,24 +273,31 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`coiGlExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  testId="coiGlExpDate"
+                  onChange={e => {
+                    if (!changedDateFields.includes('COIGLExpDate')) {
+                      setChangeDateFields([...changedDateFields, 'COIGLExpDate'])
+                    }
+                  }}
                 />
               </Box>
 
               <Flex w="100%" pr="20px">
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.coiGlExpFile && errors.coiGlExpFile?.message}
                     label={''}
                     name={`coiGlExpFile`}
                     register={register}
-                    isRequired={false}
+                    isRequired={changedDateFields.includes('COIGLExpDate')}
                   >
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize={16}
-                      fontWeight={400}
+                      fontSize="14px"
+                      fontWeight={500}
+                      color="gray.600"
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -266,20 +307,20 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')}
+                  {downloadableDocument(documents.insuranceUrl, 'COI GL.jpeg', 'coiGlExpLink')}
                   {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
                 </Box>
               </Flex>
             </HStack>
           </Box>
 
-          <Divider border="1px solid " />
+          <Box w="940px">
+            <Divider border="1px solid " />
+          </Box>
 
-          <Box minH="96px" mt={8}>
-            <Text fontSize="16px" fontWeight={600} color="#2D3748">
-              {t('COIWCExpDate')}
-            </Text>
-            <HStack alignItems="baseline">
+          <Box mt={8}>
+            <Text sx={labelStyle}>{t('COIWCExpDate')}</Text>
+            <HStack alignItems="baseline" spacing={24}>
               <Box>
                 <FormDatePicker
                   errorMessage={errors.coiWcExpDate && errors.coiWcExpDate?.message}
@@ -287,24 +328,31 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   name={`coiWcExpDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
-                  style={{ width: '25em' }}
+                  style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                  testId="coiWcExpDate"
+                  onChange={e => {
+                    if (!changedDateFields.includes('coiWcExpDate')) {
+                      setChangeDateFields([...changedDateFields, 'coiWcExpDate'])
+                    }
+                  }}
                 />
               </Box>
 
               <Flex w="100%" pr="20px">
-                <Box>
+                <Box pr="30px">
                   <FormFileInput
                     errorMessage={errors.coiWcExpFile && errors.coiWcExpFile?.message}
                     label={''}
                     name={`coiWcExpFile`}
                     register={register}
-                    isRequired={false}
+                    isRequired={changedDateFields.includes('coiWcExpDate')}
                   >
                     <Button
                       rounded="none"
                       roundedLeft={5}
-                      fontSize={16}
-                      fontWeight={400}
+                      fontSize="14px"
+                      fontWeight={500}
+                      color="gray.600"
                       bg="gray.100"
                       h="36px"
                       w={120}
@@ -314,7 +362,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')}
+                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COI WC.png', 'coiWcExpLink')}
+
                   {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
                 </Box>
               </Flex>
@@ -322,10 +371,19 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
           </Box>
         </Box>
         <Box id="footer" w="100%" minH="60px" borderTop="1px solid #E2E8F0">
-          <Button mt="16px" mr="60px" float={'right'} colorScheme="CustomPrimaryColor" size="md" type="submit">
-            <Text fontSize="14px" fontStyle="normal" fontWeight={500}>
-              {t('next')}
-            </Text>
+          <Button
+            mt="16px"
+            mr="60px"
+            float={'right'}
+            colorScheme="CustomPrimaryColor"
+            size="md"
+            type="submit"
+            fontSize="14px"
+            fontStyle="normal"
+            fontWeight={500}
+          >
+            {/* {t('next')} */}
+            Next
           </Button>
         </Box>
       </form>
