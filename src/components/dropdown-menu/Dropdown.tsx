@@ -113,7 +113,7 @@ const chakraComponents = {
           sx={{
             ...inputStyles.field,
             color: 'gray.700',
-            bg: 'white',
+            bg: '#FFFFFF',
             border: 'none',
             fontWeight: 400,
             fontsize: '16px',
