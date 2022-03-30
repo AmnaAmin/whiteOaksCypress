@@ -124,7 +124,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   label={''}
                   name={`w9Document`}
                   register={register}
-                  testId="fileInput"
+                  // testId="fileInput"
                   isRequired={documents.w9DocumentUrl ? false : true}
                 >
                   <Button
@@ -142,7 +142,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document.png', 'w9DocumentLink')}
+                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
                 {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
               </Box>
             </Flex>
@@ -194,7 +194,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.agreementUrl, 'Agreement signed.jpeg', 'agreementLink')}
+                  {downloadableDocument(documents.agreementUrl, 'Agreement', 'agreementLink')}
                   {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
                 </Box>
               </Flex>
@@ -252,7 +252,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.insuranceUrl, 'Auto insurance.jpeg', 'autoInsuranceLink')}
+                  {downloadableDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
                   {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
                 </Box>
               </Flex>
@@ -307,7 +307,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {downloadableDocument(documents.insuranceUrl, 'COI GL.jpeg', 'coiGlExpLink')}
+                  {downloadableDocument(documents.insuranceUrl, 'General Liability', 'coiGlExpLink')}
                   {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
                 </Box>
               </Flex>
@@ -362,7 +362,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
                   </FormFileInput>
                 </Box>
                 <Box ml={6} pt={5}>
-                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COI WC.png', 'coiWcExpLink')}
+                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
 
                   {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
                 </Box>
@@ -380,7 +380,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             type="submit"
             fontSize="14px"
             fontStyle="normal"
-            fontWeight={500}
+            fontWeight={600}
           >
             {/* {t('next')} */}
             Next
