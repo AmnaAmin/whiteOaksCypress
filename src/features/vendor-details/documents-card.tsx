@@ -380,7 +380,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             type="submit"
             fontSize="14px"
             fontStyle="normal"
-            fontWeight={600}
+            fontWeight={500}
           >
             {/* {t('next')} */}
             Next
