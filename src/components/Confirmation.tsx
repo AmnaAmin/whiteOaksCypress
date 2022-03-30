@@ -31,14 +31,7 @@ export function ConfirmationBox({
   content,
 }: ConfirmationBoxProps) {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered={true}
-      closeOnEsc={false}
-      closeOnOverlayClick={false}
-      size="lg"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
       <ModalOverlay />
       <ModalContent rounded="6">
         <ModalHeader
@@ -54,13 +47,7 @@ export function ConfirmationBox({
         <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
 
         <ModalBody>
-          <Text
-            color="gray.500"
-            fontSize="14px"
-            fontWeight={400}
-            fontStyle="normal"
-            mb="2"
-          >
+          <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
             Are you sure you want to {content}?
           </Text>
         </ModalBody>
@@ -77,10 +64,10 @@ export function ConfirmationBox({
               isLoading={isLoading}
               colorScheme="CustomPrimaryColor"
               rounded="6px"
+              fontSize="14px"
+              fontWeight={500}
             >
-              <Text fontSize="14px" fontWeight={500}>
-                Delete
-              </Text>
+              Delete
             </Button>
           </ModalFooter>
         </Flex>

@@ -15,6 +15,7 @@ import {
   FormErrorMessage,
   VStack,
   ModalCloseButton,
+  Progress,
 } from '@chakra-ui/react'
 import { MdOutlineCancel } from 'react-icons/md'
 import { documentTypes, useUploadDocument } from 'utils/vendor-projects'
@@ -24,19 +25,14 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { Document } from 'types/vendor.types'
 
-export const UploadDocumentModal: React.FC<any> = ({
-  isOpen,
-  onClose,
-  projectId,
-  setLatestUploadedDoc,
-}) => {
+export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [document, setDocument] = useState<File | null>(null)
   const [documentType, setDocumentType] = useState('')
   const [isError, setError] = useState(false)
   const { vendorId } = useUserProfile() as Account
-  const { mutate: saveDocument } = useUploadDocument()
+  const { mutate: saveDocument, isLoading } = useUploadDocument()
 
   const onFileChange = useCallback(
     e => {
@@ -83,7 +79,6 @@ export const UploadDocumentModal: React.FC<any> = ({
     }
     saveDocument(doc, {
       onSuccess() {
-        setLatestUploadedDoc(doc)
         resetUpload()
         onClose()
       },
@@ -120,24 +115,33 @@ export const UploadDocumentModal: React.FC<any> = ({
       <ModalContent minW="71em" h="24em">
         <ModalHeader
           fontSize="18px"
+          fontWeight={700}
+          fontStyle="normal"
+          color="gray.700"
           borderBottom="1px solid #E2E8F0"
           borderTop="2px solid #4E87F8"
         >
           {t('upload')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
+        {isLoading && <Progress isIndeterminate colorScheme="blue" aria-labelledby="loading" size="xs" />}
         <ModalBody>
           <FormControl mt="35px" isInvalid={isError}>
             <VStack align="start">
-              <FormLabel fontSize="16px" htmlFor="documentType">
+              <FormLabel fontSize="16px" fontStyle="normal" fontWeight={500} color="gray.700" htmlFor="documentType">
                 {t('documentType')}{' '}
               </FormLabel>
               <HStack spacing="20px">
                 <Select
+                  borderLeft="2px solid #4E87F8"
                   w="320px"
                   id="documentType"
                   placeholder="Select"
-                  size="lg"
+                  fontWeight={400}
+                  fontStyle="normal"
+                  fontSize="16px"
+                  color="gray.700"
+                  size="md"
                   onChange={onDocumentTypeChange}
                 >
                   {documentTypes.map(type => (
@@ -147,6 +151,7 @@ export const UploadDocumentModal: React.FC<any> = ({
                   ))}
                 </Select>
                 <input
+                  aria-labelledby="upload-document-field"
                   type="file"
                   ref={inputRef}
                   style={{ display: 'none' }}
@@ -160,19 +165,8 @@ export const UploadDocumentModal: React.FC<any> = ({
                     borderRadius="3px"
                     fontSize="16px"
                   >
-                    <HStack
-                      spacing="5px"
-                      h="37px"
-                      padding="10px"
-                      align="center"
-                    >
-                      <Box
-                        as="span"
-                        maxWidth="500px"
-                        whiteSpace="nowrap"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                      >
+                    <HStack spacing="5px" h="37px" padding="10px" align="center">
+                      <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                         {document.name}
                       </Box>
                       <MdOutlineCancel
@@ -186,42 +180,46 @@ export const UploadDocumentModal: React.FC<any> = ({
                   </Box>
                 ) : (
                   <Button
+                    id="upload-document-field"
                     onClick={e => {
                       if (inputRef.current) {
                         inputRef.current.click()
                       }
                     }}
-                    size="lg"
+                    fontSize="16px"
+                    fontWeight={600}
+                    fontStyle="normal"
                     variant="outline"
-                    color="barColor.100"
+                    color="#4E87F8"
                   >
                     {t('chooseFile')}{' '}
                   </Button>
                 )}
               </HStack>
-              {isError && (
-                <FormErrorMessage>Document type is required</FormErrorMessage>
-              )}
+              {isError && <FormErrorMessage>Document type is required</FormErrorMessage>}
             </VStack>
           </FormControl>
         </ModalBody>
-        <ModalFooter
-          display="flex"
-          alignItems="center"
-          borderTop="1px solid #E2E8F0"
-        >
+        <ModalFooter display="flex" alignItems="center" borderTop="1px solid #E2E8F0">
           <Button
             variant="ghost"
             onClick={() => {
               resetUpload()
               onClose()
             }}
+            fontStyle="normal"
+            fontWeight={600}
+            fontSize="18px"
+            color="gray.700"
           >
             {t('close')}
           </Button>
           <Button
+            fontStyle="normal"
+            fontWeight={600}
+            fontSize="18px"
             onClick={uploadDocument}
-            colorScheme="button"
+            colorScheme="CustomPrimaryColor"
             type="submit"
             ml="3"
           >

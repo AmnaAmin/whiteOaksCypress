@@ -43,8 +43,10 @@ const InfoCard: React.FC<{
     <Flex>
       {Icon && <Box mr="15px">{<Icon fontSize="20px" fill="#718096" />}</Box>}
       <Flex direction="column">
-        <Heading size="md">{title}</Heading>
-        <Text color="gray.600" fontWeight="400">
+        <Heading color="gray.700" fontWeight={700} fontSize="16px">
+          {title}
+        </Heading>
+        <Text color="gray.600" fontWeight="400" fontSize="14px">
           {subTitle}
         </Text>
       </Flex>
@@ -64,7 +66,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
+        <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="18px" fontWeight={700} color="gray.700">
           {transaction?.name}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
@@ -80,19 +82,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             boxShadow="sm"
           >
             <Box borderBottom="1px solid" borderColor="gray.200" p={7}>
-              <InfoCard
-                title={t('transactionType')}
-                subTitle={transaction?.transactionTypeLabel as string}
-              />
+              <InfoCard title={t('transactionType')} subTitle={transaction?.transactionTypeLabel as string} />
             </Box>
 
-            <Grid
-              templateColumns="215px 1fr"
-              rowGap={7}
-              columnGap={12}
-              px={7}
-              pb={12}
-            >
+            <Grid templateColumns="215px 1fr" rowGap={7} columnGap={12} px={7} pb={12}>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
                   title={t('dateCreated')}
@@ -101,11 +94,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
-                <InfoCard
-                  title={t('createdBy')}
-                  subTitle={transaction?.createdBy as string}
-                  Icon={BiUser}
-                />
+                <InfoCard title={t('createdBy')} subTitle={transaction?.createdBy as string} Icon={BiUser} />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
                 <InfoCard
@@ -115,11 +104,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                 />
               </GridItem>
               <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
-                <InfoCard
-                  title={t('modifiedBy')}
-                  subTitle={transaction?.modifiedBy as string}
-                  Icon={BiUser}
-                />
+                <InfoCard title={t('modifiedBy')} subTitle={transaction?.modifiedBy as string} Icon={BiUser} />
               </GridItem>
             </Grid>
           </VStack>
@@ -128,8 +113,12 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             <Table colorScheme="gray">
               <Thead bg="gray.50">
                 <Tr>
-                  <Th>{t('description')}</Th>
-                  <Th>{t('amount')}</Th>
+                  <Th fontSize="12px" fontWeight={700} color="gray.700" textTransform="capitalize">
+                    {t('description')}
+                  </Th>
+                  <Th fontSize="12px" fontWeight={700} color="gray.700" textTransform="capitalize">
+                    {t('amount')}
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -137,8 +126,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                   const amount = Number(t.whiteoaksCost) || Number(t.vendorCost)
                   return (
                     <Tr key={t.id}>
-                      <Td>{t.description}</Td>
-                      <Td>
+                      <Td color="gray.700" fontWeight={400} fontSize="14px">
+                        {t.description}
+                      </Td>
+                      <Td color="gray.700" fontWeight={400} fontSize="14px">
                         {amount < 0 ? `-$${Math.abs(amount)}` : `$${amount}`}
                       </Td>
                     </Tr>
