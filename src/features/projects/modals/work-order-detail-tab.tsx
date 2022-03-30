@@ -1,5 +1,5 @@
 import { Box, HStack, Text, Flex, SimpleGrid, Button, Checkbox } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -35,11 +35,11 @@ const TableBodyChilde: React.FC<{
   Details: string
   Quantity: string
   Price: string
-  Status: string
+  // Status: string
   Images: string
   SKU: string
-  disabled: boolean
-}> = ({ ProductName, Details, Quantity, Price, Status, Images, SKU, disabled }) => {
+}> = ({ ProductName, Details, Quantity, Price, Images, SKU }) => {
+  const [text, setText] = useState(false)
   return (
     <SimpleGrid
       columns={7}
@@ -63,19 +63,19 @@ const TableBodyChilde: React.FC<{
       <Box>
         <Checkbox
           rounded="6px"
-          isDisabled={disabled}
           colorScheme="none"
           iconColor="green.400"
           h="32px"
           w="145px"
-          color="#2AB450"
-          bg="#E7F8EC"
+          color={text ? '#2AB450' : '#A0AEC0'}
+          bg={text ? '#E7F8EC' : '#F2F3F4'}
           boxShadow="0px 0px 4px -2px "
           justifyContent="center"
           fontSize={14}
           fontWeight={600}
+          onChange={() => setText(!text)}
         >
-          {Status}
+          {text ? 'Completed' : 'Not Completed'}
         </Checkbox>
       </Box>
 
@@ -155,57 +155,52 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
           </Box>
           <Box h={367} overflow="auto">
             <TableBodyChilde
-              disabled={true}
               SKU="#8383"
               ProductName="Debrish Trash"
               Details="Remove Trash from Outdoor"
               Quantity="2"
               Price="$450"
-              Status="Not Completed"
+              // Status={text}
               Images="Upload"
             />
 
             <TableBodyChilde
-              disabled={false}
               SKU="#8383"
               ProductName="Remove Satellite dish"
               Details="Remove all cables"
               Quantity="12"
               Price="$200"
-              Status="Completed"
+              // Status="Completed"
               Images="First23.img"
             />
 
             <TableBodyChilde
-              disabled={false}
               SKU="#8383"
               ProductName="Install Blinders"
               Details="Replace Curtains"
               Quantity="15"
               Price="$1400"
-              Status="Completed"
+              // Status="Completed"
               Images="First88.img"
             />
 
             <TableBodyChilde
-              disabled={true}
               SKU="#8383"
               ProductName="Wall Lock Box"
               Details="Home Depot Lock Box"
               Quantity="8"
               Price="$150"
-              Status="Not Completed"
+              // Status="Not Completed"
               Images="Tsk19.img"
             />
 
             <TableBodyChilde
-              disabled={false}
               SKU="#8383"
               ProductName="Push Button"
               Details="Replace Buttons"
               Quantity="3"
               Price="$450"
-              Status="Completed"
+              // Status="Completed"
               Images="Upload"
             />
           </Box>
