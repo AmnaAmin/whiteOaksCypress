@@ -12,7 +12,6 @@ import {
   Text,
   Flex,
 } from '@chakra-ui/react'
-import { CloseIcon } from '@chakra-ui/icons'
 
 interface ConfirmationBoxProps {
   isOpen: boolean
@@ -32,25 +31,43 @@ export function ConfirmationBox({
   content,
 }: ConfirmationBoxProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader pb="9">{title}</ModalHeader>
-
-        <ModalCloseButton rounded="50%" bg="gray.400" color="white" w="5" h="5" _hover={{ bg: 'gray.500' }}>
-          <CloseIcon w="2" h="2" />
-        </ModalCloseButton>
+      <ModalContent rounded="6">
+        <ModalHeader
+          borderBottom="2px solid #E2E8F0"
+          fontWeight={500}
+          color="gray.600"
+          fontSize="16px"
+          fontStyle="normal"
+          mb="5"
+        >
+          {title}
+        </ModalHeader>
+        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
 
         <ModalBody>
-          <Text>Are you sure you want to {content}?</Text>
+          <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
+            Are you sure you want to {content}?
+          </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
-          <ModalFooter py="8">
-            <Button w="36" variant="outline" mr={3} onClick={onClose} rounded="3">
-              No
+          <ModalFooter>
+            <Button variant="unstyled" mr={5} onClick={onClose}>
+              <Text color="gray.600" fontSize="14px" fontWeight={400}>
+                Cancel
+              </Text>
             </Button>
-            <Button onClick={onConfirm} isLoading={isLoading} w="36" colorScheme="red" rounded="3">
-              Yes
+            <Button
+              size="md"
+              onClick={onConfirm}
+              isLoading={isLoading}
+              colorScheme="CustomPrimaryColor"
+              rounded="6px"
+              fontSize="14px"
+              fontWeight={500}
+            >
+              Delete
             </Button>
           </ModalFooter>
         </Flex>
