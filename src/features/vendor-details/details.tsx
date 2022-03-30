@@ -355,7 +355,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   size="md"
                   fontSize="14px"
                   fontStyle="normal"
-                  fontWeight={500}
+                  fontWeight={600}
                   type="submit"
                   data-testid="saveDetails"
                 >

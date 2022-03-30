@@ -70,7 +70,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="markettab"
-              _selected={{ color: 'white', bg: 'button.300' }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >

@@ -203,7 +203,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
             type="submit"
             fontSize="14px"
             fontStyle="normal"
-            fontWeight={500}
+            fontWeight={600}
           >
             {t('next')}
           </Button>

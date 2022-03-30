@@ -109,7 +109,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
           type="submit"
           colorScheme="CustomPrimaryColor"
           size="md"
-          fontWeight={500}
+          fontWeight={600}
           fontStyle="normal"
           fontSize="14px"
           data-testid="saveVendorSkills"
