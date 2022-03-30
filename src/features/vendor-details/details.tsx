@@ -21,12 +21,7 @@ import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-
 import { HiOutlineLocationMarker, HiOutlineMap } from 'react-icons/hi'
 import { Controller, useForm } from 'react-hook-form'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import {
-  parseAPIDataToFormData,
-  parseFormDataToAPIData,
-  useVendorProfileUpdateMutation,
-  usePaymentMethods,
-} from 'utils/vendor-details'
+import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateMutation } from 'utils/vendor-details'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
@@ -74,7 +69,7 @@ export const Details: React.FC<{
   const toast = useToast()
   const { t } = useTranslation()
   const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  const { data: payments, isLoading } = usePaymentMethods()
+  // const { data: payments, isLoading } = usePaymentMethods()
 
   const submitForm = useCallback(
     (formData: VendorProfileDetailsFormData) => {
@@ -116,21 +111,17 @@ export const Details: React.FC<{
             icon={BiCreditCardFront}
           />
         </GridItem>
-        {isLoading ? (
-          <BlankSlate />
-        ) : (
-          <GridItem>
-            <FieldInfoCard
-              title={t('paymentMethods')}
-              value={
-                vendorProfileData?.paymentOptions?.length > 0
-                  ? vendorProfileData.paymentOptions.map(po => po.name).toString()
-                  : payments?.map(payment => payment.value).toString()
-              }
-              icon={BiCreditCardFront}
-            />
-          </GridItem>
-        )}
+        <GridItem>
+          <FieldInfoCard
+            title={t('paymentMethods')}
+            value={
+              vendorProfileData?.paymentOptions?.length > 0
+                ? vendorProfileData.paymentOptions.map(po => po.name).toString()
+                : 'none'
+            }
+            icon={BiCreditCardFront}
+          />
+        </GridItem>
       </Grid>
       <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap="10px" w="100%" mb="40px">
         <GridItem>
@@ -362,13 +353,14 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   float={'right'}
                   colorScheme="CustomPrimaryColor"
                   size="md"
-                  fontSize="16px"
+                  fontSize="14px"
                   fontStyle="normal"
                   fontWeight={600}
                   type="submit"
                   data-testid="saveDetails"
                 >
-                  {t('save')}
+                  {/* {t('save')} */}
+                  Next
                 </Button>
               </Box>
             </Stack>

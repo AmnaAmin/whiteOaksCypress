@@ -26,6 +26,8 @@ type DatePickerProps = {
   style?: any
   defaultValue?: Date
   placeholder?: string
+  onChange?: (e) => void
+  testId?: string
 }
 const CalendarContainer = ({ children }) => {
   return <Portal>{children}</Portal>
@@ -50,9 +52,10 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
             onChange={val => {
               const format = getFormattedDate(val)
               onChange(format)
+              if (props.onChange) props.onChange(val)
             }}
             placeholderText={props.placeholder}
-            customInput={<DatePickerInput size={props.size || 'lg'} />}
+            customInput={<DatePickerInput testId={props.testId} size={props.size || 'lg'} />}
           />
           <Box minH="20px" mt="3px">
             <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
@@ -74,6 +77,7 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
       value={props.value}
       type="text"
       ref={ref}
+      data-testid={props.testId}
     />
     <InputRightElement className="InputLeft" pointerEvents="none">
       <Box color="gray.400" fontSize="16px" mt="2px">

@@ -45,7 +45,7 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     // userEvent.click(screen.getByText('Transaction', { selector: 'button' }))
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByTestId('new-transaction-button')
     expect(newTransactionButton).toBeInTheDocument()
     expect(screen.getByText(/WO-ADT Renovations Inc-11\/13\/2021/i)).toBeInTheDocument()
     expect(screen.getAllByRole('row').length).toEqual(4)
@@ -103,7 +103,7 @@ describe('Porject Details: Transaction tab test cases', () => {
   test('New transaction with Transaction Type "Draw" flow', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByTestId('new-transaction-button')
 
     // Open new Transaction Modal
     userEvent.click(newTransactionButton)
@@ -135,6 +135,22 @@ describe('Porject Details: Transaction tab test cases', () => {
     expect(screen.getByText('-400')).toBeInTheDocument()
   })
 
+  test('New transaction form validation should work properly', async () => {
+    await render(<App />, { route: '/project-details/2951' })
+
+    const newTransactionButton = screen.getByText('New Transaction')
+
+    // Open new Transaction Modal
+    userEvent.click(newTransactionButton)
+    await waitForLoadingToFinish()
+
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('save-transaction'))
+    })
+
+    expect(screen.getAllByText(/This is required field/).length).toEqual(3)
+  })
+
   test('Update transaction by clicking on transaction row which will open Update Transaction modal', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
@@ -156,7 +172,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     expect(totalAmount.textContent).toEqual('$1,980')
 
     // Add new row for adding additional amount
-    await userEvent.click(screen.getByText('Add New Row'))
+    await userEvent.click(screen.getByTestId('add-new-row-button'))
 
     const descriptionSecondField = screen.getByTestId('transaction-description-1') as HTMLInputElement
     const amountSecondField = screen.getByTestId('transaction-amount-1') as HTMLInputElement
@@ -173,9 +189,10 @@ describe('Porject Details: Transaction tab test cases', () => {
     })
     await waitForLoadingToFinish()
 
-    expect(await screen.findByText('Transaction has been updated successfully.')).toBeInTheDocument()
-    await screen.findByText('2980')
-    expect(screen.getByText('2980')).toBeInTheDocument()
+    // Chakra UI toast message rendered twice in DOM, that's why we are going to assert like this.
+    expect((await screen.findAllByText('Transaction has been updated successfully.')).length).toBeGreaterThan(0)
+
+    expect(await screen.findByText('2980')).toBeInTheDocument()
   })
 })
 

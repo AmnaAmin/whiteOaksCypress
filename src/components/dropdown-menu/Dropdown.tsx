@@ -36,6 +36,12 @@ const chakraStyles = {
     background: '#F7FAFC',
     borderRadius: '4px',
   }),
+  dropdownIndicator: provided => ({
+    ...provided,
+    svg: {
+      fill: '#2D3748',
+    },
+  }),
   input: provided => ({
     ...provided,
     color: 'inherit',

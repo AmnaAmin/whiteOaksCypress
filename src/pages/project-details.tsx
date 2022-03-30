@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon, Text } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
@@ -31,7 +31,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = useProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const [alertRow, selectedAlertRow] = useState(null)
+  const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -88,7 +88,7 @@ export const ProjectDetails: React.FC = props => {
                     onClick={onDocumentModalOpen}
                     bg="#4E87F8"
                     color="#FFFFFF"
-                    size="md"
+                    size="lg"
                     _hover={{ bg: 'royalblue' }}
                   >
                     <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
@@ -98,27 +98,36 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
-                    {t('resolve')}
+                  <Button
+                    color="#4E87F8"
+                    size="md"
+                    onClick={onAlertModalOpen}
+                    _focus={{ border: 'none' }}
+                    _hover={{ bg: 'none' }}
+                    _active={{ bg: 'none' }}
+                    bg="none"
+                    pt="6"
+                  >
+                    <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
+                      {t('resolve')}
+                    </Text>
                   </Button>
                 )}
                 {tabIndex === 0 && (
                   <Button
-                    pos="relative"
-                    top="2"
+                    pt="6"
                     bg="none"
                     color="#4E87F8"
-                    fontSize="14px"
-                    fontStyle="normal"
-                    fontWeight={500}
+                    size="lg"
                     _focus={{ border: 'none' }}
                     _active={{ bg: 'none' }}
                     _hover={{ bg: 'none' }}
                     onClick={onTransactionModalOpen}
                   >
                     <Icon as={BiAddToQueue} mr="1" boxSize={4} />
-                    {t('newTransaction')}
+                    <Text fontSize="14px" fontStyle="normal" fontWeight={600} data-testid="new-transaction-button">
+                      {t('newTransaction')}
+                    </Text>
                   </Button>
                 )}
               </Box>

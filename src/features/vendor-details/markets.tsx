@@ -109,9 +109,9 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
           type="submit"
           colorScheme="CustomPrimaryColor"
           size="md"
-          fontSize="16px"
-          fontStyle="normal"
           fontWeight={600}
+          fontStyle="normal"
+          fontSize="14px"
           data-testid="saveMarkets"
         >
           {t('save')}
