@@ -106,7 +106,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
 }) => {
-  const { projects } = useProjects()
+  const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
 
   useEffect(() => {
@@ -123,6 +123,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   return (
     <Box ref={resizeElementRef} height="100%">
       <ReactTable
+        isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
         TableRow={ProjectRow}

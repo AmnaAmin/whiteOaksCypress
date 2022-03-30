@@ -166,7 +166,6 @@ const chakraComponents = {
   Menu({ children, ...props }: any) {
     const menuStyles = useMultiStyleConfig('Menu', { minWidth: '100%' })
 
-    console.log('menuStyle', menuStyles)
     return (
       <selectComponents.Menu {...props}>
         <StylesProvider value={menuStyles}>{children}</StylesProvider>
