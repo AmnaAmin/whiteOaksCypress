@@ -67,6 +67,7 @@ const TableBodyChilde: React.FC<{
           iconColor="green.400"
           h="32px"
           w="145px"
+          sx={{ '[data-focus]': { boxShadow: 'none' } }}
           color={text ? '#2AB450' : '#A0AEC0'}
           bg={text ? '#E7F8EC' : '#F2F3F4'}
           boxShadow="0px 0px 4px -2px "
