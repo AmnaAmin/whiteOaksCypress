@@ -22,7 +22,7 @@ const CalenderCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -64,16 +64,15 @@ const TableBodyChilde: React.FC<{
         <Checkbox
           rounded="6px"
           colorScheme="none"
-          iconColor="green.400"
+          iconColor="#2AB450"
           h="32px"
           w="145px"
-          sx={{ '[data-focus]': { boxShadow: 'none' } }}
           color={text ? '#2AB450' : '#A0AEC0'}
           bg={text ? '#E7F8EC' : '#F2F3F4'}
           boxShadow="0px 0px 4px -2px "
           justifyContent="center"
           fontSize={14}
-          fontWeight={600}
+          fontWeight={500}
           onChange={() => setText(!text)}
         >
           {text ? 'Completed' : 'Not Completed'}
@@ -81,15 +80,10 @@ const TableBodyChilde: React.FC<{
       </Box>
 
       <Box overflow="hidden" ml="2">
-        <Button
-          _focus={{ outline: 'none' }}
-          variant="unstyled"
-          leftIcon={<BiUpload />}
-          fontWeight={400}
-          fontSize="14px"
-          color="#4E87F8"
-        >
-          {Images}
+        <Button _focus={{ outline: 'none' }} variant="unstyled" leftIcon={<BiUpload color="#4E87F8" />} display="flex">
+          <Text fontWeight={400} fontSize="14px" color="#4E87F8">
+            {Images}
+          </Text>
         </Button>
       </Box>
     </SimpleGrid>
@@ -116,42 +110,43 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
           </Text>
 
           <HStack>
-            <Button
-              leftIcon={<BiDownload />}
-              mr={5}
-              color="#4E87F8"
-              _focus={{ border: 'none' }}
-              bg="white"
-              fontStyle="normal"
-              fontWeight={600}
-              fontSize="14px"
-            >
-              Download as PDF
+            <Button leftIcon={<BiDownload color="#4E87F8" />} mr={5} _focus={{ border: 'none' }} bg="white">
+              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                Download as PDF
+              </Text>
             </Button>
 
-            <Button
-              leftIcon={<BiCheck />}
-              color="#4E87F8"
-              _focus={{ border: 'none' }}
-              bg="white"
-              fontStyle="normal"
-              fontWeight={600}
-              fontSize="14px"
-            >
-              Mark All Completed
+            <Button leftIcon={<BiCheck color="#4E87F8" />} _focus={{ border: 'none' }} bg="white">
+              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                Mark All Completed
+              </Text>
             </Button>
           </HStack>
         </Flex>
         <Box border="1px solid #E2E8F0">
           <Box bg=" #F7FAFC" h="40px">
             <SimpleGrid columns={7} p={3} pl={8} gap={4} color="#718096" fontSize={12} fontWeight={700}>
-              <Text>SKU</Text>
-              <Text>ProductName</Text>
-              <Text>Details</Text>
-              <Text>Quantity</Text>
-              <Text>Price</Text>
-              <Text>Status</Text>
-              <Text>Images</Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                SKU
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                ProductName
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Details
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Quantity
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Price
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Status
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Images
+              </Text>
             </SimpleGrid>
           </Box>
           <Box h={367} overflow="auto">
@@ -209,11 +204,15 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </Box>
 
       <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal">
-          {t('close')}
+        <Button variant="ghost" mr={3} size="lg">
+          <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
+            {t('close')}
+          </Text>
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal">
-          {t('save')}
+        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg">
+          <Text fontSize="14px" fontWeight={500} fontStyle="normal">
+            {t('save')}
+          </Text>
         </Button>
       </Flex>
     </Box>
