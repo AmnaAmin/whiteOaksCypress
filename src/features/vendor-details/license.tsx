@@ -67,7 +67,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
   const watchAllFields = watch()
   React.useEffect(() => {
     const subscription = watch(value => {
-      console.log('Value Change', value)
+      // console.log('Value Change', value)
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
