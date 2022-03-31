@@ -42,7 +42,7 @@ export const Dashboard: React.FC = () => {
         w="100%"
         pb="10px"
       >
-        <Card rounded="13px" flex={1}>
+        <Card rounded="13px" flex={1} bg="#FDFDFF">
           <Flex mb="20px" mt="10px">
             <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="17px">
               {t('WOstatus')}
@@ -51,7 +51,7 @@ export const Dashboard: React.FC = () => {
           <Overview vendorId={vendorId} />
         </Card>
 
-        <Card p={0} rounded="13px" flex={1} ml={{ base: 0, xl: '12px' }} mt={{ base: '30px', xl: 0 }}>
+        <Card p={0} rounded="13px" flex={1} ml={{ base: 0, xl: '12px' }} mt={{ base: '30px', xl: 0 }} bg="#FDFDFF">
           <Flex mb="20px">
             <Text
               mt="25px"

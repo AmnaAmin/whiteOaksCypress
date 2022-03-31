@@ -155,7 +155,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                 {t('transactionType')}
               </FormLabel>
               <Controller
-                rules={{ required: 'This is required' }}
+                rules={{ required: 'This is required field' }}
                 control={control}
                 name="transactionType"
                 render={({ field, fieldState }) => {
