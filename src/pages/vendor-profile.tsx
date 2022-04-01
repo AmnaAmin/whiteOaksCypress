@@ -19,7 +19,7 @@ const profileTabStyle = {
   fontSize: '14px',
   fontWeight: 500,
   fontStyle: 'normal',
-  color: '#4A5568',
+  color: 'gray.600',
 }
 
 export const VendorProfilePage: React.FC = props => {
@@ -40,21 +40,21 @@ export const VendorProfilePage: React.FC = props => {
         <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab
-              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
               {t('details')}
             </Tab>
             <Tab
-              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
               {t('documents')}
             </Tab>
             <Tab
-              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -62,7 +62,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="tradetab"
-              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -70,7 +70,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="markettab"
-              _selected={{ fontWeight: '600', color: 'white', bg: 'button.300' }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >

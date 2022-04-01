@@ -201,10 +201,10 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
             float={'right'}
             colorScheme="CustomPrimaryColor"
             size="md"
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={600}
             type="submit"
+            fontSize="14px"
+            fontStyle="normal"
+            fontWeight={500}
           >
             {t('next')}
           </Button>

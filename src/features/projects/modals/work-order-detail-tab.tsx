@@ -1,5 +1,5 @@
 import { Box, HStack, Text, Flex, SimpleGrid, Button, Checkbox } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,7 @@ const CalenderCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -35,11 +35,11 @@ const TableBodyChilde: React.FC<{
   Details: string
   Quantity: string
   Price: string
-  Status: string
+  // Status: string
   Images: string
   SKU: string
-  disabled: boolean
-}> = ({ ProductName, Details, Quantity, Price, Status, Images, SKU, disabled }) => {
+}> = ({ ProductName, Details, Quantity, Price, Images, SKU }) => {
+  const [text, setText] = useState(false)
   return (
     <SimpleGrid
       columns={7}
@@ -63,32 +63,27 @@ const TableBodyChilde: React.FC<{
       <Box>
         <Checkbox
           rounded="6px"
-          isDisabled={disabled}
           colorScheme="none"
-          iconColor="green.400"
+          iconColor="#2AB450"
           h="32px"
           w="145px"
-          color="#2AB450"
-          bg="#E7F8EC"
+          color={text ? '#2AB450' : '#A0AEC0'}
+          bg={text ? '#E7F8EC' : '#F2F3F4'}
           boxShadow="0px 0px 4px -2px "
           justifyContent="center"
           fontSize={14}
-          fontWeight={600}
+          fontWeight={500}
+          onChange={() => setText(!text)}
         >
-          {Status}
+          {text ? 'Completed' : 'Not Completed'}
         </Checkbox>
       </Box>
 
       <Box overflow="hidden" ml="2">
-        <Button
-          _focus={{ outline: 'none' }}
-          variant="unstyled"
-          leftIcon={<BiUpload />}
-          fontWeight={400}
-          fontSize="14px"
-          color="#4E87F8"
-        >
-          {Images}
+        <Button _focus={{ outline: 'none' }} variant="unstyled" leftIcon={<BiUpload color="#4E87F8" />} display="flex">
+          <Text fontWeight={400} fontSize="14px" color="#4E87F8">
+            {Images}
+          </Text>
         </Button>
       </Box>
     </SimpleGrid>
@@ -115,97 +110,93 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
           </Text>
 
           <HStack>
-            <Button
-              leftIcon={<BiDownload />}
-              mr={5}
-              color="#4E87F8"
-              _focus={{ border: 'none' }}
-              bg="white"
-              fontStyle="normal"
-              fontWeight={600}
-              fontSize="14px"
-            >
-              Download as PDF
+            <Button leftIcon={<BiDownload color="#4E87F8" />} mr={5} _focus={{ border: 'none' }} bg="white">
+              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                Download as PDF
+              </Text>
             </Button>
 
-            <Button
-              leftIcon={<BiCheck />}
-              color="#4E87F8"
-              _focus={{ border: 'none' }}
-              bg="white"
-              fontStyle="normal"
-              fontWeight={600}
-              fontSize="14px"
-            >
-              Mark All Completed
+            <Button leftIcon={<BiCheck color="#4E87F8" />} _focus={{ border: 'none' }} bg="white">
+              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                Mark All Completed
+              </Text>
             </Button>
           </HStack>
         </Flex>
         <Box border="1px solid #E2E8F0">
           <Box bg=" #F7FAFC" h="40px">
             <SimpleGrid columns={7} p={3} pl={8} gap={4} color="#718096" fontSize={12} fontWeight={700}>
-              <Text>SKU</Text>
-              <Text>ProductName</Text>
-              <Text>Details</Text>
-              <Text>Quantity</Text>
-              <Text>Price</Text>
-              <Text>Status</Text>
-              <Text>Images</Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                SKU
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                ProductName
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Details
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Quantity
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Price
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Status
+              </Text>
+              <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
+                Images
+              </Text>
             </SimpleGrid>
           </Box>
           <Box h={367} overflow="auto">
             <TableBodyChilde
-              disabled={true}
               SKU="#8383"
               ProductName="Debrish Trash"
               Details="Remove Trash from Outdoor"
               Quantity="2"
               Price="$450"
-              Status="Not Completed"
+              // Status={text}
               Images="Upload"
             />
 
             <TableBodyChilde
-              disabled={false}
               SKU="#8383"
               ProductName="Remove Satellite dish"
               Details="Remove all cables"
               Quantity="12"
               Price="$200"
-              Status="Completed"
+              // Status="Completed"
               Images="First23.img"
             />
 
             <TableBodyChilde
-              disabled={false}
               SKU="#8383"
               ProductName="Install Blinders"
               Details="Replace Curtains"
               Quantity="15"
               Price="$1400"
-              Status="Completed"
+              // Status="Completed"
               Images="First88.img"
             />
 
             <TableBodyChilde
-              disabled={true}
               SKU="#8383"
               ProductName="Wall Lock Box"
               Details="Home Depot Lock Box"
               Quantity="8"
               Price="$150"
-              Status="Not Completed"
+              // Status="Not Completed"
               Images="Tsk19.img"
             />
 
             <TableBodyChilde
-              disabled={false}
               SKU="#8383"
               ProductName="Push Button"
               Details="Replace Buttons"
               Quantity="3"
               Price="$450"
-              Status="Completed"
+              // Status="Completed"
               Images="Upload"
             />
           </Box>
@@ -213,11 +204,15 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </Box>
 
       <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal">
-          {t('close')}
+        <Button variant="ghost" mr={3} size="lg">
+          <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
+            {t('close')}
+          </Text>
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal">
-          {t('save')}
+        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg">
+          <Text fontSize="14px" fontWeight={500} fontStyle="normal">
+            {t('save')}
+          </Text>
         </Button>
       </Flex>
     </Box>
