@@ -94,7 +94,7 @@ describe('Transaction amount adding/removing interactions test cases', () => {
 
     expect(screen.getByText('Delete Transaction Row', { selector: 'header' }))
 
-    await userEvent.click(screen.getByText(/Yes/i, { selector: 'button' }))
+    userEvent.click(screen.getByText('Delete', { selector: 'button' }))
 
     expect(container.querySelectorAll(FIELD_CHECKBOX_SELECTOR).length).toEqual(0)
     expect(container.querySelector(ALL_CHECKBOX_SLELECTOR)).not.toBeInTheDocument()
@@ -120,7 +120,7 @@ describe('Transaction amount adding/removing interactions test cases', () => {
 
     expect(screen.getByText('Delete Transaction Row', { selector: 'header' }))
 
-    await userEvent.click(screen.getByText(/Yes/i, { selector: 'button' }))
+    await userEvent.click(screen.getByText('Delete', { selector: 'button' }))
 
     expect(screen.getByTestId('transaction-description-0')).toBeInTheDocument()
   })
