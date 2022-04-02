@@ -4,7 +4,6 @@ import ReactTable, { RowProps } from '../../components/table/react-table'
 import { Link } from 'react-router-dom'
 import { useProjects } from 'utils/projects'
 import Status from './status'
-import { dateFormat } from 'utils/date-time-utils'
 import { Column } from 'react-table'
 import { t } from 'i18next'
 
