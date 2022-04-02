@@ -1,43 +1,18 @@
-import {
-  background,
-  Box,
-  Button,
-  Center,
-  Divider,
-  Flex,
-  HStack,
-  Radio,
-  RadioGroup,
-  Stack,
-  VStack,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { BsBoxArrowUp } from 'react-icons/bs'
-import TableColumnSettings from '../components/table/table-column-settings'
+import { Box, Button, Divider, Stack, VStack } from '@chakra-ui/react'
+import { useState } from 'react'
 import { ProjectFilters } from '../features/projects/pc-project-filters'
 import { ProjectsTable, PROJECT_COLUMNS } from '../features/projects/pc-projects-table'
 import { TableNames } from '../types/table-column.types'
-import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { useTableColumnSettings } from 'utils/table-column-settings'
 import PlusIcon from 'icons/plus-icon'
 import { ProjectDayFilters } from 'features/projects/pc-project-days-filters'
 
 export const PCProjects = () => {
-  const { t } = useTranslation()
-  const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
-    PROJECT_COLUMNS,
-    TableNames.project,
-  )
+  const [setInstance] = useState<any>(null)
+  const { tableColumns, resizeElementRef } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
-  }
-
-  const onSave = columns => {
-    postProjectColumn(columns)
   }
 
   return (
