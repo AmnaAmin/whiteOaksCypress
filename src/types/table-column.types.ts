@@ -1,28 +1,29 @@
 export type TableColumnSetting = {
-  id: number;
-  flex: number | null;
-  hide: boolean;
-  sort: string | null;
-  sortIndex: string | null;
-  colId: string;
-  aggFunc: string | null;
-  pivot: false;
-  pivotIndex: string | null;
-  pinned: string | null;
-  rowGroup: false;
-  rowGroupIndex: string | null;
-  type: string;
-  field: string;
-  cellRenderer: string | null;
-  contentKey: string;
-  order: number;
-  minWidth: number;
-  userId: string;
-};
+  id: number
+  flex: number | null
+  hide: boolean
+  sort: string | null
+  sortIndex: string | null
+  colId: string
+  aggFunc: string | null
+  pivot: false
+  pivotIndex: string | null
+  pinned: string | null
+  rowGroup: false
+  rowGroupIndex: string | null
+  type: string
+  field: string
+  cellRenderer: string | null
+  contentKey: string
+  order: number
+  minWidth: number
+  userId: string
+}
 
 export enum TableNames {
   project = 'project',
   transaction = 'transaction',
   workOrder = 'workOrder',
   alerts = 'alerts',
+  pcproject = 'pc-project',
 }

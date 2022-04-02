@@ -1,22 +1,10 @@
-import {
-  background,
-  Box,
-  Button,
-  Center,
-  Divider,
-  Flex,
-  HStack,
-  Radio,
-  RadioGroup,
-  Stack,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Button, Center, Divider, Flex, Stack, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from '../components/table/table-column-settings'
 import { ProjectFilters } from '../features/projects/pc-project-filters'
-import { ProjectsTable, PROJECT_COLUMNS } from '../features/projects/pc-projects-table'
+import { ProjectsTable, PCPROJECT_COLUMNS } from '../features/projects/pc-projects-table'
 import { TableNames } from '../types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -28,8 +16,8 @@ export const PCProjects = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
-    PROJECT_COLUMNS,
-    TableNames.project,
+    PCPROJECT_COLUMNS,
+    TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
   const setProjectTableInstance = tableInstance => {
@@ -93,6 +81,44 @@ export const PCProjects = () => {
             resizeElementRef={resizeElementRef}
             projectColumns={tableColumns}
           />
+          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}>
+            <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
+              {isLoading ? (
+                <>
+                  <BlankSlate size="md" />
+                  <BlankSlate size="md" />
+                </>
+              ) : (
+                <>
+                  <Button
+                    bg="none"
+                    color="#4E87F8"
+                    _hover={{ bg: 'none' }}
+                    _focus={{ border: 'none' }}
+                    fontSize="12px"
+                    fontStyle="normal"
+                    fontWeight={500}
+                    onClick={() => {
+                      if (projectTableInstance) {
+                        projectTableInstance?.exportData('xlsx', false)
+                      }
+                    }}
+                  >
+                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                      <BsBoxArrowUp />
+                    </Box>
+                    {t('export')}
+                  </Button>
+                  <Center>
+                    <Divider orientation="vertical" height="25px" border="1px solid" />
+                  </Center>
+                  {settingColumns && (
+                    <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  )}
+                </>
+              )}
+            </Flex>
+          </Stack>
         </Box>
       </VStack>
     </>
