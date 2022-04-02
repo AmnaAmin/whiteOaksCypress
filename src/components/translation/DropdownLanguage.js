@@ -8,7 +8,7 @@ import { useSaveLanguage, useAccountDetails } from 'utils/vendor-details'
 const languageStyle = {
   paddingRight: '5px',
   fontWeight: 500,
-  fontSize: '14px',
+  fontSize: '16px',
   color: '#4A5568',
 }
 
@@ -85,7 +85,7 @@ const DropdownLanguage = () => {
               Espanol
             </Box>
           )}
-          <FaAngleDown fontSize="0.9rem" display="inline-flex" color="#4A5568" />
+          <FaAngleDown display="inline-flex" color="#4A5568" />
         </Stack>
       </MenuButton>
 
