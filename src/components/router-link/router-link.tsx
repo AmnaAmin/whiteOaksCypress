@@ -5,7 +5,7 @@ import { LinkProps, Link } from 'react-router-dom'
 const textStyle = {
   color: '#4A5568',
   fontSize: '14px',
-  fontWeight: 500,
+  fontWeight: 400,
   lineHeight: '20px',
   fontStyle: 'normal',
 }

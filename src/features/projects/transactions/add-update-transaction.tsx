@@ -155,7 +155,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                 {t('transactionType')}
               </FormLabel>
               <Controller
-                rules={{ required: 'This is required' }}
+                rules={{ required: 'This is required field' }}
                 control={control}
                 name="transactionType"
                 render={({ field, fieldState }) => {
@@ -199,7 +199,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             </Box>
           </Stack> */}
 
-            <FormControl isInvalid={!!errors.against}>
+            <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
               <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
                 {t('against')}
               </FormLabel>
@@ -460,7 +460,13 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
             Close
           </Button>
 
-          <Button colorScheme="CustomPrimaryColor" type="submit" form="newTransactionForm" ml="3">
+          <Button
+            data-testid="update-transaction"
+            colorScheme="CustomPrimaryColor"
+            type="submit"
+            form="newTransactionForm"
+            ml="3"
+          >
             Save
           </Button>
         </ModalFooter>
