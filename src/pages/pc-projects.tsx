@@ -1,5 +1,5 @@
 import { Box, Button, Center, Divider, Flex, Stack, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from '../components/table/table-column-settings'
@@ -27,6 +27,7 @@ export const PCProjects = () => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
+  
   return (
     <>
       <VStack w="100%" h="calc(100vh - 160px)">
