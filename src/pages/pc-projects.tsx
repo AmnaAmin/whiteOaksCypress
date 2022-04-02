@@ -27,7 +27,7 @@ export const PCProjects = () => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
-
+  
   return (
     <>
       <VStack w="100%" h="calc(100vh - 160px)">
