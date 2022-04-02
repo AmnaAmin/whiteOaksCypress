@@ -25,6 +25,7 @@ import { LienWaiverTab } from './lien-waiver-tab'
 import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
+import { InvoiceTab } from './invoice-tab'
 
 const TabStyle = {
   fontWeight: 500,
@@ -97,6 +98,14 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                 >
                   {t('Payments')}
                 </Tab>
+
+                <Tab
+                  _focus={{ border: 'none' }}
+                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                  sx={TabStyle}
+                >
+                  {t('Invoice')}
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -136,6 +145,10 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       datePermitsPulled: workOrder?.datePermitsPulled ?? '',
                     }}
                   />
+                </TabPanel>
+
+                <TabPanel>
+                  <InvoiceTab />
                 </TabPanel>
               </TabPanels>
             </Tabs>
