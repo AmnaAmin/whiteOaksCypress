@@ -8,7 +8,6 @@ import SummaryIconFirst, {
   SummaryIconSeventh,
   SummaryIconEight,
 } from 'icons/pc-project-icons'
-import numeral from 'numeral'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVendorCards } from 'utils/vendor-dashboard'
