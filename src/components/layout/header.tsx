@@ -42,11 +42,11 @@ const UserInfo: React.FC = () => {
       />
       <VStack alignItems="start" spacing="0.3" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="12px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
+          <Text fontSize="16px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="14px" fontStyle="normal" fontWeight={500} color="#A0AEC0">
+        <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.600">
           {isAdmin ? 'Admin' : 'User'}
         </Text>
       </VStack>
@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               onOpen={() => setShowNotification(true)}
             >
               <MenuButton transition="all 0.2s" color="gray" _active={{ color: '#4E87F8' }}>
-                <FaBell fontSize="1.5rem" />
+                <FaBell fontSize="1.7rem" color="#A0AEC0" />
               </MenuButton>
 
               {showNotification && (
@@ -128,13 +128,21 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <RouterLink to="/support">Support</RouterLink>
               </MenuItem>
               <MenuItem>
-                <Box onClick={logout} fontSize="sm" width="100%">
+                <Box
+                  onClick={logout}
+                  fontSize="14px"
+                  fontWeight={400}
+                  fontStyle="normal"
+                  lineHeight="20px"
+                  color="#4A5568"
+                  width="100%"
+                >
                   Signout
                 </Box>
               </MenuItem>
             </MenuList>
             <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
-              {show ? <FaAngleDown /> : <FaAngleUp />}
+              {show ? <FaAngleDown color="#4A5568" /> : <FaAngleUp color="#4A5568" />}
             </Box>
           </Menu>
         </HStack>
