@@ -6,6 +6,7 @@ import { useAsync } from './hooks'
 import { getToken, removeToken, setToken } from './storage.utils'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
+import { Box } from '@chakra-ui/layout'
 
 type AuthState = {
   user: Account
@@ -89,7 +90,11 @@ function AuthProvider(props: AuthProviderProps) {
   const value = React.useMemo(() => ({ data, login, logout, register, token }), [login, logout, register, token, data])
 
   if (isLoading || isIdle) {
-    return <ViewLoader />
+    return (
+      <Box h="100vh" w="100vw">
+        <ViewLoader />
+      </Box>
+    )
   }
 
   // if (isError) {

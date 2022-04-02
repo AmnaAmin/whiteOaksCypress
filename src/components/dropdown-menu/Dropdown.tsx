@@ -36,6 +36,12 @@ const chakraStyles = {
     background: '#F7FAFC',
     borderRadius: '4px',
   }),
+  dropdownIndicator: provided => ({
+    ...provided,
+    svg: {
+      fill: '#2D3748',
+    },
+  }),
   input: provided => ({
     ...provided,
     color: 'inherit',
@@ -107,7 +113,7 @@ const chakraComponents = {
           sx={{
             ...inputStyles.field,
             color: 'gray.700',
-            bg: 'white',
+            bg: '#FFFFFF',
             border: 'none',
             fontWeight: 400,
             fontsize: '16px',
@@ -166,7 +172,6 @@ const chakraComponents = {
   Menu({ children, ...props }: any) {
     const menuStyles = useMultiStyleConfig('Menu', { minWidth: '100%' })
 
-    console.log('menuStyle', menuStyles)
     return (
       <selectComponents.Menu {...props}>
         <StylesProvider value={menuStyles}>{children}</StylesProvider>

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -27,7 +27,6 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'utils/transactions'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { GenericObjectType } from 'types/common.types'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -54,6 +53,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     getValues,
     setValue,
   } = formReturn
+
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -61,6 +61,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
   } = useDisclosure()
 
   const transaction = useWatch({ name: 'transaction', control })
+  const checkedItems = useMemo(() => {
+    return transaction.map(item => item.checked)
+  }, [transaction])
+
   const {
     fields: transactionFields,
     append,
@@ -70,9 +74,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     name: 'transaction',
   })
 
-  const [checkedItems, setCheckedItems] = React.useState<GenericObjectType>(
-    transaction.reduce((final, current) => ({ ...final, [current.id]: false }), {}),
-  )
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
@@ -81,59 +82,45 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
 
   const toggleAllCheckboxes = useCallback(
     event => {
-      setCheckedItems(state => {
-        const result: GenericObjectType = {}
-        state &&
-          Object.keys(state).forEach(key => {
-            result[key] = event.currentTarget.checked
-          })
-        return result
-      })
+      setValue(
+        'transaction',
+        transactionFields.map(transactionItem => ({
+          ...transactionItem,
+          checked: event.currentTarget.checked,
+        })),
+      )
     },
-    [setCheckedItems],
+    [transactionFields, setValue],
   )
-
-  const removeCheckedCheckboxes = () => {
-    setCheckedItems(state => {
-      for (const item in state) {
-        if (state[item]) {
-          delete state[item]
-        }
-      }
-
-      return state
-    })
-  }
 
   const addRow = useCallback(() => {
     const id = Date.now()
 
-    append({ id, description: '', amount: '' })
-    setCheckedItems(state => ({ ...state, [id]: false }))
-  }, [append, setCheckedItems])
+    append({ id, description: '', amount: '', checked: false })
+  }, [append])
 
   const deleteRows = useCallback(() => {
     const indexes: number[] = []
     transactionFields.forEach((transaction, index) => {
-      if (checkedItems[transaction.id]) {
+      if (transaction.checked) {
         indexes.push(index)
       }
     })
 
     removeTransactionField(indexes)
-    removeCheckedCheckboxes()
     onDeleteConfirmationModalClose()
 
     if (transactionFields.length === indexes.length) {
       setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
     }
-  }, [checkedItems, removeTransactionField, transactionFields, onDeleteConfirmationModalClose, setValue])
+  }, [removeTransactionField, transactionFields, onDeleteConfirmationModalClose, setValue])
 
   return (
     <>
       <Flex justifyContent="space-between" w="100%" mt="30px" mb="15px">
         <Box flex="1">
           <Button
+            data-testid="add-new-row-button"
             variant="outline"
             size="md"
             borderColor="#4E87F8"
@@ -144,6 +131,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             {t('addNewRow')}
           </Button>
           <Button
+            data-testid="delete-row-button"
             variant="outline"
             size="md"
             ml="10px"
@@ -203,7 +191,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             <Tr>
               {transactionFields?.length > 1 && (
                 <Th px="3">
-                  <Checkbox isChecked={allChecked} isIndeterminate={isIndeterminate} onChange={toggleAllCheckboxes} />
+                  <Checkbox
+                    data-testid="all-checkbox"
+                    isChecked={allChecked}
+                    isIndeterminate={isIndeterminate}
+                    onChange={toggleAllCheckboxes}
+                  />
                 </Th>
               )}
               <Th fontWeight={700} fontSize="12px" color="gray.600" fontStyle="normal" textTransform="capitalize">
@@ -215,69 +208,82 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             </Tr>
           </Thead>
           <Tbody>
-            {transactionFields.map((transactionField, index) => (
-              <Tr key={`field${index}`}>
-                {transactionFields?.length > 1 && (
-                  <Td px="3">
-                    <Checkbox
-                      isChecked={!!checkedItems?.[transactionField.id]}
-                      onChange={e =>
-                        setCheckedItems(state => ({
-                          ...state,
-                          [transactionField.id]: e.currentTarget.checked,
-                        }))
-                      }
-                    />
-                  </Td>
-                )}
-                <Td>
-                  <FormControl isInvalid={!!errors.transaction?.[index].description}>
-                    <Input
-                      data-testid={`transaction-description-${index}`}
-                      type="text"
-                      size="md"
-                      placeholder="description"
-                      {...register(`transaction.${index}.description` as const, { required: 'This is required' })}
-                    />
-
-                    <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
-                  </FormControl>
-                </Td>
-                <Td maxW="120">
-                  <FormControl isInvalid={!!errors.transaction?.[index].amount}>
-                    <Controller
-                      name={`transaction.${index}.amount` as const}
-                      control={control}
-                      rules={{
-                        required: 'This is required field',
-                      }}
-                      render={({ field, fieldState }) => {
-                        return (
-                          <>
-                            <Input
-                              {...field}
-                              data-testid={`transaction-amount-${index}`}
-                              type="number"
-                              size="md"
-                              placeholder="amount"
-                              onChange={event => {
-                                const inputValue = Number(event.currentTarget.value)
-                                field.onChange(
-                                  TransactionTypeValues.draw === getValues('transactionType')?.value
-                                    ? -1 * Math.abs(inputValue)
-                                    : inputValue,
-                                )
+            {transactionFields.map((transactionField, index) => {
+              return (
+                <Tr key={`field${index}`}>
+                  {transactionFields?.length > 1 && (
+                    <Td px="3">
+                      <Controller
+                        control={control}
+                        name={`transaction.${index}.checked` as const}
+                        render={({ field: { name, value, onChange } }) => {
+                          return (
+                            <Checkbox
+                              data-testid={`checkbox-${index}`}
+                              key={name}
+                              name={name}
+                              isChecked={transactionField.checked}
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                                transactionField.checked = event.currentTarget.checked
+                                onChange(event.currentTarget.checked)
                               }}
                             />
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                          </>
-                        )
-                      }}
-                    />
-                  </FormControl>
-                </Td>
-              </Tr>
-            ))}
+                          )
+                        }}
+                      />
+                    </Td>
+                  )}
+                  <Td>
+                    <FormControl isInvalid={!!errors.transaction?.[index].description}>
+                      <Input
+                        data-testid={`transaction-description-${index}`}
+                        type="text"
+                        size="md"
+                        placeholder="description"
+                        {...register(`transaction.${index}.description` as const, {
+                          required: 'This is required field',
+                        })}
+                      />
+
+                      <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                    </FormControl>
+                  </Td>
+                  <Td maxW="120">
+                    <FormControl isInvalid={!!errors.transaction?.[index].amount}>
+                      <Controller
+                        name={`transaction.${index}.amount` as const}
+                        control={control}
+                        rules={{
+                          required: 'This is required field',
+                        }}
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Input
+                                {...field}
+                                data-testid={`transaction-amount-${index}`}
+                                type="number"
+                                size="md"
+                                placeholder="amount"
+                                onChange={event => {
+                                  const inputValue = Number(event.currentTarget.value)
+                                  field.onChange(
+                                    TransactionTypeValues.draw === getValues('transactionType')?.value
+                                      ? -1 * Math.abs(inputValue)
+                                      : inputValue,
+                                  )
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </Td>
+                </Tr>
+              )
+            })}
           </Tbody>
         </Table>
       </Box>
@@ -290,7 +296,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
 
       <ConfirmationBox
         title="Delete Transaction Row"
-        content="delete selected rows."
+        content="delete selected rows"
         isOpen={isDeleteConfirmationModalOpen}
         onClose={onDeleteConfirmationModalClose}
         onConfirm={deleteRows}
