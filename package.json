@@ -70,7 +70,8 @@
     "eslint": "eslint src --color",
     "prettier": "prettier src -check",
     "lint-staged": "lint-staged --config lint-staged.js",
-    "husky-install": "husky install"
+    "husky-install": "husky install",
+    "lint": "eslint src --color"
   },
   "eslintConfig": {
     "plugins": [
