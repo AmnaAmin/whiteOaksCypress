@@ -10,6 +10,7 @@ import VendorProfilePassword from 'pages/password'
 import { CreateATicket } from 'pages/create-a-ticket'
 import { Settings } from 'pages/settings'
 import { PCProjects } from 'pages/pc-projects'
+import { PCProjectDetails } from 'pages/pc-project-details'
 
 export default function AuthenticatedApp() {
   return (
@@ -25,6 +26,7 @@ export default function AuthenticatedApp() {
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/vendorDashboard" />} />
         <Route path="/pc-projects" element={<PCProjects />} />
+        <Route path="/pc-project-details/:projectId" element={<PCProjectDetails />} />
       </Routes>
     </Layout>
   )

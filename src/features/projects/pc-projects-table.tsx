@@ -63,7 +63,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map((cell, index) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-            <Link to={`/project-details/${projectId}`}>
+            <Link to={`/pc-project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
                   noOfLines={2}
