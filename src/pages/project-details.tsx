@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon, Text } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
@@ -16,11 +16,11 @@ import { TransactionInfoCard } from '../features/projects/transactions/transacti
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
-import { Document } from 'types/vendor.types'
+import { BiAddToQueue } from 'react-icons/bi'
 
 const projectTabStyle = {
   fontSize: '14px',
-  fontWeight: 400,
+  fontWeight: 500,
   fontStyle: 'normal',
   color: 'gray.600',
 }
@@ -31,8 +31,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = useProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const [alertRow, selectedAlertRow] = useState(null)
-  const [latestUploadedDoc, setLatestUploadedDoc] = useState<Document | null>(null)
+  const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -51,16 +50,15 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="transaction-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
               >
                 {t('transaction')}
               </Tab>
 
               <Tab
-                aria-labelledby="work-order-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 whiteSpace="nowrap"
                 sx={projectTabStyle}
               >
@@ -70,16 +68,15 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="documents-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
               >
                 {t('documents')}
               </Tab>
 
               <Tab
-                aria-labelledby="alerts-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: 'button.300' }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                 sx={projectTabStyle}
               >
                 {t('alerts')}
@@ -88,11 +85,10 @@ export const ProjectDetails: React.FC = props => {
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (
                   <Button
-                    aria-labelledby="upload-document-button"
                     onClick={onDocumentModalOpen}
                     bg="#4E87F8"
                     color="#FFFFFF"
-                    size="md"
+                    size="lg"
                     _hover={{ bg: 'royalblue' }}
                   >
                     <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
@@ -102,20 +98,36 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
-                    {t('resolve')}
+                  <Button
+                    color="#4E87F8"
+                    size="md"
+                    onClick={onAlertModalOpen}
+                    _focus={{ border: 'none' }}
+                    _hover={{ bg: 'none' }}
+                    _active={{ bg: 'none' }}
+                    bg="none"
+                    pt="6"
+                  >
+                    <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
+                      {t('resolve')}
+                    </Text>
                   </Button>
                 )}
                 {tabIndex === 0 && (
                   <Button
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="md"
-                    _hover={{ bg: 'royalblue' }}
+                    pt="6"
+                    bg="none"
+                    color="#4E87F8"
+                    size="lg"
+                    _focus={{ border: 'none' }}
+                    _active={{ bg: 'none' }}
+                    _hover={{ bg: 'none' }}
                     onClick={onTransactionModalOpen}
                   >
-                    {t('newTransaction')}
+                    <Icon as={BiAddToQueue} mr="1" boxSize={4} />
+                    <Text fontSize="14px" fontStyle="normal" fontWeight={600} data-testid="new-transaction-button">
+                      {t('newTransaction')}
+                    </Text>
                   </Button>
                 )}
               </Box>
@@ -134,7 +146,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px">
                 <Box h="100%" w="100%">
-                  <VendorDocumentsTable ref={tabsContainerRef} latestUploadedDoc={latestUploadedDoc as Document} />
+                  <VendorDocumentsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px">
@@ -152,14 +164,7 @@ export const ProjectDetails: React.FC = props => {
         </Stack>
       </Stack>
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
-      <UploadDocumentModal
-        isOpen={isOpenDocumentModal}
-        onClose={onDocumentModalClose}
-        projectId={projectId}
-        setLatestUploadedDoc={val => {
-          setLatestUploadedDoc(val)
-        }}
-      />
+      <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )

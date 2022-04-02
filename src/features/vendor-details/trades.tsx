@@ -9,14 +9,44 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 // import 'components/translation/i18n';
 
 export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData }) => {
-  const { t } = useTranslation()
   const toast = useToast()
-  const { data: trades } = useTrades()
+  const { data: trades, isLoading } = useTrades()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
+
+  const onSubmit = (formValues: VendorTradeFormValues) => {
+    const vendorProfilePayload: VendorProfilePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData)
+
+    updateVendorProfile(vendorProfilePayload, {
+      onSuccess() {
+        toast({
+          title: 'Update Vendor Profile Trades',
+          description: 'Vendor profile trades has been saved successfully.',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+    })
+  }
+
+  return (
+    <Box>
+      {isLoading ? (
+        <BlankSlate />
+      ) : (
+        <TradeForm submitForm={onSubmit} vendorProfileData={vendorProfileData} trades={trades} />
+      )}
+    </Box>
+  )
+}
+
+export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
+  // const { t } = useTranslation()
+
   const {
     handleSubmit,
     control,
@@ -41,67 +71,53 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vend
     }
   }, [trades, vendorProfileData, reset])
 
-  const onSubmit = (formValues: VendorTradeFormValues) => {
-    const vendorProfilePayload: VendorProfilePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData)
-
-    updateVendorProfile(vendorProfilePayload, {
-      onSuccess() {
-        toast({
-          title: 'Update Vendor Profile Trades',
-          description: 'Vendor profile trades has been saved successfully.',
-          status: 'success',
-          isClosable: true,
-        })
-      },
-    })
-  }
-
   return (
-    <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="65vh">
-          <Flex maxW="900px" wrap="wrap" gridGap={3}>
-            {tradeCheckboxes.map((checkbox, index) => {
-              return (
-                <Controller
-                  name={`trades.${index}`}
-                  control={control}
-                  key={checkbox.id}
-                  render={({ field: { name, onChange, value } }) => {
-                    return (
-                      <CheckboxButton
-                        name={name}
-                        key={name}
-                        isChecked={value.checked}
-                        onChange={event => {
-                          const checked = event.target.checked
-                          onChange({ ...checkbox, checked })
-                        }}
-                      >
-                        {value.skill}
-                      </CheckboxButton>
-                    )
-                  }}
-                />
-              )
-            })}
-          </Flex>
-        </Box>
-        <Flex borderTop="2px solid #E2E8F0" textAlign="end" w="100%" h="130px" justifyContent="end">
-          <Button
-            mt="16px"
-            mr="60px"
-            type="submit"
-            colorScheme="CustomPrimaryColor"
-            size="md"
-            fontWeight={600}
-            fontStyle="normal"
-            fontSize="16px"
-          >
-            {t('save')}
-          </Button>
+    <form onSubmit={handleSubmit(submitForm)}>
+      <Box h="65vh" mt={14}>
+        <Flex maxW="900px" wrap="wrap" gridGap={3}>
+          {tradeCheckboxes.map((checkbox, index) => {
+            return (
+              <Controller
+                name={`trades.${index}`}
+                control={control}
+                key={checkbox.id}
+                render={({ field: { name, onChange, value } }) => {
+                  return (
+                    <CheckboxButton
+                      name={name}
+                      key={name}
+                      isChecked={value.checked}
+                      data-testid={`tradeChecks.${value.id}`}
+                      onChange={event => {
+                        const checked = event.target.checked
+                        onChange({ ...checkbox, checked })
+                      }}
+                    >
+                      {value.skill}
+                    </CheckboxButton>
+                  )
+                }}
+              />
+            )
+          })}
         </Flex>
-      </form>
-    </Box>
+      </Box>
+      <Flex borderTop="2px solid #E2E8F0" textAlign="end" w="100%" h="130px" justifyContent="end">
+        <Button
+          mt="16px"
+          mr="60px"
+          type="submit"
+          colorScheme="CustomPrimaryColor"
+          size="md"
+          fontWeight={500}
+          fontStyle="normal"
+          fontSize="14px"
+          data-testid="saveVendorSkills"
+        >
+          {/* {t('save')} */}
+          Next
+        </Button>
+      </Flex>
+    </form>
   )
 }

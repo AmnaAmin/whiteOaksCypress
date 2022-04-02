@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Container, Flex, useColorModeValue as mode, VStack } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Stack, useColorModeValue as mode, VStack } from '@chakra-ui/react'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
@@ -36,11 +36,20 @@ export const Layout: React.FC = props => {
           >
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
-                <VStack align="start" spacing={5}>
-                  <SidebarLink pathTo="/vendorDashboard" title="Dashboard" icon={<FaHome />} />
-                  <SidebarLink pathTo="/projects" title="Projects" icon={<FaAlignCenter />} />
-                  <SidebarLink pathTo="/vendors" title="Profile" icon={<FaUser />} />
-                </VStack>
+                <Stack align="start" spacing={3}>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/vendorDashboard" title="Dashboard" icon={<FaHome />} />
+                  </Box>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/projects" title="Projects" icon={<FaAlignCenter />} />
+                  </Box>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/vendors" title="Profile" icon={<FaUser />} />
+                  </Box>
+                  <Box w="201px">
+                    <SidebarLink pathTo="/pc-projects" title="PC-Projects" icon={<FaUser />} />
+                  </Box>
+                </Stack>
               </Sidebar>
             </Box>
           </Box>

@@ -15,6 +15,7 @@ import {
   FormErrorMessage,
   VStack,
   ModalCloseButton,
+  Progress,
 } from '@chakra-ui/react'
 import { MdOutlineCancel } from 'react-icons/md'
 import { documentTypes, useUploadDocument } from 'utils/vendor-projects'
@@ -24,14 +25,14 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { Document } from 'types/vendor.types'
 
-export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId, setLatestUploadedDoc }) => {
+export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [document, setDocument] = useState<File | null>(null)
   const [documentType, setDocumentType] = useState('')
   const [isError, setError] = useState(false)
   const { vendorId } = useUserProfile() as Account
-  const { mutate: saveDocument } = useUploadDocument()
+  const { mutate: saveDocument, isLoading } = useUploadDocument()
 
   const onFileChange = useCallback(
     e => {
@@ -78,7 +79,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
     }
     saveDocument(doc, {
       onSuccess() {
-        setLatestUploadedDoc(doc)
         resetUpload()
         onClose()
       },
@@ -124,6 +124,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
           {t('upload')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
+        {isLoading && <Progress isIndeterminate colorScheme="blue" aria-labelledby="loading" size="xs" />}
         <ModalBody>
           <FormControl mt="35px" isInvalid={isError}>
             <VStack align="start">
@@ -149,7 +150,13 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
                     </option>
                   ))}
                 </Select>
-                <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+                <input
+                  aria-labelledby="upload-document-field"
+                  type="file"
+                  ref={inputRef}
+                  style={{ display: 'none' }}
+                  onChange={onFileChange}
+                ></input>
                 {document ? (
                   <Box
                     color="barColor.100"
@@ -173,6 +180,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
                   </Box>
                 ) : (
                   <Button
+                    id="upload-document-field"
                     onClick={e => {
                       if (inputRef.current) {
                         inputRef.current.click()

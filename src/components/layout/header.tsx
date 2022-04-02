@@ -128,7 +128,15 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <RouterLink to="/support">Support</RouterLink>
               </MenuItem>
               <MenuItem>
-                <Box onClick={logout} fontSize="14px" fontWeight={400} color="gray.600" width="100%">
+                <Box
+                  onClick={logout}
+                  fontSize="14px"
+                  fontWeight={400}
+                  fontStyle="normal"
+                  lineHeight="20px"
+                  color="#4A5568"
+                  width="100%"
+                >
                   Signout
                 </Box>
               </MenuItem>
