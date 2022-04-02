@@ -49,7 +49,7 @@ const SignatureModal = ({
     <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
       <ModalContent h="70vh">
-        <ModalHeader color="gray.700" fontWeight={700} fontSize="18px" fontStyle="normal">
+        <ModalHeader color="gray.700" fontWeight={500} fontSize="16px" fontStyle="normal">
           {t('addSignature')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
