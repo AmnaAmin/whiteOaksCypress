@@ -33,7 +33,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     await render(<App />, { route: '/project-details/2951' })
 
     expect(window.location.pathname).toEqual('/project-details/2951')
-    expect(screen.getByRole('tab', { selected: true }).textContent).toEqual('Transaction')
+    expect(screen.getByRole('tab', { selected: true }).textContent).toEqual('Transactions')
 
     // userEvent.click(screen.getByText('Transaction', { selector: 'button' }))
 

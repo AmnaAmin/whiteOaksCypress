@@ -376,6 +376,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             mr="60px"
             float={'right'}
             colorScheme="CustomPrimaryColor"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue', fontWeight: '600' }}
             size="md"
             type="submit"
             fontSize="14px"
