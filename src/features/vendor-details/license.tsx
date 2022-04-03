@@ -200,6 +200,8 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
             mr="60px"
             float={'right'}
             colorScheme="CustomPrimaryColor"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue', fontWeight: '600' }}
             size="md"
             type="submit"
             fontSize="14px"
