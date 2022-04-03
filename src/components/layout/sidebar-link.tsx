@@ -12,8 +12,6 @@ interface SidebarLinkProps extends BoxProps {
 
 const useCheckPathSelected = (pathTo: string) => {
   const { pathname } = useLocation()
-  console.log('pathname', pathname)
-  console.log('pathTo', pathTo)
   const isProjectDetails = pathname.includes('/project-details')
   const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard' || (pathTo === '/projects' && isProjectDetails)
   return { isLinkSelected }
