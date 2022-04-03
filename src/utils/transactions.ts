@@ -320,6 +320,7 @@ export const TRANSACTION_FEILD_DEFAULT = {
   id: Date.now(),
   description: '',
   amount: '',
+  checked: false,
 }
 export const transactionDefaultFormValues = (createdBy: string): FormValues => {
   return {
@@ -356,6 +357,7 @@ export const parseTransactionToFormValues = (
         id: item.id,
         description: item.description,
         amount: `${item.whiteoaksCost}`,
+        checked: false,
       })) ?? [],
   }
 }
@@ -401,11 +403,12 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
+        console.log('Update Transaction')
         toast({
-          title: 'New Transaction.',
-          description: 'Transaction has been created successfully.',
+          title: 'Update Transaction.',
+          description: 'Transaction has been updated successfully.',
           status: 'success',
-          duration: 9000,
+          duration: 5000,
           isClosable: true,
         })
       },
@@ -421,7 +424,6 @@ export const useTransaction = (transactionId?: number) => {
     async () => {
       const response = await client(`change-orders/${transactionId}`, {})
 
-      console.log('response', response)
       return response?.data
     },
     {

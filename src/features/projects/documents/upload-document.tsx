@@ -128,7 +128,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
           {t('upload')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
-        {isLoading && <Progress isIndeterminate colorScheme="blue" aria-labelledby="loading" size="xs" />}
+        {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
             <VStack align="start">

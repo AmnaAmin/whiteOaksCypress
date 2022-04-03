@@ -24,7 +24,6 @@ export const useUploadDocument = () => {
           title: 'Upload New Document',
           description: 'New document has been uploaded successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -33,7 +32,6 @@ export const useUploadDocument = () => {
           title: 'Upload New Document',
           description: 'Error occured during uploading new document',
           status: 'error',
-          duration: 9000,
           isClosable: true,
         })
       },

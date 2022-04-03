@@ -19,15 +19,15 @@ const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = 
           </Box>
         )}
         <Stack>
-          <Heading as="h5" color="gray.700" fontSize="16px" fontWeight={700}>
+          <Heading color="gray.600" fontSize="14px" fontWeight={500}>
             {label}
           </Heading>
-          <Text minH="22px" fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.600">
+          <Text minH="22px" fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.500">
             {InputElem}
           </Text>
         </Stack>
       </HStack>
-      {showDivider && <Divider orientation="horizontal" pt={5} mb={5} />}
+      {showDivider && <Divider orientation="horizontal" pt={5} mb={5} w="284px" />}
     </Box>
   )
 }
