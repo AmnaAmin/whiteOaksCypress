@@ -194,7 +194,7 @@ i18n.use(initReactI18next).init({
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
         insurance: 'Seguro',
-        license: 'Licencia',
+        License: 'Licencia',
         projectSummary: 'Resumen del Proyecto',
         activeWO: 'WO Activo',
         pastDue: 'Vencido',

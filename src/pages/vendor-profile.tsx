@@ -58,7 +58,7 @@ export const VendorProfilePage: React.FC = props => {
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
-              {t('license')}
+              {t('License')}
             </Tab>
             <Tab
               data-testid="tradetab"
