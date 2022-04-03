@@ -22,7 +22,7 @@ import jsPdf from 'jspdf'
 import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiBookAdd, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
+import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
@@ -163,17 +163,17 @@ export const LienWaiverTab: React.FC<any> = props => {
               <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (
                   <Flex alignItems={'center'}>
-                    <FormLabel margin={0} fontSize="16px" fontStyle="normal" fontWeight={600} color="gray.700">
+                    <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
                       Recent LW:
                     </FormLabel>
 
                     <Button
-                      fontSize="10px"
+                      fontSize="14px"
+                      fontWeight={500}
                       bg="white"
                       color="#4E87F8"
                       float="right"
                       mr={3}
-                      textDecoration="underline"
                       onClick={() => downloadFile(recentLWFile.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
@@ -207,23 +207,11 @@ export const LienWaiverTab: React.FC<any> = props => {
 
                   <InputView
                     controlStyle={{ w: '20em' }}
-                    label={t('customerName')}
-                    InputElem={<Text>{lienWaiverData.customerName}</Text>}
-                  />
-                </HStack>
-                <HStack>
-                  <InputView
-                    controlStyle={{ w: '20em' }}
                     label={t('jobLocation')}
                     InputElem={<Text>{lienWaiverData.propertyAddress}</Text>}
                   />
-
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('owner')}
-                    InputElem={<Text>{lienWaiverData.owner}</Text>}
-                  />
                 </HStack>
+                <HStack></HStack>
                 <HStack>
                   <InputView
                     controlStyle={{ w: '20em' }}
@@ -235,19 +223,30 @@ export const LienWaiverTab: React.FC<any> = props => {
                     label={t('amountOfCheck')}
                     InputElem={<Text>${lienWaiverData.amountOfCheck}</Text>}
                   />
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('checkPayableTo')}
-                    InputElem={<Text>{lienWaiverData.claimantName}</Text>}
-                  />
                 </HStack>
 
-                <HStack alignItems={'flex-start'}>
+                <Stack pt="5" pb="5">
+                  <FormInput
+                    errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
+                    label={t('claimantsTitle')}
+                    placeholder=""
+                    register={register}
+                    controlStyle={{ w: '293px' }}
+                    elementStyle={{
+                      bg: 'white',
+                      borderLeft: '2px solid #4E87F8',
+                    }}
+                    rules={{ required: 'This is required field' }}
+                    name={`claimantTitle`}
+                  />
+                </Stack>
+
+                <HStack alignItems={'flex-start'} spacing="7">
                   <FormControl isInvalid={!value.claimantsSignature} width={'20em'}>
-                    <FormLabel fontWeight={700} fontSize={'16px'}>
+                    <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
                       {t('claimantsSignature')}
                     </FormLabel>
-                    <Flex pos="relative" bg="gray.50" height={'64px'} alignItems={'center'} px={4}>
+                    <Flex pos="relative" bg="gray.50" height={'37px'} alignItems={'center'} px={4}>
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                       <Image
                         hidden={!value.claimantsSignature}
@@ -259,28 +258,18 @@ export const LienWaiverTab: React.FC<any> = props => {
                         ref={sigRef}
                       />
 
-                      <Flex pos={'absolute'} right={'10px'} top={'25px'}>
-                        {value.claimantsSignature && <BiTrash className="mr-1" onClick={onRemoveSignature} />}
-                        <BiBookAdd onClick={() => setOpenSignature(true)} />
+                      <Flex pos={'absolute'} right="10px" top="11px">
+                        {value.claimantsSignature && (
+                          <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
+                        )}
+                        <BiBookAdd onClick={() => setOpenSignature(true)} color="#A0AEC0" />
                       </Flex>
                     </Flex>
                     {!value.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
                   </FormControl>
 
                   <FormInput
-                    errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
-                    label={t('claimantsTitle')}
-                    placeholder=""
-                    register={register}
-                    controlStyle={{ w: '20em' }}
-                    elementStyle={{
-                      bg: 'white',
-                      borderLeft: '2px solid #4E87F8',
-                    }}
-                    rules={{ required: 'This is required field' }}
-                    name={`claimantTitle`}
-                  />
-                  <FormInput
+                    icon={<BiCalendar />}
                     errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
                     label={t('dateOfSignature')}
                     placeholder=""
@@ -311,8 +300,8 @@ export const LienWaiverTab: React.FC<any> = props => {
             size="lg"
             color="gray.700"
             fontStyle="normal"
-            fontWeight={600}
-            fontSize="18px"
+            fontWeight={500}
+            fontSize="14px"
           >
             {t('close')}
           </Button>
@@ -322,8 +311,8 @@ export const LienWaiverTab: React.FC<any> = props => {
             mr={3}
             type="submit"
             fontStyle="normal"
-            fontWeight={600}
-            fontSize="18px"
+            fontWeight={500}
+            fontSize="14px"
           >
             {t('save')}
           </Button>
@@ -343,8 +332,8 @@ const HelpText = ({ children }) => {
   return (
     <>
       {!isReadMore ? (
-        <Link onClick={toggleReadMore} style={{ color: '#4E87F8' }}>
-          <Flex fontStyle="normal" fontWeight="500" fontSize="lg">
+        <Link onClick={toggleReadMore} style={{ color: '#4A5568' }}>
+          <Flex fontStyle="normal" fontWeight={500} fontSize="14px">
             <Box>{t('readMore')}</Box>
             <Box ml="3px" mt="3px">
               <BiCaretDown />
@@ -353,7 +342,7 @@ const HelpText = ({ children }) => {
         </Link>
       ) : (
         <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight="500" fontSize="lg">
+          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4A5568' }}>
             <Box>{t('readLess')}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />

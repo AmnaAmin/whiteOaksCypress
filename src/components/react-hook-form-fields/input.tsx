@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { FormErrorMessage, FormControl, FormLabel, Input, Box, InputRightElement, InputGroup } from '@chakra-ui/react'
+import { FormErrorMessage, FormControl, FormLabel, Input, Box, InputGroup } from '@chakra-ui/react'
 import { UseFormRegister } from 'react-hook-form'
 
 type InputProps = {
@@ -25,22 +25,26 @@ type InputProps = {
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
-  <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage}>
+  <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage} w="215px">
     <FormLabel
-      fontWeight={props.weight || 700}
-      fontSize={props.size || '16px'}
+      display="flex"
+      color="gray.600"
+      fontWeight={props.weight || 500}
+      fontSize={props.size || '14px'}
       {...props.labelStyle}
       htmlFor={props.name}
     >
+      <Box color="#718096" fontSize="1.5rem" pos="relative" right="5px">
+        {props.icon}
+      </Box>
+
       {props.label}
     </FormLabel>
     <InputGroup>
-      {props.icon && (
-        <InputRightElement right="10px" w="auto" className="InputLeft">
-          <Box color="gray.400">{props.icon}</Box>
-        </InputRightElement>
-      )}
       <Input
+        color="gray.500"
+        fontSize="14px"
+        fontWeight={400}
         type="text"
         bg="white"
         size={props.size || 'md'}

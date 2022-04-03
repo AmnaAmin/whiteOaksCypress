@@ -9,7 +9,6 @@ import { WorkOrdersTable } from '../features/projects/work-orders-table'
 import { AlertsTable } from '../features/projects/alerts/alerts-table'
 import { AlertStatusModal } from '../features/projects/alerts/alert-status'
 import { UploadDocumentModal } from '../features/projects/documents/upload-document'
-import { AiOutlineUpload } from 'react-icons/ai'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from '../features/projects/transactions/transaction-info-card'
 // import { t } from 'i18next';
@@ -84,16 +83,8 @@ export const ProjectDetails: React.FC = props => {
 
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
                 {tabIndex === 2 && (
-                  <Button
-                    onClick={onDocumentModalOpen}
-                    bg="#4E87F8"
-                    color="#FFFFFF"
-                    size="lg"
-                    _hover={{ bg: 'royalblue' }}
-                  >
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <AiOutlineUpload aria-label="upload-document-button" />
-                    </Box>
+                  <Button onClick={onDocumentModalOpen} fontSize={14} fontWeight={600} color="#4E87F8" size="md">
+                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
                     {t('upload')}
                   </Button>
                 )}

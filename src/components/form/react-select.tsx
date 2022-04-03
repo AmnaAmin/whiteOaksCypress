@@ -37,7 +37,6 @@ const chakraStyles = {
     pointerEvents: 'auto',
     background: '#F7FAFC',
     borderRadius: '4px',
-    fontFamily: 'Inter',
   }),
   input: provided => ({
     ...provided,
@@ -110,14 +109,15 @@ const chakraComponents = {
           ref={innerRef}
           sx={{
             ...inputStyles.field,
-            fontFamily: 'Inter',
             p: 0,
             overflow: 'hidden',
             h: 'auto',
             minH: heights[size],
+            borderLeft: '2px solid #4E87F8',
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,
+
               bg: 'gray.50',
               borderColor: 'gray.200',
             },
