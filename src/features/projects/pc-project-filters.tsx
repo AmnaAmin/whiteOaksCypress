@@ -10,7 +10,7 @@ import SummaryIconFirst, {
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useProjectCards } from 'utils/pc-projects'
+// import { useProjectCards } from 'utils/pc-projects'
 import { ProjectCard } from './project-card'
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
@@ -76,7 +76,8 @@ const useProjectCardJson = cards => {
 }
 
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
-  const { data: values } = useProjectCards()
+  // const { data: values } = useProjectCards()
+  const values = []
   const cards = useProjectCardJson(values)
   console.log(cards)
 
