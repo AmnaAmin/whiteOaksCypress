@@ -73,7 +73,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>
-      <Box h="65vh">
+      <Box h="65vh" mt={14}>
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
@@ -109,7 +109,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
           type="submit"
           colorScheme="CustomPrimaryColor"
           size="md"
-          fontWeight={600}
+          fontWeight={500}
           fontStyle="normal"
           fontSize="14px"
           data-testid="saveVendorSkills"

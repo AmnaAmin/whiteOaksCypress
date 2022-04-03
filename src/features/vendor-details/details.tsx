@@ -28,8 +28,8 @@ import 'components/translation/i18n'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const textStyle = {
-  color: '#2D3748',
-  fontSize: '16px',
+  color: '#4A5568',
+  fontSize: '14px',
   fontWeight: 500,
   lineHeight: '24px',
   mb: '5px',
@@ -45,12 +45,12 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
   return (
     <Box>
       <HStack alignItems="start">
-        {icon && <Icon as={icon} boxSize={7} color="#718096" />}
+        {icon && <Icon as={icon} boxSize={7} color="#718096" mr={2} />}
         <VStack spacing={1} alignItems="start">
-          <Text color="#2D3748" fontWeight={700} fontSize="16px" lineHeight="24px" fontStyle="normal">
+          <Text color="#4A5568" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
             {title}
           </Text>
-          <Text data-testid={testid} color="#4A5568" fontSize="13px" fontWeight={400} fontStyle="normal" pb="20px">
+          <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal" pb="20px">
             {value}
           </Text>
         </VStack>
@@ -92,7 +92,7 @@ export const Details: React.FC<{
 
   return (
     <Flex h="100%" direction="column">
-      <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap="10px" w="100%" mb="30px">
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="100%" mb="30px">
         <GridItem>
           <FieldInfoCard
             testid="businessName"
@@ -123,7 +123,7 @@ export const Details: React.FC<{
           />
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(auto-fill, minmax(250px, 1fr))" gap="10px" w="100%" mb="40px">
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="100%" mb="40px">
         <GridItem>
           <FieldInfoCard
             testid="streetAddress"
@@ -181,14 +181,16 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
         <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm">
           <Flex direction="column" h="100%">
             <Box flex="1">
-              <Box w="50%" mb="22px">
+              <Box mb="22px">
                 <Stack spacing={4} direction={['row']}>
-                  <FormControl w="320px" isInvalid={!!errors.primaryContact}>
+                  <FormControl w="215px" isInvalid={!!errors.primaryContact}>
                     <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
                     <Input
-                      bg="#FFFFFF"
-                      w="320px"
+                      w="215px"
                       h="40px"
+                      bg="#FFFFFF"
+                      color="#718096"
+                      fontSize="14px"
                       borderLeft="2px solid #4E87F8"
                       {...register('primaryContact', {
                         required: 'This is required',
@@ -203,9 +205,11 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl isInvalid={!!errors.secondaryContact}>
                     <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
                     <Input
-                      bg="#FFFFFF"
-                      w="320px"
+                      w="215px"
                       h="40px"
+                      bg="#FFFFFF"
+                      color="#718096"
+                      fontSize="14px"
                       {...register('secondaryContact')}
                       id="secondaryContact"
                       type="text"
@@ -215,14 +219,16 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                 </Stack>
               </Box>
 
-              <Box mb="22px" w="50%">
+              <Box mb="22px">
                 <Stack direction="row" spacing={4}>
-                  <FormControl isInvalid={!!errors.businessPhoneNumber}>
+                  <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
                     <Input
-                      bg="#FFFFFF"
-                      w="320px"
+                      w="215px"
                       h="40px"
+                      bg="#FFFFFF"
+                      color="#718096"
+                      fontSize="14px"
                       borderLeft="2px solid #4E87F8"
                       mb="5px"
                       {...register('businessPhoneNumber', {
@@ -240,9 +246,11 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl w="100px" isInvalid={!!errors.businessNumberExtention}>
                     <FormLabel sx={textStyle}>Ext</FormLabel>
                     <Input
-                      bg="#FFFFFF"
                       w="96px"
                       h="40px"
+                      bg="#FFFFFF"
+                      color="#718096"
+                      fontSize="14px"
                       {...register('businessNumberExtention')}
                       id="businessNumberExtention"
                       type="text"
@@ -252,7 +260,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondaryNumber}>
+                  <FormControl isInvalid={!!errors.secondaryNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryNo')}</FormLabel>
                     <Controller
                       name="secondaryNumber"
@@ -261,9 +269,11 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                         return (
                           <Input
                             {...field}
-                            bg="#FFFFFF"
-                            w="320px"
+                            w="215px"
                             h="40px"
+                            bg="#FFFFFF"
+                            color="#718096"
+                            fontSize="14px"
                             id="SecondaryNo"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
@@ -294,6 +304,8 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       bg="#FFFFFF"
                       w="96px"
                       h="40px"
+                      color="#718096"
+                      fontSize="14px"
                       id="Ext"
                       {...register('secondaryNumberExtenstion')}
                       type="text"
@@ -305,16 +317,18 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                 </Stack>
               </Box>
 
-              <Box w="50%" mb="22px">
+              <Box mb="22px">
                 <Stack direction="row" spacing={4}>
                   {/* Primary Email => Input */}
 
-                  <FormControl w="320px" isInvalid={!!errors.primaryEmail}>
+                  <FormControl isInvalid={!!errors.primaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
-                      bg="#FFFFFF"
-                      w="320px"
+                      w="215px"
                       h="40px"
+                      bg="#FFFFFF"
+                      color="#718096"
+                      fontSize="14px"
                       borderLeft="2px solid #4E87F8"
                       {...register('primaryEmail', {
                         required: 'This is required',
@@ -326,13 +340,15 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                     <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondaryEmail}>
+                  <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
                     <Input
-                      bg="#FFFFFF"
-                      w="320px"
-                      {...register('secondaryEmail')}
+                      w="215px"
                       h="40px"
+                      bg="#FFFFFF"
+                      color="#718096"
+                      fontSize="14px"
+                      {...register('secondaryEmail')}
                       id="secondaryEmail"
                       type="text"
                     />
@@ -355,7 +371,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   size="md"
                   fontSize="14px"
                   fontStyle="normal"
-                  fontWeight={600}
+                  fontWeight={500}
                   type="submit"
                   data-testid="saveDetails"
                 >

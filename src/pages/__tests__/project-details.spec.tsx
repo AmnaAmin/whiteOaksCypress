@@ -1,15 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import App from 'App'
 import { dateFormat } from 'utils/date-time-utils'
-import {
-  act,
-  getByText,
-  render,
-  screen,
-  selectOption,
-  waitForElementToBeRemoved,
-  waitForLoadingToFinish,
-} from 'utils/test-utils'
+import { act, getByText, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
 
 const renderProjectDetailsAndSwitchToDocumentTab = async () => {
   await render(<App />, { route: '/project-details/2951' })
@@ -216,18 +208,21 @@ describe('Porject Details: Document tab test cases', () => {
     userEvent.click(uploadDocumentButton)
 
     // Fill document form
-    userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
-    const selectedOption = screen.getByRole('option', { name: 'Drawings' }) as HTMLOptionElement
-    expect(selectedOption.selected).toBe(true)
+    // userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
+    // const selectedOption = screen.getByRole('option', { name: 'Drawings' }) as HTMLOptionElement
+    // expect(selectedOption.selected).toBe(true)
+    // User first select Transaction type, one of ['Change Order', 'Draw']
+    await selectOption(screen.getByTestId('document-type'), 'Drawings')
 
     chooseFileByLabel(/Choose File/i)
 
-    userEvent.click(screen.getByText(/Save/i))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/Save/i))
+    })
 
-    await waitForElementToBeRemoved(() => [screen.getByText('Upload', { selector: 'header' })], { timeout: 5000 })
+    expect(await screen.findAllByText('New document has been uploaded successfully.')).not.toEqual(null)
 
-    expect(screen.getByText(/New document has been uploaded successfully./i)).toBeInTheDocument()
-    expect(screen.getByText(/dummy-file\.png/i)).toBeInTheDocument()
+    expect(await screen.findByText(/dummy-file\.png/i)).toBeInTheDocument()
   })
 
   test('Upload document Empty fields validation', async () => {
@@ -236,7 +231,9 @@ describe('Porject Details: Document tab test cases', () => {
     const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
     userEvent.click(uploadDocumentButton)
 
-    userEvent.click(screen.getByText(/Save/i))
+    act(() => {
+      userEvent.click(screen.getByText(/Save/i))
+    })
     expect(screen.getByText(/Document type is required/i)).toBeInTheDocument()
   })
 })

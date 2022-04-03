@@ -102,10 +102,10 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 
   return (
-    <Box>
+    <Box w="100%">
       <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-        <Box w="100%">
-          <HStack direction="row" spacing={24}>
+        <Box w="940px">
+          <HStack direction="row" spacing="60px">
             <Flex minWidth="250px" alignSelf="baseline" mt="8px">
               <Box width="25px" fontSize="20px">
                 <BiFile color="#718096" />
@@ -380,7 +380,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
             type="submit"
             fontSize="14px"
             fontStyle="normal"
-            fontWeight={600}
+            fontWeight={500}
           >
             {/* {t('next')} */}
             Next
