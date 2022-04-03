@@ -90,8 +90,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             // onClose={() => setShowNotification(false)}
             // onOpen={() => setShowNotification(true)}
             >
-              <MenuButton transition="all 0.2s" color="gray" _active={{ color: '#4E87F8' }}>
-                <FaBell fontSize="1.7rem" color="#A0AEC0" />
+              <MenuButton transition="all 0.2s" _active={{ color: '#4E87F8' }} color="#A0AEC0">
+                <FaBell fontSize="1.7rem" />
               </MenuButton>
               <Notification />
 
