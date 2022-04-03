@@ -12,6 +12,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const isDateExpired = (date: string) => {
   const currentDate = new Date()
+  console.log('givenDtat', date)
   const givenDate = new Date(date)
   if (givenDate > currentDate) return ''
   return '#EC7979'
@@ -47,10 +48,10 @@ export const SimpleSlider: React.FC<{
       w="100%"
       padding={{
         base: '30px 30px 10px',
-        sm: '30px 40px 10px',
+        sm: '30px 30px 10px',
         md: '30px 50px 10px',
         xl: ' 30px 40px 10px',
-        '2xl': '30px 80px 10px',
+        '2xl': '30px 60px 10px',
       }}
       display="block"
       boxShadow="1px 1px 7px rgba(0,0,0,0.1)"
@@ -66,7 +67,7 @@ export const SimpleSlider: React.FC<{
             fontSize="18px"
             color="#4A5568"
             pb={3}
-            ml={{ base: 'unset', lg: '2', xl: '5' }}
+            mx={{ base: 'unset', lg: 'unset', '2xl': '5' }}
           >
             {props.heading}
           </Heading>
@@ -98,7 +99,7 @@ const SliderItem: React.FC<{ title: string; date: string }> = ({ title, date }) 
   if (!date) return null
   return (
     <Flex
-      mx={{ base: 'unset', lg: '2', xl: '5' }}
+      mx={{ base: 'unset', '2xl': '5' }}
       whiteSpace="nowrap"
       lineHeight={1.4}
       _last={{ borderBottomWidth: 0 }}
