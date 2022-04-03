@@ -117,6 +117,7 @@ const chakraComponents = {
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,
+
               bg: 'gray.50',
               borderColor: 'gray.200',
             },
