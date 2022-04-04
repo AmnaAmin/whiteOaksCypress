@@ -1,14 +1,14 @@
-import { Box, Heading, useColorModeValue } from "@chakra-ui/react";
-import { Card } from "../features/login-form-centered/Card";
-import { LoginForm } from "../features/login-form-centered/LoginForm";
+import { Box, Heading, useColorModeValue } from '@chakra-ui/react'
+import { Card } from 'features/login-form-centered/Card'
+import { LoginForm } from 'features/login-form-centered/LoginForm'
 
 export const Login = () => {
   return (
     <Box
-      bg={useColorModeValue("gray.50", "inherit")}
+      bg={useColorModeValue('gray.50', 'inherit')}
       minH="100vh"
       py="12"
-      px={{ base: "4", lg: "8" }}
+      px={{ base: '4', lg: '8' }}
       display="flex"
       dir="column"
       alignItems="center"
@@ -23,5 +23,5 @@ export const Login = () => {
         </Card>
       </Box>
     </Box>
-  );
-};
+  )
+}

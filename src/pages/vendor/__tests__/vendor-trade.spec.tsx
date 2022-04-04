@@ -2,9 +2,9 @@ import { render, screen } from 'utils/test-utils'
 import { fireEvent, waitFor, render as directRender } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import App from 'App'
-import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
-import { VENDOR_SKILLS } from '../../mocks/api/vendor-profile/data'
-import { TradeForm } from '../../features/vendor-details/trades'
+import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
+import { VENDOR_SKILLS } from 'mocks/api/vendor-profile/data'
+import { TradeForm } from 'features/vendor-details/trades'
 
 jest.setTimeout(30000)
 

@@ -11,11 +11,11 @@ import {
   licenseDefaultFormValues,
   createVendorPayload,
 } from 'utils/vendor-details'
-import { FormSelect } from '../../components/react-hook-form-fields/select'
-import { FormInput } from '../../components/react-hook-form-fields/input'
-import { FormDatePicker } from '../../components/react-hook-form-fields/date-picker'
-import { FormFileInput } from '../../components/react-hook-form-fields/file-input'
-import { LicenseFormValues, VendorProfile } from '../../types/vendor.types'
+import { FormSelect } from 'components/react-hook-form-fields/select'
+import { FormInput } from 'components/react-hook-form-fields/input'
+import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
+import { FormFileInput } from 'components/react-hook-form-fields/file-input'
+import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 

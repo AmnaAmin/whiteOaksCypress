@@ -3,9 +3,9 @@ import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
-import { FormDatePicker } from '../../components/react-hook-form-fields/date-picker'
-import { FormFileInput } from '../../components/react-hook-form-fields/file-input'
-import { DocumentsCardFormValues, VendorProfile } from '../../types/vendor.types'
+import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
+import { FormFileInput } from 'components/react-hook-form-fields/file-input'
+import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import {
   parseDocumentCardsValues,
   useSaveVendorDetails,

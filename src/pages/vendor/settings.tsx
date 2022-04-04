@@ -3,16 +3,16 @@ import { Box, Button, HStack, Avatar, Text, Stack, Divider, Icon, VStack } from 
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
-import { SettingsValues } from '../types/vendor.types'
+import { SettingsValues } from 'types/vendor.types'
 import {
   readFileContent,
   useSaveSettings,
   //  languageOptions,
   useAccountDetails,
 } from 'utils/vendor-details'
-// import { FormSelect } from '../components/react-hook-form-fields/select'
-import { FormInput } from '../components/react-hook-form-fields/input'
-// import { FormFileInput } from '../components/react-hook-form-fields/file-input'
+// import { FormSelect } from 'components/react-hook-form-fields/select'
+import { FormInput } from 'components/react-hook-form-fields/input'
+// import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 
