@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import ReactTable, { RowProps } from '../../components/table/react-table'
+import ReactTable, { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
 import { useProjects } from 'utils/projects'
 import Status from './status'

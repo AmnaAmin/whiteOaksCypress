@@ -15,7 +15,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Select from 'components/form/react-select'
-import ChooseFileField from '../components/choose-file/choose-file'
+import ChooseFileField from 'components/choose-file/choose-file'
 import { Controller, useForm } from 'react-hook-form'
 // import { disabledInputStyle } from '../theme/common-style'
 import {
@@ -27,7 +27,7 @@ import {
   useCreateTicketMutation,
 } from 'utils/support'
 import { useUserProfile } from 'utils/redux-common-selectors'
-import { FileAttachment, SupportFormValues } from '../types/support.types'
+import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 

@@ -3,8 +3,8 @@ import { fireEvent, waitFor, render as directRender } from '@testing-library/rea
 import { act } from 'react-dom/test-utils'
 import App from 'App'
 import userEvent from '@testing-library/user-event'
-import { LicenseForm } from '../../features/vendor-details/license'
-import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
+import { LicenseForm } from 'features/vendor-details/license'
+import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 
 jest.setTimeout(30000)
 
