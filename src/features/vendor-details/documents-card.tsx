@@ -394,7 +394,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
           fontSize="14px"
           fontStyle="normal"
           fontWeight={500}
-          data-test="saveDocumentCards"
+          data-testid="saveDocumentCards"
         >
           {/* {t('next')} */}
           Next

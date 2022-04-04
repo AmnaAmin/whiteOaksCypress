@@ -32,7 +32,7 @@ describe('Vendor Profile License', () => {
     await waitFor(() => {
       expect(screen.getByTestId('licenseForm')).toBeInTheDocument()
       const openTab = screen.getByRole('tab', { selected: true })
-      expect(openTab.innerHTML).toEqual('license')
+      expect(openTab.innerHTML).toEqual('License')
       expect(screen.getAllByTestId('licenseRows')).toHaveLength(2)
       expect((screen.getByTestId('licenseType-0') as HTMLSelectElement).value).toEqual('1')
       expect((screen.getByTestId('licenseType-1') as HTMLSelectElement).value).toEqual('4')
