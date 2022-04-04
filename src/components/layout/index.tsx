@@ -46,9 +46,9 @@ export const Layout: React.FC = props => {
                   <Box w="201px">
                     <SidebarLink pathTo="/vendors" title="Profile" icon={<FaUser />} />
                   </Box>
-                  <Box w="201px">
+                  {/* <Box w="201px">
                     <SidebarLink pathTo="/pc-projects" title="PC-Projects" icon={<FaUser />} />
-                  </Box>
+                  </Box> */}
                 </Stack>
               </Sidebar>
             </Box>
