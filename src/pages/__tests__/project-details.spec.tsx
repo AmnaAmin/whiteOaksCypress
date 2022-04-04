@@ -1,15 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import App from 'App'
 import { dateFormat } from 'utils/date-time-utils'
-import {
-  act,
-  getByText,
-  render,
-  screen,
-  selectOption,
-  waitForElementToBeRemoved,
-  waitForLoadingToFinish,
-} from 'utils/test-utils'
+import { act, getByText, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
 
 const renderProjectDetailsAndSwitchToDocumentTab = async () => {
   await render(<App />, { route: '/project-details/2951' })
@@ -41,11 +33,11 @@ describe('Porject Details: Transaction tab test cases', () => {
     await render(<App />, { route: '/project-details/2951' })
 
     expect(window.location.pathname).toEqual('/project-details/2951')
-    expect(screen.getByRole('tab', { selected: true }).textContent).toEqual('Transaction')
+    expect(screen.getByRole('tab', { selected: true }).textContent).toEqual('Transactions')
 
     // userEvent.click(screen.getByText('Transaction', { selector: 'button' }))
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByTestId('new-transaction-button')
     expect(newTransactionButton).toBeInTheDocument()
     expect(screen.getByText(/WO-ADT Renovations Inc-11\/13\/2021/i)).toBeInTheDocument()
     expect(screen.getAllByRole('row').length).toEqual(4)
@@ -103,7 +95,7 @@ describe('Porject Details: Transaction tab test cases', () => {
   test('New transaction with Transaction Type "Draw" flow', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByTestId('new-transaction-button')
 
     // Open new Transaction Modal
     userEvent.click(newTransactionButton)
@@ -138,7 +130,7 @@ describe('Porject Details: Transaction tab test cases', () => {
   test('New transaction form validation should work properly', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
-    const newTransactionButton = screen.getByText('New Transaction', { selector: 'button' })
+    const newTransactionButton = screen.getByText('New Transaction')
 
     // Open new Transaction Modal
     userEvent.click(newTransactionButton)
@@ -216,18 +208,21 @@ describe('Porject Details: Document tab test cases', () => {
     userEvent.click(uploadDocumentButton)
 
     // Fill document form
-    userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
-    const selectedOption = screen.getByRole('option', { name: 'Drawings' }) as HTMLOptionElement
-    expect(selectedOption.selected).toBe(true)
+    // userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
+    // const selectedOption = screen.getByRole('option', { name: 'Drawings' }) as HTMLOptionElement
+    // expect(selectedOption.selected).toBe(true)
+    // User first select Transaction type, one of ['Change Order', 'Draw']
+    await selectOption(screen.getByTestId('document-type'), 'Drawings')
 
     chooseFileByLabel(/Choose File/i)
 
-    userEvent.click(screen.getByText(/Save/i))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/Save/i))
+    })
 
-    await waitForElementToBeRemoved(() => [screen.getByText('Upload', { selector: 'header' })], { timeout: 5000 })
+    expect(await screen.findAllByText('New document has been uploaded successfully.')).not.toEqual(null)
 
-    expect(screen.getByText(/New document has been uploaded successfully./i)).toBeInTheDocument()
-    expect(screen.getByText(/dummy-file\.png/i)).toBeInTheDocument()
+    expect(await screen.findByText(/dummy-file\.png/i)).toBeInTheDocument()
   })
 
   test('Upload document Empty fields validation', async () => {
@@ -236,7 +231,9 @@ describe('Porject Details: Document tab test cases', () => {
     const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
     userEvent.click(uploadDocumentButton)
 
-    userEvent.click(screen.getByText(/Save/i))
+    act(() => {
+      userEvent.click(screen.getByText(/Save/i))
+    })
     expect(screen.getByText(/Document type is required/i)).toBeInTheDocument()
   })
 })

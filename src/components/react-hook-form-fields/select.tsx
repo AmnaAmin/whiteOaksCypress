@@ -18,8 +18,8 @@ type SelectProps = {
 }
 
 export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
-  <FormControl size={props.size || 'lg'} {...props.controlStyle} isInvalid={!!props.errorMessage}>
-    <FormLabel fontSize={props.size || 'lg'} htmlFor={props.name}>
+  <FormControl size={props.size || 'lg'} {...props.controlStyle} isInvalid={!!props.errorMessage} w="215px">
+    <FormLabel fontSize={props.size || 'sm'} htmlFor={props.name} color="#4A5568">
       {props.label}
     </FormLabel>
     <Controller
@@ -29,7 +29,14 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
       render={({ field, fieldState }) => (
         <>
           <InputGroup>
-            <Select {...field} {...props.elementStyle} data-testid={props.testId} size={props.size || 'lg'}>
+            <Select
+              {...field}
+              {...props.elementStyle}
+              size={props.size || 'md'}
+              data-testid={props.testId}
+              fontSize={props.size || 'sm'}
+              color="#718096"
+            >
               <option value={''}>Select..</option>
               {props.options.map((option, index) => {
                 return (

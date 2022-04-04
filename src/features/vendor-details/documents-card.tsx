@@ -64,13 +64,13 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 
   return (
-    <Box>
-      <DocumentsForm onSubmit={onSubmit} vendor={props.vendor} />
+    <Box w="100%">
+      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit}></DocumentsForm>
     </Box>
   )
 })
 
-export const DocumentsForm = ({ onSubmit, vendor }) => {
+export const DocumentsForm = ({ vendor, onSubmit }) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const defaultValue = vendor => {
@@ -111,8 +111,8 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
   }, [watch, watchAllFields])
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-      <Box w="100%">
-        <HStack direction="row" spacing={24}>
+      <Box w="940px">
+        <HStack direction="row" spacing="60px">
           <Flex minWidth="250px" alignSelf="baseline" mt="8px">
             <Box width="25px" fontSize="20px">
               <BiFile color="#718096" />
@@ -149,7 +149,7 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
               </FormFileInput>
             </Box>
             <Box ml={6} pt={5}>
-              {downloadableDocument(documents.w9DocumentUrl, 'W9 Document.png', 'w9DocumentLink')}
+              {downloadableDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
               {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
             </Box>
           </Flex>
@@ -202,7 +202,7 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {downloadableDocument(documents.agreementUrl, 'Agreement signed.jpeg', 'agreementLink')}
+                {downloadableDocument(documents.agreementUrl, 'Agreement', 'agreementLink')}
                 {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
               </Box>
             </Flex>
@@ -261,7 +261,7 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {downloadableDocument(documents.insuranceUrl, 'Auto insurance.jpeg', 'autoInsuranceLink')}
+                {downloadableDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
                 {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
               </Box>
             </Flex>
@@ -317,7 +317,7 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {downloadableDocument(documents.insuranceUrl, 'COI GL.jpeg', 'coiGlExpLink')}
+                {downloadableDocument(documents.insuranceUrl, 'General Liability', 'coiGlExpLink')}
                 {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
               </Box>
             </Flex>
@@ -373,7 +373,7 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
-                {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COI WC.png', 'coiWcExpLink')}
+                {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
 
                 {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
               </Box>
@@ -381,20 +381,23 @@ export const DocumentsForm = ({ onSubmit, vendor }) => {
           </HStack>
         </Box>
       </Box>
-      <Box>
-        <Divider border="1px solid " />
-      </Box>
-      <Box id="footer" mr="60px" pt={5}>
+      <Box id="footer" w="100%" minH="60px" borderTop="1px solid #E2E8F0">
         <Button
-          size="md"
+          mt="16px"
+          mr="60px"
           float={'right'}
           colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue', fontWeight: '600' }}
+          size="md"
           type="submit"
-          data-testid="saveDocumentCards"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={500}
+          data-test="saveDocumentCards"
         >
-          <Text fontSize="16px" fontStyle="normal" fontWeight={600}>
-            {t('next')}
-          </Text>
+          {/* {t('next')} */}
+          Next
         </Button>
       </Box>
     </form>

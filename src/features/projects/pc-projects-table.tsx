@@ -4,49 +4,42 @@ import ReactTable, { RowProps } from '../../components/table/react-table'
 import { Link } from 'react-router-dom'
 import { useProjects } from 'utils/projects'
 import Status from './status'
-import { dateFormat } from 'utils/date-time-utils'
 import { Column } from 'react-table'
 import { t } from 'i18next'
 
-export const PROJECT_COLUMNS = [
+export const PCPROJECT_COLUMNS = [
   {
     Header: 'ID',
     accessor: 'id',
   },
   {
-    Header: t('type'),
-    accessor: 'projectTypeLabel',
+    Header: 'Project Coordinator',
+    accessor: 'projectCoordinator',
   },
   {
-    Header: t('WOstatus'),
-    accessor: 'vendorWOStatusValue',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.vendorWOStatusValue} />,
+    Header: 'General Labor',
+    accessor: 'generalLabourName',
   },
   {
-    Header: t('address'),
+    Header: 'Status',
+    accessor: 'projectStatus',
+    Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
+  },
+  {
+    Header: 'Address',
     accessor: 'streetAddress',
   },
   {
-    Header: t('region'),
-    accessor: 'region',
+    Header: 'City',
+    accessor: 'city',
   },
   {
-    Header: t('pendingTransactions'),
-    accessor: 'pendingTransactions',
+    Header: t('Client Start Date'),
+    accessor: 'clientStartDate',
   },
   {
-    Header: t('pastDueWO'),
-    accessor: 'pastDueWorkorders',
-  },
-  {
-    Header: t('expectedPaymentDate'),
-    accessor: 'vendorWOExpectedPaymentDate',
-    Cell({ value, row }) {
-      return dateFormat(value)
-    },
-    getCellExportValue(row, col) {
-      return dateFormat(row.values.vendorWOExpectedPaymentDate)
-    },
+    Header: t('Client Due Date'),
+    accessor: 'clientDueDate',
   },
 ]
 
@@ -55,22 +48,22 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const projectId = idCell?.value
 
   return (
-    <Link to={`/project-details/${projectId}`} data-testid="project-table-row">
-      <Tr
-        bg="white"
-        _hover={{
-          background: '#eee',
-          '& > td > a': {
-            color: '#333',
-          },
-        }}
-        {...row.getRowProps({
-          style,
-        })}
-      >
-        {row.cells.map((cell, index) => {
-          return (
-            <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
+    <Tr
+      bg="white"
+      _hover={{
+        background: '#eee',
+        '& > td > a': {
+          color: '#333',
+        },
+      }}
+      {...row.getRowProps({
+        style,
+      })}
+    >
+      {row.cells.map((cell, index) => {
+        return (
+          <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
+            <Link to={`/pc-project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
                   noOfLines={2}
@@ -86,11 +79,11 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
                   {cell.render('Cell')}
                 </Text>
               </Flex>
-            </Td>
-          )
-        })}
-      </Tr>
-    </Link>
+            </Link>
+          </Td>
+        )
+      })}
+    </Tr>
   )
 }
 
@@ -106,7 +99,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
 }) => {
-  const { projects, isLoading } = useProjects()
+  const { projects } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
 
   useEffect(() => {
@@ -114,8 +107,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
       ),
     )
   }, [selectedCard, projects])
@@ -123,7 +115,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   return (
     <Box ref={resizeElementRef} height="100%">
       <ReactTable
-        isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
         TableRow={ProjectRow}

@@ -424,11 +424,19 @@ export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({ isOpe
           <AddUpdateTransactionForm onClose={onClose} />
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} variant="text">
+          <Button onClick={onClose} variant="ghost">
             {t('close')}
           </Button>
 
-          <Button data-testid="save-transaction" colorScheme="button" type="submit" form="newTransactionForm" ml="3">
+          <Button
+            data-testid="save-transaction"
+            colorScheme="CustomPrimaryColor"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue' }}
+            type="submit"
+            form="newTransactionForm"
+            ml="3"
+          >
             {t('save')}
           </Button>
         </ModalFooter>
@@ -456,13 +464,15 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
           <AddUpdateTransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} />
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} variant="text">
+          <Button onClick={onClose} variant="ghost">
             Close
           </Button>
 
           <Button
             data-testid="update-transaction"
             colorScheme="CustomPrimaryColor"
+            _hover={{ bg: 'blue' }}
+            _focus={{ outlin: 'none' }}
             type="submit"
             form="newTransactionForm"
             ml="3"
