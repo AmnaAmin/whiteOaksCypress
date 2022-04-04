@@ -16,7 +16,7 @@ const chooseFilebyTestId = (id, filename) => {
   expect(screen.getByText(new RegExp(filename))).toBeInTheDocument()
 }
 
-describe('Table columns setting modal Test Cases', () => {
+describe('File Input test cases', () => {
   it('documents upload successfully in Vendor Profile documents tab', async () => {
     await render(<App />, { route: '/vendors' })
 
