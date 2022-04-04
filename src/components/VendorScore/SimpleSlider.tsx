@@ -12,7 +12,6 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const isDateExpired = (date: string) => {
   const currentDate = new Date()
-  console.log('givenDtat', date)
   const givenDate = new Date(date)
   if (givenDate > currentDate) return ''
   return '#EC7979'
@@ -26,7 +25,6 @@ export const SimpleSlider: React.FC<{
   const settings = {
     dots: false,
     infinite: true,
-
     centerPadding: '60px',
     speed: 500,
 
@@ -76,7 +74,7 @@ export const SimpleSlider: React.FC<{
               {slider.map((slide, i) => (
                 <Box key={i} textAlign="start" fontSize="16px" fontStyle="normal" fontWeight={400} color="#4A5568">
                   {slide?.map((item: any) => (
-                    <SliderItem key={item.title} title={item.title} date={item.date} />
+                    <SliderItem key={item.title} title={item.title} date={item.date} testId={item.testId} />
                   ))}
                 </Box>
               ))}
@@ -95,7 +93,7 @@ export const SimpleSlider: React.FC<{
   )
 }
 
-const SliderItem: React.FC<{ title: string; date: string }> = ({ title, date }) => {
+const SliderItem: React.FC<{ title: string; date: string; testId?: string }> = ({ title, date, testId }) => {
   if (!date) return null
   return (
     <Flex
@@ -111,7 +109,7 @@ const SliderItem: React.FC<{ title: string; date: string }> = ({ title, date }) 
       fontSize="16px"
     >
       <Text>{title}</Text>
-      <Text>{dateFormat(date)}</Text>
+      <Text data-testId={testId}>{dateFormat(date)}</Text>
     </Flex>
   )
 }

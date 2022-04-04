@@ -45,6 +45,7 @@ export const ProjectSummary = () => {
           name={t('activeWO')}
           Iconbgcolor={'#FBF3DC'}
           updownIconColor={'#E53E3E'}
+          testId="summary-active"
         />
         <ProjectSummaryCard
           isLoading={isLoading}
@@ -54,6 +55,7 @@ export const ProjectSummary = () => {
           name={t('pastDue')}
           Iconbgcolor={'#EAF3E7'}
           updownIconColor={'#E53E3E'}
+          testId="summary-pastDue"
         />
         <ProjectSummaryCard
           isLoading={isLoading}
@@ -63,6 +65,7 @@ export const ProjectSummary = () => {
           name={t('completedInvoiced')}
           Iconbgcolor={'#E8F0FF'}
           updownIconColor={'#48BB78'}
+          testId="summary-completedAndInvoiced"
         />
         <ProjectSummaryCard
           isLoading={isLoading}
@@ -72,6 +75,7 @@ export const ProjectSummary = () => {
           name={t('completednotPaid')}
           Iconbgcolor={'#FAE6E5'}
           updownIconColor={'#E53E3E'}
+          testId="summary-notInvoiced"
         />
         <ProjectSummaryCard
           isLoading={isLoading}
@@ -80,6 +84,7 @@ export const ProjectSummary = () => {
           name={t('upcomingPayments')}
           Iconbgcolor={'#ECF2FE'}
           updownIconColor={'#48BB78'}
+          testId="summary-upcomingInvoiceTotal"
           numbertext={numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0.00a)')} // HK|WOA-1736
         />
       </Flex>

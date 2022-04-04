@@ -61,6 +61,7 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
     </FormLabel>
     <FileUpload
       accept={props.accept}
+      testId={props.testId}
       register={props.register(
         props.name,
         props.isRequired
@@ -85,6 +86,7 @@ type FileUploadProps = {
   multiple?: boolean
   children?: ReactNode
   value?: any
+  testId?: string
 }
 
 const FileUpload = (props: FileUploadProps) => {
@@ -109,6 +111,7 @@ const FileUpload = (props: FileUploadProps) => {
             ref(e)
             inputRef.current = e
           }}
+          data-testid={props.testId}
         />
         {children}
         <Flex overflow="hidden" w={200} bg="#FFFFFF" roundedRight="6px">

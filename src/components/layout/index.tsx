@@ -3,12 +3,13 @@ import { Box, Button, Container, Flex, Stack, useColorModeValue as mode, VStack 
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
-import { FaAlignCenter, FaHome, FaUser } from 'react-icons/fa'
 import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
+import { useRoleBasedMenu } from './constants'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
+  const menu = useRoleBasedMenu()
 
   return (
     <VStack width="100%">
@@ -37,18 +38,11 @@ export const Layout: React.FC = props => {
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
                 <Stack align="start" spacing={3}>
-                  <Box w="201px">
-                    <SidebarLink pathTo="/vendorDashboard" title="Dashboard" icon={<FaHome />} />
-                  </Box>
-                  <Box w="201px">
-                    <SidebarLink pathTo="/projects" title="Projects" icon={<FaAlignCenter />} />
-                  </Box>
-                  <Box w="201px">
-                    <SidebarLink pathTo="/vendors" title="Profile" icon={<FaUser />} />
-                  </Box>
-                  {/* <Box w="201px">
-                    <SidebarLink pathTo="/pc-projects" title="PC-Projects" icon={<FaUser />} />
-                  </Box> */}
+                  {menu?.map(item => (
+                    <Box w="201px" key={item.pathTo}>
+                      <SidebarLink pathTo={item.pathTo} title={item.title} icon={<item.Icon />} />
+                    </Box>
+                  ))}
                 </Stack>
               </Sidebar>
             </Box>

@@ -22,6 +22,7 @@ type InputProps = {
   icon?: ReactNode
   value?: string
   weight?: number
+  testId?: string
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
@@ -47,6 +48,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
         fontWeight={400}
         type="text"
         bg="white"
+        data-testid={props.testId}
         size={props.size || 'md'}
         placeholder={props.placeholder}
         disabled={props.disabled}
