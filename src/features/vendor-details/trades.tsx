@@ -9,7 +9,7 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 // import 'components/translation/i18n';
 
@@ -45,7 +45,7 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vend
 }
 
 export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
-  const { t } = useTranslation()
+  // const { t } = useTranslation()
 
   const {
     handleSubmit,
@@ -73,7 +73,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>
-      <Box h="65vh">
+      <Box h="65vh" mt={14}>
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
@@ -108,13 +108,16 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
           mr="60px"
           type="submit"
           colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue', fontWeight: '600' }}
           size="md"
-          fontWeight={600}
+          fontWeight={500}
           fontStyle="normal"
-          fontSize="16px"
+          fontSize="14px"
           data-testid="saveVendorSkills"
         >
-          {t('save')}
+          {/* {t('save')} */}
+          Next
         </Button>
       </Flex>
     </form>

@@ -1,128 +1,117 @@
-import { Box } from "@chakra-ui/react";
-import { useVendorsPerMonth } from "utils/vendor-dashboard";
-import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { GenericObjectType } from "types/common.types";
+import { Box } from '@chakra-ui/react'
+import { useVendorsPerMonth } from 'utils/vendor-dashboard'
+import React from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { GenericObjectType } from 'types/common.types'
 
 const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
 const monthsShort: GenericObjectType = {
-  January: "Jan",
-  February: "Feb",
-  March: "Mar",
-  April: "Apr",
-  May: "May",
-  June: "Jun",
-  July: "Jul",
-  August: "Aug",
-  September: "Sep",
-  October: "Oct",
-  November: "Nov",
-  December: "Dec",
-};
+  January: 'Jan',
+  February: 'Feb',
+  March: 'Mar',
+  April: 'Apr',
+  May: 'May',
+  June: 'Jun',
+  July: 'Jul',
+  August: 'Aug',
+  September: 'Sep',
+  October: 'Oct',
+  November: 'Nov',
+  December: 'Dec',
+}
 
 const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
-  const { data: vendorEntity } = useVendorsPerMonth(vendorId);
-  const vendorData = months.map((key) => ({
+  const { data: vendorEntity } = useVendorsPerMonth(vendorId)
+  const vendorData = months.map(key => ({
     name: monthsShort[key],
     Active: vendorEntity?.[key]?.Active || 0,
     Closed: vendorEntity?.[key]?.Completed || 0,
     Paid: vendorEntity?.[key]?.Paid || 0,
     Canceled: vendorEntity?.[key]?.Cancelled || 0,
-  }));
+  }))
 
   return (
-    <ResponsiveContainer width="98%" height={330}>
-      <BarChart data={vendorData} barSize={50}>
+    <ResponsiveContainer width="98%" height={360}>
+      <BarChart
+        data={vendorData}
+        barSize={50}
+        margin={{
+          top: 14,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
         <CartesianGrid stroke="#EFF3F9" />
         <XAxis
           dataKey="name"
           axisLine={false}
           tickLine={false}
           tick={{
-            fill: "#4A5568",
-            fontSize: "12px",
+            fill: '#4A5568',
+            fontSize: '12px',
             fontWeight: 400,
-            fontStyle: "normal",
+            fontStyle: 'normal',
           }}
           tickMargin={20}
         />
 
         <YAxis
+          tickLine={{ stroke: '#4F4F4F' }}
           type="number"
-          // domain={[0, (dataMax: number) => 40]}
           tickSize={8}
           tickCount={3}
           axisLine={false}
           tick={{
-            fontSize: "12px",
-            fontStyle: "normal",
+            fontSize: '12px',
+            fontStyle: 'normal',
             fontWeight: 400,
-            fill: "#4A5568",
+            fill: '#4A5568',
           }}
         />
 
-        <Tooltip />
+        <Tooltip contentStyle={{ borderRadius: '6px' }} />
 
-        <Bar dataKey="Active" fill="#68B8EF" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="Closed" fill="#FB8832" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="Paid" fill="#949AC2" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="Canceled" fill="#F7685B" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
+        <Bar dataKey="Closed" fill="#FB8832" radius={[10, 10, 0, 0]} />
+        <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
+        <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
         <Legend
           wrapperStyle={{
-            lineHeight: "31px",
-            position: "relative",
-            bottom: "calc(100% + 73px)",
-            left: "80px",
+            lineHeight: '31px',
+            position: 'relative',
+            bottom: 'calc(100% + 50px)',
+            left: 50,
           }}
-          height={40}
           iconType="circle"
           iconSize={10}
-          align="center"
-          formatter={(value) => {
+          align="right"
+          formatter={value => {
             return (
-              <Box
-                display="inline-flex"
-                marginInlineEnd="28px"
-                mt={{ base: "30px", sm: "30px", md: 0 }}
-              >
-                <Box
-                  as="span"
-                  color="#4A5568"
-                  fontSize="12px"
-                  fontStyle="normal"
-                  fontWeight={400}
-                >
+              <Box display="inline-flex" marginInlineEnd="40px">
+                <Box as="span" color="#4A5568" fontSize="12px" fontStyle="normal" fontWeight={400}>
                   {value}
                 </Box>
               </Box>
-            );
+            )
           }}
         />
       </BarChart>
     </ResponsiveContainer>
-  );
-};
+  )
+}
 
-export default Overview;
+export default Overview

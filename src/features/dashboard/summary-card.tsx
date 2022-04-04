@@ -1,21 +1,21 @@
-import { Box, HStack, Text } from '@chakra-ui/layout';
-import { Center, Flex } from '@chakra-ui/react';
-import React from 'react';
+import { Box, HStack, Text } from '@chakra-ui/layout'
+import { Center, Flex } from '@chakra-ui/react'
+import React from 'react'
 type cardprops = {
-  UpdownIcon: React.ElementType;
-  BigIcon: React.ElementType;
-  number?: number;
-  name: string;
-  Iconbgcolor: any;
-  TopnValuebgColor: any;
-  numberText?: string;
-  TopValuecolor: string;
-};
+  UpdownIcon: React.ElementType
+  BigIcon: React.ElementType
+  number?: number
+  name: string
+  Iconbgcolor: any
+  TopnValuebgColor: any
+  numberText?: string
+  TopValuecolor: string
+}
 export const SummaryCard = (props: cardprops) => {
-  const { UpdownIcon, BigIcon } = props;
+  const { UpdownIcon, BigIcon } = props
   return (
     <HStack marginLeft="8px">
-      <Flex alignItems="center" w={{ base: 'unset', md: 'unset' }}>
+      <Flex alignItems="center">
         <Center bg={props.Iconbgcolor} borderRadius="4px" marginTop="30px" marginRight="10px" h="44px" w="46px">
           <BigIcon />
         </Center>
@@ -43,11 +43,17 @@ export const SummaryCard = (props: cardprops) => {
             {props.number}
             {props.numberText}
           </Box>
-          <Box lineHeight={{ base: '1rem', md: '20px' }} fontSize={{ base: '13px', md: '20px' }} fontWeight="400" color="#A0AEC0" h="auto">
+          <Box
+            lineHeight={{ base: '1rem', md: '20px' }}
+            fontSize={{ base: '13px', md: '20px' }}
+            fontWeight="400"
+            color="#A0AEC0"
+            h="auto"
+          >
             {props.name}
           </Box>
         </Flex>
       </Flex>
     </HStack>
-  );
-};
+  )
+}

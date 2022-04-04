@@ -1,10 +1,15 @@
 import { Box, Spinner } from '@chakra-ui/react'
 
-export const PageLoader = () => {
+export const ViewLoader = () => {
   return (
     <Box
-      h="100vh"
-      w="100vw"
+      position="absolute"
+      left="0"
+      right="0"
+      top="0"
+      bottom="0"
+      width="100%"
+      height="100%"
       display="flex"
       flexDirection="column"
       justifyContent="center"

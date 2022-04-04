@@ -12,7 +12,8 @@ interface SidebarLinkProps extends BoxProps {
 
 const useCheckPathSelected = (pathTo: string) => {
   const { pathname } = useLocation()
-  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard'
+  const isProjectDetails = pathname.includes('/project-details')
+  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard' || (pathTo === '/projects' && isProjectDetails)
   return { isLinkSelected }
 }
 
@@ -21,14 +22,14 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
   const { isLinkSelected } = useCheckPathSelected(pathTo)
   const selectedLinkStyle = useMemo(() => {
     return {
-      color: 'brand.500',
+      color: '#4E87F8',
     }
   }, [])
   const linkState = isLinkSelected
     ? {
         ...selectedLinkStyle,
         borderLeftColor: '#4E87F8',
-        bgGradient: 'linear(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%);',
+        bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%)',
       }
     : {}
 
@@ -37,16 +38,13 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       as={Link}
       to={pathTo}
       marginEnd="2"
-      color="#4A5568"
+      color="gray.600"
       fontSize="sm"
       display="block"
-      px="5"
-      py="1"
-      borderLeft="6px solid transparent"
+      px="2"
+      py="2"
+      borderLeft="4px solid transparent"
       cursor="pointer"
-      _hover={{
-        ...selectedLinkStyle,
-      }}
       className="group"
       fontWeight="medium"
       {...linkState}
@@ -56,7 +54,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
         <Box _groupHover={{ opacity: 1 }} fontSize="16px">
           {icon}
         </Box>
-        <Text fontSize="18px" fontWeight={500} lineHeight="24px" fontStyle="normal" pt="2px">
+        <Text fontSize="18px" fontWeight={500} lineHeight="28px" fontStyle="normal" pt="2px">
           {title}
         </Text>
       </HStack>

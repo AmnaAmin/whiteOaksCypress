@@ -25,52 +25,7 @@ type LicenseProps = {
 }
 
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { t } = useTranslation()
-  const [startDate] = useState(new Date())
   const { mutate: saveLicenses } = useSaveVendorDetails()
-
-  const defaultValues: LicenseFormValues = useMemo(() => {
-    if (props.vendor) {
-      return { licenses: licenseDefaultFormValues(props.vendor) }
-    }
-
-    return { licenses: [] }
-  }, [props.vendor])
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    control,
-    watch,
-    getValues,
-    reset,
-  } = useForm<LicenseFormValues>({
-    defaultValues,
-  })
-
-  useEffect(() => {
-    reset(defaultValues)
-  }, [defaultValues, props.vendor, reset])
-
-  const {
-    fields: licenseFields,
-    append,
-    remove: removeLicense,
-  } = useFieldArray({
-    control,
-    name: 'licenses',
-  })
-  const licenseValues = getValues()?.licenses
-
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {
-      console.log('Value Change', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
 
   const onSubmit = useCallback(
     async values => {
@@ -87,13 +42,69 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 
   return (
     <Box>
-      <form className="License Form" id="licenseForm" onSubmit={handleSubmit(onSubmit)}>
+      <LicenseForm vendor={props.vendor} onSubmit={onSubmit} />
+    </Box>
+  )
+})
+
+export const LicenseForm = ({ vendor, onSubmit }) => {
+  const [startDate] = useState(new Date())
+  const { t } = useTranslation()
+
+  const defaultValues: LicenseFormValues = useMemo(() => {
+    if (vendor) {
+      return { licenses: licenseDefaultFormValues(vendor) }
+    }
+
+    return { licenses: [] }
+  }, [vendor])
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+    watch,
+    getValues,
+    reset,
+  } = useForm<LicenseFormValues>({
+    defaultValues,
+  })
+
+  useEffect(() => {
+    reset(defaultValues)
+  }, [defaultValues, vendor, reset])
+
+  const {
+    fields: licenseFields,
+    append,
+    remove: removeLicense,
+  } = useFieldArray({
+    control,
+    name: 'licenses',
+  })
+  const licenseValues = getValues()?.licenses
+
+  /* debug purpose */
+  const watchAllFields = watch()
+  React.useEffect(() => {
+    const subscription = watch(value => {
+      // console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
+  return (
+    <Box>
+      <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
+          variant="outline"
           ml="13px"
-          bg="#4E87F8"
-          color="#FFFFFF"
+          color="#4E87F8"
+          fontSize="14px"
+          fontWeight={500}
           size="lg"
-          _hover={{ bg: 'royalblue' }}
+          _hover={{ bg: 'gray.200' }}
+          data-testid="addLicense"
           onClick={() =>
             append({
               licenseType: '',
@@ -108,13 +119,13 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" minH="60vh" spacing="20px" ml="8px">
+        <VStack align="start" minH="60vh" spacing="15px" ml="8px">
           {licenseFields.map((license, index) => {
             return (
-              <HStack key={index} mt="40px">
+              <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows">
                 <Box w="2em" color="barColor.100" fontSize="15px">
                   <Center>
-                    <MdOutlineCancel onClick={() => removeLicense(index)} />
+                    <MdOutlineCancel onClick={() => removeLicense(index)} data-testid={`removeLicense-` + index} />
                   </Center>
                 </Box>
                 <FormSelect
@@ -127,8 +138,9 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   controlStyle={{ w: '20em' }}
                   elementStyle={{
                     bg: 'white',
-                    borderLeft: '1.5px solid #4E87F8',
+                    borderLeft: '2px solid #4E87F8',
                   }}
+                  testId={`licenseType-` + index}
                 />
                 <FormInput
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
@@ -138,10 +150,10 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   controlStyle={{ w: '20em' }}
                   elementStyle={{
                     bg: 'white',
-                    borderLeft: '1.5px solid #4E87F8',
                   }}
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
+                  testId={`licenseNumber-` + index}
                 />
                 <FormDatePicker
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
@@ -151,16 +163,18 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   rules={{ required: 'This is required field' }}
                   style={{ w: '20em' }}
                   defaultValue={startDate}
+                  testId={`expiryDate-` + index}
                 />
                 <VStack>
                   <FormFileInput
                     errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
-                    label={t('fileInput')}
+                    // label={t('fileInput')}
                     name={`licenses.${index}.expirationFile`}
                     register={register}
-                    style={{ w: '20em' }}
+                    style={{ w: '20em', mt: '25px' }}
                     isRequired={true}
                     downloadableFile={licenseValues?.[index].downloadableFile}
+                    testId={`expirationFile-` + index}
                   >
                     <>
                       <Flex
@@ -169,12 +183,14 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                         // size="lg"
                         rounded={4}
                         bg="gray.100"
+                        h="36px"
+                        w={120}
                       >
                         <Button
                           rounded="none"
                           roundedLeft={5}
-                          fontSize={16}
-                          fontWeight={400}
+                          fontSize="14px"
+                          fontWeight={500}
                           bg="gray.100"
                           h="36px"
                           w={120}
@@ -199,11 +215,14 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
             mr="60px"
             float={'right'}
             colorScheme="CustomPrimaryColor"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue', fontWeight: '600' }}
             size="md"
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={600}
             type="submit"
+            fontSize="14px"
+            fontStyle="normal"
+            fontWeight={500}
+            data-testid="saveLicenses"
           >
             {t('next')}
           </Button>
@@ -211,4 +230,4 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
       </form>
     </Box>
   )
-})
+}

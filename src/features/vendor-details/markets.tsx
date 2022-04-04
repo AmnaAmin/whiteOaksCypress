@@ -73,7 +73,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>
-      <Box h="65vh">
+      <Box h="65vh" mt={14}>
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
@@ -108,10 +108,12 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
           mr="60px"
           type="submit"
           colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue', fontWeight: '600' }}
           size="md"
-          fontSize="16px"
+          fontWeight={500}
           fontStyle="normal"
-          fontWeight={600}
+          fontSize="14px"
           data-testid="saveMarkets"
         >
           {t('save')}

@@ -5,9 +5,9 @@ import {
   FormControl,
   FormLabel,
   InputGroup,
-  InputRightElement,
   Box,
   Portal,
+  InputLeftElement,
 } from '@chakra-ui/react'
 import { AiOutlineCalendar } from 'react-icons/ai'
 import DatePicker from 'react-datepicker'
@@ -26,14 +26,16 @@ type DatePickerProps = {
   style?: any
   defaultValue?: Date
   placeholder?: string
+  onChange?: (e) => void
+  testId?: string
 }
 const CalendarContainer = ({ children }) => {
   return <Portal>{children}</Portal>
 }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
-  <FormControl {...props.style} size={props.size || 'lg'}>
-    <FormLabel htmlFor={props.name} fontSize={props.size || 'lg'}>
+  <FormControl {...props.style} size={props.size || 'lg'} w="215px">
+    <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
       {props.label}
     </FormLabel>
     <Controller
@@ -50,9 +52,10 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
             onChange={val => {
               const format = getFormattedDate(val)
               onChange(format)
+              if (props.onChange) props.onChange(val)
             }}
             placeholderText={props.placeholder}
-            customInput={<DatePickerInput size={props.size || 'lg'} />}
+            customInput={<DatePickerInput testId={props.testId} size={props.size || 'lg'} />}
           />
           <Box minH="20px" mt="3px">
             <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
@@ -68,17 +71,20 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
     <Input
       bg="white"
       size="md"
+      color="#718096"
+      textAlign="center"
       onChange={props.onChange}
       onClick={props.onClick}
       placeholder={props.placeholder}
       value={props.value}
       type="text"
       ref={ref}
+      data-testid={props.testId}
     />
-    <InputRightElement className="InputLeft" pointerEvents="none">
-      <Box color="gray.400" fontSize="16px" mt="2px">
-        <AiOutlineCalendar size={20} cursor="pointer" color="black" />
+    <InputLeftElement className="InputLeft" pointerEvents="none">
+      <Box color="gray.400" fontSize="14px">
+        <AiOutlineCalendar size={20} cursor="pointer" color="#A0AEC0" />
       </Box>
-    </InputRightElement>
+    </InputLeftElement>
   </InputGroup>
 ))

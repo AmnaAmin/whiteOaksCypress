@@ -44,6 +44,9 @@ export const PROJECT_COLUMNS = [
     Cell({ value, row }) {
       return dateFormat(value)
     },
+    getCellExportValue(row, col) {
+      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+    },
   },
 ]
 
@@ -52,40 +55,42 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const projectId = idCell?.value
 
   return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: '#eee',
-        '& > td > a': {
-          color: '#333',
-        },
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-    >
-      {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0" bg="transparent">
-            <Link to={`/project-details/${projectId}`}>
+    <Link to={`/project-details/${projectId}`} data-testid="project-table-row">
+      <Tr
+        bg="white"
+        _hover={{
+          background: '#eee',
+          '& > td > a': {
+            color: '#333',
+          },
+        }}
+        {...row.getRowProps({
+          style,
+        })}
+      >
+        {row.cells.map((cell, index) => {
+          return (
+            <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
                   noOfLines={2}
                   title={cell.value}
                   padding="0 15px"
-                  color="gray.500"
-                  fontSize="12px"
+                  color="gray.600"
+                  mb="20px"
+                  mt="10px"
+                  fontSize="14px"
                   fontStyle="normal"
                   fontWeight="400"
                 >
                   {cell.render('Cell')}
                 </Text>
               </Flex>
-            </Link>
-          </Td>
-        )
-      })}
-    </Tr>
+            </Td>
+          )
+        })}
+      </Tr>
+    </Link>
   )
 }
 
@@ -101,7 +106,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
 }) => {
-  const { projects } = useProjects()
+  const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
 
   useEffect(() => {
@@ -118,6 +123,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   return (
     <Box ref={resizeElementRef} height="100%">
       <ReactTable
+        isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
         TableRow={ProjectRow}

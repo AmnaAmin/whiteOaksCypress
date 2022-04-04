@@ -9,13 +9,14 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Select,
   HStack,
   Box,
   FormErrorMessage,
   VStack,
   ModalCloseButton,
+  Progress,
 } from '@chakra-ui/react'
+
 import { MdOutlineCancel } from 'react-icons/md'
 import { documentTypes, useUploadDocument } from 'utils/vendor-projects'
 // import { t } from 'i18next';
@@ -24,14 +25,17 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { Document } from 'types/vendor.types'
 
-export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId, setLatestUploadedDoc }) => {
+import ReactSelect from 'components/form/react-select'
+import { SelectOption } from 'types/transaction.type'
+
+export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [document, setDocument] = useState<File | null>(null)
-  const [documentType, setDocumentType] = useState('')
+  const [documentType, setDocumentType] = useState<SelectOption | undefined>()
   const [isError, setError] = useState(false)
   const { vendorId } = useUserProfile() as Account
-  const { mutate: saveDocument } = useUploadDocument()
+  const { mutate: saveDocument, isLoading } = useUploadDocument()
 
   const onFileChange = useCallback(
     e => {
@@ -45,7 +49,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
 
   const resetUpload = useCallback(() => {
     setDocument(null)
-    setDocumentType('')
+    setDocumentType(undefined)
     setError(false)
     if (inputRef.current) {
       inputRef.current.value = ''
@@ -53,13 +57,13 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
   }, [setDocument, setDocumentType, setError, inputRef])
 
   const onDocumentTypeChange = useCallback(
-    e => {
-      if (e.target.value !== '') {
+    option => {
+      if (option) {
         setError(false)
       } else {
         setError(true)
       }
-      setDocumentType(e.target.value)
+      setDocumentType(option)
     },
     [setError, setDocumentType],
   )
@@ -68,7 +72,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
   function readFile(event: any) {
     const blob = event.target.result.split(',')[1]
     const doc: Document = {
-      documentType,
+      documentType: documentType?.value?.toString() || '',
       fileObject: blob,
       fileObjectContentType: document?.type || '',
       fileType: document?.name || '',
@@ -78,7 +82,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
     }
     saveDocument(doc, {
       onSuccess() {
-        setLatestUploadedDoc(doc)
         resetUpload()
         onClose()
       },
@@ -87,7 +90,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
 
   const uploadDocument = useCallback(
     e => {
-      if (documentType === '') {
+      if (!documentType) {
         setError(true)
         return
       }
@@ -104,6 +107,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
 
   return (
     <Modal
+      isCentered
       isOpen={isOpen}
       onClose={() => {
         resetUpload()
@@ -112,54 +116,47 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
       size="md"
     >
       <ModalOverlay />
-      <ModalContent minW="71em" h="24em">
+      <ModalContent minW="700px" minH="317px">
         <ModalHeader
-          fontSize="18px"
-          fontWeight={700}
+          fontSize="16px"
+          fontWeight={500}
           fontStyle="normal"
-          color="gray.700"
+          color="gray.600"
           borderBottom="1px solid #E2E8F0"
           borderTop="2px solid #4E87F8"
         >
           {t('upload')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
+        {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
-          <FormControl mt="35px" isInvalid={isError}>
+          <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
             <VStack align="start">
-              <FormLabel fontSize="16px" fontStyle="normal" fontWeight={500} color="gray.700" htmlFor="documentType">
+              <FormLabel fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600" htmlFor="documentType">
                 {t('documentType')}{' '}
               </FormLabel>
-              <HStack spacing="20px">
-                <Select
-                  borderLeft="2px solid #4E87F8"
-                  w="320px"
-                  id="documentType"
-                  placeholder="Select"
-                  fontWeight={400}
-                  fontStyle="normal"
-                  fontSize="16px"
-                  color="gray.700"
-                  size="md"
-                  onChange={onDocumentTypeChange}
-                >
-                  {documentTypes.map(type => (
-                    <option value={type.id} key={type.id}>
-                      {type.value}
-                    </option>
-                  ))}
-                </Select>
-                <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+              <HStack spacing="20px" w="100%">
+                <Box w={215}>
+                  <ReactSelect options={documentTypes} value={documentType} onChange={onDocumentTypeChange} />
+                </Box>
+
+                <input
+                  aria-labelledby="upload-document-field"
+                  type="file"
+                  ref={inputRef}
+                  style={{ display: 'none' }}
+                  onChange={onFileChange}
+                ></input>
                 {document ? (
                   <Box
                     color="barColor.100"
                     border="1px solid #e2e8f0"
                     // a
                     borderRadius="3px"
-                    fontSize="16px"
+                    fontSize="14px"
                   >
                     <HStack spacing="5px" h="37px" padding="10px" align="center">
-                      <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+                      <Box as="span" maxWidth="400px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                         {document.name}
                       </Box>
                       <MdOutlineCancel
@@ -173,15 +170,16 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
                   </Box>
                 ) : (
                   <Button
+                    id="upload-document-field"
                     onClick={e => {
                       if (inputRef.current) {
                         inputRef.current.click()
                       }
                     }}
-                    fontSize="16px"
-                    fontWeight={600}
+                    fontSize="14px"
+                    fontWeight={500}
                     fontStyle="normal"
-                    variant="outline"
+                    bg="none"
                     color="#4E87F8"
                   >
                     {t('chooseFile')}{' '}
@@ -200,18 +198,19 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId,
               onClose()
             }}
             fontStyle="normal"
-            fontWeight={600}
-            fontSize="18px"
+            fontWeight={500}
+            fontSize="14px"
             color="gray.700"
           >
             {t('close')}
           </Button>
           <Button
             fontStyle="normal"
-            fontWeight={600}
-            fontSize="18px"
+            fontWeight={500}
+            fontSize="14px"
             onClick={uploadDocument}
             colorScheme="CustomPrimaryColor"
+            _hover={{ bg: 'blue', fontWeight: '600' }}
             type="submit"
             ml="3"
           >

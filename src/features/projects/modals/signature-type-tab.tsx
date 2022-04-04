@@ -14,7 +14,6 @@ export const SignatureTab = props => {
 
   const onSubmit = useCallback(
     values => {
-      console.log(values)
       setSignature(values.signature)
       onClose()
     },
@@ -33,11 +32,12 @@ export const SignatureTab = props => {
                     errorMessage={errors.signature && errors.signature?.message}
                     label="Type Your Name Here"
                     labelStyle={{
-                      textAlign: 'center',
                       fontSize: '16px',
-                      fontWeight: 700,
+                      fontWeight: 500,
                       color: 'gray.800',
                       marginBottom: '20px',
+                      display: 'flex',
+                      justifyContent: 'center',
                     }}
                     placeholder=""
                     register={register}
@@ -48,6 +48,7 @@ export const SignatureTab = props => {
                       fontSize: '20px',
                       fontWeight: 700,
                       px: '2em',
+                      marginBottom: '10px',
                     }}
                     rules={{ required: 'This is required field' }}
                     name={`signature`}
@@ -65,18 +66,19 @@ export const SignatureTab = props => {
             onClick={onClose}
             color="gray.700"
             fontStyle="normal"
-            fontWeight={600}
-            fontSize="18px"
+            fontWeight={500}
+            fontSize="14px"
           >
             {t('close')}
           </Button>
           <Button
             colorScheme="CustomPrimaryColor"
             mr={3}
+            size="lg"
             type="submit"
             fontStyle="normal"
-            fontWeight={600}
-            fontSize="18px"
+            fontWeight={500}
+            fontSize="14px"
           >
             {t('apply')}
           </Button>

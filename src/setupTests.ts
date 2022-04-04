@@ -11,6 +11,7 @@ import '@testing-library/jest-dom'
 import { server } from './mocks/server'
 // import "whatwg-fetch";
 import { setToken } from 'utils/storage.utils'
+import { fireEvent } from '@testing-library/react'
 
 setToken('Token for testing')
 
@@ -40,6 +41,10 @@ beforeAll(() => {
 })
 
 afterAll(() => {
+  // lots of tests can leave a post-drop click blocker
+  // this cleans it up before every test
+  fireEvent.click(window)
+
   Object.defineProperty(HTMLElement.prototype, 'offsetHeight', originalOffsetHeight as PropertyDecorator)
   Object.defineProperty(HTMLElement.prototype, 'offsetWidth', originalOffsetWidth as PropertyDecorator)
 })

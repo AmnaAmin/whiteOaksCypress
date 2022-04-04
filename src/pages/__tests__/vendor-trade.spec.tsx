@@ -1,16 +1,12 @@
 import { render, screen } from 'utils/test-utils'
 import { fireEvent, waitFor, render as directRender } from '@testing-library/react'
-import { renderHook } from '@testing-library/react-hooks'
-import { useTrades } from 'utils/vendor-details'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { act } from 'react-dom/test-utils'
 import App from 'App'
 import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
 import { VENDOR_SKILLS } from '../../mocks/api/vendor-profile/data'
 import { TradeForm } from '../../features/vendor-details/trades'
 
-const queryClient = new QueryClient()
-const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+jest.setTimeout(30000)
 
 describe('Vendor Profile Trade Test Cases', () => {
   it('Trade Data is rendered', async () => {

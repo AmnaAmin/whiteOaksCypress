@@ -1,5 +1,13 @@
 import React from 'react'
-import { render, RenderOptions, waitForElementToBeRemoved, screen } from '@testing-library/react'
+import {
+  render,
+  RenderOptions,
+  waitForElementToBeRemoved,
+  screen,
+  fireEvent,
+  getByText,
+  findByText,
+} from '@testing-library/react'
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Providers } from 'providers'
@@ -9,7 +17,7 @@ export const ReactQueryProviderWrapper = ({ children }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 )
 
-const AllTheProviders: React.FC = ({ children }) => {
+export const AllTheProviders: React.FC = ({ children }) => {
   return <Providers>{children}</Providers>
 }
 
@@ -17,11 +25,30 @@ type CustomRenderOptions = RenderOptions & {
   route?: string
 }
 
+export const tick = (): Promise<void> => {
+  return new Promise(resolve => {
+    setTimeout(resolve, 0)
+  })
+}
+
+/**
+ * React select need this hack to open the select first then click on one of options
+ */
+const keyDownEvent = {
+  key: 'ArrowDown',
+}
+
+export async function selectOption(container: HTMLElement, optionText: string) {
+  const placeholder = getByText(container, 'Select...')
+  fireEvent.keyDown(placeholder, keyDownEvent)
+  await findByText(container, optionText)
+  fireEvent.click(getByText(container, optionText))
+}
+
 export const waitForLoadingToFinish = () =>
-  waitForElementToBeRemoved(
-    () => [...screen.queryAllByLabelText(/loading/i), ...screen.queryAllByText(/Loading.../i)],
-    { timeout: 10000 },
-  )
+  waitForElementToBeRemoved(() => [...screen.queryAllByLabelText(/loading/i), ...screen.queryAllByText(/Loading/i)], {
+    timeout: 10000,
+  })
 
 const customRender = async (ui, options: CustomRenderOptions) => {
   const { route = '/' } = options

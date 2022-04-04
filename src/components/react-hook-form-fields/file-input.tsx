@@ -20,6 +20,7 @@ type FileInputProps = {
   isRequired?: boolean
   downloadableFile?: { name: string; url: string }
   id?: any
+  testId?: string
 }
 
 const validateFiles = (value: FileList) => {
@@ -34,9 +35,16 @@ export const downloadableLink = (downloadableFile: any) => {
     <>
       {downloadableFile && downloadableFile.url && (
         <a href={downloadableFile.url} download style={{ color: '#4E87F8' }}>
-          <Flex>
-            <BiDownload fontSize="20px" />
-            <Box ml="5px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          <Flex pt="10px">
+            <BiDownload fontSize="16px" />
+            <Box
+              ml="7px"
+              whiteSpace="nowrap"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              fontSize="14px"
+              fontWeight={500}
+            >
               {downloadableFile.name}
             </Box>
           </Flex>
@@ -48,17 +56,12 @@ export const downloadableLink = (downloadableFile: any) => {
 
 export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
   <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
-    <FormLabel
-      width="150px"
-      fontSize={props.size || 'lg'}
-      whiteSpace="nowrap"
-      overflow="hidden"
-      textOverflow="ellipsis"
-    >
+    <FormLabel fontSize={props.size || 'lg'} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
       {props.label}
     </FormLabel>
     <FileUpload
       accept={props.accept}
+      testId={props.testId}
       register={props.register(
         props.name,
         props.isRequired
@@ -83,6 +86,7 @@ type FileUploadProps = {
   multiple?: boolean
   children?: ReactNode
   value?: any
+  testId?: string
 }
 
 const FileUpload = (props: FileUploadProps) => {
@@ -95,7 +99,7 @@ const FileUpload = (props: FileUploadProps) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <Box className="form-file-input" rounded={6} h="40px" p={0} w={320} border="2px solid #CBD5E0">
+    <Box className="form-file-input" rounded={6} h="40px" p={0} width="293px" border="2px solid #CBD5E0">
       <InputGroup onClick={handleClick}>
         <input
           type={'file'}
@@ -107,6 +111,7 @@ const FileUpload = (props: FileUploadProps) => {
             ref(e)
             inputRef.current = e
           }}
+          data-testid={props.testId}
         />
         {children}
         <Flex overflow="hidden" w={200} bg="#FFFFFF" roundedRight="6px">

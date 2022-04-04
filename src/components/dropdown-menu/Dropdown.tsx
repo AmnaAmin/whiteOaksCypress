@@ -36,6 +36,12 @@ const chakraStyles = {
     background: '#F7FAFC',
     borderRadius: '4px',
   }),
+  dropdownIndicator: provided => ({
+    ...provided,
+    svg: {
+      fill: '#2D3748',
+    },
+  }),
   input: provided => ({
     ...provided,
     color: 'inherit',
@@ -79,10 +85,8 @@ const chakraStyles = {
     }
   },
   // Add the chakra style for when a TagCloseButton has focus
-  multiValueRemove: (
-    provided,
-    { isFocused, selectProps: { multiValueRemoveFocusStyle } },
-  ) => (isFocused ? multiValueRemoveFocusStyle : {}),
+  multiValueRemove: (provided, { isFocused, selectProps: { multiValueRemoveFocusStyle } }) =>
+    isFocused ? multiValueRemoveFocusStyle : {},
   control: () => ({}),
   menuList: () => ({}),
   option: () => ({}),
@@ -93,14 +97,7 @@ const chakraStyles = {
 
 const chakraComponents = {
   // Control components
-  Control({
-    children,
-    innerRef,
-    innerProps,
-    isDisabled,
-    isFocused,
-    selectProps: { size, isInvalid },
-  }) {
+  Control({ children, innerRef, innerProps, isDisabled, isFocused, selectProps: { size, isInvalid } }) {
     const inputStyles = useMultiStyleConfig('Input', { size })
 
     const heights = {
@@ -116,6 +113,8 @@ const chakraComponents = {
           sx={{
             ...inputStyles.field,
             color: 'gray.700',
+            bg: '#FFFFFF',
+            border: 'none',
             fontWeight: 400,
             fontsize: '16px',
             p: 0,
@@ -134,13 +133,7 @@ const chakraComponents = {
       </StylesProvider>
     )
   },
-  MultiValueContainer: ({
-    children,
-    innerRef,
-    innerProps,
-    data,
-    selectProps,
-  }) => (
+  MultiValueContainer: ({ children, innerRef, innerProps, data, selectProps }) => (
     <Tag
       ref={innerRef}
       {...innerProps}
@@ -179,7 +172,6 @@ const chakraComponents = {
   Menu({ children, ...props }: any) {
     const menuStyles = useMultiStyleConfig('Menu', { minWidth: '100%' })
 
-    console.log('menuStyle', menuStyles)
     return (
       <selectComponents.Menu {...props}>
         <StylesProvider value={menuStyles}>{children}</StylesProvider>
@@ -201,11 +193,9 @@ const chakraComponents = {
         sx={{
           ...list,
           // maxH: `${maxHeight}px`,
-          color: 'gray.400',
-          fontsize: '16px',
-          fontWeight: 400,
-          h: '110px',
+          h: '100px',
           minW: '100%',
+          bg: '#FFFFFF',
           overflowY: 'auto',
           borderRadius: borderRadii[size],
         }}
@@ -223,14 +213,7 @@ const chakraComponents = {
       </Box>
     )
   },
-  Option({
-    innerRef,
-    innerProps,
-    children,
-    isFocused,
-    isDisabled,
-    selectProps: { size },
-  }) {
+  Option({ innerRef, innerProps, children, isFocused, isDisabled, selectProps: { size } }) {
     const { item } = useStyles() as any
     return (
       <Box
@@ -238,9 +221,10 @@ const chakraComponents = {
         sx={{
           ...item,
           w: '100%',
+          color: 'gray.600',
+          fontWeight: 400,
           textAlign: 'start',
           bg: isFocused ? item._focus.bg : 'transparent',
-          fontSize: size,
           ...(isDisabled && item._disabled),
         }}
         ref={innerRef}
@@ -272,8 +256,7 @@ const ChakraReactSelect = ({
   const inputProps = useFormControl({ isDisabled, isInvalid })
 
   // The chakra theme styles for TagCloseButton when focused
-  const closeButtonFocus =
-    chakraTheme.components.Tag.baseStyle.closeButton._focus
+  const closeButtonFocus = chakraTheme.components.Tag.baseStyle.closeButton._focus
   const multiValueRemoveFocusStyle = {
     background: closeButtonFocus.bg,
     boxShadow: chakraTheme.shadows[closeButtonFocus.boxShadow],
@@ -281,10 +264,7 @@ const ChakraReactSelect = ({
 
   // The chakra UI global placeholder color
   // https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/src/styles.ts#L13
-  const placeholderColor = useColorModeValue(
-    chakraTheme.colors.gray[400],
-    chakraTheme.colors.whiteAlpha[400],
-  )
+  const placeholderColor = useColorModeValue(chakraTheme.colors.gray[400], chakraTheme.colors.whiteAlpha[400])
 
   // Ensure that the size used is one of the options, either `sm`, `md`, or `lg`
   let realSize = size
