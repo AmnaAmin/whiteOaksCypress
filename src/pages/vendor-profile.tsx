@@ -47,6 +47,7 @@ export const VendorProfilePage: React.FC = props => {
               {t('details')}
             </Tab>
             <Tab
+              data-testid="documents"
               _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
@@ -54,6 +55,7 @@ export const VendorProfilePage: React.FC = props => {
               {t('documents')}
             </Tab>
             <Tab
+              data-testid="license"
               _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
