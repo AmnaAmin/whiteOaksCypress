@@ -148,7 +148,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                 </TabPanel>
 
                 <TabPanel>
-                  <InvoiceTab />
+                  <InvoiceTab onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
