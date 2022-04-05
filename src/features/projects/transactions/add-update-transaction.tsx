@@ -41,8 +41,8 @@ import { TransactionAmountForm } from './transaction-amount-form'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
-import { disabledInputStyle } from 'theme/common-style'
 import { ViewLoader } from 'components/page-level-loader'
+import { ReadOnlyInput } from 'components/input-view/input-view'
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -148,7 +148,56 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
       )}
       <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
-        <Grid templateColumns="repeat(2, 1fr)" gap={'1rem 5rem'}>
+        <Grid
+          templateColumns="repeat(4, 1fr)"
+          gap={'1rem 0.5rem'}
+          borderBottom="2px solid"
+          borderColor="gray.200"
+          pb="3"
+          mb="5"
+        >
+          <GridItem>
+            <Controller
+              name="dateCreated"
+              control={control}
+              render={({ field: { name, onChange, value } }) => {
+                return (
+                  <ReadOnlyInput label={t('dateCreated')} name={name} onChange={onChange} value={value as string} />
+                )
+              }}
+            />
+          </GridItem>
+
+          <GridItem>
+            <Controller
+              name="createdBy"
+              control={control}
+              render={({ field: { name, onChange, value } }) => {
+                return <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
+              }}
+            />
+          </GridItem>
+          {isShowExpectedCompletionDateField && (
+            <GridItem>
+              <Controller
+                name="expectedCompletionDate"
+                control={control}
+                render={({ field: { name, onChange, value } }) => {
+                  return (
+                    <ReadOnlyInput
+                      testId="expected-completion-date"
+                      label={t('expectedCompletionDate')}
+                      name={name}
+                      onChange={onChange}
+                      value={value as string}
+                    />
+                  )
+                }}
+              />
+            </GridItem>
+          )}
+        </Grid>
+        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
             <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
               <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -187,18 +236,6 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
           </GridItem>
 
           <GridItem>
-            {/* <Stack>
-            <Text fontSize="14px" fontWeight={500} color="gray.600" fontStyle="normal">
-              {t('against')}
-            </Text>
-            <Text fontSize="14px" fontWeight={500} color="gray.400" fontStyle="normal">
-              ADT Renovation
-            </Text>
-            <Box w="250px" color="gray.200" pt="12px">
-              <Divider />
-            </Box>
-          </Stack> */}
-
             <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
               <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
                 {t('against')}
@@ -273,39 +310,6 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             </GridItem>
           )}
 
-          {isShowExpectedCompletionDateField && (
-            <GridItem>
-              {/* <Stack>
-              <Text fontSize="14px" fontWeight={500} color="gray.600" fontStyle="normal">
-                {t('expectedCompletionDate')}
-              </Text>
-              <Text fontSize="14px" fontWeight={400} color="gray.400" fontStyle="normal">
-                {date}
-              </Text>
-              <Box w="250px" color="gray.200" pt="12px">
-                <Divider />
-              </Box>
-            </Stack> */}
-
-              <FormControl isInvalid={!!errors.expectedCompletionDate}>
-                <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="expectedCompletionDate">
-                  {t('expectedCompletionDate')}
-                </FormLabel>
-                <Input
-                  data-testid="expected-completion-date"
-                  type="text"
-                  size="md"
-                  _disabled={disabledInputStyle}
-                  disabled
-                  {...register('expectedCompletionDate')}
-                />
-                <FormErrorMessage>
-                  {errors.expectedCompletionDate && errors.expectedCompletionDate.message}
-                </FormErrorMessage>
-              </FormControl>
-            </GridItem>
-          )}
-
           {isShowNewExpectedCompletionDateField && (
             <GridItem>
               <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
@@ -315,6 +319,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                   fontWeight={500}
                   color="gray.600"
                   htmlFor="newExpectedCompletionDate"
+                  whiteSpace="nowrap"
                 >
                   {t('newExpectedCompletionDate')}
                 </FormLabel>
@@ -324,6 +329,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                   id="newExpectedCompletionDate"
                   type="date"
                   size="md"
+                  fontSize="14px"
                   color="gray.400"
                   {...register('newExpectedCompletionDate')}
                 />
@@ -333,68 +339,6 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
               </FormControl>
             </GridItem>
           )}
-
-          <GridItem>
-            {/* <Stack>
-            <Text fontSize="14px" fontWeight={500} color="gray.600" fontStyle="normal">
-              {t('dateCreated')}
-            </Text>
-            <Text fontSize="14px" fontWeight={400} color="gray.400" fontStyle="normal">
-              {date}
-            </Text>
-            <Box w="250px" color="gray.200" pt="12px">
-              <Divider />
-            </Box>
-          </Stack> */}
-            <FormControl isInvalid={!!errors.dateCreated}>
-              <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="dateCreated">
-                {t('dateCreated')}
-              </FormLabel>
-              <Input
-                id="dateCreated"
-                type="text"
-                size="md"
-                _disabled={disabledInputStyle}
-                disabled
-                {...register('dateCreated', {
-                  required: 'This is required',
-                })}
-              />
-              <FormErrorMessage>{errors.dateCreated && errors.dateCreated.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            {/* <Stack>
-            <Text fontSize="14px" fontWeight={500} color="gray.600" fontStyle="normal">
-              {t('createdBy')}
-            </Text>
-            <Text fontSize="14px" fontWeight={400} color="gray.400" fontStyle="normal">
-              vendor@devtek.ai
-            </Text>
-            <Box w="250px" color="gray.200" pt="12px">
-              <Divider />
-            </Box>
-          </Stack> */}
-
-            <FormControl isInvalid={!!errors.createdBy}>
-              <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="createdBy">
-                {t('createdBy')}
-              </FormLabel>
-              <Input
-                id="createdBy"
-                type="text"
-                size="md"
-                placeholder="createdBy"
-                _disabled={disabledInputStyle}
-                disabled
-                {...register('createdBy', {
-                  required: 'This is required',
-                })}
-              />
-              <FormErrorMessage>{errors.createdBy && errors.createdBy.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
         </Grid>
 
         <TransactionAmountForm formReturn={formReturn} />

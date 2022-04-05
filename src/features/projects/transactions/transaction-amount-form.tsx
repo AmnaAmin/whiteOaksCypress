@@ -121,7 +121,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
         <Box flex="1">
           <Button
             data-testid="add-new-row-button"
-            variant="outline"
+            variant="ghost"
             size="md"
             borderColor="#4E87F8"
             color="#4E87F8"
@@ -132,7 +132,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           </Button>
           <Button
             data-testid="delete-row-button"
-            variant="outline"
+            variant="ghost"
             size="md"
             ml="10px"
             borderColor="#4E87F8"
@@ -175,7 +175,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
               }
             }}
             leftIcon={<AiOutlineFileText color="#4E87F8" />}
-            variant="outline"
+            variant="ghost"
             size="md"
             borderColor="#4E87F8"
             color="#4E87F8"
@@ -287,10 +287,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           </Tbody>
         </Table>
       </Box>
-
-      <Flex pt="3" flexDirection="row-reverse">
-        <Text data-testid="total-amount" color="gray.600" fontSize="16px" fontWeight={600} fontStyle="normal">
-          {totalAmount}
+      <Flex p="3" flexDirection="row-reverse" borderWidth="0 1px 1px 1px" borderStyle="solid" borderColor="gray.100">
+        <Text data-testid="total-amount" color="gray.600" fontSize="14px" fontWeight={500} fontStyle="normal">
+          Total: {totalAmount}
         </Text>
       </Flex>
 
