@@ -37,21 +37,23 @@ const chakraStyles = {
     pointerEvents: 'auto',
     background: '#F7FAFC',
     borderRadius: '4px',
-    fontSize: '14px',
   }),
   input: provided => ({
     ...provided,
-    color: 'inherit',
+    fontWeight: 'normal',
     lineHeight: 1,
     width: '100%',
     border: 'none',
     padding: '7px 0',
-    fontSize: '14px',
+  }),
+  singleValue: provider => ({
+    ...provider,
+    color: '#718096',
+    fontWeight: '300',
   }),
   menu: provided => ({
     ...provided,
     boxShadow: 'none',
-    fontSize: '14px',
   }),
   valueContainer(provided: any, { selectProps: { size } }: any) {
     const px = {
@@ -118,6 +120,7 @@ const chakraComponents = {
             minH: heights[size],
             rounded: 'md',
             borderLeft: '2px solid #4E87F8',
+            color: 'white',
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,
@@ -136,6 +139,7 @@ const chakraComponents = {
       </StylesProvider>
     )
   },
+
   MultiValueContainer: ({ children, innerRef, innerProps, data, selectProps }) => (
     <Tag
       ref={innerRef}
@@ -243,7 +247,7 @@ const chakraComponents = {
 
 const ChakraReactSelect = ({
   children,
-  styles = { fontSize: '14px' },
+  styles = {},
   components = {},
   theme = () => ({}),
   size = 'sm',
@@ -285,7 +289,6 @@ const ChakraReactSelect = ({
     styles: {
       ...chakraStyles,
       ...styles,
-      fontSize: '14px',
     },
     theme(baseTheme) {
       const propTheme = theme(baseTheme)
