@@ -122,7 +122,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           <Button
             data-testid="add-new-row-button"
             variant="ghost"
-            size="md"
+            size="sm"
             borderColor="#4E87F8"
             color="#4E87F8"
             onClick={addRow}
@@ -133,7 +133,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           <Button
             data-testid="delete-row-button"
             variant="ghost"
-            size="md"
+            size="sm"
             ml="10px"
             borderColor="#4E87F8"
             color="#4E87F8"
@@ -176,7 +176,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             }}
             leftIcon={<AiOutlineFileText color="#4E87F8" />}
             variant="ghost"
-            size="md"
+            size="sm"
             borderColor="#4E87F8"
             color="#4E87F8"
           >
@@ -239,6 +239,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                         data-testid={`transaction-description-${index}`}
                         type="text"
                         size="md"
+                        fontSize="14px"
                         placeholder="description"
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
@@ -264,6 +265,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                                 data-testid={`transaction-amount-${index}`}
                                 type="number"
                                 size="md"
+                                fontSize="14px"
                                 placeholder="amount"
                                 onChange={event => {
                                   const inputValue = Number(event.currentTarget.value)

@@ -364,11 +364,11 @@ export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({ isOpe
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
 
-        <ModalBody px="6" py="8">
+        <ModalBody px="6" pt="3" pb="1">
           <AddUpdateTransactionForm onClose={onClose} />
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} variant="ghost">
+          <Button onClick={onClose} variant="ghost" size="sm">
             {t('close')}
           </Button>
 
@@ -380,6 +380,7 @@ export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({ isOpe
             type="submit"
             form="newTransactionForm"
             ml="3"
+            size="sm"
           >
             {t('save')}
           </Button>
@@ -404,11 +405,11 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
           Update Transaction
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
-        <ModalBody px="6" py="8">
+        <ModalBody px="6" pt="3" pb="1">
           <AddUpdateTransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} />
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} variant="ghost">
+          <Button onClick={onClose} variant="ghost" size="sm">
             Close
           </Button>
 
@@ -420,6 +421,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
             type="submit"
             form="newTransactionForm"
             ml="3"
+            size="sm"
           >
             Save
           </Button>
