@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Divider, Heading, HStack, Stack, Text } from '@chakra-ui/react'
+import { Box, Divider, Heading, HStack, InputProps, Stack, Text, FormControl, FormLabel, Input } from '@chakra-ui/react'
 
 interface InputViewProps {
   label: string
@@ -29,6 +29,31 @@ const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = 
       </HStack>
       {showDivider && <Divider orientation="horizontal" pt={5} mb={5} w="284px" />}
     </Box>
+  )
+}
+
+export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: string }> = ({
+  label,
+  name,
+  testId,
+  ...inputProps
+}) => {
+  return (
+    <FormControl>
+      <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
+        {label}
+      </FormLabel>
+      <Input
+        {...inputProps}
+        id={name}
+        name={name}
+        data-testid={testId}
+        variant="unstyled"
+        disabled
+        color="gray.500"
+        fontSize="14px"
+      />
+    </FormControl>
   )
 }
 
