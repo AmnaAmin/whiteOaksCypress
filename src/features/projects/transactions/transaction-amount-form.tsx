@@ -238,8 +238,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                       <Input
                         data-testid={`transaction-description-${index}`}
                         type="text"
-                        size="md"
-                        fontSize="14px"
+                        size="sm"
+                        rounded="md"
                         placeholder="description"
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
@@ -264,8 +264,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                                 {...field}
                                 data-testid={`transaction-amount-${index}`}
                                 type="number"
-                                size="md"
-                                fontSize="14px"
+                                size="sm"
+                                rounded="md"
                                 placeholder="amount"
                                 onChange={event => {
                                   const inputValue = Number(event.currentTarget.value)
