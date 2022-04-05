@@ -47,7 +47,7 @@ export async function selectOption(container: HTMLElement, optionText: string) {
 
 export const waitForLoadingToFinish = () =>
   waitForElementToBeRemoved(() => [...screen.queryAllByLabelText(/loading/i), ...screen.queryAllByText(/Loading/i)], {
-    timeout: 10000,
+    timeout: 30000,
   })
 
 const customRender = async (ui, options: CustomRenderOptions) => {
