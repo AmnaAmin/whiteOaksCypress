@@ -1,10 +1,11 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Tag } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from '../../components/table/react-table'
+import { Box, Td, Tr, Text, Flex, useDisclosure, Tag, TagLabel } from '@chakra-ui/react'
+import ReactTable, { RowProps } from 'components/table/react-table'
 // import { useTransactions } from 'utils/transactions'
 import { dateFormat } from 'utils/date-time-utils'
+
 import { t } from 'i18next'
+import { Column } from 'react-table'
 
 const STATUS_TAG_COLOR_SCHEME = {
   denied: {
@@ -13,8 +14,8 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 
   approved: {
-    bg: 'green.100',
-    color: 'green.600',
+    bg: '#E7F8EC',
+    color: '#2AB450',
   },
   cancelled: {
     bg: 'red.100',
@@ -22,12 +23,12 @@ const STATUS_TAG_COLOR_SCHEME = {
   },
 
   pending: {
-    bg: 'orange.100',
-    color: 'orange.600',
+    bg: '#FEEBCB',
+    color: '#C05621',
   },
 }
 
-const COLUMNS = [
+export const COLUMNS = [
   {
     Header: 'ID',
     accessor: 'name',
@@ -48,18 +49,12 @@ const COLUMNS = [
     Header: t('status'),
     accessor: 'status',
     Cell(cellInfo) {
+      const value = (cellInfo.value || '').toLowerCase()
       return (
-        <Tag
-          textTransform="capitalize"
-          fontWeight={500}
-          fontSize="12px"
-          rounded="6px"
-          fontStyle="normal"
-          lineHeight="16px"
-          size="lg"
-          {...STATUS_TAG_COLOR_SCHEME[(cellInfo.value || '').toLowerCase()]}
-        >
-          {cellInfo.value}
+        <Tag rounded="6px" textTransform="capitalize" size="md" {...STATUS_TAG_COLOR_SCHEME[value]}>
+          <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
+            {value}
+          </TagLabel>
         </Tag>
       )
     },
@@ -77,23 +72,38 @@ const COLUMNS = [
   },
 ]
 
-const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const TransactionRow: React.FC<RowProps> = ({ row, style }) => {
+  const idCell = row.cells.find(cell => cell.column.id === 'id')
+  const projectId = idCell?.value
+
   return (
     <Tr
       bg="white"
       _hover={{
         background: '#eee',
+        '& > td > a': {
+          color: '#333',
+        },
       }}
       {...row.getRowProps({
         style,
       })}
-      onClick={event => onRowClick(event, row)}
     >
-      {row.cells.map(cell => {
+      {row.cells.map((cell, index) => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
-            <Flex alignItems="center" h="60px" pl="2">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.700">
+          <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
+            <Flex alignItems="center" h="72px" pl="3">
+              <Text
+                noOfLines={2}
+                title={cell.value}
+                padding="0 15px"
+                color="gray.600"
+                mb="20px"
+                mt="10px"
+                fontSize="14px"
+                fontStyle="normal"
+                fontWeight="400"
+              >
                 {cell.render('Cell')}
               </Text>
             </Flex>
@@ -104,20 +114,27 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const TransactionsTable = React.forwardRef((props, ref) => {
-  // const { projectId } = useParams<{ projectId: string }>()
-  const { columns } = useColumnWidthResize(COLUMNS, ref)
-
+type TransactionProps = {
+  projectColumns: Column[]
+  resizeElementRef: any
+  setTableInstance: (tableInstance: any) => void
+}
+export const TransactionsTable: React.FC<TransactionProps> = ({
+  setTableInstance,
+  projectColumns,
+  resizeElementRef,
+}) => {
   return (
-    <Box h="100%">
+    <Box ref={resizeElementRef} height="100%">
       <ReactTable
-        columns={columns}
+        // isLoading={isLoading}
+        columns={projectColumns}
         data={[]}
         TableRow={TransactionRow}
-        tableHeight="calc(100vh - 400px)"
-        name="transaction-table"
-        // onRowClick={onRowClick}
+        name="my-table"
+        setTableInstance={setTableInstance}
+        tableHeight={'inherit'}
       />
     </Box>
   )
-})
+}

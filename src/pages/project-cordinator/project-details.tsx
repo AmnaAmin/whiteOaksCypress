@@ -15,10 +15,14 @@ import { AiOutlineUpload } from 'react-icons/ai'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
 import { useTranslation } from 'react-i18next'
-import { TransactionsTable } from 'features/project-coordinator/transactions-table'
+import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
 import { AddNewTransactionModal } from 'features/projects/transactions/add-update-transaction'
 import { usePCProject } from 'utils/pc-projects'
 import { ProjectType } from 'types/project.type'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+import { TableNames } from 'types/table-column.types'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { BsBoxArrowUp } from 'react-icons/bs'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -33,8 +37,13 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { onOpen: onDocumentModalOpen } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
+  }
+  const onSave = columns => {
+    postProjectColumn(columns)
   }
 
   return (
@@ -90,30 +99,42 @@ export const ProjectDetails: React.FC = props => {
                       border="1px solid #4E87F8"
                       marginRight={1}
                       size="md"
-                      _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
+                      fontSize="12px"
+                      fontWeight={500}
+                      fontStyle="normal"
+                      // _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
                       onClick={() => {
                         if (projectTableInstance) {
                           projectTableInstance?.exportData('xlsx', false)
                         }
                       }}
                     >
+                      <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                        <BsBoxArrowUp />
+                      </Box>
                       {t('export')}
                     </Button>
+                    {/* {settingColumns && (
+                      <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                    )} */}
                     <Button
                       bg="#FFFFFF"
                       color="#4E87F8"
                       border="1px solid #4E87F8"
                       marginRight={1}
                       size="md"
-                      _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
+                      // _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
                       // onClick={}
                     >
-                      {'Settings'}
+                      {settingColumns && (
+                        <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                      )}
                     </Button>
                     <Button
                       bg="#4E87F8"
                       color="#FFFFFF"
                       size="md"
+                      fontSize="12px"
                       _hover={{ bg: 'royalblue' }}
                       onClick={onTransactionModalOpen}
                     >
@@ -135,7 +156,11 @@ export const ProjectDetails: React.FC = props => {
                   </FormControl>
                 </Box>
                 <Box h="100%">
-                  <TransactionsTable ref={tabsContainerRef} setTableInstance={setProjectTableInstance} />
+                  <TransactionsTable
+                    setTableInstance={setProjectTableInstance}
+                    projectColumns={tableColumns}
+                    resizeElementRef={resizeElementRef}
+                  />
                 </Box>
               </TabPanel>
             </TabPanels>
