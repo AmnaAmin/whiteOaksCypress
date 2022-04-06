@@ -14,6 +14,7 @@ type SelectProps = {
   size?: 'lg' | 'sm'
   controlStyle?: any
   elementStyle?: any
+  testId?: string
 }
 
 export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
@@ -32,6 +33,7 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
               {...field}
               {...props.elementStyle}
               size={props.size || 'md'}
+              data-testid={props.testId}
               fontSize={props.size || 'sm'}
               color="#718096"
             >

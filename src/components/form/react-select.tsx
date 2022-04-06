@@ -40,11 +40,16 @@ const chakraStyles = {
   }),
   input: provided => ({
     ...provided,
-    color: 'inherit',
+    fontWeight: 'normal',
     lineHeight: 1,
     width: '100%',
     border: 'none',
     padding: '7px 0',
+  }),
+  singleValue: provider => ({
+    ...provider,
+    color: '#718096',
+    fontWeight: '300',
   }),
   menu: provided => ({
     ...provided,
@@ -113,7 +118,9 @@ const chakraComponents = {
             overflow: 'hidden',
             h: 'auto',
             minH: heights[size],
+            rounded: 'md',
             borderLeft: '2px solid #4E87F8',
+            color: 'white',
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,
@@ -132,6 +139,7 @@ const chakraComponents = {
       </StylesProvider>
     )
   },
+
   MultiValueContainer: ({ children, innerRef, innerProps, data, selectProps }) => (
     <Tag
       ref={innerRef}
@@ -242,7 +250,7 @@ const ChakraReactSelect = ({
   styles = {},
   components = {},
   theme = () => ({}),
-  size = 'md',
+  size = 'sm',
   colorScheme = 'gray',
   isDisabled,
   isInvalid,

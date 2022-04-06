@@ -1,5 +1,5 @@
 import { useClient } from 'utils/auth-context'
-import { Document } from '../types/vendor.types'
+import { Document } from 'types/vendor.types'
 import { useToast } from '@chakra-ui/toast'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'

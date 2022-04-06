@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from 'utils/test-utils'
 import App from 'App'
 import userEvent from '@testing-library/user-event'
-import { FIRST_PROJECT_ID } from '../../mocks/api/projects/data'
+// import { FIRST_PROJECT_ID } from '../../mocks/api/projects/data'
 
 jest.setTimeout(30000)
 
@@ -26,7 +26,7 @@ describe('Vendor Projects Test Cases', () => {
     fireEvent.drop(firstItem)
     fireEvent.dragEnd(list)
 
-    // await jest.setTimeout(5000)
+    // await jest.setTimeout(30000)
     // expect(screen.getByTestId('draggable-item-0').textContent).toEqual('Type')
 
     // expect(firstItem).toBeInTheDocument()

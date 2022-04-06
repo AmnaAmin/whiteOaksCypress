@@ -1,7 +1,7 @@
 import { useClient } from 'utils/auth-context'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Column } from 'react-table'
-import { TableColumnSetting, TableNames } from '../types/table-column.types'
+import { TableColumnSetting, TableNames } from 'types/table-column.types'
 import { useColumnWidthResize } from './hooks/useColumnsWidthResize'
 import { useUserProfile } from './redux-common-selectors'
 import { Account } from 'types/account.types'
