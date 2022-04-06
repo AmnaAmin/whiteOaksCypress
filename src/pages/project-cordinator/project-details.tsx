@@ -32,6 +32,10 @@ export const ProjectDetails: React.FC = props => {
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
   const { onOpen: onDocumentModalOpen } = useDisclosure()
+  const [projectTableInstance, setInstance] = useState<any>(null)
+  const setProjectTableInstance = tableInstance => {
+    setInstance(tableInstance)
+  }
 
   return (
     <>
@@ -87,7 +91,11 @@ export const ProjectDetails: React.FC = props => {
                       marginRight={1}
                       size="md"
                       _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
-                      // onClick={}
+                      onClick={() => {
+                        if (projectTableInstance) {
+                          projectTableInstance?.exportData('xlsx', false)
+                        }
+                      }}
                     >
                       {t('export')}
                     </Button>
@@ -127,7 +135,7 @@ export const ProjectDetails: React.FC = props => {
                   </FormControl>
                 </Box>
                 <Box h="100%">
-                  <TransactionsTable ref={tabsContainerRef} />
+                  <TransactionsTable ref={tabsContainerRef} setTableInstance={setProjectTableInstance} />
                 </Box>
               </TabPanel>
             </TabPanels>
