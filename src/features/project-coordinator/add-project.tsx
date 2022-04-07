@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { AddProjectInfo } from './add-project-info'
+import { AddPropertyInfo } from './add-property-info'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -60,7 +61,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                   <AddProjectInfo isLoading={false} />
                 </TabPanel>
                 <TabPanel p="0px" h="100%">
-                  <AddProjectInfo isLoading={false} />
+                  <AddPropertyInfo isLoading={false} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -101,6 +102,7 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
             form="newProjectForm"
             ml="3"
             size="sm"
+            disabled={true}
           >
             {'Next'}
           </Button>

@@ -1,10 +1,11 @@
 import React from 'react'
-import { Button, FormControl, FormLabel, Grid, GridItem, Input, Select } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, Grid, GridItem } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { useForm } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
+import { FormSelect } from 'components/react-hook-form-fields/select'
 
 export const AddProjectInfo: React.FC<{
   isLoading: boolean
@@ -14,44 +15,75 @@ export const AddProjectInfo: React.FC<{
     register,
     formState: { errors },
     control,
-  } = useForm<[]>({})
+  } = useForm<{}>({})
+
+  const types = [
+    { value: '1', label: 'A' },
+    { value: '2', label: 'B' },
+    { value: '3', label: 'C' },
+  ]
 
   return (
     <form>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
-          <FormControl>
-            <FormLabel fontSize="14px" color="gray.600" fontWeight={500}>
-              {'Project Name'}
-            </FormLabel>
-            <Input></Input>
-          </FormControl>
+          <GridItem>
+            <FormControl>
+              <FormInput
+                errorMessage={''}
+                label={'Project Name'}
+                placeholder=""
+                register={register}
+                controlStyle={{ w: '20em' }}
+                rules={{ required: 'This is required field' }}
+                name={`projectName`}
+              />
+            </FormControl>
+          </GridItem>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel fontSize="14px" color="gray.600" fontWeight={500}>
-              {'Type'}
-            </FormLabel>
-            <Select>
-              <option>Select</option>
-            </Select>
+            <FormSelect
+              errorMessage={''}
+              label={'Type'}
+              name={`type`}
+              control={control}
+              options={types}
+              rules={{ required: 'This is required field' }}
+              controlStyle={{ w: '20em' }}
+              elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
+            />
           </FormControl>
         </GridItem>
         <GridItem>
-          <FormControl>
-            <FormLabel fontSize="14px" color="gray.600" fontWeight={500}>
-              {'WO Number'}
-            </FormLabel>
-            <Input></Input>
-          </FormControl>
+          <GridItem>
+            <FormControl>
+              <FormInput
+                errorMessage={''}
+                label={'WO Number'}
+                placeholder=""
+                register={register}
+                controlStyle={{ w: '20em' }}
+                rules={{ required: 'This is required field' }}
+                name={`WONumber`}
+              />
+            </FormControl>
+          </GridItem>
         </GridItem>
         <GridItem>
-          <FormControl>
-            <FormLabel fontSize="14px" color="gray.600" fontWeight={500}>
-              {'PO Number'}
-            </FormLabel>
-            <Input></Input>
-          </FormControl>
+          <GridItem>
+            <FormControl>
+              <FormInput
+                errorMessage={''}
+                label={'PO Number'}
+                placeholder=""
+                register={register}
+                controlStyle={{ w: '20em' }}
+                rules={{ required: 'This is required field' }}
+                name={`PONumber`}
+              />
+            </FormControl>
+          </GridItem>
         </GridItem>
       </Grid>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
@@ -124,7 +156,7 @@ export const AddProjectInfo: React.FC<{
               style={{ w: '20em' }}
             >
               <Button rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} bg="gray.100" h="37px">
-                {t('chooseFile')}
+                {'ChooseFile'}
               </Button>
             </FormFileInput>
           </FormControl>
