@@ -114,6 +114,7 @@ const chakraComponents = {
             ...inputStyles.field,
             color: 'gray.700',
             bg: '#FFFFFF',
+            _hover: { backgroundColor: 'gray.100' },
             border: 'none',
             fontWeight: 400,
             fontsize: '16px',

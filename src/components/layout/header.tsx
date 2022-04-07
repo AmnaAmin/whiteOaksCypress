@@ -106,6 +106,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           {/** User Dropdown Menu */}
           <Menu placement="bottom">
             <MenuButton
+              _hover={{ bg: 'gray.100' }}
+              rounded="6px"
               // variant="text"
               // colorScheme="blue"
               bgSize="auto"
