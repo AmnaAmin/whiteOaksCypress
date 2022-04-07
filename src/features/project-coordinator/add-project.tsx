@@ -17,9 +17,9 @@ import {
   TabPanel,
   TabPanels,
 } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { AddProjectInfo } from './add-project-info'
 import { AddPropertyInfo } from './add-property-info'
+import { ManageProject } from './manage-project'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -62,6 +62,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                 </TabPanel>
                 <TabPanel p="0px" h="100%">
                   <AddPropertyInfo isLoading={false} />
+                </TabPanel>
+                <TabPanel p="0px" h="100%">
+                  <ManageProject isLoading={false} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

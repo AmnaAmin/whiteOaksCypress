@@ -72,7 +72,6 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
       bg="white"
       size="md"
       color="#718096"
-      textAlign="center"
       onChange={props.onChange}
       onClick={props.onClick}
       placeholder={props.placeholder}

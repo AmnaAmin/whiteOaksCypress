@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, FormControl, FormLabel, Grid, GridItem } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { useForm } from 'react-hook-form'
@@ -10,13 +9,13 @@ import { FormSelect } from 'components/react-hook-form-fields/select'
 export const AddProjectInfo: React.FC<{
   isLoading: boolean
 }> = () => {
-  const { t } = useTranslation()
   const {
     register,
     formState: { errors },
     control,
   } = useForm<{}>({})
 
+  // const [startDate] = useState(new Date())
   const types = [
     { value: '1', label: 'A' },
     { value: '2', label: 'B' },
@@ -87,7 +86,7 @@ export const AddProjectInfo: React.FC<{
         </GridItem>
       </Grid>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
-        <GridItem>
+        <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
             <FormDatePicker
               errorMessage={errors}
@@ -153,9 +152,9 @@ export const AddProjectInfo: React.FC<{
               name={`uploadProjectSOW`}
               register={register}
               isRequired={true}
-              style={{ w: '20em' }}
+              // style={{ w: '20em' }}
             >
-              <Button rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} bg="gray.100" h="37px">
+              <Button rounded="none" roundedLeft={5} fontSize={12} fontWeight={500} bg="gray.100" h="37px">
                 {'ChooseFile'}
               </Button>
             </FormFileInput>

@@ -99,7 +99,7 @@ const FileUpload = (props: FileUploadProps) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <Box className="form-file-input" rounded={6} h="40px" p={0} width="293px" border="2px solid #CBD5E0">
+    <Box className="form-file-input" rounded={6} h="40px" p={0} border="1px solid #CBD5E0">
       <InputGroup onClick={handleClick}>
         <input
           type={'file'}
@@ -114,13 +114,13 @@ const FileUpload = (props: FileUploadProps) => {
           data-testid={props.testId}
         />
         {children}
-        <Flex overflow="hidden" w={200} bg="#FFFFFF" roundedRight="6px">
+        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px">
           {inputRef.current && (
             <Box
               color="#4E87F8"
               fontWeight={500}
               fontStyle="normal"
-              fontSize="14px"
+              fontSize="12px"
               as="span"
               ml="20px"
               mt="7px"
