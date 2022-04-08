@@ -99,7 +99,7 @@ const FileUpload = (props: FileUploadProps) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <Box className="form-file-input" rounded={6} h="40px" p={0} border="1px solid #CBD5E0">
+    <Box className="form-file-input" rounded={6} h="40px" w="293px" p={0} border="1px solid #CBD5E0">
       <InputGroup onClick={handleClick}>
         <input
           type={'file'}

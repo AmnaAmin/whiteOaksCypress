@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, FormControl, FormLabel, Grid, GridItem } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
@@ -152,9 +152,9 @@ export const AddProjectInfo: React.FC<{
               name={`uploadProjectSOW`}
               register={register}
               isRequired={true}
-              // style={{ w: '20em' }}
+              style={{ w: '20em' }}
             >
-              <Button rounded="none" roundedLeft={5} fontSize={12} fontWeight={500} bg="gray.100" h="37px">
+              <Button rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} bg="gray.100" h="37px">
                 {'ChooseFile'}
               </Button>
             </FormFileInput>
