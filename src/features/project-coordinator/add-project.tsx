@@ -40,7 +40,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
           mb="5"
         >
           <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
-            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+            <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="7">
               <TabList color="#4A5568">
                 <Tab minW={180} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
                   {'Project Information'}
