@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, Tag, TagLabel } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Tag, TagLabel } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
 // import { useTransactions } from 'utils/transactions'
 import { dateFormat } from 'utils/date-time-utils'
@@ -73,9 +73,6 @@ export const COLUMNS = [
 ]
 
 const TransactionRow: React.FC<RowProps> = ({ row, style }) => {
-  const idCell = row.cells.find(cell => cell.column.id === 'id')
-  const projectId = idCell?.value
-
   return (
     <Tr
       bg="white"

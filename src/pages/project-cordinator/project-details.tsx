@@ -16,7 +16,6 @@ import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
-import { AddNewTransactionModal } from 'features/projects/transactions/add-update-transaction'
 import { usePCProject } from 'utils/pc-projects'
 import { ProjectType } from 'types/project.type'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
@@ -30,11 +29,6 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const {
-    isOpen: isOpenTransactionModal,
-    onClose: onTransactionModalClose,
-    onOpen: onTransactionModalOpen,
-  } = useDisclosure()
   const { onOpen: onDocumentModalOpen } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
@@ -102,7 +96,7 @@ export const ProjectDetails: React.FC = props => {
                       fontSize="12px"
                       fontWeight={500}
                       fontStyle="normal"
-                      // _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
+                      _hover={{ bg: 'none' }}
                       onClick={() => {
                         if (projectTableInstance) {
                           projectTableInstance?.exportData('xlsx', false)
@@ -114,17 +108,13 @@ export const ProjectDetails: React.FC = props => {
                       </Box>
                       {t('export')}
                     </Button>
-                    {/* {settingColumns && (
-                      <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
-                    )} */}
                     <Button
                       bg="#FFFFFF"
                       color="#4E87F8"
                       border="1px solid #4E87F8"
+                      _hover={{ bg: 'none' }}
                       marginRight={1}
                       size="md"
-                      // _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
-                      // onClick={}
                     >
                       {settingColumns && (
                         <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
@@ -136,7 +126,7 @@ export const ProjectDetails: React.FC = props => {
                       size="md"
                       fontSize="12px"
                       _hover={{ bg: 'royalblue' }}
-                      onClick={onTransactionModalOpen}
+                      // onClick={onTransactionModalOpen}
                     >
                       {t('newTransaction')}
                     </Button>
@@ -167,7 +157,6 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
       </Stack>
-      <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )
 }
