@@ -1,20 +1,173 @@
-import { Stack } from '@chakra-ui/react'
-import React, { useRef } from 'react'
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Switch,
+} from '@chakra-ui/react'
+import { Box, Button, Stack } from '@chakra-ui/react'
+import React, { useRef, useState } from 'react'
+import { AiOutlineUpload } from 'react-icons/ai'
 import { useParams } from 'react-router'
-import { TransactionInfoCard } from 'features/projects/transactions/pc-transaction-info-card'
-import { ProjectType } from 'types/project.type'
+import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
+import { useTranslation } from 'react-i18next'
+import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
+import { AddNewTransactionModal } from 'features/projects/transactions/add-update-transaction'
 import { usePCProject } from 'utils/pc-projects'
+import { ProjectType } from 'types/project.type'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+import { TableNames } from 'types/table-column.types'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { BsBoxArrowUp } from 'react-icons/bs'
 
 export const ProjectDetails: React.FC = props => {
-  const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
+  const { projectId } = useParams<{ projectId: string }>()
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const [tabIndex, setTabIndex] = useState(0)
+  const {
+    isOpen: isOpenTransactionModal,
+    onClose: onTransactionModalClose,
+    onOpen: onTransactionModalOpen,
+  } = useDisclosure()
+  const { onOpen: onDocumentModalOpen } = useDisclosure()
+  const [projectTableInstance, setInstance] = useState<any>(null)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
+  const setProjectTableInstance = tableInstance => {
+    setInstance(tableInstance)
+  }
+  const onSave = columns => {
+    postProjectColumn(columns)
+  }
 
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
+
+        <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+            <TabList color="#4A5568">
+              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+                {t('Transactions')}
+              </Tab>
+              <Tab minW={180} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+                {t('vendorWorkOrders')}
+              </Tab>
+              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+                {t('documents')}
+              </Tab>
+              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>{'Notes'}</Tab>
+              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+                {t('alerts')}
+              </Tab>
+              <Tab minW={120} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+                {'HFE Mgmt'}
+              </Tab>
+              <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
+                {tabIndex === 2 && (
+                  <Button
+                    onClick={onDocumentModalOpen}
+                    bg="#4E87F8"
+                    color="#FFFFFF"
+                    size="md"
+                    _hover={{ bg: 'royalblue' }}
+                  >
+                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                      <AiOutlineUpload />
+                    </Box>
+                    {t('upload')}
+                  </Button>
+                )}
+                {tabIndex === 3 && (
+                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
+                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
+                    {t('resolve')}
+                  </Button>
+                )}
+                {tabIndex === 0 && (
+                  <>
+                    <Button
+                      bg="#FFFFFF"
+                      color="#4E87F8"
+                      border="1px solid #4E87F8"
+                      marginRight={1}
+                      size="md"
+                      fontSize="12px"
+                      fontWeight={500}
+                      fontStyle="normal"
+                      // _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
+                      onClick={() => {
+                        if (projectTableInstance) {
+                          projectTableInstance?.exportData('xlsx', false)
+                        }
+                      }}
+                    >
+                      <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                        <BsBoxArrowUp />
+                      </Box>
+                      {t('export')}
+                    </Button>
+                    {/* {settingColumns && (
+                      <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                    )} */}
+                    <Button
+                      bg="#FFFFFF"
+                      color="#4E87F8"
+                      border="1px solid #4E87F8"
+                      marginRight={1}
+                      size="md"
+                      // _hover={{ bg: '#4E87F8', color: '#FFFFFF' }}
+                      // onClick={}
+                    >
+                      {settingColumns && (
+                        <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                      )}
+                    </Button>
+                    <Button
+                      bg="#4E87F8"
+                      color="#FFFFFF"
+                      size="md"
+                      fontSize="12px"
+                      _hover={{ bg: 'royalblue' }}
+                      onClick={onTransactionModalOpen}
+                    >
+                      {t('newTransaction')}
+                    </Button>
+                  </>
+                )}
+              </Box>
+            </TabList>
+
+            <TabPanels mt="31px" h="100%">
+              <TabPanel p="0px" h="100%">
+                <Box mb={5}>
+                  <FormControl display="flex" alignItems="center">
+                    <FormLabel htmlFor="view-details" mb="0">
+                      View Details
+                    </FormLabel>
+                    <Switch id="view-details" />
+                  </FormControl>
+                </Box>
+                <Box h="100%">
+                  <TransactionsTable
+                    setTableInstance={setProjectTableInstance}
+                    projectColumns={tableColumns}
+                    resizeElementRef={resizeElementRef}
+                  />
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Stack>
       </Stack>
+      <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )
 }

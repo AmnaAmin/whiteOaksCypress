@@ -3,13 +3,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { ProjectFilters } from 'features/projects/pc-project-filters'
-import { ProjectsTable, PCPROJECT_COLUMNS } from 'features/projects/pc-projects-table'
+import { ProjectFilters } from 'features/project-coordinator/project-filters'
+import { ProjectsTable, PCPROJECT_COLUMNS } from 'features/project-coordinator/projects-table'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
-import { ProjectDayFilters } from 'features/projects/pc-project-days-filters'
+import { ProjectDayFilters } from 'features/project-coordinator/project-days-filters'
 
 export const Projects = () => {
   const { t } = useTranslation()
