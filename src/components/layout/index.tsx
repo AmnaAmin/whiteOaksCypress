@@ -6,6 +6,7 @@ import { SidebarLink } from './sidebar-link'
 import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
 import { useRoleBasedMenu } from './constants'
+import { IdleTimeOutModal } from './idle-time-out'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
@@ -18,6 +19,7 @@ export const Layout: React.FC = props => {
       </Box>
 
       <Container maxW="full" pt="65px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
+        <IdleTimeOutModal />
         <Flex
           position="fixed"
           top="66px"
@@ -47,6 +49,7 @@ export const Layout: React.FC = props => {
               </Sidebar>
             </Box>
           </Box>
+
           <Button
             display={{ base: 'none', lg: 'unset' }}
             _focus={{ outline: 'none' }}
