@@ -5,6 +5,15 @@ export type ProjectWorkOrder = {
   clientApprovedAmount: number
   clientOriginalApprovedAmount: number
   companyName: string
+  claimantName: string
+  customerName: string
+  owner: string
+  makerOfCheck: string
+  amountOfCheck: number
+  checkPayableTo: string
+  claimantsSignature: string
+  claimantTitle: string
+  dateOfSignature: string
   createdBy: string
   createdDate: string
   dateInvoiceSubmitted: string | null
@@ -100,6 +109,19 @@ export interface FormValues {
   transaction: TransactionFormValues[]
   expectedCompletionDate: string
   newExpectedCompletionDate: string
+}
+
+export interface LienWaiverFormValues {
+  claimantName: string
+  customerName: string
+  propertyAddress: string
+  owner: string
+  makerOfCheck: string
+  amountOfCheck: string
+  checkPayableTo: string
+  claimantsSignature: string | null | undefined
+  claimantTitle: string
+  dateOfSignature: string | Date | null
 }
 
 export type ChangeTransaction = {

@@ -172,6 +172,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'COI WC Exp Date',
         downloadCOIWCDocument: 'Download COI WC Document ',
         next: 'Next',
+        back: 'Back',
         cancel: 'Cancel',
         // Vendor-profile-license
         addLicense: 'Add License',
@@ -361,6 +362,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'Fecha de Caducidad COI WC',
         downloadCOIWCDocument: 'Descargar Documento COI WC',
         next: 'Próximo',
+        back: 'Espalda',
         cancel: 'Cancelar',
         // Vendor-profile-license
         addLicense: 'Agregar Licencia',

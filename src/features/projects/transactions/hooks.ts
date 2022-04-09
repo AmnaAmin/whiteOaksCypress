@@ -1,4 +1,4 @@
-import { TransactionTypeValues } from 'types/transaction.type'
+import { LienWaiverFormValues, ProjectWorkOrder, TransactionTypeValues } from 'types/transaction.type'
 import { AGAINST_DEFAULT_VALUE } from 'utils/transactions'
 import { useWatch } from 'react-hook-form'
 import numeral from 'numeral'
@@ -33,4 +33,36 @@ export const useTotalAmount = control => {
   }, 0)
 
   return numeral(totalAmount).format('$0,0[.]00')
+}
+
+export const useIsLienWaiverRequired = control => {
+  const transactionType = useWatch({ name: 'transactionType', control })
+
+  return transactionType?.value === TransactionTypeValues.draw
+}
+
+export const useSelectedWorkOrder = (control, workOrdersKeyValues: { [key: string]: ProjectWorkOrder } | undefined) => {
+  const selectedWorkOrderOption = useWatch({ name: 'against', control })
+
+  return workOrdersKeyValues?.[selectedWorkOrderOption?.value]
+}
+
+export const useLienWaiverFormValues = (
+  control,
+  selectedWorkOrder: ProjectWorkOrder | undefined,
+): LienWaiverFormValues => {
+  const totalAmount = useTotalAmount(control)
+
+  return {
+    claimantName: selectedWorkOrder?.claimantName || '',
+    customerName: selectedWorkOrder?.customerName || '',
+    propertyAddress: selectedWorkOrder?.propertyAddress || '',
+    owner: selectedWorkOrder?.owner || '',
+    makerOfCheck: selectedWorkOrder?.makerOfCheck || '',
+    amountOfCheck: totalAmount,
+    checkPayableTo: selectedWorkOrder?.claimantName || '',
+    claimantsSignature: selectedWorkOrder?.claimantsSignature || '',
+    claimantTitle: selectedWorkOrder?.claimantTitle || '',
+    dateOfSignature: selectedWorkOrder?.dateOfSignature || '',
+  }
 }

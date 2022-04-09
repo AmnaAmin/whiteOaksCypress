@@ -177,7 +177,7 @@ describe('Porject Details: Transaction tab test cases', () => {
 
     // Submit the Form
     await act(async () => {
-      await userEvent.click(screen.getByTestId('update-transaction'))
+      await userEvent.click(screen.getByTestId('save-transaction'))
     })
     await waitForLoadingToFinish()
 
