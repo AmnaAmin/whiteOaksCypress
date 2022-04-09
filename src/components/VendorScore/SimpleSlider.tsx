@@ -14,7 +14,7 @@ const isDateExpired = (date: string) => {
   const currentDate = new Date()
   const givenDate = new Date(date)
   if (givenDate > currentDate) return ''
-  return '#EC7979'
+  return '#F56565'
 }
 
 export const SimpleSlider: React.FC<{
