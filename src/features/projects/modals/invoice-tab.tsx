@@ -3,6 +3,8 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormErrorMessage,
   Grid,
   HStack,
   Icon,
@@ -15,16 +17,15 @@ import {
   Text,
   Thead,
   Tr,
+  VStack,
 } from '@chakra-ui/react'
 
-import { useForm } from 'react-hook-form'
-import { BiCalendar, BiDollarCircle, BiFile } from 'react-icons/bi'
+import { useState } from 'react'
 
-const InvoiceReadableInfo: React.FC<{ title: string; date: string; icons: React.ElementType }> = ({
-  title,
-  date,
-  icons,
-}) => {
+import { useForm } from 'react-hook-form'
+import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
+
+const InvoiceInfo: React.FC<{ title: string; date: string; icons: React.ElementType }> = ({ title, date, icons }) => {
   return (
     <Flex pt={6} pb={8}>
       <Box pr={4}>
@@ -43,20 +44,43 @@ const InvoiceReadableInfo: React.FC<{ title: string; date: string; icons: React.
 }
 
 export const InvoiceTab = ({ onClose }) => {
-  const { register, handleSubmit, reset } = useForm()
+  const [items, setItems] = useState([] as any)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      item: '',
+      description: '',
+      unitPrice: '',
+      quantity: '',
+      amount: '',
+    },
+  })
+
   const onSubmit = data => {
-    console.log(data)
+    // console.log(data)
+    setItems(state => [...state, { ...data }])
     reset()
   }
+
+  const DeleteItems = Id => {
+    const deleteValue = items.filter((value, id) => id !== Id)
+    setItems(deleteValue)
+    // console.log('deleteValue', deleteValue)
+  }
+
   return (
     <Box>
       <Box w="95%">
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2}>
-          <InvoiceReadableInfo title={'WO Original Amount'} date={'$40,170.6'} icons={BiDollarCircle} />
-          <InvoiceReadableInfo title={'Final Invoice:'} date={'$40,170.6'} icons={BiDollarCircle} />
-          <InvoiceReadableInfo title={'PO Number'} date={'xyz'} icons={BiFile} />
-          <InvoiceReadableInfo title={'Invoice Date'} date={'10/02/2022'} icons={BiCalendar} />
-          <InvoiceReadableInfo title={'Due Date'} date={'12/02/2022'} icons={BiCalendar} />
+          <InvoiceInfo title={'WO Original Amount'} date={'$40,170.6'} icons={BiDollarCircle} />
+          <InvoiceInfo title={'Final Invoice:'} date={'$40,170.6'} icons={BiDollarCircle} />
+          <InvoiceInfo title={'PO Number'} date={'xyz'} icons={BiFile} />
+          <InvoiceInfo title={'Invoice Date'} date={'10/02/2022'} icons={BiCalendar} />
+          <InvoiceInfo title={'Due Date'} date={'12/02/2022'} icons={BiCalendar} />
         </Grid>
 
         <Divider border="2px solid gray" mb={5} color="gray.200" />
@@ -65,7 +89,7 @@ export const InvoiceTab = ({ onClose }) => {
           <TableContainer border="1px solid #E2E8F0">
             <Box h="488px" overflow="auto">
               <Table colorScheme="teal" size="lg">
-                <Thead position="sticky" top={0}>
+                <Thead position="sticky" top={0} zIndex={2}>
                   <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
                     <Td>Item</Td>
                     <Td>Description</Td>
@@ -74,14 +98,30 @@ export const InvoiceTab = ({ onClose }) => {
                     <Td>Amount</Td>
                   </Tr>
                 </Thead>
-                <Tbody fontWeight={400} fontSize="14px" color="gray.600">
-                  <Tr h="72px">
-                    <Td>Service 1</Td>
-                    <Td>Original Scope</Td>
-                    <Td>$300.00</Td>
-                    <Td>1</Td>
-                    <Td>$570</Td>
-                  </Tr>
+                <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
+                  {items.map((item, index) => {
+                    return (
+                      <Tr h="72px">
+                        <Td>{item.item}</Td>
+                        <Td>{item.description}</Td>
+                        <Td>{item.unitPrice}</Td>
+                        <Td>{item.quantity}</Td>
+                        <Td>
+                          <Flex justifyContent="space-between">
+                            <Text>{item.amount}</Text>
+                            <Button
+                              bg="none"
+                              variant="link"
+                              _focus={{ outline: 'none' }}
+                              onClick={() => DeleteItems(index)}
+                            >
+                              <BiXCircle fontSize={20} color="#4E87F8" />
+                            </Button>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    )
+                  })}
                 </Tbody>
               </Table>
 
@@ -89,7 +129,7 @@ export const InvoiceTab = ({ onClose }) => {
                 <Box px={5} borderBottom="1px solid #E2E8F0">
                   <Button
                     type="submit"
-                    size="sm"
+                    size="xs"
                     variant="ghost"
                     my={1}
                     fontSize="14px"
@@ -98,19 +138,82 @@ export const InvoiceTab = ({ onClose }) => {
                   >
                     +Add New Item
                   </Button>
-                  <SimpleGrid columns={5} gap={20} pb={4}>
-                    <Input type="text" h="28px" bg="gray.50" id="item" {...register('Item')} />
+                  <SimpleGrid columns={5} gap={20} pb={4} w="97%">
+                    <FormControl isInvalid={!!errors.item?.message}>
+                      <Input
+                        w={165}
+                        type="text"
+                        h="28px"
+                        bg="gray.50"
+                        // id="item"
+                        {...register('item', { required: 'This field is required.' })}
+                      />
+                      <FormErrorMessage>{errors.item?.message}</FormErrorMessage>
+                    </FormControl>
 
-                    <Input type="text" h="28px" bg="gray.50" id="description" {...register('Description')} />
-
-                    <Input type="text" h="28px" bg="gray.50" id="unitPrice" {...register('UnitPrice')} />
-
-                    <Input type="text" h="28px" bg="gray.50" id="quantity" {...register('Quantity')} />
-
-                    <Input type="text" h="28px" bg="gray.50" id="amount" {...register('Amount')} />
+                    <FormControl isInvalid={!!errors.description?.message}>
+                      <Input
+                        w={149}
+                        type="text"
+                        h="28px"
+                        bg="gray.50"
+                        // id="description"
+                        {...register('description', { required: 'This field is required.' })}
+                      />
+                      <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.unitPrice?.message}>
+                      <Input
+                        w={149}
+                        type="text"
+                        h="28px"
+                        bg="gray.50"
+                        // id="unitPrice"
+                        {...register('unitPrice', { required: 'This field is required.' })}
+                      />
+                      <FormErrorMessage>{errors.unitPrice?.message}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.quantity?.message}>
+                      <Input
+                        w={84}
+                        type="text"
+                        h="28px"
+                        bg="gray.50"
+                        // id="quantity"
+                        {...register('quantity', { required: 'This field is required.' })}
+                      />
+                      <FormErrorMessage>{errors.quantity?.message}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid={!!errors.amount?.message}>
+                      <Input
+                        w={84}
+                        type="text"
+                        h="28px"
+                        bg="gray.50"
+                        // id="amount"
+                        {...register('amount', { required: 'This field is required.' })}
+                      />
+                      <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
+                    </FormControl>
                   </SimpleGrid>
                 </Box>
               </form>
+              <VStack alignItems="end" w="95%" fontSize="14px" fontWeight={500} color="gray.600">
+                <Box>
+                  <HStack w={300} height="60px" justifyContent="space-between">
+                    <Text>Subtotal:</Text>
+                    <Text>$1710.00</Text>
+                  </HStack>
+                  <HStack w={300} height="60px" justifyContent="space-between">
+                    <Text>Total Amount Paid:</Text>
+                    <Text>$1710.00</Text>
+                  </HStack>
+                  <HStack w={300} height="60px" justifyContent="space-between">
+                    <Text>Balance Due:</Text>
+                    <Text>$0.00</Text>
+                  </HStack>
+                </Box>
+              </VStack>
             </Box>
           </TableContainer>
         </Box>
