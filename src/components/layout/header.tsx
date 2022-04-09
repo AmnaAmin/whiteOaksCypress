@@ -79,8 +79,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           <LogoIcon />
         </Flex>
 
-        <HStack spacing="5">
-          {/** Language Dropdown Menu */}
+        <HStack spacing="5" _hover={{ bg: 'gray.100', rounded: '6px' }} px="1">
+          {/* * Language Dropdown Menu */}
           <Box display={{ base: 'none', md: 'block' }}>
             <DropdownLanguage />
           </Box>
@@ -104,12 +104,9 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
+
           <Menu placement="bottom">
             <MenuButton
-              _hover={{ bg: 'gray.100' }}
-              rounded="6px"
-              // variant="text"
-              // colorScheme="blue"
               bgSize="auto"
               w={{ base: '50px', md: 'auto' }}
               onClick={() => {

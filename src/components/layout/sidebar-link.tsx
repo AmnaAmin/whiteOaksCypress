@@ -46,10 +46,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       borderLeft="4px solid transparent"
       cursor="pointer"
       _hover={{
-        // bg: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%)',
-        bgGradient: 'linear(to-l, whiteAlpha.100, gray.100)',
-
-        // borderLeftColor: '#4E87F8',
+        bgGradient: 'linear(to-l, whiteAlpha.100,gray.100, gray.100)',
       }}
       className="group"
       fontWeight="medium"
