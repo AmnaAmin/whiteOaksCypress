@@ -106,23 +106,23 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
+            <TabPanels mt="10px" h="100%">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%">
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <VendorDocumentsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <AlertsTable
                     onRowClick={(e, row) => {
