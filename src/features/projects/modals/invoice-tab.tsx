@@ -9,12 +9,12 @@ import {
   HStack,
   Icon,
   Input,
-  SimpleGrid,
   Table,
   TableContainer,
   Tbody,
   Td,
   Text,
+  Tfoot,
   Thead,
   Tr,
   VStack,
@@ -88,116 +88,122 @@ export const InvoiceTab = ({ onClose }) => {
         <Box>
           <TableContainer border="1px solid #E2E8F0">
             <Box h="488px" overflow="auto">
-              <Table colorScheme="teal" size="lg">
-                <Thead position="sticky" top={0} zIndex={2}>
-                  <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
-                    <Td>Item</Td>
-                    <Td>Description</Td>
-                    <Td>Unit Price </Td>
-                    <Td>Quantity</Td>
-                    <Td>Amount</Td>
-                  </Tr>
-                </Thead>
-                <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
-                  {items.map((item, index) => {
-                    return (
-                      <Tr h="72px">
-                        <Td>{item.item}</Td>
-                        <Td>{item.description}</Td>
-                        <Td>{item.unitPrice}</Td>
-                        <Td>{item.quantity}</Td>
-                        <Td>
-                          <Flex justifyContent="space-between">
-                            <Text>{item.amount}</Text>
-                            <Button
-                              bg="none"
-                              variant="link"
-                              _focus={{ outline: 'none' }}
-                              onClick={() => DeleteItems(index)}
-                            >
-                              <BiXCircle fontSize={20} color="#4E87F8" />
-                            </Button>
-                          </Flex>
-                        </Td>
-                      </Tr>
-                    )
-                  })}
-                </Tbody>
-              </Table>
-
               <form onSubmit={handleSubmit(onSubmit)}>
-                <Box px={5} borderBottom="1px solid #E2E8F0">
-                  <Button
-                    type="submit"
-                    size="xs"
-                    variant="ghost"
-                    my={1}
-                    fontSize="14px"
-                    fontWeight={600}
-                    color="#4E87F8"
-                  >
-                    +Add New Item
-                  </Button>
-                  <SimpleGrid columns={5} gap={20} pb={4} w="97%">
-                    <FormControl isInvalid={!!errors.item?.message}>
-                      <Input
-                        w={165}
-                        type="text"
-                        h="28px"
-                        bg="gray.50"
-                        // id="item"
-                        {...register('item', { required: 'This field is required.' })}
-                      />
-                      <FormErrorMessage>{errors.item?.message}</FormErrorMessage>
-                    </FormControl>
+                <Table colorScheme="teal" size="lg">
+                  <Thead position="sticky" top={0} zIndex={2}>
+                    <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
+                      <Td>Item</Td>
+                      <Td>Description</Td>
+                      <Td>Unit Price </Td>
+                      <Td>Quantity</Td>
+                      <Td>Amount</Td>
+                    </Tr>
+                  </Thead>
+                  <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
+                    {items.map((item, index) => {
+                      return (
+                        <Tr h="72px">
+                          <Td>{item.item}</Td>
+                          <Td textAlign="center">{item.description}</Td>
+                          <Td>{item.unitPrice}</Td>
+                          <Td>{item.quantity}</Td>
+                          <Td>
+                            <Flex justifyContent="space-between" alignItems="center">
+                              <Text>{item.amount}</Text>
+                              <Text>
+                                <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
+                              </Text>
+                            </Flex>
+                          </Td>
+                        </Tr>
+                      )
+                    })}
+                  </Tbody>
+                  <Tfoot>
+                    <Tr>
+                      <Td pt="0" pb={6}>
+                        <Button
+                          type="submit"
+                          size="xs"
+                          variant="ghost"
+                          my={0.5}
+                          fontSize="14px"
+                          fontWeight={600}
+                          color="#4E87F8"
+                        >
+                          +Add New Item
+                        </Button>
 
-                    <FormControl isInvalid={!!errors.description?.message}>
-                      <Input
-                        w={149}
-                        type="text"
-                        h="28px"
-                        bg="gray.50"
-                        // id="description"
-                        {...register('description', { required: 'This field is required.' })}
-                      />
-                      <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.unitPrice?.message}>
-                      <Input
-                        w={149}
-                        type="text"
-                        h="28px"
-                        bg="gray.50"
-                        // id="unitPrice"
-                        {...register('unitPrice', { required: 'This field is required.' })}
-                      />
-                      <FormErrorMessage>{errors.unitPrice?.message}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.quantity?.message}>
-                      <Input
-                        w={84}
-                        type="text"
-                        h="28px"
-                        bg="gray.50"
-                        // id="quantity"
-                        {...register('quantity', { required: 'This field is required.' })}
-                      />
-                      <FormErrorMessage>{errors.quantity?.message}</FormErrorMessage>
-                    </FormControl>
-                    <FormControl isInvalid={!!errors.amount?.message}>
-                      <Input
-                        w={84}
-                        type="text"
-                        h="28px"
-                        bg="gray.50"
-                        // id="amount"
-                        {...register('amount', { required: 'This field is required.' })}
-                      />
-                      <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
-                    </FormControl>
-                  </SimpleGrid>
-                </Box>
+                        <FormControl isInvalid={!!errors.item?.message}>
+                          <Input
+                            w={165}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="item"
+                            {...register('item', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+
+                      <Td>
+                        <FormControl isInvalid={!!errors.description?.message}>
+                          <Input
+                            w={149}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="description"
+                            {...register('description', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.unitPrice?.message}>
+                          <Input
+                            w={149}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="unitPrice"
+                            {...register('unitPrice', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.quantity?.message}>
+                          <Input
+                            w={84}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="quantity"
+                            {...register('quantity', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.amount?.message}>
+                          <Input
+                            w={84}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="amount"
+                            {...register('amount', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                    </Tr>
+                  </Tfoot>
+                </Table>
               </form>
+
               <VStack alignItems="end" w="95%" fontSize="14px" fontWeight={500} color="gray.600">
                 <Box>
                   <HStack w={300} height="60px" justifyContent="space-between">

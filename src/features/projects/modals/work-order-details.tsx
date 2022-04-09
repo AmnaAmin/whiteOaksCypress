@@ -38,7 +38,7 @@ const TabStyle = {
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [idTarget, setIdTarget] = useState(false)
+  const [header, setHeader] = useState(false)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -59,7 +59,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
       <ModalContent w={1200} rounded={0} borderTop="2px solid #4E87F8">
         <ModalHeader h="64px" py={4} display="flex" alignItems="center">
-          {idTarget ? (
+          {header ? (
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
@@ -96,7 +96,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   minW={180}
                   sx={TabStyle}
                   _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
-                  onClick={() => setIdTarget(false)}
+                  onClick={() => setHeader(false)}
                 >
                   {t('workOrderDetails')}
                 </Tab>
@@ -104,7 +104,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   _focus={{ border: 'none' }}
                   _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                   sx={TabStyle}
-                  onClick={() => setIdTarget(false)}
+                  onClick={() => setHeader(false)}
                 >
                   {t('lienWaiver')}
                 </Tab>
@@ -112,7 +112,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   _focus={{ border: 'none' }}
                   _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
                   sx={TabStyle}
-                  onClick={() => setIdTarget(false)}
+                  onClick={() => setHeader(false)}
                 >
                   {t('Payments')}
                 </Tab>
@@ -121,7 +121,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   _focus={{ border: 'none' }}
                   _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, id: 'checkId' }}
                   sx={TabStyle}
-                  onClick={() => setIdTarget(true)}
+                  onClick={() => setHeader(true)}
                 >
                   {t('Invoice')}
                 </Tab>
