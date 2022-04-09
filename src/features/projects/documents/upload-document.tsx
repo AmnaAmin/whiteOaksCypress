@@ -210,7 +210,8 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             fontSize="14px"
             onClick={uploadDocument}
             colorScheme="CustomPrimaryColor"
-            _hover={{ bg: 'blue', fontWeight: '600' }}
+            _hover={{ bg: 'blue' }}
+            _focus={{ outline: 'none' }}
             type="submit"
             ml="3"
           >
