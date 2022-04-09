@@ -368,6 +368,8 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   mr="60px"
                   float={'right'}
                   colorScheme="CustomPrimaryColor"
+                  _focus={{ outline: 'none' }}
+                  _hover={{ bg: 'blue', fontWeight: '600' }}
                   size="md"
                   fontSize="14px"
                   fontStyle="normal"

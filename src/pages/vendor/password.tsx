@@ -24,7 +24,7 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import zxcvbn from 'zxcvbn'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import { PasswordFormValues } from '../types/account.types'
+import { PasswordFormValues } from 'types/account.types'
 import { successMessage } from 'utils/api-messages'
 import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'

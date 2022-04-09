@@ -20,7 +20,7 @@ import {
   Tag,
   Box,
 } from '@chakra-ui/react'
-import { ProjectWorkOrderType } from '../../../types/project.type'
+import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
 import { LienWaiverTab } from './lien-waiver-tab'
 import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
