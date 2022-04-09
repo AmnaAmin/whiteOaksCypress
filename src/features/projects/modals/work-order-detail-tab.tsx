@@ -67,15 +67,16 @@ const TableBodyChilde: React.FC<{
           iconColor="#2AB450"
           h="32px"
           w="145px"
-          color={text ? '#2AB450' : '#A0AEC0'}
-          bg={text ? '#E7F8EC' : '#F2F3F4'}
+          color="gray.400"
+          bg="#F2F3F4"
+          _checked={{ color: '#2AB450', bg: '#E7F8EC' }}
           boxShadow="0px 0px 4px -2px "
           justifyContent="center"
           fontSize={14}
           fontWeight={500}
           onChange={() => setText(!text)}
         >
-          {text ? 'Completed' : 'Not Completed'}
+          Completed
         </Checkbox>
       </Box>
 
