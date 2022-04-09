@@ -27,9 +27,9 @@ import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
 
 const InvoiceInfo: React.FC<{ title: string; date: string; icons: React.ElementType }> = ({ title, date, icons }) => {
   return (
-    <Flex pt={6} pb={8}>
+    <Flex pt={6} pb={8} justifyContent="center">
       <Box pr={4}>
-        <Icon as={icons} fontSize="23px" color="gray.600" />
+        <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
       <Box lineHeight="20px">
         <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
@@ -74,7 +74,7 @@ export const InvoiceTab = ({ onClose }) => {
 
   return (
     <Box>
-      <Box w="95%">
+      <Box w="100%">
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2}>
           <InvoiceInfo title={'WO Original Amount'} date={'$40,170.6'} icons={BiDollarCircle} />
           <InvoiceInfo title={'Final Invoice:'} date={'$40,170.6'} icons={BiDollarCircle} />
@@ -104,7 +104,7 @@ export const InvoiceTab = ({ onClose }) => {
                       return (
                         <Tr h="72px">
                           <Td>{item.item}</Td>
-                          <Td textAlign="center">{item.description}</Td>
+                          <Td>{item.description}</Td>
                           <Td>{item.unitPrice}</Td>
                           <Td>{item.quantity}</Td>
                           <Td>
@@ -204,7 +204,7 @@ export const InvoiceTab = ({ onClose }) => {
                 </Table>
               </form>
 
-              <VStack alignItems="end" w="95%" fontSize="14px" fontWeight={500} color="gray.600">
+              <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
                 <Box>
                   <HStack w={300} height="60px" justifyContent="space-between">
                     <Text>Subtotal:</Text>
