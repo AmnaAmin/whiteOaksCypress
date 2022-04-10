@@ -313,6 +313,8 @@ export const LienWaiverTab: React.FC<any> = props => {
             fontStyle="normal"
             fontWeight={500}
             fontSize="14px"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue' }}
           >
             {t('save')}
           </Button>

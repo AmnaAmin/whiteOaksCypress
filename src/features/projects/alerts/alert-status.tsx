@@ -145,7 +145,6 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             <ModalCloseButton size="lg" _focus={{ border: 'none' }} />
             <ModalBody>
               <Box
-                margin="20px 10px 10px 10px"
                 minH="31.6em"
                 borderRadius="8px"
                 boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
@@ -173,7 +172,8 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
                 fontWeight={500}
                 fontStyle="normal"
                 colorScheme="CustomPrimaryColor"
-                _hover={{ bg: 'blue', fontWeight: '600' }}
+                _hover={{ bg: 'blue' }}
+                _focus={{ outline: 'none' }}
                 rounded="6px"
                 type="submit"
                 form="newTransactionForm"
