@@ -221,7 +221,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
             {t('close')}
           </Text>
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg">
+        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg" _focus={{ outline: 'none' }} _hover={{ bg: 'blue' }}>
           <Text fontSize="14px" fontWeight={500} fontStyle="normal">
             {t('save')}
           </Text>
