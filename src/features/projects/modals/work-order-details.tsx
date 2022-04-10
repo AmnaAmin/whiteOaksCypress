@@ -31,6 +31,9 @@ const TabStyle = {
   fontSize: '14px',
   fontStyle: 'normal',
   color: 'gray.600',
+  _hover: {
+    backgroundColor: 'gray.200',
+  },
 }
 
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
@@ -79,20 +82,20 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   _focus={{ border: 'none' }}
                   minW={180}
                   sx={TabStyle}
-                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                 >
                   {t('workOrderDetails')}
                 </Tab>
                 <Tab
                   _focus={{ border: 'none' }}
-                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                   sx={TabStyle}
                 >
                   {t('lienWaiver')}
                 </Tab>
                 <Tab
                   _focus={{ border: 'none' }}
-                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                   sx={TabStyle}
                 >
                   {t('Payments')}

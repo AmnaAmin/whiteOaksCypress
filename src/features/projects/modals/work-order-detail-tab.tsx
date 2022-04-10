@@ -209,10 +209,16 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
             {t('close')}
           </Text>
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg">
-          <Text fontSize="14px" fontWeight={500} fontStyle="normal">
-            {t('save')}
-          </Text>
+        <Button
+          colorScheme="CustomPrimaryColor"
+          mr={3}
+          size="lg"
+          _hover={{ bg: 'blue' }}
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+        >
+          {t('save')}
         </Button>
       </Flex>
     </Box>

@@ -89,12 +89,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        bg="none"
+        ml="1"
+        variant="ghost"
         color="#4E87F8"
         fontSize="12px"
         fontStyle="normal"
         fontWeight={500}
-        _hover={{ bg: 'none' }}
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
@@ -196,6 +196,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
               fontStyle="normal"
               mr={3}
               onClick={saveModal}
+              _hover={{ bg: 'blue' }}
             >
               Save
             </Button>

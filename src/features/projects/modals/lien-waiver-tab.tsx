@@ -306,6 +306,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             {t('close')}
           </Button>
           <Button
+            _hover={{ bg: 'blue' }}
             colorScheme="CustomPrimaryColor"
             size="lg"
             mr={3}
