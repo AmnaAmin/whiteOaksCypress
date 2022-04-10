@@ -141,6 +141,8 @@ const InvoicingAndPaymentTab = ({
           fontStyle="normal"
           fontSize="18px"
           fontWeight={600}
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue' }}
         >
           {t('close')}
         </Button>
