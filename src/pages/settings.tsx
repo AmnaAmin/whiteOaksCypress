@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react'
-import { Box, Button, HStack, Avatar, Text, Stack, Divider, Icon, VStack } from '@chakra-ui/react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { Box, Button, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input } from '@chakra-ui/react'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -15,6 +15,7 @@ import { FormInput } from '../components/react-hook-form-fields/input'
 // import { FormFileInput } from '../components/react-hook-form-fields/file-input'
 import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
+import { MdCameraAlt } from 'react-icons/md'
 
 export const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
@@ -91,32 +92,16 @@ export const Settings = React.forwardRef((props, ref) => {
   return (
     <Box mt="40px" ml="20px" h="65vh">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Text fontSize="18px" fontWeight={500} color="gray.800" fontStyle="normal" mb={8}>
+        <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
           {/* {t('settingsFor')} [{account ? account.email : null}] */}
           Settings
         </Text>
-
-        {/* <Flex id="Avatar">
-          <FormFileInput
-            errorMessage={errors.profilePicture}
-            label={'Profile Picture'}
-            name={`profilePicture`}
-            register={register}
-            isRequired={false}
-            id="Avatar"
-          >
-            <Avatar src={account?.imageUrl} />
-            <Text m={4} color={'lightgrey'} width="350px">
-              Change your Profile Picture
-            </Text>
-          </FormFileInput>
-        </Flex> */}
         <Stack mb="10">
-          <Text fontSize="16px" fontWeight={500} color="gray.800" fontStyle="normal">
+          <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
             Profile Picture
           </Text>
           <HStack spacing={4}>
-            <Avatar src="https://bit.ly/sage-adebayo"></Avatar>
+            <PreviewImg />
             <Text fontSize="14px" fontWeight={400} color="gray.600">
               Change your profile picture
             </Text>
@@ -164,28 +149,6 @@ export const Settings = React.forwardRef((props, ref) => {
             name={`lastName`}
           />
         </HStack>
-
-        {/* <FormInput
-          errorMessage={errors.email && errors.email?.message}
-          label={t('email')}
-          placeholder="Email"
-          register={register}
-          disabled={true}
-          controlStyle={{ w: '20em' }}
-          elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-          rules={{ required: 'This is required field' }}
-          name={`email`}
-        />
-        <FormSelect
-          errorMessage={errors.language && errors.language?.message}
-          label={t('language')}
-          name={`language`}
-          control={control}
-          options={languageOptions}
-          rules={{ required: 'This is required field' }}
-          controlStyle={{ w: '20em' }}
-          elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-        /> */}
         <Box id="footer" w="100%" mt={100} borderTop="2px solid #E2E8F0">
           <Button float="right" mr="5" mt="5" colorScheme="CustomPrimaryColor" type="submit">
             <Text fontSize="14px" fontWeight={500} fontStyle="normal">
@@ -197,3 +160,45 @@ export const Settings = React.forwardRef((props, ref) => {
     </Box>
   )
 })
+
+const PreviewImg = () => {
+  const defaultImage = 'https://bit.ly/sage-adebayo'
+  const [preview, setPreview] = useState<any>(null)
+
+  const fileInputRef = useRef<any>()
+
+  const handleInputClick = (e: any) => {
+    e.preventDefault()
+    fileInputRef.current.click()
+  }
+
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0]
+    const reader = new FileReader()
+    reader.onloadend = () => setPreview(reader.result)
+    reader.readAsDataURL(file)
+  }
+
+  return (
+    <Box>
+      <Box pos="relative" display="flex" justifyContent="center" alignContent="center">
+        <Avatar size="lg" src={preview || defaultImage} zIndex={1}></Avatar>
+        <Button
+          onClick={handleInputClick}
+          bg="transparent"
+          variant="unstyled"
+          pos="absolute"
+          zIndex={2}
+          top="17px"
+          _focus={{ outline: 'none' }}
+        >
+          <Icon as={MdCameraAlt} boxSize={7} color="#FFFFFF" />
+        </Button>
+      </Box>
+
+      <Input hidden type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} />
+    </Box>
+  )
+}
+
+export default PreviewImg
