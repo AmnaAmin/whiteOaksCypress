@@ -322,6 +322,20 @@ export const TRANSACTION_FEILD_DEFAULT = {
   amount: '',
   checked: false,
 }
+
+export const LIEN_WAIVER_DEFAULT_VALUES = {
+  claimantName: '',
+  customerName: '',
+  propertyAddress: '',
+  owner: '',
+  makerOfCheck: '',
+  amountOfCheck: '',
+  checkPayableTo: '',
+  claimantsSignature: '',
+  claimantTitle: '',
+  dateOfSignature: '',
+}
+
 export const transactionDefaultFormValues = (createdBy: string): FormValues => {
   return {
     transactionType: null,

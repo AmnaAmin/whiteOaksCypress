@@ -78,7 +78,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
 
-  const totalAmount = useTotalAmount(control)
+  const { formattedAmount: totalAmount } = useTotalAmount(control)
 
   const toggleAllCheckboxes = useCallback(
     event => {

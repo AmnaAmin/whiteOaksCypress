@@ -20,28 +20,27 @@ import { downloadFile } from 'utils/file-utils'
 import jsPdf from 'jspdf'
 import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
+import { createForm, getHelpText } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from 'features/projects/modals/signature-modal'
 import { useTranslation } from 'react-i18next'
-import { LienWaiverFormValues } from 'types/transaction.type'
 
 type LienWaiverProps = {
-  formValues: LienWaiverFormValues
+  //   formValues: LienWaiverFormValues
   //   onSubmit: (values: LienWaiverFormValues) => void
   onClose?: () => void
 }
 
 export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const { t } = useTranslation()
-  const { formValues, onClose } = props
-  const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
-  const [documents, setDocuments] = useState<any[]>([])
+  //   const { onClose } = props
+  //   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
+  //   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [] } = useDocuments({
     projectId,
@@ -54,29 +53,27 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const {
     register,
     formState: { errors },
-    handleSubmit,
     getValues,
     setValue,
-  } = useForm({
-    defaultValues: formValues,
-  })
+    control,
+  } = useFormContext()
 
-  const value = getValues()
-  const parseValuesToPayload = (values, documents) => {
-    return {
-      ...formValues,
-      ...values,
-      documents,
-    }
-  }
+  const formValues = useWatch({ name: 'lienWaiver', control })
+  //   const parseValuesToPayload = (values, documents) => {
+  //     return {
+  //       ...formValues,
+  //       ...values,
+  //       documents,
+  //     }
+  //   }
 
-  const onSubmit = values => {
-    const formValues = parseValuesToPayload(values, documents)
-    updateLienWaiver(formValues)
-  }
-  useEffect(() => {
-    if (isSuccess) onClose?.()
-  }, [isSuccess, onClose])
+  //   const onSubmit = values => {
+  //     const formValues = parseValuesToPayload(values, documents)
+  //     updateLienWaiver(formValues)
+  //   }
+  //   useEffect(() => {
+  //     if (isSuccess) onClose?.()
+  //   }, [isSuccess, onClose])
 
   useEffect(() => {
     if (!documentsData?.length) return
@@ -96,21 +93,21 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     }
     convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
       form = createForm(form, getValues(), dimention, dataUrl)
-      const pdfUri = form.output('datauristring')
+      //   const pdfUri = form.output('datauristring')
       const pdfBlob = form.output('bloburi')
       setRecentLWFile({
         s3Url: pdfBlob,
         fileType: 'Lien-Waiver-Form.pdf',
       })
-      setDocuments(doc => [
-        ...doc,
-        {
-          documentType: 26,
-          fileObject: pdfUri.split(',')[1],
-          fileObjectContentType: 'application/pdf',
-          fileType: 'Lien-Waiver-Form.pdf',
-        },
-      ])
+      //   setDocuments(doc => [
+      //     ...doc,
+      //     {
+      //       documentType: 26,
+      //       fileObject: pdfUri.split(',')[1],
+      //       fileObjectContentType: 'application/pdf',
+      //       fileType: 'Lien-Waiver-Form.pdf',
+      //     },
+      //   ])
     })
   }, [getValues])
 
@@ -126,16 +123,16 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     const trimContext = trimCanvas(canvasRef.current)
 
     const uri = trimContext?.toDataURL('image/png')
-    setDocuments(doc => [
-      ...doc,
-      {
-        documentType: 108,
-        fileObject: uri?.split(',')[1],
-        fileObjectContentType: 'image/png',
-        fileType: 'Claimants Signature.png',
-      },
-    ])
-    setValue('claimantsSignature', uri)
+    // setDocuments(doc => [
+    //   ...doc,
+    //   {
+    //     documentType: 108,
+    //     fileObject: uri?.split(',')[1],
+    //     fileObjectContentType: 'image/png',
+    //     fileType: 'Claimants Signature.png',
+    //   },
+    // ])
+    setValue('lienWaiver.claimantsSignature', uri)
   }
 
   const onSignatureChange = value => {
@@ -152,146 +149,146 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     <Stack>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
 
-      <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <VStack align="start" spacing="30px">
-            <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box flex="4">
-                <HelpText>{getHelpText()}</HelpText>
-              </Box>
-              <Flex pos="absolute" top={0} right={0} flex="1">
-                {recentLWFile && (
-                  <Flex alignItems={'center'}>
-                    <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                      Recent LW:
-                    </FormLabel>
-
-                    <Button
-                      fontSize="14px"
-                      fontWeight={500}
-                      bg="white"
-                      color="#4E87F8"
-                      float="right"
-                      mr={3}
-                      onClick={() => downloadFile(recentLWFile.s3Url)}
-                    >
-                      <Box pos="relative" right="6px"></Box>
-                      {recentLWFile.fileType}
-                    </Button>
-                  </Flex>
-                )}
-
-                <Button
-                  bg="#4E87F8"
-                  disabled={!value.claimantsSignature || recentLWFile}
-                  color="#FFFFFF"
-                  float="right"
-                  size="md"
-                  _hover={{ bg: 'royalblue' }}
-                  onClick={generatePdf}
-                >
-                  <Box pos="relative" right="6px"></Box>
-                  Generate LW
-                </Button>
-              </Flex>
-            </Flex>
-            <Box>
-              <VStack alignItems="start">
-                <HStack>
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('nameofClaimant')}
-                    InputElem={<Text>{formValues.claimantName}</Text>}
-                  />
-
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('jobLocation')}
-                    InputElem={<Text>{formValues.propertyAddress}</Text>}
-                  />
-                </HStack>
-                <HStack></HStack>
-                <HStack>
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('makerOfCheck')}
-                    InputElem={<Text>{formValues.makerOfCheck}</Text>}
-                  />
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('amountOfCheck')}
-                    InputElem={<Text>${formValues.amountOfCheck}</Text>}
-                  />
-                </HStack>
-
-                <Stack pt="5" pb="5">
-                  <FormInput
-                    errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
-                    label={t('claimantsTitle')}
-                    placeholder=""
-                    register={register}
-                    controlStyle={{ w: '293px' }}
-                    elementStyle={{
-                      bg: 'white',
-                      borderLeft: '2px solid #4E87F8',
-                    }}
-                    rules={{ required: 'This is required field' }}
-                    name={`claimantTitle`}
-                  />
-                </Stack>
-
-                <HStack alignItems={'flex-start'} spacing="7">
-                  <FormControl isInvalid={!value.claimantsSignature} width={'20em'}>
-                    <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
-                      {t('claimantsSignature')}
-                    </FormLabel>
-                    <Flex pos="relative" bg="gray.50" height={'37px'} alignItems={'center'} px={4}>
-                      <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
-                      <Image
-                        hidden={!value.claimantsSignature}
-                        maxW={'100%'}
-                        src={value.claimantsSignature as string}
-                        {...register('claimantsSignature', {
-                          required: 'This is required field',
-                        })}
-                        ref={sigRef}
-                      />
-
-                      <Flex pos={'absolute'} right="10px" top="11px">
-                        {value.claimantsSignature && (
-                          <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
-                        )}
-                        <BiBookAdd onClick={() => setOpenSignature(true)} color="#A0AEC0" />
-                      </Flex>
-                    </Flex>
-                    {!value.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
-                  </FormControl>
-
-                  <FormInput
-                    icon={<BiCalendar />}
-                    errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
-                    label={t('dateOfSignature')}
-                    placeholder=""
-                    register={register}
-                    name={`dateOfSignature`}
-                    value={dateFormat(value.dateOfSignature as Date)}
-                    controlStyle={{ w: '20em' }}
-                    elementStyle={{
-                      bg: 'white',
-                      borderWidth: '0 0 1px 0',
-                      borderColor: 'gray.100',
-                      rounded: '0',
-                    }}
-                    rules={{ required: 'This is required field' }}
-                    readOnly
-                  />
-                </HStack>
-              </VStack>
+      {/* <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}> */}
+      <FormControl>
+        <VStack align="start" spacing="30px">
+          <Flex w="100%" alignContent="space-between" pos="relative">
+            <Box flex="4">
+              <HelpText>{getHelpText()}</HelpText>
             </Box>
-          </VStack>
-        </FormControl>
-        <Divider />
-        {/* <ModalFooter mt={3}>
+            <Flex pos="absolute" top={0} right={0} flex="1">
+              {recentLWFile && (
+                <Flex alignItems={'center'}>
+                  <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
+                    Recent LW:
+                  </FormLabel>
+
+                  <Button
+                    fontSize="14px"
+                    fontWeight={500}
+                    bg="white"
+                    color="#4E87F8"
+                    float="right"
+                    mr={3}
+                    onClick={() => downloadFile(recentLWFile.s3Url)}
+                  >
+                    <Box pos="relative" right="6px"></Box>
+                    {recentLWFile.fileType}
+                  </Button>
+                </Flex>
+              )}
+
+              <Button
+                bg="#4E87F8"
+                disabled={!formValues.claimantsSignature || recentLWFile}
+                color="#FFFFFF"
+                float="right"
+                size="md"
+                _hover={{ bg: 'royalblue' }}
+                onClick={generatePdf}
+              >
+                <Box pos="relative" right="6px"></Box>
+                Generate LW
+              </Button>
+            </Flex>
+          </Flex>
+          <Box>
+            <VStack alignItems="start">
+              <HStack>
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('nameofClaimant')}
+                  InputElem={<Text>{formValues.claimantName}</Text>}
+                />
+
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('jobLocation')}
+                  InputElem={<Text>{formValues.propertyAddress}</Text>}
+                />
+              </HStack>
+              <HStack></HStack>
+              <HStack>
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('makerOfCheck')}
+                  InputElem={<Text>{formValues.makerOfCheck}</Text>}
+                />
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('amountOfCheck')}
+                  InputElem={<Text>${formValues.amountOfCheck}</Text>}
+                />
+              </HStack>
+
+              <Stack pt="5" pb="5">
+                <FormInput
+                  errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
+                  label={t('claimantsTitle')}
+                  placeholder=""
+                  register={register}
+                  controlStyle={{ w: '293px' }}
+                  elementStyle={{
+                    bg: 'white',
+                    borderLeft: '2px solid #4E87F8',
+                  }}
+                  rules={{ required: 'This is required field' }}
+                  name={`claimantTitle`}
+                />
+              </Stack>
+
+              <HStack alignItems={'flex-start'} spacing="7">
+                <FormControl isInvalid={!formValues.claimantsSignature} width={'20em'}>
+                  <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
+                    {t('claimantsSignature')}
+                  </FormLabel>
+                  <Flex pos="relative" bg="gray.50" height={'37px'} alignItems={'center'} px={4}>
+                    <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
+                    <Image
+                      hidden={!formValues.claimantsSignature}
+                      maxW={'100%'}
+                      src={formValues.claimantsSignature as string}
+                      {...register('lienWaiver.claimantsSignature', {
+                        required: 'This is required field',
+                      })}
+                      ref={sigRef}
+                    />
+
+                    <Flex pos={'absolute'} right="10px" top="11px">
+                      {formValues.claimantsSignature && (
+                        <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
+                      )}
+                      <BiBookAdd onClick={() => setOpenSignature(true)} color="#A0AEC0" />
+                    </Flex>
+                  </Flex>
+                  {!formValues.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
+                </FormControl>
+
+                <FormInput
+                  icon={<BiCalendar />}
+                  errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
+                  label={t('dateOfSignature')}
+                  placeholder=""
+                  register={register}
+                  name={`lienWaiver.dateSignature`}
+                  value={dateFormat(formValues.dateOfSignature as Date)}
+                  controlStyle={{ w: '20em' }}
+                  elementStyle={{
+                    bg: 'white',
+                    borderWidth: '0 0 1px 0',
+                    borderColor: 'gray.100',
+                    rounded: '0',
+                  }}
+                  rules={{ required: 'This is required field' }}
+                  readOnly
+                />
+              </HStack>
+            </VStack>
+          </Box>
+        </VStack>
+      </FormControl>
+      <Divider />
+      {/* <ModalFooter mt={3}>
           <Button
             variant="ghost"
             mr={3}
@@ -316,7 +313,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
             {t('save')}
           </Button>
         </ModalFooter> */}
-      </form>
+      {/* </form> */}
     </Stack>
   )
 }

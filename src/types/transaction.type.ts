@@ -99,18 +99,6 @@ export type TransactionFormValues = {
   checked: boolean
 }
 
-export interface FormValues {
-  transactionType: SelectOption | null
-  against: SelectOption | null
-  dateCreated: string | null
-  createdBy: string | null
-  workOrder: SelectOption | null
-  changeOrder: SelectOption | null
-  transaction: TransactionFormValues[]
-  expectedCompletionDate: string
-  newExpectedCompletionDate: string
-}
-
 export interface LienWaiverFormValues {
   claimantName: string
   customerName: string
@@ -122,6 +110,19 @@ export interface LienWaiverFormValues {
   claimantsSignature: string | null | undefined
   claimantTitle: string
   dateOfSignature: string | Date | null
+}
+
+export interface FormValues {
+  transactionType: SelectOption | null
+  against: SelectOption | null
+  dateCreated: string | null
+  createdBy: string | null
+  workOrder: SelectOption | null
+  changeOrder: SelectOption | null
+  transaction: TransactionFormValues[]
+  expectedCompletionDate: string
+  newExpectedCompletionDate: string
+  lienWaiver?: LienWaiverFormValues
 }
 
 export type ChangeTransaction = {

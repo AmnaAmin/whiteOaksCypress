@@ -1,7 +1,8 @@
-import { LienWaiverFormValues, ProjectWorkOrder, TransactionTypeValues } from 'types/transaction.type'
+import { ProjectWorkOrder, TransactionTypeValues } from 'types/transaction.type'
 import { AGAINST_DEFAULT_VALUE } from 'utils/transactions'
 import { useWatch } from 'react-hook-form'
 import numeral from 'numeral'
+import { useMemo } from 'react'
 
 export const useFieldShowHideDecision = control => {
   const transactionType = useWatch({ name: 'transactionType', control })
@@ -32,7 +33,7 @@ export const useTotalAmount = control => {
     }
   }, 0)
 
-  return numeral(totalAmount).format('$0,0[.]00')
+  return { formattedAmount: numeral(totalAmount).format('$0,0[.]00'), amount: totalAmount }
 }
 
 export const useIsLienWaiverRequired = control => {
@@ -47,22 +48,24 @@ export const useSelectedWorkOrder = (control, workOrdersKeyValues: { [key: strin
   return workOrdersKeyValues?.[selectedWorkOrderOption?.value]
 }
 
-export const useLienWaiverFormValues = (
-  control,
-  selectedWorkOrder: ProjectWorkOrder | undefined,
-): LienWaiverFormValues => {
-  const totalAmount = useTotalAmount(control)
+export const useLienWaiverFormValues = (control, selectedWorkOrder: ProjectWorkOrder | undefined, setValue) => {
+  const { amount: totalAmount } = useTotalAmount(control)
 
-  return {
-    claimantName: selectedWorkOrder?.claimantName || '',
-    customerName: selectedWorkOrder?.customerName || '',
-    propertyAddress: selectedWorkOrder?.propertyAddress || '',
-    owner: selectedWorkOrder?.owner || '',
-    makerOfCheck: selectedWorkOrder?.makerOfCheck || '',
-    amountOfCheck: totalAmount,
-    checkPayableTo: selectedWorkOrder?.claimantName || '',
-    claimantsSignature: selectedWorkOrder?.claimantsSignature || '',
-    claimantTitle: selectedWorkOrder?.claimantTitle || '',
-    dateOfSignature: selectedWorkOrder?.dateOfSignature || '',
-  }
+  const lienWaiver = useMemo(
+    () => ({
+      claimantName: selectedWorkOrder?.claimantName || '',
+      customerName: selectedWorkOrder?.customerName || '',
+      propertyAddress: selectedWorkOrder?.propertyAddress || '',
+      owner: selectedWorkOrder?.owner || '',
+      makerOfCheck: selectedWorkOrder?.makerOfCheck || '',
+      amountOfCheck: totalAmount,
+      checkPayableTo: selectedWorkOrder?.claimantName || '',
+      claimantsSignature: selectedWorkOrder?.claimantsSignature || '',
+      claimantTitle: selectedWorkOrder?.claimantTitle || '',
+      dateOfSignature: selectedWorkOrder?.dateOfSignature || '',
+    }),
+    [totalAmount, selectedWorkOrder],
+  )
+
+  setValue('lienWaiver', lienWaiver)
 }

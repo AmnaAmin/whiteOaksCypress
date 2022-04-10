@@ -18,11 +18,13 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { DevTool } from '@hookform/devtools'
 import Select from 'components/form/react-select'
 import { useParams } from 'react-router'
 import {
   AGAINST_DEFAULT_VALUE,
+  LIEN_WAIVER_DEFAULT_VALUES,
   parseChangeOrderAPIPayload,
   parseChangeOrderUpdateAPIPayload,
   parseTransactionToFormValues,
@@ -39,7 +41,7 @@ import { FormValues, SelectOption, TransactionTypeValues } from 'types/transacti
 import { dateFormat } from 'utils/date-time-utils'
 import {
   useFieldShowHideDecision,
-  // useIsLienWaiverRequired,
+  useIsLienWaiverRequired,
   useLienWaiverFormValues,
   useSelectedWorkOrder,
 } from './hooks'
@@ -81,8 +83,12 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   }, [login])
 
   const formReturn = useForm<FormValues>({
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
+    },
   })
+
   const {
     handleSubmit,
     register,
@@ -99,9 +105,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
   } = useFieldShowHideDecision(control)
-  // const isLienWaiverRequired = useIsLienWaiverRequired(control)
+  const isLienWaiverRequired = useIsLienWaiverRequired(control)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
-  const lienWaiverFormValues = useLienWaiverFormValues(control, selectedWorkOrder)
+  useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   const onSubmit = useCallback(
     (values: FormValues) => {
@@ -158,51 +164,28 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
       )}
-      {/** In case Draw selected and user click next will show Lien Waiver Popover */}
-      {!isShowLienWaiver ? (
-        <Box flex={1}>
-          <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
-            <Grid
-              templateColumns="repeat(4, 1fr)"
-              gap={'1rem 0.5rem'}
-              borderBottom="2px solid"
-              borderColor="gray.200"
-              pb="3"
-              mb="5"
-            >
-              <GridItem>
-                <Controller
-                  name="dateCreated"
-                  control={control}
-                  render={({ field: { name, onChange, value } }) => {
-                    return (
-                      <ReadOnlyInput label={t('dateCreated')} name={name} onChange={onChange} value={value as string} />
-                    )
-                  }}
-                />
-              </GridItem>
 
-              <GridItem>
-                <Controller
-                  name="createdBy"
-                  control={control}
-                  render={({ field: { name, onChange, value } }) => {
-                    return (
-                      <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
-                    )
-                  }}
-                />
-              </GridItem>
-              {isShowExpectedCompletionDateField && (
+      <FormProvider {...formReturn}>
+        <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
+          {/** In case Draw selected and user click next will show Lien Waiver Popover */}
+          {!isShowLienWaiver ? (
+            <Box flex={1}>
+              <Grid
+                templateColumns="repeat(4, 1fr)"
+                gap={'1rem 0.5rem'}
+                borderBottom="2px solid"
+                borderColor="gray.200"
+                pb="3"
+                mb="5"
+              >
                 <GridItem>
                   <Controller
-                    name="expectedCompletionDate"
+                    name="dateCreated"
                     control={control}
                     render={({ field: { name, onChange, value } }) => {
                       return (
                         <ReadOnlyInput
-                          testId="expected-completion-date"
-                          label={t('expectedCompletionDate')}
+                          label={t('dateCreated')}
                           name={name}
                           onChange={onChange}
                           value={value as string}
@@ -211,91 +194,94 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                     }}
                   />
                 </GridItem>
-              )}
-            </Grid>
-            <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
-              <GridItem>
-                <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
-                  <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
-                    {t('transactionType')}
-                  </FormLabel>
+
+                <GridItem>
                   <Controller
-                    rules={{ required: 'This is required field' }}
+                    name="createdBy"
                     control={control}
-                    name="transactionType"
-                    render={({ field, fieldState }) => {
+                    render={({ field: { name, onChange, value } }) => {
                       return (
-                        <>
-                          <Select
-                            {...field}
-                            options={transactionTypeOptions}
-                            isDisabled={!!transaction}
-                            onChange={(option: SelectOption) => {
-                              if (option.value !== TransactionTypeValues.changeOrder) {
-                                reset({
-                                  ...defaultValues,
-                                  transactionType: option,
-                                  against: getValues('against'),
-                                })
-                                resetExpectedCompletionDateFields(getValues('against') as SelectOption)
-                              } else {
-                                field.onChange(option)
-                              }
-                            }}
-                          />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </>
+                        <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
                       )
                     }}
                   />
-                </FormControl>
-              </GridItem>
-
-              <GridItem>
-                <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
-                  <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
-                    {t('against')}
-                  </FormLabel>
-                  <Controller
-                    control={control}
-                    name="against"
-                    rules={{ required: 'This is required' }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <Select
-                          {...field}
-                          options={againstOptions}
-                          isDisabled={!!transaction}
-                          onChange={againstOption => {
-                            resetExpectedCompletionDateFields(againstOption)
-                            field.onChange(againstOption)
-                          }}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )}
-                  />
-                </FormControl>
-              </GridItem>
-
-              {isShowWorkOrderSelectField && (
+                </GridItem>
+                {isShowExpectedCompletionDateField && (
+                  <GridItem>
+                    <Controller
+                      name="expectedCompletionDate"
+                      control={control}
+                      render={({ field: { name, onChange, value } }) => {
+                        return (
+                          <ReadOnlyInput
+                            testId="expected-completion-date"
+                            label={t('expectedCompletionDate')}
+                            name={name}
+                            onChange={onChange}
+                            value={value as string}
+                          />
+                        )
+                      }}
+                    />
+                  </GridItem>
+                )}
+              </Grid>
+              <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
                 <GridItem>
-                  <FormControl isInvalid={!!errors.workOrder}>
-                    <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
-                      {t('workOrder')}
+                  <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
+                    <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
+                      {t('transactionType')}
+                    </FormLabel>
+                    <Controller
+                      rules={{ required: 'This is required field' }}
+                      control={control}
+                      name="transactionType"
+                      render={({ field, fieldState }) => {
+                        return (
+                          <>
+                            <Select
+                              {...field}
+                              options={transactionTypeOptions}
+                              isDisabled={!!transaction}
+                              onChange={(option: SelectOption) => {
+                                if (option.value !== TransactionTypeValues.changeOrder) {
+                                  reset({
+                                    ...defaultValues,
+                                    transactionType: option,
+                                    against: getValues('against'),
+                                  })
+                                  resetExpectedCompletionDateFields(getValues('against') as SelectOption)
+                                } else {
+                                  field.onChange(option)
+                                }
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
+                        )
+                      }}
+                    />
+                  </FormControl>
+                </GridItem>
+
+                <GridItem>
+                  <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
+                    <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                      {t('against')}
                     </FormLabel>
                     <Controller
                       control={control}
-                      name="workOrder"
-                      rules={{ required: true }}
+                      name="against"
+                      rules={{ required: 'This is required' }}
                       render={({ field, fieldState }) => (
                         <>
                           <Select
-                            options={workOrderSelectOptions}
                             {...field}
-                            onChange={option => {
-                              setSelectedWorkOrderId(option.value)
-                              field.onChange(option)
+                            options={againstOptions}
+                            isDisabled={!!transaction}
+                            onChange={againstOption => {
+                              resetExpectedCompletionDateFields(againstOption)
+                              field.onChange(againstOption)
                             }}
                           />
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -304,81 +290,111 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                     />
                   </FormControl>
                 </GridItem>
-              )}
-              {isShowChangeOrderSelectField && (
-                <GridItem>
-                  <FormControl isInvalid={!!errors.changeOrder}>
-                    <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
-                      {t('changeOrder')}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      name="changeOrder"
-                      rules={{ required: true }}
-                      render={({ field, fieldState }) => (
-                        <>
-                          <Select options={changeOrderSelectOptions} {...field} />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </>
-                      )}
-                    />
-                  </FormControl>
-                </GridItem>
-              )}
 
-              {isShowNewExpectedCompletionDateField && (
-                <GridItem>
-                  <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
-                    <FormLabel
-                      fontSize="14px"
-                      fontStyle="normal"
-                      fontWeight={500}
-                      color="gray.600"
-                      htmlFor="newExpectedCompletionDate"
-                      whiteSpace="nowrap"
-                    >
-                      {t('newExpectedCompletionDate')}
-                    </FormLabel>
-                    <Input
-                      data-testid="new-expected-completion-date"
-                      borderLeft=" 2px solid #4E87F8"
-                      id="newExpectedCompletionDate"
-                      type="date"
-                      size="md"
-                      fontSize="14px"
-                      color="gray.400"
-                      {...register('newExpectedCompletionDate')}
-                    />
-                    <FormErrorMessage>
-                      {errors.newExpectedCompletionDate && errors.newExpectedCompletionDate.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </GridItem>
-              )}
-            </Grid>
+                {isShowWorkOrderSelectField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.workOrder}>
+                      <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
+                        {t('workOrder')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="workOrder"
+                        rules={{ required: true }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <Select
+                              options={workOrderSelectOptions}
+                              {...field}
+                              onChange={option => {
+                                setSelectedWorkOrderId(option.value)
+                                field.onChange(option)
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
+                        )}
+                      />
+                    </FormControl>
+                  </GridItem>
+                )}
+                {isShowChangeOrderSelectField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.changeOrder}>
+                      <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
+                        {t('changeOrder')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="changeOrder"
+                        rules={{ required: true }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <Select options={changeOrderSelectOptions} {...field} />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
+                        )}
+                      />
+                    </FormControl>
+                  </GridItem>
+                )}
 
-            <TransactionAmountForm formReturn={formReturn} />
-          </form>
-        </Box>
-      ) : (
-        <Box flex={1}>
-          {/** This component need Nested form Implementation using FormProvider */}
-          <DrawLienWaiver formValues={lienWaiverFormValues} />
-        </Box>
-      )}
+                {isShowNewExpectedCompletionDateField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
+                      <FormLabel
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={500}
+                        color="gray.600"
+                        htmlFor="newExpectedCompletionDate"
+                        whiteSpace="nowrap"
+                      >
+                        {t('newExpectedCompletionDate')}
+                      </FormLabel>
+                      <Input
+                        data-testid="new-expected-completion-date"
+                        borderLeft=" 2px solid #4E87F8"
+                        id="newExpectedCompletionDate"
+                        type="date"
+                        size="md"
+                        fontSize="14px"
+                        color="gray.400"
+                        {...register('newExpectedCompletionDate')}
+                      />
+                      <FormErrorMessage>
+                        {errors.newExpectedCompletionDate && errors.newExpectedCompletionDate.message}
+                      </FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                )}
+              </Grid>
+
+              <TransactionAmountForm formReturn={formReturn} />
+            </Box>
+          ) : (
+            <Box flex={1}>
+              {/** This component need Nested form Implementation using FormProvider */}
+              <DrawLienWaiver />
+            </Box>
+          )}
+        </form>
+
+        <DevTool control={control} />
+      </FormProvider>
 
       <Flex alignItems="center" justifyContent="end" py="4">
-        {isShowLienWaiver && (
-          <Button onClick={() => setIsShowLienWaiver(false)} size="sm" colorScheme="CustomPrimaryColor">
+        {isShowLienWaiver ? (
+          <Button onClick={() => setIsShowLienWaiver(false)} size="sm" variant="ghost">
             {t('back')}
+          </Button>
+        ) : (
+          <Button onClick={onClose} variant="ghost" size="sm">
+            {t('close')}
           </Button>
         )}
 
-        <Button onClick={onClose} variant="ghost" size="sm">
-          {t('close')}
-        </Button>
-
-        {/* {isLienWaiverRequired ? (
+        {isLienWaiverRequired && !isShowLienWaiver ? (
           <Button
             data-testid="save-transaction"
             colorScheme="CustomPrimaryColor"
@@ -391,20 +407,20 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
           >
             {t('next')}
           </Button>
-        ) : ( */}
-        <Button
-          data-testid="save-transaction"
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          _hover={{ bg: 'blue' }}
-          type="submit"
-          form="newTransactionForm"
-          ml="3"
-          size="sm"
-        >
-          {t('save')}
-        </Button>
-        {/* )} */}
+        ) : (
+          <Button
+            data-testid="save-transaction"
+            colorScheme="CustomPrimaryColor"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue' }}
+            type="submit"
+            form="newTransactionForm"
+            ml="3"
+            size="sm"
+          >
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </Flex>
   )
