@@ -11,11 +11,11 @@ import {
   licenseDefaultFormValues,
   createVendorPayload,
 } from 'utils/vendor-details'
-import { FormSelect } from '../../components/react-hook-form-fields/select'
-import { FormInput } from '../../components/react-hook-form-fields/input'
-import { FormDatePicker } from '../../components/react-hook-form-fields/date-picker'
-import { FormFileInput } from '../../components/react-hook-form-fields/file-input'
-import { LicenseFormValues, VendorProfile } from '../../types/vendor.types'
+import { FormSelect } from 'components/react-hook-form-fields/select'
+import { FormInput } from 'components/react-hook-form-fields/input'
+import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
+import { FormFileInput } from 'components/react-hook-form-fields/file-input'
+import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 
@@ -25,17 +25,39 @@ type LicenseProps = {
 }
 
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { t } = useTranslation()
-  const [startDate] = useState(new Date())
   const { mutate: saveLicenses } = useSaveVendorDetails()
 
+  const onSubmit = useCallback(
+    async values => {
+      const results = await parseLicenseValues(values)
+      const vendorPayload = createVendorPayload({ licenseDocuments: results }, props.vendor)
+      saveLicenses(vendorPayload, {
+        onSuccess() {
+          props.setNextTab()
+        },
+      })
+    },
+    [props, saveLicenses],
+  )
+
+  return (
+    <Box>
+      <LicenseForm vendor={props.vendor} onSubmit={onSubmit} />
+    </Box>
+  )
+})
+
+export const LicenseForm = ({ vendor, onSubmit }) => {
+  const [startDate] = useState(new Date())
+  const { t } = useTranslation()
+
   const defaultValues: LicenseFormValues = useMemo(() => {
-    if (props.vendor) {
-      return { licenses: licenseDefaultFormValues(props.vendor) }
+    if (vendor) {
+      return { licenses: licenseDefaultFormValues(vendor) }
     }
 
     return { licenses: [] }
-  }, [props.vendor])
+  }, [vendor])
 
   const {
     register,
@@ -51,7 +73,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 
   useEffect(() => {
     reset(defaultValues)
-  }, [defaultValues, props.vendor, reset])
+  }, [defaultValues, vendor, reset])
 
   const {
     fields: licenseFields,
@@ -71,23 +93,9 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
-
-  const onSubmit = useCallback(
-    async values => {
-      const results = await parseLicenseValues(values)
-      const vendorPayload = createVendorPayload({ licenseDocuments: results }, props.vendor)
-      saveLicenses(vendorPayload, {
-        onSuccess() {
-          props.setNextTab()
-        },
-      })
-    },
-    [props, saveLicenses],
-  )
-
   return (
     <Box>
-      <form className="License Form" id="licenseForm" onSubmit={handleSubmit(onSubmit)}>
+      <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
           variant="outline"
           ml="13px"
@@ -96,6 +104,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
           fontWeight={500}
           size="lg"
           _hover={{ bg: 'gray.200' }}
+          data-testid="addLicense"
           onClick={() =>
             append({
               licenseType: '',
@@ -113,10 +122,10 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
         <VStack align="start" minH="60vh" spacing="15px" ml="8px">
           {licenseFields.map((license, index) => {
             return (
-              <HStack key={index} mt="40px" spacing={4}>
+              <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows">
                 <Box w="2em" color="barColor.100" fontSize="15px">
                   <Center>
-                    <MdOutlineCancel onClick={() => removeLicense(index)} />
+                    <MdOutlineCancel onClick={() => removeLicense(index)} data-testid={`removeLicense-` + index} />
                   </Center>
                 </Box>
                 <FormSelect
@@ -131,6 +140,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                     bg: 'white',
                     borderLeft: '2px solid #4E87F8',
                   }}
+                  testId={`licenseType-` + index}
                 />
                 <FormInput
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
@@ -143,6 +153,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   }}
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
+                  testId={`licenseNumber-` + index}
                 />
                 <FormDatePicker
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
@@ -152,6 +163,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                   rules={{ required: 'This is required field' }}
                   style={{ w: '20em' }}
                   defaultValue={startDate}
+                  testId={`expiryDate-` + index}
                 />
                 <VStack>
                   <FormFileInput
@@ -162,6 +174,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                     style={{ w: '20em', mt: '25px' }}
                     isRequired={true}
                     downloadableFile={licenseValues?.[index].downloadableFile}
+                    testId={`expirationFile-` + index}
                   >
                     <>
                       <Flex
@@ -170,6 +183,8 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
                         // size="lg"
                         rounded={4}
                         bg="gray.100"
+                        h="36px"
+                        w={120}
                       >
                         <Button
                           rounded="none"
@@ -200,11 +215,14 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
             mr="60px"
             float={'right'}
             colorScheme="CustomPrimaryColor"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue', fontWeight: '600' }}
             size="md"
             type="submit"
             fontSize="14px"
             fontStyle="normal"
             fontWeight={500}
+            data-testid="saveLicenses"
           >
             {t('next')}
           </Button>
@@ -212,4 +230,4 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
       </form>
     </Box>
   )
-})
+}

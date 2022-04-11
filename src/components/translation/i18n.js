@@ -52,7 +52,7 @@ i18n.use(initReactI18next).init({
         newWorkOrder: 'New Work Order',
         newDocument: 'New Document',
         newAlert: 'New Alert',
-        transaction: 'Transaction',
+        transaction: 'Transactions',
         vendorWorkOrders: 'Vendor Work Orders',
         documents: 'Documents',
         alerts: 'Alerts',
@@ -194,7 +194,7 @@ i18n.use(initReactI18next).init({
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
         insurance: 'Seguro',
-        license: 'Licencia',
+        License: 'Licencia',
         projectSummary: 'Resumen del Proyecto',
         activeWO: 'WO Activo',
         pastDue: 'Vencido',

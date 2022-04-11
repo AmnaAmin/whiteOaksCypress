@@ -173,6 +173,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
                 fontWeight={500}
                 fontStyle="normal"
                 colorScheme="CustomPrimaryColor"
+                _hover={{ bg: 'blue', fontWeight: '600' }}
                 rounded="6px"
                 type="submit"
                 form="newTransactionForm"
