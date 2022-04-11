@@ -53,6 +53,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
+  const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
 
   // API calls
@@ -93,7 +94,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   } = useFieldShowHideDecision(control)
 
   const onSubmit = useCallback(
-    (values: FormValues) => {
+    async (values: FormValues, attachment) => {
       const queryOptions = {
         onSuccess() {
           onClose()
@@ -102,10 +103,10 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
-        const payload = parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
+        const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId, attachment)
         updateChangeOrder({ ...payload, id: transaction.id }, queryOptions)
       } else {
-        const payload = parseChangeOrderAPIPayload(values, projectId)
+        const payload = await parseChangeOrderAPIPayload(values, projectId, attachment)
         createChangeOrder(payload, queryOptions)
       }
     },
@@ -147,7 +148,12 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
       )}
-      <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
+      <form
+        onSubmit={handleSubmit(values => {
+          onSubmit(values, document)
+        })}
+        id="newTransactionForm"
+      >
         <Grid
           templateColumns="repeat(4, 1fr)"
           gap={'1rem 0.5rem'}
@@ -341,7 +347,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
           )}
         </Grid>
 
-        <TransactionAmountForm formReturn={formReturn} />
+        <TransactionAmountForm formReturn={formReturn} document={document} setDocument={setDocument} />
       </form>
     </>
   )
