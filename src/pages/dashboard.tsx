@@ -1,102 +1,79 @@
-import React from "react";
-import { Box, Flex, Spacer, VStack, Text } from "@chakra-ui/react";
+import React, { useState } from 'react'
+import { Box, Flex, Spacer, VStack, Text } from '@chakra-ui/react'
 
-import Overview from "components/chart/Overview";
-import PaidChart from "components/chart/paid-chart";
-import { Card } from "components/card/card";
-import { Layout } from "components/layout";
-import ProjectSummary from "features/dashboard/project-summary";
+import { ProjectSummary } from '../features/dashboard/project-summary'
+import { VendorScore } from '../components/VendorScore/vendor-score'
+import { Card } from '../components/card/card'
+import Overview from '../components/chart/Overview'
+import PaidChart from '../components/chart/paid-chart'
+// import { usePaidWOAmountByYearAndMonthTotal } from 'utils/vendor-dashboard'
+import Dropdown from '../components/dropdown-menu/Dropdown'
 
-// import Main from "components/layout";
-// import Sidebar from "../layout/Sidebar/sidebar";
-// import { Header } from "../layout/Header/Header";
-// import { ProjectSummary } from "../layout/ProjectSummary/ProjectSummary";
-// import { Dropdown } from "../Drop-down/Dropdown";
-import { VendorScore } from "components/VendorScore/vendor-score";
-import { Dropdown } from "components/dropdown-menu/Dropdown";
+import { MonthOption, monthOptions } from 'utils/date-time-utils'
+import { useTranslation } from 'react-i18next'
+import 'components/translation/i18n'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
 
-export const Dashboard = () => {
+export const Dashboard: React.FC = () => {
+  const { vendorId } = useUserProfile() as Account
+
+  // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
+  // const { onToggle } = useDisclosure()
+  const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
+  // const { data: paidTotal = '' } = usePaidWOAmountByYearAndMonthTotal(paidOption?.year ?? '', paidOption?.month ?? '')
+  const { t } = useTranslation()
+
   return (
-    <Layout
-      pageContents={
-        <Box>
-          <>
-            <VStack w="100%" zIndex={2}>
-              <Box w={{ base: "100%" }}>
-                <VendorScore />
-              </Box>
+    <VStack w="100%" zIndex={2}>
+      <Box w={{ base: '100%' }}>
+        <VendorScore vendorId={vendorId} />
+      </Box>
 
-              <Box w="100%">
-                <ProjectSummary />
-              </Box>
+      <Box w="100%">
+        <ProjectSummary />
+      </Box>
+      <Flex
+        direction={{
+          base: 'column',
+          xl: 'row',
+        }}
+        justifyContent="stretch"
+        w="100%"
+        pb="10px"
+      >
+        <Card rounded="13px" flex={1} bg="#FDFDFF">
+          <Flex mb="20px" mt="10px">
+            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="17px">
+              {t('WOstatus')}
+            </Text>
+          </Flex>
+          <Overview vendorId={vendorId} />
+        </Card>
 
-              <Box w="100%">
-                <Text
-                  fontSize="22px"
-                  fontWeight={700}
-                  paddingInlineStart="14px"
-                  mb="5px"
-                >
-                  WO Status Graph
-                </Text>
-              </Box>
+        <Card p={0} rounded="13px" flex={1} ml={{ base: 0, xl: '12px' }} mt={{ base: '30px', xl: 0 }} bg="#FDFDFF">
+          <Flex mb="20px">
+            <Text
+              mt="25px"
+              ml="22px"
+              color="gray.600"
+              fontStyle="normal"
+              fontWeight={500}
+              fontSize="18px"
+              lineHeight="28px"
+            >
+              {/* {t('paid')} */}
+              WO Paid
+            </Text>
+            <Spacer />
+            <Box mt="20px" mr="30px" w="140px">
+              <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
+            </Box>
+          </Flex>
 
-              <Flex
-                direction={{
-                  base: "column",
-                  md: "column",
-                  lg: "column",
-                  xl: "row",
-                }}
-                w="100%"
-              >
-                <Card rounded="13px" w="100%">
-                  <Flex mb="40px" mt="30px">
-                    <Text
-                      color="#4F4F4F"
-                      fontWeight="bold"
-                      fontSize="20px"
-                      lineHeight="26px"
-                      ml="17px"
-                    >
-                      OVERVIEW
-                    </Text>
-                  </Flex>
-                  <Overview />
-                </Card>
-
-                <Spacer />
-
-                <Card
-                  rounded="13px"
-                  w="100%"
-                  ml={{ base: 0, md: 0, lg: 0, xl: "30px" }}
-                  mt={{ base: "30px", md: "30px", lg: "30px", xl: 0 }}
-                >
-                  <Flex w="100%" mb="50px">
-                    <Text
-                      fontSize="24px"
-                      fontWeight={700}
-                      w="10vw"
-                      pos="relative"
-                      left={73}
-                      top=" 14px"
-                      width={["80px", "80px", "80px", "80px"]}
-                    >
-                      PAID
-                    </Text>
-                    <Spacer />
-                    <Box pos="relative" top="25px" right={30}>
-                      <Dropdown />
-                    </Box>
-                  </Flex>
-                  <PaidChart />
-                </Card>
-              </Flex>
-            </VStack>
-          </>
-        </Box>
-      }
-    />
-  );
-};
+          <PaidChart filterChart={paidOption} />
+        </Card>
+      </Flex>
+    </VStack>
+  )
+}

@@ -1,31 +1,13 @@
-import "./App.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import './App.css'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-import { Dashboard } from "./pages/dashboard";
-import { Examples } from "pages/examples";
-import { Projects } from "pages/projects";
+import { useAuth } from 'utils/auth-context'
+import AuthenticatedApp from 'authenticated-app'
+import UnAuthenticatedApp from 'unauthenticated-app'
 
-function App() {
-  alert(
-    `AuthenticationToken: ${localStorage.getItem("jhi-authenticationToken")}`
-  );
-  return (
-    <Router>
-      <Routes>
-        <Route path="/vendorportal" element={<Dashboard />} />
-        <Route path="/vendorportal/examples/*" element={<Examples />} />
-        <Route path="/vendorportal/dashboard" element={<Dashboard />} />
-        <Route path="/vendorportal/projects" element={<Projects />} />
-        <Route path="/vendorportal/vendors" element={<Projects />} />
-        <Route path="*" element={<Navigate to="/vendorportal" />} />
-      </Routes>
-    </Router>
-  );
+export default function App() {
+  const { data } = useAuth()
+  const user = data?.user
+
+  return <Router basename={process.env.PUBLIC_URL}>{user ? <AuthenticatedApp /> : <UnAuthenticatedApp />}</Router>
 }
-
-export default App;

@@ -1,61 +1,117 @@
-import React from "react";
+import React, { useState, useEffect } from 'react'
+import { Box, Text, Heading, Flex } from '@chakra-ui/react'
+import { GoChevronLeft, GoChevronRight } from 'react-icons/go'
+import Slider from 'react-slick'
+import { Card } from '../card/card'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { dateFormat } from 'utils/date-time-utils'
+import { chunk } from 'lodash'
+import { RiErrorWarningFill } from 'react-icons/ri'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
-import { Box, Text, Heading } from "@chakra-ui/react";
-import Slider from "react-slick";
-import { Card } from "../card/card";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
-const defaultData = [
-  {
-    title: "COI WC",
-    date: new Date(),
-  },
-  {
-    title: "COI WC",
-    date: new Date(),
-  },
-  {
-    title: "COI WC",
-    date: new Date(),
-  },
-];
+const isDateExpired = (date: string) => {
+  const currentDate = new Date()
+  console.log('givenDtat', date)
+  const givenDate = new Date(date)
+  if (givenDate > currentDate) return ''
+  return '#EC7979'
+}
 
 export const SimpleSlider: React.FC<{
-  heading: string;
-}> = (props) => {
+  heading: string
+  isLoading: boolean
+  data?: any[]
+}> = props => {
   const settings = {
-    // dots: true,
+    dots: false,
     infinite: true,
-    // centerMode: true,
-    centerPadding: "60px",
+
+    centerPadding: '60px',
     speed: 500,
+
     slidesToShow: 1,
     slidesToScroll: 1,
-  };
-
+    center: 30,
+    prevArrow: <GoChevronLeft color="#A3A9B4" />,
+    nextArrow: <GoChevronRight color="#A3A9B4" />,
+  }
+  const [slider, setSlider] = useState<any[]>([])
+  useEffect(() => {
+    setSlider(chunk(props.data, 3))
+  }, [props.data])
   return (
     <Card
-      bg=" 
-      #EBF8FF"
+      rounded="15px"
+      minH="156px"
+      bg="white"
       w="100%"
+      padding={{
+        base: '30px 30px 10px',
+        sm: '30px 30px 10px',
+        md: '30px 50px 10px',
+        xl: ' 30px 40px 10px',
+        '2xl': '30px 60px 10px',
+      }}
       display="block"
-      boxShadow="1px 1px 7px rgba(0,0,0,0.2)"
+      boxShadow="1px 1px 7px rgba(0,0,0,0.1)"
     >
-      <Box w="100%">
-        <Heading textAlign="start" fontWeight={700} fontSize="20px">
-          {props.heading}
-        </Heading>
-        <Box w="100%">
-          {/* <Slider {...settings}> */}
-          <Box textAlign="start">
-            <Text>h1</Text>
-            <Text>h2</Text>
-            <Text>h3</Text>
-          </Box>
-          {/* </Slider> */}
+      {props.isLoading ? (
+        <BlankSlate width="100%" h="95px" />
+      ) : (
+        <Box>
+          <Heading
+            textAlign="start"
+            fontStyle="normal"
+            fontWeight={500}
+            fontSize="18px"
+            color="#4A5568"
+            pb={3}
+            mx={{ base: 'unset', lg: 'unset', '2xl': '5' }}
+          >
+            {props.heading}
+          </Heading>
+          {slider.length > 0 ? (
+            <Slider {...settings}>
+              {slider.map((slide, i) => (
+                <Box key={i} textAlign="start" fontSize="16px" fontStyle="normal" fontWeight={400} color="#4A5568">
+                  {slide?.map((item: any) => (
+                    <SliderItem key={item.title} title={item.title} date={item.date} />
+                  ))}
+                </Box>
+              ))}
+            </Slider>
+          ) : (
+            <Flex marginTop="25px" justifyContent="center" alignItems="center" fontSize="15px" fontWeight="normal">
+              <RiErrorWarningFill fontSize="30px" color="#718096" />
+              <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
+                You dont have any {props.heading} expiration
+              </Text>
+            </Flex>
+          )}
         </Box>
-      </Box>
+      )}
     </Card>
-  );
-};
+  )
+}
+
+const SliderItem: React.FC<{ title: string; date: string }> = ({ title, date }) => {
+  if (!date) return null
+  return (
+    <Flex
+      mx={{ base: 'unset', '2xl': '5' }}
+      whiteSpace="nowrap"
+      lineHeight={1.4}
+      _last={{ borderBottomWidth: 0 }}
+      borderBottom="1px solid #E5E5E5"
+      justifyContent="space-between"
+      color={isDateExpired(date)}
+      alignItems="center"
+      fontWeight={400}
+      fontSize="16px"
+    >
+      <Text>{title}</Text>
+      <Text>{dateFormat(date)}</Text>
+    </Flex>
+  )
+}

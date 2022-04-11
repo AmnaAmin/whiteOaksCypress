@@ -1,3 +1,8 @@
 {
-  "cSpell.words": ["dafault"]
+  "cSpell.words": ["dafault"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript", "typescript", "javascriptreact", "html", "typescriptreact"],
+  "eslint.options": { "configFile": "./.eslintrc.js" }
 }
