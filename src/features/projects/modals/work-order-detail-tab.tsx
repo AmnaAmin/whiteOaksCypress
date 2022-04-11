@@ -18,13 +18,13 @@ import React from 'react'
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 
-type WODates = {
-  workOrderIssueDate: string
-  workOrderCompletionDateVariance: string
-  workOrderStartDate: string
-  workOrderExpectedCompletionDate: string
-  woStatus: { value: string; id: string }
-}
+// type WODates = {
+//   workOrderIssueDate: string
+//   workOrderCompletionDateVariance: string
+//   workOrderStartDate: string
+//   workOrderExpectedCompletionDate: string
+//   woStatus: { value: string; id: string }
+// }
 
 const CalenderCard = props => {
   return (
@@ -79,7 +79,7 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
   )
 }
 
-const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
+const WorkOrderDetailTab = ({ onClose }) => {
   const { t } = useTranslation()
 
   return (
@@ -215,16 +215,30 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
         </Box>
       </TableContainer>
 
-      <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg">
-          <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
-            {t('close')}
-          </Text>
+      <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
+        <Button
+          variant="ghost"
+          mr={3}
+          size="lg"
+          onClick={onClose}
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+          color="gray.700"
+        >
+          {t('close')}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg" _focus={{ outline: 'none' }} _hover={{ bg: 'blue' }}>
-          <Text fontSize="14px" fontWeight={500} fontStyle="normal">
-            {t('save')}
-          </Text>
+        <Button
+          colorScheme="CustomPrimaryColor"
+          mr={3}
+          size="lg"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue' }}
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+        >
+          {t('save')}
         </Button>
       </Flex>
     </Box>

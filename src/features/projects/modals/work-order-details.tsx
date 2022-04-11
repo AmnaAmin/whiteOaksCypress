@@ -130,17 +130,17 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
               <TabPanels>
                 <TabPanel p="0px">
                   <WorkOrderDetailTab
-                    // onClose={onClose}
-                    woDates={{
-                      workOrderIssueDate: workOrder?.workOrderIssueDate,
-                      workOrderCompletionDateVariance: workOrder?.workOrderCompletionDateVariance,
-                      workOrderExpectedCompletionDate: workOrder?.workOrderExpectedCompletionDate,
-                      workOrderStartDate: workOrder?.workOrderStartDate,
-                      woStatus: {
-                        id: String(workOrder?.status),
-                        value: workOrder?.statusLabel,
-                      },
-                    }}
+                    onClose={onClose}
+                    // woDates={{
+                    //   workOrderIssueDate: workOrder?.workOrderIssueDate,
+                    //   workOrderCompletionDateVariance: workOrder?.workOrderCompletionDateVariance,
+                    //   workOrderExpectedCompletionDate: workOrder?.workOrderExpectedCompletionDate,
+                    //   workOrderStartDate: workOrder?.workOrderStartDate,
+                    //   woStatus: {
+                    //     id: String(workOrder?.status),
+                    //     value: workOrder?.statusLabel,
+                    //   },
+                    // }}
                   />
                 </TabPanel>
                 <TabPanel>
