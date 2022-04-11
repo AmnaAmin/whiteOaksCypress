@@ -26,7 +26,7 @@ export const ProjectCard = (props: multitypes) => {
         pointerEvents={props.disabled ? 'none' : 'auto'}
         onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
         borderColor={props.selectedCard === props.id ? '#4E87F8' : ''}
-        _hover={{ bg: 'gray.100' }}
+        _hover={{ border: '4px solid #E2E8F0' }}
       >
         <Flex height="100%">
           <Text marginLeft={'20px'}> {props.IconElement}</Text>

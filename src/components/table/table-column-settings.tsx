@@ -148,6 +148,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                 fontSize="1em"
                                 fontWeight={600}
                                 backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                                _hover={{ bg: 'gray.100' }}
                               >
                                 <HStack spacing="24px">
                                   <BiGridVertical

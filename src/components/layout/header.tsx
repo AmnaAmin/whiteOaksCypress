@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           <LogoIcon />
         </Flex>
 
-        <HStack spacing="5" _hover={{ bg: 'gray.100', rounded: '6px' }} px="1">
+        <HStack spacing="5" px="1">
           {/* * Language Dropdown Menu */}
           <Box display={{ base: 'none', md: 'block' }}>
             <DropdownLanguage />
@@ -90,7 +90,12 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             // onClose={() => setShowNotification(false)}
             // onOpen={() => setShowNotification(true)}
             >
-              <MenuButton transition="all 0.2s" _active={{ color: '#4E87F8' }} color="#A0AEC0">
+              <MenuButton
+                transition="all 0.2s"
+                _active={{ color: '#4E87F8' }}
+                color="#A0AEC0"
+                _hover={{ color: 'gray.500' }}
+              >
                 <FaBell fontSize="1.7rem" />
               </MenuButton>
               <Notification />
@@ -104,48 +109,49 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-
-          <Menu placement="bottom">
-            <MenuButton
-              bgSize="auto"
-              w={{ base: '50px', md: 'auto' }}
-              onClick={() => {
-                setShow(!show)
-              }}
-            >
-              <UserInfo />
-            </MenuButton>
-            <MenuList minWidth="279px">
-              <MenuItem>
-                <RouterLink to="/settings">Settings</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <RouterLink to="/password">Password</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <RouterLink to="/help">help</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <RouterLink to="/support">Support</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <Box
-                  onClick={logout}
-                  fontSize="14px"
-                  fontWeight={400}
-                  fontStyle="normal"
-                  lineHeight="20px"
-                  color="#4A5568"
-                  width="100%"
-                >
-                  Signout
-                </Box>
-              </MenuItem>
-            </MenuList>
-            <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
-              {show ? <FaAngleDown color="#4A5568" /> : <FaAngleUp color="#4A5568" />}
-            </Box>
-          </Menu>
+          <HStack spacing={4} _hover={{ bg: 'gray.100', rounded: '6px' }} pl="1">
+            <Menu placement="bottom">
+              <MenuButton
+                bgSize="auto"
+                w={{ base: '50px', md: 'auto' }}
+                onClick={() => {
+                  setShow(!show)
+                }}
+              >
+                <UserInfo />
+              </MenuButton>
+              <MenuList minWidth="279px">
+                <MenuItem>
+                  <RouterLink to="/settings">Settings</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <RouterLink to="/password">Password</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <RouterLink to="/help">help</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <RouterLink to="/support">Support</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <Box
+                    onClick={logout}
+                    fontSize="14px"
+                    fontWeight={400}
+                    fontStyle="normal"
+                    lineHeight="20px"
+                    color="#4A5568"
+                    width="100%"
+                  >
+                    Signout
+                  </Box>
+                </MenuItem>
+              </MenuList>
+              <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
+                {show ? <FaAngleDown color="#4A5568" /> : <FaAngleUp color="#4A5568" />}
+              </Box>
+            </Menu>
+          </HStack>
         </HStack>
       </HStack>
     </Box>
