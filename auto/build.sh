@@ -13,7 +13,8 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
 
 if [ "prod" = $ENV ]; then
-  npm run build:prod
+#  npm run build:prod
+  npm run webpack:build
 else 
   npm run webpack:build
 fi
