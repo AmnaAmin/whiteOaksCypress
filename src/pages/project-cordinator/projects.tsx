@@ -55,24 +55,9 @@ export const Projects = () => {
             fontStyle="normal"
             fontWeight={500}
             alignContent="right"
-            position="absolute"
-            right="8"
-          >
-            Clear Filter
-          </Button>
-        </Stack>
-        <Divider></Divider>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}>
-          <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="12px"
-            fontStyle="normal"
-            fontWeight={500}
-            alignContent="right"
             onClick={onNewProjectModalOpen}
+            position="absolute"
+            right={8}
           >
             <Box pos="relative" fontWeight="bold" p="2px">
               <PlusIcon />
@@ -80,6 +65,7 @@ export const Projects = () => {
             New Project
           </Button>
         </Stack>
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}></Stack>
         <Divider></Divider>
         <br></br>
         <Box w="100%" flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
