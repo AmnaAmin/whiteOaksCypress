@@ -81,7 +81,7 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
       ref={ref}
       data-testid={props.testId}
     />
-    <InputLeftElement className="InputLeft" pointerEvents="none">
+    <InputLeftElement className="InputLeft" pointerEvents="none" zIndex={1}>
       <Box color="gray.400" fontSize="14px">
         <AiOutlineCalendar size={20} cursor="pointer" color="#A0AEC0" />
       </Box>
