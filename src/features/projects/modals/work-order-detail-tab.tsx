@@ -18,14 +18,6 @@ import React from 'react'
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 
-// type WODates = {
-//   workOrderIssueDate: string
-//   workOrderCompletionDateVariance: string
-//   workOrderStartDate: string
-//   workOrderExpectedCompletionDate: string
-//   woStatus: { value: string; id: string }
-// }
-
 const CalenderCard = props => {
   return (
     <Flex pt={6} pb={8}>
