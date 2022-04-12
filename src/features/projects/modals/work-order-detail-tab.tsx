@@ -216,15 +216,20 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </TableContainer>
 
       <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg">
-          <Text fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
-            {t('close')}
-          </Text>
+        <Button variant="ghost" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
+          {t('close')}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" mr={3} size="lg" _focus={{ outline: 'none' }} _hover={{ bg: 'blue' }}>
-          <Text fontSize="14px" fontWeight={500} fontStyle="normal">
-            {t('save')}
-          </Text>
+        <Button
+          colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          mr={3}
+          size="lg"
+          _hover={{ bg: 'blue' }}
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+        >
+          {t('save')}
         </Button>
       </Flex>
     </Box>

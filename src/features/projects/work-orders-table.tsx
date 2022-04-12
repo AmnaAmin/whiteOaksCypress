@@ -15,7 +15,7 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     <Tr
       bg="white"
       _hover={{
-        background: '#eee',
+        background: 'gray.100',
       }}
       onClick={e => {
         if (onRowClick) {

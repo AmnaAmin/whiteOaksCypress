@@ -146,6 +146,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             fontSize="16px"
             fontWeight={600}
             fontStyle="normal"
+            _hover={{ bg: 'blue' }}
           >
             {t('close')}
           </Button>
