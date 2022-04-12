@@ -30,7 +30,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 
   return (
     <>
-      <form id="newTransactionForm">
+      <form id="newProjectForm">
         <Grid
           templateColumns="repeat(4, 1fr)"
           gap={'1rem 0.5rem'}
