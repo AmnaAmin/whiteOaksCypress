@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
 import { useProjects } from 'utils/projects'
-import Status from './status'
+import Status from '../projects/status'
 import { Column } from 'react-table'
 import { t } from 'i18next'
 
@@ -63,7 +63,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map((cell, index) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-            <Link to={`/pc-project-details/${projectId}`}>
+            <Link to={`/project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
                   noOfLines={2}

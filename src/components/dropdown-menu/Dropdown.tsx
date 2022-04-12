@@ -36,12 +36,21 @@ const chakraStyles = {
     background: '#F7FAFC',
     borderRadius: '4px',
   }),
+
+  singleValue: provided => ({
+    ...provided,
+    color: 'gray.600',
+    fontSize: '16px',
+    fontWeight: 400,
+  }),
+
   dropdownIndicator: provided => ({
     ...provided,
     svg: {
       fill: '#2D3748',
     },
   }),
+
   input: provided => ({
     ...provided,
     color: 'inherit',
@@ -112,12 +121,9 @@ const chakraComponents = {
           ref={innerRef}
           sx={{
             ...inputStyles.field,
-            color: 'gray.700',
             bg: '#FFFFFF',
             _hover: { backgroundColor: 'gray.100' },
             border: 'none',
-            fontWeight: 400,
-            fontsize: '16px',
             p: 0,
             overflow: 'hidden',
             h: 'auto',
@@ -224,6 +230,7 @@ const chakraComponents = {
           w: '100%',
           color: 'gray.600',
           fontWeight: 400,
+          fontSize: '14px',
           textAlign: 'start',
           bg: isFocused ? item._focus.bg : 'transparent',
           ...(isDisabled && item._disabled),
