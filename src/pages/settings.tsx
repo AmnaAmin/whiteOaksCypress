@@ -163,19 +163,19 @@ export const Settings = React.forwardRef((props, ref) => {
 
 const PreviewImg = () => {
   const defaultImage = 'https://bit.ly/sage-adebayo'
-  const [preview, setPreview] = useState<any>(null)
+  const [preview, setPreview] = useState<string | null>(null)
 
-  const fileInputRef = useRef<any>()
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleInputClick = (e: any) => {
+  const handleInputClick = e => {
     e.preventDefault()
-    fileInputRef.current.click()
+    fileInputRef.current!.click()
   }
 
-  const handleImageChange = (e: any) => {
+  const handleImageChange = e => {
     const file = e.target.files[0]
     const reader = new FileReader()
-    reader.onloadend = () => setPreview(reader.result)
+    reader.onloadend = () => setPreview(reader.result as string)
     reader.readAsDataURL(file)
   }
 
@@ -192,7 +192,7 @@ const PreviewImg = () => {
           top="17px"
           _focus={{ outline: 'none' }}
         >
-          <Icon as={MdCameraAlt} boxSize={7} color="#FFFFFF" />
+          <Icon as={MdCameraAlt} boxSize={5} color="#FFFFFF" />
         </Button>
       </Box>
 
