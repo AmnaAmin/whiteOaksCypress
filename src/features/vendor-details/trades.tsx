@@ -109,7 +109,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
           type="submit"
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
-          _hover={{ bg: 'blue', fontWeight: '600' }}
+          _hover={{ bg: 'blue' }}
           size="md"
           fontWeight={500}
           fontStyle="normal"

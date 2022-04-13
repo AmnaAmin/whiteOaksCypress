@@ -108,12 +108,12 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             gridGap="15px"
           >
             <Box>
-              <SimpleSlider heading={t('License Expiration')} data={defaultData} isLoading={isLoading} />
+              <SimpleSlider heading={t('Insurance Expiration')} data={defaultData} isLoading={isLoading} />
             </Box>
             <Box>
               <SimpleSlider
                 isLoading={isLoading}
-                heading={t('Insurance Expiration')}
+                heading={t('License Expiration')}
                 data={vendorEntity?.licenseDocuments
                   ?.sort((curr: any, pre: any) => pre.id - curr.id)
                   .map((licenseDocument: LicenseDocument) => ({
