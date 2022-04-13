@@ -28,7 +28,7 @@ type WODates = {
 
 const CalenderCard = props => {
   return (
-    <Flex pt={6} pb={8}>
+    <Flex>
       <Box pr={4}>
         <BiCalendar size={23} color="#718096" />
       </Box>
@@ -84,7 +84,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
 
   return (
     <Box>
-      <SimpleGrid columns={5} spacing={8} mt="31px" borderBottom="1px solid  #E2E8F0">
+      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
         <CalenderCard title="WO Issued" date="11/14/2021" />
         <CalenderCard title="Expected Start " date="11/14/2021" />
         <CalenderCard title="Expected Completion" date="11/14/2021" />

@@ -159,11 +159,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                     </Flex>
                     <Button
                       fontSize="14px"
-                      fontWeight={500}
-                      size={'md'}
+                      fontWeight={600}
+                      h="48px"
+                      w="130px"
                       colorScheme="CustomPrimaryColor"
                       _focus={{ outline: 'none' }}
-                      _hover={{ bg: 'blue' }}
                     >
                       Generate
                     </Button>
