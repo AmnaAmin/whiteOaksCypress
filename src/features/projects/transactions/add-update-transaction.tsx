@@ -214,6 +214,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                         {...field}
                         options={transactionTypeOptions}
                         isDisabled={!!transaction}
+                        selectProps={{ isLeftBorder: true }}
                         onChange={(option: SelectOption) => {
                           if (option.value !== TransactionTypeValues.changeOrder) {
                             reset({
@@ -404,7 +405,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
           Update Transaction
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} size="lg" />
         <ModalBody px="6" pt="3" pb="1">
           <AddUpdateTransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} />
         </ModalBody>
