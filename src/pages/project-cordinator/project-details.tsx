@@ -22,6 +22,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
+import ProjectDetailsTAb from 'features/project-coordinator/project-details/project-details-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -40,6 +41,12 @@ export const ProjectDetails: React.FC = props => {
     postProjectColumn(columns)
   }
 
+  const TabStyle = {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'gray.600',
+  }
+
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
@@ -48,20 +55,56 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList color="#4A5568">
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
                 {t('Transactions')}
               </Tab>
-              <Tab minW={180} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                whiteSpace="nowrap"
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
+                Project Details
+              </Tab>
+              <Tab
+                whiteSpace="nowrap"
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
                 {t('vendorWorkOrders')}
               </Tab>
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
                 {t('documents')}
               </Tab>
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>{'Notes'}</Tab>
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
+                {'Notes'}
+              </Tab>
+              <Tab
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
                 {t('alerts')}
               </Tab>
-              <Tab minW={120} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                minW={120}
+                _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '16px' }}
+                _focus={{ outline: 'none' }}
+                sx={TabStyle}
+              >
                 {'HFE Mgmt'}
               </Tab>
               <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
@@ -152,6 +195,9 @@ export const ProjectDetails: React.FC = props => {
                     resizeElementRef={resizeElementRef}
                   />
                 </Box>
+              </TabPanel>
+              <TabPanel>
+                <ProjectDetailsTAb />
               </TabPanel>
             </TabPanels>
           </Tabs>
