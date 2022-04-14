@@ -193,6 +193,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         <ModalFooter display="flex" alignItems="center" borderTop="1px solid #E2E8F0">
           <Button
             variant="ghost"
+            _hover={{ bg: '#E2E8F0' }}
             onClick={() => {
               resetUpload()
               onClose()
@@ -210,7 +211,8 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             fontSize="14px"
             onClick={uploadDocument}
             colorScheme="CustomPrimaryColor"
-            _hover={{ bg: 'blue', fontWeight: '600' }}
+            _hover={{ bg: 'blue' }}
+            _focus={{ outline: 'none' }}
             type="submit"
             ml="3"
           >

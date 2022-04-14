@@ -89,12 +89,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        bg="none"
+        ml="1"
+        variant="ghost"
         color="#4E87F8"
         fontSize="12px"
         fontStyle="normal"
         fontWeight={500}
-        _hover={{ bg: 'none' }}
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
@@ -148,6 +148,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                 fontSize="1em"
                                 fontWeight={600}
                                 backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                                _hover={{ bg: 'gray.100' }}
                               >
                                 <HStack spacing="24px">
                                   <BiGridVertical
@@ -186,7 +187,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" onClick={onClose} color="gray.600" fontWeight={500}>
+            <Button variant="ghost" onClick={onClose} color="gray.600" fontWeight={500} mr={2}>
               Close
             </Button>
             <Button
@@ -196,6 +197,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
               fontStyle="normal"
               mr={3}
               onClick={saveModal}
+              _hover={{ bg: 'blue' }}
             >
               Save
             </Button>
