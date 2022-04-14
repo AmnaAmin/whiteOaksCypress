@@ -132,6 +132,7 @@ export const ProjectDetails: React.FC = props => {
                       selectedAlertRow(row.values)
                       onAlertModalOpen()
                     }}
+                    ref={tabsContainerRef}
                   />
                 </Box>
               </TabPanel>
