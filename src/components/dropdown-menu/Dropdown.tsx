@@ -39,7 +39,7 @@ const chakraStyles = {
 
   singleValue: provided => ({
     ...provided,
-    color: 'gray.600',
+    color: '#4A5568',
     fontSize: '16px',
     fontWeight: 400,
   }),
