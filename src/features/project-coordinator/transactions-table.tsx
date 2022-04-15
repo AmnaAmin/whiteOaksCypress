@@ -1,11 +1,12 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex, Tag, TagLabel } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
-// import { useTransactions } from 'utils/transactions'
+import { useTransactions } from 'utils/transactions'
 import { dateFormat } from 'utils/date-time-utils'
 
 import { t } from 'i18next'
 import { Column } from 'react-table'
+import { useParams } from 'react-router-dom'
 
 const STATUS_TAG_COLOR_SCHEME = {
   denied: {
@@ -121,12 +122,15 @@ export const TransactionsTable: React.FC<TransactionProps> = ({
   projectColumns,
   resizeElementRef,
 }) => {
+  const { projectId } = useParams<'projectId'>()
+  const { transactions, isLoading } = useTransactions(projectId)
+
   return (
     <Box ref={resizeElementRef} height="100%">
       <ReactTable
-        // isLoading={isLoading}
+        isLoading={isLoading}
         columns={projectColumns}
-        data={[]}
+        data={transactions || []}
         TableRow={TransactionRow}
         name="my-table"
         setTableInstance={setTableInstance}
