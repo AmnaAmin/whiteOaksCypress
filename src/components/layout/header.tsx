@@ -86,9 +86,10 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
           <Box position="relative">
             <Menu
-            // isOpen={showNotification}
-            // onClose={() => setShowNotification(false)}
-            // onOpen={() => setShowNotification(true)}
+              closeOnSelect={false}
+              // isOpen={showNotification}
+              // onClose={() => setShowNotification(false)}
+              // onOpen={() => setShowNotification(true)}
             >
               <MenuButton transition="all 0.2s" _active={{ color: '#4E87F8' }} color="#A0AEC0">
                 <FaBell fontSize="1.7rem" />
