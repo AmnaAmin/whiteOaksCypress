@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
+import React, { ChangeEvent, useCallback, useMemo, useRef } from 'react'
 import {
   Box,
   Button,
@@ -27,15 +27,17 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'utils/transactions'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
+import { BiDownload } from 'react-icons/bi'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
+  document: File | null
+  setDocument: (doc: File | null) => void
 }
 
-export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn }) => {
+export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn, setDocument, document }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const [document, setDocument] = useState<File | null>(null)
 
   const onFileChange = useCallback(
     e => {
@@ -53,7 +55,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     getValues,
     setValue,
   } = formReturn
-
+  const values = getValues()
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -121,8 +123,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
         <Box flex="1">
           <Button
             data-testid="add-new-row-button"
-            variant="outline"
-            size="md"
+            variant="ghost"
+            size="sm"
             borderColor="#4E87F8"
             color="#4E87F8"
             onClick={addRow}
@@ -132,8 +134,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           </Button>
           <Button
             data-testid="delete-row-button"
-            variant="outline"
-            size="md"
+            variant="ghost"
+            size="sm"
             ml="10px"
             borderColor="#4E87F8"
             color="#4E87F8"
@@ -146,43 +148,57 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
         </Box>
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-        {document ? (
-          <Box
-            color="barColor.100"
-            border="1px solid #e2e8f0"
-            // a
-            borderRadius="4px"
-            fontSize="16px"
-          >
-            <HStack spacing="5px" h="31px" padding="10px" align="center">
-              <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                {document?.name}
-              </Box>
-              <MdOutlineCancel
-                cursor="pointer"
-                onClick={() => {
-                  setDocument(null)
-                  if (inputRef.current) inputRef.current.value = ''
-                }}
-              />
-            </HStack>
-          </Box>
-        ) : (
-          <Button
-            onClick={e => {
-              if (inputRef.current) {
-                inputRef.current.click()
-              }
-            }}
-            leftIcon={<AiOutlineFileText color="#4E87F8" />}
-            variant="outline"
-            size="md"
-            borderColor="#4E87F8"
-            color="#4E87F8"
-          >
-            {t('attachment')}
-          </Button>
-        )}
+        <HStack>
+          {values.attachment && values.attachment.s3Url && (
+            <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
+              <Flex>
+                <Box mt="3px">
+                  <BiDownload fontSize="sm" />
+                </Box>
+                <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
+                  {values?.attachment?.fileType}
+                </Text>
+              </Flex>
+            </a>
+          )}
+          {document ? (
+            <Box
+              color="barColor.100"
+              border="1px solid #e2e8f0"
+              // a
+              borderRadius="4px"
+              fontSize="16px"
+            >
+              <HStack spacing="5px" h="31px" padding="10px" align="center">
+                <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+                  {document?.name}
+                </Box>
+                <MdOutlineCancel
+                  cursor="pointer"
+                  onClick={() => {
+                    setDocument(null)
+                    if (inputRef.current) inputRef.current.value = ''
+                  }}
+                />
+              </HStack>
+            </Box>
+          ) : (
+            <Button
+              onClick={e => {
+                if (inputRef.current) {
+                  inputRef.current.click()
+                }
+              }}
+              leftIcon={<AiOutlineFileText color="#4E87F8" />}
+              variant="ghost"
+              size="sm"
+              borderColor="#4E87F8"
+              color="#4E87F8"
+            >
+              {t('attachment')}
+            </Button>
+          )}
+        </HStack>
       </Flex>
 
       <Box border="1px solid #efefef" h="300px" overflow="auto">
@@ -238,7 +254,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                       <Input
                         data-testid={`transaction-description-${index}`}
                         type="text"
-                        size="md"
+                        size="sm"
+                        rounded="md"
                         placeholder="description"
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
@@ -263,7 +280,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                                 {...field}
                                 data-testid={`transaction-amount-${index}`}
                                 type="number"
-                                size="md"
+                                size="sm"
+                                rounded="md"
                                 placeholder="amount"
                                 onChange={event => {
                                   const inputValue = Number(event.currentTarget.value)
@@ -287,10 +305,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           </Tbody>
         </Table>
       </Box>
-
-      <Flex pt="3" flexDirection="row-reverse">
-        <Text data-testid="total-amount" color="gray.600" fontSize="16px" fontWeight={600} fontStyle="normal">
-          {totalAmount}
+      <Flex p="3" flexDirection="row-reverse" borderWidth="0 1px 1px 1px" borderStyle="solid" borderColor="gray.100">
+        <Text data-testid="total-amount" color="gray.600" fontSize="14px" fontWeight={500} fontStyle="normal">
+          Total: {totalAmount}
         </Text>
       </Flex>
 

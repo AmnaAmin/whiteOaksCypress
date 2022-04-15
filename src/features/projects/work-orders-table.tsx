@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from '../../components/table/react-table'
+import ReactTable, { RowProps } from 'components/table/react-table'
 import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
@@ -15,7 +15,7 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     <Tr
       bg="white"
       _hover={{
-        background: '#eee',
+        background: 'gray.100',
       }}
       onClick={e => {
         if (onRowClick) {
