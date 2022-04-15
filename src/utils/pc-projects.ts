@@ -73,18 +73,43 @@ export const usePCProperties = (propertyId?: string) => {
   }
 }
 
-export const verifyAddressApi = (propertyInput, values) => {
-  return axios.get(
-    '/api/addressVerification/?address=' +
-      encodeURI(propertyInput.streetAddress) +
-      '&city=' +
-      values.property.city +
-      '&state=' +
-      values.property.state +
-      '&zip=' +
-      values.property.zipCode,
-    {
-      timeout: 6000,
-    },
-  )
+// export const verifyAddressAp = (propertyInput, values) => {
+//   return axios.get(
+//     '/api/addressVerification/?address=' +
+//       encodeURI(propertyInput.streetAddress) +
+//       '&city=' +
+//       values.property.city +
+//       '&state=' +
+//       values.property.state +
+//       '&zip=' +
+//       values.property.zipCode,
+//     {
+//       timeout: 6000,
+//     },
+//   )
+// }
+
+export const useVerifyAddressApi = (propertyInput, values) => {
+  const client = useClient()
+
+  const { data: addressData, ...rest } = useQuery<ProjectType>(['address', propertyInput, values], async () => {
+    const response = await client(
+      `addressVerification/?address=' +
+    encodeURI(${propertyInput.streetAddress}) +
+    'city=' +
+    ${values.property.city} +
+    '&state=' +
+    ${values.property.state} +
+    '&zip=' +
+    ${values.property.zipCode},`,
+      {},
+    )
+
+    return response?.data
+  })
+
+  return {
+    addressData,
+    ...rest,
+  }
 }

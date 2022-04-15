@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import { Button, Row, Col, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter, Table } from 'reactstrap';
+import React, { Fragment, useState, useEffect } from 'react'
+import { Button, Row, Col, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter, Table } from 'reactstrap'
 // import { AvGroup, AvForm, AvField, AvInput } from 'availity-reactstrap-validation';
 // import axios from 'axios';
 // import AgGrid from 'app/shared/components/AgGrid';
@@ -11,9 +11,9 @@ import { Button, Row, Col, Label, Input, Modal, ModalHeader, ModalBody, ModalFoo
 // MODAL STATE
 
 const ModalVerifyAddress = props => {
-  const [closeModal, setCloseModal] = useState(props.isOpen);
-  const [continueUnverified, setContinueUnverified] = useState(false);
-  const toggleSubModal = () => props.closeAddressVerificationModal();
+  const [closeModal, setCloseModal] = useState(props.isOpen)
+  const [continueUnverified, setContinueUnverified] = useState(false)
+  const toggleSubModal = () => props.closeAddressVerificationModal()
 
   return (
     <Modal isOpen={props.isOpen} toggle={toggleSubModal} centered={true} size="md" backdrop="static">
@@ -41,9 +41,15 @@ const ModalVerifyAddress = props => {
             </Col>
             <Col md="6">
               <div>
-                {props.addressVerificationStatus === 'verifying' && <img src="content/images/spinner.gif" className="spinner" />}
-                {props.addressVerificationStatus === 'failed' && <img src="content/images/failed.png" className="spinner" />}
-                {props.addressVerificationStatus === 'success' && <img src="content/images/checkmark.gif" className="spinner" />}
+                {props.addressVerificationStatus === 'verifying' && (
+                  <img src="content/images/spinner.gif" className="spinner" />
+                )}
+                {props.addressVerificationStatus === 'failed' && (
+                  <img src="content/images/failed.png" className="spinner" />
+                )}
+                {props.addressVerificationStatus === 'success' && (
+                  <img src="content/images/checkmark.gif" className="spinner" />
+                )}
               </div>
             </Col>
           </Row>
@@ -51,9 +57,14 @@ const ModalVerifyAddress = props => {
       </ModalBody>
       <ModalFooter className="FooterSpaceBetween custom-modal">
         <Label check className="d-flex align-items-center">
-          <input type="checkbox" className="mr-1" ={setContinueUnverified} value={continueUnverified} /> Continue with unverified
-          address
-        </Label>onChange
+          <input
+            type="checkbox"
+            className="mr-1"
+            // onChange={setContinueUnverified} value={continueUnverified}
+          />{' '}
+          Continue with unverified address
+        </Label>
+        onChange
         <div className="d-flex align-items-center">
           <Button
             color="primary"
@@ -62,8 +73,8 @@ const ModalVerifyAddress = props => {
             disabled={!continueUnverified || props.addressVerificationStatus === 'verifying'}
             className="btn btn-primary jh-create-entity "
           >
-            <SaveRoundedIcon />
-            <Translate contentKey="entity.action.save">Save </Translate>
+            {/* <SaveRoundedIcon /> */}
+            Save
           </Button>
           <Button color="secondary" onClick={toggleSubModal} className="ml-2">
             Close
@@ -71,7 +82,7 @@ const ModalVerifyAddress = props => {
         </div>
       </ModalFooter>
     </Modal>
-  );
-};
+  )
+}
 
-export default ModalVerifyAddress;
+export default ModalVerifyAddress

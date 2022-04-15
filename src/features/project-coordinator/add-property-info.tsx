@@ -5,21 +5,21 @@ import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { defaultValue, PropertyType } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
-import { useAddressDetails, useAddressSettings, usePCProperties, verifyAddressApi } from 'utils/pc-projects'
+import { useAddressDetails, useAddressSettings, usePCProperties, useVerifyAddressApi } from 'utils/pc-projects'
 import ModalVerifyAddress from 'features/modal-verify-address'
 // import { ref } from 'yup'
 // import ModalVerifyAddress from './modal-verify-address'
 // import { verifyAddressApi } from 'utils/pc-projects'
-// import xml2js from 'xml2js'
+import xml2js from 'xml2js'
 
 export const AddPropertyInfo = props => {
   // const { states, marketList, properties, close, open, clients, FPMUsers } = props
   const { mutate: saveAddress } = useAddressSettings()
   const { data: address, refetch } = useAddressDetails()
-  const { propertiesData } = usePCProperties()
-  console.log(propertiesData)
-  const { addressData } = verifyAddressApi(propertyInput, values)
-  console.log(addressData)
+  // const { propertiesData } = usePCProperties()
+  // console.log(propertiesData)
+  // const { addressData } = useVerifyAddressApi(propertyInput, values)
+  // console.log(addressData)
 
   const { register, control } = useForm({})
 
@@ -69,6 +69,7 @@ export const AddPropertyInfo = props => {
         zipCode: values.zipCode,
       }
       saveAddress(propertiesPayload)
+      // console.log(addressData)
     },
     [saveAddress],
   )
@@ -88,9 +89,9 @@ export const AddPropertyInfo = props => {
 
   // useEffect(() => {}, [states, clients, FPMUsers])
 
-  useEffect(() => {
-    setTypeAheadProperties(property)
-  }, [property])
+  // useEffect(() => {
+  //   return setTypeAheadProperties(property)
+  // }, [property])
 
   const isLoading = () => {
     // const loading =   props.FPMUsersLoading && props.clientsLoading && props.propertiesLoading && props.marketLoading && props.statesLoading;
@@ -134,44 +135,45 @@ export const AddPropertyInfo = props => {
     }
   }
 
-  const verifyAddress = (propertyInput, values) => {
-    verifyAddressApi(propertyInput, values).then(response => {
-      const parser = new xml2js.Parser(/* options */)
-      const array = []
-      parser
-        .parseStringPromise(response.data)
-        .then(function (result) {
-          result.AddressValidateResponse.Address.forEach(record => {
-            if (record.Error !== undefined) {
-              setAddressVerificationStatus('failed')
-            } else {
-              setAddressVerificationStatus('success')
-              const address = {
-                streetAddress: record.Address2[0],
-                city: record.City[0],
-                state: record.State[0],
-                zipCode: record.Zip5[0],
-              }
-              values.property.streetAddress = address.streetAddress
-              values.property.city = address.city
-              values.property.state = address.state
-              values.property.zipCode = address.zipCode
-              // const projectUpdate = {
-              //   ...projectEntity,
-              //   ...values,
-              //   documents: documentInput,
-              //   newProperty: values.property,
-              //   newMarketId: values.property.marketId,
-              // };
-              // props.createEntity(projectUpdate);
-            }
-          })
-        })
-        .catch(function (err) {
-          // Failed
-        })
-    })
-  }
+  // const verifyAddress = (propertyInput, values) => {
+  //   verifyAddressApi(propertyInput, values) == () => {
+  //   // .then((response: { data: any }) => {
+  //     const parser = new xml2js.Parser(/* options */)
+  //     const array = []
+  //     parser
+  //       .parseStringPromise()
+  //       .then(function (result) {
+  //         result.AddressValidateResponse.Address.forEach(record => {
+  //           if (record.Error !== undefined) {
+  //             setAddressVerificationStatus('failed')
+  //           } else {
+  //             setAddressVerificationStatus('success')
+  //             const address = {
+  //               streetAddress: record.Address2[0],
+  //               city: record.City[0],
+  //               state: record.State[0],
+  //               zipCode: record.Zip5[0],
+  //             }
+  //             values.property.streetAddress = address.streetAddress
+  //             values.property.city = address.city
+  //             values.property.state = address.state
+  //             values.property.zipCode = address.zipCode
+  //             // const projectUpdate = {
+  //             //   ...projectEntity,
+  //             //   ...values,
+  //             //   documents: documentInput,
+  //             //   newProperty: values.property,
+  //             //   newMarketId: values.property.marketId,
+  //             // };
+  //             // props.createEntity(projectUpdate);
+  //           }
+  //         })
+  //       })
+  //       .catch(function (err) {
+  //         // Failed
+  //       })
+  //   })
+  // }
 
   const save = (event, errors, values) => {
     if (errors.length > 0) return
@@ -209,9 +211,9 @@ export const AddPropertyInfo = props => {
       setAddressVerificationStatus('verifying')
       setShowVerificationUSPS(true)
       setProjectPayload(projectUpdate)
-      setTimeout(function () {
-        verifyAddress(property, values)
-      }, 2000)
+      // setTimeout(function () {
+      //   verifyAddress(property, values)
+      // }, 2000)
     } else {
       props.createEntity(projectUpdate)
     }
@@ -398,4 +400,14 @@ export const AddPropertyInfo = props => {
       </Button>
     </form>
   )
+}
+function values(propertyInput: any, values: any): { addressData: any } {
+  throw new Error('Function not implemented.')
+}
+
+function propertyInput(
+  propertyInput: any,
+  values: (propertyInput: any, values: any) => { addressData: any },
+): { addressData: any } {
+  throw new Error('Function not implemented.')
 }
