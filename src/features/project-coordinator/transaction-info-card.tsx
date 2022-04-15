@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Center, CenterProps, Flex, Text } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
-import Status from '../status'
+import Status from '../projects/status'
 import { useTranslation } from 'react-i18next'
 import { ProjectType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'

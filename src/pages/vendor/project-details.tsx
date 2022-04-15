@@ -22,6 +22,9 @@ const projectTabStyle = {
   fontWeight: 500,
   fontStyle: 'normal',
   color: 'gray.600',
+  _hover: {
+    backgroundColor: 'gray.200',
+  },
 }
 
 export const ProjectDetails: React.FC = props => {
@@ -49,7 +52,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="transaction-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                 sx={projectTabStyle}
               >
                 {t('transaction')}
@@ -57,7 +60,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Tab
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                 whiteSpace="nowrap"
                 sx={projectTabStyle}
               >
@@ -67,7 +70,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab
                 aria-labelledby="documents-tab"
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                 sx={projectTabStyle}
               >
                 {t('documents')}
@@ -75,7 +78,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Tab
                 _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
                 sx={projectTabStyle}
               >
                 {t('alerts')}
@@ -106,29 +109,30 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
+            <TabPanels mt="10px" h="100%">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%">
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <VendorDocumentsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <AlertsTable
                     onRowClick={(e, row) => {
                       selectedAlertRow(row.values)
                       onAlertModalOpen()
                     }}
+                    ref={tabsContainerRef}
                   />
                 </Box>
               </TabPanel>

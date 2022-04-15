@@ -100,6 +100,7 @@ export interface FormValues {
   transaction: TransactionFormValues[]
   expectedCompletionDate: string
   newExpectedCompletionDate: string
+  attachment: any
 }
 
 export type ChangeTransaction = {
@@ -123,6 +124,7 @@ export type ChangeOrderPayload = {
   paidDate: string | null
   lineItems: ChangeTransaction[]
   projectId: string
+  documents?: Array<any>
 }
 
 export type ChangeOrderUpdatePayload = {
@@ -148,6 +150,7 @@ export type ChangeOrderUpdatePayload = {
   projectId: number
   vendorId: number | null
   lineItems: Array<ChangeTransaction & { id: string | number }>
+  documents?: Array<any>
 }
 
 type LineItem = {
@@ -187,4 +190,5 @@ export type ChangeOrderType = {
   paidDate: string | null
   lineItems: Array<LineItem> | null
   paymentReceived: null
+  documents: any[]
 }

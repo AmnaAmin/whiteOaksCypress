@@ -410,9 +410,24 @@ export const VENDOR_DATA = {
 }
 
 export const WO_BY_VENDORS_PER_MONTH = {
+  March: {
+    Paid: 3,
+  },
   January: {
-    Active: 2,
-    Completed: 1,
-    Cancelled: 1,
+    Completed: 2,
+  },
+  April: {
+    Active: 3,
   },
 }
+
+export const PAID_BY_YEAR_AND_MONTH = [
+  {
+    label: '3199',
+    count: 4400,
+  },
+  {
+    label: '3209',
+    count: 1980,
+  },
+]
