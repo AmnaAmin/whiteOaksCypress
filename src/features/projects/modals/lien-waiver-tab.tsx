@@ -307,6 +307,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             {t('close')}
           </Button>
           <Button
+            _hover={{ bg: 'blue' }}
             colorScheme="CustomPrimaryColor"
             size="lg"
             mr={3}
@@ -314,6 +315,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             fontStyle="normal"
             fontWeight={500}
             fontSize="14px"
+            _focus={{ outline: 'none' }}
           >
             {t('save')}
           </Button>

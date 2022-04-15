@@ -52,7 +52,8 @@ i18n.use(initReactI18next).init({
         newWorkOrder: 'New Work Order',
         newDocument: 'New Document',
         newAlert: 'New Alert',
-        transaction: 'Transaction',
+        transaction: 'Transactions',
+        projectDetails: 'Project Details',
         vendorWorkOrders: 'Vendor Work Orders',
         documents: 'Documents',
         alerts: 'Alerts',
@@ -82,6 +83,13 @@ i18n.use(initReactI18next).init({
         amount: 'Amount',
         close: 'Close',
         save: 'Save',
+        finalSOW: 'Final SOW',
+        accountpayable: 'Account Payable',
+        projectcost: 'Project Cost',
+        revenue: 'Revenue',
+        profits: 'Profits',
+        profitmargins: 'Profit Margins',
+
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
@@ -194,7 +202,7 @@ i18n.use(initReactI18next).init({
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
         insurance: 'Seguro',
-        license: 'Licencia',
+        License: 'Licencia',
         projectSummary: 'Resumen del Proyecto',
         activeWO: 'WO Activo',
         pastDue: 'Vencido',

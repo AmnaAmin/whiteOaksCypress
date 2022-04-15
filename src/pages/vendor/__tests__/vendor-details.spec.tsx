@@ -2,8 +2,8 @@ import { render, screen } from 'utils/test-utils'
 import { fireEvent, waitFor, render as directRender } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import App from 'App'
-import { DetailsForm } from '../../features/vendor-details/details'
-import { VENDOR_DATA } from '../../mocks/api/vendor-dashboard/data'
+import { DetailsForm } from 'features/vendor-details/details'
+import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 
 /* Details Tab Test Cases */
 jest.setTimeout(30000)

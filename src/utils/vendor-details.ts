@@ -11,7 +11,7 @@ import {
   VendorProfileDetailsFormData,
   VendorProfilePayload,
   VendorTradeFormValues,
-} from '../types/vendor.types'
+} from 'types/vendor.types'
 import { convertDateTimeFromServer, customFormat } from './date-time-utils'
 
 export const licenseTypes = [

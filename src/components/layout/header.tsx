@@ -14,13 +14,14 @@ import {
 } from '@chakra-ui/react'
 import DropdownLanguage from 'components/translation/DropdownLanguage'
 // import { IRootState } from "app/shared/reducers";
-import React, { Suspense, useMemo, useState } from 'react'
-import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import React, { useMemo, useState } from 'react'
+// import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { FaAngleDown, FaAngleUp, FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
+import { Notification } from './notification'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -42,11 +43,11 @@ const UserInfo: React.FC = () => {
       />
       <VStack alignItems="start" spacing="0.3" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="12px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
+          <Text fontSize="16px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="14px" fontStyle="normal" fontWeight={500} color="#A0AEC0">
+        <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.600">
           {isAdmin ? 'Admin' : 'User'}
         </Text>
       </VStack>
@@ -61,7 +62,7 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
-  const [showNotification, setShowNotification] = useState(false)
+  // const [showNotification, setShowNotification] = useState(false)
 
   return (
     <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
@@ -78,73 +79,79 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           <LogoIcon />
         </Flex>
 
-        <HStack spacing="5">
-          {/** Language Dropdown Menu */}
+        <HStack spacing="5" px="1">
+          {/* * Language Dropdown Menu */}
           <Box display={{ base: 'none', md: 'block' }}>
             <DropdownLanguage />
           </Box>
           <Box position="relative">
             <Menu
-              isOpen={showNotification}
-              onClose={() => setShowNotification(false)}
-              onOpen={() => setShowNotification(true)}
+            // isOpen={showNotification}
+            // onClose={() => setShowNotification(false)}
+            // onOpen={() => setShowNotification(true)}
             >
-              <MenuButton transition="all 0.2s" color="gray" _active={{ color: '#4E87F8' }}>
-                <FaBell fontSize="1.5rem" />
+              <MenuButton
+                transition="all 0.2s"
+                _active={{ color: '#4E87F8' }}
+                color="#A0AEC0"
+                _hover={{ color: 'gray.500' }}
+              >
+                <FaBell fontSize="1.7rem" />
               </MenuButton>
+              <Notification />
 
-              {showNotification && (
+              {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>
-                  {/* <Notification /> */}
+                  <Notification />
                 </Suspense>
-              )}
+              )} */}
             </Menu>
           </Box>
 
           {/** User Dropdown Menu */}
-          <Menu placement="bottom">
-            <MenuButton
-              // variant="text"
-              // colorScheme="blue"
-              bgSize="auto"
-              w={{ base: '50px', md: 'auto' }}
-              onClick={() => {
-                setShow(!show)
-              }}
-            >
-              <UserInfo />
-            </MenuButton>
-            <MenuList minWidth="279px">
-              <MenuItem>
-                <RouterLink to="/settings">Settings</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <RouterLink to="/password">Password</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <RouterLink to="/help">help</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <RouterLink to="/support">Support</RouterLink>
-              </MenuItem>
-              <MenuItem>
-                <Box
-                  onClick={logout}
-                  fontSize="14px"
-                  fontWeight={500}
-                  fontStyle="normal"
-                  lineHeight="20px"
-                  color="#4A5568"
-                  width="100%"
-                >
-                  Signout
-                </Box>
-              </MenuItem>
-            </MenuList>
-            <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
-              {show ? <FaAngleDown /> : <FaAngleUp />}
-            </Box>
-          </Menu>
+          <HStack spacing={4} _hover={{ bg: 'gray.100', rounded: '6px' }} pl="1">
+            <Menu placement="bottom">
+              <MenuButton
+                bgSize="auto"
+                w={{ base: '50px', md: 'auto' }}
+                onClick={() => {
+                  setShow(!show)
+                }}
+              >
+                <UserInfo />
+              </MenuButton>
+              <MenuList minWidth="279px">
+                <MenuItem>
+                  <RouterLink to="/settings">Settings</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <RouterLink to="/password">Password</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <RouterLink to="/help">help</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <RouterLink to="/support">Support</RouterLink>
+                </MenuItem>
+                <MenuItem>
+                  <Box
+                    onClick={logout}
+                    fontSize="14px"
+                    fontWeight={400}
+                    fontStyle="normal"
+                    lineHeight="20px"
+                    color="#4A5568"
+                    width="100%"
+                  >
+                    Signout
+                  </Box>
+                </MenuItem>
+              </MenuList>
+              <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
+                {show ? <FaAngleDown color="#4A5568" /> : <FaAngleUp color="#4A5568" />}
+              </Box>
+            </Menu>
+          </HStack>
         </HStack>
       </HStack>
     </Box>

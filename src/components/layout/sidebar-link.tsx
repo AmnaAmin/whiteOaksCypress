@@ -12,7 +12,8 @@ interface SidebarLinkProps extends BoxProps {
 
 const useCheckPathSelected = (pathTo: string) => {
   const { pathname } = useLocation()
-  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard'
+  const isProjectDetails = pathname.includes('/project-details')
+  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard' || (pathTo === '/projects' && isProjectDetails)
   return { isLinkSelected }
 }
 
@@ -44,6 +45,9 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       py="2"
       borderLeft="4px solid transparent"
       cursor="pointer"
+      _hover={{
+        bgGradient: 'linear(to-l, whiteAlpha.100,gray.100, gray.100)',
+      }}
       className="group"
       fontWeight="medium"
       {...linkState}

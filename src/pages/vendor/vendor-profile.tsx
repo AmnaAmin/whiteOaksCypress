@@ -1,13 +1,13 @@
-import { Details } from '../features/vendor-details/details'
+import { Details } from 'features/vendor-details/details'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { useVendorProfile } from 'utils/vendor-details'
-import { TradeList } from '../features/vendor-details/trades'
-import { MarketList } from '../features/vendor-details/markets'
+import { TradeList } from 'features/vendor-details/trades'
+import { MarketList } from 'features/vendor-details/markets'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Box, Stack } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { License } from '../features/vendor-details/license'
-import { DocumentsCard } from '../features/vendor-details/documents-card'
+import { License } from 'features/vendor-details/license'
+import { DocumentsCard } from 'features/vendor-details/documents-card'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
@@ -20,6 +20,9 @@ const profileTabStyle = {
   fontWeight: 500,
   fontStyle: 'normal',
   color: 'gray.600',
+  _hover: {
+    backgroundColor: 'gray.200',
+  },
 }
 
 export const VendorProfilePage: React.FC = props => {
@@ -40,29 +43,31 @@ export const VendorProfilePage: React.FC = props => {
         <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
               {t('details')}
             </Tab>
             <Tab
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              data-testid="documents"
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
               {t('documents')}
             </Tab>
             <Tab
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              data-testid="license"
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
-              {t('license')}
+              {t('License')}
             </Tab>
             <Tab
               data-testid="tradetab"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -70,7 +75,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="markettab"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
