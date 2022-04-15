@@ -3,19 +3,19 @@ import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
-import WorkOrderDetails from './modals/work-order-details'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
+import WorkOrderDetails from 'features/projects/modals/work-order-details'
+import WorkOrderStatus from 'features/projects/work-order-status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
       _hover={{
-        background: 'gray.100',
+        background: '#eee',
       }}
       onClick={e => {
         if (onRowClick) {

@@ -49,6 +49,8 @@ const DropdownLanguage = () => {
   return (
     <Menu placement="bottom">
       <MenuButton
+        p="1"
+        _hover={{ bg: 'gray.100', rounded: '6px' }}
         onChange={handleLangChange}
         variant="text"
         // colorScheme="blue"

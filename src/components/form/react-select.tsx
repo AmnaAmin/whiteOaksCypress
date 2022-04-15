@@ -99,8 +99,16 @@ const chakraStyles = {
 
 const chakraComponents = {
   // Control components
-  Control({ children, innerRef, innerProps, isDisabled, isFocused, selectProps: { size, isInvalid } }) {
+  Control({ children, innerRef, innerProps, isDisabled, isFocused, selectProps }) {
+    const { size, isInvalid } = selectProps
+    const { isLeftBorder } = selectProps?.selectProps || {}
     const inputStyles = useMultiStyleConfig('Input', { size })
+    const leftBorder = {
+      borderLeftWidth: '2px',
+      borderLeftStyle: 'solid',
+      borderLeftColor: 'blue.300',
+    }
+    const borderLeftStyle = isLeftBorder ? { ...leftBorder } : {}
 
     const heights = {
       sm: 8,
@@ -114,19 +122,22 @@ const chakraComponents = {
           ref={innerRef}
           sx={{
             ...inputStyles.field,
+            ...borderLeftStyle,
             p: 0,
             overflow: 'hidden',
             h: 'auto',
             minH: heights[size],
             rounded: 'md',
-            borderLeft: '2px solid #4E87F8',
             color: 'white',
+            position: 'relative',
             _disabled: {
               ...disabledInputStyle,
               opacity: 0.9,
-
               bg: 'gray.50',
               borderColor: 'gray.200',
+            },
+            _hover: {
+              ...inputStyles.field['_hover'],
             },
           }}
           {...innerProps}
@@ -254,6 +265,7 @@ const ChakraReactSelect = ({
   colorScheme = 'gray',
   isDisabled,
   isInvalid,
+  isLeftBorder,
   ...props
 }: any) => {
   const chakraTheme = useTheme()

@@ -27,7 +27,7 @@ import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
 
 const InvoiceInfo: React.FC<{ title: string; date: string; icons: React.ElementType }> = ({ title, date, icons }) => {
   return (
-    <Flex pt={6} pb={8} justifyContent="center">
+    <Flex justifyContent="center">
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -75,7 +75,7 @@ export const InvoiceTab = ({ onClose }) => {
   return (
     <Box>
       <Box w="100%">
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2}>
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo title={'WO Original Amount'} date={'$40,170.6'} icons={BiDollarCircle} />
           <InvoiceInfo title={'Final Invoice:'} date={'$40,170.6'} icons={BiDollarCircle} />
           <InvoiceInfo title={'PO Number'} date={'xyz'} icons={BiFile} />
@@ -83,7 +83,7 @@ export const InvoiceTab = ({ onClose }) => {
           <InvoiceInfo title={'Due Date'} date={'12/02/2022'} icons={BiCalendar} />
         </Grid>
 
-        <Divider border="2px solid gray" mb={5} color="gray.200" />
+        <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
           <TableContainer border="1px solid #E2E8F0">

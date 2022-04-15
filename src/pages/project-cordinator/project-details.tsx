@@ -1,4 +1,5 @@
 import {
+  Text,
   Tabs,
   TabList,
   TabPanels,
@@ -8,10 +9,10 @@ import {
   FormControl,
   FormLabel,
   Switch,
+  Flex,
 } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
-import { AiOutlineUpload } from 'react-icons/ai'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +23,9 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
+import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
+import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+import { BiAddToQueue } from 'react-icons/bi'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -44,39 +48,64 @@ export const ProjectDetails: React.FC = props => {
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
+        <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
-            <TabList color="#4A5568">
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+          <Tabs variant="line" onChange={index => setTabIndex(index)} mt="7">
+            <TabList whiteSpace="nowrap" color="gray.600" fontWeight={500}>
+              <Tab
+                _focus={{ outline: 'none' }}
+                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
+              >
                 {t('Transactions')}
               </Tab>
-              <Tab minW={180} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+
+              <Tab
+                _focus={{ outline: 'none' }}
+                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
+              >
+                {t('projectDetails')}
+              </Tab>
+
+              <Tab
+                _focus={{ outline: 'none' }}
+                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
+              >
                 {t('vendorWorkOrders')}
               </Tab>
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                _focus={{ outline: 'none' }}
+                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
+              >
                 {t('documents')}
               </Tab>
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>{'Notes'}</Tab>
-              <Tab _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
+              <Tab
+                _focus={{ outline: 'none' }}
+                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
+              >
                 {t('alerts')}
               </Tab>
-              <Tab minW={120} _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}>
-                {'HFE Mgmt'}
+              <Tab
+                _focus={{ outline: 'none' }}
+                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
+              >
+                {'Notes'}
               </Tab>
-              <Box w="100%" display="flex" justifyContent="end" position="relative" bottom="2">
+
+              <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
-                    bg="#4E87F8"
-                    color="#FFFFFF"
+                    // bg="#4E87F8"
+                    color="#4E87F8"
                     size="md"
-                    _hover={{ bg: 'royalblue' }}
                   >
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <AiOutlineUpload />
-                    </Box>
-                    {t('upload')}
+                    <Flex alignItems="center" fontSize="14px" fontWeight={500}>
+                      <Text mr={1}>
+                        <BiAddToQueue size={14} />
+                      </Text>
+                      <Text>{t('newWorkOrder')}</Text>
+                    </Flex>
                   </Button>
                 )}
                 {tabIndex === 3 && (
@@ -153,6 +182,11 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </Box>
               </TabPanel>
+              {/* <TabPanel p="0px" h="0px">
+                <Box h="100%" w="100%">
+                  <WorkOrdersTable ref={tabsContainerRef} />
+                </Box>
+              </TabPanel> */}
             </TabPanels>
           </Tabs>
         </Stack>
