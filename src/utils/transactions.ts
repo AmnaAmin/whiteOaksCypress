@@ -379,7 +379,7 @@ export const parseTransactionToFormValues = (
     newExpectedCompletionDate: '',
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
-    attachment: transaction?.documents[0],
+    attachment: transaction?.documents?.[0],
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,

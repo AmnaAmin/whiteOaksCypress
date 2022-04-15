@@ -24,7 +24,6 @@ import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
-import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import { BiAddToQueue } from 'react-icons/bi'
 
 export const ProjectDetails: React.FC = props => {

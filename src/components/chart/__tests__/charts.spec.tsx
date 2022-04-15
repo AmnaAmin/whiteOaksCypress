@@ -1,6 +1,6 @@
 import { OverviewGraph, months, monthsShort } from 'components/chart/Overview'
 import { PaidChartGraph } from 'components/chart/paid-chart'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { WO_BY_VENDORS_PER_MONTH, PAID_BY_YEAR_AND_MONTH } from 'mocks/api/vendor-dashboard/data'
 
 const vendorData = months.map(key => ({

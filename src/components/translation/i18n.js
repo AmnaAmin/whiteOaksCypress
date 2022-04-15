@@ -58,7 +58,6 @@ i18n.use(initReactI18next).init({
         documents: 'Documents',
         alerts: 'Alerts',
         upload: 'Upload',
-        newWorkOrder: 'New Work Order',
         resolve: 'Resolve',
         contactName: 'Contact Name:',
         projectID: 'Project ID',
