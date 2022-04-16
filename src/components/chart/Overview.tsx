@@ -4,7 +4,7 @@ import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { GenericObjectType } from 'types/common.types'
 
-const months = [
+export const months = [
   'January',
   'February',
   'March',
@@ -18,7 +18,7 @@ const months = [
   'November',
   'December',
 ]
-const monthsShort: GenericObjectType = {
+export const monthsShort: GenericObjectType = {
   January: 'Jan',
   February: 'Feb',
   March: 'Mar',
@@ -43,74 +43,81 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
     Canceled: vendorEntity?.[key]?.Cancelled || 0,
   }))
 
+  return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
+}
+
+export const OverviewGraph = ({ vendorData, width, height }) => {
   return (
-    <ResponsiveContainer width="98%" height={360}>
-      <BarChart
-        data={vendorData}
-        barSize={50}
-        margin={{
-          top: 14,
-          right: 30,
-          left: 0,
-          bottom: 0,
-        }}
-      >
-        <CartesianGrid stroke="#EFF3F9" />
-        <XAxis
-          dataKey="name"
-          axisLine={false}
-          tickLine={false}
-          tick={{
-            fill: '#4A5568',
-            fontSize: '12px',
-            fontWeight: 400,
-            fontStyle: 'normal',
+    <div>
+      <ResponsiveContainer width={width} height={height}>
+        <BarChart
+          data-testid="overview-chart"
+          data={vendorData}
+          barSize={50}
+          margin={{
+            top: 14,
+            right: 30,
+            left: 0,
+            bottom: 0,
           }}
-          tickMargin={20}
-        />
+        >
+          <CartesianGrid stroke="#EFF3F9" />
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tick={{
+              fill: '#4A5568',
+              fontSize: '12px',
+              fontWeight: 400,
+              fontStyle: 'normal',
+            }}
+            tickMargin={20}
+          />
 
-        <YAxis
-          tickLine={{ stroke: '#4F4F4F' }}
-          type="number"
-          tickSize={8}
-          tickCount={3}
-          axisLine={false}
-          tick={{
-            fontSize: '12px',
-            fontStyle: 'normal',
-            fontWeight: 400,
-            fill: '#4A5568',
-          }}
-        />
+          <YAxis
+            tickLine={{ stroke: '#4F4F4F' }}
+            type="number"
+            tickSize={8}
+            tickCount={3}
+            axisLine={false}
+            tick={{
+              fontSize: '12px',
+              fontStyle: 'normal',
+              fontWeight: 400,
+              fill: '#4A5568',
+            }}
+          />
 
-        <Tooltip contentStyle={{ borderRadius: '6px' }} />
+          <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" />
 
-        <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
-        <Bar dataKey="Closed" fill="#FB8832" radius={[10, 10, 0, 0]} />
-        <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
-        <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
-        <Legend
-          wrapperStyle={{
-            lineHeight: '31px',
-            position: 'relative',
-            bottom: 'calc(100% + 50px)',
-            left: 50,
-          }}
-          iconType="circle"
-          iconSize={10}
-          align="right"
-          formatter={value => {
-            return (
-              <Box display="inline-flex" marginInlineEnd="40px">
-                <Box as="span" color="#4A5568" fontSize="12px" fontStyle="normal" fontWeight={400}>
-                  {value}
+          <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Closed" fill="#FB8832" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
+          <Legend
+            wrapperStyle={{
+              lineHeight: '31px',
+              position: 'relative',
+              bottom: 'calc(100% + 50px)',
+              left: 50,
+            }}
+            iconType="circle"
+            iconSize={10}
+            align="right"
+            formatter={value => {
+              return (
+                <Box display="inline-flex" marginInlineEnd="40px" data-testid={'legend-' + value}>
+                  <Box as="span" color="#4A5568" fontSize="12px" fontStyle="normal" fontWeight={400}>
+                    {value}
+                  </Box>
                 </Box>
-              </Box>
-            )
-          }}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+              )
+            }}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   )
 }
 

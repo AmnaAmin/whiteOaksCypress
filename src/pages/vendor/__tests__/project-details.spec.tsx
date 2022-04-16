@@ -147,7 +147,7 @@ describe('Porject Details: Transaction tab test cases', () => {
   test('Update transaction by clicking on transaction row which will open Update Transaction modal', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
-    const pendingTransaction = screen.getByText(/PENDING/i)
+    const pendingTransaction = screen.getByText(/pending/i)
     expect(pendingTransaction).toBeInTheDocument()
 
     // Click on sending transaction row which will open the update transaction modal
@@ -157,7 +157,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     await waitForLoadingToFinish()
 
     // Check Modal opened with data loaded from API.
-    expect(screen.getByText(/Update Transaction/, { selector: 'header' })).toBeInTheDocument()
+    expect(screen.getByText(/Update Transaction/i)).toBeInTheDocument()
     expect(getByText(screen.getByTestId('transaction-type'), /Change Order/i)).toBeInTheDocument()
     expect(screen.getByText('360 Management Services (General Labor)')).toBeInTheDocument()
 

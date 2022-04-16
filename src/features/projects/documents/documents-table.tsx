@@ -14,7 +14,7 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
     <Tr
       bg="white"
       _hover={{
-        background: '#eee',
+        background: 'gray.100',
       }}
       cursor="pointer"
       {...row.getRowProps({

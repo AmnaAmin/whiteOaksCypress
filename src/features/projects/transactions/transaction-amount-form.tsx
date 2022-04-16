@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
+import React, { ChangeEvent, useCallback, useMemo, useRef } from 'react'
 import {
   Box,
   Button,
@@ -27,6 +27,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'utils/transactions'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
+import { BiDownload } from 'react-icons/bi'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -35,17 +36,7 @@ type TransactionAmountFormProps = {
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const [document, setDocument] = useState<File | null>(null)
 
-  const onFileChange = useCallback(
-    e => {
-      const files = e.target.files
-      if (files[0]) {
-        setDocument(files[0])
-      }
-    },
-    [setDocument],
-  )
   const {
     control,
     register,
@@ -53,7 +44,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     getValues,
     setValue,
   } = formReturn
-
+  const values = getValues()
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -61,6 +52,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
   } = useDisclosure()
 
   const transaction = useWatch({ name: 'transaction', control })
+  const document = useWatch({ name: 'attachment', control })
+
   const checkedItems = useMemo(() => {
     return transaction.map(item => item.checked)
   }, [transaction])
@@ -115,6 +108,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     }
   }, [removeTransactionField, transactionFields, onDeleteConfirmationModalClose, setValue])
 
+  const onFileChange = useCallback(
+    e => {
+      const files = e.target.files
+      if (files[0]) {
+        setValue('attachment', files[0])
+      }
+    },
+    [setValue],
+  )
+
   return (
     <>
       <Flex justifyContent="space-between" w="100%" mt="30px" mb="15px">
@@ -146,43 +149,57 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
         </Box>
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-        {document ? (
-          <Box
-            color="barColor.100"
-            border="1px solid #e2e8f0"
-            // a
-            borderRadius="4px"
-            fontSize="16px"
-          >
-            <HStack spacing="5px" h="31px" padding="10px" align="center">
-              <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                {document?.name}
-              </Box>
-              <MdOutlineCancel
-                cursor="pointer"
-                onClick={() => {
-                  setDocument(null)
-                  if (inputRef.current) inputRef.current.value = ''
-                }}
-              />
-            </HStack>
-          </Box>
-        ) : (
-          <Button
-            onClick={e => {
-              if (inputRef.current) {
-                inputRef.current.click()
-              }
-            }}
-            leftIcon={<AiOutlineFileText color="#4E87F8" />}
-            variant="ghost"
-            size="sm"
-            borderColor="#4E87F8"
-            color="#4E87F8"
-          >
-            {t('attachment')}
-          </Button>
-        )}
+        <HStack>
+          {values.attachment && values.attachment.s3Url && (
+            <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
+              <Flex>
+                <Box mt="3px">
+                  <BiDownload fontSize="sm" />
+                </Box>
+                <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
+                  {values?.attachment?.fileType}
+                </Text>
+              </Flex>
+            </a>
+          )}
+          {document ? (
+            <Box
+              color="barColor.100"
+              border="1px solid #e2e8f0"
+              // a
+              borderRadius="4px"
+              fontSize="16px"
+            >
+              <HStack spacing="5px" h="31px" padding="10px" align="center">
+                <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+                  {document?.name}
+                </Box>
+                <MdOutlineCancel
+                  cursor="pointer"
+                  onClick={() => {
+                    setValue('attachment', null)
+                    if (inputRef.current) inputRef.current.value = ''
+                  }}
+                />
+              </HStack>
+            </Box>
+          ) : (
+            <Button
+              onClick={e => {
+                if (inputRef.current) {
+                  inputRef.current.click()
+                }
+              }}
+              leftIcon={<AiOutlineFileText color="#4E87F8" />}
+              variant="ghost"
+              size="sm"
+              borderColor="#4E87F8"
+              color="#4E87F8"
+            >
+              {t('attachment')}
+            </Button>
+          )}
+        </HStack>
       </Flex>
 
       <Box border="1px solid #efefef" h="300px" overflow="auto">

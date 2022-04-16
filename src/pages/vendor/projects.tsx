@@ -50,9 +50,9 @@ export const Projects = () => {
               ) : (
                 <>
                   <Button
-                    bg="none"
+                    mr="1"
+                    variant="ghost"
                     color="#4E87F8"
-                    _hover={{ bg: 'none' }}
                     _focus={{ border: 'none' }}
                     fontSize="12px"
                     fontStyle="normal"

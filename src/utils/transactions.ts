@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { dateFormat, dateISOFormat } from './date-time-utils'
 import { useUserRolesSelector } from './redux-common-selectors'
+import { readFileContent } from './vendor-details'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -199,9 +200,25 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-export const parseChangeOrderAPIPayload = (formValues: FormValues, projectId?: string): ChangeOrderPayload => {
+export const parseChangeOrderAPIPayload = async (
+  formValues: FormValues,
+  projectId?: string,
+): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
+  let attachment
+
+  const document = formValues.attachment
+
+  if (document) {
+    const fileContents = await readFileContent(document as File)
+    attachment = {
+      documentType: 58,
+      fileObjectContentType: document.type,
+      fileType: document.name,
+      fileObject: fileContents,
+    }
+  }
 
   const againstProjectSOWPayload =
     formValues.against?.value === AGAINST_DEFAULT_VALUE
@@ -229,19 +246,29 @@ export const parseChangeOrderAPIPayload = (formValues: FormValues, projectId?: s
       unitCost: '0',
       vendorCost: '0',
     })),
+    documents: attachment ? [attachment] : [],
     projectId: projectId ?? '',
     ...againstProjectSOWPayload,
   }
 }
 
-export const parseChangeOrderUpdateAPIPayload = (
+export const parseChangeOrderUpdateAPIPayload = async (
   formValues: FormValues,
   transaction: ChangeOrderType,
   projectId?: string,
-): ChangeOrderUpdatePayload => {
+): Promise<ChangeOrderUpdatePayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
-
+  let attachment
+  if (formValues.attachment) {
+    const fileContents = await readFileContent(formValues.attachment as File)
+    attachment = {
+      documentType: 58,
+      fileObjectContentType: formValues.attachment.type,
+      fileType: formValues.attachment.name,
+      fileObject: fileContents,
+    }
+  }
   const againstProjectSOWPayload =
     formValues.against?.value === AGAINST_DEFAULT_VALUE
       ? {
@@ -279,41 +306,9 @@ export const parseChangeOrderUpdateAPIPayload = (
     })),
     projectId: Number(projectId),
     vendorId: transaction.vendorId as number,
+    documents: attachment ? [attachment] : [],
     ...againstProjectSOWPayload,
   }
-
-  // return {
-  //   id: 24444,
-  //   name: 'DR-ADT Renovations Inc-01/07/2022',
-  //   transactionTypeLabel: 'Draw',
-  //   skillName: 'General Labor',
-  //   vendor: 'ADT Renovations Inc',
-  //   changeOrderAmount: 1000,
-  //   status: 'PENDING',
-  //   createdDate: '2022-01-07T16:06:34Z',
-  //   approvedBy: null,
-  //   transactionType: 30,
-  //   parentWorkOrderId: 5122,
-  //   createdDate1: '01/07/2022',
-  //   createdBy: 'vendor@devtek.ai',
-  //   modifiedDate1: '01/07/2022',
-  //   modifiedBy: 'vendor@devtek.ai',
-  //   newExpectedCompletionDate: null,
-  //   expectedCompletionDate: null,
-  //   clientApprovedDate: null,
-  //   paidDate: null,
-  //   lineItems: [
-  //     {
-  //       id: 25373,
-  //       description: 'exclude paint',
-  //       unitCost: '0',
-  //       quantity: '0',
-  //       vendorCost: '0',
-  //       whiteoaksCost: '-1000',
-  //     },
-  //   ],
-  //   projectId: 2775,
-  // };
 }
 
 export const TRANSACTION_FEILD_DEFAULT = {
@@ -347,6 +342,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     dateCreated: dateFormat(new Date()),
     createdBy,
     transaction: [TRANSACTION_FEILD_DEFAULT],
+    attachment: null,
   }
 }
 
@@ -366,6 +362,7 @@ export const parseTransactionToFormValues = (
     newExpectedCompletionDate: '',
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
+    attachment: transaction?.documents?.[0],
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
@@ -390,6 +387,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(['documents', projectId])
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
@@ -417,7 +415,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
-        console.log('Update Transaction')
+        queryClient.invalidateQueries(['documents', projectId])
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',

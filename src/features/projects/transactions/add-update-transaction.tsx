@@ -63,6 +63,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
+  // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
 
   // API calls
@@ -110,7 +111,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   const onSubmit = useCallback(
-    (values: FormValues) => {
+    async (values: FormValues) => {
       const queryOptions = {
         onSuccess() {
           onClose()
@@ -119,10 +120,10 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
-        const payload = parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
+        const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
         updateChangeOrder({ ...payload, id: transaction.id }, queryOptions)
       } else {
-        const payload = parseChangeOrderAPIPayload(values, projectId)
+        const payload = await parseChangeOrderAPIPayload(values, projectId)
         createChangeOrder(payload, queryOptions)
       }
     },
@@ -465,7 +466,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
           Update Transaction
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} size="lg" />
         <ModalBody px="6" pt="3" pb="1">
           <AddUpdateTransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} />
         </ModalBody>
