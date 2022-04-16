@@ -7,3 +7,6 @@ unzip -o output.zip
 cd output
 echo "🚀 deploying to dev-s3"
 aws s3 sync . s3://woa-bucket-dev2-ui/vendorportal/ --delete
+
+echo "🚀 deploying to us-west-1-s3Bucket"
+aws s3 sync . s3://woa-fo-bucket-one-ui/vendorportal/ --delete
