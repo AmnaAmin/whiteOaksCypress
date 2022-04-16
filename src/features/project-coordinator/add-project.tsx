@@ -92,7 +92,7 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
         <ModalBody px="6" pt="3" pb="1">
           <AddProjectForm onClose={onClose} />
         </ModalBody>
-        <ModalFooter display="flex" alignItems="center">
+        {/* <ModalFooter display="flex" alignItems="center">
           <Button onClick={onClose} variant="ghost" size="sm">
             {'Close'}
           </Button>
@@ -109,7 +109,7 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
           >
             {'Next'}
           </Button>
-        </ModalFooter>
+        </ModalFooter> */}
       </ModalContent>
     </Modal>
   )
