@@ -111,6 +111,10 @@ const ProjectManagement = () => {
                   name={`woaStart`}
                   control={control}
                   placeholder="mm/dd/yyyy"
+                  style={{
+                    height: '0',
+                    width: '215px',
+                  }}
                   onChange={e => {
                     if (!changedDateFields.includes('woaStart')) {
                       setChangeDateFields([...changedDateFields, 'woaStart'])
@@ -128,6 +132,10 @@ const ProjectManagement = () => {
                   name={`woaCompletion`}
                   control={control}
                   placeholder="mm/dd/yyyy"
+                  style={{
+                    width: '215px',
+                    height: '0',
+                  }}
                   onChange={e => {
                     if (!changedDateFields.includes('woaCompletion')) {
                       setChangeDateFields([...changedDateFields, 'woaCompletion'])
@@ -145,6 +153,10 @@ const ProjectManagement = () => {
                   name={`clientStart`}
                   control={control}
                   placeholder="mm/dd/yyyy"
+                  style={{
+                    width: '215px',
+                    height: '0',
+                  }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientStart')) {
                       setChangeDateFields([...changedDateFields, 'clientStart'])
@@ -163,6 +175,10 @@ const ProjectManagement = () => {
                   name={`clientDue`}
                   control={control}
                   placeholder="mm/dd/yyyy"
+                  style={{
+                    width: '215px',
+                    height: '0',
+                  }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientDue')) {
                       setChangeDateFields([...changedDateFields, 'clientDue'])
@@ -182,6 +198,10 @@ const ProjectManagement = () => {
                   name={`clientClickWalkThrough`}
                   control={control}
                   placeholder="mm/dd/yyyy"
+                  style={{
+                    width: '215px',
+                    height: '0',
+                  }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientClickWalkThrough')) {
                       setChangeDateFields([...changedDateFields, 'clientClickWalkThrough'])
@@ -199,6 +219,10 @@ const ProjectManagement = () => {
                   name={`clientSignOff`}
                   control={control}
                   placeholder="mm/dd/yyyy"
+                  style={{
+                    width: '215px',
+                    height: '0',
+                  }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientSignOff')) {
                       setChangeDateFields([...changedDateFields, 'clientSignOff'])

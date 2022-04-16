@@ -34,7 +34,7 @@ const CalendarContainer = ({ children }) => {
 }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
-  <FormControl {...props.style} size={props.size || 'lg'} w="215px">
+  <FormControl {...props.style} size={props.size || 'lg'}>
     <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
       {props.label}
     </FormLabel>
