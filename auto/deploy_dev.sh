@@ -13,3 +13,4 @@ aws s3 sync . s3://woa-fo-bucket-one-ui/vendorportal/ --delete
 
 echo "🚀 deploying to us-east-1-s3Bucket"
 aws s3 sync . s3://woa-fo-bucket-two-ui/vendorportal/ --delete
+
