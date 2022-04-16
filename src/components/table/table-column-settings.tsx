@@ -187,12 +187,13 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" onClick={onClose} color="gray.600" fontWeight={500} mr={2}>
+            <Button variant="ghost" size="md" onClick={onClose} color="gray.600" fontWeight={500} mr={3}>
               Close
             </Button>
             <Button
               colorScheme="CustomPrimaryColor"
               fontSize="14px"
+              size="md"
               fontWeight={500}
               fontStyle="normal"
               mr={3}
