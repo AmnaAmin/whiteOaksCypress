@@ -22,7 +22,7 @@ import jsPdf from 'jspdf'
 import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
+import { BiCalendar, BiCaretDown, BiCaretUp, BiEditAlt, BiTrash } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
@@ -246,9 +246,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                     <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
                       {t('claimantsSignature')}
                     </FormLabel>
-                    <Flex pos="relative" bg="gray.50" height={'37px'} alignItems={'center'} px={4}>
+                    <Flex pos="relative" bg="gray.50" height={'37px'} alignItems="end" px={4}>
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                       <Image
+                        mb="3"
                         hidden={!value.claimantsSignature}
                         maxW={'100%'}
                         src={value.claimantsSignature}
@@ -258,12 +259,12 @@ export const LienWaiverTab: React.FC<any> = props => {
                         ref={sigRef}
                       />
 
-                      <Flex pos={'absolute'} right="10px" top="11px">
+                      <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
+                        <BiEditAlt onClick={() => setOpenSignature(true)} color="#A0AEC0" />
                         {value.claimantsSignature && (
                           <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
                         )}
-                        <BiBookAdd onClick={() => setOpenSignature(true)} color="#A0AEC0" />
-                      </Flex>
+                      </HStack>
                     </Flex>
                     {!value.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
                   </FormControl>
@@ -306,6 +307,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             {t('close')}
           </Button>
           <Button
+            _hover={{ bg: 'blue' }}
             colorScheme="CustomPrimaryColor"
             size="lg"
             mr={3}
@@ -314,7 +316,6 @@ export const LienWaiverTab: React.FC<any> = props => {
             fontWeight={500}
             fontSize="14px"
             _focus={{ outline: 'none' }}
-            _hover={{ bg: 'blue' }}
           >
             {t('save')}
           </Button>

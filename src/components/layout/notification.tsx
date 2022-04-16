@@ -18,7 +18,7 @@ const NotificationStructure = (props: NotificationValueType) => {
       <Center borderLeftRadius={8} bg="#BEE3F8" color="white" p="10px" w="68px">
         <BiXCircle size="35px" color="#4299E1" />
       </Center>
-      <Box flexDir="column" pl={5} p={3} lineHeight="24px">
+      <Box flexDir="column" pl={5} p={3} lineHeight="24px" _hover={{ bg: 'gray.100' }} w="100%">
         <Text fontSize={16} color="#4A5568" fontWeight={500}>
           {props.textTop}
         </Text>
@@ -40,7 +40,7 @@ export const Notification = () => {
     <>
       <MenuList borderRadius={8}>
         <Box w="519" maxH="489px" border="none" overflow="auto">
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -48,7 +48,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -56,7 +56,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -64,7 +64,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -72,7 +72,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -80,7 +80,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -88,7 +88,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}
@@ -96,7 +96,7 @@ export const Notification = () => {
             />
           </MenuItem>
 
-          <MenuItem>
+          <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }}>
             <NotificationStructure
               textTop={'729 Rocky grove GLN'}
               textSecond={'Project Management changed from tracyhowe to devtek fpm'}

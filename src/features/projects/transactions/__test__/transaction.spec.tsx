@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import React, { useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -7,6 +8,7 @@ import { transactionDefaultFormValues } from 'utils/transactions'
 import { TransactionAmountForm } from '../transaction-amount-form'
 
 const TransactionForm = () => {
+  const [document, setDocument] = useState<File | null>(null)
   const defaultValues: FormValues = useMemo(() => {
     return transactionDefaultFormValues('test@test.com')
   }, [])
@@ -15,7 +17,7 @@ const TransactionForm = () => {
     defaultValues,
   })
 
-  return <TransactionAmountForm formReturn={form} />
+  return <TransactionAmountForm formReturn={form} setDocument={setDocument} document={document} />
 }
 
 const FIELD_CHECKBOX_SELECTOR = 'td input[type=checkbox]'
