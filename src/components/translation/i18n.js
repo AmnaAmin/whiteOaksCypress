@@ -265,7 +265,7 @@ i18n.use(initReactI18next).init({
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
         transactionType: 'Tipo de Transacción',
-        against: 'Contra',
+        against: 'estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',

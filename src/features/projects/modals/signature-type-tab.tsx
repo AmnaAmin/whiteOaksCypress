@@ -28,6 +28,7 @@ export const SignatureTab = props => {
             <VStack alignItems="start">
               <HStack>
                 <FormInput
+                  testId="signature-input"
                   errorMessage={errors.signature && errors.signature?.message}
                   label="Type Your Name Here"
                   labelStyle={{
@@ -72,6 +73,7 @@ export const SignatureTab = props => {
             {t('close')}
           </Button>
           <Button
+            data-testid="save-signature"
             colorScheme="CustomPrimaryColor"
             mr={3}
             size="lg"

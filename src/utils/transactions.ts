@@ -6,6 +6,7 @@ import {
   FormValues,
   ProjectWorkOrder,
   SelectOption,
+  TransactionStatusValues,
   TransactionType,
   TransactionTypeValues,
 } from 'types/transaction.type'
@@ -74,6 +75,22 @@ export const useTransactionTypes = () => {
       ? [...transactionTypeOptions, ...adminOrOperationTransactionTypeOptions]
       : transactionTypeOptions,
   }
+}
+
+export const TRANSACTION_STATUS_OPTIONS = [
+  { value: TransactionStatusValues.pending, label: 'Pending' },
+  { value: TransactionStatusValues.approved, label: 'Approved' },
+  { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
+  { value: TransactionStatusValues.denied, label: 'Denied' },
+]
+
+export const useTransactionStatusOptions = () => {
+  const vendorOptions = [TransactionStatusValues.pending, TransactionStatusValues.cancelled]
+  const { isVendor } = useUserRolesSelector()
+
+  return isVendor
+    ? TRANSACTION_STATUS_OPTIONS.filter(statusOption => vendorOptions.includes(statusOption.value))
+    : TRANSACTION_STATUS_OPTIONS
 }
 
 export const WORK_ORDER_DEFAULT_VALUE = '0'
@@ -260,7 +277,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
   let attachment
-  if (formValues.attachment) {
+  console.log(formValues.attachment)
+  if (formValues.attachment?.name) {
     const fileContents = await readFileContent(formValues.attachment as File)
     attachment = {
       documentType: 58,
@@ -268,7 +286,10 @@ export const parseChangeOrderUpdateAPIPayload = async (
       fileType: formValues.attachment.name,
       fileObject: fileContents,
     }
+  } else {
+    attachment = formValues.attachment
   }
+
   const againstProjectSOWPayload =
     formValues.against?.value === AGAINST_DEFAULT_VALUE
       ? {
@@ -288,7 +309,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     approvedBy: transaction.approvedBy,
     createdBy: transaction.createdBy as string,
     transactionType: formValues.transactionType?.value,
-    status: transaction.status,
+    status: formValues.status?.value || transaction.status,
     modifiedDate1: formValues.dateCreated,
     createdDate1: formValues.dateCreated,
     modifiedBy: formValues.createdBy as string,
@@ -339,6 +360,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     workOrder: null,
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
+    status: null,
     dateCreated: dateFormat(new Date()),
     createdBy,
     transaction: [TRANSACTION_FEILD_DEFAULT],
@@ -359,6 +381,7 @@ export const parseTransactionToFormValues = (
     against: againstOptions.find(option => option.value === transaction.parentWorkOrderId) ?? null,
     workOrder: null,
     changeOrder: null,
+    status: TRANSACTION_STATUS_OPTIONS.find(option => option.value === transaction.status) ?? null,
     expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string) ?? null,
     newExpectedCompletionDate: '',
     createdBy: transaction.createdBy,

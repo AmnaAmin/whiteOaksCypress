@@ -33,6 +33,7 @@ import {
   useProjectWorkOrders,
   useProjectWorkOrdersWithChangeOrders,
   useTransaction,
+  useTransactionStatusOptions,
   useTransactionTypes,
   useWorkOrderChangeOrders,
 } from 'utils/transactions'
@@ -69,6 +70,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
   const { againstOptions, workOrdersKeyValues, isLoading: isAgainstLoading } = useProjectWorkOrders(projectId)
+  const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
@@ -104,8 +106,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
-  } = useFieldShowHideDecision(control)
-  const isLienWaiverRequired = useIsLienWaiverRequired(control)
+    isShowStatusField,
+  } = useFieldShowHideDecision(control, transaction)
+  const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
 
@@ -172,6 +175,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
           {/** In case Draw selected and user click next will show Lien Waiver Popover */}
           {!isShowLienWaiver ? (
             <Box flex={1}>
+              {/** Readonly information of Transaction */}
               <Grid
                 templateColumns="repeat(4, 1fr)"
                 gap={'1rem 0.5rem'}
@@ -228,7 +232,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                   </GridItem>
                 )}
               </Grid>
-              <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+
+              {/** Editable form */}
+              <Grid templateColumns="repeat(3, 215px)" gap={'1rem 1.5rem'} py="3">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -292,6 +298,33 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                     />
                   </FormControl>
                 </GridItem>
+
+                {isShowStatusField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
+                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                        {t('status')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="status"
+                        rules={{ required: 'This is required' }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <Select
+                              {...field}
+                              options={transactionStatusOptions}
+                              onChange={statusOption => {
+                                field.onChange(statusOption)
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
+                        )}
+                      />
+                    </FormControl>
+                  </GridItem>
+                )}
 
                 {isShowWorkOrderSelectField && (
                   <GridItem>
@@ -398,7 +431,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
 
         {isLienWaiverRequired && !isShowLienWaiver ? (
           <Button
-            data-testid="save-transaction"
+            data-testid="next-to-lien-waiver-form"
             colorScheme="CustomPrimaryColor"
             _focus={{ outline: 'none' }}
             _hover={{ bg: 'blue' }}

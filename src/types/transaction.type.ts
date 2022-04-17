@@ -87,6 +87,13 @@ export enum TransactionTypeValues {
   payment = 49,
 }
 
+export enum TransactionStatusValues {
+  pending = 'PENDING',
+  cancelled = 'CANCELLED',
+  approved = 'APPROVED',
+  denied = 'DENIED',
+}
+
 export type SelectOption = {
   label: string
   value: any
@@ -120,6 +127,7 @@ export interface FormValues {
   workOrder: SelectOption | null
   changeOrder: SelectOption | null
   transaction: TransactionFormValues[]
+  status: SelectOption | null
   expectedCompletionDate: string
   newExpectedCompletionDate: string
   lienWaiver?: LienWaiverFormValues

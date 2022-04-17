@@ -31,16 +31,11 @@ import SignatureModal from 'features/projects/modals/signature-modal'
 import { useTranslation } from 'react-i18next'
 
 type LienWaiverProps = {
-  //   formValues: LienWaiverFormValues
-  //   onSubmit: (values: LienWaiverFormValues) => void
   onClose?: () => void
 }
 
 export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const { t } = useTranslation()
-  //   const { onClose } = props
-  //   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
-  //   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [] } = useDocuments({
     projectId,
@@ -59,7 +54,6 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   } = useFormContext()
 
   const formValues = useWatch({ name: 'lienWaiver', control })
-  console.log('LienWaiver', formValues)
 
   useEffect(() => {
     if (!documentsData?.length) return
@@ -105,13 +99,11 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   }
 
   const onSignatureChange = value => {
-    console.log('Signature value', value)
     generateTextToImage(value)
-    setValue('lienWaiver.dateOfSignature', new Date(), { shouldValidate: true })
+    setValue('lienWaiver.dateOfSignature', dateFormat(new Date()))
   }
 
   const onRemoveSignature = () => {
-    console.log('remove signature')
     setValue('lienWaiver.claimantsSignature', null)
     setValue('lienWaiver.dateOfSignature', null)
   }
@@ -188,12 +180,13 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                 <InputView
                   controlStyle={{ w: '20em' }}
                   label={t('amountOfCheck')}
-                  InputElem={<Text>${formValues.amountOfCheck}</Text>}
+                  InputElem={<Text>{formValues.amountOfCheck}</Text>}
                 />
               </HStack>
 
               <Stack pt="5" pb="5">
                 <FormInput
+                  testId="claimants-title"
                   errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
                   label={t('claimantsTitle')}
                   placeholder=""
@@ -216,6 +209,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                   <Flex pos="relative" bg="gray.50" height={'37px'} alignItems={'center'} px={4}>
                     <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                     <Image
+                      data-testid="signature-img"
                       hidden={!formValues.claimantsSignature}
                       maxW={'100%'}
                       src={formValues.claimantsSignature as string}
@@ -229,20 +223,20 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                       {formValues.claimantsSignature && (
                         <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
                       )}
-                      <BiBookAdd onClick={() => setOpenSignature(true)} color="#A0AEC0" />
+                      <BiBookAdd data-testid="add-signature" onClick={() => setOpenSignature(true)} color="#A0AEC0" />
                     </Flex>
                   </Flex>
                   {!formValues.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
                 </FormControl>
 
                 <FormInput
+                  testId="signature-date"
                   icon={<BiCalendar />}
                   errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
                   label={t('dateOfSignature')}
                   placeholder=""
                   register={register}
-                  name={`lienWaiver.dateSignature`}
-                  value={dateFormat(formValues.dateOfSignature as Date)}
+                  name={`lienWaiver.dateOfSignature`}
                   controlStyle={{ w: '20em' }}
                   elementStyle={{
                     bg: 'white',
