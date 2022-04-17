@@ -20,6 +20,8 @@ export const AddPropertyInfo = props => {
   const { data: address, refetch } = useAddressDetails()
   const { propertiesData } = usePCProperties()
   console.log(propertiesData)
+  const { addressData } = useVerifyAddressApi(12, 5)
+  console.log(addressData)
 
   const { register, control } = useForm({})
 
@@ -137,44 +139,44 @@ export const AddPropertyInfo = props => {
   //   }
   // }
 
-  const useverifyAddress = (propertyInput, values) => {
-    useVerifyAddressApi(propertyInput, values).then((response: { data: any }) => {
-      const parser = new xml2js.Parser(/* options */)
-      const array = []
-      parser
-        .parseStringPromise()
-        .then(function (result) {
-          result.AddressValidateResponse.Address.forEach(record => {
-            if (record.Error !== undefined) {
-              setAddressVerificationStatus('failed')
-            } else {
-              setAddressVerificationStatus('success')
-              const address = {
-                streetAddress: record.Address2[0],
-                city: record.City[0],
-                state: record.State[0],
-                zipCode: record.Zip5[0],
-              }
-              values.property.streetAddress = address.streetAddress
-              values.property.city = address.city
-              values.property.state = address.state
-              values.property.zipCode = address.zipCode
-              // const projectUpdate = {
-              //   ...projectEntity,
-              //   ...values,
-              //   documents: documentInput,
-              //   newProperty: values.property,
-              //   newMarketId: values.property.marketId,
-              // };
-              // props.createEntity(projectUpdate);
-            }
-          })
-        })
-        .catch(function (err) {
-          // Failed
-        })
-    })
-  }
+  // const useverifyAddress = (propertyInput, values) => {
+  //   useVerifyAddressApi(propertyInput, values).then((response: { data: any }) => {
+  //     const parser = new xml2js.Parser(/* options */)
+  //     const array = []
+  //     parser
+  //       .parseStringPromise()
+  //       .then(function (result) {
+  //         result.AddressValidateResponse.Address.forEach(record => {
+  //           if (record.Error !== undefined) {
+  //             setAddressVerificationStatus('failed')
+  //           } else {
+  //             setAddressVerificationStatus('success')
+  //             const address = {
+  //               streetAddress: record.Address2[0],
+  //               city: record.City[0],
+  //               state: record.State[0],
+  //               zipCode: record.Zip5[0],
+  //             }
+  //             values.property.streetAddress = address.streetAddress
+  //             values.property.city = address.city
+  //             values.property.state = address.state
+  //             values.property.zipCode = address.zipCode
+  //             // const projectUpdate = {
+  //             //   ...projectEntity,
+  //             //   ...values,
+  //             //   documents: documentInput,
+  //             //   newProperty: values.property,
+  //             //   newMarketId: values.property.marketId,
+  //             // };
+  //             // props.createEntity(projectUpdate);
+  //           }
+  //         })
+  //       })
+  //       .catch(function (err) {
+  //         // Failed
+  //       })
+  //   })
+  // }
 
   const save = (event, errors, values) => {
     if (errors.length > 0) return
@@ -212,9 +214,9 @@ export const AddPropertyInfo = props => {
       setAddressVerificationStatus('verifying')
       setShowVerificationUSPS(true)
       setProjectPayload(projectUpdate)
-      setTimeout(function () {
-        useverifyAddress(property, values)
-      }, 2000)
+      // setTimeout(function () {
+      //   useverifyAddress(property, values)
+      // }, 2000)
     } else {
       // props.createEntity(projectUpdate)
     }

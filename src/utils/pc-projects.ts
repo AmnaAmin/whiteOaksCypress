@@ -104,6 +104,7 @@ export const useVerifyAddressApi = (propertyInput, values) => {
     ${values.property.zipCode},`,
       {},
     )
+    console.log(response)
     return response?.data
   })
 
