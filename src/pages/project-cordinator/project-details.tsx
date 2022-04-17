@@ -25,7 +25,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-import ProjectDetailsTab from './project-details/project-details-tab'
+import ProjectDetailsTab from '../../features/project-coordinator/project-details/project-details-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()

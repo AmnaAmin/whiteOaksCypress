@@ -15,7 +15,7 @@ const ProjectDetailsTab = () => {
     <Card rounded="16px" padding="0">
       <Tabs>
         <TabList bg="#F7FAFC" rounded="6px 6px 0 0" pt="7">
-          <HStack spacing={5}>
+          <HStack spacing={5} ml="2">
             <Tab
               sx={tabStyle}
               _selected={{ borderBottom: '2px solid #4E87F8', fontWeight: 600, color: '#4E87F8' }}
@@ -55,19 +55,17 @@ const ProjectDetailsTab = () => {
         </TabList>
 
         <TabPanels>
-          <TabPanel mt="12" p="0" ml="6"></TabPanel>
+          <TabPanel></TabPanel>
           <TabPanel>
             <p>two!</p>
           </TabPanel>
           <TabPanel>
             <p>three!</p>
           </TabPanel>
-          <TabPanel>
+          <TabPanel mt="12" p="0" ml="6">
             <Location />
           </TabPanel>
-          <TabPanel>
-            <p>six!</p>
-          </TabPanel>
+          <TabPanel></TabPanel>
         </TabPanels>
       </Tabs>
     </Card>
