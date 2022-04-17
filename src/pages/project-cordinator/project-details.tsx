@@ -25,6 +25,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -163,9 +164,9 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
-                <Box mb={5}>
+            <TabPanels h="100%">
+              <TabPanel p="0px" h="100%" mt="31px">
+                <Box mb="5">
                   <FormControl display="flex" alignItems="center">
                     <FormLabel htmlFor="view-details" mb="0">
                       View Details
@@ -186,6 +187,9 @@ export const ProjectDetails: React.FC = props => {
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel> */}
+              <TabPanel p={0} mt="3">
+                <ProjectDetailsTab />
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </Stack>
