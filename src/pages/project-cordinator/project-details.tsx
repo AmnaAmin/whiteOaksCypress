@@ -26,6 +26,7 @@ import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import { ProjectSchedule } from 'features/project-coordinator/GSTC/project-schedule'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -49,7 +50,7 @@ export const ProjectDetails: React.FC = props => {
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
-
+        {tabIndex === 1 && <ProjectSchedule />}
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="line" onChange={index => setTabIndex(index)} mt="7">
             <TabList whiteSpace="nowrap" color="gray.600" fontWeight={500}>
