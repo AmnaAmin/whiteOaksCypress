@@ -2,7 +2,7 @@ import { ProjectWorkOrder, TransactionTypeValues } from 'types/transaction.type'
 import { AGAINST_DEFAULT_VALUE } from 'utils/transactions'
 import { useWatch } from 'react-hook-form'
 import numeral from 'numeral'
-import { useMemo } from 'react'
+import { useEffect } from 'react'
 
 export const useFieldShowHideDecision = control => {
   const transactionType = useWatch({ name: 'transactionType', control })
@@ -51,8 +51,8 @@ export const useSelectedWorkOrder = (control, workOrdersKeyValues: { [key: strin
 export const useLienWaiverFormValues = (control, selectedWorkOrder: ProjectWorkOrder | undefined, setValue) => {
   const { amount: totalAmount } = useTotalAmount(control)
 
-  const lienWaiver = useMemo(
-    () => ({
+  useEffect(() => {
+    const lienWaiver = {
       claimantName: selectedWorkOrder?.claimantName || '',
       customerName: selectedWorkOrder?.customerName || '',
       propertyAddress: selectedWorkOrder?.propertyAddress || '',
@@ -60,12 +60,12 @@ export const useLienWaiverFormValues = (control, selectedWorkOrder: ProjectWorkO
       makerOfCheck: selectedWorkOrder?.makerOfCheck || '',
       amountOfCheck: totalAmount,
       checkPayableTo: selectedWorkOrder?.claimantName || '',
-      claimantsSignature: selectedWorkOrder?.claimantsSignature || '',
-      claimantTitle: selectedWorkOrder?.claimantTitle || '',
-      dateOfSignature: selectedWorkOrder?.dateOfSignature || '',
-    }),
-    [totalAmount, selectedWorkOrder],
-  )
+      claimantsSignature: '',
+      claimantTitle: '',
+      dateOfSignature: '',
+    }
 
-  setValue('lienWaiver', lienWaiver)
+    console.log('lienWaiver change to default', lienWaiver)
+    setValue('lienWaiver', lienWaiver)
+  }, [totalAmount, selectedWorkOrder, setValue])
 }

@@ -1,7 +1,7 @@
 import { Button, Divider, FormControl, HStack, ModalFooter, Stack, VStack } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { useCallback } from 'react'
-import { useForm, useFormContext } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { FormInput } from 'components/react-hook-form-fields/input'
 
 export const SignatureTab = props => {
@@ -11,16 +11,13 @@ export const SignatureTab = props => {
     formState: { errors },
     handleSubmit,
   } = useForm({})
-  const { setValue, control } = useFormContext()
-  console.log('control', control)
 
   const onSubmit = useCallback(
     values => {
       setSignature(values.signature)
-      setValue('lienWaiver.claimantsSignature', values.signature)
       onClose()
     },
-    [onClose, setSignature, setValue],
+    [onClose, setSignature],
   )
 
   return (

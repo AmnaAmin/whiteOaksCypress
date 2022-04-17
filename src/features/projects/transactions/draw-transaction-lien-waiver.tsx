@@ -59,21 +59,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   } = useFormContext()
 
   const formValues = useWatch({ name: 'lienWaiver', control })
-  //   const parseValuesToPayload = (values, documents) => {
-  //     return {
-  //       ...formValues,
-  //       ...values,
-  //       documents,
-  //     }
-  //   }
-
-  //   const onSubmit = values => {
-  //     const formValues = parseValuesToPayload(values, documents)
-  //     updateLienWaiver(formValues)
-  //   }
-  //   useEffect(() => {
-  //     if (isSuccess) onClose?.()
-  //   }, [isSuccess, onClose])
+  console.log('LienWaiver', formValues)
 
   useEffect(() => {
     if (!documentsData?.length) return
@@ -81,7 +67,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
     const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
     setRecentLWFile(recentLW)
-    setValue('claimantsSignature', signatureDoc?.s3Url)
+    setValue('lienWaiver.claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
 
   const generatePdf = useCallback(() => {
@@ -99,15 +85,6 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
         s3Url: pdfBlob,
         fileType: 'Lien-Waiver-Form.pdf',
       })
-      //   setDocuments(doc => [
-      //     ...doc,
-      //     {
-      //       documentType: 26,
-      //       fileObject: pdfUri.split(',')[1],
-      //       fileObjectContentType: 'application/pdf',
-      //       fileType: 'Lien-Waiver-Form.pdf',
-      //     },
-      //   ])
     })
   }, [getValues])
 
@@ -119,30 +96,24 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
     context.font = 'italic 500 12px Inter'
     context.textAlign = 'start'
-    context.fillText(value, 10, 50)
+    context.fillText(value, 5, 10)
     const trimContext = trimCanvas(canvasRef.current)
 
     const uri = trimContext?.toDataURL('image/png')
-    // setDocuments(doc => [
-    //   ...doc,
-    //   {
-    //     documentType: 108,
-    //     fileObject: uri?.split(',')[1],
-    //     fileObjectContentType: 'image/png',
-    //     fileType: 'Claimants Signature.png',
-    //   },
-    // ])
+
     setValue('lienWaiver.claimantsSignature', uri)
   }
 
   const onSignatureChange = value => {
+    console.log('Signature value', value)
     generateTextToImage(value)
-    setValue('dateOfSignature', new Date(), { shouldValidate: true })
+    setValue('lienWaiver.dateOfSignature', new Date(), { shouldValidate: true })
   }
 
   const onRemoveSignature = () => {
-    setValue('claimantsSignature', null)
-    setValue('dateOfSignature', null)
+    console.log('remove signature')
+    setValue('lienWaiver.claimantsSignature', null)
+    setValue('lienWaiver.dateOfSignature', null)
   }
 
   return (
@@ -170,10 +141,10 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                     color="#4E87F8"
                     float="right"
                     mr={3}
-                    onClick={() => downloadFile(recentLWFile.s3Url)}
+                    onClick={() => downloadFile(recentLWFile?.s3Url)}
                   >
                     <Box pos="relative" right="6px"></Box>
-                    {recentLWFile.fileType}
+                    {recentLWFile?.fileType}
                   </Button>
                 </Flex>
               )}
@@ -233,7 +204,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                     borderLeft: '2px solid #4E87F8',
                   }}
                   rules={{ required: 'This is required field' }}
-                  name={`claimantTitle`}
+                  name={`lienWaiver.claimantTitle`}
                 />
               </Stack>
 

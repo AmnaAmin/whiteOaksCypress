@@ -27,7 +27,7 @@ const projectTabStyle = {
   },
 }
 
-export const ProjectDetails: React.FC = props => {
+const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { projectData, isLoading } = useProject(projectId)
@@ -146,3 +146,5 @@ export const ProjectDetails: React.FC = props => {
     </>
   )
 }
+
+export default ProjectDetails

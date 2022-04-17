@@ -24,7 +24,6 @@ import Select from 'components/form/react-select'
 import { useParams } from 'react-router'
 import {
   AGAINST_DEFAULT_VALUE,
-  LIEN_WAIVER_DEFAULT_VALUES,
   parseChangeOrderAPIPayload,
   parseChangeOrderUpdateAPIPayload,
   parseTransactionToFormValues,
@@ -44,6 +43,7 @@ import {
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
   useSelectedWorkOrder,
+  useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -86,7 +86,6 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   const formReturn = useForm<FormValues>({
     defaultValues: {
       ...defaultValues,
-      lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
     },
   })
 
@@ -108,6 +107,8 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   } = useFieldShowHideDecision(control)
   const isLienWaiverRequired = useIsLienWaiverRequired(control)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
+  const { amount } = useTotalAmount(control)
+
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   const onSubmit = useCallback(
@@ -401,10 +402,14 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             colorScheme="CustomPrimaryColor"
             _focus={{ outline: 'none' }}
             _hover={{ bg: 'blue' }}
-            form="newTransactionForm"
+            type="button"
             ml="3"
             size="sm"
-            onClick={() => setIsShowLienWaiver(true)}
+            isDisabled={amount === 0}
+            onClick={event => {
+              event.stopPropagation()
+              setIsShowLienWaiver(true)
+            }}
           >
             {t('next')}
           </Button>

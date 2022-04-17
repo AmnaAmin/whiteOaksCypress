@@ -343,6 +343,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     createdBy,
     transaction: [TRANSACTION_FEILD_DEFAULT],
     attachment: null,
+    lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
   }
 }
 
