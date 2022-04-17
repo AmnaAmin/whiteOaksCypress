@@ -1,4 +1,15 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+} from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
@@ -13,42 +24,83 @@ const labelStyle = {
   color: 'gray.600',
 }
 
+const inputTextStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  color: 'blackAlpha.500',
+}
+
 const InvoiceAndPayments = () => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const {
     control,
+    handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm()
+
+  const onSubmit = formValues => {
+    console.log('FormValues', formValues)
+    reset()
+  }
+
   return (
     <Box>
-      <form>
-        <Box h="50vh">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box h="39vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%">
             <GridItem>
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Original SOW Amount</FormLabel>
-                <Input placeholder="$3000.00" bg="gray.100" borderLeft="2px solid #4E87F8" />
-                <FormErrorMessage></FormErrorMessage>
+              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.originSowAmount}>
+                <FormLabel htmlFor="originSowAmount" sx={labelStyle}>
+                  Original SOW Amount
+                </FormLabel>
+                <Input
+                  id="originSowAmount"
+                  {...register('originSowAmount', {
+                    required: 'This is required',
+                  })}
+                  placeholder="$3000.00"
+                  bg="gray.100"
+                  borderLeft="2px solid #4E87F8"
+                />
+                <FormErrorMessage>{errors.originSowAmount && errors.originSowAmount.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Final SOW Amount</FormLabel>
-                <Input placeholder="$3000.00" bg="gray.100" borderLeft="2px solid #4E87F8" />
-                <FormErrorMessage></FormErrorMessage>
+              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.finalSowAmount}>
+                <FormLabel sx={labelStyle} htmlFor="finalSowAmount">
+                  Final SOW Amount
+                </FormLabel>
+                <Input
+                  id="finalSowAmount"
+                  {...register('finalSowAmount', {
+                    required: 'This is required',
+                  })}
+                  placeholder="$3000.00"
+                  bg="gray.100"
+                  borderLeft="2px solid #4E87F8"
+                />
+                <FormErrorMessage>{errors.finalSowAmount && errors.finalSowAmount.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Invoice no</FormLabel>
-                <Input />
-                <FormErrorMessage></FormErrorMessage>
+              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.invoiceNo}>
+                <FormLabel htmlFor="invoiceNo" sx={labelStyle}>
+                  Invoice no
+                </FormLabel>
+                <Input
+                  id="invoiceNo"
+                  {...register('invoiceNo', {
+                    required: 'This is required',
+                  })}
+                />
+                <FormErrorMessage>{errors.invoiceNo && errors.invoiceNo.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl>
+              <FormControl sx={inputTextStyle}>
                 <FormLabel mb="0" sx={labelStyle}>
                   Upload Invoice
                 </FormLabel>
@@ -78,7 +130,7 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl>
+              <FormControl sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>Invoice back date</FormLabel>
                 <FormDatePicker
                   errorMessage={errors.invoiceBackDate && errors.invoiceBackDate?.message}
@@ -87,6 +139,7 @@ const InvoiceAndPayments = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8',
                     width: '215px',
                     color: 'gray.500',
                     fontStyle: 'normal',
@@ -104,14 +157,14 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px">
+              <FormControl w="215px" sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>Payments terms</FormLabel>
                 <ReactSelect selectProps={{ isLeftBorder: true }} />
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl>
+              <FormControl sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>WOA Expected Pay</FormLabel>
                 <FormDatePicker
                   errorMessage={errors.woaExpectedPay && errors.woaExpectedPay?.message}
@@ -120,6 +173,7 @@ const InvoiceAndPayments = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8',
                     width: '215px',
                     color: 'gray.500',
                     fontStyle: 'normal',
@@ -137,7 +191,7 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem display="grid" alignItems="end">
-              <Box>
+              <Box mt="1">
                 <Button
                   fontSize="14px"
                   fontWeight={500}
@@ -146,35 +200,89 @@ const InvoiceAndPayments = () => {
                   leftIcon={<BiDownload />}
                   _hover={{ bg: 'gray.100' }}
                   _focus={{ outline: 'none' }}
+                  _active={{ bg: 'none' }}
                 >
                   Original SOW
                 </Button>
               </Box>
             </GridItem>
             <GridItem>
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Overpayment</FormLabel>
-                <Input placeholder="$0.00" bg="gray.100" borderLeft="2px solid #4E87F8" />
-                <FormErrorMessage></FormErrorMessage>
+              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.overPayment}>
+                <FormLabel htmlFor="overPayment" sx={labelStyle}>
+                  Overpayment
+                </FormLabel>
+                <Input
+                  id="overPayment"
+                  {...register('overPayment', {
+                    required: 'This is required',
+                  })}
+                  placeholder="$0.00"
+                  bg="gray.100"
+                  borderLeft="2px solid #4E87F8"
+                />
+                <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Remaining Payment</FormLabel>
-                <Input placeholder="$1200" bg="gray.100" borderLeft="2px solid #4E87F8" />
-                <FormErrorMessage></FormErrorMessage>
+              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.remainingPayment}>
+                <FormLabel htmlFor="remainingPayment" sx={labelStyle}>
+                  Remaining Payment
+                </FormLabel>
+                <Input
+                  id="remainingPayment"
+                  {...register('remainingPayment', {
+                    required: 'This is required',
+                  })}
+                  placeholder="$1200"
+                  bg="gray.100"
+                  borderLeft="2px solid #4E87F8"
+                />
+                <FormErrorMessage>{errors.remainingPayment && errors.remainingPayment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Payment</FormLabel>
-                <Input placeholder="$0" bg="gray.100" borderLeft="2px solid #4E87F8" />
-                <FormErrorMessage></FormErrorMessage>
+              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.payment}>
+                <FormLabel htmlFor="payment" sx={labelStyle}>
+                  Payment
+                </FormLabel>
+                <Input
+                  id="payment"
+                  {...register('payment', {
+                    required: 'This is required',
+                  })}
+                  placeholder="$0"
+                  bg="gray.100"
+                  borderLeft="2px solid #4E87F8"
+                />
+                <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
           </Grid>
         </Box>
+
+        <Stack w="100%">
+          <Box pr="8">
+            <Divider border="1px solid" />
+          </Box>
+          <Box w="100%" minH="70px">
+            <Button
+              mt="8px"
+              mr="7"
+              float={'right'}
+              colorScheme="CustomPrimaryColor"
+              _focus={{ outline: 'none' }}
+              w="130px"
+              h="40px"
+              fontSize="14px"
+              fontStyle="normal"
+              fontWeight={500}
+              type="submit"
+            >
+              Save
+            </Button>
+          </Box>
+        </Stack>
       </form>
     </Box>
   )
