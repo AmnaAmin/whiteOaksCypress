@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 
-export const Settings = React.forwardRef((props, ref) => {
+const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
   const { data: account, refetch } = useAccountDetails()
   // const [lang, setLanguage] = useState(account?.langKey);
@@ -161,7 +161,7 @@ export const Settings = React.forwardRef((props, ref) => {
   )
 })
 
-const PreviewImg = () => {
+export const PreviewImg = () => {
   const defaultImage = 'https://bit.ly/sage-adebayo'
   const [preview, setPreview] = useState<string | null>(null)
 
@@ -201,4 +201,4 @@ const PreviewImg = () => {
   )
 }
 
-export default PreviewImg
+export default Settings
