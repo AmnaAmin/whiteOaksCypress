@@ -70,7 +70,7 @@ describe('Porject Details: Transaction tab test cases', () => {
   })
 
   // We should resume this test case After Draw flow Lien Waiver support added
-  test.only('New transaction with Transaction Type "Draw" flow', async () => {
+  test('New transaction with Transaction Type "Draw" flow', async () => {
     await render(<App />, { route: '/project-details/2951' })
 
     const newTransactionButton = screen.getByTestId('new-transaction-button')
