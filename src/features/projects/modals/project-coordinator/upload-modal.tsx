@@ -19,15 +19,7 @@ import ReactSelect from '../../../../components/form/react-select'
 
 import React, { useState } from 'react'
 import { BiXCircle } from 'react-icons/bi'
-
-export const documentTypes = [
-  { value: 56, label: 'Drawings' },
-  { value: 57, label: 'NOC' },
-  { value: 39, label: 'Original SOW' },
-  { value: 58, label: 'Other' },
-  { value: 19, label: 'Photos' },
-  { value: 18, label: 'Reciept' },
-]
+import { documentTypes } from 'utils/vendor-projects'
 
 export const UploadModal = ({ isOpen, onClose }) => {
   const [value, setValue] = useState<File>()
