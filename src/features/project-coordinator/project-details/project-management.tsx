@@ -37,7 +37,7 @@ const ProjectManagement = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="39vh">
+        <Box h="37vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap="10" columnGap="1" w="61%">
             <GridItem>
               <FormControl w="215px">
@@ -57,6 +57,7 @@ const ProjectManagement = () => {
                   WO Number
                 </FormLabel>
                 <Input
+                  placeholder="222"
                   w="215px"
                   id="woNumber"
                   {...register('woNumber', {
@@ -72,6 +73,7 @@ const ProjectManagement = () => {
                   PO Number
                 </FormLabel>
                 <Input
+                  placeholder="3456"
                   w="215px"
                   id="poNumber"
                   {...register('poNumber', {
@@ -90,9 +92,10 @@ const ProjectManagement = () => {
             <GridItem>
               <FormControl isInvalid={errors.projectName}>
                 <FormLabel sx={labelStyle} htmlFor="projectName">
-                  PO Number
+                  Project Number
                 </FormLabel>
                 <Input
+                  placeholder="PC project 1"
                   w="215px"
                   id="projectName"
                   {...register('projectName', {
@@ -112,8 +115,9 @@ const ProjectManagement = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    height: '0',
+                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
+                    height: '40px',
                   }}
                   onChange={e => {
                     if (!changedDateFields.includes('woaStart')) {
@@ -133,8 +137,9 @@ const ProjectManagement = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
-                    height: '0',
+                    height: '40px',
                   }}
                   onChange={e => {
                     if (!changedDateFields.includes('woaCompletion')) {
@@ -154,8 +159,9 @@ const ProjectManagement = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
-                    height: '0',
+                    height: '40px',
                   }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientStart')) {
@@ -176,8 +182,9 @@ const ProjectManagement = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
-                    height: '0',
+                    height: '40px',
                   }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientDue')) {
@@ -199,8 +206,9 @@ const ProjectManagement = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
-                    height: '0',
+                    height: '40px',
                   }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientClickWalkThrough')) {
@@ -220,8 +228,9 @@ const ProjectManagement = () => {
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
+                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
-                    height: '0',
+                    height: '40px',
                   }}
                   onChange={e => {
                     if (!changedDateFields.includes('clientSignOff')) {
@@ -241,8 +250,8 @@ const ProjectManagement = () => {
           <Box w="100%" minH="70px">
             <Button
               mt="8px"
+              mr="7"
               float={'right'}
-              rounded="6px 0 0 6px"
               colorScheme="CustomPrimaryColor"
               _focus={{ outline: 'none' }}
               w="130px"

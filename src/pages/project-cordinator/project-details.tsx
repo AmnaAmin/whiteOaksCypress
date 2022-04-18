@@ -178,9 +178,9 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
-                <Box mb={5}>
+            <TabPanels h="100%">
+              <TabPanel p="0px" h="100%" mt="31px">
+                <Box mb="5">
                   <FormControl display="flex" alignItems="center">
                     <FormLabel htmlFor="view-details" mb="0">
                       View Details
@@ -196,7 +196,7 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </Box>
               </TabPanel>
-              <TabPanel>
+              <TabPanel p="0px" mt="3">
                 <ProjectDetailsTAb />
               </TabPanel>
             </TabPanels>
