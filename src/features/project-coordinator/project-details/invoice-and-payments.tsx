@@ -273,7 +273,7 @@ const InvoiceAndPayments = () => {
               colorScheme="CustomPrimaryColor"
               _focus={{ outline: 'none' }}
               w="130px"
-              h="40px"
+              h="48px"
               fontSize="14px"
               fontStyle="normal"
               fontWeight={500}
