@@ -106,7 +106,7 @@ const chakraComponents = {
     const leftBorder = {
       borderLeftWidth: '2px',
       borderLeftStyle: 'solid',
-      borderLeftColor: 'blue.300',
+      borderLeftColor: '#4E87F8',
     }
     const borderLeftStyle = isLeftBorder ? { ...leftBorder } : {}
 
