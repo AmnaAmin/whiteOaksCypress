@@ -40,7 +40,7 @@ export const UploadModal = ({ isOpen, onClose }) => {
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="none">
         <ModalOverlay />
-        <ModalContent w={800} h={300} rounded={3} borderTop="2px solid #4E87F8">
+        <ModalContent w="700px" h="326px" rounded={3} borderTop="2px solid #4E87F8">
           <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
             Upload
           </ModalHeader>
@@ -76,7 +76,7 @@ export const UploadModal = ({ isOpen, onClose }) => {
 
                 {value && (
                   <Flex alignItems="center" color="brand.400" ml={4} fontSize="14px" fontWeight={500}>
-                    <Text maxW="400px" overflow="hidden" whiteSpace="nowrap" isTruncated>
+                    <Text maxW="300px" overflow="hidden" whiteSpace="nowrap" isTruncated>
                       {value.name}
                     </Text>
                     <Button

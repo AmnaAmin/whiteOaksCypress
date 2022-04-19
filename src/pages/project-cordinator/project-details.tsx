@@ -27,7 +27,6 @@ import { AmountDetailsCard } from 'features/project-coordinator/project-amount-d
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
-import { DocumentWorkOrdersTable } from 'features/project-coordinator/document-tab-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -197,10 +196,6 @@ export const ProjectDetails: React.FC = props => {
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
-              </TabPanel>
-
-              <TabPanel p={0}>
-                <DocumentWorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
             </TabPanels>
           </Tabs>
