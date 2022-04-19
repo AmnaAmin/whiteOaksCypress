@@ -31,23 +31,12 @@ import { BiDownload } from 'react-icons/bi'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
-  document: File | null
-  setDocument: (doc: File | null) => void
 }
 
-export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn, setDocument, document }) => {
+export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const onFileChange = useCallback(
-    e => {
-      const files = e.target.files
-      if (files[0]) {
-        setDocument(files[0])
-      }
-    },
-    [setDocument],
-  )
   const {
     control,
     register,
@@ -63,6 +52,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
   } = useDisclosure()
 
   const transaction = useWatch({ name: 'transaction', control })
+  const document = useWatch({ name: 'attachment', control })
+
   const checkedItems = useMemo(() => {
     return transaction.map(item => item.checked)
   }, [transaction])
@@ -80,7 +71,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
 
-  const totalAmount = useTotalAmount(control)
+  const { formattedAmount: totalAmount } = useTotalAmount(control)
 
   const toggleAllCheckboxes = useCallback(
     event => {
@@ -116,6 +107,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
       setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
     }
   }, [removeTransactionField, transactionFields, onDeleteConfirmationModalClose, setValue])
+
+  const onFileChange = useCallback(
+    e => {
+      const files = e.target.files
+      if (files[0]) {
+        setValue('attachment', files[0])
+      }
+    },
+    [setValue],
+  )
 
   return (
     <>
@@ -176,7 +177,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                 <MdOutlineCancel
                   cursor="pointer"
                   onClick={() => {
-                    setDocument(null)
+                    setValue('attachment', null)
                     if (inputRef.current) inputRef.current.value = ''
                   }}
                 />

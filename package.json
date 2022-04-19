@@ -124,6 +124,7 @@
     ]
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.1.0",
     "@chakra-ui/storybook-addon": "^1.0.3",
     "@storybook/addon-actions": "^6.4.21",
     "@storybook/addon-essentials": "^6.4.21",

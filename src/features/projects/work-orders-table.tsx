@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/pc-react-table'
+import ReactTable, { RowProps } from 'components/table/react-table'
 import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
-// import WorkOrderDetails from './modals/work-order-details'
+import WorkOrderDetails from './modals/work-order-details'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 
@@ -52,17 +52,12 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   const { t } = useTranslation()
 
   const { projectId } = useParams<'projectId'>()
 
-  const [
-    ,
-    // selectedWorkOrder
-    setSelectedWorkOrder,
-  ] = useState<ProjectWorkOrderType>()
-
-  const { data: workOrders, isLoading } = useProjectWorkOrders(projectId)
+  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
 
   const { columns } = useColumnWidthResize(
     [
@@ -103,13 +98,13 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   return (
     <Box>
-      {/* <WorkOrderDetails
+      <WorkOrderDetails
         workOrder={selectedWorkOrder as ProjectWorkOrderType}
         onClose={() => {
           setSelectedWorkOrder(undefined)
           refetch()
         }}
-      /> */}
+      />
       {isLoading && (
         <Center>
           <Spinner size="xl" />
