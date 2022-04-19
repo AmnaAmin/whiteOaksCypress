@@ -55,6 +55,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
       onOpen()
     } else {
       onCloseDisclosure()
+      setTabIndex(0)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 

@@ -227,24 +227,25 @@ export const InvoiceTab = ({ onClose }) => {
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
         <Button
           variant="ghost"
-          size={'lg'}
           onClick={onClose}
           mr={3}
-          fontSize="14px"
-          fontWeight={500}
-          fontStyle="normal"
           color="gray.700"
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           Close
         </Button>
         <Button
-          size={'lg'}
           _focus={{ outline: 'none' }}
           colorScheme={'CustomPrimaryColor'}
-          _hover={{ bg: 'blue' }}
-          fontSize="14px"
-          fontWeight={500}
           fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           Save
         </Button>
