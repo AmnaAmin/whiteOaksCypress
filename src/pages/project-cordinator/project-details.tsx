@@ -1,16 +1,5 @@
-import {
-  Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Switch,
-  Flex,
-} from '@chakra-ui/react'
+import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex } from '@chakra-ui/react'
+
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
@@ -27,6 +16,7 @@ import { AmountDetailsCard } from 'features/project-coordinator/project-amount-d
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -54,46 +44,14 @@ export const ProjectDetails: React.FC = props => {
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="line" onChange={index => setTabIndex(index)} mt="7">
-            <TabList whiteSpace="nowrap" color="gray.600" fontWeight={500}>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('Transactions')}
-              </Tab>
-
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('projectDetails')}
-              </Tab>
-
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('vendorWorkOrders')}
-              </Tab>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('documents')}
-              </Tab>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('alerts')}
-              </Tab>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {'Notes'}
-              </Tab>
+          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+            <TabList>
+              <Tab variant="enclosed">{t('Transactions')}</Tab>
+              <Tab variant="enclosed">{t('projectDetails')}</Tab>
+              <Tab variant="enclosed">{t('vendorWorkOrders')}</Tab>
+              <Tab variant="enclosed">{t('documents')}</Tab>
+              <Tab variant="enclosed">{t('alerts')}</Tab>
+              <Tab variant="enclosed">{'Notes'}</Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
