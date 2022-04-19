@@ -53,7 +53,7 @@ export const getHelpText = () => {
         {headings.first}
       </Text>
       <br />
-      <Text fontSize="14px" fontWeight="400" color="gray.500">
+      <Text fontSize="14px" fontWeight="400" color="gray.500" w="724px" whiteSpace="normal">
         {noticeText()}
       </Text>
       <br />
@@ -61,7 +61,7 @@ export const getHelpText = () => {
         {headings.third}
       </Text>
       <br />
-      <Text fontSize="14px" fontWeight="400" color="gray.500">
+      <Text fontSize="14px" fontWeight="400" color="gray.500" w="740px" whiteSpace="normal">
         {informationSection()}
       </Text>
     </>
