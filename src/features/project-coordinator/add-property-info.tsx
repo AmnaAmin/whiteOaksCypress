@@ -3,27 +3,23 @@ import { Button, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/r
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
-import { defaultValue, PropertyType } from 'types/project.type'
+import { verifyAddressValues } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
-import { useAddressDetails, useAddressSettings, usePCProperties, useVerifyAddressApi } from 'utils/pc-projects'
-//import ModalVerifyAddress from 'features/modal-verify-address'
-// import { ref } from 'yup'
-// import { verifyAddressApi } from 'utils/pc-projects'
+import { useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/modal-verify-address'
-import { AddNewProjectModal } from './add-project'
-import { ConfirmationBox } from 'components/Confirmation'
+import React from 'react'
 
 export const AddPropertyInfo = props => {
-  //const { states, marketList, properties, close, open, clients, FPMUsers } = props
-  const { mutate: saveAddress } = useAddressSettings()
-  const { data: address, refetch } = useAddressDetails()
-  const { propertiesData } = usePCProperties()
-  console.log(propertiesData)
-  const { addressData } = useVerifyAddressApi(12, 5)
-  console.log(addressData)
+  // const { mutate: saveAddress, data: addressPayload } = useAddressSettings()
+  // const { projectId } = useParams<{ projectId: string }>()
+  // const { data: address } = useAddressDetails(projectId)
+  const [streetAddress, setStreetAddress] = useState()
+  const [city, setCity] = useState()
+  const [state, setState] = useState()
+  const [zipCode, setZipCode] = useState()
 
-  const { register, control } = useForm({})
+  const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
 
   const states = [
     { value: '1', label: 'A' },
@@ -47,184 +43,86 @@ export const AddPropertyInfo = props => {
     return addressValues
   }
 
+  // useEffect(() => {
+  //   refetch()
+  // }, [refetch])
+
   const {
-    // register,
+    register,
     formState: { errors },
     handleSubmit,
-    // control,
+    control,
+    watch,
     reset,
-  } = useForm<PropertyType>()
+  } = useForm<verifyAddressValues>()
 
-  useEffect(() => {
-    if (address) {
-      const defaultSettings = addressDefaultValue(address)
-      reset(defaultSettings)
-    }
-  }, [address, reset])
+  /* debug purpose */
+  const watchAllFields = watch()
+  React.useEffect(() => {
+    const subscription = watch(value => {
+      console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
 
   const onSubmit = useCallback(
     async values => {
-      const propertiesPayload = {
+      setTimeout(() => {
+        refetch()
+      }, 2000)
+      const addressInfo = {
         streetAddress: values.streetAddress,
         city: values.city,
         state: values.state,
         zipCode: values.zipCode,
       }
-      saveAddress(propertiesPayload)
-      // console.log(addressData)
+      setStreetAddress(addressInfo.streetAddress)
+      setCity(addressInfo.city)
+      setState(addressInfo.state)
+      setZipCode(addressInfo.zipCode)
+      console.log(streetAddress)
     },
-    [saveAddress],
+    [refetch, setStreetAddress, setCity, setState, setZipCode],
   )
 
-  // const { isOpen: isOpenAddresstModal, onClose: onAddressModalClose, onOpen: onAddressModalOpen } = useDisclosure()
+  // Parse XML
+  useEffect(() => {
+    if (addressData) {
+      const parser = new xml2js.Parser(addressData)
+      parser
+        .parseStringPromise(addressData)
+        .then(function (result) {
+          result.AddressValidateResponse.Address.forEach(record => {
+            if (record.Error !== undefined) {
+              setAddressVerificationStatus('failed')
+            } else {
+              setAddressVerificationStatus('success')
+              const address = {
+                streetAddress: record.Address2[0],
+                city: record.City[0],
+                state: record.State[0],
+                zipCode: record.Zip5[0],
+              }
+              record.streetAddress = address.streetAddress
+              record.city = address.city
+              record.state = address.state
+              record.zipCode = address.zipCode
+            }
+          })
+        })
+        .catch(function (err) {
+          // Failed
+        })
 
-  // const [projectEntity, setProjectEntity] = useState(defaultValue)
+      const defaultAddress = addressDefaultValue(addressData)
+      reset(defaultAddress)
+    }
+  }, [addressData, reset])
+
   const [projectPayload, setProjectPayload] = useState({})
-  // const [typeAheadProperties, setTypeAheadProperties] = useState()
   const [property, setProperty] = useState({})
   const [showVerificationUSPS, setShowVerificationUSPS] = useState(false)
   const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
-  // const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
-  // const [addressReadOnly, setAddressReadOnly] = useState(false)
-
-  // useEffect(() => {
-  //   props.getProperties()
-  // }, [])
-
-  // useEffect(() => {}, [states, clients, FPMUsers])
-
-  // useEffect(() => {
-  //   return setTypeAheadProperties(property)
-  // }, [property])
-
-  // const isLoading = () => {
-  //   // const loading =   props.FPMUsersLoading && props.clientsLoading && props.propertiesLoading && props.marketLoading && props.statesLoading;
-  //   const loading = props.marketLoading
-  //   return loading
-  // }
-
-  // const onTypeAheadAddressBlur = e => {
-  //   if (e.target.value !== property.streetAddress) {
-  //     delete property.id;
-  //     setProperty(property);
-  //     setAddressReadOnly(false);
-  //  1 }
-  //   property.streetAddress = e.target.value;
-  // };
-
-  // useEffect(() => {
-  //   if (props.projectByProperty.length > 0) {
-  //     setIsDuplicateAddress(true)
-  //   }
-  // }, [props.projectByProperty])
-
-  // const onTypeAheadAddressChange = e => {
-  //   setIsDuplicateAddress(false)
-  //   // const a = typeAheadProperties.filter(f => f.streetAddress === e[0]?.streetAddress)
-  //   // if (a && a.length > 0) {
-  //   //   props.getProjectByPropertyId(a[0].id)
-  //   // }
-  //   const x = 1
-  //   if (e.length > 0) {
-  //     if (e[0].customOption === undefined) {
-  //       const newProperty = e[0]
-  //       setProperty(newProperty)
-  //       setAddressReadOnly(true)
-  //     } else {
-  //       // delete property.id;
-  //       // property.streetAddress = e[0].streetAddress;
-  //       setProperty(property)
-  //       setAddressReadOnly(false)
-  //     }
-  //   }
-  // }
-
-  // const useverifyAddress = (propertyInput, values) => {
-  //   useVerifyAddressApi(propertyInput, values).then((response: { data: any }) => {
-  //     const parser = new xml2js.Parser(/* options */)
-  //     const array = []
-  //     parser
-  //       .parseStringPromise()
-  //       .then(function (result) {
-  //         result.AddressValidateResponse.Address.forEach(record => {
-  //           if (record.Error !== undefined) {
-  //             setAddressVerificationStatus('failed')
-  //           } else {
-  //             setAddressVerificationStatus('success')
-  //             const address = {
-  //               streetAddress: record.Address2[0],
-  //               city: record.City[0],
-  //               state: record.State[0],
-  //               zipCode: record.Zip5[0],
-  //             }
-  //             values.property.streetAddress = address.streetAddress
-  //             values.property.city = address.city
-  //             values.property.state = address.state
-  //             values.property.zipCode = address.zipCode
-  //             // const projectUpdate = {
-  //             //   ...projectEntity,
-  //             //   ...values,
-  //             //   documents: documentInput,
-  //             //   newProperty: values.property,
-  //             //   newMarketId: values.property.marketId,
-  //             // };
-  //             // props.createEntity(projectUpdate);
-  //           }
-  //         })
-  //       })
-  //       .catch(function (err) {
-  //         // Failed
-  //       })
-  //   })
-  // }
-
-  const save = (event, errors, values) => {
-    if (errors.length > 0) return
-
-    //  if (Object.keys(sowDocument).length === 0) return;
-
-    // //  this means user typed something and tabbed out of it
-    // if (document.getElementsByClassName('rbt-input-main')[0].value !== property.streetAddress) {
-    //   delete property?.id;
-    // }
-
-    // values.clientDueDate = convertDateTimeToServer(values.clientDueDate);
-    // values.clientStartDate = convertDateTimeToServer(values.clientStartDate);
-    // values.clientWalkthroughDate = convertDateTimeToServer(values.clientWalkthroughDate);
-    // values.woaCompletionDate = convertDateTimeToServer(values.woaCompletionDate);
-    // values.woaStartDate = convertDateTimeToServer(values.woaStartDate);
-    // values.projectClosedDate = convertDateTimeToServer(values.projectClosedDate);
-    // values.projectExpectedCloseDate = convertDateTimeToServer(values.projectExpectedCloseDate);
-    // values.projectStartDate = convertDateTimeToServer(values.projectStartDate);
-    // values.clientSignoffDate = convertDateTimeToServer(values.clientSignoffDate);
-
-    // values.sowOriginalContractAmount = removeCurrencyFormat(values.sowOriginalContractAmount);
-    // values.clientName = clients.find(c => +c?.id === +values?.clientId)?.companyName;
-
-    // const documents = [];
-    // documents.push(documents);
-    const projectUpdate = {
-      ...values,
-      propertyId: property,
-      newMarketId: property,
-      streetAddress: property,
-      acknowledgeCheck: true,
-    }
-    if (property === undefined) {
-      setAddressVerificationStatus('verifying')
-      setShowVerificationUSPS(true)
-      setProjectPayload(projectUpdate)
-      // setTimeout(function () {
-      //   useverifyAddress(property, values)
-      // }, 2000)
-    } else {
-      // props.createEntity(projectUpdate)
-    }
-  }
-
-  // const closeAddressVerificationModal = () => {
-  //   setShowVerificationUSPS(false)
-  // }
 
   const saveModalVerify = () => {
     const property = {
@@ -243,14 +141,14 @@ export const AddPropertyInfo = props => {
   } = useDisclosure()
 
   return (
-    <form>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
               errorMessage={''}
               label={'Address'}
-              placeholder="Type Address Here"
+              placeholder="Type Property Address . ."
               register={register}
               controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
@@ -298,12 +196,12 @@ export const AddPropertyInfo = props => {
               controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`zip`}
+              name={`zipCode`}
             />
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormSelect
@@ -345,7 +243,7 @@ export const AddPropertyInfo = props => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -389,7 +287,7 @@ export const AddPropertyInfo = props => {
         </GridItem>
       </Grid>
       <Grid display="flex" alignItems="center">
-        <Button // onClick={onClose}
+        <Button // onClose={onAddressVerifyModalClose}
           variant="ghost"
           size="sm"
         >
@@ -402,7 +300,11 @@ export const AddPropertyInfo = props => {
           _hover={{ bg: 'blue' }}
           ml="3"
           size="sm"
-          onClick={onOpenAddressVerifyModalOpen}
+          type="submit"
+          onClick={() => {
+            refetch()
+            onOpenAddressVerifyModalOpen()
+          }}
         >
           {'Next'}
         </Button>
@@ -416,12 +318,6 @@ export const AddPropertyInfo = props => {
         save={saveModalVerify}
         addressVerificationStatus={addressVerificationStatus}
       />
-      {/* <ModalVerifyAddress
-        isOpen={showVerificationUSPS}
-        addressVerificationStatus={addressVerificationStatus}
-        closeAddressVerificationModal={closeAddressVerificationModal}
-        save={saveModalVerify}
-      /> */}
     </form>
   )
 }

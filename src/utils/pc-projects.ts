@@ -1,7 +1,6 @@
-import { ProjectType, PropertyType } from 'types/project.type'
+import { ProjectType } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
-import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 
 export const usePCProject = (projectId?: string) => {
@@ -19,17 +18,17 @@ export const usePCProject = (projectId?: string) => {
   }
 }
 
-export const useAddressDetails = () => {
+export const useAddressDetails = (projectId?: string) => {
   const client = useClient()
 
   return useQuery(
     'address-details',
     async () => {
-      const response = await client(`projects`, {})
+      const response = await client(`projects/${projectId}`, { projectId })
 
       return response?.data
     },
-    { enabled: false },
+    // { enabled: false },
   )
 }
 
@@ -57,59 +56,25 @@ export const useAddressSettings = () => {
   )
 }
 
-export const usePCProperties = (propertyId?: string) => {
+export const useVerifyAddressApi = (streetAddress?: any, city?: string, state?: string, zipCode?: string) => {
   const client = useClient()
 
-  const { data: propertiesData, ...rest } = useQuery<PropertyType>(['property', propertyId], async () => {
-    const response = await client('properties', {})
-    //`${'api/properties'}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`, {})
-
-    return response?.data
-  })
-
-  return {
-    propertiesData,
-    ...rest,
-  }
-}
-
-// export const verifyAddressAp = (propertyInput, values) => {
-//   return axios.get(
-//     '/api/addressVerification/?address=' +
-//       encodeURI(propertyInput.streetAddress) +
-//       '&city=' +
-//       values.property.city +
-//       '&state=' +
-//       values.property.state +
-//       '&zip=' +
-//       values.property.zipCode,
-//     {
-//       timeout: 6000,
-//     },
-//   )
-// }
-
-export const useVerifyAddressApi = (propertyInput, values) => {
-  const client = useClient()
-
-  const { data: addressData, ...rest } = useQuery<ProjectType>(['address', propertyInput, values], async () => {
-    const response = await client(
-      `addressVerification/?address=' +
-    encodeURI(${propertyInput.streetAddress}) +
-    'city=' +
-    ${values.property.city} +
-    '&state=' +
-    ${values.property.state} +
-    '&zip=' +
-    ${values.property.zipCode},`,
-      {},
-    )
-    console.log(response)
-    return response?.data
-  })
-
-  return {
-    addressData,
-    ...rest,
-  }
+  return useQuery<any>(
+    ['address'],
+    async () => {
+      const response = await client(
+        `/addressVerification/?address=` +
+          encodeURI(streetAddress) +
+          '&city=' +
+          city +
+          '&state=' +
+          state +
+          '&zip=' +
+          zipCode,
+        {},
+      )
+      return response?.data
+    },
+    { enabled: false },
+  )
 }
