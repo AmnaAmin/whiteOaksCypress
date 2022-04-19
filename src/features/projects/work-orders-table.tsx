@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import ReactTable, { RowProps } from 'components/table/pc-react-table'
 import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
@@ -91,11 +91,6 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
       {
         Header: t('expectedCompletion') as string,
         accessor: 'workOrderExpectedCompletionDate',
-        Cell: ({ value }) => dateFormat(value),
-      },
-      {
-        Header: t('completed') as string,
-        accessor: 'workOrderDateCompleted',
         Cell: ({ value }) => dateFormat(value),
       },
     ],

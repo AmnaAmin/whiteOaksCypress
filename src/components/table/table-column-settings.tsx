@@ -194,7 +194,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
               mr={3}
               fontStyle="normal"
               fontSize="14px"
-              fontWeight={500}
+              fontWeight={600}
               h="48px"
               w="130px"
             >
@@ -205,7 +205,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
               onClick={saveModal}
               fontStyle="normal"
               fontSize="14px"
-              fontWeight={500}
+              fontWeight={600}
               h="48px"
               w="130px"
             >

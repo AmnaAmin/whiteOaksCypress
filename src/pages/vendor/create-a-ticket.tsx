@@ -31,7 +31,7 @@ import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 
-export const CreateATicket = () => {
+const CreateATicket = () => {
   const toast = useToast()
   const { mutate: createTicket } = useCreateTicketMutation()
   const { email } = useUserProfile() as Account
@@ -301,3 +301,5 @@ export const CreateATicket = () => {
     </>
   )
 }
+
+export default CreateATicket
