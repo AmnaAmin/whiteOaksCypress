@@ -25,6 +25,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
+import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
 
 export const ProjectDetails: React.FC = props => {
@@ -43,6 +44,8 @@ export const ProjectDetails: React.FC = props => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
+
+  const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
 
   return (
     <>
@@ -109,9 +112,14 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
-                    {t('resolve')}
+                  <Button
+                    _hover={{ bg: 'gray.200' }}
+                    color="blue"
+                    fontSize={14}
+                    fontWeight={500}
+                    onClick={OnUploadMdal}
+                  >
+                    Upload
                   </Button>
                 )}
                 {tabIndex === 0 && (
@@ -192,6 +200,7 @@ export const ProjectDetails: React.FC = props => {
             </TabPanels>
           </Tabs>
         </Stack>
+        <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
       </Stack>
     </>
   )
