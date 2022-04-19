@@ -1,4 +1,5 @@
 import { extendTheme, theme as chakraTheme } from '@chakra-ui/react'
+import { components } from './components'
 
 export const theme = extendTheme({
   styles: {
@@ -110,4 +111,5 @@ export const theme = extendTheme({
       900: '#4E87F8',
     },
   },
+  components,
 })
