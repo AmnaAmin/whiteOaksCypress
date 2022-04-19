@@ -50,7 +50,9 @@ export const ProjectDetails: React.FC = props => {
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
+
         {tabIndex === 1 && <ProjectSchedule />}
+
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="line" onChange={index => setTabIndex(index)} mt="7">
             <TabList whiteSpace="nowrap" color="gray.600" fontWeight={500}>
