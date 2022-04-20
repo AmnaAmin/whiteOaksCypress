@@ -44,14 +44,14 @@ export const ProjectDetails: React.FC = props => {
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab variant="enclosed">{t('Transactions')}</Tab>
-              <Tab variant="enclosed">{t('projectDetails')}</Tab>
-              <Tab variant="enclosed">{t('vendorWorkOrders')}</Tab>
-              <Tab variant="enclosed">{t('documents')}</Tab>
-              <Tab variant="enclosed">{t('alerts')}</Tab>
-              <Tab variant="enclosed">{'Notes'}</Tab>
+              <Tab>{t('Transactions')}</Tab>
+              <Tab>{t('projectDetails')}</Tab>
+              <Tab>{t('vendorWorkOrders')}</Tab>
+              <Tab>{t('documents')}</Tab>
+              <Tab>{t('alerts')}</Tab>
+              <Tab>{'Notes'}</Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
