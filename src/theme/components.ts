@@ -10,6 +10,9 @@ export const components = {
           tab: {
             roundedTopEnd: '4px',
             roundedTopStart: '4px',
+            _hover: {
+              bg: `gray.100`,
+            },
             _selected: {
               bg: `${props.colorScheme}.400`,
               color: 'white',
@@ -22,7 +25,7 @@ export const components = {
   },
   Button: {
     variants: {
-      custom: props => {
+      solid: props => {
         return {
           ...chakraTheme.components.Button.variants.solid(props),
           bg: `${props.colorScheme}.400`,

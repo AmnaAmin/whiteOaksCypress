@@ -6,7 +6,7 @@ export default {
 }
 
 export const Primary = () => (
-  <Button variant="custom" colorScheme="blue">
+  <Button variant="solid" colorScheme="blue">
     Primary
   </Button>
 )
@@ -18,7 +18,7 @@ export const Secondary = () => (
 )
 
 export const Error = () => (
-  <Button variant="custom" colorScheme="red">
+  <Button variant="solid" colorScheme="red">
     Secondary
   </Button>
 )
