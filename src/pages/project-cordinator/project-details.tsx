@@ -27,6 +27,7 @@ import { AmountDetailsCard } from 'features/project-coordinator/project-amount-d
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -172,9 +173,9 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
-                <Box mb={5}>
+            <TabPanels h="100%">
+              <TabPanel p="0px" h="100%" mt="31px">
+                <Box mb="5">
                   <FormControl display="flex" alignItems="center">
                     <FormLabel htmlFor="view-details" mb="0">
                       View Details
@@ -190,7 +191,9 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
+              <TabPanel p="0px" h="0px" mt="3">
+                <ProjectDetailsTab />
+              </TabPanel>
 
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
