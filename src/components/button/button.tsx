@@ -2,7 +2,7 @@ import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
 
 export const Button: React.FC<ButtonProps> = props => {
   return (
-    <ChakraButton colorScheme="blue" _focus={{ outline: 'none' }} ml="3" size="sm" {...props}>
+    <ChakraButton _focus={{ outline: 'none' }} ml="3" size="sm" {...props}>
       {props.children}
     </ChakraButton>
   )

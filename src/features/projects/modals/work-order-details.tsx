@@ -63,6 +63,7 @@ const WorkOrderDetails = ({
       onOpen()
     } else {
       onCloseDisclosure()
+      setTabIndex(0)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 

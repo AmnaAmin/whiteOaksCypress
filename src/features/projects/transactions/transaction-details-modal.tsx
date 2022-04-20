@@ -143,10 +143,11 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
           <Button
             onClick={onClose}
             colorScheme="CustomPrimaryColor"
-            fontSize="16px"
+            fontSize="14px"
             fontWeight={600}
             fontStyle="normal"
-            _hover={{ bg: 'blue' }}
+            h="48px"
+            w="130px"
           >
             {t('close')}
           </Button>

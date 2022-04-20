@@ -180,6 +180,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'COI WC Exp Date',
         downloadCOIWCDocument: 'Download COI WC Document ',
         next: 'Next',
+        back: 'Back',
         cancel: 'Cancel',
         // Vendor-profile-license
         addLicense: 'Add License',
@@ -264,7 +265,7 @@ i18n.use(initReactI18next).init({
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
         transactionType: 'Tipo de Transacción',
-        against: 'Contra',
+        against: 'estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
@@ -369,6 +370,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'Fecha de Caducidad COI WC',
         downloadCOIWCDocument: 'Descargar Documento COI WC',
         next: 'Próximo',
+        back: 'Espalda',
         cancel: 'Cancelar',
         // Vendor-profile-license
         addLicense: 'Agregar Licencia',

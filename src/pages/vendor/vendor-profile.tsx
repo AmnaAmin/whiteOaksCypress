@@ -25,7 +25,7 @@ const profileTabStyle = {
   },
 }
 
-export const VendorProfilePage: React.FC = props => {
+const VendorProfilePage: React.FC = props => {
   const { t } = useTranslation()
   const { vendorId } = useUserProfile() as Account
   const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId)
@@ -111,3 +111,5 @@ export const VendorProfilePage: React.FC = props => {
     </Stack>
   )
 }
+
+export default VendorProfilePage
