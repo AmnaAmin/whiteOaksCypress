@@ -10,6 +10,13 @@ import {
   FormLabel,
   Switch,
   Flex,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from '@chakra-ui/react'
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -26,6 +33,7 @@ import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import NewWorkOrder from 'features/projects/modals/new-work-order'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -33,7 +41,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const { onOpen: onDocumentModalOpen } = useDisclosure()
+  // const { onOpen: onDocumentModalOpen } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -43,6 +51,7 @@ export const ProjectDetails: React.FC = props => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
@@ -95,7 +104,7 @@ export const ProjectDetails: React.FC = props => {
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
                   <Button
-                    onClick={onDocumentModalOpen}
+                    onClick={onOpen}
                     // bg="#4E87F8"
                     color="#4E87F8"
                     size="md"
@@ -106,6 +115,7 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
+                    <NewWorkOrder isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
                 {tabIndex === 3 && (
