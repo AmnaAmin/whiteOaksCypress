@@ -33,7 +33,7 @@ import { useTranslation } from 'react-i18next'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose } = props
+  const { lienWaiverData, onClose, onProjectTabChange } = props
   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
@@ -78,7 +78,10 @@ export const LienWaiverTab: React.FC<any> = props => {
     updateLienWaiver(lienWaiverData)
   }
   useEffect(() => {
-    if (isSuccess) onClose()
+    if (isSuccess) {
+      onProjectTabChange?.(2)
+      onClose()
+    }
   }, [isSuccess, onClose])
 
   useEffect(() => {
