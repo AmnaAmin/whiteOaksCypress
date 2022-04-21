@@ -40,7 +40,7 @@ export const SignatureTab = props => {
                   }}
                   placeholder=""
                   register={register}
-                  controlStyle={{ w: '50em' }}
+                  controlStyle={{ w: '938px' }}
                   elementStyle={{
                     bg: 'gray.100',
                     h: '150px',
@@ -59,11 +59,13 @@ export const SignatureTab = props => {
           </Stack>
         </FormControl>
         <Divider />
-        <ModalFooter mt={3}>
+        <ModalFooter mt={6}>
           <Button
             variant="ghost"
             mr={3}
             onClick={onClose}
+            w="130px"
+            h="48px"
             color="gray.700"
             fontStyle="normal"
             fontWeight={500}
@@ -73,14 +75,14 @@ export const SignatureTab = props => {
           </Button>
           <Button
             colorScheme="CustomPrimaryColor"
-            mr={3}
-            size="lg"
+            w="130px"
+            h="48px"
             type="submit"
             fontStyle="normal"
             fontWeight={500}
             fontSize="14px"
           >
-            {t('apply')}
+            {t('Apply')}
           </Button>
         </ModalFooter>
       </form>
