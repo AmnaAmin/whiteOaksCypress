@@ -1,6 +1,6 @@
 import { Button, Divider, FormControl, HStack, ModalFooter, Stack, VStack } from '@chakra-ui/react'
 import { t } from 'i18next'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormInput } from 'components/react-hook-form-fields/input'
 
@@ -28,6 +28,7 @@ export const SignatureTab = props => {
             <VStack alignItems="start">
               <HStack>
                 <FormInput
+                  testId="signature-input"
                   errorMessage={errors.signature && errors.signature?.message}
                   label="Type Your Name Here"
                   labelStyle={{
@@ -72,13 +73,15 @@ export const SignatureTab = props => {
             {t('close')}
           </Button>
           <Button
+            data-testid="save-signature"
             colorScheme="CustomPrimaryColor"
             mr={3}
             size="lg"
-            type="submit"
+            type="button"
             fontStyle="normal"
             fontWeight={500}
             fontSize="14px"
+            onClick={handleSubmit(onSubmit)}
           >
             {t('apply')}
           </Button>

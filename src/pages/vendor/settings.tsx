@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { Box, Button, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input } from '@chakra-ui/react'
+import { Box, Button, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input, Flex } from '@chakra-ui/react'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 
-export const Settings = React.forwardRef((props, ref) => {
+const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
   const { data: account, refetch } = useAccountDetails()
   // const [lang, setLanguage] = useState(account?.langKey);
@@ -149,19 +149,33 @@ export const Settings = React.forwardRef((props, ref) => {
             name={`lastName`}
           />
         </HStack>
-        <Box id="footer" w="100%" mt={100} borderTop="2px solid #E2E8F0">
-          <Button float="right" mr="5" mt="5" colorScheme="CustomPrimaryColor" type="submit">
-            <Text fontSize="14px" fontWeight={500} fontStyle="normal">
-              {t('save')}
-            </Text>
+        <Flex
+          id="footer"
+          w="100%"
+          h="100px"
+          mt="100px"
+          alignItems="center"
+          justifyContent="end"
+          borderTop="2px solid #E2E8F0"
+        >
+          <Button
+            colorScheme="CustomPrimaryColor"
+            type="submit"
+            fontSize="14px"
+            fontWeight={600}
+            fontStyle="normal"
+            h="48px"
+            w="130px"
+          >
+            {t('save')}
           </Button>
-        </Box>
+        </Flex>
       </form>
     </Box>
   )
 })
 
-const PreviewImg = () => {
+export const PreviewImg = () => {
   const defaultImage = 'https://bit.ly/sage-adebayo'
   const [preview, setPreview] = useState<string | null>(null)
 
@@ -201,4 +215,4 @@ const PreviewImg = () => {
   )
 }
 
-export default PreviewImg
+export default Settings

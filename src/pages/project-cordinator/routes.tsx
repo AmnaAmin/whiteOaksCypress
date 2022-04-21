@@ -1,8 +1,8 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 
 import VendorProfilePassword from 'pages/vendor/password'
-import { CreateATicket } from 'pages/vendor/create-a-ticket'
-import { Settings } from 'pages/vendor/settings'
+import CreateATicket from 'pages/vendor/create-a-ticket'
+import Settings from 'pages/vendor/settings'
 import { Projects } from 'pages/project-cordinator/projects'
 import { ProjectCoordinatorDashboard } from 'pages/project-cordinator/dashboard'
 import { ProjectDetails } from 'pages/project-cordinator/project-details'
