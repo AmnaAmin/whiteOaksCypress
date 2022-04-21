@@ -87,7 +87,7 @@ export const InvoiceTab = ({ onClose }) => {
 
         <Box>
           <TableContainer border="1px solid #E2E8F0">
-            <Box h="488px" overflow="auto">
+            <Box h="400px" overflow="auto">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Table colorScheme="teal" size="lg">
                   <Thead position="sticky" top={0} zIndex={2}>

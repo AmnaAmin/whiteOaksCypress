@@ -114,7 +114,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </Box>
 
       <TableContainer border="1px solid #E2E8F0" mb={9}>
-        <Box h={431} overflow="auto">
+        <Box h={340} overflow="auto">
           <Table variant="simple" size="md" fontSize={14} color="gray.600" whiteSpace="initial">
             <Thead bg=" #F7FAFC" position="sticky" top={0} zIndex={2} fontWeight={600}>
               <Tr>
