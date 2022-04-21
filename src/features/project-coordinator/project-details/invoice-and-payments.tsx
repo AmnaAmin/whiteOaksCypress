@@ -52,11 +52,12 @@ const InvoiceAndPayments = () => {
         <Box h="39vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%">
             <GridItem>
-              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.originSowAmount}>
+              <FormControl w="215px" isInvalid={errors.originSowAmount}>
                 <FormLabel htmlFor="originSowAmount" sx={labelStyle}>
                   Original SOW Amount
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="originSowAmount"
                   {...register('originSowAmount', {
                     required: 'This is required',
@@ -69,11 +70,12 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.finalSowAmount}>
+              <FormControl w="215px" isInvalid={errors.finalSowAmount}>
                 <FormLabel sx={labelStyle} htmlFor="finalSowAmount">
                   Final SOW Amount
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="finalSowAmount"
                   {...register('finalSowAmount', {
                     required: 'This is required',
@@ -86,11 +88,12 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.invoiceNo}>
+              <FormControl w="215px" isInvalid={errors.invoiceNo}>
                 <FormLabel htmlFor="invoiceNo" sx={labelStyle}>
                   Invoice no
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="invoiceNo"
                   {...register('invoiceNo', {
                     required: 'This is required',
@@ -207,11 +210,12 @@ const InvoiceAndPayments = () => {
               </Box>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.overPayment}>
+              <FormControl w="215px" isInvalid={errors.overPayment}>
                 <FormLabel htmlFor="overPayment" sx={labelStyle}>
                   Overpayment
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="overPayment"
                   {...register('overPayment', {
                     required: 'This is required',
@@ -224,11 +228,12 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.remainingPayment}>
+              <FormControl w="215px" isInvalid={errors.remainingPayment}>
                 <FormLabel htmlFor="remainingPayment" sx={labelStyle}>
                   Remaining Payment
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="remainingPayment"
                   {...register('remainingPayment', {
                     required: 'This is required',
@@ -241,11 +246,12 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" sx={inputTextStyle} isInvalid={errors.payment}>
+              <FormControl w="215px" isInvalid={errors.payment}>
                 <FormLabel htmlFor="payment" sx={labelStyle}>
                   Payment
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="payment"
                   {...register('payment', {
                     required: 'This is required',
