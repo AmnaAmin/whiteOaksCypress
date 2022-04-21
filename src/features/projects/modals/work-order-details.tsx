@@ -40,7 +40,15 @@ const TabStyle = {
   },
 }
 
-const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
+const WorkOrderDetails = ({
+  workOrder,
+  onClose: close,
+  onProjectTabChange,
+}: {
+  workOrder: ProjectWorkOrderType
+  onClose: () => void
+  onProjectTabChange?: any
+}) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
@@ -55,6 +63,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
       onOpen()
     } else {
       onCloseDisclosure()
+      setTabIndex(0)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 
@@ -173,22 +182,10 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab
-                    // onClose={onClose}
-                    woDates={{
-                      workOrderIssueDate: workOrder?.workOrderIssueDate,
-                      workOrderCompletionDateVariance: workOrder?.workOrderCompletionDateVariance,
-                      workOrderExpectedCompletionDate: workOrder?.workOrderExpectedCompletionDate,
-                      workOrderStartDate: workOrder?.workOrderStartDate,
-                      woStatus: {
-                        id: String(workOrder?.status),
-                        value: workOrder?.statusLabel,
-                      },
-                    }}
-                  />
+                  <WorkOrderDetailTab onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
-                  <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
+                  <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab
