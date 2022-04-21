@@ -88,7 +88,7 @@ const NewWorkOrder: React.FC<{
                 <InformationCard title=" Phone No" date={projectData?.projectManagerPhoneNumber} />
               </SimpleGrid>
               <Box mt={10}>
-                <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+                <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
                   <Box>
                     <FormControl height="40px">
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
@@ -148,22 +148,7 @@ const NewWorkOrder: React.FC<{
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         Expected Compiltion Date
                       </FormLabel>
-                      <Stack spacing={4}>
-                        <InputGroup>
-                          <InputLeftElement
-                            pointerEvents="none"
-                            children={<DatePicker selected={startDate} onChange={(date: Date) => setStartDate(date)} />}
-                          />
-                          <Input
-                            readOnly={true}
-                            placeholder="dd/mm/yy"
-                            height="40px"
-                            borderLeft="2px solid #4E87F8"
-                            focusBorderColor="none"
-                          />
-                        </InputGroup>
-                      </Stack>
-                      <DatePicker selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+                      <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
                     </FormControl>
                   </Box>
                 </SimpleGrid>

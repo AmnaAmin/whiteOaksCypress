@@ -15,9 +15,9 @@ import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
-import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
+import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
