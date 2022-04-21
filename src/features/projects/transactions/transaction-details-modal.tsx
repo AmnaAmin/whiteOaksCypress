@@ -52,7 +52,7 @@ const InfoCard: React.FC<{
           isTruncated
           display="inline-block"
           title={subTitle}
-          maxW="113px"
+          maxW="112px"
         >
           {subTitle}
         </Text>
