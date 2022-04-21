@@ -41,12 +41,11 @@ const InfoCard: React.FC<{
 }> = ({ title, subTitle, Icon }) => {
   return (
     <Flex>
-      {Icon && <Box mr="15px">{<Icon fontSize="20px" fill="#718096" />}</Box>}
       <Flex direction="column">
-        <Heading color="gray.700" fontWeight={700} fontSize="16px">
+        <Heading color="gray.600" fontWeight={500} fontSize="14px" whiteSpace="nowrap" mb="2">
           {title}
         </Heading>
-        <Text color="gray.600" fontWeight="400" fontSize="14px">
+        <Text color="gray.500" fontWeight="400" fontSize="14px">
           {subTitle}
         </Text>
       </Flex>
@@ -66,44 +65,35 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="18px" fontWeight={700} color="gray.700">
+        <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="16px" fontWeight={500} color="gray.600">
           {transaction?.name}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
 
         <ModalBody px="6" py="8">
-          <VStack
-            alignItems="left"
-            mb="5"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="gray.100"
-            borderRadius={10}
-            boxShadow="sm"
-          >
-            <Box borderBottom="1px solid" borderColor="gray.200" p={7}>
-              <InfoCard title={t('transactionType')} subTitle={transaction?.transactionTypeLabel as string} />
-            </Box>
-
-            <Grid templateColumns="215px 1fr" rowGap={7} columnGap={12} px={7} pb={12}>
-              <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
+          <VStack alignItems="left" mt="5">
+            <Grid templateColumns="repeat(5,1fr)" pb={6} borderBottom="1px solid #E2E8F0" mb="20">
+              <GridItem>
+                <InfoCard title={t('transactionType')} subTitle={transaction?.transactionTypeLabel as string} />
+              </GridItem>
+              <GridItem>
                 <InfoCard
                   title={t('dateCreated')}
                   subTitle={dateFormat(transaction?.createdDate as string)}
                   Icon={BiCalendar}
                 />
               </GridItem>
-              <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
+              <GridItem>
                 <InfoCard title={t('createdBy')} subTitle={transaction?.createdBy as string} Icon={BiUser} />
               </GridItem>
-              <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
+              <GridItem>
                 <InfoCard
                   title={t('dateModified')}
                   subTitle={dateFormat(transaction?.modifiedDate as string)}
                   Icon={BiCalendar}
                 />
               </GridItem>
-              <GridItem borderBottom="1px solid" borderColor="gray.200" py={7}>
+              <GridItem>
                 <InfoCard title={t('modifiedBy')} subTitle={transaction?.modifiedBy as string} Icon={BiUser} />
               </GridItem>
             </Grid>
@@ -113,10 +103,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             <Table colorScheme="gray">
               <Thead bg="gray.50">
                 <Tr>
-                  <Th fontSize="12px" fontWeight={700} color="gray.700" textTransform="capitalize">
+                  <Th fontSize="14px" fontWeight={500} color="gray.600" textTransform="capitalize">
                     {t('description')}
                   </Th>
-                  <Th fontSize="12px" fontWeight={700} color="gray.700" textTransform="capitalize">
+                  <Th fontSize="14px" fontWeight={500} color="gray.600" textTransform="capitalize">
                     {t('amount')}
                   </Th>
                 </Tr>
@@ -126,10 +116,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
                   const amount = Number(t.whiteoaksCost) || Number(t.vendorCost)
                   return (
                     <Tr key={t.id}>
-                      <Td color="gray.700" fontWeight={400} fontSize="14px">
+                      <Td color="gray.500" fontWeight={400} fontSize="14px">
                         {t.description}
                       </Td>
-                      <Td color="gray.700" fontWeight={400} fontSize="14px">
+                      <Td color="gray.500" fontWeight={400} fontSize="14px">
                         {amount < 0 ? `-$${Math.abs(amount)}` : `$${amount}`}
                       </Td>
                     </Tr>
