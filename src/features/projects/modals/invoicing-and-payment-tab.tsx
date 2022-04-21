@@ -29,6 +29,25 @@ const InvoicingAndPaymentTab = ({
   invoiceAndPaymentData: InvoiceAndPaymentData
   onClose: () => void
 }) => {
+  console.log(
+    'inovice',
+    'invoiceAndPaymentData?.paymentTermDate',
+    invoiceAndPaymentData?.paymentTermDate,
+    'invoiceAndPaymentData?.workOrderPayDateVariance',
+    invoiceAndPaymentData?.workOrderPayDateVariance,
+    'invoiceAndPaymentData?.datePaid',
+    invoiceAndPaymentData?.datePaid,
+    'invoiceAndPaymentData?.dateLeanWaiverSubmitted',
+    invoiceAndPaymentData?.dateLeanWaiverSubmitted,
+    'invoiceAndPaymentData?.datePermitsPulled',
+    invoiceAndPaymentData?.datePermitsPulled,
+    'invoiceAndPaymentData?.datePaymentProcessed',
+    invoiceAndPaymentData?.datePaymentProcessed,
+    'invoiceAndPaymentData?.dateInvoiceSubmitted',
+    invoiceAndPaymentData?.dateInvoiceSubmitted,
+    'invoiceAndPaymentData?.expectedPaymentDate',
+    invoiceAndPaymentData?.expectedPaymentDate,
+  )
   const { t } = useTranslation()
   return (
     <Stack>
@@ -44,7 +63,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiFile />}
             label="Pay Date Variance"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}</Text>}
+            InputElem={<Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>}
           />
         </Box>
         <Box w="25%">
