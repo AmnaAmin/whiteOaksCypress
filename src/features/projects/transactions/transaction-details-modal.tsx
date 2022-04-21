@@ -45,7 +45,15 @@ const InfoCard: React.FC<{
         <Heading color="gray.600" fontWeight={500} fontSize="14px" whiteSpace="nowrap" mb="2">
           {title}
         </Heading>
-        <Text color="gray.500" fontWeight="400" fontSize="14px">
+        <Text
+          color="gray.500"
+          fontWeight="400"
+          fontSize="14px"
+          isTruncated
+          display="inline-block"
+          title={subTitle}
+          maxW="113px"
+        >
           {subTitle}
         </Text>
       </Flex>
