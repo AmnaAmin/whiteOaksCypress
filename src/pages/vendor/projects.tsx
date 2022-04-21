@@ -9,7 +9,7 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
-export const Projects = () => {
+const Projects = () => {
   const { t } = useTranslation()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
@@ -83,3 +83,5 @@ export const Projects = () => {
     </>
   )
 }
+
+export default Projects

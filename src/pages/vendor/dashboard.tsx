@@ -15,7 +15,7 @@ import 'components/translation/i18n'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 
-export const Dashboard: React.FC = () => {
+const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
 
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
@@ -77,3 +77,5 @@ export const Dashboard: React.FC = () => {
     </VStack>
   )
 }
+
+export default Dashboard
