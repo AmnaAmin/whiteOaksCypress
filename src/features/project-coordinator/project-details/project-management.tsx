@@ -21,6 +21,12 @@ const labelStyle = {
   color: 'gray.600',
 }
 
+const inputTextStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  color: 'blackAlpha.500',
+}
+
 const ProjectManagement = () => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const {
@@ -57,6 +63,7 @@ const ProjectManagement = () => {
                   WO Number
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   placeholder="222"
                   w="215px"
                   id="woNumber"
@@ -73,6 +80,7 @@ const ProjectManagement = () => {
                   PO Number
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   placeholder="3456"
                   w="215px"
                   id="poNumber"
