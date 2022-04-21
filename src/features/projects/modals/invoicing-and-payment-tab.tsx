@@ -29,25 +29,6 @@ const InvoicingAndPaymentTab = ({
   invoiceAndPaymentData: InvoiceAndPaymentData
   onClose: () => void
 }) => {
-  console.log(
-    'inovice',
-    'invoiceAndPaymentData?.paymentTermDate',
-    invoiceAndPaymentData?.paymentTermDate,
-    'invoiceAndPaymentData?.workOrderPayDateVariance',
-    invoiceAndPaymentData?.workOrderPayDateVariance,
-    'invoiceAndPaymentData?.datePaid',
-    invoiceAndPaymentData?.datePaid,
-    'invoiceAndPaymentData?.dateLeanWaiverSubmitted',
-    invoiceAndPaymentData?.dateLeanWaiverSubmitted,
-    'invoiceAndPaymentData?.datePermitsPulled',
-    invoiceAndPaymentData?.datePermitsPulled,
-    'invoiceAndPaymentData?.datePaymentProcessed',
-    invoiceAndPaymentData?.datePaymentProcessed,
-    'invoiceAndPaymentData?.dateInvoiceSubmitted',
-    invoiceAndPaymentData?.dateInvoiceSubmitted,
-    'invoiceAndPaymentData?.expectedPaymentDate',
-    invoiceAndPaymentData?.expectedPaymentDate,
-  )
   const { t } = useTranslation()
   return (
     <Stack>
