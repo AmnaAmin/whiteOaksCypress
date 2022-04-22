@@ -29,11 +29,13 @@ const Location = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm()
 
   const onSubmit = formValues => {
     console.log('FormValues', formValues)
+    reset()
   }
 
   return (
@@ -42,11 +44,12 @@ const Location = () => {
         <Box h="39vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%">
             <GridItem>
-              <FormControl isInvalid={errors.address} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.address} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="address">
                   Address
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="2037 SW TRENTON LN"
                   bg="#EDF2F7"
@@ -60,11 +63,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.city} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.city} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="city">
                   City
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="East Point"
                   bg="#EDF2F7"
@@ -78,11 +82,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.state} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.state} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="state">
                   State
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="NC"
                   bg="#EDF2F7"
@@ -96,11 +101,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.zip} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.zip} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="zip">
                   Zip
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="28164"
                   bg="#EDF2F7"
@@ -113,11 +119,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.market} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.market} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="market">
                   Market
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="Atlanta"
                   bg="#EDF2F7"
@@ -131,11 +138,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.gateCode} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.gateCode} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="gateCode">
                   Gate Code
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="2334"
                   id="gateCode"
@@ -147,11 +155,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.lockBoxCode} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.lockBoxCode} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="lockBoxCode">
                   Lock Box Code
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   placeholder="5678"
                   id="lockBoxCode"
@@ -164,11 +173,12 @@ const Location = () => {
             </GridItem>
             <GridItem></GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.hoaContactPhone} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.hoaContactPhone} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="hoaContactPhone">
                   HOA Contact Phone
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   id="hoaContactPhone"
                   {...register('hoaContactPhone', {
@@ -179,11 +189,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.ext} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.ext} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   id="ext"
                   {...register('ext', {
@@ -194,11 +205,12 @@ const Location = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.hoaContactEmail} w="215px" sx={inputTextStyle}>
+              <FormControl isInvalid={errors.hoaContactEmail} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="hoaContactEmail">
                   HOA Contact Email
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   border=" 1px solid #E2E8F0"
                   id="hoaContactEmail"
                   {...register('hoaContactEmail', {
