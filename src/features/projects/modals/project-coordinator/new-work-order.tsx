@@ -1,13 +1,10 @@
 import {
   Box,
-  Stack,
   Button,
   Flex,
   FormControl,
   FormLabel,
   Input,
-  InputGroup,
-  InputLeftElement,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,14 +16,11 @@ import {
   Text,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useState } from 'react'
+import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
 import { dateFormatter } from 'utils/new-work-order'
 import { documentTypes } from 'utils/vendor-projects'
-import DatePicker from 'react-datepicker'
-
-import 'react-datepicker/dist/react-datepicker.css'
 
 const CalenderCard = props => {
   return (
@@ -66,13 +60,11 @@ const NewWorkOrder: React.FC<{
   isOpen: boolean
   onClose: () => void
 }> = ({ projectData, isOpen, onClose }) => {
-  const [startDate, setStartDate] = useState(new Date())
-
   return (
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="1137px" h="1029px" rounded={3} borderTop="2px solid #4E87F8">
+        <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
           <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
             New Work Order
           </ModalHeader>
@@ -135,12 +127,7 @@ const NewWorkOrder: React.FC<{
                       <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                         Expected Start Date
                       </FormLabel>
-                      <Input
-                        placeholder="dd/mm/yy"
-                        height="40px"
-                        borderLeft="2px solid #4E87F8"
-                        focusBorderColor="none"
-                      />
+                      <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
                     </FormControl>
                   </Box>
                   <Box>

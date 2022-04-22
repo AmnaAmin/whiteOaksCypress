@@ -20,8 +20,6 @@ import {
   Tag,
   Box,
   Flex,
-  Button,
-  ModalFooter,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'

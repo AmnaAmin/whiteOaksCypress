@@ -1,32 +1,13 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  Icon,
-  Image,
-  Link,
-  ModalFooter,
-  Stack,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, FormLabel, HStack, Link, Stack, Text, VStack } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { convertImageToDataURL, trimCanvas } from 'components/table/util'
-import { dateFormat } from 'utils/date-time-utils'
-import { downloadFile } from 'utils/file-utils'
-import jsPdf from 'jspdf'
+import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { downloadFile } from 'utils/file-utils'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiEditAlt, BiTrash } from 'react-icons/bi'
+import { BiCalendar, BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
-import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
+import { getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from './signature-modal'
@@ -44,15 +25,8 @@ export const LienWaiverTab: React.FC<any> = props => {
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const sigRef = useRef<HTMLImageElement>(null)
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    getValues,
-    setValue,
-  } = useForm({
+  const { handleSubmit, setValue } = useForm({
     defaultValues: {
       claimantName: lienWaiverData.claimantName,
       customerName: lienWaiverData.customerName,
@@ -66,7 +40,6 @@ export const LienWaiverTab: React.FC<any> = props => {
       dateOfSignature: lienWaiverData.dateOfSignature,
     },
   })
-  const value = getValues()
   const parseValuesToPayload = (formValues, documents) => {
     return {
       ...lienWaiverData,
@@ -91,32 +64,32 @@ export const LienWaiverTab: React.FC<any> = props => {
     setValue('claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
 
-  const generatePdf = useCallback(() => {
-    let form = new jsPdf()
-    const value = getValues()
-    const dimention = {
-      width: sigRef?.current?.width,
-      height: sigRef?.current?.height,
-    }
-    convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
-      form = createForm(form, getValues(), dimention, dataUrl)
-      const pdfUri = form.output('datauristring')
-      const pdfBlob = form.output('bloburi')
-      setRecentLWFile({
-        s3Url: pdfBlob,
-        fileType: 'Lien-Waver-Form.pdf',
-      })
-      setDocuments(doc => [
-        ...doc,
-        {
-          documentType: 26,
-          fileObject: pdfUri.split(',')[1],
-          fileObjectContentType: 'application/pdf',
-          fileType: 'Lien-Waver-Form.pdf',
-        },
-      ])
-    })
-  }, [getValues])
+  // const generatePdf = useCallback(() => {
+  //   let form = new jsPdf()
+  //   const value = getValues()
+  //   const dimention = {
+  //     width: sigRef?.current?.width,
+  //     height: sigRef?.current?.height,
+  //   }
+  //   convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
+  //     form = createForm(form, getValues(), dimention, dataUrl)
+  //     const pdfUri = form.output('datauristring')
+  //     const pdfBlob = form.output('bloburi')
+  //     setRecentLWFile({
+  //       s3Url: pdfBlob,
+  //       fileType: 'Lien-Waver-Form.pdf',
+  //     })
+  //     setDocuments(doc => [
+  //       ...doc,
+  //       {
+  //         documentType: 26,
+  //         fileObject: pdfUri.split(',')[1],
+  //         fileObjectContentType: 'application/pdf',
+  //         fileType: 'Lien-Waver-Form.pdf',
+  //       },
+  //     ])
+  //   })
+  // }, [getValues])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
@@ -146,10 +119,7 @@ export const LienWaiverTab: React.FC<any> = props => {
     generateTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
-  const onRemoveSignature = () => {
-    setValue('claimantsSignature', null)
-    setValue('dateOfSignature', null)
-  }
+
   return (
     <Stack>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
@@ -184,22 +154,12 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </Flex>
                 )}
 
-                <Button
-                  bg="#4E87F8"
-                  disabled={!value.claimantsSignature || recentLWFile}
-                  color="#FFFFFF"
-                  float="right"
-                  _hover={{ bg: 'royalblue' }}
-                  onClick={generatePdf}
-                  fontStyle="normal"
-                  fontSize="14px"
-                  fontWeight={600}
-                  h="48px"
-                  w="130px"
-                >
-                  <Box pos="relative" right="6px"></Box>
-                  Generate LW
-                </Button>
+                <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
+                  <Flex fontSize="14px" fontWeight={500} mr={1}>
+                    <Text mr={2}>See LW:</Text>
+                    <Text color="#4E87F8">LW34.Pdf</Text>
+                  </Flex>
+                </HStack>
               </Flex>
             </Flex>
             <Box>

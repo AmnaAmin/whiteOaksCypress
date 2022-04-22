@@ -1,25 +1,6 @@
-import {
-  Box,
-  HStack,
-  Text,
-  Flex,
-  SimpleGrid,
-  Button,
-  Checkbox,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Tbody,
-  Td,
-  FormControl,
-  FormLabel,
-  Input,
-  ModalFooter,
-} from '@chakra-ui/react'
+import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
 import React from 'react'
-
-import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
+import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import { documentTypes } from 'utils/vendor-projects'
@@ -57,41 +38,6 @@ const InformationCard = props => {
   )
 }
 
-const CheckboxStructure = () => {
-  return (
-    <Box>
-      <Checkbox
-        rounded="6px"
-        colorScheme="none"
-        iconColor="#2AB450"
-        h="32px"
-        w="145px"
-        bg="#F2F3F4"
-        color="#A0AEC0"
-        _checked={{ bg: '#E7F8EC', color: '#2AB450' }}
-        boxShadow="0px 0px 4px -2px "
-        justifyContent="center"
-        fontSize={14}
-        fontWeight={500}
-      >
-        Completed
-      </Checkbox>
-    </Box>
-  )
-}
-
-const UploadImage: React.FC<{ Images }> = ({ Images }) => {
-  return (
-    <Box overflow="hidden" ml="2">
-      <Button _focus={{ outline: 'none' }} variant="unstyled" leftIcon={<BiUpload color="#4E87F8" />} display="flex">
-        <Text fontWeight={400} fontSize="14px" color="#4E87F8">
-          {Images}
-        </Text>
-      </Button>
-    </Box>
-  )
-}
-
 const WorkOrderDetailTab = ({ onClose }) => {
   const { t } = useTranslation()
 
@@ -112,7 +58,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
       </SimpleGrid>
 
       <Box mt={10}>
-        <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
+        <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
           <Box>
             <FormControl height="40px">
               <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
@@ -126,7 +72,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Expected Start Date
               </FormLabel>
-              <Input placeholder="dd/mm/yy" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
           <Box>
@@ -134,7 +80,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Expected Completion Date
               </FormLabel>
-              <Input placeholder="dd/mm/yy" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
           <Box>
@@ -142,7 +88,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Completed By Vendor
               </FormLabel>
-              <Input placeholder="dd/mm/yy" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
         </SimpleGrid>
