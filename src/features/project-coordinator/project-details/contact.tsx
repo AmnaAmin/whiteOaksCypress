@@ -41,11 +41,12 @@ const Contact = () => {
             </Box>
 
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.fpmPhone}>
+              <FormControl isInvalid={errors.fpmPhone}>
                 <FormLabel sx={labelStyle} htmlFor="fpmPhone">
                   FPM Phone
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   placeholder="098-987-2233"
                   id="fpmPhone"
                   {...register('fpmPhone', {
@@ -59,11 +60,12 @@ const Contact = () => {
             </Box>
 
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.ext}>
+              <FormControl isInvalid={errors.ext}>
                 <FormLabel sx={labelStyle} htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="ext"
                   {...register('ext', {
                     required: 'This is required',
@@ -85,11 +87,12 @@ const Contact = () => {
             </Box>
 
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.pcPhone}>
+              <FormControl isInvalid={errors.pcPhone}>
                 <FormLabel sx={labelStyle} htmlFor="pcPhone">
                   PC Phone
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   placeholder="098-987-2233"
                   id="pcPhone"
                   {...register('pcPhone', {
@@ -103,11 +106,12 @@ const Contact = () => {
             </Box>
 
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.ext}>
+              <FormControl isInvalid={errors.ext}>
                 <FormLabel sx={labelStyle} htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="ext"
                   {...register('ext', {
                     required: 'This is required',
@@ -122,11 +126,12 @@ const Contact = () => {
 
           <HStack spacing={5}>
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.superEmailName}>
+              <FormControl isInvalid={errors.superEmailName}>
                 <FormLabel sx={labelStyle} htmlFor="superEmailName">
                   Super Email Name
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="superEmailName"
                   {...register('superEmailName', {
                     required: 'This is required',
@@ -138,11 +143,12 @@ const Contact = () => {
             </Box>
 
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.superPhone}>
+              <FormControl isInvalid={errors.superPhone}>
                 <FormLabel sx={labelStyle} htmlFor="superPhone">
                   Super Phone
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="superPhone"
                   {...register('superPhone', {
                     required: 'This is required',
@@ -153,11 +159,12 @@ const Contact = () => {
               </FormControl>
             </Box>
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.ext}>
+              <FormControl isInvalid={errors.ext}>
                 <FormLabel sx={labelStyle} htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="ext"
                   {...register('ext', {
                     required: 'This is required',
@@ -169,11 +176,12 @@ const Contact = () => {
             </Box>
 
             <Box h="40px">
-              <FormControl sx={inputTextStyle} isInvalid={errors.superEmail}>
+              <FormControl isInvalid={errors.superEmail}>
                 <FormLabel sx={labelStyle} htmlFor="superEmail">
                   Super Email
                 </FormLabel>
                 <Input
+                  sx={inputTextStyle}
                   id="superEmail"
                   {...register('superEmail', {
                     required: 'This is required',
