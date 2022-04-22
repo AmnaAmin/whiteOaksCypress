@@ -182,7 +182,7 @@ const WorkOrderDetails = ({
 
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab onClose={onClose} />
+                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
                   <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
@@ -208,7 +208,7 @@ const WorkOrderDetails = ({
                 </TabPanel>
 
                 <TabPanel p={0}>
-                  <InvoiceTab onClose={onClose} />
+                  <InvoiceTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
