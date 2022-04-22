@@ -43,9 +43,9 @@ export const AddPropertyInfo = props => {
     return addressValues
   }
 
-  // useEffect(() => {
-  //   refetch()
-  // }, [refetch])
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   const {
     register,
@@ -80,7 +80,6 @@ export const AddPropertyInfo = props => {
       setCity(addressInfo.city)
       setState(addressInfo.state)
       setZipCode(addressInfo.zipCode)
-      console.log(streetAddress)
     },
     [refetch, setStreetAddress, setCity, setState, setZipCode],
   )
@@ -88,7 +87,7 @@ export const AddPropertyInfo = props => {
   // Parse XML
   useEffect(() => {
     if (addressData) {
-      const parser = new xml2js.Parser(addressData)
+      const parser = new xml2js.Parser()
       parser
         .parseStringPromise(addressData)
         .then(function (result) {
@@ -118,6 +117,37 @@ export const AddPropertyInfo = props => {
       reset(defaultAddress)
     }
   }, [addressData, reset])
+
+  // const verifyAddress = (propertyInput, documentInput, values) => {
+  //   verifyAddressApi(propertyInput, documentInput, values).then(response => {
+  //     const parser = new xml2js.Parser(/* options */);
+  //     const array = [];
+  //     parser
+  //       .parseStringPromise(response.data)
+  //       .then(function (result) {
+  //         result.AddressValidateResponse.Address.forEach(record => {
+  //           if (record.Error !== undefined) {
+  //             setAddressVerificationStatus('failed');
+  //           } else {
+  //             setAddressVerificationStatus('success');
+  //             const address = {
+  //               streetAddress: record.Address2[0],
+  //               city: record.City[0],
+  //               state: record.State[0],
+  //               zipCode: record.Zip5[0],
+  //             };
+  //             values.property.streetAddress = address.streetAddress;
+  //             values.property.city = address.city;
+  //             values.property.state = address.state;
+  //             values.property.zipCode = address.zipCode;
+  //           }
+  //         });
+  //       })
+  //       .catch(function (err) {
+  //         // Failed
+  //       });
+  //   });
+  // };
 
   const [projectPayload, setProjectPayload] = useState({})
   const [property, setProperty] = useState({})
