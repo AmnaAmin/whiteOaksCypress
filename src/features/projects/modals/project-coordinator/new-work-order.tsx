@@ -72,12 +72,12 @@ const NewWorkOrder: React.FC<{
           <ModalBody justifyContent="center">
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-                <CalenderCard title="Client Start" date={dateFormatter(projectData?.clientStartDate)} />
-                <CalenderCard title="Client End " date={dateFormatter(projectData?.clientDueDate)} />
-                <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
-                <InformationCard title=" Final SOW Amount" date={`$${projectData?.sowNewAmount}`} />
-                <InformationCard title=" Email" date={projectData?.createdBy} />
-                <InformationCard title=" Phone No" date={projectData?.projectManagerPhoneNumber} />
+                <CalenderCard title="Client Start" date="11/14/2021" />
+                <CalenderCard title="Client End " date="11/14/2021" />
+                <InformationCard title="Profit Percentage" date="7.62%" />
+                <InformationCard title=" Final SOW Amount" date="$6,768.00" />
+                <InformationCard title=" Email" date="VendorADT@gmail.com" />
+                <InformationCard title=" Phone No" date="+27352735725" />
               </SimpleGrid>
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
