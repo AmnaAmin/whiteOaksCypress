@@ -87,7 +87,7 @@ export const InvoiceTab = ({ onClose }) => {
 
         <Box>
           <TableContainer border="1px solid #E2E8F0">
-            <Box h="488px" overflow="auto">
+            <Box h="400px" overflow="auto">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Table colorScheme="teal" size="lg">
                   <Thead position="sticky" top={0} zIndex={2}>
@@ -227,24 +227,25 @@ export const InvoiceTab = ({ onClose }) => {
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
         <Button
           variant="ghost"
-          size={'lg'}
           onClick={onClose}
           mr={3}
-          fontSize="14px"
-          fontWeight={500}
-          fontStyle="normal"
           color="gray.700"
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           Close
         </Button>
         <Button
-          size={'lg'}
           _focus={{ outline: 'none' }}
           colorScheme={'CustomPrimaryColor'}
-          _hover={{ bg: 'blue' }}
-          fontSize="14px"
-          fontWeight={500}
           fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           Save
         </Button>
