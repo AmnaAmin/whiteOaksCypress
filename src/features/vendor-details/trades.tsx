@@ -11,6 +11,7 @@ import {
 import { CheckboxButton } from 'components/form/checkbox-button'
 // import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { t } from 'i18next'
 // import 'components/translation/i18n';
 
 export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData }) => {
@@ -102,22 +103,19 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
           })}
         </Flex>
       </Box>
-      <Flex borderTop="2px solid #E2E8F0" textAlign="end" w="100%" h="130px" justifyContent="end">
+      <Flex alignItems="center" w="100%" h="100px" justifyContent="end" borderTop="2px solid #E2E8F0">
         <Button
-          mt="16px"
-          mr="60px"
           type="submit"
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
-          _hover={{ bg: 'blue', fontWeight: '600' }}
-          size="md"
-          fontWeight={500}
+          data-testid="saveVendorSkills"
+          fontWeight={600}
           fontStyle="normal"
           fontSize="14px"
-          data-testid="saveVendorSkills"
+          h="48px"
+          w="130px"
         >
-          {/* {t('save')} */}
-          Next
+          {t('save')}
         </Button>
       </Flex>
     </form>

@@ -45,13 +45,16 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       py="2"
       borderLeft="4px solid transparent"
       cursor="pointer"
+      _hover={{
+        bgGradient: 'linear(to-l, whiteAlpha.100,gray.100, gray.100)',
+      }}
       className="group"
       fontWeight="medium"
       {...linkState}
       {...rest}
     >
       <HStack>
-        <Box _groupHover={{ opacity: 1 }} fontSize="16px">
+        <Box _groupHover={{ opacity: 1 }} fontSize="18px">
           {icon}
         </Box>
         <Text fontSize="18px" fontWeight={500} lineHeight="28px" fontStyle="normal" pt="2px">
