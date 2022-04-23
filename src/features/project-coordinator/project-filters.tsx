@@ -86,11 +86,12 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
         justifyContent="space-between"
         w="100%"
         display="grid"
-        gridTemplateColumns={{
-          base: 'repeat(auto-fit, minmax(105px,1fr))',
-          sm: 'repeat(auto-fit, minmax(125px,1fr))',
-          md: 'repeat(auto-fit, minmax(205px,1fr))',
-        }}
+        gridTemplateColumns="repeat(4, 1fr)"
+        // gridTemplateColumns={{
+        //   base: 'repeat(auto-fit, minmax(105px,1fr))',
+        //   sm: 'repeat(auto-fit, minmax(125px,1fr))',
+        //   md: 'repeat(auto-fit, minmax(205px,1fr))',
+        // }}
         gridGap="15px"
       >
         {cards.map(card => {
