@@ -53,6 +53,7 @@ i18n.use(initReactI18next).init({
         newDocument: 'New Document',
         newAlert: 'New Alert',
         transaction: 'Transactions',
+        projectDetails: 'Project Details',
         vendorWorkOrders: 'Vendor Work Orders',
         documents: 'Documents',
         alerts: 'Alerts',
@@ -82,6 +83,13 @@ i18n.use(initReactI18next).init({
         amount: 'Amount',
         close: 'Close',
         save: 'Save',
+        finalSOW: 'Final SOW',
+        accountpayable: 'Account Payable',
+        projectcost: 'Project Cost',
+        revenue: 'Revenue',
+        profits: 'Profits',
+        profitmargins: 'Profit Margins',
+
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
@@ -172,6 +180,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'COI WC Exp Date',
         downloadCOIWCDocument: 'Download COI WC Document ',
         next: 'Next',
+        back: 'Back',
         cancel: 'Cancel',
         // Vendor-profile-license
         addLicense: 'Add License',
@@ -256,7 +265,7 @@ i18n.use(initReactI18next).init({
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
         transactionType: 'Tipo de Transacción',
-        against: 'Contra',
+        against: 'estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
@@ -361,6 +370,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'Fecha de Caducidad COI WC',
         downloadCOIWCDocument: 'Descargar Documento COI WC',
         next: 'Próximo',
+        back: 'Espalda',
         cancel: 'Cancelar',
         // Vendor-profile-license
         addLicense: 'Agregar Licencia',

@@ -18,17 +18,9 @@ import React from 'react'
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 
-type WODates = {
-  workOrderIssueDate: string
-  workOrderCompletionDateVariance: string
-  workOrderStartDate: string
-  workOrderExpectedCompletionDate: string
-  woStatus: { value: string; id: string }
-}
-
 const CalenderCard = props => {
   return (
-    <Flex pt={6} pb={8}>
+    <Flex>
       <Box pr={4}>
         <BiCalendar size={23} color="#718096" />
       </Box>
@@ -79,12 +71,12 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
   )
 }
 
-const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
+const WorkOrderDetailTab = ({ onClose }) => {
   const { t } = useTranslation()
 
   return (
     <Box>
-      <SimpleGrid columns={5} spacing={8} mt="31px" borderBottom="1px solid  #E2E8F0">
+      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
         <CalenderCard title="WO Issued" date="11/14/2021" />
         <CalenderCard title="Expected Start " date="11/14/2021" />
         <CalenderCard title="Expected Completion" date="11/14/2021" />
@@ -114,7 +106,7 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
       </Box>
 
       <TableContainer border="1px solid #E2E8F0" mb={9}>
-        <Box h={431} overflow="auto">
+        <Box h={340} overflow="auto">
           <Table variant="simple" size="md" fontSize={14} color="gray.600" whiteSpace="initial">
             <Thead bg=" #F7FAFC" position="sticky" top={0} zIndex={2} fontWeight={600}>
               <Tr>
@@ -215,19 +207,28 @@ const WorkOrderDetailTab = ({ woDates }: { woDates: WODates }) => {
         </Box>
       </TableContainer>
 
-      <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
+      <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
+        <Button
+          variant="ghost"
+          onClick={onClose}
+          mr={3}
+          color="gray.700"
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
+        >
           {t('close')}
         </Button>
         <Button
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
-          mr={3}
-          size="lg"
-          _hover={{ bg: 'blue' }}
-          fontSize="14px"
-          fontWeight={500}
           fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           {t('save')}
         </Button>

@@ -27,7 +27,7 @@ import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
 
 const InvoiceInfo: React.FC<{ title: string; date: string; icons: React.ElementType }> = ({ title, date, icons }) => {
   return (
-    <Flex pt={6} pb={8} justifyContent="center">
+    <Flex justifyContent="center">
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -75,7 +75,7 @@ export const InvoiceTab = ({ onClose }) => {
   return (
     <Box>
       <Box w="100%">
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2}>
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo title={'WO Original Amount'} date={'$40,170.6'} icons={BiDollarCircle} />
           <InvoiceInfo title={'Final Invoice:'} date={'$40,170.6'} icons={BiDollarCircle} />
           <InvoiceInfo title={'PO Number'} date={'xyz'} icons={BiFile} />
@@ -83,11 +83,11 @@ export const InvoiceTab = ({ onClose }) => {
           <InvoiceInfo title={'Due Date'} date={'12/02/2022'} icons={BiCalendar} />
         </Grid>
 
-        <Divider border="2px solid gray" mb={5} color="gray.200" />
+        <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
           <TableContainer border="1px solid #E2E8F0">
-            <Box h="488px" overflow="auto">
+            <Box h="400px" overflow="auto">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Table colorScheme="teal" size="lg">
                   <Thead position="sticky" top={0} zIndex={2}>
@@ -224,11 +224,29 @@ export const InvoiceTab = ({ onClose }) => {
           </TableContainer>
         </Box>
       </Box>
-      <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5} pr={14}>
-        <Button variant="ghost" size={'lg'} onClick={onClose} mr={3}>
+      <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
+        <Button
+          variant="ghost"
+          onClick={onClose}
+          mr={3}
+          color="gray.700"
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
+        >
           Close
         </Button>
-        <Button size={'lg'} _focus={{ outline: 'none' }} colorScheme={'CustomPrimaryColor'} _hover={{ bg: 'blue' }}>
+        <Button
+          _focus={{ outline: 'none' }}
+          colorScheme={'CustomPrimaryColor'}
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
+        >
           Save
         </Button>
       </HStack>

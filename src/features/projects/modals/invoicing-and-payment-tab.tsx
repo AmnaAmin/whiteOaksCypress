@@ -135,14 +135,14 @@ const InvoicingAndPaymentTab = ({
       <Divider />
       <ModalFooter pb="15px" pt="15px">
         <Button
-          _hover={{ bg: 'blue' }}
           colorScheme="CustomPrimaryColor"
           onClick={onClose}
-          size="lg"
-          fontStyle="normal"
-          fontSize="18px"
-          fontWeight={600}
           _focus={{ outline: 'none' }}
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           {t('close')}
         </Button>

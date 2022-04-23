@@ -26,7 +26,7 @@ type InputProps = {
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
-  <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage} w="215px">
+  <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage}>
     <FormLabel
       display="flex"
       color="gray.600"
