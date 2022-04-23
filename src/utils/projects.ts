@@ -52,3 +52,18 @@ export const useProjectAlerts = (projectId, login) => {
     return response?.data.filter(alert => alert.login === login)
   })
 }
+
+export const useWeekDayProjectsDue = () => {
+  const client = useClient()
+
+  const { data: dueProjectData, ...rest } = useQuery<ProjectType>(['project', {}], async () => {
+    const response = await client(`projects-due-this-week`, {})
+
+    return response?.data
+  })
+
+  return {
+    dueProjectData,
+    ...rest,
+  }
+}

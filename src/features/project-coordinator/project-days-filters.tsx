@@ -1,6 +1,9 @@
 import { Button, Divider, Flex, Stack } from '@chakra-ui/react'
+import { useWeekDayProjectsDue } from 'utils/projects'
 
 export const ProjectDayFilters = () => {
+  const { dueProjectData } = useWeekDayProjectsDue()
+  console.log(dueProjectData)
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1}>
