@@ -15,7 +15,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { convertImageToDataURL, trimCanvas } from 'components/table/util'
+import { convertImageToDataURL } from 'components/table/util'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 import jsPdf from 'jspdf'
@@ -27,13 +27,13 @@ import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
-
+import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose } = props
+  const { lienWaiverData, onClose, onProjectTabChange } = props
   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
@@ -78,7 +78,10 @@ export const LienWaiverTab: React.FC<any> = props => {
     updateLienWaiver(lienWaiverData)
   }
   useEffect(() => {
-    if (isSuccess) onClose()
+    if (isSuccess) {
+      onProjectTabChange?.(2)
+      onClose()
+    }
   }, [isSuccess, onClose])
 
   useEffect(() => {
