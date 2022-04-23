@@ -60,8 +60,10 @@ export const ProjectDetails: React.FC = props => {
                   <Button
                     onClick={onOpen}
                     // bg="#4E87F8"
-                    color="#4E87F8"
+                    color="white"
                     size="md"
+                    bg="#4e87f8"
+                    _hover={{ bg: '#2A61CE' }}
                   >
                     <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>

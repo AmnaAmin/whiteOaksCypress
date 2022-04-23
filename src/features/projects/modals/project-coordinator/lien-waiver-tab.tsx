@@ -5,7 +5,7 @@ import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp } from 'react-icons/bi'
+import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose } = props
+  console.log(lienWaiverData)
   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
@@ -153,13 +154,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                     </Button>
                   </Flex>
                 )}
-
-                <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
-                  <Flex fontSize="14px" fontWeight={500} mr={1}>
-                    <Text mr={2}>See LW:</Text>
-                    <Text color="#4E87F8">LW34.Pdf</Text>
-                  </Flex>
-                </HStack>
               </Flex>
             </Flex>
             <Box>
@@ -213,7 +207,18 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Box>
           </VStack>
         </FormControl>
+
         <Flex mt="70px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
+          <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
+            <Flex fontSize="14px" fontWeight={500} mr={1}>
+              <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
+                <Text mr={1}>
+                  <BiDownload size={14} />
+                </Text>
+                See LW2705_AR
+              </Button>
+            </Flex>
+          </HStack>
           <Button
             variant="ghost"
             mr={3}

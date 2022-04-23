@@ -93,7 +93,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
           </Box>
         </SimpleGrid>
       </Box>
-      <Flex mt="70px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
+      <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
         <Button
           variant="ghost"
           onClick={onClose}

@@ -77,9 +77,15 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
           {tabIndex !== 3 && (
             <HStack spacing={4}>
-              <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
-                {t('editVendorWorkOrder')}
-              </Text>
+              <HStack fontSize="16px" fontWeight={500} h="32px">
+                <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
+                  WO 2705
+                </Text>
+                <Text lineHeight="22px" h="22px">
+                  ADT RENOVATIONS
+                </Text>
+              </HStack>
+
               <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
                 <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
                   Active
@@ -162,32 +168,6 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
             </Tabs>
           </Stack>
         </ModalBody>
-        {/* <ModalFooter>
-          <Button
-            variant="ghost"
-            onClick={onClose}
-            mr={3}
-            color="gray.700"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
-            {t('close')}
-          </Button>
-          <Button
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
-            {t('save')}
-          </Button>
-        </ModalFooter> */}
       </ModalContent>
     </Modal>
   )
