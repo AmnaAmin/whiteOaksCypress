@@ -166,14 +166,7 @@ const WorkOrderDetails = ({
                       <Text mr={2}>Recent INV:</Text>
                       <Text color="#4E87F8">Invc4.pdf</Text>
                     </Flex>
-                    <Button
-                      fontSize="14px"
-                      fontWeight={600}
-                      h="48px"
-                      w="130px"
-                      colorScheme="CustomPrimaryColor"
-                      _focus={{ outline: 'none' }}
-                    >
+                    <Button fontSize="14px" fontWeight={600} w="130px" colorScheme="brand">
                       Generate
                     </Button>
                   </HStack>

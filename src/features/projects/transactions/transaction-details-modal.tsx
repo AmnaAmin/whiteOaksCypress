@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalBody,
-  Button,
   Box,
   Text,
   Table,
@@ -28,6 +27,7 @@ import { BiCalendar, BiUser } from 'react-icons/bi'
 import { dateFormat } from 'utils/date-time-utils'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
 type AddNewTransactionProps = CustomModalProps & {
@@ -140,7 +140,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
         <ModalFooter display="flex" alignItems="center">
           <Button
             onClick={onClose}
-            colorScheme="CustomPrimaryColor"
+            colorScheme="brand"
             fontSize="14px"
             fontWeight={600}
             fontStyle="normal"

@@ -4,7 +4,6 @@ import {
   Text,
   Flex,
   SimpleGrid,
-  Button,
   Checkbox,
   TableContainer,
   Table,
@@ -17,6 +16,7 @@ import React from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 const CalenderCard = props => {
   return (
@@ -90,16 +90,31 @@ const WorkOrderDetailTab = ({ onClose }) => {
           </Text>
 
           <HStack>
-            <Button leftIcon={<BiDownload color="#4E87F8" />} mr={5} _focus={{ border: 'none' }} bg="white">
-              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
-                Download as PDF
-              </Text>
+            <Button
+              leftIcon={<BiDownload color="#4E87F8" />}
+              fontStyle="normal"
+              fontWeight={600}
+              fontSize="14px"
+              color="#4E87F8"
+              mr={5}
+              bg="white"
+              variant="ghost"
+              colorScheme="brand"
+            >
+              Download as PDF
             </Button>
 
-            <Button leftIcon={<BiCheck color="#4E87F8" />} _focus={{ border: 'none' }} bg="white">
-              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
-                Mark All Completed
-              </Text>
+            <Button
+              leftIcon={<BiCheck color="#4E87F8" />}
+              fontStyle="normal"
+              fontWeight={600}
+              fontSize="14px"
+              color="#4E87F8"
+              bg="white"
+              variant="ghost"
+              colorScheme="brand"
+            >
+              Mark All Completed
             </Button>
           </HStack>
         </Flex>
@@ -221,15 +236,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
         >
           {t('close')}
         </Button>
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button colorScheme="brand" fontStyle="normal" fontSize="14px" fontWeight={600} h="48px" w="130px">
           {t('save')}
         </Button>
       </Flex>

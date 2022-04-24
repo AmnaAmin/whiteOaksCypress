@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalBody,
-  Button,
   FormControl,
   FormLabel,
   HStack,
@@ -27,6 +26,7 @@ import { Document } from 'types/vendor.types'
 
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
+import { Button } from 'components/button/button'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -181,8 +181,9 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                     fontStyle="normal"
                     bg="none"
                     color="#4E87F8"
+                    variant="ghost"
                   >
-                    {t('chooseFile')}{' '}
+                    {t('chooseFile')}
                   </Button>
                 )}
               </HStack>
@@ -209,8 +210,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
           </Button>
           <Button
             onClick={uploadDocument}
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
+            colorScheme="brand"
             type="submit"
             fontSize="14px"
             fontWeight={600}

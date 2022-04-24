@@ -5,7 +5,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  Button,
   FormErrorMessage,
   FormLabel,
   FormControl,
@@ -54,6 +53,7 @@ import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
+import { Button } from 'components/button/button'
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -438,8 +438,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
         {isLienWaiverRequired && !isShowLienWaiver ? (
           <Button
             data-testid="next-to-lien-waiver-form"
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
+            colorScheme="brand"
             type="button"
             ml="3"
             h="48px"
@@ -457,8 +456,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
         ) : (
           <Button
             data-testid="save-transaction"
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
+            colorScheme="brand"
             type="submit"
             form="newTransactionForm"
             ml="3"

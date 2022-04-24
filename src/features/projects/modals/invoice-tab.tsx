@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -19,6 +18,7 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
 
 import { useState } from 'react'
 
@@ -126,6 +126,7 @@ export const InvoiceTab = ({ onClose }) => {
                           type="submit"
                           size="xs"
                           variant="ghost"
+                          colorScheme="brand"
                           my={0.5}
                           fontSize="14px"
                           fontWeight={600}
@@ -238,15 +239,7 @@ export const InvoiceTab = ({ onClose }) => {
         >
           Close
         </Button>
-        <Button
-          _focus={{ outline: 'none' }}
-          colorScheme={'CustomPrimaryColor'}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button colorScheme="brand" fontStyle="normal" fontSize="14px" fontWeight={600} h="48px" w="130px">
           Save
         </Button>
       </HStack>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { Box, Button, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input, Flex } from '@chakra-ui/react'
+import { Box, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input, Flex } from '@chakra-ui/react'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -16,6 +16,7 @@ import { FormInput } from 'components/react-hook-form-fields/input'
 import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
+import { Button } from 'components/button/button'
 
 const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
@@ -159,7 +160,7 @@ const Settings = React.forwardRef((props, ref) => {
           borderTop="2px solid #E2E8F0"
         >
           <Button
-            colorScheme="CustomPrimaryColor"
+            colorScheme="brand"
             type="submit"
             fontSize="14px"
             fontWeight={600}
@@ -198,6 +199,7 @@ export const PreviewImg = () => {
       <Box pos="relative" display="flex" justifyContent="center" alignContent="center">
         <Avatar size="lg" src={preview || defaultImage} zIndex={1}></Avatar>
         <Button
+          ml={0}
           onClick={handleInputClick}
           bg="transparent"
           variant="unstyled"

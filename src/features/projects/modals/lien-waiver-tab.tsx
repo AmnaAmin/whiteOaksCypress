@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -30,6 +29,7 @@ import { useDocuments } from 'utils/vendor-projects'
 import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -171,6 +171,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                     </FormLabel>
 
                     <Button
+                      colorScheme="brand"
+                      variant="ghost"
                       fontSize="14px"
                       fontWeight={500}
                       bg="white"
@@ -187,11 +189,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                 )}
 
                 <Button
-                  bg="#4E87F8"
+                  colorScheme="brand"
                   disabled={!value.claimantsSignature || recentLWFile}
                   color="#FFFFFF"
                   float="right"
-                  _hover={{ bg: 'royalblue' }}
                   onClick={generatePdf}
                   fontStyle="normal"
                   fontSize="14px"
@@ -316,9 +317,8 @@ export const LienWaiverTab: React.FC<any> = props => {
             {t('close')}
           </Button>
           <Button
-            colorScheme="CustomPrimaryColor"
+            colorScheme="brand"
             type="submit"
-            _focus={{ outline: 'none' }}
             fontStyle="normal"
             fontSize="14px"
             fontWeight={600}

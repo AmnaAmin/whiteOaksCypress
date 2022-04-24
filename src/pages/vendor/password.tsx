@@ -6,7 +6,6 @@ import {
   Text,
   Input,
   HStack,
-  Button,
   Progress,
   VStack,
   FormErrorMessage,
@@ -28,6 +27,7 @@ import { successMessage } from 'utils/api-messages'
 import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'
 import { t } from 'i18next'
+import { Button } from 'components/button/button'
 
 const textStyle = {
   color: '#4A5568',
@@ -246,7 +246,7 @@ const VendorProfilePassword = () => {
 
         <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="100px">
           <Button
-            colorScheme="CustomPrimaryColor"
+            colorScheme="brand"
             type="submit"
             fontSize="14px"
             fontWeight={600}

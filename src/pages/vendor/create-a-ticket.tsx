@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -30,6 +29,7 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
+import { Button } from 'components/button/button'
 
 const CreateATicket = () => {
   const toast = useToast()
@@ -286,7 +286,7 @@ const CreateATicket = () => {
           >
             <Button
               type="submit"
-              colorScheme="CustomPrimaryColor"
+              colorScheme="brand"
               fontSize="14px"
               fontWeight={600}
               fontStyle="normal"

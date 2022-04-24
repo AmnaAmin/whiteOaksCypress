@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Box, Button, HStack, VStack, Center, Divider, Flex } from '@chakra-ui/react'
+import { Box, HStack, VStack, Center, Divider, Flex } from '@chakra-ui/react'
 import { MdAdd } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -18,6 +18,7 @@ import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
+import { Button } from 'components/button/button'
 
 type LicenseProps = {
   setNextTab: () => void
@@ -217,8 +218,7 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
           borderTop="2px solid #E2E8F0"
         >
           <Button
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
+            colorScheme="brand"
             data-testid="saveLicenses"
             type="submit"
             fontSize="14px"

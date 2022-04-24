@@ -7,7 +7,6 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  Button,
   Grid,
   GridItem,
   Flex,
@@ -18,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { BiListMinus, BiMapPin, BiWorld, BiUser, BiCalendar } from 'react-icons/bi'
+import { Button } from 'components/button/button'
 
 type AlertStatusProps = {
   isOpen: boolean
@@ -170,8 +170,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
                 Close
               </Button>
               <Button
-                colorScheme="CustomPrimaryColor"
-                _focus={{ outline: 'none' }}
+                colorScheme="brand"
                 rounded="6px"
                 type="submit"
                 form="newTransactionForm"
