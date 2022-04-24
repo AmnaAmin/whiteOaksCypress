@@ -106,7 +106,7 @@ const WorkOrderDetailTab = ({ onClose }) => {
       </Box>
 
       <TableContainer border="1px solid #E2E8F0" mb={9}>
-        <Box h={431} overflow="auto">
+        <Box h={340} overflow="auto">
           <Table variant="simple" size="md" fontSize={14} color="gray.600" whiteSpace="initial">
             <Thead bg=" #F7FAFC" position="sticky" top={0} zIndex={2} fontWeight={600}>
               <Tr>
@@ -207,19 +207,28 @@ const WorkOrderDetailTab = ({ onClose }) => {
         </Box>
       </TableContainer>
 
-      <Flex pr={10} h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" mr={3} size="lg" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.700">
+      <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
+        <Button
+          variant="ghost"
+          onClick={onClose}
+          mr={3}
+          color="gray.700"
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
+        >
           {t('close')}
         </Button>
         <Button
           colorScheme="CustomPrimaryColor"
-          mr={3}
-          size="lg"
           _focus={{ outline: 'none' }}
-          _hover={{ bg: 'blue' }}
-          fontSize="14px"
-          fontWeight={500}
           fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
           {t('save')}
         </Button>

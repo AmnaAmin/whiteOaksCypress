@@ -64,7 +64,6 @@ const InvoiceAndPayments = () => {
                   })}
                   placeholder="$3000.00"
                   bg="gray.100"
-                  borderLeft="2px solid #4E87F8"
                 />
                 <FormErrorMessage>{errors.originSowAmount && errors.originSowAmount.message}</FormErrorMessage>
               </FormControl>
@@ -82,7 +81,6 @@ const InvoiceAndPayments = () => {
                   })}
                   placeholder="$3000.00"
                   bg="gray.100"
-                  borderLeft="2px solid #4E87F8"
                 />
                 <FormErrorMessage>{errors.finalSowAmount && errors.finalSowAmount.message}</FormErrorMessage>
               </FormControl>
@@ -136,18 +134,16 @@ const InvoiceAndPayments = () => {
               <FormControl sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>Invoice back date</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.invoiceBackDate && errors.invoiceBackDate?.message}
                   label={''}
                   name={`invoiceBackDate`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8',
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 400,
-                    fontSize: '14px',
                     height: '40px',
                   }}
                   onChange={e => {
@@ -162,7 +158,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>Payments terms</FormLabel>
-                <ReactSelect selectProps={{ isLeftBorder: true }} />
+                <ReactSelect selectProps={{ isBorderLeft: true }} />
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -170,18 +166,16 @@ const InvoiceAndPayments = () => {
               <FormControl sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>WOA Expected Pay</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.woaExpectedPay && errors.woaExpectedPay?.message}
                   label={''}
                   name={`woaExpectedPay`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8',
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 400,
-                    fontSize: '14px',
                     height: '40px',
                   }}
                   onChange={e => {

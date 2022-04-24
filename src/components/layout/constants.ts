@@ -1,3 +1,4 @@
+import { BiCreditCard, BiDollarCircle, BiError, BiGroup, BiUserPin } from 'react-icons/bi'
 import { FaAlignCenter, FaHome, FaUser } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
@@ -44,7 +45,27 @@ export const MENU_ROLE_BASED: Menus = {
     {
       pathTo: '/payable',
       title: 'Payable',
-      Icon: FaUser,
+      Icon: BiCreditCard,
+    },
+    {
+      pathTo: '/receivable',
+      title: 'Receivable',
+      Icon: BiDollarCircle,
+    },
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+    },
+    {
+      pathTo: '/alerts',
+      title: 'Alerts',
+      Icon: BiError,
+    },
+    {
+      pathTo: '/clients',
+      title: 'Clients',
+      Icon: BiGroup,
     },
   ],
 }

@@ -186,34 +186,20 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl w="215px" isInvalid={!!errors.primaryContact}>
                     <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
                     <Input
-                      w="215px"
-                      h="40px"
-                      bg="#FFFFFF"
-                      color="#718096"
-                      fontSize="14px"
-                      borderLeft="2px solid #4E87F8"
+                      data-testid="primaryContact"
+                      id="primaryContact"
+                      type="text"
+                      variant="outline-with-left-border"
                       {...register('primaryContact', {
                         required: 'This is required',
                       })}
-                      id="primaryContact"
-                      type="text"
-                      data-testid="primaryContact"
                     />
                     <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondaryContact}>
+                  <FormControl isInvalid={!!errors.secondaryContact} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
-                    <Input
-                      w="215px"
-                      h="40px"
-                      bg="#FFFFFF"
-                      color="#718096"
-                      fontSize="14px"
-                      {...register('secondaryContact')}
-                      id="secondaryContact"
-                      type="text"
-                    />
+                    <Input bg="white" {...register('secondaryContact')} id="secondaryContact" type="text" />
                     <FormErrorMessage>{errors.secondaryContact && errors.secondaryContact.message}</FormErrorMessage>
                   </FormControl>
                 </Stack>
@@ -224,19 +210,13 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
                     <Input
-                      w="215px"
-                      h="40px"
-                      bg="#FFFFFF"
-                      color="#718096"
-                      fontSize="14px"
-                      borderLeft="2px solid #4E87F8"
-                      mb="5px"
-                      {...register('businessPhoneNumber', {
-                        required: 'This is required',
-                      })}
                       id="businessPhoneNumber"
                       type="text"
                       data-testid="businessPhoneNumber"
+                      variant="outline-with-left-border"
+                      {...register('businessPhoneNumber', {
+                        required: 'This is required',
+                      })}
                     />
                     <FormErrorMessage>
                       {errors.businessPhoneNumber && errors.businessPhoneNumber.message}
@@ -245,16 +225,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
 
                   <FormControl w="100px" isInvalid={!!errors.businessNumberExtention}>
                     <FormLabel sx={textStyle}>Ext</FormLabel>
-                    <Input
-                      w="96px"
-                      h="40px"
-                      bg="#FFFFFF"
-                      color="#718096"
-                      fontSize="14px"
-                      {...register('businessNumberExtention')}
-                      id="businessNumberExtention"
-                      type="text"
-                    />
+                    <Input {...register('businessNumberExtention')} id="businessNumberExtention" type="text" />
                     <FormErrorMessage>
                       {errors.businessNumberExtention && errors.businessNumberExtention.message}
                     </FormErrorMessage>
@@ -269,11 +240,6 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                         return (
                           <Input
                             {...field}
-                            w="215px"
-                            h="40px"
-                            bg="#FFFFFF"
-                            color="#718096"
-                            fontSize="14px"
                             id="SecondaryNo"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
@@ -300,16 +266,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
 
                   <FormControl w="100px" isInvalid={!!errors.secondaryNumberExtenstion}>
                     <FormLabel sx={textStyle}>Ext</FormLabel>
-                    <Input
-                      bg="#FFFFFF"
-                      w="96px"
-                      h="40px"
-                      color="#718096"
-                      fontSize="14px"
-                      id="Ext"
-                      {...register('secondaryNumberExtenstion')}
-                      type="text"
-                    />
+                    <Input id="Ext" {...register('secondaryNumberExtenstion')} type="text" />
                     <FormErrorMessage>
                       {errors.secondaryNumberExtenstion && errors.secondaryNumberExtenstion.message}
                     </FormErrorMessage>
@@ -324,12 +281,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl isInvalid={!!errors.primaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
-                      w="215px"
-                      h="40px"
-                      bg="#FFFFFF"
-                      color="#718096"
-                      fontSize="14px"
-                      borderLeft="2px solid #4E87F8"
+                      variant="outline-with-left-border"
                       {...register('primaryEmail', {
                         required: 'This is required',
                       })}
@@ -342,46 +294,18 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
 
                   <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
-                    <Input
-                      w="215px"
-                      h="40px"
-                      bg="#FFFFFF"
-                      color="#718096"
-                      fontSize="14px"
-                      {...register('secondaryEmail')}
-                      id="secondaryEmail"
-                      type="text"
-                    />
+                    <Input {...register('secondaryEmail')} id="secondaryEmail" type="text" />
                     <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
                   </FormControl>
                 </Stack>
               </Box>
             </Box>
 
-            <Stack mt="100px" w="100%">
-              <Box>
-                <Divider border="1px solid" />
-              </Box>
-              <Box w="100%" minH="60px">
-                <Button
-                  mt="10px"
-                  mr="60px"
-                  float={'right'}
-                  colorScheme="CustomPrimaryColor"
-                  _focus={{ outline: 'none' }}
-                  _hover={{ bg: 'blue' }}
-                  size="md"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  fontWeight={500}
-                  type="submit"
-                  data-testid="saveDetails"
-                >
-                  {/* {t('save')} */}
-                  Next
-                </Button>
-              </Box>
-            </Stack>
+            <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
+              <Button type="submit" data-testid="saveDetails" variant="solid" size="lg" colorScheme="brand">
+                {t('save')}
+              </Button>
+            </Flex>
           </Flex>
         </Box>
       )}

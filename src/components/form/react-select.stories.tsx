@@ -6,5 +6,15 @@ export default {
 }
 
 export const Select = () => <ReactSelect />
-export const SelectWithLeftBorder = () => <ReactSelect selectProps={{ isLeftBorder: true }} />
-export const SelectDisabled = () => <ReactSelect selectProps={{ isLeftBorder: true }} isDisabled />
+
+export const SelectWithLeftBorder = () => <ReactSelect selectProps={{ isBorderLeft: true }} />
+
+export const SelectDisabled = () => <ReactSelect isDisabled />
+
+export const SelectSmall = () => <ReactSelect size="sm" />
+
+export const SelectMedium = () => <ReactSelect size="md" />
+
+export const SelectLarge = () => <ReactSelect size="lg" />
+
+export const SelectWithError = () => <ReactSelect size="lg" errorBorderColor="red.500" isInvalid />

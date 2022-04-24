@@ -1,5 +1,7 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon, Text } from '@chakra-ui/react'
-import { Box, Button, Stack } from '@chakra-ui/react'
+import { useDisclosure, Text } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
+import { Box, Stack } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
 import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
@@ -27,12 +29,12 @@ const projectTabStyle = {
   },
 }
 
-export const ProjectDetails: React.FC = props => {
+const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { projectData, isLoading } = useProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const [tabIndex, setTabIndex] = useState(0)
+  const [tabIndex, setTabIndex] = useState<number>(0)
   const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,
@@ -47,63 +49,44 @@ export const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab
-                aria-labelledby="transaction-tab"
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                sx={projectTabStyle}
-              >
+              <Tab aria-labelledby="transaction-tab" sx={projectTabStyle}>
                 {t('transaction')}
               </Tab>
 
-              <Tab
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                whiteSpace="nowrap"
-                sx={projectTabStyle}
-              >
+              <Tab whiteSpace="nowrap" sx={projectTabStyle}>
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab
-                aria-labelledby="documents-tab"
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                sx={projectTabStyle}
-              >
+              <Tab aria-labelledby="documents-tab" sx={projectTabStyle}>
                 {t('documents')}
               </Tab>
 
-              <Tab
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                sx={projectTabStyle}
-              >
-                {t('alerts')}
-              </Tab>
+              <Tab sx={projectTabStyle}>{t('alerts')}</Tab>
 
-              <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative" bottom="2">
+              <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
-                  <Button onClick={onDocumentModalOpen} fontSize={14} fontWeight={600} color="#4E87F8" size="md">
-                    <Box pos="relative" right="6px" pb="3.3px"></Box>
+                  <Button onClick={onDocumentModalOpen} variant="ghost" colorScheme="brand">
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button color="#4E87F8" size="md" onClick={onAlertModalOpen}>
+                  <Button variant="ghost" colorScheme="brand" onClick={onAlertModalOpen}>
                     <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
                       {t('resolve')}
                     </Text>
                   </Button>
                 )}
                 {tabIndex === 0 && (
-                  <Button color="#4E87F8" size="md" onClick={onTransactionModalOpen} fontSize="14px" m="1px">
-                    <Icon as={BiAddToQueue} mr="1" />
-                    <Text fontStyle="normal" data-testid="new-transaction-button" fontWeight={600}>
-                      {t('newTransaction')}
-                    </Text>
+                  <Button
+                    data-testid="new-transaction-button"
+                    onClick={onTransactionModalOpen}
+                    variant="ghost"
+                    colorScheme="brand"
+                    leftIcon={<BiAddToQueue />}
+                  >
+                    {t('newTransaction')}
                   </Button>
                 )}
               </Box>
@@ -117,7 +100,13 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
-                  <WorkOrdersTable ref={tabsContainerRef} />
+                  <WorkOrdersTable
+                    onTabChange={n => {
+                      console.log(n)
+                      setTabIndex(n)
+                    }}
+                    ref={tabsContainerRef}
+                  />
                 </Box>
               </TabPanel>
               <TabPanel p="0px" h="0px">
@@ -146,3 +135,5 @@ export const ProjectDetails: React.FC = props => {
     </>
   )
 }
+
+export default ProjectDetails

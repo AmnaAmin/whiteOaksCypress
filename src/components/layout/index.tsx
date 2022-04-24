@@ -58,9 +58,14 @@ export const Layout: React.FC = props => {
             size="xs"
             onClick={toggle}
             fontSize="16px"
-            bg="#F3F8FF"
-            color="#A0AEC0"
+            bg="gray.50"
+            color="gray.400"
+            _hover={{
+              bg: 'gray.200',
+              color: 'gray.600',
+            }}
             maxW="0"
+            minW="20px"
             h="21px"
             p="0.5"
             rounded={0}
