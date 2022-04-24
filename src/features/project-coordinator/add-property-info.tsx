@@ -113,41 +113,10 @@ export const AddPropertyInfo = props => {
           // Failed
         })
 
-      const defaultAddress = addressDefaultValue(addressData)
-      reset(defaultAddress)
+      // const defaultAddress = addressDefaultValue(addressData)
+      // reset(defaultAddress)
     }
-  }, [addressData, reset])
-
-  // const verifyAddress = (propertyInput, documentInput, values) => {
-  //   verifyAddressApi(propertyInput, documentInput, values).then(response => {
-  //     const parser = new xml2js.Parser(/* options */);
-  //     const array = [];
-  //     parser
-  //       .parseStringPromise(response.data)
-  //       .then(function (result) {
-  //         result.AddressValidateResponse.Address.forEach(record => {
-  //           if (record.Error !== undefined) {
-  //             setAddressVerificationStatus('failed');
-  //           } else {
-  //             setAddressVerificationStatus('success');
-  //             const address = {
-  //               streetAddress: record.Address2[0],
-  //               city: record.City[0],
-  //               state: record.State[0],
-  //               zipCode: record.Zip5[0],
-  //             };
-  //             values.property.streetAddress = address.streetAddress;
-  //             values.property.city = address.city;
-  //             values.property.state = address.state;
-  //             values.property.zipCode = address.zipCode;
-  //           }
-  //         });
-  //       })
-  //       .catch(function (err) {
-  //         // Failed
-  //       });
-  //   });
-  // };
+  }, [])
 
   const [projectPayload, setProjectPayload] = useState({})
   const [property, setProperty] = useState({})

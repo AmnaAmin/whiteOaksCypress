@@ -63,7 +63,7 @@ export const useVerifyAddressApi = (streetAddress?: any, city?: string, state?: 
     ['address'],
     async () => {
       const response = await client(
-        `/addressVerification/?address=` +
+        `/addressVerification/?&address=` +
           encodeURI(streetAddress) +
           '&city=' +
           city +
@@ -73,7 +73,7 @@ export const useVerifyAddressApi = (streetAddress?: any, city?: string, state?: 
           zipCode,
         {},
       )
-      return response?.data
+      return response
     },
     { enabled: false },
   )
