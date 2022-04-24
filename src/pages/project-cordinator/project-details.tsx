@@ -37,11 +37,11 @@ export const ProjectDetails: React.FC = props => {
   }
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const TabStyle = {
-    fontSize: '14px',
-    fontWeight: 500,
-    color: 'gray.600',
-  }
+  // const TabStyle = {
+  //   fontSize: '14px',
+  //   fontWeight: 500,
+  //   color: 'gray.600',
+  // }
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
 
   return (
