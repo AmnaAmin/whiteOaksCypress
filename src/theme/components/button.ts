@@ -1,27 +1,13 @@
 import { theme as chakraTheme } from '@chakra-ui/react'
 
-const buttonSize = size => {
-  return size === 'lg'
-    ? {
-        fontSize: '16px',
-        h: '40px',
-        px: '15px',
-        fontWeight: '600',
-      }
-    : {
-        fontWeight: '500',
-      }
-}
-
 const ButtonVariants = {
   Button: {
     variants: {
       solid: props => {
-        const style = buttonSize(props.size)
+        // const style = buttonSize(props.size)
 
         return {
           ...chakraTheme.components.Button.variants.solid(props),
-          ...style,
           bg: `${props.colorScheme}.300`,
           color: 'white',
           _hover: {
@@ -33,10 +19,11 @@ const ButtonVariants = {
         }
       },
       outline: props => {
-        const style = buttonSize(props.size)
+        // const style = buttonSize(props.size)
+
         return {
           ...chakraTheme.components.Button.variants.outline(props),
-          ...style,
+          // ...style,
           borderColor: `${props.colorScheme}.400`,
           color: `${props.colorScheme}.400`,
           _hover: {
@@ -48,10 +35,11 @@ const ButtonVariants = {
         }
       },
       ghost: props => {
-        const style = buttonSize(props.size)
+        // const style = buttonSize(props.size)
+
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
-          ...style,
+          // ...style,
           color: `${props.colorScheme}.400`,
           _hover: {
             bg: `${props.colorScheme}.50`,
@@ -60,6 +48,25 @@ const ButtonVariants = {
             outline: 'none',
           },
         }
+      },
+    },
+
+    sizes: {
+      xs: {
+        minW: '55px',
+        h: '24px',
+      },
+      sm: {
+        minW: '70px',
+        h: '32px',
+      },
+      md: {
+        minW: '84px',
+        h: '40px',
+      },
+      lg: {
+        minW: '107px',
+        h: '48px',
       },
     },
   },

@@ -1,3 +1,4 @@
+import { VStack } from '@chakra-ui/layout'
 import { Button } from './button'
 
 export default {
@@ -5,20 +6,31 @@ export default {
   component: Button,
 }
 
-export const Primary = () => (
-  <Button variant="solid" colorScheme="brand" size="lg">
-    Primary
-  </Button>
+export const ButtonSolid = () => (
+  <VStack>
+    <Button variant="solid" colorScheme="brand" size="xs">
+      Solid
+    </Button>
+    <Button variant="solid" colorScheme="brand" size="sm">
+      Solid
+    </Button>
+    <Button variant="solid" colorScheme="brand" size="md">
+      Solid
+    </Button>
+    <Button variant="solid" colorScheme="brand" size="lg">
+      Solid
+    </Button>
+  </VStack>
 )
 
-export const Secondary = () => (
+export const ButtonOutline = () => (
   <Button variant="outline" colorScheme="brand">
-    Secondary
+    Outline
   </Button>
 )
 
 export const Error = () => (
-  <Button variant="solid" colorScheme="red">
+  <Button variant="solid" colorScheme="red" size="md">
     Secondary
   </Button>
 )
