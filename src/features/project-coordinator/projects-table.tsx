@@ -7,7 +7,7 @@ import Status from '../projects/status'
 import { Column } from 'react-table'
 import { t } from 'i18next'
 
-export const PCPROJECT_COLUMNS = [
+export const PROJECT_COLUMNS = [
   {
     Header: 'ID',
     accessor: 'id',

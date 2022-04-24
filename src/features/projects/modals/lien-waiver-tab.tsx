@@ -15,7 +15,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { convertImageToDataURL, trimCanvas } from 'components/table/util'
+import { convertImageToDataURL } from 'components/table/util'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 import jsPdf from 'jspdf'
@@ -27,13 +27,13 @@ import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
-
+import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose } = props
+  const { lienWaiverData, onClose, onProjectTabChange } = props
   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
@@ -78,7 +78,10 @@ export const LienWaiverTab: React.FC<any> = props => {
     updateLienWaiver(lienWaiverData)
   }
   useEffect(() => {
-    if (isSuccess) onClose()
+    if (isSuccess) {
+      onProjectTabChange?.(2)
+      onClose()
+    }
   }, [isSuccess, onClose])
 
   useEffect(() => {
@@ -174,6 +177,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       color="#4E87F8"
                       float="right"
                       mr={3}
+                      h="48px"
                       onClick={() => downloadFile(recentLWFile.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
@@ -187,9 +191,13 @@ export const LienWaiverTab: React.FC<any> = props => {
                   disabled={!value.claimantsSignature || recentLWFile}
                   color="#FFFFFF"
                   float="right"
-                  size="md"
                   _hover={{ bg: 'royalblue' }}
                   onClick={generatePdf}
+                  fontStyle="normal"
+                  fontSize="14px"
+                  fontWeight={600}
+                  h="48px"
+                  w="130px"
                 >
                   <Box pos="relative" right="6px"></Box>
                   Generate LW
@@ -298,24 +306,24 @@ export const LienWaiverTab: React.FC<any> = props => {
             variant="ghost"
             mr={3}
             onClick={onClose}
-            size="lg"
             color="gray.700"
             fontStyle="normal"
-            fontWeight={500}
             fontSize="14px"
+            fontWeight={600}
+            h="48px"
+            w="130px"
           >
             {t('close')}
           </Button>
           <Button
-            _hover={{ bg: 'blue' }}
             colorScheme="CustomPrimaryColor"
-            size="lg"
-            mr={3}
             type="submit"
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
             _focus={{ outline: 'none' }}
+            fontStyle="normal"
+            fontSize="14px"
+            fontWeight={600}
+            h="48px"
+            w="130px"
           >
             {t('save')}
           </Button>

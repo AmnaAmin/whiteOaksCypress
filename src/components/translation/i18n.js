@@ -130,13 +130,13 @@ i18n.use(initReactI18next).init({
         finalInvoice: 'Final Invoice',
         uploadInvoice: 'Upload Invoice',
         // Lean-Weiver
-        firstHeading: 'CONDITIONAL WAIVER AND RELEASE ON FINAL PAYMENT',
+        firstHeading: 'Conditional waiver and release on final payment',
         secondHeading: 'Identifying Information',
         thirdHeading: 'Conditional Waiver and Release',
         fourthHeading: 'Exceptions',
         fifthHeading: 'Signature',
         noticeText:
-          'NOTICE: THIS DOCUMENT WAIVES THE CLAIMANTS LIEN, STOP PAYMENT NOTICE, AND PAYMENT BOND RIGHTS EFFECTIVE ON RECEIPT OF PAYMENT. A PERSON SHOULD NOT RELY ON THIS DOCUMENT UNLESS SATISFIED THAT THE CLAIMANT WILL/HAS RECEIVED PAYMENT.',
+          'NOTICE: this document waives the claimants lien, stop payment notice, and payment bond rights effective on receipt of payment. a person should not rely on this document unless satisfied that the claimant will/has received payment.',
         informationSection:
           'This document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant`s schedule to receive or receipt of payment from the financial institution on which the following check is drawn:',
         // Projects-Documents
@@ -180,6 +180,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'COI WC Exp Date',
         downloadCOIWCDocument: 'Download COI WC Document ',
         next: 'Next',
+        back: 'Back',
         cancel: 'Cancel',
         // Vendor-profile-license
         addLicense: 'Add License',
@@ -264,7 +265,7 @@ i18n.use(initReactI18next).init({
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
         transactionType: 'Tipo de Transacción',
-        against: 'Contra',
+        against: 'estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
@@ -369,6 +370,7 @@ i18n.use(initReactI18next).init({
         COIWCExpDate: 'Fecha de Caducidad COI WC',
         downloadCOIWCDocument: 'Descargar Documento COI WC',
         next: 'Próximo',
+        back: 'Espalda',
         cancel: 'Cancelar',
         // Vendor-profile-license
         addLicense: 'Agregar Licencia',

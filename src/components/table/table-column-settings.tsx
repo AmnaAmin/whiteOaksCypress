@@ -187,18 +187,27 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" size="md" onClick={onClose} color="gray.600" fontWeight={500} mr={3}>
+            <Button
+              variant="ghost"
+              onClick={onClose}
+              color="gray.600"
+              mr={3}
+              fontStyle="normal"
+              fontSize="14px"
+              fontWeight={600}
+              h="48px"
+              w="130px"
+            >
               Close
             </Button>
             <Button
               colorScheme="CustomPrimaryColor"
-              fontSize="14px"
-              size="md"
-              fontWeight={500}
-              fontStyle="normal"
-              mr={3}
               onClick={saveModal}
-              _hover={{ bg: 'blue' }}
+              fontStyle="normal"
+              fontSize="14px"
+              fontWeight={600}
+              h="48px"
+              w="130px"
             >
               Save
             </Button>
