@@ -5,6 +5,15 @@ export type ProjectWorkOrder = {
   clientApprovedAmount: number
   clientOriginalApprovedAmount: number
   companyName: string
+  claimantName: string
+  customerName: string
+  owner: string
+  makerOfCheck: string
+  amountOfCheck: number
+  checkPayableTo: string
+  claimantsSignature: string
+  claimantTitle: string
+  dateOfSignature: string
   createdBy: string
   createdDate: string
   dateInvoiceSubmitted: string | null
@@ -78,6 +87,13 @@ export enum TransactionTypeValues {
   payment = 49,
 }
 
+export enum TransactionStatusValues {
+  pending = 'PENDING',
+  cancelled = 'CANCELLED',
+  approved = 'APPROVED',
+  denied = 'DENIED',
+}
+
 export type SelectOption = {
   label: string
   value: any
@@ -90,6 +106,19 @@ export type TransactionFormValues = {
   checked: boolean
 }
 
+export interface LienWaiverFormValues {
+  claimantName: string
+  customerName: string
+  propertyAddress: string
+  owner: string
+  makerOfCheck: string
+  amountOfCheck: string
+  checkPayableTo: string
+  claimantsSignature: string | null | undefined
+  claimantTitle: string
+  dateOfSignature: string | Date | null
+}
+
 export interface FormValues {
   transactionType: SelectOption | null
   against: SelectOption | null
@@ -98,8 +127,11 @@ export interface FormValues {
   workOrder: SelectOption | null
   changeOrder: SelectOption | null
   transaction: TransactionFormValues[]
+  status: SelectOption | null
   expectedCompletionDate: string
   newExpectedCompletionDate: string
+  lienWaiver?: LienWaiverFormValues
+  attachment: any
 }
 
 export type ChangeTransaction = {
@@ -123,6 +155,7 @@ export type ChangeOrderPayload = {
   paidDate: string | null
   lineItems: ChangeTransaction[]
   projectId: string
+  documents?: Array<any>
 }
 
 export type ChangeOrderUpdatePayload = {
@@ -148,6 +181,7 @@ export type ChangeOrderUpdatePayload = {
   projectId: number
   vendorId: number | null
   lineItems: Array<ChangeTransaction & { id: string | number }>
+  documents?: Array<any>
 }
 
 type LineItem = {
@@ -187,4 +221,5 @@ export type ChangeOrderType = {
   paidDate: string | null
   lineItems: Array<LineItem> | null
   paymentReceived: null
+  documents: any[]
 }

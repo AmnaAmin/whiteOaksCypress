@@ -15,8 +15,12 @@ type PaidChartProps = {
 
 const PaidChart: React.FC<PaidChartProps> = ({ filterChart }) => {
   const { data } = usePaidWOAmountByYearAndMonth(filterChart.year, filterChart.month)
+  return <PaidChartGraph data={data} width="90%" height={327} />
+}
+
+export const PaidChartGraph = ({ data, width, height }) => {
   return (
-    <ResponsiveContainer width="90%" height={327}>
+    <ResponsiveContainer width={width} height={height}>
       <BarChart
         width={630}
         height={250}

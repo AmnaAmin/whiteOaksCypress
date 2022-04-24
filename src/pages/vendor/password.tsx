@@ -5,10 +5,8 @@ import {
   FormLabel,
   Text,
   Input,
-  Divider,
   HStack,
   Button,
-  Spacer,
   Progress,
   VStack,
   FormErrorMessage,
@@ -16,6 +14,7 @@ import {
   InputRightElement,
   InputGroup,
   useToast,
+  Flex,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 // import { InputGroup } from 'react-bootstrap';
@@ -28,6 +27,7 @@ import { PasswordFormValues } from 'types/account.types'
 import { successMessage } from 'utils/api-messages'
 import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'
+import { t } from 'i18next'
 
 const textStyle = {
   color: '#4A5568',
@@ -109,7 +109,7 @@ const VendorProfilePassword = () => {
       </Text>
 
       <form onSubmit={handleSubmit(onsubmit)}>
-        <VStack spacing={7} h="45vh" align="start">
+        <VStack spacing={7} h="35vh" align="start">
           <FormControl isInvalid={!!errors.currentPassword} w="215px">
             <FormLabel sx={textStyle}>Current Password</FormLabel>
 
@@ -244,17 +244,19 @@ const VendorProfilePassword = () => {
           </FormControl>
         </VStack>
 
-        <Box>
-          <Divider border="1px solid" />
-        </Box>
-        <HStack pt="10px">
-          <Spacer />
-          <Button colorScheme="CustomPrimaryColor" size="md" type="submit" mr="5" mt="5">
-            <Text fontSize="14px" fontWeight={500} fontStyle="normal">
-              Save
-            </Text>
+        <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="100px">
+          <Button
+            colorScheme="CustomPrimaryColor"
+            type="submit"
+            fontSize="14px"
+            fontWeight={600}
+            fontStyle="normal"
+            h="48px"
+            w="130px"
+          >
+            {t('save')}
           </Button>
-        </HStack>
+        </Flex>
       </form>
     </Stack>
   )

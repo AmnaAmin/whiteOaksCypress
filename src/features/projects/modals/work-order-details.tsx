@@ -19,6 +19,8 @@ import {
   TagLabel,
   Tag,
   Box,
+  Flex,
+  Button,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
@@ -38,10 +40,18 @@ const TabStyle = {
   },
 }
 
-const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
+const WorkOrderDetails = ({
+  workOrder,
+  onClose: close,
+  onProjectTabChange,
+}: {
+  workOrder: ProjectWorkOrderType
+  onClose: () => void
+  onProjectTabChange?: any
+}) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [header, setHeader] = useState(false)
+  const [tabIndex, setTabIndex] = useState(0)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -53,6 +63,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
       onOpen()
     } else {
       onCloseDisclosure()
+      setTabIndex(0)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 
@@ -60,9 +71,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     <Modal isOpen={isOpen} onClose={onClose} size="none">
       <ModalOverlay />
 
-      <ModalContent w={1200} rounded={0} borderTop="2px solid #4E87F8">
+      <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
         <ModalHeader h="64px" py={4} display="flex" alignItems="center">
-          {header ? (
+          {tabIndex === 3 && (
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
@@ -73,7 +84,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                 </Text>
               </HStack>
             </Box>
-          ) : (
+          )}
+
+          {tabIndex !== 3 && (
             <HStack spacing={4}>
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
@@ -92,67 +105,87 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
         <Divider mb={3} />
         <ModalBody>
           <Stack spacing={5}>
-            <Tabs variant="enclosed">
-              <TabList>
-                <Tab
-                  _focus={{ border: 'none' }}
-                  minW={180}
-                  sx={TabStyle}
-                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                >
-                  {t('workOrderDetails')}
-                </Tab>
-                <Tab
-                  _focus={{ border: 'none' }}
-                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                  sx={TabStyle}
-                  onClick={() => setHeader(false)}
-                >
-                  {t('lienWaiver')}
-                </Tab>
-                <Tab
-                  _focus={{ border: 'none' }}
-                  _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                  sx={TabStyle}
-                  onClick={() => setHeader(false)}
-                >
-                  {t('Payments')}
-                </Tab>
+            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
+              <TabList height="50px" alignItems={'end'}>
+                <Flex h="40px">
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    minW={180}
+                    sx={TabStyle}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                  >
+                    {t('workOrderDetails')}
+                  </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('lienWaiver')}
+                  </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('Payments')}
+                  </Tab>
 
-                <Tab
-                  _focus={{ border: 'none' }}
-                  _selected={{
-                    color: 'white',
-                    bg: '#4E87F8',
-                    fontWeight: 600,
-                    id: 'checkId',
-                    _hover: { backgroundColor: '#4E87F8' },
-                  }}
-                  sx={TabStyle}
-                  onClick={() => setHeader(true)}
-                >
-                  {t('Invoice')}
-                </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
+                      id: 'checkId',
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('Invoice')}
+                  </Tab>
+                </Flex>
+                {tabIndex === 3 && (
+                  <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
+                    <Flex fontSize="14px" fontWeight={500} mr={1}>
+                      <Text mr={2}>Recent INV:</Text>
+                      <Text color="#4E87F8">Invc4.pdf</Text>
+                    </Flex>
+                    <Button
+                      fontSize="14px"
+                      fontWeight={600}
+                      h="48px"
+                      w="130px"
+                      colorScheme="CustomPrimaryColor"
+                      _focus={{ outline: 'none' }}
+                    >
+                      Generate
+                    </Button>
+                  </HStack>
+                )}
               </TabList>
 
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab
-                    // onClose={onClose}
-                    woDates={{
-                      workOrderIssueDate: workOrder?.workOrderIssueDate,
-                      workOrderCompletionDateVariance: workOrder?.workOrderCompletionDateVariance,
-                      workOrderExpectedCompletionDate: workOrder?.workOrderExpectedCompletionDate,
-                      workOrderStartDate: workOrder?.workOrderStartDate,
-                      woStatus: {
-                        id: String(workOrder?.status),
-                        value: workOrder?.statusLabel,
-                      },
-                    }}
-                  />
+                  <WorkOrderDetailTab onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
-                  <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
+                  <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab

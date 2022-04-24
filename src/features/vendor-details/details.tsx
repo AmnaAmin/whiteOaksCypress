@@ -358,30 +358,21 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
               </Box>
             </Box>
 
-            <Stack mt="100px" w="100%">
-              <Box>
-                <Divider border="1px solid" />
-              </Box>
-              <Box w="100%" minH="60px">
-                <Button
-                  mt="10px"
-                  mr="60px"
-                  float={'right'}
-                  colorScheme="CustomPrimaryColor"
-                  _focus={{ outline: 'none' }}
-                  _hover={{ bg: 'blue' }}
-                  size="md"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  fontWeight={500}
-                  type="submit"
-                  data-testid="saveDetails"
-                >
-                  {/* {t('save')} */}
-                  Next
-                </Button>
-              </Box>
-            </Stack>
+            <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
+              <Button
+                colorScheme="CustomPrimaryColor"
+                _focus={{ outline: 'none' }}
+                type="submit"
+                data-testid="saveDetails"
+                fontStyle="normal"
+                fontSize="14px"
+                fontWeight={600}
+                h="48px"
+                w="130px"
+              >
+                {t('save')}
+              </Button>
+            </Flex>
           </Flex>
         </Box>
       )}
