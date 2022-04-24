@@ -16,7 +16,7 @@ const chooseFilebyTestId = (id, filename) => {
   expect(screen.getByText(new RegExp(filename))).toBeInTheDocument()
 }
 
-jest.setTimeout(30000)
+jest.setTimeout(150000)
 
 /* keeping as it is for now. Will create a story and change this */
 describe('File Input test cases', () => {

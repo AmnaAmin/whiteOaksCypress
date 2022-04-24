@@ -1,7 +1,7 @@
 import App from 'App'
 import { render, screen } from '../../../utils/test-utils'
 
-jest.setTimeout(30000)
+jest.setTimeout(150000)
 
 describe('Dashboard Test Cases', () => {
   test('Dasbhoard should render widgets properly', async () => {

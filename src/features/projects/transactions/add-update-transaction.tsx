@@ -252,6 +252,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                               {...field}
                               options={transactionTypeOptions}
                               isDisabled={!!transaction}
+                              size="md"
                               onChange={(option: SelectOption) => {
                                 if (option.value !== TransactionTypeValues.changeOrder) {
                                   reset({

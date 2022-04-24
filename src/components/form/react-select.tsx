@@ -57,7 +57,8 @@ export const chakraStyles = {
     },
   }),
   control: (provider: any, options) => {
-    const { isBorderLeft } = options.selectProps?.selectProps || {}
+    const { selectProps } = options
+    const { isBorderLeft } = selectProps?.selectProps || {}
 
     const borderLeftStyle = isBorderLeft ? inputBorderLeftStyle : {}
 
@@ -67,6 +68,10 @@ export const chakraStyles = {
       borderRadius: '6px',
       bg: '#F7FAFC',
       _focus: inputFocusStateStyle,
+      _disabled: {
+        opacity: 0.7,
+        cursor: 'not-allowed',
+      },
     }
   },
   // menuList: () => ({}),

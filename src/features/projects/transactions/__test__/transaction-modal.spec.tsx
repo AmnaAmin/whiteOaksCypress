@@ -3,7 +3,7 @@ import { act, getByText, render, screen, selectOption, waitForLoadingToFinish } 
 import App from 'App'
 import userEvent from '@testing-library/user-event'
 
-jest.setTimeout(50000)
+jest.setTimeout(150000)
 
 describe('Porject Details: Transaction tab test cases', () => {
   test('User should create new transaction', async () => {

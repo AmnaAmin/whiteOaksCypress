@@ -5,7 +5,7 @@ export default {
 
 export const TabsEnclosed = () => {
   return (
-    <Tabs size="md" variant="filled" colorScheme="brand">
+    <Tabs size="md" variant="enclosed" colorScheme="brand">
       <TabList>
         <Tab>One</Tab>
         <Tab>Two</Tab>

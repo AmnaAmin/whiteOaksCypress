@@ -3,7 +3,7 @@ import { theme as chakraTheme } from '@chakra-ui/react'
 const tabsVariants = {
   Tabs: {
     variants: {
-      filled: props => {
+      enclosed: props => {
         return {
           // @ts-ignore
           ...chakraTheme.components.Tabs.variants.enclosed(props),
