@@ -1,13 +1,26 @@
-import React from 'react'
-import { FormControl, Grid, GridItem } from '@chakra-ui/react'
+// import React, { useEffect, useState } from 'react'
+import { Button, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
+import { verifyAddressValues } from 'types/project.type'
+import { useCallback, useEffect, useState } from 'react'
+import { useVerifyAddressApi } from 'utils/pc-projects'
+import xml2js from 'xml2js'
+import { ModalVerifyAddress } from 'features/modal-verify-address'
+import React from 'react'
 
-export const AddPropertyInfo: React.FC<{
-  isLoading: boolean
-}> = () => {
-  const { register, control } = useForm<{}>({})
+export const AddPropertyInfo = props => {
+  // const { mutate: saveAddress, data: addressPayload } = useAddressSettings()
+  // const { projectId } = useParams<{ projectId: string }>()
+  // const { data: address } = useAddressDetails(projectId)
+  const [streetAddress, setStreetAddress] = useState()
+  const [city, setCity] = useState()
+  const [state, setState] = useState()
+  const [zipCode, setZipCode] = useState()
+  const [isDuplicateAddress, setIsDuplicateAddress] = useState('false')
+
+  const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
 
   const states = [
     { value: '1', label: 'A' },
@@ -21,20 +34,128 @@ export const AddPropertyInfo: React.FC<{
     { value: '3', label: 'C' },
   ]
 
+  // const addressDefaultValue = address => {
+  //   const addressValues = {
+  //     streetAddress: address.streetAddress,
+  //     city: address.city,
+  //     state: address.state,
+  //     zipCode: address.zipCode,
+  //   }
+  //   return addressValues
+  // }
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+    watch,
+    reset,
+  } = useForm<verifyAddressValues>()
+
+  /* debug purpose */
+  const watchAllFields = watch()
+  React.useEffect(() => {
+    const subscription = watch(value => {
+      console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
+
+  const onSubmit = useCallback(
+    async values => {
+      setTimeout(() => {
+        refetch()
+      }, 2000)
+      const addressInfo = {
+        streetAddress: values.streetAddress,
+        city: values.city,
+        state: values.state,
+        zipCode: values.zipCode,
+      }
+      setStreetAddress(addressInfo.streetAddress)
+      setCity(addressInfo.city)
+      setState(addressInfo.state)
+      setZipCode(addressInfo.zipCode)
+      setIsDuplicateAddress('true')
+    },
+    [refetch, setStreetAddress, setCity, setState, setZipCode],
+  )
+
+  // Parse XML
+  useEffect(() => {
+    if (addressData) {
+      const parser = new xml2js.Parser()
+      parser
+        .parseStringPromise(addressData)
+        .then(function (result) {
+          result.AddressValidateResponse.Address.forEach(record => {
+            if (record.Error !== undefined) {
+              setAddressVerificationStatus('failed')
+            } else {
+              setAddressVerificationStatus('success')
+              const address = {
+                streetAddress: record.Address2[0],
+                city: record.City[0],
+                state: record.State[0],
+                zipCode: record.Zip5[0],
+              }
+              record.streetAddress = address.streetAddress
+              record.city = address.city
+              record.state = address.state
+              record.zipCode = address.zipCode
+            }
+          })
+        })
+        .catch(function (err) {
+          // Failed
+        })
+
+      // const defaultAddress = addressDefaultValue(addressData)
+      // reset(defaultAddress)
+    }
+  }, [])
+
+  const [projectPayload, setProjectPayload] = useState({})
+  const [property, setProperty] = useState({})
+  const [showVerificationUSPS, setShowVerificationUSPS] = useState(false)
+  const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
+
+  const saveModalVerify = () => {
+    const property = {
+      ...projectPayload,
+      streetAddress: projectPayload,
+    }
+    const p = { ...projectPayload, ...{ property }, newProperty: property }
+
+    props.createEntity({ ...p })
+  }
+
+  const {
+    isOpen: isAddressVerifyModalOpen,
+    onClose: onAddressVerifyModalClose,
+    onOpen: onOpenAddressVerifyModalOpen,
+  } = useDisclosure()
+
   return (
-    <form>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
               errorMessage={''}
               label={'Address'}
-              placeholder=""
+              placeholder="Type Property Address . ."
               register={register}
               controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`address`}
+              name={`streetAddress`}
+              // onChange={s => onTypeAheadAddressChange(s)}
             />
           </FormControl>
         </GridItem>
@@ -76,12 +197,12 @@ export const AddPropertyInfo: React.FC<{
               controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`zip`}
+              name={`zipCode`}
             />
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormSelect
@@ -123,7 +244,7 @@ export const AddPropertyInfo: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -166,6 +287,50 @@ export const AddPropertyInfo: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
+      <Grid display="flex" alignItems="center">
+        <Button // onClose={onAddressVerifyModalClose}
+          variant="ghost"
+          size="sm"
+        >
+          {'Close'}
+        </Button>
+
+        <Button
+          colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue' }}
+          ml="3"
+          size="sm"
+          type="submit"
+          onClick={() => {
+            refetch()
+            onOpenAddressVerifyModalOpen()
+          }}
+        >
+          {'Next'}
+        </Button>
+      </Grid>
+      <ModalVerifyAddress
+        title="Address Verification"
+        content="Address Verification"
+        isOpen={isAddressVerifyModalOpen}
+        onClose={onAddressVerifyModalClose}
+        props={''} // onConfirm={onDeleteConfirmationModalClose}
+        save={saveModalVerify}
+        addressVerificationStatus={addressVerificationStatus}
+      />
+      isDuplicateAddress &&{' '}
+      {
+        <ModalVerifyAddress
+          title="Address Verification"
+          content="Address Verification"
+          isOpen={isAddressVerifyModalOpen}
+          onClose={onAddressVerifyModalClose}
+          props={''} // onConfirm={onDeleteConfirmationModalClose}
+          save={saveModalVerify}
+          addressVerificationStatus={addressVerificationStatus}
+        />
+      }
     </form>
   )
 }
