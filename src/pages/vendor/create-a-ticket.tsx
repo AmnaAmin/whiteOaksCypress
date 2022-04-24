@@ -259,9 +259,7 @@ const CreateATicket = () => {
                         }}
                         onClear={() => setValue(field.name, null)}
                       >
-                        <Text color="#4E87F8" fontWeight={500} fontSize="14px" fontStyle="normal">
-                          Choose File
-                        </Text>
+                        Choose File
                       </ChooseFileField>
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
