@@ -12,9 +12,9 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
-import ProjectDetailsTAb from 'features/project-coordinator/project-details/project-details-tab'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
@@ -156,7 +156,7 @@ export const ProjectDetails: React.FC = props => {
                 </Box>
               </TabPanel>
               <TabPanel p="0px" mt="3">
-                <ProjectDetailsTAb />
+                <ProjectDetailsTab />
               </TabPanel>
 
               <TabPanel p="0px" h="0px">

@@ -2,6 +2,7 @@ import { HStack } from '@chakra-ui/react'
 import React from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
+import Contact from './contact'
 import ProjectManagement from './project-management'
 
 const tabStyle = {
@@ -10,7 +11,7 @@ const tabStyle = {
   color: 'gray.500',
 }
 
-const ProjectDetailsTAb = () => {
+const ProjectDetailsTab = () => {
   return (
     <Card rounded="16px" padding="0">
       <Tabs>
@@ -61,6 +62,9 @@ const ProjectDetailsTAb = () => {
           <TabPanel>
             <p>two!</p>
           </TabPanel>
+          <TabPanel mt="12" p="0" ml="6">
+            <Contact />
+          </TabPanel>
           <TabPanel>
             <p>three!</p>
           </TabPanel>
@@ -70,4 +74,4 @@ const ProjectDetailsTAb = () => {
   )
 }
 
-export default ProjectDetailsTAb
+export default ProjectDetailsTab
