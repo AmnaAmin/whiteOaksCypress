@@ -20,9 +20,19 @@ export const InputWithBorderLeft = () => {
   return (
     <VStack>
       <Input w="215px" variant="outline-with-left-border" size="sm" placeholder="Input size small" />
+      <Input w="215px" variant="outline-with-left-border" size="sm" placeholder="Input size small" />
       <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
       <Input w="215px" variant="outline-with-left-border" size="lg" placeholder="Input size large" />
       <Input w="215px" variant="outline-with-left-border" size="sm" placeholder="with border color" isInvalid />
+    </VStack>
+  )
+}
+
+export const InputStates = () => {
+  return (
+    <VStack>
+      <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" disabled />
+      <Input w="215px" variant="outline-with-left-border" size="md" placeholder="with border color" isInvalid />
     </VStack>
   )
 }

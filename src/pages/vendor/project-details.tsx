@@ -1,4 +1,5 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Text } from '@chakra-ui/react'
+import { useDisclosure, Text } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import React, { useRef, useState } from 'react'
@@ -48,42 +49,21 @@ const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs index={tabIndex} variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab
-                aria-labelledby="transaction-tab"
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                sx={projectTabStyle}
-              >
+              <Tab aria-labelledby="transaction-tab" sx={projectTabStyle}>
                 {t('transaction')}
               </Tab>
 
-              <Tab
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                whiteSpace="nowrap"
-                sx={projectTabStyle}
-              >
+              <Tab whiteSpace="nowrap" sx={projectTabStyle}>
                 {t('vendorWorkOrders')}
               </Tab>
 
-              <Tab
-                aria-labelledby="documents-tab"
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                sx={projectTabStyle}
-              >
+              <Tab aria-labelledby="documents-tab" sx={projectTabStyle}>
                 {t('documents')}
               </Tab>
 
-              <Tab
-                _focus={{ border: 'none' }}
-                _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-                sx={projectTabStyle}
-              >
-                {t('alerts')}
-              </Tab>
+              <Tab sx={projectTabStyle}>{t('alerts')}</Tab>
 
               <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
