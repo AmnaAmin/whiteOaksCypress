@@ -16,6 +16,7 @@ import { AmountDetailsCard } from 'features/project-coordinator/project-amount-d
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import { ProjectSchedule } from 'features/project-coordinator/GSTC/project-schedule'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 
 export const ProjectDetails: React.FC = props => {
@@ -42,6 +43,8 @@ export const ProjectDetails: React.FC = props => {
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
+
+        {tabIndex === 1 && <ProjectSchedule />}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
