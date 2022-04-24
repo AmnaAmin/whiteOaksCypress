@@ -44,7 +44,7 @@ export const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
-        {tabIndex === 1 }
+        {tabIndex === 1}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">

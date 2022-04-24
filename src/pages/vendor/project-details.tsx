@@ -1,5 +1,6 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Icon, Text } from '@chakra-ui/react'
-import { Box, Button, Stack } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure, Text } from '@chakra-ui/react'
+import { Box, Stack } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
 import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
@@ -84,26 +85,28 @@ const ProjectDetails: React.FC = props => {
                 {t('alerts')}
               </Tab>
 
-              <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative" bottom="2">
+              <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
-                  <Button onClick={onDocumentModalOpen} fontSize={14} fontWeight={600} color="#4E87F8" size="md">
-                    <Box pos="relative" right="6px" pb="3.3px"></Box>
+                  <Button onClick={onDocumentModalOpen} variant="ghost" colorScheme="brand">
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button color="#4E87F8" size="md" onClick={onAlertModalOpen}>
+                  <Button variant="ghost" colorScheme="brand" onClick={onAlertModalOpen}>
                     <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
                       {t('resolve')}
                     </Text>
                   </Button>
                 )}
                 {tabIndex === 0 && (
-                  <Button color="#4E87F8" size="md" onClick={onTransactionModalOpen} fontSize="14px" m="1px">
-                    <Icon as={BiAddToQueue} mr="1" />
-                    <Text fontStyle="normal" data-testid="new-transaction-button" fontWeight={600}>
-                      {t('newTransaction')}
-                    </Text>
+                  <Button
+                    data-testid="new-transaction-button"
+                    onClick={onTransactionModalOpen}
+                    variant="ghost"
+                    colorScheme="brand"
+                    leftIcon={<BiAddToQueue />}
+                  >
+                    {t('newTransaction')}
                   </Button>
                 )}
               </Box>
