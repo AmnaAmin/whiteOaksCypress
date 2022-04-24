@@ -40,10 +40,8 @@ export const SimpleSlider: React.FC<{
   }, [props.data])
   return (
     <Card
-      rounded="15px"
+      rounded="2xl"
       minH="156px"
-      bg="white"
-      w="100%"
       padding={{
         base: '30px 30px 10px',
         sm: '30px 30px 10px',
@@ -51,8 +49,6 @@ export const SimpleSlider: React.FC<{
         xl: ' 30px 40px 10px',
         '2xl': '30px 60px 10px',
       }}
-      display="block"
-      boxShadow="1px 1px 7px rgba(0,0,0,0.1)"
     >
       {props.isLoading ? (
         <BlankSlate width="100%" h="95px" />

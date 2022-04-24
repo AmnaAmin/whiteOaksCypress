@@ -13,7 +13,6 @@ export default function GSTCWrapper(props) {
   const callback = useCallback(
     node => {
       if (node) {
-        // @ts-ignore
         gstc = GSTC({
           element: node,
           state,

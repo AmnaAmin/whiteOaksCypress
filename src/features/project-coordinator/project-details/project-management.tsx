@@ -54,18 +54,17 @@ const ProjectManagement = () => {
             <GridItem>
               <FormControl w="215px">
                 <FormLabel sx={labelStyle}>Type</FormLabel>
-                <ReactSelect />
+                <ReactSelect selectProps={{ isBorderLeft: true }} />
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.woNumber}>
+              <FormControl isInvalid={errors.woNumber} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="woNumber">
                   WO Number
                 </FormLabel>
                 <Input
                   sx={inputTextStyle}
                   placeholder="222"
-                  w="215px"
                   id="woNumber"
                   {...register('woNumber', {
                     required: 'This is required',
@@ -75,14 +74,13 @@ const ProjectManagement = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.poNumber}>
+              <FormControl isInvalid={errors.poNumber} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="poNumber">
                   PO Number
                 </FormLabel>
                 <Input
                   sx={inputTextStyle}
                   placeholder="3456"
-                  w="215px"
                   id="poNumber"
                   {...register('poNumber', {
                     required: 'This is required',
@@ -98,13 +96,12 @@ const ProjectManagement = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl isInvalid={errors.projectName}>
+              <FormControl isInvalid={errors.projectName} w="215px">
                 <FormLabel sx={labelStyle} htmlFor="projectName">
                   Project Number
                 </FormLabel>
                 <Input
                   placeholder="PC project 1"
-                  w="215px"
                   id="projectName"
                   {...register('projectName', {
                     required: 'This is required',
@@ -117,13 +114,15 @@ const ProjectManagement = () => {
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Start</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.woaStart && errors.woaStart?.message}
                   label={''}
                   name={`woaStart`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
                     height: '40px',
                   }}
@@ -139,13 +138,15 @@ const ProjectManagement = () => {
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Completion</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.woaCompletion && errors.woaCompletion?.message}
                   label={''}
                   name={`woaCompletion`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
                     height: '40px',
                   }}
@@ -161,13 +162,15 @@ const ProjectManagement = () => {
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Start</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.clientStart && errors.clientStart?.message}
                   label={''}
                   name={`clientStart`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
                     height: '40px',
                   }}
@@ -184,13 +187,15 @@ const ProjectManagement = () => {
                 <FormLabel sx={labelStyle}>Client Due</FormLabel>
 
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.clientDue && errors.clientDue?.message}
                   label={''}
                   name={`clientDue`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
                     height: '40px',
                   }}
@@ -208,13 +213,15 @@ const ProjectManagement = () => {
                   Client Click Walk Through
                 </FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.clientClickWalkThrough && errors.clientClickWalkThrough?.message}
                   label={''}
                   name={`clientClickWalkThrough`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
                     height: '40px',
                   }}
@@ -230,13 +237,15 @@ const ProjectManagement = () => {
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Sign Off</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                  }}
                   errorMessage={errors.clientSignOff && errors.clientSignOff?.message}
                   label={''}
                   name={`clientSignOff`}
                   control={control}
                   placeholder="mm/dd/yyyy"
                   style={{
-                    borderLeft: '2px solid #4E87F8 ',
                     width: '215px',
                     height: '40px',
                   }}

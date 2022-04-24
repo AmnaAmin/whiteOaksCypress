@@ -29,3 +29,11 @@ export const parameters = {
     theme: theme,
   },
 }
+
+export const decorators = [
+  Story => (
+    <div style={{ padding: '80px 15px 15px' }}>
+      <Story />
+    </div>
+  ),
+]
