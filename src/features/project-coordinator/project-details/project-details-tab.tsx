@@ -2,6 +2,7 @@ import { HStack } from '@chakra-ui/react'
 import React from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
+import InvoiceAndPayments from './invoice-and-payments'
 import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
@@ -55,11 +56,14 @@ const ProjectDetailsTab = () => {
             </Tab>
           </HStack>
         </TabList>
+
         <TabPanels>
           <TabPanel mt="12" p="0" ml="6">
             <ProjectManagement />
           </TabPanel>
-          <TabPanel></TabPanel>
+          <TabPanel mt="12" p="0" ml="6">
+            <InvoiceAndPayments />
+          </TabPanel>
           <TabPanel mt="12" p="0" ml="6">
             <Contact />
           </TabPanel>
