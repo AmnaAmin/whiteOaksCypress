@@ -1,16 +1,5 @@
-import {
-  Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Switch,
-  Flex,
-} from '@chakra-ui/react'
+import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex } from '@chakra-ui/react'
+
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
@@ -25,8 +14,11 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
+import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
+import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
+import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -34,7 +26,6 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const { onOpen: onDocumentModalOpen } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -44,6 +35,9 @@ export const ProjectDetails: React.FC = props => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
 
   return (
     <>
@@ -51,55 +45,27 @@ export const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
+        {tabIndex === 1}
+
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="line" onChange={index => setTabIndex(index)} mt="7">
-            <TabList whiteSpace="nowrap" color="gray.600" fontWeight={500}>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('Transactions')}
-              </Tab>
-
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('projectDetails')}
-              </Tab>
-
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('vendorWorkOrders')}
-              </Tab>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('documents')}
-              </Tab>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {t('alerts')}
-              </Tab>
-              <Tab
-                _focus={{ outline: 'none' }}
-                _selected={{ borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }}
-              >
-                {'Notes'}
-              </Tab>
+          <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
+            <TabList>
+              <Tab>{t('Transactions')}</Tab>
+              <Tab>{t('projectDetails')}</Tab>
+              <Tab>{t('vendorWorkOrders')}</Tab>
+              <Tab>{t('documents')}</Tab>
+              <Tab>{t('alerts')}</Tab>
+              <Tab>{'Notes'}</Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
                   <Button
-                    onClick={onDocumentModalOpen}
+                    onClick={onOpen}
                     // bg="#4E87F8"
-                    color="#4E87F8"
+                    color="white"
                     size="md"
+                    bg="#4e87f8"
+                    _hover={{ bg: '#2A61CE' }}
                   >
                     <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>
@@ -107,12 +73,18 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
+                    <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button bg="#4E87F8" color="#FFFFFF" size="md" _hover={{ bg: 'royalblue' }}>
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px"></Box>
-                    {t('resolve')}
+                  <Button
+                    _hover={{ bg: 'gray.200' }}
+                    color="blue"
+                    fontSize={14}
+                    fontWeight={500}
+                    onClick={OnUploadMdal}
+                  >
+                    Upload
                   </Button>
                 )}
                 {tabIndex === 0 && (
@@ -195,6 +167,7 @@ export const ProjectDetails: React.FC = props => {
             </TabPanels>
           </Tabs>
         </Stack>
+        <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
       </Stack>
     </>
   )

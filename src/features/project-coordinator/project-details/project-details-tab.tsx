@@ -3,6 +3,7 @@ import React from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
 import Contact from './contact'
+import ProjectManagement from './project-management'
 
 const tabStyle = {
   fontSize: '14px',
@@ -55,10 +56,17 @@ const ProjectDetailsTab = () => {
         </TabList>
 
         <TabPanels>
-          <TabPanel mt="12" p="0" ml="6"></TabPanel>
-          <TabPanel></TabPanel>
+          <TabPanel mt="12" p="0" ml="6">
+            <ProjectManagement />
+          </TabPanel>
           <TabPanel>
+            <p>two!</p>
+          </TabPanel>
+          <TabPanel mt="12" p="0" ml="6">
             <Contact />
+          </TabPanel>
+          <TabPanel>
+            <p>three!</p>
           </TabPanel>
         </TabPanels>
       </Tabs>

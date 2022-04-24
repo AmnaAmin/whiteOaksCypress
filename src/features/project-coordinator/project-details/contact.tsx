@@ -36,7 +36,7 @@ const Contact = () => {
             <Box h="40px">
               <FormControl w="215px">
                 <FormLabel sx={labelStyle}>Field Project Manager</FormLabel>
-                <ReactSelect selectProps={{ isLeftBorder: true }} />
+                <ReactSelect selectProps={{ isBorderLeft: true }} />
               </FormControl>
             </Box>
 
@@ -82,7 +82,7 @@ const Contact = () => {
             <Box h="40px">
               <FormControl w="215px">
                 <FormLabel sx={labelStyle}>Project Coordinator</FormLabel>
-                <ReactSelect />
+                <ReactSelect selectProps={{ isBorderLeft: true }} />
               </FormControl>
             </Box>
 
@@ -198,7 +198,7 @@ const Contact = () => {
               <FormLabel sx={labelStyle} htmlFor="client">
                 Client
               </FormLabel>
-              <ReactSelect selectProps={{ isLeftBorder: true }} />
+              <ReactSelect selectProps={{ isBorderLeft: true }} />
               <FormErrorMessage></FormErrorMessage>
             </FormControl>
           </Box>

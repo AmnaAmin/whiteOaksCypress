@@ -53,6 +53,7 @@ import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver } from './draw-transaction-lien-waiver'
+import { calendarIcon } from 'theme/common-style'
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -251,6 +252,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                               {...field}
                               options={transactionTypeOptions}
                               isDisabled={!!transaction}
+                              size="md"
                               onChange={(option: SelectOption) => {
                                 if (option.value !== TransactionTypeValues.changeOrder) {
                                   reset({
@@ -389,12 +391,10 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                       </FormLabel>
                       <Input
                         data-testid="new-expected-completion-date"
-                        borderLeft=" 2px solid #4E87F8"
                         id="newExpectedCompletionDate"
                         type="date"
                         size="md"
-                        fontSize="14px"
-                        color="gray.400"
+                        css={calendarIcon}
                         {...register('newExpectedCompletionDate')}
                       />
                       <FormErrorMessage>
@@ -420,11 +420,18 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
 
       <Flex alignItems="center" justifyContent="end" py="4">
         {isShowLienWaiver ? (
-          <Button onClick={() => setIsShowLienWaiver(false)} size="sm" variant="ghost">
+          <Button
+            onClick={() => setIsShowLienWaiver(false)}
+            fontSize="14px"
+            fontWeight={600}
+            h="48px"
+            w="130px"
+            variant="ghost"
+          >
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onClose} variant="ghost" size="sm">
+          <Button onClick={onClose} variant="ghost" fontSize="14px" fontWeight={600} h="48px" w="130px">
             {t('close')}
           </Button>
         )}
@@ -434,10 +441,12 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             data-testid="next-to-lien-waiver-form"
             colorScheme="CustomPrimaryColor"
             _focus={{ outline: 'none' }}
-            _hover={{ bg: 'blue' }}
             type="button"
             ml="3"
-            size="sm"
+            h="48px"
+            w="130px"
+            fontSize="14px"
+            fontWeight={600}
             isDisabled={amount === 0}
             onClick={event => {
               event.stopPropagation()
@@ -451,11 +460,13 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             data-testid="save-transaction"
             colorScheme="CustomPrimaryColor"
             _focus={{ outline: 'none' }}
-            _hover={{ bg: 'blue' }}
             type="submit"
             form="newTransactionForm"
             ml="3"
-            size="sm"
+            h="48px"
+            w="130px"
+            fontSize="14px"
+            fontWeight={600}
           >
             {t('save')}
           </Button>

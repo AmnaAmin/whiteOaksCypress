@@ -206,27 +206,30 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
             )
           })}
         </VStack>
-        <Box>
-          <Divider border="1px solid" />
-        </Box>
-        <Box id="footer" w="100%" minH="60px">
+
+        <Flex
+          id="footer"
+          mt="20px"
+          w="100%"
+          h="100px"
+          alignItems="center"
+          justifyContent="end"
+          borderTop="2px solid #E2E8F0"
+        >
           <Button
-            mt="16px"
-            mr="60px"
-            float={'right'}
             colorScheme="CustomPrimaryColor"
             _focus={{ outline: 'none' }}
-            _hover={{ bg: 'blue' }}
-            size="md"
+            data-testid="saveLicenses"
             type="submit"
             fontSize="14px"
             fontStyle="normal"
-            fontWeight={500}
-            data-testid="saveLicenses"
+            fontWeight={600}
+            h="48px"
+            w="130px"
           >
             {t('next')}
           </Button>
-        </Box>
+        </Flex>
       </form>
     </Box>
   )

@@ -6,7 +6,7 @@ import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 import { MARKETS } from 'mocks/api/vendor-profile/data'
 import { MarketForm } from 'features/vendor-details/markets'
 
-jest.setTimeout(30000)
+jest.setTimeout(150000)
 
 describe('Vendor Profile Market Test Cases', () => {
   it('Market Data is rendered', async () => {

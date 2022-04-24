@@ -14,7 +14,6 @@ import { useExportData } from 'react-table-plugins'
 import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex } from '@chakra-ui/react'
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
-import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
@@ -27,7 +26,7 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 // Define a default UI for filtering
 
 function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
-  const count = preFilteredRows.length
+  // const count = preFilteredRows.length
 
   return null
 }

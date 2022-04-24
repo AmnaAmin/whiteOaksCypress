@@ -48,18 +48,19 @@ const SignatureModal = ({
   return (
     <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent h="70vh">
+      <ModalContent h="480px">
         <ModalHeader color="gray.700" fontWeight={500} fontSize="16px" fontStyle="normal">
           {t('addSignature')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
         <Divider mb={3} />
-        <ModalBody h="50vh" overflow="scroll">
+        <ModalBody h="50vh">
           <Stack w={{ base: '900px', xl: '100%' }} spacing={5}>
             <Tabs variant="enclosed">
               <TabList>
                 <Tab
                   minW={105}
+                  _focus={{ outline: 'none' }}
                   _selected={{
                     color: 'button.300',
                     borderBottom: '1px solid',

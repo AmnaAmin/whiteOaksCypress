@@ -54,6 +54,8 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
 }
 
 export const documentTypes = [
+  { value: 24, label: 'Permit' },
+  { value: 25, label: 'Warranty' },
   { value: 56, label: 'Drawings' },
   { value: 57, label: 'NOC' },
   { value: 39, label: 'Original SOW' },
