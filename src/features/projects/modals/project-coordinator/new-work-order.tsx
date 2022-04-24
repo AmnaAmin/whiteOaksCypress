@@ -19,7 +19,6 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
-import { dateFormatter } from 'utils/new-work-order'
 import { documentTypes } from 'utils/vendor-projects'
 
 const CalenderCard = props => {

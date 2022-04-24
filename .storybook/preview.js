@@ -8,7 +8,32 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  backgrounds: {
+    default: 'white',
+    values: [
+      {
+        name: 'grey',
+        value: '#eee',
+      },
+      {
+        name: 'white',
+        value: '#fff',
+      },
+      {
+        name: 'dark',
+        value: 'darkGray',
+      },
+    ],
+  },
   chakra: {
     theme: theme,
   },
 }
+
+export const decorators = [
+  Story => (
+    <div style={{ padding: '80px 15px 15px' }}>
+      <Story />
+    </div>
+  ),
+]

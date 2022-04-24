@@ -6,9 +6,10 @@ export const Card: React.FC<BoxProps> = props => {
     <Box
       bg="white"
       p="15px"
-      //  boxShadow="1px 1px 12px rgba(0,0,0,0.2)"
-      boxShadow="1px 1px 7px rgba(0,0,0,0.1)"
+      boxShadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
       h={props.height || 'auto'}
+      rounded="xl"
+      border="1px solid #E5E5E5"
       {...props}
     >
       {props.children}

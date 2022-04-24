@@ -16,8 +16,8 @@ import { AmountDetailsCard } from 'features/project-coordinator/project-amount-d
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
+import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
-import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -25,7 +25,6 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  // const { onOpen: onDocumentModalOpen } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -45,15 +44,17 @@ export const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
+        {tabIndex === 1}
+
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab variant="enclosed">{t('Transactions')}</Tab>
-              <Tab variant="enclosed">{t('projectDetails')}</Tab>
-              <Tab variant="enclosed">{t('vendorWorkOrders')}</Tab>
-              <Tab variant="enclosed">{t('documents')}</Tab>
-              <Tab variant="enclosed">{t('alerts')}</Tab>
-              <Tab variant="enclosed">{'Notes'}</Tab>
+              <Tab>{t('Transactions')}</Tab>
+              <Tab>{t('projectDetails')}</Tab>
+              <Tab>{t('vendorWorkOrders')}</Tab>
+              <Tab>{t('documents')}</Tab>
+              <Tab>{t('alerts')}</Tab>
+              <Tab>{'Notes'}</Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
