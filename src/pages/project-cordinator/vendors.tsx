@@ -1,8 +1,87 @@
-import { Heading } from '@chakra-ui/react'
-import React from 'react'
+import { AddIcon } from '@chakra-ui/icons'
+import { HStack, Box, Icon, Grid, GridItem, Button, Spacer, useDisclosure } from '@chakra-ui/react'
+import VendorFilterCard from 'features/project-coordinator/vendor/vendor-filter-card'
+import { VendorTable } from 'features/project-coordinator/vendor/vendorTable'
+import React, { useRef } from 'react'
+import { BiClipboard, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
+import { GoFile } from 'react-icons/go'
 
 const Vendors = () => {
-  return <Heading>Vendors Page...</Heading>
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
+  // const [ alertRow, selectedAlertRow,] = useState(true)
+  const {
+    // isOpen: isOpenAlertModal,
+    //  onClose: onAlertModalClose,
+    onOpen: onAlertModalOpen,
+  } = useDisclosure()
+  return (
+    <Box mt="5">
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
+        <GridItem>
+          <VendorFilterCard
+            icon={<Icon color="#4A5568" boxSize={7} as={GoFile} />}
+            status="Active"
+            num={25}
+            bgColor="#F9F1DA"
+          />
+        </GridItem>
+
+        <GridItem>
+          <VendorFilterCard
+            icon={<Icon color="#4A5568" boxSize={7} as={BiClipboard} />}
+            status="Inactive"
+            num={15}
+            bgColor="#E5ECF9"
+          />
+        </GridItem>
+
+        <GridItem>
+          <VendorFilterCard
+            icon={<Icon color="#4A5568" boxSize={7} as={BiMessageSquareError} />}
+            status="Do Not Use"
+            num={11}
+            bgColor="#E6FFFA"
+          />
+        </GridItem>
+        <GridItem>
+          <VendorFilterCard
+            icon={<Icon color="#4A5568" boxSize={7} as={BiHourglass} />}
+            status="Expired"
+            num={33}
+            bgColor="#FCE8D8"
+          />
+        </GridItem>
+      </Grid>
+      <HStack mt="1" mb="2">
+        <Button _focus={{ outline: 'none' }} variant="ghost" color="#4E87F8" fontSize="14px" fontWeight={600}>
+          Clear Filter
+        </Button>
+        <Spacer />
+        <Box pt="3">
+          <Button
+            _focus={{ outline: 'none' }}
+            variant="ghost"
+            color="#4E87F8"
+            leftIcon={<Icon boxSize={3} as={AddIcon} />}
+            fontSize="14px"
+            fontWeight={600}
+          >
+            New Vendor
+          </Button>
+        </Box>
+      </HStack>
+
+      <Box>
+        <VendorTable
+          onRowClick={(e, row) => {
+            // selectedAlertRow(row.values)
+            onAlertModalOpen()
+          }}
+          ref={tabsContainerRef}
+        />
+      </Box>
+    </Box>
+  )
 }
 
 export default Vendors
