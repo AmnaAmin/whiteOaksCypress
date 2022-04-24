@@ -159,7 +159,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab onClose={onClose} />
+                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
                   <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
