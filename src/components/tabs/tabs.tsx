@@ -34,14 +34,9 @@ const TabPanel: React.FC<TabPanelProps> = props => {
   return <ChakraTabPanel {...props}>{props.children}</ChakraTabPanel>
 }
 
-const Tab: React.FC<TabProps & { variant?: 'enclosed' | 'line' }> = ({ variant = 'enclosed', ...props }) => {
-  const selectedStyle =
-    variant === 'enclosed'
-      ? { color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }
-      : { borderBottom: '2px solid #4E87F8', color: '#4E87F8', fontWeight: '600' }
-
+const Tab: React.FC<TabProps> = props => {
   return (
-    <ChakraTab _focus={{ outline: 'none' }} _selected={selectedStyle} {...props}>
+    <ChakraTab _focus={{ outline: 'none' }} {...props}>
       {props.children}
     </ChakraTab>
   )
