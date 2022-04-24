@@ -63,7 +63,7 @@ const useProjectCardJson = cards => {
     {
       id: 'overpayment',
       title: 'Overpayment',
-      number: cards?.find(c => c.status === 63)?.count, //verify
+      number: cards?.find(c => c.status === 109)?.count,
       IconElement: <IconElement Icon={SummaryIconSeventh} bg="#E2EFDF" />,
     },
     {
@@ -82,17 +82,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
 
   return (
     <>
-      <Box
-        justifyContent="space-between"
-        w="100%"
-        display="grid"
-        gridTemplateColumns={{
-          base: 'repeat(auto-fit, minmax(105px,1fr))',
-          sm: 'repeat(auto-fit, minmax(125px,1fr))',
-          md: 'repeat(auto-fit, minmax(205px,1fr))',
-        }}
-        gridGap="15px"
-      >
+      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(4, 1fr)" gridGap="15px">
         {cards.map(card => {
           return <ProjectCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
         })}
