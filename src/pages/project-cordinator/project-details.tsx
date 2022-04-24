@@ -12,6 +12,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
+import ProjectDetailsTAb from 'features/project-coordinator/project-details/project-details-tab'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
@@ -36,6 +37,11 @@ export const ProjectDetails: React.FC = props => {
   }
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const TabStyle = {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'gray.600',
+  }
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
 
   return (
@@ -136,9 +142,9 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
-                <Box mb={5}>
+            <TabPanels h="100%">
+              <TabPanel p="0px" h="100%" mt="31px">
+                <Box mb="5">
                   <FormControl display="flex" alignItems="center">
                     <FormLabel htmlFor="view-details" mb="0">
                       View Details
@@ -154,7 +160,9 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
+              <TabPanel p="0px" mt="3">
+                <ProjectDetailsTAb />
+              </TabPanel>
 
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
