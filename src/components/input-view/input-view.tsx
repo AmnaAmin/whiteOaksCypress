@@ -14,7 +14,7 @@ const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = 
     <Box {...controlStyle} whiteSpace="nowrap">
       <HStack align="flex-start" spacing={5}>
         {Icon && (
-          <Box fontSize="1.5rem" color="#718096" pos="relative" bottom="5px">
+          <Box fontSize="1.5rem" color="#718096" bottom="5px">
             {Icon}
           </Box>
         )}
