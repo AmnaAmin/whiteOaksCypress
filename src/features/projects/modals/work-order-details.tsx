@@ -40,7 +40,15 @@ const TabStyle = {
   },
 }
 
-const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
+const WorkOrderDetails = ({
+  workOrder,
+  onClose: close,
+  onProjectTabChange,
+}: {
+  workOrder: ProjectWorkOrderType
+  onClose: () => void
+  onProjectTabChange?: any
+}) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
@@ -177,7 +185,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   <WorkOrderDetailTab onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
-                  <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
+                  <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab

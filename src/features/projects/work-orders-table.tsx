@@ -6,9 +6,9 @@ import ReactTable, { RowProps } from 'components/table/react-table'
 import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
-import WorkOrderDetails from './modals/work-order-details'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
+import WorkOrderDetails from './modals/work-order-details'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -50,11 +50,12 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     </Tr>
   )
 }
-
-export const WorkOrdersTable = React.forwardRef((_, ref) => {
+interface PropType {
+  onTabChange?: any
+}
+export const WorkOrdersTable = React.forwardRef(({ onTabChange }: PropType, ref) => {
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   const { t } = useTranslation()
-
   const { projectId } = useParams<'projectId'>()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
@@ -104,6 +105,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           setSelectedWorkOrder(undefined)
           refetch()
         }}
+        onProjectTabChange={onTabChange}
       />
       {isLoading && (
         <Center>

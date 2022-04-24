@@ -54,7 +54,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       {...rest}
     >
       <HStack>
-        <Box _groupHover={{ opacity: 1 }} fontSize="16px">
+        <Box _groupHover={{ opacity: 1 }} fontSize="18px">
           {icon}
         </Box>
         <Text fontSize="18px" fontWeight={500} lineHeight="28px" fontStyle="normal" pt="2px">

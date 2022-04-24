@@ -33,7 +33,7 @@ const ProjectDetails: React.FC = props => {
   const { projectId } = useParams<'projectId'>()
   const { projectData, isLoading } = useProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const [tabIndex, setTabIndex] = useState(0)
+  const [tabIndex, setTabIndex] = useState<number>(0)
   const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,
@@ -48,7 +48,7 @@ const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs index={tabIndex} variant="enclosed" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
               <Tab
                 aria-labelledby="transaction-tab"
@@ -120,7 +120,13 @@ const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
-                  <WorkOrdersTable ref={tabsContainerRef} />
+                  <WorkOrdersTable
+                    onTabChange={n => {
+                      console.log(n)
+                      setTabIndex(n)
+                    }}
+                    ref={tabsContainerRef}
+                  />
                 </Box>
               </TabPanel>
               <TabPanel p="0px" h="0px">
