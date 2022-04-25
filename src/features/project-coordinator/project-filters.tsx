@@ -7,6 +7,8 @@ import SummaryIconFirst, {
   SummaryIconSixth,
   SummaryIconSeventh,
   SummaryIconEight,
+  SummaryIconNinth,
+  SummaryIconTenth,
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -72,17 +74,28 @@ const useProjectCardJson = cards => {
       number: cards?.find(c => c.status === 11)?.count,
       IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
     },
+    {
+      id: 'disputed',
+      title: 'Disputed',
+      number: cards?.find(c => c.status === '')?.count,
+      IconElement: <IconElement Icon={SummaryIconNinth} bg="#FFF5F7" />,
+    },
+    {
+      id: 'collection',
+      title: 'Collection',
+      number: cards?.find(c => c.status === '')?.count,
+      IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
+    },
   ]
 }
 
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useProjectCards()
   const cards = useProjectCardJson(values)
-  console.log(cards)
 
   return (
     <>
-      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(4, 1fr)" gridGap="15px">
+      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">
         {cards.map(card => {
           return <ProjectCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
         })}
