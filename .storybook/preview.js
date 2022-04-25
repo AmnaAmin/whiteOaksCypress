@@ -1,28 +1,31 @@
-// export const parameters = {
-//   actions: { argTypesRegex: "^on[A-Z].*" },
-//   controls: {
-//     matchers: {
-//       color: /(background|color)$/i,
-//       date: /Date$/,
-//     },
-//   },
-// }
-
-import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "../src/theme";
+import { theme } from '../src/theme/theme'
 
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-};
-
-export const decorators = [
-  (Story) => (
-    <ChakraProvider theme={theme}>
-      <div
-        style={{ padding: "3em", backgroundColor: "#f1f1f1", height: "100vh" }}
-      >
-        <Story />
-      </div>
-    </ChakraProvider>
-  ),
-];
+  actions: { argTypesRegex: '^on[A-Z].*' },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+  backgrounds: {
+    default: 'white',
+    values: [
+      {
+        name: 'grey',
+        value: '#eee',
+      },
+      {
+        name: 'white',
+        value: '#fff',
+      },
+      {
+        name: 'dark',
+        value: 'darkGray',
+      },
+    ],
+  },
+  chakra: {
+    theme: theme,
+  },
+}

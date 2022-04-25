@@ -31,7 +31,7 @@ import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 
-export const CreateATicket = () => {
+const CreateATicket = () => {
   const toast = useToast()
   const { mutate: createTicket } = useCreateTicketMutation()
   const { email } = useUserProfile() as Account
@@ -275,12 +275,25 @@ export const CreateATicket = () => {
             <Divider />
           </FormControl>
 
-          <Divider border="2px solid" />
-          <Flex flexDirection="row-reverse" mt="5" mr="5">
-            <Button type="submit" colorScheme="CustomPrimaryColor" size="md">
-              <Text fontSize="14px" fontWeight={500} fontStyle="normal">
-                Save
-              </Text>
+          <Flex
+            flexDirection="row-reverse"
+            w="100%"
+            h="100px"
+            mt="100px"
+            alignItems="center"
+            justifyContent="end"
+            borderTop="2px solid #E2E8F0"
+          >
+            <Button
+              type="submit"
+              colorScheme="CustomPrimaryColor"
+              fontSize="14px"
+              fontWeight={600}
+              fontStyle="normal"
+              h="48px"
+              w="130px"
+            >
+              Save
             </Button>
           </Flex>
         </form>
@@ -288,3 +301,5 @@ export const CreateATicket = () => {
     </>
   )
 }
+
+export default CreateATicket

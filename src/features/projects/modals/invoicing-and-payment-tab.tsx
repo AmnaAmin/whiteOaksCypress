@@ -37,21 +37,39 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Payment Term Date"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>}
+            InputElem={
+              invoiceAndPaymentData.paymentTermDate ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
         <Box w="25%">
           <InputView
             Icon={<BiFile />}
             label="Pay Date Variance"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}</Text>}
+            InputElem={
+              invoiceAndPaymentData.workOrderPayDateVariance ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
         <Box w="25%">
           <InputView
             Icon={<BiCalendar />}
             label="Payment Terms:"
-            InputElem={<Text>{invoiceAndPaymentData?.paymentTerm} </Text>}
+            InputElem={
+              invoiceAndPaymentData?.paymentTerm ? (
+                <Text>{invoiceAndPaymentData?.paymentTerm} </Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
 
@@ -59,7 +77,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Paid"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>}
+            InputElem={
+              invoiceAndPaymentData?.datePaid ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
       </HStack>
@@ -68,7 +92,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="LW Date"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>}
+            InputElem={
+              invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
 
@@ -76,7 +106,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Permit Date"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>}
+            InputElem={
+              invoiceAndPaymentData?.datePermitsPulled ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
 
@@ -84,7 +120,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Payment Processed"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>}
+            InputElem={
+              invoiceAndPaymentData?.datePaymentProcessed ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
 
@@ -92,7 +134,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Invoice Submitted:"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>}
+            InputElem={
+              invoiceAndPaymentData.dateInvoiceSubmitted ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
       </HStack>
@@ -101,7 +149,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             Icon={<BiCalendar />}
             label="Expected Pay"
-            InputElem={<Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>}
+            InputElem={
+              invoiceAndPaymentData.expectedPaymentDate ? (
+                <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
 
@@ -116,7 +170,13 @@ const InvoicingAndPaymentTab = ({
           <InputView
             label="WO Original Amount:"
             Icon={<BiDollarCircle />}
-            InputElem={<Text>{currencyFormatter(invoiceAndPaymentData?.clientOriginalApprovedAmount)}</Text>}
+            InputElem={
+              invoiceAndPaymentData.clientOriginalApprovedAmount ? (
+                <Text>{currencyFormatter(invoiceAndPaymentData?.clientOriginalApprovedAmount)}</Text>
+              ) : (
+                <Text>MM/DD/YY</Text>
+              )
+            }
           />
         </Box>
 
@@ -137,10 +197,12 @@ const InvoicingAndPaymentTab = ({
         <Button
           colorScheme="CustomPrimaryColor"
           onClick={onClose}
-          size="lg"
+          _focus={{ outline: 'none' }}
           fontStyle="normal"
-          fontSize="18px"
+          fontSize="14px"
           fontWeight={600}
+          h="48px"
+          w="130px"
         >
           {t('close')}
         </Button>

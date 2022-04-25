@@ -1,9 +1,24 @@
-import { Button, Flex, Stack } from '@chakra-ui/react'
+import { Button, Divider, Flex, Stack } from '@chakra-ui/react'
 
 export const ProjectDayFilters = () => {
   return (
     <>
-      <Stack direction="row" justify="left" marginTop={1}>
+      <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
+        <Button
+          bg="none"
+          border="none"
+          rounded="20"
+          _hover={{ bg: '#4E87F8', color: 'white', rounded: '20', border: 'none' }}
+          _focus={{ border: 'none' }}
+          fontSize="12px"
+          fontStyle="normal"
+          fontWeight={500}
+          alignContent="right"
+          color="black"
+        >
+          All
+        </Button>
+        <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" />
         <Button
           bg="none"
           border="none"
@@ -199,6 +214,18 @@ export const ProjectDayFilters = () => {
           >
             2
           </Flex>
+        </Button>
+        <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" marginLeft={5} />
+        <Button
+          bg="none"
+          color="#4E87F8"
+          _hover={{ bg: 'none' }}
+          _focus={{ border: 'none' }}
+          fontSize="12px"
+          fontStyle="normal"
+          fontWeight={500}
+        >
+          Clear Filter
         </Button>
       </Stack>
     </>
