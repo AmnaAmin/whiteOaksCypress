@@ -58,7 +58,6 @@ export const useAddressSettings = () => {
 
 export const useVerifyAddressApi = (streetAddress?: any, city?: string, state?: string, zipCode?: string) => {
   const client = useClient()
-
   return useQuery<any>(
     ['address'],
     async () => {

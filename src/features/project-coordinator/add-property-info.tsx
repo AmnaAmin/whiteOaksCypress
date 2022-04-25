@@ -43,10 +43,6 @@ export const AddPropertyInfo = props => {
     return addressValues
   }
 
-  useEffect(() => {
-    refetch()
-  }, [refetch])
-
   const {
     register,
     formState: { errors },
@@ -89,7 +85,7 @@ export const AddPropertyInfo = props => {
     if (addressData) {
       const parser = new xml2js.Parser()
       parser
-        .parseStringPromise(addressData)
+        .parseStringPromise(addressData.data)
         .then(function (result) {
           result.AddressValidateResponse.Address.forEach(record => {
             if (record.Error !== undefined) {
@@ -116,7 +112,7 @@ export const AddPropertyInfo = props => {
       // const defaultAddress = addressDefaultValue(addressData)
       // reset(defaultAddress)
     }
-  }, [])
+  }, [addressData])
 
   const [projectPayload, setProjectPayload] = useState({})
   const [property, setProperty] = useState({})
