@@ -59,9 +59,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="created"
@@ -88,9 +85,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="active"
@@ -117,9 +111,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="punch"
@@ -147,9 +138,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="coiWcExpDate"
@@ -176,9 +164,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="clientPaid"
@@ -205,9 +190,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="collection"
@@ -234,9 +216,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="disputed"
@@ -264,9 +243,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="woaInvoice"
@@ -293,9 +269,6 @@ function Misc() {
                   placeholder="mm/dd/yyyy"
                   style={{
                     width: '215px',
-                    color: 'gray.500',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
                     fontSize: '14px',
                   }}
                   testId="woaPaid"
