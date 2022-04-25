@@ -20,9 +20,12 @@ const profileTabStyle = {
   fontWeight: 500,
   fontStyle: 'normal',
   color: 'gray.600',
+  _hover: {
+    backgroundColor: 'gray.200',
+  },
 }
 
-export const VendorProfilePage: React.FC = props => {
+const VendorProfilePage: React.FC = props => {
   const { t } = useTranslation()
   const { vendorId } = useUserProfile() as Account
   const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId)
@@ -40,7 +43,7 @@ export const VendorProfilePage: React.FC = props => {
         <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -48,7 +51,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="documents"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -56,7 +59,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="license"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -64,7 +67,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="tradetab"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -72,7 +75,7 @@ export const VendorProfilePage: React.FC = props => {
             </Tab>
             <Tab
               data-testid="markettab"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600 }}
+              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
               _focus={{ border: 'none' }}
               sx={profileTabStyle}
             >
@@ -108,3 +111,5 @@ export const VendorProfilePage: React.FC = props => {
     </Stack>
   )
 }
+
+export default VendorProfilePage

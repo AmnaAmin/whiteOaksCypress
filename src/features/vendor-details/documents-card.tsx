@@ -381,25 +381,29 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
           </HStack>
         </Box>
       </Box>
-      <Box id="footer" w="100%" minH="60px" borderTop="1px solid #E2E8F0">
+      <Flex
+        id="footer"
+        w="100%"
+        h="100px"
+        minH="60px"
+        borderTop="2px solid #E2E8F0"
+        alignItems="center"
+        justifyContent="end"
+      >
         <Button
-          mt="16px"
-          mr="60px"
-          float={'right'}
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
-          _hover={{ bg: 'blue', fontWeight: '600' }}
-          size="md"
           type="submit"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={500}
           data-testid="saveDocumentCards"
+          fontStyle="normal"
+          fontSize="14px"
+          fontWeight={600}
+          h="48px"
+          w="130px"
         >
-          {/* {t('next')} */}
-          Next
+          {t('next')}
         </Button>
-      </Box>
+      </Flex>
     </form>
   )
 }

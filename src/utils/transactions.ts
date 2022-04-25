@@ -6,6 +6,7 @@ import {
   FormValues,
   ProjectWorkOrder,
   SelectOption,
+  TransactionStatusValues,
   TransactionType,
   TransactionTypeValues,
 } from 'types/transaction.type'
@@ -13,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { dateFormat, dateISOFormat } from './date-time-utils'
 import { useUserRolesSelector } from './redux-common-selectors'
+import { readFileContent } from './vendor-details'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -73,6 +75,22 @@ export const useTransactionTypes = () => {
       ? [...transactionTypeOptions, ...adminOrOperationTransactionTypeOptions]
       : transactionTypeOptions,
   }
+}
+
+export const TRANSACTION_STATUS_OPTIONS = [
+  { value: TransactionStatusValues.pending, label: 'Pending' },
+  { value: TransactionStatusValues.approved, label: 'Approved' },
+  { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
+  { value: TransactionStatusValues.denied, label: 'Denied' },
+]
+
+export const useTransactionStatusOptions = () => {
+  const vendorOptions = [TransactionStatusValues.pending, TransactionStatusValues.cancelled]
+  const { isVendor } = useUserRolesSelector()
+
+  return isVendor
+    ? TRANSACTION_STATUS_OPTIONS.filter(statusOption => vendorOptions.includes(statusOption.value))
+    : TRANSACTION_STATUS_OPTIONS
 }
 
 export const WORK_ORDER_DEFAULT_VALUE = '0'
@@ -199,9 +217,25 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-export const parseChangeOrderAPIPayload = (formValues: FormValues, projectId?: string): ChangeOrderPayload => {
+export const parseChangeOrderAPIPayload = async (
+  formValues: FormValues,
+  projectId?: string,
+): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
+  let attachment
+
+  const document = formValues.attachment
+
+  if (document) {
+    const fileContents = await readFileContent(document as File)
+    attachment = {
+      documentType: 58,
+      fileObjectContentType: document.type,
+      fileType: document.name,
+      fileObject: fileContents,
+    }
+  }
 
   const againstProjectSOWPayload =
     formValues.against?.value === AGAINST_DEFAULT_VALUE
@@ -229,18 +263,32 @@ export const parseChangeOrderAPIPayload = (formValues: FormValues, projectId?: s
       unitCost: '0',
       vendorCost: '0',
     })),
+    documents: attachment ? [attachment] : [],
     projectId: projectId ?? '',
     ...againstProjectSOWPayload,
   }
 }
 
-export const parseChangeOrderUpdateAPIPayload = (
+export const parseChangeOrderUpdateAPIPayload = async (
   formValues: FormValues,
   transaction: ChangeOrderType,
   projectId?: string,
-): ChangeOrderUpdatePayload => {
+): Promise<ChangeOrderUpdatePayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
+  let attachment
+  console.log(formValues.attachment)
+  if (formValues.attachment?.name) {
+    const fileContents = await readFileContent(formValues.attachment as File)
+    attachment = {
+      documentType: 58,
+      fileObjectContentType: formValues.attachment.type,
+      fileType: formValues.attachment.name,
+      fileObject: fileContents,
+    }
+  } else {
+    attachment = formValues.attachment
+  }
 
   const againstProjectSOWPayload =
     formValues.against?.value === AGAINST_DEFAULT_VALUE
@@ -261,7 +309,7 @@ export const parseChangeOrderUpdateAPIPayload = (
     approvedBy: transaction.approvedBy,
     createdBy: transaction.createdBy as string,
     transactionType: formValues.transactionType?.value,
-    status: transaction.status,
+    status: formValues.status?.value || transaction.status,
     modifiedDate1: formValues.dateCreated,
     createdDate1: formValues.dateCreated,
     modifiedBy: formValues.createdBy as string,
@@ -279,41 +327,9 @@ export const parseChangeOrderUpdateAPIPayload = (
     })),
     projectId: Number(projectId),
     vendorId: transaction.vendorId as number,
+    documents: attachment ? [attachment] : [],
     ...againstProjectSOWPayload,
   }
-
-  // return {
-  //   id: 24444,
-  //   name: 'DR-ADT Renovations Inc-01/07/2022',
-  //   transactionTypeLabel: 'Draw',
-  //   skillName: 'General Labor',
-  //   vendor: 'ADT Renovations Inc',
-  //   changeOrderAmount: 1000,
-  //   status: 'PENDING',
-  //   createdDate: '2022-01-07T16:06:34Z',
-  //   approvedBy: null,
-  //   transactionType: 30,
-  //   parentWorkOrderId: 5122,
-  //   createdDate1: '01/07/2022',
-  //   createdBy: 'vendor@devtek.ai',
-  //   modifiedDate1: '01/07/2022',
-  //   modifiedBy: 'vendor@devtek.ai',
-  //   newExpectedCompletionDate: null,
-  //   expectedCompletionDate: null,
-  //   clientApprovedDate: null,
-  //   paidDate: null,
-  //   lineItems: [
-  //     {
-  //       id: 25373,
-  //       description: 'exclude paint',
-  //       unitCost: '0',
-  //       quantity: '0',
-  //       vendorCost: '0',
-  //       whiteoaksCost: '-1000',
-  //     },
-  //   ],
-  //   projectId: 2775,
-  // };
 }
 
 export const TRANSACTION_FEILD_DEFAULT = {
@@ -322,6 +338,20 @@ export const TRANSACTION_FEILD_DEFAULT = {
   amount: '',
   checked: false,
 }
+
+export const LIEN_WAIVER_DEFAULT_VALUES = {
+  claimantName: '',
+  customerName: '',
+  propertyAddress: '',
+  owner: '',
+  makerOfCheck: '',
+  amountOfCheck: '',
+  checkPayableTo: '',
+  claimantsSignature: '',
+  claimantTitle: '',
+  dateOfSignature: '',
+}
+
 export const transactionDefaultFormValues = (createdBy: string): FormValues => {
   return {
     transactionType: null,
@@ -330,9 +360,12 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     workOrder: null,
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
+    status: null,
     dateCreated: dateFormat(new Date()),
     createdBy,
     transaction: [TRANSACTION_FEILD_DEFAULT],
+    attachment: null,
+    lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
   }
 }
 
@@ -348,10 +381,12 @@ export const parseTransactionToFormValues = (
     against: againstOptions.find(option => option.value === transaction.parentWorkOrderId) ?? null,
     workOrder: null,
     changeOrder: null,
+    status: TRANSACTION_STATUS_OPTIONS.find(option => option.value === transaction.status) ?? null,
     expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string) ?? null,
     newExpectedCompletionDate: '',
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
+    attachment: transaction?.documents?.[0],
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
@@ -376,6 +411,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(['documents', projectId])
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
@@ -403,7 +439,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
-        console.log('Update Transaction')
+        queryClient.invalidateQueries(['documents', projectId])
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',

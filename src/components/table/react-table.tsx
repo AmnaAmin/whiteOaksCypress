@@ -114,6 +114,8 @@ export const TableHeader = ({ headerGroups }) => {
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => {
+            const title = column.render('Header')
+
             return (
               // @ts-ignore
               <Th key={`th_td_${column.id}`} {...column.getHeaderProps(column.getSortByToggleProps())} p="0">
@@ -131,9 +133,9 @@ export const TableHeader = ({ headerGroups }) => {
                     noOfLines={2}
                     isTruncated
                     display="inline-block"
-                    title={column.render('Header')}
+                    title={title}
                   >
-                    {column.render('Header')}
+                    {typeof title === 'string' ? title.toLowerCase() : title}
                   </Text>
                   {column.isSorted ? (
                     column.isSortedDesc ? (

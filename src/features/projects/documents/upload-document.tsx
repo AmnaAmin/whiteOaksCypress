@@ -197,22 +197,26 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               resetUpload()
               onClose()
             }}
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
             color="gray.700"
+            mr={3}
+            fontSize="14px"
+            fontWeight={600}
+            fontStyle="normal"
+            h="48px"
+            w="130px"
           >
             {t('close')}
           </Button>
           <Button
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
             onClick={uploadDocument}
             colorScheme="CustomPrimaryColor"
-            _hover={{ bg: 'blue', fontWeight: '600' }}
+            _focus={{ outline: 'none' }}
             type="submit"
-            ml="3"
+            fontSize="14px"
+            fontWeight={600}
+            fontStyle="normal"
+            h="48px"
+            w="130px"
           >
             {t('save')}
           </Button>

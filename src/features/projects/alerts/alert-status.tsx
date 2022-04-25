@@ -145,7 +145,6 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             <ModalCloseButton size="lg" _focus={{ border: 'none' }} />
             <ModalBody>
               <Box
-                margin="20px 10px 10px 10px"
                 minH="31.6em"
                 borderRadius="8px"
                 boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
@@ -156,27 +155,31 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
                 <Box>{<AlertCard />}</Box>
               </Box>
             </ModalBody>
-            <ModalFooter display="flex" alignItems="center" mb="3" mr="5">
+            <ModalFooter display="flex" alignItems="center" mb="3">
               <Button
                 variant="ghost"
                 onClick={onClose}
-                fontSize="14px"
-                fontWeight={500}
-                fontStyle="normal"
                 color="gray.600"
-                mr="5"
+                mr={3}
+                fontSize="14px"
+                fontWeight={600}
+                fontStyle="normal"
+                h="48px"
+                w="130px"
               >
                 Close
               </Button>
               <Button
-                fontSize="14px"
-                fontWeight={500}
-                fontStyle="normal"
                 colorScheme="CustomPrimaryColor"
-                _hover={{ bg: 'blue', fontWeight: '600' }}
+                _focus={{ outline: 'none' }}
                 rounded="6px"
                 type="submit"
                 form="newTransactionForm"
+                fontSize="14px"
+                fontWeight={600}
+                fontStyle="normal"
+                h="48px"
+                w="130px"
               >
                 Save
               </Button>

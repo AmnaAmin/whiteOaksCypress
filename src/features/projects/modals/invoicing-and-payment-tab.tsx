@@ -137,10 +137,12 @@ const InvoicingAndPaymentTab = ({
         <Button
           colorScheme="CustomPrimaryColor"
           onClick={onClose}
-          size="lg"
+          _focus={{ outline: 'none' }}
           fontStyle="normal"
-          fontSize="18px"
+          fontSize="14px"
           fontWeight={600}
+          h="48px"
+          w="130px"
         >
           {t('close')}
         </Button>

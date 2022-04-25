@@ -16,3 +16,13 @@ export const usePCProject = (projectId?: string) => {
     ...rest,
   }
 }
+
+export const useProjectCards = () => {
+  const client = useClient()
+
+  return useQuery('projectCards', async () => {
+    const response = await client(`projectCards`, {})
+
+    return response?.data
+  })
+}

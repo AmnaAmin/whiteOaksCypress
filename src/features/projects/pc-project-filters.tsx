@@ -10,7 +10,7 @@ import SummaryIconFirst, {
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-// import { useProjectCards } from 'utils/pc-projects'
+import { useProjectCards } from 'utils/pc-projects'
 import { ProjectCard } from './project-card'
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
@@ -21,13 +21,13 @@ const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, 
   )
 }
 
-const useProjectCardJson = cards => {
+const useVendorCardJson = cards => {
   const { t } = useTranslation()
   return [
     {
       id: 'new',
       title: 'New',
-      number: cards?.find(c => c.status === 7)?.count,
+      number: '0', // cards?.find(c => c.label === 'new')?.count,
       IconElement: <IconElement Icon={SummaryIconFirst} bg="#F9F1DA" />,
     },
     {
@@ -39,13 +39,13 @@ const useProjectCardJson = cards => {
     {
       id: 'punch',
       title: 'Punch',
-      number: cards?.find(c => c.label === 'punch')?.count,
+      number: '0', // cards?.find(c => c.label === 'punch')?.count,
       IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
     },
     {
       id: 'closed',
       title: 'Closed',
-      number: cards?.find(c => c.label === 'closed')?.count,
+      number: '0', // cards?.find(c => c.label === 'closed')?.count,
       IconElement: <IconElement Icon={SummaryIconForth} bg="#FCE8D8" />,
     },
     {
@@ -54,21 +54,22 @@ const useProjectCardJson = cards => {
       number: cards?.find(c => c.label === 'pastDue')?.count,
       IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
     },
+
     {
       id: 'clientPaid',
       title: 'Client Paid',
-      number: cards?.find(c => c.label === 'clientPaid')?.count,
+      number: '0', // cards?.find(c => c.label === 'clientPaid')?.count,
       IconElement: <IconElement Icon={SummaryIconSixth} bg="#FEEBCB" />,
     },
     {
       id: 'overpayment',
       title: 'Overpayment',
-      number: cards?.find(c => c.label === 'overpayment')?.count,
+      number: '0', // cards?.find(c => c.label === 'overpayment')?.count,
       IconElement: <IconElement Icon={SummaryIconSeventh} bg="#E2EFDF" />,
     },
     {
       id: 'invoiced',
-      title: 'Invoiced',
+      title: t('invoiced'),
       number: cards?.find(c => c.label === 'invoiced')?.count,
       IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
     },
@@ -76,10 +77,8 @@ const useProjectCardJson = cards => {
 }
 
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
-  // const { data: values } = useProjectCards()
-  const values = []
-  const cards = useProjectCardJson(values)
-  console.log(cards)
+  const { data: values } = useProjectCards()
+  const cards = useVendorCardJson(values)
 
   return (
     <>
