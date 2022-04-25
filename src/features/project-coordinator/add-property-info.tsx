@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
+import { Button, Checkbox, Divider, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
@@ -8,7 +8,7 @@ import { useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
-import { ModalDuplicateAddress } from './modal-duplicate-address'
+import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 
 export const AddPropertyInfo = props => {
   // const { mutate: saveAddress, data: addressPayload } = useAddressSettings()
@@ -137,14 +137,26 @@ export const AddPropertyInfo = props => {
     onOpen: onOpenAddressVerifyModalOpen,
   } = useDisclosure()
 
-  const {
-    isOpen: isAddressDuplicateModalOpen,
-    onClose: onAddressDuplicateModalClose,
-    onOpen: onOpenAddressDuplicateModalOpen,
-  } = useDisclosure()
+  // const {
+  //   isOpen: isAddressDuplicateModalOpen,
+  //   onClose: onAddressDuplicateModalClose,
+  //   onOpen: onOpenAddressDuplicateModalOpen,
+  // } = useDisclosure()
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {isDuplicateAddress && (
+        <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
+          <AlertIcon />
+          <AlertDescription color="red">
+            Project ID xxx using this address already exist & is in xxx state.
+          </AlertDescription>
+          <Divider orientation="vertical" h={6} marginLeft={6} />
+          <Checkbox type="checkbox" marginTop={1} marginLeft={6} color="#4E87F8">
+            Acknowledged
+          </Checkbox>
+        </Alert>
+      )}
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
@@ -306,8 +318,7 @@ export const AddPropertyInfo = props => {
           type="submit"
           onClick={() => {
             refetch()
-            // onOpenAddressVerifyModalOpen()
-            onOpenAddressDuplicateModalOpen()
+            onOpenAddressVerifyModalOpen()
           }}
         >
           {'Next'}
@@ -323,15 +334,15 @@ export const AddPropertyInfo = props => {
         addressVerificationStatus={addressVerificationStatus}
       />
 
-      <ModalDuplicateAddress
+      {/* <ModalDuplicateAddress
         title="Address already exist"
         content="Address already exist"
         isOpen={isAddressDuplicateModalOpen}
         onClose={onAddressDuplicateModalClose}
         props={''} // onConfirm={onDeleteConfirmationModalClose}
         save={saveModalVerify}
-        // addressVerificationStatus={addressVerificationStatus}
-      />
+        isDuplicateAddress={isDuplicateAddress}
+      /> */}
     </form>
   )
 }
