@@ -46,22 +46,15 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
 
   return (
     <>
-      <Card w="100%" mb="10px" boxShadow="none" bg="none" p={0}>
-        <Box
-          justifyContent="space-evenly"
-          display="grid"
-          gridTemplateColumns={{ base: '1fr', lg: '2fr', xl: '1fr 2fr' }}
-          alignItems="center"
-        >
-          <VStack
-            py="4"
-            alignItems="start"
-            boxShadow="1px 1px 7px rgba(0,0,0,0.1)"
-            bg="white"
-            rounded="15px"
-            p={5}
-            minH={156}
-          >
+      <Box
+        justifyContent="space-evenly"
+        display="grid"
+        gridTemplateColumns={{ base: '1fr', lg: '2fr', xl: '1fr 2fr' }}
+        alignItems="center"
+        mb="10px"
+      >
+        <Card minH={156} rounded="2xl">
+          <VStack alignItems="start">
             {isLoading ? (
               <BlankSlate width="60px" h="8px" />
             ) : (
@@ -100,32 +93,30 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               )}
             </Flex>
           </VStack>
-          <Flex
-            pt={{ base: '15px', xl: '0' }}
-            pl={{ base: '0px', xl: '15px' }}
-            display="grid"
-            gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
-            gridGap="15px"
-          >
-            <Box>
-              <SimpleSlider heading={t('Insurance Expiration')} data={defaultData} isLoading={isLoading} />
-            </Box>
-            <Box>
-              <SimpleSlider
-                isLoading={isLoading}
-                heading={t('License Expiration')}
-                data={vendorEntity?.licenseDocuments
-                  ?.sort((curr: any, pre: any) => pre.id - curr.id)
-                  .map((licenseDocument: LicenseDocument) => ({
-                    title: LicenseType[licenseDocument.licenseType],
-                    date: dateFormat(licenseDocument.licenseExpirationDate),
-                    testId: LicenseType[licenseDocument.licenseType],
-                  }))}
-              />
-            </Box>
-          </Flex>
-        </Box>
-      </Card>
+        </Card>
+
+        <Flex
+          pt={{ base: '15px', xl: '0' }}
+          pl={{ base: '0px', xl: '15px' }}
+          display="grid"
+          gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
+          gridGap="15px"
+        >
+          <SimpleSlider heading={t('Insurance Expiration')} data={defaultData} isLoading={isLoading} />
+
+          <SimpleSlider
+            isLoading={isLoading}
+            heading={t('License Expiration')}
+            data={vendorEntity?.licenseDocuments
+              ?.sort((curr: any, pre: any) => pre.id - curr.id)
+              .map((licenseDocument: LicenseDocument) => ({
+                title: LicenseType[licenseDocument.licenseType],
+                date: dateFormat(licenseDocument.licenseExpirationDate),
+                testId: LicenseType[licenseDocument.licenseType],
+              }))}
+          />
+        </Flex>
+      </Box>
     </>
   )
 }

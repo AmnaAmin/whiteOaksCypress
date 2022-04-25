@@ -53,6 +53,7 @@ import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver } from './draw-transaction-lien-waiver'
+import { calendarIcon } from 'theme/common-style'
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -251,6 +252,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                               {...field}
                               options={transactionTypeOptions}
                               isDisabled={!!transaction}
+                              size="md"
                               onChange={(option: SelectOption) => {
                                 if (option.value !== TransactionTypeValues.changeOrder) {
                                   reset({
@@ -389,12 +391,10 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                       </FormLabel>
                       <Input
                         data-testid="new-expected-completion-date"
-                        borderLeft=" 2px solid #4E87F8"
                         id="newExpectedCompletionDate"
                         type="date"
                         size="md"
-                        fontSize="14px"
-                        color="gray.400"
+                        css={calendarIcon}
                         {...register('newExpectedCompletionDate')}
                       />
                       <FormErrorMessage>

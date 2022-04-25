@@ -43,12 +43,15 @@ function Misc() {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="45vh">
+        <Box h="51vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap={7} w="60%">
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Created</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.created && errors.created?.message}
                   label={''}
                   name={`created`}
@@ -60,8 +63,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="created"
                   onChange={e => {
@@ -77,6 +78,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>Active</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.active && errors.active?.message}
                   label={''}
                   name={`active`}
@@ -88,8 +92,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="active"
                   onChange={e => {
@@ -105,6 +107,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>Punch</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.punch && errors.punch?.message}
                   label={''}
                   name={`punch`}
@@ -116,8 +121,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="punch"
                   onChange={e => {
@@ -133,6 +136,10 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>Closed</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    borderLeft: '2px solid #4E87F8',
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.coiWcExpDate && errors.coiWcExpDate?.message}
                   label={''}
                   name={`coiWcExpDate`}
@@ -144,8 +151,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="coiWcExpDate"
                   onChange={e => {
@@ -161,6 +166,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Paid</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.clientPaid && errors.clientPaid?.message}
                   label={''}
                   name={`clientPaid`}
@@ -172,8 +180,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="clientPaid"
                   onChange={e => {
@@ -189,6 +195,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>Collection</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.collection && errors.collection?.message}
                   label={''}
                   name={`collection`}
@@ -200,8 +209,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="collection"
                   onChange={e => {
@@ -217,6 +224,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>Disputed</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.disputed && errors.disputed?.message}
                   label={''}
                   name={`disputed`}
@@ -228,8 +238,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="disputed"
                   onChange={e => {
@@ -246,6 +254,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Invoice</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.woaInvoice && errors.woaInvoice?.message}
                   label={''}
                   name={`woaInvoice`}
@@ -257,8 +268,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="woaInvoice"
                   onChange={e => {
@@ -274,6 +283,9 @@ function Misc() {
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Paid</FormLabel>
                 <FormDatePicker
+                  elementStyle={{
+                    backgroundColor: '#EDF2F7',
+                  }}
                   errorMessage={errors.woaPaid && errors.woaPaid?.message}
                   label={''}
                   name={`woaPaid`}
@@ -285,8 +297,6 @@ function Misc() {
                     fontStyle: 'normal',
                     fontWeight: 500,
                     fontSize: '14px',
-                    backgroundColor: '#EDF2F7',
-                    borderLeft: '2px solid #4E87F8',
                   }}
                   testId="woaPaid"
                   onChange={e => {
@@ -312,7 +322,6 @@ function Misc() {
                   {...register('dueDateVariance', {
                     required: 'This is required',
                   })}
-                  borderLeft="2px solid #4E87F8"
                 />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
@@ -330,7 +339,6 @@ function Misc() {
                   {...register('finalDateVariance', {
                     required: 'This is required',
                   })}
-                  borderLeft="2px solid #4E87F8"
                 />
                 <FormErrorMessage>{errors.finalDateVariance && errors.finalDateVariance.message}</FormErrorMessage>
               </FormControl>

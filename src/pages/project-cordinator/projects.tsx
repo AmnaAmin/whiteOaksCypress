@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ProjectFilters } from 'features/project-coordinator/project-filters'
-import { ProjectsTable, PCPROJECT_COLUMNS } from 'features/project-coordinator/projects-table'
+import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/projects-table'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -23,7 +23,7 @@ export const Projects = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
-    PCPROJECT_COLUMNS,
+    PROJECT_COLUMNS,
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
