@@ -7,8 +7,9 @@ import { verifyAddressValues } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
 import { useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
-import { ModalVerifyAddress } from 'features/modal-verify-address'
+import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
+import { ModalDuplicateAddress } from './modal-duplicate-address'
 
 export const AddPropertyInfo = props => {
   // const { mutate: saveAddress, data: addressPayload } = useAddressSettings()
@@ -18,7 +19,7 @@ export const AddPropertyInfo = props => {
   const [city, setCity] = useState()
   const [state, setState] = useState()
   const [zipCode, setZipCode] = useState()
-  const [isDuplicateAddress, setIsDuplicateAddress] = useState('false')
+  const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
 
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
 
@@ -81,7 +82,7 @@ export const AddPropertyInfo = props => {
       setCity(addressInfo.city)
       setState(addressInfo.state)
       setZipCode(addressInfo.zipCode)
-      setIsDuplicateAddress('true')
+      setIsDuplicateAddress(true)
     },
     [refetch, setStreetAddress, setCity, setState, setZipCode],
   )
@@ -139,6 +140,12 @@ export const AddPropertyInfo = props => {
     isOpen: isAddressVerifyModalOpen,
     onClose: onAddressVerifyModalClose,
     onOpen: onOpenAddressVerifyModalOpen,
+  } = useDisclosure()
+
+  const {
+    isOpen: isAddressDuplicateModalOpen,
+    onClose: onAddressDuplicateModalClose,
+    onOpen: onOpenAddressDuplicateModalOpen,
   } = useDisclosure()
 
   return (
@@ -304,7 +311,8 @@ export const AddPropertyInfo = props => {
           type="submit"
           onClick={() => {
             refetch()
-            onOpenAddressVerifyModalOpen()
+            // onOpenAddressVerifyModalOpen()
+            onOpenAddressDuplicateModalOpen()
           }}
         >
           {'Next'}
@@ -319,18 +327,16 @@ export const AddPropertyInfo = props => {
         save={saveModalVerify}
         addressVerificationStatus={addressVerificationStatus}
       />
-      isDuplicateAddress &&{' '}
-      {
-        <ModalVerifyAddress
-          title="Address Verification"
-          content="Address Verification"
-          isOpen={isAddressVerifyModalOpen}
-          onClose={onAddressVerifyModalClose}
-          props={''} // onConfirm={onDeleteConfirmationModalClose}
-          save={saveModalVerify}
-          addressVerificationStatus={addressVerificationStatus}
-        />
-      }
+
+      <ModalDuplicateAddress
+        title="Address already exist"
+        content="Address already exist"
+        isOpen={isAddressDuplicateModalOpen}
+        onClose={onAddressDuplicateModalClose}
+        props={''} // onConfirm={onDeleteConfirmationModalClose}
+        save={saveModalVerify}
+        // addressVerificationStatus={addressVerificationStatus}
+      />
     </form>
   )
 }
