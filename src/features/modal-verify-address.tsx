@@ -15,11 +15,12 @@ import {
   GridItem,
   Grid,
   Checkbox,
+  Icon,
+  Box,
 } from '@chakra-ui/react'
-import { Label } from 'recharts'
-import { Row } from 'components/table/react-table'
-import { useVerifyAddressApi } from 'utils/pc-projects'
-
+import FailedIcon from 'icons/failed-icon'
+import SuccessIcon from 'icons/success-icon'
+import VerifyingIcon from 'icons/verifying-icon'
 interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
@@ -46,80 +47,116 @@ export function ModalVerifyAddress({
   const toggleSubModal = () => props
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="xl">
       <ModalOverlay />
       <ModalContent rounded="6">
-        <ModalHeader
-          borderBottom="2px solid #E2E8F0"
-          fontWeight={500}
-          color="gray.600"
-          fontSize="16px"
-          fontStyle="normal"
-          mb="5"
+        <Grid
+          height={addressVerificationStatus === 'failed' ? 155 : 100}
+          templateRows="repeat(2, 1fr)"
+          templateColumns="repeat(5, 1fr)"
         >
-          {title}
-        </ModalHeader>
-        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
-        <ModalBody>
-          <Grid>
-            <GridItem>
+          <GridItem
+            rowSpan={2}
+            colSpan={1}
+            bg="#4E87F8"
+            roundedLeft={6}
+            alignItems={'center'}
+            height={addressVerificationStatus === 'failed' ? 155 : 100}
+          >
+            {addressVerificationStatus === 'verifying' && (
+              <Box position={'absolute'} left={38} top={8}>
+                <VerifyingIcon />
+              </Box>
+            )}
+            {addressVerificationStatus === 'failed' && (
+              <Box position={'absolute'} left={38} top={55}>
+                <FailedIcon />
+              </Box>
+            )}
+            {addressVerificationStatus === 'success' && (
+              <Box position={'absolute'} left={38} top={8}>
+                <SuccessIcon />
+              </Box>
+            )}
+          </GridItem>
+          <GridItem colSpan={4}>
+            <ModalHeader fontWeight={500} color="gray.600" fontSize="18px" fontStyle="normal" mt="2" mb="-4">
+              {title}
+            </ModalHeader>
+            {/* <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} /> */}
+            <ModalBody>
               {addressVerificationStatus === 'verifying' && (
-                <div className="uspsAdressVerification">
-                  <h5>Verifying address with USPS...</h5>
-                </div>
+                <Box className="uspsAdressVerification" marginTop={-2}>
+                  <h5>Verifying address with USPS</h5>
+                </Box>
               )}
 
               {addressVerificationStatus === 'failed' && (
-                <div className="uspsAdressVerificationFailed">
-                  <h5>Address verification failed! Please fix the address and try again</h5>
-                </div>
+                <Box className="uspsAdressVerificationFailed" marginTop={-2}>
+                  <h5>Address verification failed! Please fix the address & try again</h5>
+                </Box>
               )}
               {addressVerificationStatus === 'success' && (
-                <div className="uspsAdressVerificationSuccess">
-                  <h5>Address verification Passed</h5>
-                </div>
+                <>
+                  <Box className="uspsAdressVerificationSuccess" marginTop={-2}>
+                    <h5>Verified by UPS</h5>
+                    <Button
+                      bg="none"
+                      color="#4E87F8"
+                      _hover={{ bg: 'none' }}
+                      _focus={{ border: '1px solid #4E87F8' }}
+                      fontSize="12px"
+                      fontStyle="normal"
+                      fontWeight={500}
+                      border="1px solid #4E87F8"
+                      position="absolute"
+                      top="30"
+                      right="55"
+                    >
+                      Continue
+                    </Button>
+                  </Box>
+                </>
               )}
-            </GridItem>
-            <GridItem>
-              <div>
-                {addressVerificationStatus === 'verifying' && (
-                  <img src="content/images/spinner.gif" className="spinner" />
-                )}
-                {addressVerificationStatus === 'failed' && <img src="content/images/failed.png" className="spinner" />}
-                {addressVerificationStatus === 'success' && (
-                  <img src="content/images/checkmark.gif" className="spinner" />
-                )}
-              </div>
-            </GridItem>
-          </Grid>
-        </ModalBody>
-        <ModalFooter className="FooterSpaceBetween custom-modal">
-          <Checkbox
-            type="checkbox"
-            className="mr-1"
-            position={'absolute'}
-            left="25px"
-            // onChange={setContinueUnverified}
-            // value={continueUnverified}
-          >
-            Continue with unverified address
-          </Checkbox>
-          <div className="d-flex align-items-center">
-            <Button
-              color="primary"
-              id="save-entity"
-              // onClick={}
-              disabled={!continueUnverified || addressVerificationStatus === 'verifying'}
-              className="btn btn-primary jh-create-entity "
-            >
-              {/* <SaveRoundedIcon /> */}
-              Save
-            </Button>
-            <Button color="secondary" onClick={toggleSubModal} className="ml-2">
-              Close
-            </Button>
-          </div>
-        </ModalFooter>
+            </ModalBody>
+            <ModalFooter className="FooterSpaceBetween custom-modal">
+              {addressVerificationStatus === 'failed' && (
+                <>
+                  <Box position={'absolute'} left={200}>
+                    <Button
+                      disabled={!continueUnverified}
+                      marginRight={3}
+                      bg="none"
+                      color="#4E87F8"
+                      _hover={{ bg: 'none' }}
+                      _focus={{ border: '1px solid #4E87F8' }}
+                      fontSize="14px"
+                      fontStyle="normal"
+                      fontWeight={500}
+                      width={78}
+                      height={30}
+                      border="1px solid #4E87F8"
+                    >
+                      Save
+                    </Button>
+                    <Checkbox
+                      type="checkbox"
+                      marginTop={1}
+                      onChange={e => setContinueUnverified(e.target.checked)}
+                      isChecked={continueUnverified}
+                      color="red"
+                    >
+                      Continue with unverified address
+                    </Checkbox>
+                    {/* <Button color="secondary" onClick={toggleSubModal} className="ml-2">
+                      Close
+                    </Button> */}
+                  </Box>
+                </>
+              )}
+            </ModalFooter>
+          </GridItem>
+        </Grid>
       </ModalContent>
     </Modal>
   )

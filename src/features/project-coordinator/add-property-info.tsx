@@ -1,4 +1,3 @@
-// import React, { useEffect, useState } from 'react'
 import { Button, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
