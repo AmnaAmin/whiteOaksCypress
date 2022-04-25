@@ -77,10 +77,10 @@ const WorkOrderDetails = ({
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  Invoice # 432022
+                  Invoice {workOrder.invoiceNumber ? `#` + workOrder.invoiceNumber : ''}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  ADT RENOVATIONS
+                  {workOrder.companyName}
                 </Text>
               </HStack>
             </Box>
