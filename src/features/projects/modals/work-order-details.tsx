@@ -106,7 +106,7 @@ const WorkOrderDetails = ({
         <ModalBody>
           <Stack spacing={5}>
             <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-              <TabList height="50px" alignItems={'end'}>
+              <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
                 <Flex h="40px">
                   <Tab
                     _focus={{ border: 'none' }}
