@@ -93,6 +93,11 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
         accessor: 'workOrderExpectedCompletionDate',
         Cell: ({ value }) => dateFormat(value),
       },
+      {
+        Header: t('completed') as string,
+        accessor: 'workOrderDateCompleted',
+        Cell: ({ value }) => dateFormat(value),
+      },
     ],
     ref,
   )

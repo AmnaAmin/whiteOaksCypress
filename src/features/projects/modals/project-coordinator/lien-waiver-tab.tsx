@@ -12,7 +12,6 @@ import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
-import { dateFormatter } from 'utils/new-work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -190,7 +189,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     Icon={<BiCalendar />}
                     controlStyle={{ w: '20em' }}
                     label="Date of signature"
-                    InputElem={<Text>{dateFormatter(lienWaiverData.dateOfSignature)}</Text>}
+                    InputElem={<Text>02/04/2022</Text>}
                   />
 
                   <InputView
@@ -198,7 +197,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     label="Claimant Signature"
                     InputElem={
                       <Text fontWeight="600" fontStyle="italic">
-                        {lienWaiverData.claimantTitle}
+                        Anam Rubab
                       </Text>
                     }
                   />

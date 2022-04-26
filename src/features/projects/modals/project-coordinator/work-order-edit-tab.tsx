@@ -4,7 +4,6 @@ import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import { documentTypes } from 'utils/vendor-projects'
-import { dateFormatter } from 'utils/new-work-order'
 
 const CalenderCard = props => {
   return (
@@ -17,7 +16,7 @@ const CalenderCard = props => {
           {props.title}
         </Text>
         <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props?.date}
+          {props.date}
         </Text>
       </Box>
     </Flex>
@@ -39,34 +38,23 @@ const InformationCard = props => {
   )
 }
 
-const WorkOrderDetailTab = props => {
+const WorkOrderDetailTab = ({ onClose }) => {
   const { t } = useTranslation()
-  console.log(props.workOrder)
-  const {
-    skillName,
-    companyName,
-    businessEmailAddress,
-    businessPhoneNumber,
-    workOrderIssueDate,
-    dateLeanWaiverSubmitted,
-    datePermitsPulled,
-    durationCategory,
-  } = props.workOrder
 
   return (
     <Box>
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <InformationCard title="Vendor Name" date={companyName} />
-        <InformationCard title="Vendor Type" date={skillName} />
-        <InformationCard title="Email" date={businessEmailAddress} />
-        <InformationCard title=" Phone No" date={businessPhoneNumber} />
+        <InformationCard title="Vendor Name" date="ADT Renovations" />
+        <InformationCard title="Vendor Type" date="General Labor" />
+        <InformationCard title="Email" date="vendor@gmail.com" />
+        <InformationCard title=" Phone No" date="+12345678" />
       </SimpleGrid>
 
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="WO Issued" date={dateFormatter(workOrderIssueDate)} />
-        <CalenderCard title="LW Submitted " date={dateFormatter(dateLeanWaiverSubmitted)} />
-        <CalenderCard title="Permitted Pulled" date={dateFormatter(datePermitsPulled)} />
-        <InformationCard title=" Completion Variance" date={durationCategory} />
+        <CalenderCard title="WO Issued" date="11/14/2021" />
+        <CalenderCard title="LW Submitted " date="dd/mm/yy" />
+        <CalenderCard title="Permitted Pulled" date="dd/mm/yy" />
+        <CalenderCard title=" Completion Variance" date="6 Days" />
       </SimpleGrid>
 
       <Box mt={10}>
@@ -108,7 +96,7 @@ const WorkOrderDetailTab = props => {
       <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
         <Button
           variant="ghost"
-          onClick={props.onClose}
+          onClick={onClose}
           mr={3}
           color="gray.700"
           fontStyle="normal"
