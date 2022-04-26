@@ -1,17 +1,10 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-// import { dateFormat } from 'utils/date-time-utils'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useProjectAlerts } from 'utils/projects'
 import { useParams } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
-
-// enum PROJECT_CATEGORY {
-//   WARNING = 1,
-//   INFO = 2,
-//   ERROR = 3,
-// }
 
 const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -75,11 +68,11 @@ export const VendorTable = React.forwardRef((props: any, ref) => {
         accessor: 'dateCreated',
       },
       {
-        Header: 'COI-GL Exp...',
+        Header: 'COI-GL Expiration Date',
         accessor: 'date',
       },
       {
-        Header: 'COI-WC Exp...',
+        Header: 'COI-WC Expiration Date',
         accessor: 'now',
       },
       {

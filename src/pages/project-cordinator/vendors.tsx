@@ -7,12 +7,7 @@ import { BiClipboard, BiHourglass, BiMessageSquareError, BiFile } from 'react-ic
 
 const Vendors = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  // const [ alertRow, selectedAlertRow,] = useState(true)
-  const {
-    // isOpen: isOpenAlertModal,
-    //  onClose: onAlertModalClose,
-    onOpen: onAlertModalOpen,
-  } = useDisclosure()
+  const { onOpen: onAlertModalOpen } = useDisclosure()
   return (
     <Box mt="5">
       <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
@@ -73,7 +68,6 @@ const Vendors = () => {
       <Box>
         <VendorTable
           onRowClick={(e, row) => {
-            // selectedAlertRow(row.values)
             onAlertModalOpen()
           }}
           ref={tabsContainerRef}
