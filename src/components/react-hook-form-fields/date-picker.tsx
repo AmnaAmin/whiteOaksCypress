@@ -16,6 +16,7 @@ import { Controller, Control } from 'react-hook-form'
 import { getFormattedDate } from 'utils/date-time-utils'
 
 type DatePickerProps = {
+  elementStyle?: any
   errorMessage: any
   label?: string
   name: string
@@ -34,7 +35,7 @@ const CalendarContainer = ({ children }) => {
 }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
-  <FormControl {...props.style} size={props.size || 'lg'} w="215px">
+  <FormControl {...props.style} size={props.size || 'lg'}>
     <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
       {props.label}
     </FormLabel>
@@ -55,7 +56,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
               if (props.onChange) props.onChange(val)
             }}
             placeholderText={props.placeholder}
-            customInput={<DatePickerInput testId={props.testId} size={props.size || 'lg'} />}
+            customInput={<DatePickerInput testId={props.testId} size={props.size || 'lg'} style={props.elementStyle} />}
           />
           <Box minH="20px" mt="3px">
             <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
@@ -69,6 +70,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
 const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputElement>) => (
   <InputGroup>
     <Input
+      {...props.style}
       bg="white"
       size="md"
       color="#718096"

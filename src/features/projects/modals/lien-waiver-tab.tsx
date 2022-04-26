@@ -15,7 +15,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { convertImageToDataURL, trimCanvas } from 'components/table/util'
+import { convertImageToDataURL } from 'components/table/util'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 import jsPdf from 'jspdf'
@@ -27,7 +27,7 @@ import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
-
+import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 

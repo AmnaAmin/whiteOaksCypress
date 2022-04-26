@@ -3,7 +3,7 @@ import { Button, Divider, Flex, Stack } from '@chakra-ui/react'
 export const ProjectDayFilters = () => {
   return (
     <>
-      <Stack direction="row" justify="left" marginTop={1}>
+      <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
         <Button
           bg="none"
           border="none"
@@ -224,9 +224,6 @@ export const ProjectDayFilters = () => {
           fontSize="12px"
           fontStyle="normal"
           fontWeight={500}
-          // alignContent="right"
-          // position="absolute"
-          // right="8"
         >
           Clear Filter
         </Button>

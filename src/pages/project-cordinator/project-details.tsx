@@ -14,9 +14,11 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
-import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
+import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -24,7 +26,6 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const { onOpen: onDocumentModalOpen } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -34,6 +35,7 @@ export const ProjectDetails: React.FC = props => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
 
@@ -42,6 +44,8 @@ export const ProjectDetails: React.FC = props => {
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
+
+        {tabIndex === 1}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
@@ -56,10 +60,12 @@ export const ProjectDetails: React.FC = props => {
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
                   <Button
-                    onClick={onDocumentModalOpen}
+                    onClick={onOpen}
                     // bg="#4E87F8"
-                    color="#4E87F8"
+                    color="white"
                     size="md"
+                    bg="#4e87f8"
+                    _hover={{ bg: '#2A61CE' }}
                   >
                     <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>
@@ -67,6 +73,7 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
+                    <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
                 {tabIndex === 3 && (
@@ -130,9 +137,9 @@ export const ProjectDetails: React.FC = props => {
               </Box>
             </TabList>
 
-            <TabPanels mt="31px" h="100%">
-              <TabPanel p="0px" h="100%">
-                <Box mb={5}>
+            <TabPanels h="100%">
+              <TabPanel p="0px" h="100%" mt="31px">
+                <Box mb="5">
                   <FormControl display="flex" alignItems="center">
                     <FormLabel htmlFor="view-details" mb="0">
                       View Details
@@ -148,7 +155,9 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
+              <TabPanel p="0px" mt="3">
+                <ProjectDetailsTab />
+              </TabPanel>
 
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">

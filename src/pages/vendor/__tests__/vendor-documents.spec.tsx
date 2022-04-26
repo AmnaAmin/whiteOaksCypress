@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event'
 import { DocumentsForm } from 'features/vendor-details/documents-card'
 import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 
-jest.setTimeout(30000)
+jest.setTimeout(150000)
 
 const chooseFilebyTestId = (id, filename) => {
   const inputEl = screen.getByTestId(id)
