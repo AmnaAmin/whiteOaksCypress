@@ -3,8 +3,7 @@ import { HStack, Box, Icon, Grid, GridItem, Button, Spacer, useDisclosure } from
 import VendorFilterCard from 'features/project-coordinator/vendor/vendor-filter-card'
 import { VendorTable } from 'features/project-coordinator/vendor/vendorTable'
 import React, { useRef } from 'react'
-import { BiClipboard, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
-import { GoFile } from 'react-icons/go'
+import { BiClipboard, BiHourglass, BiMessageSquareError, BiFile } from 'react-icons/bi'
 
 const Vendors = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
@@ -19,7 +18,7 @@ const Vendors = () => {
       <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
         <GridItem>
           <VendorFilterCard
-            icon={<Icon color="#4A5568" boxSize={7} as={GoFile} />}
+            icon={<Icon color="#4A5568" boxSize={7} as={BiFile} />}
             status="Active"
             num={25}
             bgColor="#F9F1DA"
@@ -52,12 +51,12 @@ const Vendors = () => {
           />
         </GridItem>
       </Grid>
-      <HStack mt="1" mb="2">
+      <HStack mt="1" mb="1">
         <Button _focus={{ outline: 'none' }} variant="ghost" color="#4E87F8" fontSize="14px" fontWeight={600}>
           Clear Filter
         </Button>
         <Spacer />
-        <Box pt="3">
+        <Box pt="4">
           <Button
             _focus={{ outline: 'none' }}
             variant="ghost"
