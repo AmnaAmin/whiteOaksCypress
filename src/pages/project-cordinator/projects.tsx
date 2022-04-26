@@ -9,7 +9,7 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
-import { ProjectDayFilters } from 'features/project-coordinator/project-days-filters'
+import { ProjectDayFilters } from 'features/project-coordinator/weekday-filters'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
 
 export const Projects = () => {
@@ -45,7 +45,7 @@ export const Projects = () => {
           <Box fontWeight={'bold'}>Due Projects</Box>
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1}>
-          <ProjectDayFilters />
+          <ProjectDayFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
           <Button
             bg="none"
             color="#4E87F8"

@@ -56,14 +56,9 @@ export const useProjectAlerts = (projectId, login) => {
 export const useWeekDayProjectsDue = () => {
   const client = useClient()
 
-  const { data: dueProjectData, ...rest } = useQuery<ProjectType>(['project', {}], async () => {
+  return useQuery('weekDayFilters', async () => {
     const response = await client(`projects-due-this-week`, {})
 
     return response?.data
   })
-
-  return {
-    dueProjectData,
-    ...rest,
-  }
 }
