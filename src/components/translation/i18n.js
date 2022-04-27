@@ -99,6 +99,7 @@ i18n.use(initReactI18next).init({
         issue: 'Issue',
         expectedCompletion: 'Expected Completion',
         lienWaiver: 'Lien Waiver',
+        reject: 'Reject',
         inovice: 'Invoice',
         WOIssued: 'WO Issued',
         WOOriginalAmount: 'WO Original Amount',

@@ -5,7 +5,7 @@ import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
+import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
@@ -120,6 +120,23 @@ export const LienWaiverTab: React.FC<any> = props => {
     generateTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
+  const [clicked, SetClicked] = useState(false)
+
+  const InformationCard = ({ clicked }) => {
+    return (
+      <>
+        {!clicked && (
+          <Flex alignItems="center" fontSize="14px" fontWeight={600}>
+            <Text mr={1}>
+              <BiXCircle size={14} />
+            </Text>
+            <Text>{t('reject')}</Text>
+          </Flex>
+        )}
+        {clicked && <Text>{t('save')}</Text>}
+      </>
+    )
+  }
 
   return (
     <Stack>
@@ -147,7 +164,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       float="right"
                       mr={3}
                       h="48px"
-                      onClick={() => downloadFile(recentLWFile.s3Url)}
+                      onClick={() => downloadFile(recentLWFile?.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
                       {recentLWFile.fileType}
@@ -211,7 +228,13 @@ export const LienWaiverTab: React.FC<any> = props => {
         <Flex mt="70px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
           <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
             <Flex fontSize="14px" fontWeight={500} mr={1}>
-              <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
+              <Button
+                onClick={() => downloadFile(recentLWFile?.s3Url)}
+                colorScheme="#4E87F8"
+                variant="outline"
+                color="#4E87F8"
+                mr={2}
+              >
                 <Text mr={1}>
                   <BiDownload size={14} />
                 </Text>
@@ -219,22 +242,10 @@ export const LienWaiverTab: React.FC<any> = props => {
               </Button>
             </Flex>
           </HStack>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            color="gray.700"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
-            {t('close')}
-          </Button>
+
           <Button
             colorScheme="CustomPrimaryColor"
-            type="submit"
+            onClick={() => SetClicked(true)}
             _focus={{ outline: 'none' }}
             fontStyle="normal"
             fontSize="14px"
@@ -242,7 +253,20 @@ export const LienWaiverTab: React.FC<any> = props => {
             h="48px"
             w="130px"
           >
-            {t('save')}
+            <InformationCard clicked={clicked} />
+          </Button>
+          <Button
+            ml={3}
+            onClick={onClose}
+            colorScheme="blue"
+            variant="outline"
+            fontStyle="normal"
+            fontSize="14px"
+            fontWeight={600}
+            h="48px"
+            w="130px"
+          >
+            {t('cancel')}
           </Button>
         </Flex>
       </form>

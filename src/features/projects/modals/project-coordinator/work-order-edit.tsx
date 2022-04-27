@@ -134,13 +134,25 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       color: 'white',
                       bg: '#4E87F8',
                       fontWeight: 600,
+                      id: 'checkId',
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('Invoice')}
+                  </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
                       _hover: { backgroundColor: '#4E87F8' },
                     }}
                     sx={TabStyle}
                   >
                     {t('Payments')}
                   </Tab>
-
                   <Tab
                     _focus={{ border: 'none' }}
                     _selected={{
@@ -152,7 +164,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                     }}
                     sx={TabStyle}
                   >
-                    {t('Invoice')}
+                    {t('Notes')}
                   </Tab>
                 </Flex>
               </TabList>
