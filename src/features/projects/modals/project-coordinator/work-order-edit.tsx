@@ -26,6 +26,7 @@ import { LienWaiverTab } from './lien-waiver-tab'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import WorkOrderDetailTab from './work-order-edit-tab'
+import PaymentInfoTab from './payment-tab-pc'
 
 const TabStyle = {
   fontWeight: 500,
@@ -163,6 +164,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                 </TabPanel>
                 <TabPanel>
                   <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
+                </TabPanel>
+                <TabPanel>
+                  <PaymentInfoTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
