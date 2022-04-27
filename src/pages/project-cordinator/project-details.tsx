@@ -19,6 +19,7 @@ import { UploadModal } from '../../features/projects/modals/project-coordinator/
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+import { NotesTab } from 'features/project-coordinator/notes-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -48,7 +49,7 @@ export const ProjectDetails: React.FC = props => {
         {tabIndex === 1}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
               <Tab>{t('Transactions')}</Tab>
               <Tab>{t('projectDetails')}</Tab>
@@ -163,6 +164,12 @@ export const ProjectDetails: React.FC = props => {
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
+              </TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel px="0">
+                <NotesTab />
               </TabPanel>
             </TabPanels>
           </Tabs>
