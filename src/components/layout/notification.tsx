@@ -7,13 +7,11 @@ export const Notification = () => {
   const [list, setList] = useState(() => notificationData)
 
   const handleDelete = id => {
-    console.log('id', id)
     const newList = list.filter(data => data.id !== id)
 
     setList(newList)
   }
 
-  console.log('list', list)
   return (
     <>
       <MenuList borderRadius={8} maxH="542px">

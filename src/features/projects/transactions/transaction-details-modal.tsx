@@ -80,7 +80,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
 
         <ModalBody px="6" py="8">
           <VStack alignItems="left" mt="5">
-            <Grid templateColumns="repeat(5,1fr)" pb={6} borderBottom="1px solid #E2E8F0" mb="20">
+            <Grid templateColumns="repeat(5,1fr)" pb={6} borderBottom="1px solid #E2E8F0" mb="14">
               <GridItem>
                 <InfoCard title={t('transactionType')} subTitle={transaction?.transactionTypeLabel as string} />
               </GridItem>
@@ -107,7 +107,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
             </Grid>
           </VStack>
 
-          <Box border="1px solid #efefef" h="300px" overflow="auto">
+          <Text mb="4" fontSize="14px" fontWeight={500} color="gray.600" ml="4">
+            Items:
+          </Text>
+          <Box border="1px solid #efefef" h="300px" overflow="auto" ml="4" mr="4">
             <Table colorScheme="gray">
               <Thead bg="gray.50">
                 <Tr>
