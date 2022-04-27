@@ -1,7 +1,16 @@
 import { Box, Button } from '@chakra-ui/react'
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader } from 'components/modal/modal'
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+} from 'components/modal/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'components/tabs/tabs'
 import React from 'react'
+import Document from './document'
 
 export const NewVendorTabs = () => {
   return (
@@ -15,7 +24,9 @@ export const NewVendorTabs = () => {
       </TabList>
       <TabPanels>
         <TabPanel>Details section</TabPanel>
-        <TabPanel>Documents section</TabPanel>
+        <TabPanel>
+          <Document />
+        </TabPanel>
         <TabPanel>License section</TabPanel>
         <TabPanel>Trade section</TabPanel>
         <TabPanel>Market section</TabPanel>
@@ -33,6 +44,7 @@ const NewVendorModal: React.FC<NewVendorModalType> = props => {
   return (
     <Box>
       <Modal onClose={props.onClose} isOpen={props.isOpen} size="5xl">
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>Vendor New Modal</ModalHeader>
           <ModalCloseButton />

@@ -56,7 +56,7 @@ export const downloadableLink = (downloadableFile: any) => {
 
 export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
   <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
-    <FormLabel fontSize={props.size || 'lg'} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+    <FormLabel fontSize={props.size || 'lg'} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis" mb="0">
       {props.label}
     </FormLabel>
     <FileUpload
@@ -99,7 +99,7 @@ const FileUpload = (props: FileUploadProps) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <Box className="form-file-input" rounded={6} h="40px" w="293px" p={0} border="1px solid #CBD5E0">
+    <Box className="form-file-input" rounded={6} w="293px" p={0} border="1px solid #CBD5E0">
       <InputGroup onClick={handleClick}>
         <input
           type={'file'}
