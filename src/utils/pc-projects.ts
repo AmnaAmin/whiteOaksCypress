@@ -26,3 +26,29 @@ export const useProjectCards = () => {
     return response?.data
   })
 }
+
+export const useVendorCards = () => {
+  const client = useClient()
+
+  return useQuery('vendorsCards', async () => {
+    const response = await client(`vendorsCards`, {})
+
+    return response?.data
+  })
+}
+
+const VENDOR_QUERY_KEY = 'vendor'
+export const useVendor = () => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<ProjectType>>(VENDOR_QUERY_KEY, async () => {
+    const response = await client(`view-vendors`, {})
+
+    return response?.data
+  })
+
+  return {
+    projects: data,
+    ...rest,
+  }
+}

@@ -3,9 +3,10 @@ import { Card } from 'components/card/card'
 import React from 'react'
 
 const VendorFilterCard: React.FC<{
-  icon: React.ReactNode
-  status: string
-  num: number
+  id: string
+  IconElement: React.ReactNode
+  title: string
+  number: number
   bgColor: string
 }> = props => {
   return (
@@ -16,15 +17,15 @@ const VendorFilterCard: React.FC<{
     >
       <HStack spacing="4" mt="15px" ml="13px">
         <Center bg={props.bgColor} w="52px" h="52px" rounded="full">
-          {props.icon}
+          {props.IconElement}
         </Center>
 
         <VStack alignItems="start" spacing={1}>
           <Text fontSize="16px" fontWeight={400} color="gray.600">
-            {props.status}
+            {props.title}
           </Text>
           <Text fontSize="18px" fontWeight={600} color="gray.600">
-            {props.num}
+            {props.number}
           </Text>
         </VStack>
       </HStack>
