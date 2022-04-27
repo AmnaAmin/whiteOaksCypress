@@ -91,11 +91,13 @@ const WorkOrderDetails = ({
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
               </Text>
-              <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
-                <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
-                  Active
-                </TagLabel>
-              </Tag>
+              {workOrder.statusLabel && (
+                <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
+                  <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
+                    {workOrder.statusLabel}
+                  </TagLabel>
+                </Tag>
+              )}
             </HStack>
           )}
         </ModalHeader>
