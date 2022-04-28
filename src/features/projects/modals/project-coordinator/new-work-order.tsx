@@ -19,8 +19,6 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
-import { dateFormatter } from 'utils/new-work-order'
-import { currencyFormatter } from 'utils/stringFormatters'
 import { documentTypes } from 'utils/vendor-projects'
 
 const CalenderCard = props => {
@@ -48,15 +46,7 @@ const InformationCard = props => {
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text
-          title={props.date}
-          isTruncated
-          w="170px"
-          color="gray.500"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={400}
-        >
+        <Text whiteSpace="nowrap" color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -81,12 +71,12 @@ const NewWorkOrder: React.FC<{
           <ModalBody justifyContent="center">
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-                <CalenderCard title="Client Start" date={dateFormatter(projectData.clientStartDate)} />
-                <CalenderCard title="Client End " date={dateFormatter(projectData.clientDueDate)} />
-                <InformationCard title="Profit Percentage" date={`${projectData.profitPercentage}%`} />
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData.revenue)} />
-                <InformationCard title=" Email" date={projectData.createdBy} />
-                <InformationCard title=" Phone No" date={projectData.projectManagerPhoneNumber} />
+                <CalenderCard title="Client Start" date="11/14/2021" />
+                <CalenderCard title="Client End " date="11/14/2021" />
+                <InformationCard title="Profit Percentage" date="7.62%" />
+                <InformationCard title=" Final SOW Amount" date="$6,768.00" />
+                <InformationCard title=" Email" date="VendorADT@gmail.com" />
+                <InformationCard title=" Phone No" date="+27352735725" />
               </SimpleGrid>
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>

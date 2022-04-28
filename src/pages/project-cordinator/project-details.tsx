@@ -67,7 +67,7 @@ export const ProjectDetails: React.FC = props => {
                     bg="#4e87f8"
                     _hover={{ bg: '#2A61CE' }}
                   >
-                    <Flex alignItems="center" fontSize="14px" fontWeight={600}>
+                    <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>
                         <BiAddToQueue size={14} />
                       </Text>
