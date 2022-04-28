@@ -17,6 +17,7 @@ import React from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { convertDateTimeFromServer } from 'utils/date-time-utils'
 
 const CalenderCard = props => {
   return (
@@ -29,7 +30,7 @@ const CalenderCard = props => {
           {props.title}
         </Text>
         <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props.date}
+          {props.value ? props.value : 'mm/dd/yyy'}
         </Text>
       </Box>
     </Flex>
@@ -71,17 +72,26 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
   )
 }
 
-const WorkOrderDetailTab = ({ onClose }) => {
+const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
 
   return (
     <Box>
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="WO Issued" date="11/14/2021" />
-        <CalenderCard title="Expected Start " date="11/14/2021" />
-        <CalenderCard title="Expected Completion" date="11/14/2021" />
-        <CalenderCard title=" Completed by Vendor​" date="11/14/2021" />
-        <CalenderCard title=" Completion Variance" date="6 Days" />
+        <CalenderCard title="WO Issued" value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
+        <CalenderCard title="Expected Start " value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
+        <CalenderCard
+          title="Expected Completion"
+          value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
+        />
+        <CalenderCard
+          title=" Completed by Vendor​"
+          value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
+        />
+        <CalenderCard
+          title=" Completion Variance"
+          value={convertDateTimeFromServer(workOrder.workOrderCompletionDateVariance)}
+        />
       </SimpleGrid>
       <Box pt={6}>
         <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">

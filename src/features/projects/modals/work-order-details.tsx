@@ -77,10 +77,10 @@ const WorkOrderDetails = ({
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  Invoice # 432022
+                  Invoice {workOrder.invoiceNumber ? `#` + workOrder.invoiceNumber : ''}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  ADT RENOVATIONS
+                  {workOrder.companyName}
                 </Text>
               </HStack>
             </Box>
@@ -91,11 +91,13 @@ const WorkOrderDetails = ({
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
               </Text>
-              <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
-                <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
-                  Active
-                </TagLabel>
-              </Tag>
+              {workOrder.statusLabel && (
+                <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
+                  <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
+                    {workOrder.statusLabel}
+                  </TagLabel>
+                </Tag>
+              )}
             </HStack>
           )}
         </ModalHeader>
@@ -182,7 +184,7 @@ const WorkOrderDetails = ({
 
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab onClose={onClose} />
+                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
                   <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
@@ -208,7 +210,7 @@ const WorkOrderDetails = ({
                 </TabPanel>
 
                 <TabPanel p={0}>
-                  <InvoiceTab onClose={onClose} />
+                  <InvoiceTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
