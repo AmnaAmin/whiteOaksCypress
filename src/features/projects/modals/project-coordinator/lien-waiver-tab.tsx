@@ -5,7 +5,7 @@ import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
+import { BiCalendar, BiCaretDown, BiCaretUp, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
@@ -29,13 +29,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sigRef = useRef<HTMLImageElement>(null)
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    getValues,
-    setValue,
-  } = useForm({
+  const { handleSubmit, getValues, setValue } = useForm({
     defaultValues: {
       claimantName: lienWaiverData.claimantName,
       customerName: lienWaiverData.customerName,
