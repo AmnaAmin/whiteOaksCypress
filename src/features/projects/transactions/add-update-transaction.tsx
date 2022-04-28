@@ -49,7 +49,7 @@ import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { DrawLienWaiver } from './draw-transaction-lien-waiver'
+import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 
 type AddUpdateTransactionFormProps = {
@@ -163,7 +163,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   if (isFormLoading) return <ViewLoader />
 
   return (
-    <Flex direction="column" minH="650px">
+    <Flex direction="column">
+      {isLienWaiverRequired && <LienWaiverAlert />}
+
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
       )}
