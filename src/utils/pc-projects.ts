@@ -1,6 +1,7 @@
 import { ProjectType } from 'types/project.type'
 import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
+import { Vendors } from 'types/vendor.types'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -41,14 +42,14 @@ const VENDOR_QUERY_KEY = 'vendor'
 export const useVendor = () => {
   const client = useClient()
 
-  const { data, ...rest } = useQuery<Array<ProjectType>>(VENDOR_QUERY_KEY, async () => {
+  const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
     const response = await client(`view-vendors`, {})
 
     return response?.data
   })
 
   return {
-    projects: data,
+    vendors: data,
     ...rest,
   }
 }

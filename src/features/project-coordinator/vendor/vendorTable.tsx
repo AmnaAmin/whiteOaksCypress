@@ -1,43 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-// import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
-// import { useProjectAlerts } from 'utils/projects'
-// import { useParams } from 'react-router-dom'
-// import { useAuth } from 'utils/auth-context'
 import { useVendor } from 'utils/pc-projects'
 import { Link } from 'react-router-dom'
-
-// const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
-//   return (
-//     <Tr
-//       bg="white"
-//       _hover={{
-//         background: '#eee',
-//       }}
-//       onClick={e => {
-//         if (onRowClick) {
-//           onRowClick(e, row)
-//         }
-//       }}
-//       {...row.getRowProps({
-//         style,
-//       })}
-//     >
-//       {row.cells.map(cell => {
-//         return (
-//           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
-//             <Flex alignItems="center" h="60px">
-//               <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
-//                 {cell.render('Cell')}
-//               </Text>
-//             </Flex>
-//           </Td>
-//         )
-//       })}
-//     </Tr>
-//   )
-// }
+import { Column } from 'react-table'
 
 export const VENDOR_COLUMNS = [
   {
@@ -120,39 +86,42 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
 
 type ProjectProps = {
   selectedCard: string
-  // projectColumns: Column[]
+  projectColumns: Column[]
   resizeElementRef: any
-  setTableInstance: (tableInstance: any) => void
+  // setTableInstance: (tableInstance: any) => void
 }
-export const ProjectsTable: React.FC<ProjectProps> = ({
-  setTableInstance,
-  // projectColumns,
+export const VendorTable: React.FC<ProjectProps> = ({
+  // setTableInstance,
+  projectColumns,
   resizeElementRef,
   selectedCard,
 }) => {
-  const { projects, isLoading } = useVendor()
-  const [filterProjects, setFilterProjects] = useState(projects)
+  const {
+    vendors,
+    //  isLoading
+  } = useVendor()
+  console.log('Veendo=', vendors)
+  // const [filterVendors, setFilterVendors] = useState(vendors)
 
-  useEffect(() => {
-    if (!selectedCard) setFilterProjects(projects)
-    setFilterProjects(
-      projects?.filter(
-        project =>
-          !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
-      ),
-    )
-  }, [selectedCard, projects])
+  // useEffect(() => {
+  //   if (!selectedCard) setFilterVendors(vendors)
+  //   setFilterVendors(
+  //     vendors?.filter(
+  //       project =>
+  //         !selectedCard || project.companyName?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+  //     ),
+  //   )
+  // }, [selectedCard, vendors])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box ref={resizeElementRef} height="1000px">
       <ReactTable
-        isLoading={isLoading}
-        columns={[]}
-        data={filterProjects || []}
+        // isLoading={isLoading}
+        columns={projectColumns}
+        data={vendors ? vendors : []}
         TableRow={ProjectRow}
         name="my-table"
-        setTableInstance={setTableInstance}
+        // setTableInstance={setTableInstance}
         tableHeight={'inherit'}
       />
     </Box>

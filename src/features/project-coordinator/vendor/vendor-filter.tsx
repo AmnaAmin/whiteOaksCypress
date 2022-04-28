@@ -40,7 +40,7 @@ const useVendorCardJson = cards => {
   ]
 }
 
-export const VendorFilters = () => {
+export const VendorFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useVendorCards()
   const cards = useVendorCardJson(values)
   console.log('VendorCards', values)
@@ -55,7 +55,7 @@ export const VendorFilters = () => {
         gridGap="6"
       >
         {cards.map(card => {
-          return <VendorFilterCard key={card.id} {...card} />
+          return <VendorFilterCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
         })}
       </Box>
     </>

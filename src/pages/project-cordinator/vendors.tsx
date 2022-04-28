@@ -1,15 +1,30 @@
 import { AddIcon } from '@chakra-ui/icons'
 import { HStack, Box, Icon, Button, Spacer } from '@chakra-ui/react'
 import { VendorFilters } from 'features/project-coordinator/vendor/vendor-filter'
+import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor/vendorTable'
+import { useState } from 'react'
+import { TableNames } from 'types/table-column.types'
+import { useTableColumnSettings } from 'utils/table-column-settings'
 // import { VendorTable } from 'features/project-coordinator/vendor/vendorTable'
 // import React, { useRef } from 'react'
 
 const Vendors = () => {
+  // const [projectTableInstance, setInstance] = useState<any>(null)
+  const [selectedCard, setSelectedCard] = useState<string>('')
+  const {
+    tableColumns,
+    resizeElementRef,
+    //  settingColumns, isLoading
+  } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+  // const setProjectTableInstance = tableInstance => {
+  //   setInstance(tableInstance)
+  // }
+
   // const tabsContainerRef = useRef<HTMLDivElement>(null)
   // const { onOpen: onAlertModalOpen } = useDisclosure()
   return (
     <Box mt="5">
-      <VendorFilters />
+      <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
 
       <HStack mt="1" mb="1">
         <Button _focus={{ outline: 'none' }} variant="ghost" color="#4E87F8" fontSize="14px" fontWeight={600}>
@@ -31,12 +46,12 @@ const Vendors = () => {
       </HStack>
 
       <Box>
-        {/* <VendorTable
-          onRowClick={(e, row) => {
-            onAlertModalOpen()
-          }}
-          ref={tabsContainerRef}
-        /> */}
+        <VendorTable
+          selectedCard={selectedCard as string}
+          resizeElementRef={resizeElementRef}
+          projectColumns={tableColumns}
+          // setTableInstance={setProjectTableInstance}
+        />
       </Box>
     </Box>
   )

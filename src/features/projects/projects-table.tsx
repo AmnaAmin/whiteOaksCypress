@@ -53,6 +53,7 @@ export const PROJECT_COLUMNS = [
 const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const idCell = row.cells.find(cell => cell.column.id === 'id')
   const projectId = idCell?.value
+  console.log('ProjectId', projectId)
 
   return (
     <Link to={`/project-details/${projectId}`} data-testid="project-table-row">

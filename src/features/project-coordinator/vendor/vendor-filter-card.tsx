@@ -8,12 +8,18 @@ const VendorFilterCard: React.FC<{
   title: string
   number: number
   bgColor: string
+  selectedCard: string
+  onSelectCard: (string) => void
 }> = props => {
   return (
     <Card
       boxShadow="0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
       height="120px"
       rounded="8px"
+      borderBottom="5px solid transparent"
+      border="1px solid transparent"
+      onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
+      borderColor={props.selectedCard === props.id ? '#4E87F8' : ''}
     >
       <HStack spacing="4" mt="15px" ml="13px">
         <Center bg={props.bgColor} w="52px" h="52px" rounded="full">
