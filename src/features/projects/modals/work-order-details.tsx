@@ -77,10 +77,10 @@ const WorkOrderDetails = ({
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  Invoice {workOrder.invoiceNumber ? `#` + workOrder.invoiceNumber : ''}
+                  Invoice {workOrder?.invoiceNumber ? `#` + workOrder?.invoiceNumber : ''}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  {workOrder.companyName}
+                  {workOrder?.companyName}
                 </Text>
               </HStack>
             </Box>
@@ -91,10 +91,10 @@ const WorkOrderDetails = ({
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
               </Text>
-              {workOrder.statusLabel && (
+              {workOrder?.statusLabel && (
                 <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
                   <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
-                    {workOrder.statusLabel}
+                    {workOrder?.statusLabel}
                   </TagLabel>
                 </Tag>
               )}
