@@ -73,7 +73,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl height="40px">
               <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                Cancel Work Order
+                Payemt Terms
               </FormLabel>
               <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
             </FormControl>
@@ -82,7 +82,20 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Expected Completion Date
+                Payment Term Date
+              </FormLabel>
+              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+            </FormControl>
+          </Box>
+        </SimpleGrid>
+      </Box>
+
+      <Box mt={10}>
+        <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+          <Box>
+            <FormControl>
+              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+                Expected Pay
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
@@ -90,14 +103,71 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Completed By Vendor
+                Payment Processed
+              </FormLabel>
+              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+            </FormControl>
+          </Box>
+
+          <Box>
+            <FormControl>
+              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+                Paid
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
         </SimpleGrid>
+        <Box mt={10}>
+          <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+            <Box>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+                  WO Original amount
+                </FormLabel>
+                <Input
+                  readOnly={true}
+                  placeholder="$0.00"
+                  height="40px"
+                  borderLeft="2px solid #4E87F8"
+                  focusBorderColor="none"
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl>
+                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                  Client original amount
+                </FormLabel>
+                <Input
+                  readOnly={true}
+                  placeholder="0%"
+                  height="40px"
+                  borderLeft="2px solid #4E87F8"
+                  focusBorderColor="none"
+                />
+              </FormControl>
+            </Box>
+
+            <Box height="80px">
+              <FormControl>
+                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                  Client final approved amount
+                </FormLabel>
+                <Input
+                  readOnly={true}
+                  placeholder="$0.00"
+                  height="40px"
+                  borderLeft="2px solid #4E87F8"
+                  focusBorderColor="none"
+                />
+              </FormControl>
+            </Box>
+          </SimpleGrid>
+        </Box>
       </Box>
-      <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
+
+      <Flex mt="50px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
         <Button
           variant="ghost"
           onClick={props.onClose}
