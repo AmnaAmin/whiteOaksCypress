@@ -106,17 +106,17 @@ const WorkOrderDetailTab = props => {
       </Box>
       <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
         <Button
-          variant="ghost"
-          onClick={props.onClose}
           mr={3}
-          color="gray.700"
+          onClick={props.onClose}
+          colorScheme="blue"
+          variant="outline"
           fontStyle="normal"
           fontSize="14px"
           fontWeight={600}
           h="48px"
           w="130px"
         >
-          {t('close')}
+          {t('cancel')}
         </Button>
         <Button
           colorScheme="CustomPrimaryColor"
