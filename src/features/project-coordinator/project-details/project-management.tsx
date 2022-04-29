@@ -43,7 +43,7 @@ const ProjectManagement = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="37vh">
+        <Box h="35vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap="10" columnGap="1" w="61%">
             <GridItem>
               <FormControl w="215px">
