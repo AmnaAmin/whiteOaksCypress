@@ -28,6 +28,23 @@ const input = {
         }
       },
     },
+    sizes: {
+      sm: {
+        field: {
+          fontSize: '13px',
+        },
+      },
+      md: {
+        field: {
+          fontSize: '14px',
+        },
+      },
+      lg: {
+        field: {
+          fontSize: '16px',
+        },
+      },
+    },
   },
 }
 
