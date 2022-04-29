@@ -78,7 +78,6 @@ const useProjectCardJson = cards => {
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useProjectCards()
   const cards = useProjectCardJson(values)
-  console.log(cards)
 
   return (
     <>

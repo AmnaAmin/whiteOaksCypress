@@ -272,12 +272,12 @@ export type SettingsValues = {
 }
 
 export type Vendors = {
-  status: string
+  statusLabel: string
   companyName: string
   region: string
   state: string
-  dateCreated: string
+  createdDate: number
   coiglExpirationDate: string
-  coiWCExpirationDate: string
+  coiWcExpirationDate: string
   einNumber: string
 }

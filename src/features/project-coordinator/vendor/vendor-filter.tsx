@@ -18,7 +18,7 @@ const useVendorCardJson = cards => {
     },
     {
       id: 'inActive',
-      title: 'Inactive',
+      title: 'In Active',
       number: cards?.find(items => items.status === 13)?.count,
       IconElement: <Icon color="#4A5568" boxSize={7} as={BiClipboard} />,
       bgColor: '#E5ECF9',
@@ -43,7 +43,6 @@ const useVendorCardJson = cards => {
 export const VendorFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useVendorCards()
   const cards = useVendorCardJson(values)
-  console.log('VendorCards', values)
 
   return (
     <>
