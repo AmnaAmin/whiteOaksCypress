@@ -11,12 +11,13 @@ import {
   Flex,
   Box,
   HStack,
+  Button,
 } from '@chakra-ui/react'
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/modal'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from 'components/modal/modal'
-import { Button } from 'components/button/button'
+// import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
 import { useParams } from 'react-router'
 import {
@@ -468,7 +469,7 @@ type UpdateTransactionProps = CustomModalProps & {
 export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>{t('newTransaction')}</ModalHeader>
@@ -490,7 +491,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
   // const { transaction } = useTransaction(selectedTransactionIdd);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>Update Transaction</ModalHeader>

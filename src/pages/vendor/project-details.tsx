@@ -1,7 +1,6 @@
 import { useDisclosure, Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
-import { Box, Stack } from '@chakra-ui/react'
-import { Button } from 'components/button/button'
+import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
