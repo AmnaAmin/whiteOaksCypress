@@ -1,10 +1,22 @@
-import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import {
+  Box,
+  Text,
+  Flex,
+  SimpleGrid,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  InputLeftElement,
+  InputGroup,
+} from '@chakra-ui/react'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import { documentTypes } from 'utils/vendor-projects'
 import { dateFormat } from 'utils/date-time-utils'
+import { currencyFormatter } from 'utils/stringFormatters'
 
 const CalenderCard = props => {
   return (
@@ -42,22 +54,23 @@ const InformationCard = props => {
 const PaymentInfoTab = props => {
   const { t } = useTranslation()
   const {
-    skillName,
-    companyName,
-    businessEmailAddress,
-    businessPhoneNumber,
-    workOrderIssueDate,
-    dateLeanWaiverSubmitted,
-    datePermitsPulled,
+    leanWaiverSubmitted,
+    paymentTermDate,
     durationCategory,
+    dateInvoiceSubmitted,
+    paymentTerm,
+    clientApprovedAmount,
+    clientOriginalApprovedAmount,
   } = props.workOrder
+
+  const { sowOriginalContractAmount } = props?.projectData
 
   return (
     <Box>
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="LW Date" date={dateFormat(workOrderIssueDate)} />
-        <CalenderCard title="Permit Date " date="12/10/2022" />
-        <InformationCard title="Pay date variance" date="7" />
+        <CalenderCard title="LW Date" date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
+        <CalenderCard title="Permit Date " date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
+        <InformationCard title="Pay date variance" date={durationCategory} />
       </SimpleGrid>
 
       <Box mt={10}>
@@ -67,7 +80,17 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Invoiced Submitted
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
+                <Input value={dateFormat(props.projectData.clientDueDate)} type="tel" />
+              </InputGroup>
+              <Input
+                value={dateFormat(dateInvoiceSubmitted)}
+                type="date"
+                height="40px"
+                borderLeft="2px solid #4E87F8"
+                focusBorderColor="none"
+              />
             </FormControl>
           </Box>
           <Box>
@@ -75,7 +98,7 @@ const PaymentInfoTab = props => {
               <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                 Payemt Terms
               </FormLabel>
-              <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
+              <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes || paymentTerm} />
             </FormControl>
           </Box>
 
@@ -84,7 +107,13 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Payment Term Date
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input
+                value={paymentTermDate}
+                type="date"
+                height="40px"
+                borderLeft="2px solid #4E87F8"
+                focusBorderColor="none"
+              />
             </FormControl>
           </Box>
         </SimpleGrid>
@@ -97,7 +126,13 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Expected Pay
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input
+                value={paymentTermDate}
+                type="date"
+                height="40px"
+                borderLeft="2px solid #4E87F8"
+                focusBorderColor="none"
+              />
             </FormControl>
           </Box>
           <Box>
@@ -127,6 +162,7 @@ const PaymentInfoTab = props => {
                 </FormLabel>
                 <Input
                   readOnly={true}
+                  value={currencyFormatter(sowOriginalContractAmount)}
                   placeholder="$0.00"
                   height="40px"
                   borderLeft="2px solid #4E87F8"
@@ -142,6 +178,7 @@ const PaymentInfoTab = props => {
                 <Input
                   readOnly={true}
                   placeholder="0%"
+                  value={currencyFormatter(clientApprovedAmount)}
                   height="40px"
                   borderLeft="2px solid #4E87F8"
                   focusBorderColor="none"
@@ -155,6 +192,7 @@ const PaymentInfoTab = props => {
                   Client final approved amount
                 </FormLabel>
                 <Input
+                  value={currencyFormatter(clientOriginalApprovedAmount)}
                   readOnly={true}
                   placeholder="$0.00"
                   height="40px"

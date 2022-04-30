@@ -41,7 +41,7 @@ const Location = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="39vh">
+        <Box h="35vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%">
             <GridItem>
               <FormControl isInvalid={errors.address} w="215px">

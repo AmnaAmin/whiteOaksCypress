@@ -48,15 +48,7 @@ const InformationCard = props => {
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text
-          title={props.date}
-          isTruncated
-          w="170px"
-          color="gray.500"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={400}
-        >
+        <Text whiteSpace="nowrap" color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -85,8 +77,8 @@ const NewWorkOrder: React.FC<{
                 <CalenderCard title="Client End " date={dateFormatter(projectData?.clientDueDate)} />
                 <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
                 <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue)} />
-                <InformationCard title=" Email" date={projectData?.createdBy} />
-                <InformationCard title=" Phone No" date={projectData?.projectManagerPhoneNumber} />
+                <InformationCard title=" Email" date={projectData?.hoaEmailAddress} />
+                <InformationCard title=" Phone No" date={projectData?.hoaPhone} />
               </SimpleGrid>
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>

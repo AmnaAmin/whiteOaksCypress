@@ -21,7 +21,7 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react'
-import { ProjectWorkOrderType } from 'types/project.type'
+import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
@@ -38,7 +38,15 @@ const TabStyle = {
   },
 }
 
-const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
+const WorkOrderDetails = ({
+  projectData,
+  workOrder,
+  onClose: close,
+}: {
+  projectData: ProjectType
+  workOrder: ProjectWorkOrderType
+  onClose: () => void
+}) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
@@ -135,13 +143,25 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       color: 'white',
                       bg: '#4E87F8',
                       fontWeight: 600,
+                      id: 'checkId',
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('Invoice')}
+                  </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
                       _hover: { backgroundColor: '#4E87F8' },
                     }}
                     sx={TabStyle}
                   >
                     {t('Payments')}
                   </Tab>
-
                   <Tab
                     _focus={{ border: 'none' }}
                     _selected={{
@@ -153,7 +173,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                     }}
                     sx={TabStyle}
                   >
-                    {t('Invoice')}
+                    {t('Notes')}
                   </Tab>
                 </Flex>
               </TabList>
@@ -165,8 +185,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                 <TabPanel>
                   <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
+                <TabPanel></TabPanel>
                 <TabPanel>
-                  <PaymentInfoTab workOrder={workOrder} onClose={onClose} />
+                  <PaymentInfoTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

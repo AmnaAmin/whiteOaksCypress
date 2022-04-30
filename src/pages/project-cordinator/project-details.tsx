@@ -14,8 +14,10 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
+// import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
+// import { WorkOrdersTable } from 'features/projects/work-orders-table'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
@@ -67,7 +69,7 @@ export const ProjectDetails: React.FC = props => {
                     bg="#4e87f8"
                     _hover={{ bg: '#2A61CE' }}
                   >
-                    <Flex alignItems="center" fontSize="14px" fontWeight={600}>
+                    <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>
                         <BiAddToQueue size={14} />
                       </Text>
