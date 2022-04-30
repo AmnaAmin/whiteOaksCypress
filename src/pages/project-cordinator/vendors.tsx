@@ -1,23 +1,18 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { HStack, Box, Icon, Button, Spacer } from '@chakra-ui/react'
+import { HStack, Box, Icon, Button, Spacer, Flex, Stack } from '@chakra-ui/react'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { VendorFilters } from 'features/project-coordinator/vendor/vendor-filter'
 import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor/vendorTable'
+import { t } from 'i18next'
 import { useState } from 'react'
+import { BsBoxArrowUp } from 'react-icons/bs'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'utils/table-column-settings'
 
 const Vendors = () => {
-  const [
-    ,
-    // vendorTableInstance
-    setInstance,
-  ] = useState<any>(null)
+  const [vendorTableInstance, setInstance] = useState<any>(null)
   const [selectedCard, setSelectedCard] = useState<string>('')
-  const {
-    tableColumns,
-    resizeElementRef,
-    //  settingColumns, isLoading
-  } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+  const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
@@ -60,6 +55,39 @@ const Vendors = () => {
           setTableInstance={setProjectTableInstance}
         />
       </Box>
+      <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}>
+        <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
+          {isLoading ? (
+            <>
+              <BlankSlate size="md" />
+              <BlankSlate size="md" />
+            </>
+          ) : (
+            <>
+              <Button
+                bg="none"
+                size="md"
+                color="#4E87F8"
+                _hover={{ bg: 'none' }}
+                _focus={{ border: 'none' }}
+                fontSize="12px"
+                fontStyle="normal"
+                fontWeight={500}
+                onClick={() => {
+                  if (vendorTableInstance) {
+                    vendorTableInstance?.exportData('xlsx', false)
+                  }
+                }}
+              >
+                <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
+                  <BsBoxArrowUp />
+                </Box>
+                {t('export')}
+              </Button>
+            </>
+          )}
+        </Flex>
+      </Stack>
     </Box>
   )
 }

@@ -276,7 +276,7 @@ export type Vendors = {
   companyName: string
   region: string
   state: string
-  createdDate: number
+  createdDate: string
   coiglExpirationDate: string
   coiWcExpirationDate: string
   einNumber: string
