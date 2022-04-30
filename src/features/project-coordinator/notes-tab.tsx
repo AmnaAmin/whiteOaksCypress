@@ -1,16 +1,16 @@
 import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import textArea from 'theme/components/textarea'
+import { useForm, useWatch } from 'react-hook-form'
 
 export const NotesTab = () => {
-  const [addMessage, setAddMessage] = useState([] as any)
-  const { handleSubmit, register, reset } = useForm()
+  const [messages, setMessage] = useState([] as any)
+  const { handleSubmit, register, reset, control } = useForm()
 
+  const message = useWatch({ name: 'message', control })
   const Submit = data => {
     console.log(data)
-    setAddMessage(state => [...state, { ...data }])
+    setMessage(state => [...state, data.message])
     reset()
   }
 
@@ -41,7 +41,7 @@ export const NotesTab = () => {
             </Text>
           </Flex>
 
-          {addMessage.map(message => {
+          {messages.map(message => {
             return (
               <Flex mb={4}>
                 <Box w="115px" />
@@ -54,7 +54,7 @@ export const NotesTab = () => {
                   flex="1"
                   wordBreak="break-all"
                 >
-                  {message.textArea}
+                  {message}
                 </Text>
               </Flex>
             )
@@ -67,18 +67,17 @@ export const NotesTab = () => {
                 Enter New Note Here
               </FormLabel>
               <Textarea
-                id="value"
                 flexWrap="wrap"
                 minH="200px"
                 placeholder="Here is a sample placeholder"
-                {...register('textArea')}
+                {...register('message')}
               />
             </Box>
           </Flex>
         </Box>
 
         <Flex borderTop="1px solid #E2E8F0" h="92px" justifyContent="end" alignItems="center" pr={3}>
-          <Button type="submit" h="48px" w="130px" colorScheme="brand" isDisabled={textArea.Textarea ? false : true}>
+          <Button type="submit" h="48px" w="130px" colorScheme="brand" isDisabled={!message}>
             Submit
           </Button>
         </Flex>
