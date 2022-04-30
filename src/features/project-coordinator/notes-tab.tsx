@@ -19,7 +19,7 @@ export const NotesTab = () => {
       <Box bg="white" rounded={16}>
         <Box h={550} p="40px 100px 0px 65px " overflow="auto">
           <Flex mb={4}>
-            <Box mr={4} fontSize="12px" fontWeight={400}>
+            <Box mr={5} fontSize="12px" fontWeight={400}>
               <WrapItem justifyContent="center" mb={1}>
                 <Avatar size="sm" bg="blackAlpha.200" />
               </WrapItem>
@@ -44,7 +44,7 @@ export const NotesTab = () => {
           {addMessage.map(message => {
             return (
               <Flex mb={4}>
-                <Box w="110px" />
+                <Box w="115px" />
                 <Text
                   p={7}
                   rounded={6}
