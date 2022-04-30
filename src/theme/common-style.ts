@@ -1,5 +1,4 @@
 import { InputProps } from '@chakra-ui/input'
-import {} from '@chakra-ui/theme-tools'
 import { css } from '@emotion/react'
 
 export const disabledInputStyle = {
