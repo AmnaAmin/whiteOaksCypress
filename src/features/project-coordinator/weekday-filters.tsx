@@ -1,53 +1,50 @@
 import { Button } from '@chakra-ui/react'
 import { Stack } from '@chakra-ui/react'
-import { Flex } from '@chakra-ui/react'
 import { Divider } from '@chakra-ui/react'
-import { Box, Center } from '@chakra-ui/react'
 import { WeekdayCard } from 'features/project-coordinator/weekday-filter-card'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useWeekDayProjectsDue } from 'utils/projects'
-import { ProjectCard } from '../projects/project-card'
 
 const useWeekdayCardJson = days => {
   return [
     {
-      id: 'mon',
+      id: 'Monday',
       title: 'Mon',
       number: days?.find(c => c.dayName === 'Monday')?.count,
       date: days?.find(c => c.dayName === 'Monday')?.dueDate,
     },
     {
-      id: 'tue',
+      id: 'Tuesday',
       title: 'Tue',
       number: days?.find(c => c.dayName === 'Tuesday')?.count,
       date: days?.find(c => c.dayName === 'Tuesday')?.dueDate,
     },
     {
-      id: 'wed',
+      id: 'Wednesday',
       title: 'Wed',
       number: days?.find(c => c.dayName === 'Wednesday')?.count,
       date: days?.find(c => c.dayName === 'Wednesday')?.dueDate,
     },
     {
-      id: 'thu',
+      id: 'Thursday',
       title: 'Thu',
       number: days?.find(c => c.dayName === 'Thursday')?.count,
       date: days?.find(c => c.dayName === 'Thursday')?.dueDate,
     },
     {
-      id: 'fri',
+      id: 'Friday',
       title: 'Fri',
       number: days?.find(c => c.dayName === 'Friday')?.count,
       date: days?.find(c => c.dayName === 'Friday')?.dueDate,
     },
     {
-      id: 'sat',
+      id: 'Saturday',
       title: 'Sat',
       number: days?.find(c => c.dayName === 'Saturday')?.count,
       date: days?.find(c => c.dayName === 'Saturday')?.dueDate,
     },
     {
-      id: 'sun',
+      id: 'Sunday',
       title: 'Sun',
       number: days?.find(c => c.dayName === 'Sunday')?.count,
       date: days?.find(c => c.dayName === 'Sunday')?.dueDate,
@@ -55,15 +52,13 @@ const useWeekdayCardJson = days => {
   ]
 }
 
-export const ProjectDayFilters = ({ onSelectCard, selectedCard }) => {
-  const [dayClicked, setDayClicked] = useState(null)
-
+export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useWeekDayProjectsDue()
-  console.log(values)
   const days = useWeekdayCardJson(values)
 
   const clearAll = () => {
-    setDayClicked(null)
+    onSelectCard = {}
+    selectedCard = {}
   }
 
   return (
@@ -108,6 +103,7 @@ export const ProjectDayFilters = ({ onSelectCard, selectedCard }) => {
           fontStyle="normal"
           fontWeight={500}
           onClick={clearAll}
+          // onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
         >
           Clear Filter
         </Button>

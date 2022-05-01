@@ -1,5 +1,4 @@
-import { Box, Button, Divider, Flex, Stack, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Button, Flex, Stack } from '@chakra-ui/react'
 
 type multitypes = {
   id: number | string
@@ -12,30 +11,10 @@ type multitypes = {
 }
 
 export const WeekdayCard = (props: multitypes) => {
-  // const handleClick = (day, count, date) => {
-  //   if (count > 0) {
-  //     setDayClicked(day)
-  //     props.search(date)
-  //   }
-  // }
-  // const { dayClicked, setDayClicked } = useState(false)
-
-  const handleClick = e => {
-    console.log('this is working fine')
-    e.preventDefault()
-    e.target.style.color = 'red'
-    console.log(e.target)
-    // setDayClicked(true)
-    alert(props.selectedCard)
-    alert(props.id)
-    alert(props.dayName)
-    alert(props.dueDate)
-  }
-
   return (
     <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
       <Button
-        bg="none"
+        bg={props.selectedCard === props.id ? '#4E87F8' : 'none'}
         border="none"
         rounded="20"
         _hover={{ bg: '#4E87F8', color: 'white', rounded: '20', border: 'none' }}
@@ -44,9 +23,8 @@ export const WeekdayCard = (props: multitypes) => {
         fontStyle="normal"
         fontWeight={500}
         alignContent="right"
-        color="black"
+        color={props.selectedCard === props.id ? 'white' : 'black'}
         onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
-        borderColor={props.selectedCard === props.id ? 'black' : ''}
       >
         {props.dayName}
         <Flex
@@ -54,8 +32,8 @@ export const WeekdayCard = (props: multitypes) => {
           h="22px !important"
           margin={1}
           rounded="50"
-          bg="#E2E8F0"
-          color="black"
+          bg={props.selectedCard === props.id ? 'white' : '#E2E8F0'}
+          color={props.selectedCard === props.id ? '#4E87F8' : 'black'}
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
           fontSize="12px"
           paddingTop={1}

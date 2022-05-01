@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ProjectFilters } from 'features/project-coordinator/project-filters'
-import { ProjectsTable, PCPROJECT_COLUMNS } from 'features/project-coordinator/projects-table'
+import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/projects-table'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
-import { ProjectDayFilters } from 'features/project-coordinator/weekday-filters'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
+import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -23,7 +23,7 @@ export const Projects = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
-    PCPROJECT_COLUMNS,
+    PROJECT_COLUMNS,
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
@@ -45,7 +45,7 @@ export const Projects = () => {
           <Box fontWeight={'bold'}>Due Projects</Box>
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1}>
-          <ProjectDayFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
+          <WeekDayFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
           <Button
             bg="none"
             color="#4E87F8"

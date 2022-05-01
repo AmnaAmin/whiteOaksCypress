@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
-import { useProjects } from 'utils/projects'
+import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
 import { t } from 'i18next'
+import { dateFormat } from 'utils/date-time-utils'
 
-export const PCPROJECT_COLUMNS = [
+export const PROJECT_COLUMNS = [
   {
     Header: 'ID',
     accessor: 'id',
@@ -101,13 +102,22 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 }) => {
   const { projects } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
+  const [dueDates, setDueDates] = useState('')
+
+  const { data: days } = useWeekDayProjectsDue()
 
   useEffect(() => {
     if (!selectedCard) setFilterProjects(projects)
+    days &&
+      days?.map(day => {
+        if (selectedCard === day.dayName) setDueDates(day.dueDate)
+      })
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          !selectedCard ||
+          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
+          project.clientDueDate === dueDates,
       ),
     )
   }, [selectedCard, projects])
