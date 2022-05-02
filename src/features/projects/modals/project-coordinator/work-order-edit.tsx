@@ -23,10 +23,9 @@ import {
 } from '@chakra-ui/react'
 import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import WorkOrderDetailTab from './work-order-edit-tab'
-import PaymentInfoTab from './payment-tab-pc'
+// import PaymentInfoTab from './payment-tab-pc'
 import { InvoiceTabPC } from './invoice-tab-pc'
 
 const TabStyle = {
@@ -190,7 +189,7 @@ const WorkOrderDetails = ({
                   <InvoiceTabPC workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
-                  <PaymentInfoTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                  {/* <PaymentInfoTab projectData={projectData} workOrder={workOrder} onClose={onClose} /> */}
                 </TabPanel>
               </TabPanels>
             </Tabs>

@@ -18,11 +18,9 @@ import {
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 
-import { useState } from 'react'
-
-import { useForm } from 'react-hook-form'
-import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiXCircle } from 'react-icons/bi'
+import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
 import { t } from 'i18next'
+import { rejectInvoice } from 'utils/pc-projects'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -43,28 +41,19 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 }
 
 export const InvoiceTabPC = ({ onClose, workOrder }) => {
-  const [items, setItems] = useState([] as any)
-  const { handleSubmit, reset } = useForm({
-    defaultValues: {
-      item: '',
-      description: '',
-      unitPrice: '',
-      quantity: '',
-      amount: '',
+  const dummyData = [
+    {
+      item: '1',
+      description: 'abx',
+      unitPrice: '12',
+      quantity: '5',
+      amount: '100',
     },
-  })
-  console.log(workOrder)
+  ]
 
-  const onSubmit = data => {
-    // console.log(data)
-    setItems(state => [...state, { ...data }])
-    reset()
-  }
-
-  const DeleteItems = Id => {
-    const deleteValue = items.filter((value, id) => id !== Id)
-    setItems(deleteValue)
-    // console.log('deleteValue', deleteValue)
+  const entity = {
+    ...workOrder,
+    ...{ status: 111 },
   }
 
   return (
@@ -103,39 +92,32 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
         <Box>
           <TableContainer border="1px solid #E2E8F0">
             <Box h="400px" overflow="auto">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Table colorScheme="teal" size="lg">
-                  <Thead position="sticky" top={0} zIndex={2}>
-                    <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
-                      <Td>Item</Td>
-                      <Td>Description</Td>
-                      <Td>Unit Price </Td>
-                      <Td>Quantity</Td>
-                      <Td>Amount</Td>
-                    </Tr>
-                  </Thead>
-                  <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
-                    {items.map((item, index) => {
-                      return (
-                        <Tr h="72px">
-                          <Td>{item.item}</Td>
-                          <Td>{item.description}</Td>
-                          <Td>{item.unitPrice}</Td>
-                          <Td>{item.quantity}</Td>
-                          <Td>
-                            <Flex justifyContent="space-between" alignItems="center">
-                              <Text>{item.amount}</Text>
-                              <Text>
-                                <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
-                              </Text>
-                            </Flex>
-                          </Td>
-                        </Tr>
-                      )
-                    })}
-                  </Tbody>
-                </Table>
-              </form>
+              <Table colorScheme="teal" size="lg">
+                <Thead position="sticky" top={0} zIndex={2}>
+                  <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
+                    <Td>Item</Td>
+                    <Td>Description</Td>
+                    <Td>Unit Price </Td>
+                    <Td>Quantity</Td>
+                    <Td>Amount</Td>
+                  </Tr>
+                </Thead>
+                <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
+                  {dummyData.map((item, index) => {
+                    return (
+                      <Tr h="72px">
+                        <Td>{item.item}</Td>
+                        <Td>{item.description}</Td>
+                        <Td>{item.unitPrice}</Td>
+                        <Td>{item.quantity}</Td>
+                        <Td>
+                          <Text>{item.amount}</Text>
+                        </Td>
+                      </Tr>
+                    )
+                  })}
+                </Tbody>
+              </Table>
 
               <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
                 <Box>
@@ -171,6 +153,7 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
           </Flex>
         </HStack>
         <Button
+          onClick={() => rejectInvoice(entity)}
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
           fontStyle="normal"
