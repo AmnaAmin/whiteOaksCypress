@@ -233,7 +233,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Flex fontSize="14px" fontWeight={500} mr={1}>
-                <Button onClick={generatePdf} colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
+                <Button onClick={generatePdf} colorScheme="brand" variant="outline">
                   <Text mr={1}>
                     <BiDownload size={14} />
                   </Text>
@@ -243,29 +243,10 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Flex>
           </HStack>
 
-          <Button
-            colorScheme="CustomPrimaryColor"
-            onClick={() => SetClicked(true)}
-            _focus={{ outline: 'none' }}
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" onClick={() => SetClicked(true)}>
             <InformationCard clicked={clicked} />
           </Button>
-          <Button
-            ml={3}
-            onClick={onClose}
-            colorScheme="blue"
-            variant="outline"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button ml={3} onClick={onClose} colorScheme="brand" variant="ghost">
             {t('cancel')}
           </Button>
         </Flex>

@@ -160,14 +160,7 @@ const PaymentInfoTab = props => {
                 <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                   WO Original amount
                 </FormLabel>
-                <Input
-                  readOnly={true}
-                  value={currencyFormatter(sowOriginalContractAmount)}
-                  placeholder="$0.00"
-                  height="40px"
-                  borderLeft="2px solid #4E87F8"
-                  focusBorderColor="none"
-                />
+                <Input readOnly={true} value={currencyFormatter(sowOriginalContractAmount)} />
               </FormControl>
             </Box>
             <Box>
@@ -175,14 +168,7 @@ const PaymentInfoTab = props => {
                 <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                   Client original amount
                 </FormLabel>
-                <Input
-                  readOnly={true}
-                  placeholder="0%"
-                  value={currencyFormatter(clientApprovedAmount)}
-                  height="40px"
-                  borderLeft="2px solid #4E87F8"
-                  focusBorderColor="none"
-                />
+                <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
               </FormControl>
             </Box>
 
@@ -191,14 +177,7 @@ const PaymentInfoTab = props => {
                 <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                   Client final approved amount
                 </FormLabel>
-                <Input
-                  value={currencyFormatter(clientOriginalApprovedAmount)}
-                  readOnly={true}
-                  placeholder="$0.00"
-                  height="40px"
-                  borderLeft="2px solid #4E87F8"
-                  focusBorderColor="none"
-                />
+                <Input value={currencyFormatter(clientOriginalApprovedAmount)} readOnly={true} />
               </FormControl>
             </Box>
           </SimpleGrid>
@@ -206,30 +185,10 @@ const PaymentInfoTab = props => {
       </Box>
 
       <Flex mt="50px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button
-          variant="ghost"
-          onClick={props.onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button variant="ghost" onClick={props.onClose} colorScheme="brand">
           {t('close')}
         </Button>
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          {t('save')}
-        </Button>
+        <Button colorScheme="brand">{t('save')}</Button>
       </Flex>
     </Box>
   )

@@ -20,7 +20,7 @@ import { dateFormat } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
 import { t } from 'i18next'
-import { rejectInvoice } from 'utils/pc-projects'
+import { useReject } from 'utils/pc-projects'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -55,6 +55,7 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
     ...workOrder,
     ...{ status: 111 },
   }
+  const { mutate: rejectInvocie } = useReject()
 
   return (
     <Box>
@@ -143,7 +144,7 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
         <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
           <Flex w="100%" alignContent="space-between" pos="relative">
             <Flex fontSize="14px" fontWeight={500} mr={1}>
-              <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
+              <Button colorScheme="brand" variant="outline">
                 <Text mr={1}>
                   <BiDownload size={14} />
                 </Text>
@@ -152,29 +153,10 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
             </Flex>
           </Flex>
         </HStack>
-        <Button
-          onClick={() => rejectInvoice(entity)}
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button onClick={() => rejectInvocie(entity)} colorScheme="brand">
           {t('reject')}
         </Button>
-        <Button
-          ml={3}
-          onClick={onClose}
-          colorScheme="blue"
-          variant="outline"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button onClick={onClose} colorScheme="brand" variant="ghost">
           {t('cancel')}
         </Button>
       </HStack>
