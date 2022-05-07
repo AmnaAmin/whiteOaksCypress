@@ -56,11 +56,6 @@ export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
 
-  const clearAll = () => {
-    onSelectCard = {}
-    selectedCard = {}
-  }
-
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
@@ -94,7 +89,7 @@ export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
         })}
         <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" />
 
-        <Button
+        {/* <Button
           bg="none"
           color="#4E87F8"
           _hover={{ bg: 'none' }}
@@ -103,10 +98,9 @@ export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
           fontStyle="normal"
           fontWeight={500}
           onClick={clearAll}
-          // onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
         >
           Clear Filter
-        </Button>
+        </Button> */}
       </Stack>
     </>
   )

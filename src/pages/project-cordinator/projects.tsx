@@ -35,6 +35,10 @@ export const Projects = () => {
     postProjectColumn(columns)
   }
 
+  const clearAll = () => {
+    setSelectedCard('')
+  }
+
   return (
     <>
       <VStack w="100%" h="calc(100vh - 160px)">
@@ -46,6 +50,20 @@ export const Projects = () => {
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1}>
           <WeekDayFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
+          <Button
+            bg="none"
+            color="#4E87F8"
+            _hover={{ bg: 'none' }}
+            _focus={{ border: 'none' }}
+            fontSize="12px"
+            fontStyle="normal"
+            fontWeight={500}
+            alignContent="right"
+            onClick={clearAll}
+            paddingTop={2}
+          >
+            Clear All
+          </Button>
           <Button
             bg="none"
             color="#4E87F8"
