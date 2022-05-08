@@ -20,7 +20,7 @@ import { dateFormat } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
 import { t } from 'i18next'
-import { useReject } from 'utils/pc-projects'
+import { useCall } from 'utils/pc-projects'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -55,7 +55,7 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
     ...workOrder,
     ...{ status: 111 },
   }
-  const { mutate: rejectInvocie } = useReject()
+  const { mutate: rejectInvocie } = useCall()
 
   return (
     <Box>

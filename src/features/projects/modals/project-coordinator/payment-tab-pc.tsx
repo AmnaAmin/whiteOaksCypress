@@ -10,13 +10,15 @@ import {
   InputLeftElement,
   InputGroup,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import ReactSelect from 'components/form/react-select'
-import { documentTypes } from 'utils/vendor-projects'
+import { paymentsTerms } from 'utils/vendor-projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
+import { useCall } from 'utils/pc-projects'
+import { convertDateTimeToServerISO } from 'components/table/util'
+import Select from 'components/form/react-select'
 
 const CalenderCard = props => {
   return (
@@ -52,16 +54,46 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
+  const { workOrder } = props
+
+  interface Date {
+    date: string
+    prevState: null
+  }
+  const [paymentProcessed, setPaymentProcessed] = useState<Date | null>(null)
+  const [paidDate, setPaidDate] = useState<Date | null>(null)
+  const [paidTerm, setPaidTerm] = useState<Date | null>(null)
+
+  const handlePPChange = e => {
+    setPaymentProcessed(e.target.value)
+  }
+  const handlePDChange = e => {
+    setPaidDate(e.target.value)
+  }
+  const handlePTChange = e => {
+    setPaidTerm(e.label)
+  }
+
   const { t } = useTranslation()
   const {
     leanWaiverSubmitted,
     paymentTermDate,
     durationCategory,
     dateInvoiceSubmitted,
-    paymentTerm,
     clientApprovedAmount,
     clientOriginalApprovedAmount,
+    expectedPaymentDate,
+    paid,
   } = props.workOrder
+
+  const entity = {
+    ...workOrder,
+    ...{ datePaymentProcessed: convertDateTimeToServerISO(paymentProcessed) },
+    ...{ datePaid: convertDateTimeToServerISO(paidDate) },
+    ...{ paymentTerm: paidTerm },
+  }
+
+  const { mutate: saveChanges } = useCall()
 
   const { sowOriginalContractAmount } = props?.projectData
 
@@ -82,15 +114,8 @@ const PaymentInfoTab = props => {
               </FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input value={dateFormat(props.projectData.clientDueDate)} type="tel" />
+                <Input readOnly value={dateInvoiceSubmitted ? dateFormat(dateInvoiceSubmitted) : 'mm/dd/yyyy'} />
               </InputGroup>
-              <Input
-                value={dateFormat(dateInvoiceSubmitted)}
-                type="date"
-                height="40px"
-                borderLeft="2px solid #4E87F8"
-                focusBorderColor="none"
-              />
             </FormControl>
           </Box>
           <Box>
@@ -98,7 +123,7 @@ const PaymentInfoTab = props => {
               <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                 Payemt Terms
               </FormLabel>
-              <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes || paymentTerm} />
+              <Select options={paymentsTerms} selectProps={{ isBorderLeft: true }} onChange={e => handlePTChange(e)} />
             </FormControl>
           </Box>
 
@@ -107,13 +132,10 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Payment Term Date
               </FormLabel>
-              <Input
-                value={paymentTermDate}
-                type="date"
-                height="40px"
-                borderLeft="2px solid #4E87F8"
-                focusBorderColor="none"
-              />
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
+                <Input readOnly value={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
+              </InputGroup>
             </FormControl>
           </Box>
         </SimpleGrid>
@@ -126,13 +148,10 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Expected Pay
               </FormLabel>
-              <Input
-                value={paymentTermDate}
-                type="date"
-                height="40px"
-                borderLeft="2px solid #4E87F8"
-                focusBorderColor="none"
-              />
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
+                <Input readOnly value={expectedPaymentDate ? dateFormat(expectedPaymentDate) : 'mm/dd/yyyy'} />
+              </InputGroup>
             </FormControl>
           </Box>
           <Box>
@@ -140,7 +159,7 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Payment Processed
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input onChange={date => handlePPChange(date)} type="date" />
             </FormControl>
           </Box>
 
@@ -149,7 +168,7 @@ const PaymentInfoTab = props => {
               <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                 Paid
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input onChange={date => handlePDChange(date)} type="date" readOnly={!paid ? true : false} />
             </FormControl>
           </Box>
         </SimpleGrid>
@@ -184,11 +203,13 @@ const PaymentInfoTab = props => {
         </Box>
       </Box>
 
-      <Flex mt="50px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
+      <Flex mt="40px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
         <Button variant="ghost" onClick={props.onClose} colorScheme="brand">
           {t('close')}
         </Button>
-        <Button colorScheme="brand">{t('save')}</Button>
+        <Button onClick={() => saveChanges(entity)} colorScheme="brand">
+          {t('save')}
+        </Button>
       </Flex>
     </Box>
   )

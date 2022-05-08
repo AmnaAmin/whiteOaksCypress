@@ -63,3 +63,7 @@ export const documentTypes = [
   { value: 19, label: 'Photos' },
   { value: 18, label: 'Reciept' },
 ]
+export const paymentsTerms = [
+  { value: 24, label: '20' },
+  { value: 25, label: '30' },
+]

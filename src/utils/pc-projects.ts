@@ -17,7 +17,7 @@ export const usePCProject = (projectId?: string) => {
   }
 }
 
-export const useReject = () => {
+export const useCall = () => {
   const client = useClient()
 
   return useMutation(entity => {
