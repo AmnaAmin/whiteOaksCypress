@@ -27,6 +27,8 @@ export const Projects = () => {
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const [isClicked, setIsClicked] = useState(false)
+
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
@@ -37,6 +39,12 @@ export const Projects = () => {
 
   const clearAll = () => {
     setSelectedCard('')
+    setIsClicked(false)
+  }
+
+  const allDays = () => {
+    setSelectedCard('All')
+    setIsClicked(true)
   }
 
   return (
@@ -48,7 +56,21 @@ export const Projects = () => {
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
           <Box fontWeight={'bold'}>Due Projects</Box>
         </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1}>
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} paddingLeft={5}>
+          <Button
+            bg={isClicked ? '#4E87F8' : 'none'}
+            color={isClicked ? 'white' : 'black'}
+            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
+            _focus={{ border: 'none' }}
+            fontSize="12px"
+            fontStyle="normal"
+            fontWeight={500}
+            alignContent="right"
+            onClick={allDays}
+            rounded={20}
+          >
+            All
+          </Button>
           <WeekDayFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
           <Button
             bg="none"
@@ -60,7 +82,6 @@ export const Projects = () => {
             fontWeight={500}
             alignContent="right"
             onClick={clearAll}
-            paddingTop={2}
           >
             Clear All
           </Button>

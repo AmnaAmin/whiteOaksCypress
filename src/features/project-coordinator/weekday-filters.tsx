@@ -1,6 +1,4 @@
-import { Button } from '@chakra-ui/react'
-import { Stack } from '@chakra-ui/react'
-import { Divider } from '@chakra-ui/react'
+import { Divider, Stack } from '@chakra-ui/react'
 import { WeekdayCard } from 'features/project-coordinator/weekday-filter-card'
 import { useWeekDayProjectsDue } from 'utils/projects'
 
@@ -57,21 +55,7 @@ export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
 
   return (
     <>
-      <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
-        <Button
-          bg="none"
-          border="none"
-          rounded="20"
-          _hover={{ bg: '#4E87F8', color: 'white', rounded: '20', border: 'none' }}
-          _focus={{ border: 'none' }}
-          fontSize="12px"
-          fontStyle="normal"
-          fontWeight={500}
-          alignContent="right"
-          color="black"
-        >
-          All
-        </Button>
+      <Stack direction="row" justify="left" marginTop={1}>
         <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" />
         {days.map(day => {
           return (
@@ -87,19 +71,6 @@ export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
           )
         })}
         <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" />
-
-        {/* <Button
-          bg="none"
-          color="#4E87F8"
-          _hover={{ bg: 'none' }}
-          _focus={{ border: 'none' }}
-          fontSize="12px"
-          fontStyle="normal"
-          fontWeight={500}
-          onClick={clearAll}
-        >
-          Clear Filter
-        </Button> */}
       </Stack>
     </>
   )
