@@ -5,18 +5,18 @@ import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
+import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
+import { dateFormatter } from 'utils/new-work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose } = props
-  console.log(lienWaiverData)
   const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
@@ -41,6 +41,8 @@ export const LienWaiverTab: React.FC<any> = props => {
       dateOfSignature: lienWaiverData.dateOfSignature,
     },
   })
+  const { leanwieverLink } = props.lienWaiverData
+
   const parseValuesToPayload = (formValues, documents) => {
     return {
       ...lienWaiverData,
@@ -48,6 +50,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       documents,
     }
   }
+
   const onSubmit = formValues => {
     const lienWaiverData = parseValuesToPayload(formValues, documents)
     updateLienWaiver(lienWaiverData)
@@ -64,33 +67,6 @@ export const LienWaiverTab: React.FC<any> = props => {
     setRecentLWFile(recentLW)
     setValue('claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
-
-  // const generatePdf = useCallback(() => {
-  //   let form = new jsPdf()
-  //   const value = getValues()
-  //   const dimention = {
-  //     width: sigRef?.current?.width,
-  //     height: sigRef?.current?.height,
-  //   }
-  //   convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
-  //     form = createForm(form, getValues(), dimention, dataUrl)
-  //     const pdfUri = form.output('datauristring')
-  //     const pdfBlob = form.output('bloburi')
-  //     setRecentLWFile({
-  //       s3Url: pdfBlob,
-  //       fileType: 'Lien-Waver-Form.pdf',
-  //     })
-  //     setDocuments(doc => [
-  //       ...doc,
-  //       {
-  //         documentType: 26,
-  //         fileObject: pdfUri.split(',')[1],
-  //         fileObjectContentType: 'application/pdf',
-  //         fileType: 'Lien-Waver-Form.pdf',
-  //       },
-  //     ])
-  //   })
-  // }, [getValues])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
@@ -120,6 +96,23 @@ export const LienWaiverTab: React.FC<any> = props => {
     generateTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
+  const [clicked, SetClicked] = useState(false)
+
+  const InformationCard = ({ clicked }) => {
+    return (
+      <>
+        {!clicked && (
+          <Flex alignItems="center" fontSize="14px" fontWeight={600}>
+            <Text mr={1}>
+              <BiXCircle size={14} />
+            </Text>
+            <Text>{t('reject')}</Text>
+          </Flex>
+        )}
+        {clicked && <Text>{t('save')}</Text>}
+      </>
+    )
+  }
 
   return (
     <Stack>
@@ -147,7 +140,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       float="right"
                       mr={3}
                       h="48px"
-                      onClick={() => downloadFile(recentLWFile.s3Url)}
+                      onClick={() => downloadFile(recentLWFile?.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
                       {recentLWFile.fileType}
@@ -190,7 +183,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     Icon={<BiCalendar />}
                     controlStyle={{ w: '20em' }}
                     label="Date of signature"
-                    InputElem={<Text>02/04/2022</Text>}
+                    InputElem={<Text>{dateFormatter(lienWaiverData.dateOfSignature)}</Text>}
                   />
 
                   <InputView
@@ -198,7 +191,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     label="Claimant Signature"
                     InputElem={
                       <Text fontWeight="600" fontStyle="italic">
-                        Anam Rubab
+                        {lienWaiverData.claimantTitle}
                       </Text>
                     }
                   />
@@ -210,31 +203,23 @@ export const LienWaiverTab: React.FC<any> = props => {
 
         <Flex mt="70px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
           <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
-            <Flex fontSize="14px" fontWeight={500} mr={1}>
-              <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
-                <Text mr={1}>
-                  <BiDownload size={14} />
-                </Text>
-                See LW2705_AR
-              </Button>
+            <Flex w="100%" alignContent="space-between" pos="relative">
+              <Flex fontSize="14px" fontWeight={500} mr={1}>
+                <Link href={leanwieverLink} target={'_blank'}>
+                  <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
+                    <Text mr={1}>
+                      <BiDownload size={14} />
+                    </Text>
+                    See LW{`${lienWaiverData.id}`}
+                  </Button>
+                </Link>
+              </Flex>
             </Flex>
           </HStack>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            color="gray.700"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
-            {t('close')}
-          </Button>
+
           <Button
             colorScheme="CustomPrimaryColor"
-            type="submit"
+            onClick={() => SetClicked(true)}
             _focus={{ outline: 'none' }}
             fontStyle="normal"
             fontSize="14px"
@@ -242,7 +227,20 @@ export const LienWaiverTab: React.FC<any> = props => {
             h="48px"
             w="130px"
           >
-            {t('save')}
+            <InformationCard clicked={clicked} />
+          </Button>
+          <Button
+            ml={3}
+            onClick={onClose}
+            colorScheme="blue"
+            variant="outline"
+            fontStyle="normal"
+            fontSize="14px"
+            fontWeight={600}
+            h="48px"
+            w="130px"
+          >
+            {t('cancel')}
           </Button>
         </Flex>
       </form>

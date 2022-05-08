@@ -49,7 +49,7 @@ const InvoiceAndPayments = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="39vh">
+        <Box h="35vh">
           <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>

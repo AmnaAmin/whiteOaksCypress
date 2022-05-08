@@ -11,12 +11,13 @@ import {
   Flex,
   Box,
   HStack,
+  Button,
 } from '@chakra-ui/react'
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from '@chakra-ui/modal'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from 'components/modal/modal'
-import { Button } from 'components/button/button'
+// import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
 import { useParams } from 'react-router'
 import {
@@ -49,7 +50,7 @@ import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { DrawLienWaiver } from './draw-transaction-lien-waiver'
+import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 
 type AddUpdateTransactionFormProps = {
@@ -163,7 +164,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   if (isFormLoading) return <ViewLoader />
 
   return (
-    <Flex direction="column" minH="650px">
+    <Flex direction="column">
+      {isLienWaiverRequired && <LienWaiverAlert />}
+
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
       )}
@@ -231,7 +234,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
               </Grid>
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 215px)" gap={'1rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1rem 1rem'} pt="10" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -466,7 +469,7 @@ type UpdateTransactionProps = CustomModalProps & {
 export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>{t('newTransaction')}</ModalHeader>
@@ -488,7 +491,7 @@ export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
   // const { transaction } = useTransaction(selectedTransactionIdd);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>Update Transaction</ModalHeader>

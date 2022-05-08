@@ -172,7 +172,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             >
               <HStack spacing="5px" h="31px" padding="10px" align="center">
                 <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                  {document?.name}
+                  {document?.name || document.fileType}
                 </Box>
                 <MdOutlineCancel
                   cursor="pointer"
