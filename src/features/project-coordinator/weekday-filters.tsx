@@ -2,7 +2,6 @@ import { Button } from '@chakra-ui/react'
 import { Stack } from '@chakra-ui/react'
 import { Divider } from '@chakra-ui/react'
 import { WeekdayCard } from 'features/project-coordinator/weekday-filter-card'
-import { useState } from 'react'
 import { useWeekDayProjectsDue } from 'utils/projects'
 
 const useWeekdayCardJson = days => {
