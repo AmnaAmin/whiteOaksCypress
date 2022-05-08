@@ -82,6 +82,9 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
 const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
   const [status, setStatus] = useState([false, true, true, false, true, true])
+  const onMarkCompleted = () => {
+    setStatus([true, true, true, true, true, true])
+  }
   return (
     <Box>
       <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
@@ -109,7 +112,12 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
               </Text>
             </Button>
 
-            <Button leftIcon={<BiCheck color="#4E87F8" />} _focus={{ border: 'none' }} bg="white">
+            <Button
+              onClick={onMarkCompleted}
+              leftIcon={<BiCheck color="#4E87F8" />}
+              _focus={{ border: 'none' }}
+              bg="white"
+            >
               <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
                 Mark All Completed
               </Text>
