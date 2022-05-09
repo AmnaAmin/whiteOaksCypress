@@ -15,14 +15,19 @@ import {
   GridItem,
   Grid,
   Checkbox,
-  Icon,
-  Box,
-  Divider,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from '@chakra-ui/react'
-import FailedIcon from 'icons/failed-icon'
-import SuccessIcon from 'icons/success-icon'
-import VerifyingIcon from 'icons/verifying-icon'
-interface VerifyAddressBoxProps {
+import { Label } from 'recharts'
+import { Row } from 'components/table/react-table'
+import { useVerifyAddressApi } from 'utils/pc-projects'
+
+interface duplicateAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
   onClose: () => void
@@ -30,7 +35,6 @@ interface VerifyAddressBoxProps {
   title: string
   content: string
   props: string
-  isDuplicateAddress: boolean
 }
 
 export function ModalDuplicateAddress({
@@ -41,80 +45,127 @@ export function ModalDuplicateAddress({
   title,
   content,
   props,
-  isDuplicateAddress,
-}: VerifyAddressBoxProps) {
+}: duplicateAddressBoxProps) {
   const [closeModal, setCloseModal] = useState(isOpen)
   const [continueUnverified, setContinueUnverified] = useState(false)
   const toggleSubModal = () => props
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered={false}
-      closeOnEsc={false}
-      closeOnOverlayClick={false}
-      size="4xl"
-    >
-      <ModalContent rounded="6" top={75}>
-        <Grid height={85} templateRows="repeat(2, 1fr)" templateColumns="repeat(5, 1fr)">
-          <GridItem rowSpan={2} colSpan={1} bg="#4E87F8" roundedLeft={6} alignItems={'center'} height={85}>
-            <Box position={'absolute'} left={58} top={6}>
-              <FailedIcon />
-            </Box>
-          </GridItem>
-          <GridItem colSpan={3}>
-            <ModalHeader fontWeight={500} color="gray.600" fontSize="18px" fontStyle="normal" mb="-4">
-              {title}
-            </ModalHeader>
-            <ModalBody>
-              <Box className="uspsAdressVerification" marginTop={-2} color={'red'}>
-                <h5>Project ID xxx using this address already exist & is in xxx state</h5>
-              </Box>
-            </ModalBody>
-          </GridItem>
-          <GridItem rowSpan={1} colSpan={1} height={85} borderLeft="1px solid #E9EDF3">
-            <>
-              <GridItem colSpan={2}>
-                <Box>
-                  <Button
-                    bg="none"
-                    color="#4E87F8"
-                    _hover={{ bg: 'none' }}
-                    _focus={{ border: '1px solid #4E87F8' }}
-                    fontSize="14px"
-                    fontStyle="normal"
-                    fontWeight={500}
-                    width={180}
-                    height={45}
-                  >
-                    Continue
-                  </Button>
-                </Box>
-              </GridItem>
-              <Divider orientation="horizontal" />
-              <GridItem colSpan={2}>
-                <Box>
-                  <Button
-                    bg="none"
-                    color="black"
-                    _hover={{ bg: 'none' }}
-                    _focus={{ border: '1px solid #4E87F8' }}
-                    fontSize="14px"
-                    fontStyle="normal"
-                    fontWeight={500}
-                    width={180}
-                    height={45}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </GridItem>
-            </>
-            {/* </ModalFooter> */}
-          </GridItem>
-        </Grid>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered={true}
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+        size="lg"
+      >
+        <AlertDialog
+          motionPreset="slideInBottom"
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          isOpen={isOpen}
+          isCentered
+        >
+          <AlertDialogOverlay />
+
+          <AlertDialogContent>
+            <AlertDialogHeader>Discard Changes?</AlertDialogHeader>
+            <AlertDialogCloseButton />
+            <AlertDialogBody>
+              Are you sure you want to discard all of your notes? 44 words will be deleted.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                No
+              </Button>
+              <Button colorScheme="red" ml={3}>
+                Yes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Modal>
+    </>
   )
 }
+
+//   return (
+//     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
+//       <ModalOverlay />
+//       <ModalContent rounded="6">
+//         <ModalHeader
+//           borderBottom="2px solid #E2E8F0"
+//           fontWeight={500}
+//           color="gray.600"
+//           fontSize="16px"
+//           fontStyle="normal"
+//           mb="5"
+//         >
+//           {title}
+//         </ModalHeader>
+//         <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
+//         <ModalBody>
+//           <Grid>
+//             <GridItem>
+//               {addressVerificationStatus === 'verifying' && (
+//                 <div className="uspsAdressVerification">
+//                   <h5>Verifying address with USPS...</h5>
+//                 </div>
+//               )}
+
+//               {addressVerificationStatus === 'failed' && (
+//                 <div className="uspsAdressVerificationFailed">
+//                   <h5>Address verification failed! Please fix the address and try again</h5>
+//                 </div>
+//               )}
+//               {addressVerificationStatus === 'success' && (
+//                 <div className="uspsAdressVerificationSuccess">
+//                   <h5>Address verification Passed</h5>
+//                 </div>
+//               )}
+//             </GridItem>
+//             <GridItem>
+//               <div>
+//                 {addressVerificationStatus === 'verifying' && (
+//                   <img src="content/images/spinner.gif" className="spinner" />
+//                 )}
+//                 {addressVerificationStatus === 'failed' && <img src="content/images/failed.png" className="spinner" />}
+//                 {addressVerificationStatus === 'success' && (
+//                   <img src="content/images/checkmark.gif" className="spinner" />
+//                 )}
+//               </div>
+//             </GridItem>
+//           </Grid>
+//         </ModalBody>
+//         <ModalFooter className="FooterSpaceBetween custom-modal">
+//           <Checkbox
+//             type="checkbox"
+//             className="mr-1"
+//             position={'absolute'}
+//             left="25px"
+//             // onChange={setContinueUnverified}
+//             // value={continueUnverified}
+//           >
+//             Continue with unverified address
+//           </Checkbox>
+//           <div className="d-flex align-items-center">
+//             <Button
+//               color="primary"
+//               id="save-entity"
+//               // onClick={}
+//               disabled={!continueUnverified || addressVerificationStatus === 'verifying'}
+//               className="btn btn-primary jh-create-entity "
+//             >
+//               {/* <SaveRoundedIcon /> */}
+//               Save
+//             </Button>
+//             <Button color="secondary" onClick={toggleSubModal} className="ml-2">
+//               Close
+//             </Button>
+//           </div>
+//         </ModalFooter>
+//       </ModalContent>
+//     </Modal>
+//   )
+// }
