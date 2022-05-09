@@ -127,7 +127,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
           />
           <InvoiceInfo
             title={'PO Number'}
-            value={workOrder.invoiceNumber ? workOrder.invoiceNumber : ''}
+            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
             icons={BiFile}
           />
           <InvoiceInfo

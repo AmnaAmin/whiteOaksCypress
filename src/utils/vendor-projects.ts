@@ -70,6 +70,13 @@ export const documentTypes = [
 
 export const createInvoice = (doc, workOrder, projectData: ProjectType, items) => {
   const baseFont = 'arial'
+  const woAddress = {
+    companyName: 'WhiteOaks Aligned, LLC',
+    streetAddress: '4 14th Street #601',
+    city: 'Hoboken',
+    state: 'NJ',
+    zipCode: '07030',
+  }
 
   // Vendor
   const rightMarginX = doc.internal.pageSize.getWidth() - 80 /* starting point of right margin text */
@@ -83,9 +90,9 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
 
   //Address
   doc.setFontSize(12).setFont(baseFont, 'normal')
-  doc.text(projectData?.streetAddress, 15, 45)
-  doc.text(projectData?.state + ', ' + projectData?.city, 15, 50)
-  doc.text(projectData?.region + '/' + projectData?.zipCode, 15, 55)
+  doc.text(woAddress?.companyName, 15, 45)
+  doc.text(woAddress?.streetAddress, 15, 50)
+  doc.text(woAddress?.city + ', ' + woAddress?.state + ' ' + woAddress?.zipCode, 15, 55)
 
   // Specifications
   doc.setFont(baseFont, 'bold')
