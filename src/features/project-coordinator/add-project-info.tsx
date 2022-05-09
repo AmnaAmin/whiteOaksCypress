@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, FormControl, FormLabel, Grid, GridItem } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Button, FormControl, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { useForm } from 'react-hook-form'
@@ -15,12 +15,22 @@ export const AddProjectInfo: React.FC<{
     control,
   } = useForm<{}>({})
 
-  // const [startDate] = useState(new Date())
+  const [startDate] = useState(new Date())
   const types = [
     { value: '1', label: 'A' },
     { value: '2', label: 'B' },
     { value: '3', label: 'C' },
   ]
+
+  const labelStyle = {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'gray.600',
+  }
+  const inputStyle = {
+    bg: 'white',
+    borderLeft: '1.5px solid #4E87F8',
+  }
 
   return (
     <form>
@@ -33,7 +43,7 @@ export const AddProjectInfo: React.FC<{
                 label={'Project Name'}
                 placeholder=""
                 register={register}
-                controlStyle={{ w: '20em' }}
+                // controlStyle={{ w: '20em' }}
                 rules={{ required: 'This is required field' }}
                 name={`projectName`}
               />
@@ -49,7 +59,7 @@ export const AddProjectInfo: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
+              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -62,7 +72,7 @@ export const AddProjectInfo: React.FC<{
                 label={'WO Number'}
                 placeholder=""
                 register={register}
-                controlStyle={{ w: '20em' }}
+                //  controlStyle={{ w: '20em' }}
                 rules={{ required: 'This is required field' }}
                 name={`WONumber`}
               />
@@ -77,7 +87,7 @@ export const AddProjectInfo: React.FC<{
                 label={'PO Number'}
                 placeholder=""
                 register={register}
-                controlStyle={{ w: '20em' }}
+                //   controlStyle={{ w: '20em' }}
                 rules={{ required: 'This is required field' }}
                 name={`PONumber`}
               />
@@ -88,45 +98,24 @@ export const AddProjectInfo: React.FC<{
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
-            <FormDatePicker
-              errorMessage={errors}
-              label={'Client Start Date'}
-              name={`clientStartDate`}
-              control={control}
-              rules={{ required: 'This is required field' }}
-              style={{ w: '20em' }}
-              placeholder={'mm/dd/yyyy'}
-            />
+            <FormLabel sx={labelStyle}>Client Start Date</FormLabel>
+            <Input type="date" name={`clientStartDate`} placeholder={'mm/dd/yyyy'} sx={inputStyle} required />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormDatePicker
-              errorMessage={''}
-              label={'Client Due Date'}
-              name={`clientDueDate`}
-              control={control}
-              rules={{ required: 'This is required field' }}
-              style={{ w: '20em' }}
-              placeholder={'mm/dd/yyyy'}
-            />
+            <FormLabel sx={labelStyle}>Client Due Date</FormLabel>
+            <Input type="date" name={`clientDueDate`} placeholder={'mm/dd/yyyy'} sx={inputStyle} required />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormDatePicker
-              errorMessage={''}
-              label={'WO Start Date'}
-              name={`WOStartDate`}
-              control={control}
-              rules={{ required: 'This is required field' }}
-              style={{ w: '20em' }}
-              placeholder={'mm/dd/yyyy'}
-            />
+            <FormLabel sx={labelStyle}>WOA Start Date</FormLabel>
+            <Input type="date" name={`WOAStartDate`} placeholder={'mm/dd/yyyy'} sx={inputStyle} required />
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" mt={6}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -134,7 +123,7 @@ export const AddProjectInfo: React.FC<{
               label={'Original SOW Amount'}
               placeholder="$"
               register={register}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`originalSOWAmount`}
@@ -152,9 +141,17 @@ export const AddProjectInfo: React.FC<{
               name={`uploadProjectSOW`}
               register={register}
               isRequired={true}
-              style={{ w: '20em' }}
+              //  style={{ w: '20em' }}
             >
-              <Button rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} bg="gray.100" h="37px">
+              <Button
+                rounded="none"
+                roundedLeft={5}
+                fontSize={14}
+                fontWeight={500}
+                bg="#EDF2F7"
+                h="37px"
+                color="#4A5568"
+              >
                 {'ChooseFile'}
               </Button>
             </FormFileInput>

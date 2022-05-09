@@ -27,7 +27,7 @@ export const ManageProject: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
+              //   controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -41,7 +41,7 @@ export const ManageProject: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
             />
           </FormControl>
         </GridItem>
@@ -56,7 +56,7 @@ export const ManageProject: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
+              //    controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -68,7 +68,7 @@ export const ManageProject: React.FC<{
               label={'Client Super Name'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`clientSuperName`}
             />
@@ -83,7 +83,7 @@ export const ManageProject: React.FC<{
               label={'Super Phone'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`superPhone`}
             />
@@ -96,7 +96,7 @@ export const ManageProject: React.FC<{
               label={'Ext.'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`ext`}
             />
@@ -109,7 +109,7 @@ export const ManageProject: React.FC<{
               label={'Super Email'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`superEmail`}
             />

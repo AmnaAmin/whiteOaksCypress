@@ -31,7 +31,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Address'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`address`}
@@ -45,7 +45,7 @@ export const AddPropertyInfo: React.FC<{
               label={'City'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`city`}
@@ -61,7 +61,7 @@ export const AddPropertyInfo: React.FC<{
               control={control}
               options={states}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -73,7 +73,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Zip'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`zip`}
@@ -91,7 +91,7 @@ export const AddPropertyInfo: React.FC<{
               control={control}
               options={markets}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
+              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -103,7 +103,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Gate Code'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`gateCode`}
             />
@@ -116,7 +116,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Lunch Box Code'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`lunchBoxCode`}
             />
@@ -131,7 +131,7 @@ export const AddPropertyInfo: React.FC<{
               label={'HOA Contact Phone'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`HOAContactPhone`}
@@ -145,7 +145,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Ext.'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              //  controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`ext`}
             />
@@ -158,7 +158,7 @@ export const AddPropertyInfo: React.FC<{
               label={'HOA Contact Email'}
               placeholder=""
               register={register}
-              controlStyle={{ w: '20em' }}
+              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`HOAContactEmail`}
