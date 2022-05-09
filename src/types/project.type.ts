@@ -142,6 +142,7 @@ export type ProjectWorkOrderType = {
   propertyAddress: string
   vendorAddress: string
   durationCategory: string
+  invoiceNumber: string
 }
 
 export type ProjectAlertType = {

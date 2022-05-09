@@ -6,7 +6,7 @@ import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 import { VENDOR_SKILLS } from 'mocks/api/vendor-profile/data'
 import { TradeForm } from 'features/vendor-details/trades'
 
-jest.setTimeout(30000)
+jest.setTimeout(150000)
 
 describe('Vendor Profile Trade Test Cases', () => {
   it('Trade Data is rendered', async () => {
