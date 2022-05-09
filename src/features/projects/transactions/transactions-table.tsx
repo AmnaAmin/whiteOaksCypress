@@ -8,7 +8,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { UpdateTransactionModal } from './add-update-transaction'
 import { TransactionTypeValues } from 'types/transaction.type'
 import { TransactionDetailsModal } from './transaction-details-modal'
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 const STATUS_TAG_COLOR_SCHEME = {
   denied: {
@@ -30,50 +30,6 @@ const STATUS_TAG_COLOR_SCHEME = {
     color: '#C05621',
   },
 }
-
-const COLUMNS = [
-  {
-    Header: 'ID',
-    accessor: 'name',
-  },
-  {
-    Header: t('type'),
-    accessor: 'transactionTypeLabel',
-  },
-  {
-    Header: t('trade'),
-    accessor: 'skillName',
-  },
-  {
-    Header: t('totalAmount'),
-    accessor: 'transactionTotal',
-  },
-  {
-    Header: t('status'),
-    accessor: 'status',
-    Cell(cellInfo) {
-      const value = (cellInfo.value || '').toLowerCase()
-      return (
-        <Tag rounded="6px" textTransform="capitalize" size="md" {...STATUS_TAG_COLOR_SCHEME[value]}>
-          <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
-            {value}
-          </TagLabel>
-        </Tag>
-      )
-    },
-  },
-  {
-    Header: t('submit'),
-    accessor: 'modifiedDate',
-    Cell({ value }) {
-      return <Box>{dateFormat(value)}</Box>
-    },
-  },
-  {
-    Header: t('approvedBy'),
-    accessor: 'approvedBy',
-  },
-]
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -116,7 +72,55 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const { transactions = [], isLoading } = useTransactions(projectId)
-  const { columns } = useColumnWidthResize(COLUMNS, ref)
+  const { t } = useTranslation()
+
+  const { columns } = useColumnWidthResize(
+    [
+      {
+        Header: 'ID',
+        accessor: 'name',
+      },
+      {
+        Header: t('type') as string,
+        accessor: 'transactionTypeLabel',
+      },
+      {
+        Header: t('trade') as string,
+        accessor: 'skillName',
+      },
+      {
+        Header: t('totalAmount') as string,
+        accessor: 'transactionTotal',
+      },
+      {
+        Header: t('status') as string,
+        accessor: 'status',
+        Cell(cellInfo) {
+          const value = (cellInfo.value || '').toLowerCase()
+          return (
+            <Tag rounded="6px" textTransform="capitalize" size="md" {...STATUS_TAG_COLOR_SCHEME[value]}>
+              <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
+                {value}
+              </TagLabel>
+            </Tag>
+          )
+        },
+      },
+      {
+        Header: t('submit') as string,
+        accessor: 'modifiedDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+      },
+      {
+        Header: t('approvedBy') as string,
+        accessor: 'approvedBy',
+      },
+    ],
+    ref,
+  )
+
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
     isOpen: isOpenTransactionDetailsModal,
