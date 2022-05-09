@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
+import { Button, Checkbox, Divider, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
@@ -6,8 +6,9 @@ import { verifyAddressValues } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
 import { useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
-import { ModalVerifyAddress } from 'features/modal-verify-address'
+import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
+import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 
 export const AddPropertyInfo = props => {
   // const { mutate: saveAddress, data: addressPayload } = useAddressSettings()
@@ -17,6 +18,7 @@ export const AddPropertyInfo = props => {
   const [city, setCity] = useState()
   const [state, setState] = useState()
   const [zipCode, setZipCode] = useState()
+  const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
 
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
 
@@ -32,15 +34,15 @@ export const AddPropertyInfo = props => {
     { value: '3', label: 'C' },
   ]
 
-  const addressDefaultValue = address => {
-    const addressValues = {
-      streetAddress: address.streetAddress,
-      city: address.city,
-      state: address.state,
-      zipCode: address.zipCode,
-    }
-    return addressValues
-  }
+  // const addressDefaultValue = address => {
+  //   const addressValues = {
+  //     streetAddress: address.streetAddress,
+  //     city: address.city,
+  //     state: address.state,
+  //     zipCode: address.zipCode,
+  //   }
+  //   return addressValues
+  // }
 
   const {
     register,
@@ -75,6 +77,7 @@ export const AddPropertyInfo = props => {
       setCity(addressInfo.city)
       setState(addressInfo.state)
       setZipCode(addressInfo.zipCode)
+      setIsDuplicateAddress(true)
     },
     [refetch, setStreetAddress, setCity, setState, setZipCode],
   )
@@ -134,8 +137,26 @@ export const AddPropertyInfo = props => {
     onOpen: onOpenAddressVerifyModalOpen,
   } = useDisclosure()
 
+  // const {
+  //   isOpen: isAddressDuplicateModalOpen,
+  //   onClose: onAddressDuplicateModalClose,
+  //   onOpen: onOpenAddressDuplicateModalOpen,
+  // } = useDisclosure()
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {isDuplicateAddress && (
+        <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
+          <AlertIcon />
+          <AlertDescription color="red">
+            Project ID xxx using this address already exist & is in xxx state.
+          </AlertDescription>
+          <Divider orientation="vertical" h={6} marginLeft={6} />
+          <Checkbox type="checkbox" marginTop={1} marginLeft={6} color="#4E87F8">
+            Acknowledged
+          </Checkbox>
+        </Alert>
+      )}
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
@@ -312,6 +333,16 @@ export const AddPropertyInfo = props => {
         save={saveModalVerify}
         addressVerificationStatus={addressVerificationStatus}
       />
+
+      {/* <ModalDuplicateAddress
+        title="Address already exist"
+        content="Address already exist"
+        isOpen={isAddressDuplicateModalOpen}
+        onClose={onAddressDuplicateModalClose}
+        props={''} // onConfirm={onDeleteConfirmationModalClose}
+        save={saveModalVerify}
+        isDuplicateAddress={isDuplicateAddress}
+      /> */}
     </form>
   )
 }

@@ -18,6 +18,16 @@ export const usePCProject = (projectId?: string) => {
   }
 }
 
+export const useProjectCards = () => {
+  const client = useClient()
+
+  return useQuery('projectCards', async () => {
+    const response = await client(`projectCards`, {})
+
+    return response?.data
+  })
+}
+
 export const useAddressDetails = (projectId?: string) => {
   const client = useClient()
 
@@ -76,14 +86,4 @@ export const useVerifyAddressApi = (streetAddress?: any, city?: string, state?: 
     },
     { enabled: false },
   )
-}
-
-export const useProjectCards = () => {
-  const client = useClient()
-
-  return useQuery('projectCards', async () => {
-    const response = await client(`projectCards`, {})
-
-    return response?.data
-  })
 }

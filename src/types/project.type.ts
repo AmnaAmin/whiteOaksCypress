@@ -154,7 +154,6 @@ export type ProjectAlertType = {
 }
 
 export type verifyAddressValues = {
-  streetAddress?: string
   city?: string
   state?: string
   zipCode?: any
