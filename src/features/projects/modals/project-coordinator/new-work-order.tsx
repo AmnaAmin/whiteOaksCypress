@@ -77,7 +77,7 @@ const NewWorkOrder: React.FC<{
                 <CalenderCard title="Client End " date={dateFormatter(projectData?.clientDueDate)} />
                 <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
                 <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue)} />
-                <InformationCard title=" Email" date={projectData?.hoaEmailAddress} />
+                <InformationCard title=" Email" date={projectData?.createdBy} />
                 <InformationCard title=" Phone No" date={projectData?.hoaPhone} />
               </SimpleGrid>
               <Box mt={10}>

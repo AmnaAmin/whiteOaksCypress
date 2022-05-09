@@ -13,9 +13,9 @@ import {
   Tbody,
   Td,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useState } from 'react'
 
-import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
+import { BiCalendar, BiCheck, BiCircle, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 
@@ -37,24 +37,25 @@ const CalenderCard = props => {
   )
 }
 
-const CheckboxStructure = () => {
+const CheckboxStructure = ({ checked }) => {
   return (
     <Box>
       <Checkbox
+        isChecked={checked}
         rounded="6px"
         colorScheme="none"
         iconColor="#2AB450"
         h="32px"
-        w="145px"
+        w="140px"
         bg="#F2F3F4"
         color="#A0AEC0"
         _checked={{ bg: '#E7F8EC', color: '#2AB450' }}
         boxShadow="0px 0px 4px -2px "
         justifyContent="center"
         fontSize={14}
-        fontWeight={500}
+        // fontWeight={500}
       >
-        Completed
+        {checked ? 'Completed' : 'Not Completed'}
       </Checkbox>
     </Box>
   )
@@ -62,8 +63,14 @@ const CheckboxStructure = () => {
 
 const UploadImage: React.FC<{ Images }> = ({ Images }) => {
   return (
-    <Box overflow="hidden" ml="2">
-      <Button _focus={{ outline: 'none' }} variant="unstyled" leftIcon={<BiUpload color="#4E87F8" />} display="flex">
+    <Box>
+      <Button
+        minW={'auto'}
+        _focus={{ outline: 'none' }}
+        variant="unstyled"
+        leftIcon={<BiUpload color="#4E87F8" />}
+        display="flex"
+      >
         <Text fontWeight={400} fontSize="14px" color="#4E87F8">
           {Images}
         </Text>
@@ -74,10 +81,10 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
-
+  const [status, setStatus] = useState([false, true, true, false, true, true])
   return (
     <Box>
-      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
+      <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
         <CalenderCard title="WO Issued" value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
         <CalenderCard title="Expected Start " value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
         <CalenderCard
@@ -87,10 +94,6 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
         <CalenderCard
           title=" Completed by Vendor​"
           value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
-        />
-        <CalenderCard
-          title=" Completion Variance"
-          value={convertDateTimeFromServer(workOrder.workOrderCompletionDateVariance)}
         />
       </SimpleGrid>
       <Box pt={6}>
@@ -137,7 +140,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
                 <Td>2</Td>
                 <Td>$450</Td>
                 <Td>
-                  <CheckboxStructure />
+                  <CheckboxStructure checked={status[0]} />
                 </Td>
                 <Td>
                   <UploadImage Images={'Upload'} />
@@ -150,7 +153,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
                 <Td>12</Td>
                 <Td>$200</Td>
                 <Td>
-                  <CheckboxStructure />
+                  <CheckboxStructure checked={status[1]} />
                 </Td>
                 <Td>
                   <UploadImage Images={'First23.img'} />
@@ -163,7 +166,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
                 <Td>15</Td>
                 <Td>$1400</Td>
                 <Td>
-                  <CheckboxStructure />
+                  <CheckboxStructure checked={status[2]} />
                 </Td>
 
                 <Td>
@@ -178,7 +181,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
                 <Td>3</Td>
                 <Td>$450</Td>
                 <Td>
-                  <CheckboxStructure />
+                  <CheckboxStructure checked={status[3]} />
                 </Td>
                 <Td>
                   <UploadImage Images={'Upload'} />
@@ -192,7 +195,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
                 <Td>8</Td>
                 <Td>$150</Td>
                 <Td>
-                  <CheckboxStructure />
+                  <CheckboxStructure checked={status[4]} />
                 </Td>
                 <Td>
                   <UploadImage Images={'Tsk19.img'} />
@@ -206,7 +209,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
                 <Td>8</Td>
                 <Td>$150</Td>
                 <Td>
-                  <CheckboxStructure />
+                  <CheckboxStructure checked={status[5]} />
                 </Td>
                 <Td>
                   <UploadImage Images={'Tsk19.img'} />
