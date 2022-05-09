@@ -6,7 +6,7 @@ import { DetailsForm } from 'features/vendor-details/details'
 import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 
 /* Details Tab Test Cases */
-jest.setTimeout(30000)
+jest.setTimeout(150000)
 
 describe('Vendor Profile Test Cases', () => {
   test('App should redirect to /vendors with default details tab open', async () => {

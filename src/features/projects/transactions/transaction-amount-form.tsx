@@ -172,7 +172,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             >
               <HStack spacing="5px" h="31px" padding="10px" align="center">
                 <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                  {document?.name}
+                  {document?.name || document.fileType}
                 </Box>
                 <MdOutlineCancel
                   cursor="pointer"
@@ -256,7 +256,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                         data-testid={`transaction-description-${index}`}
                         type="text"
                         size="sm"
-                        rounded="md"
                         placeholder="description"
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
@@ -282,7 +281,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                                 data-testid={`transaction-amount-${index}`}
                                 type="number"
                                 size="sm"
-                                rounded="md"
                                 placeholder="amount"
                                 onChange={event => {
                                   const inputValue = Number(event.currentTarget.value)

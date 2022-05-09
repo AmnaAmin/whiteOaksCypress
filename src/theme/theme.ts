@@ -1,5 +1,10 @@
 import { extendTheme, theme as chakraTheme } from '@chakra-ui/react'
-import { components } from './components'
+import tabs from './components/tabs'
+import button from './components/button'
+import modal from './components/modal'
+import input from './components/input'
+import textArea from './components/textarea'
+import alert from './components/alert'
 
 export const theme = extendTheme({
   styles: {
@@ -111,5 +116,12 @@ export const theme = extendTheme({
       900: '#4E87F8',
     },
   },
-  components,
+  components: {
+    ...tabs,
+    ...button,
+    ...modal,
+    ...input,
+    ...textArea,
+    ...alert,
+  },
 })

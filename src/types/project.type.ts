@@ -142,6 +142,7 @@ export type ProjectWorkOrderType = {
   propertyAddress: string
   vendorAddress: string
   durationCategory: string
+  invoiceNumber: string
 }
 
 export type ProjectAlertType = {
@@ -153,7 +154,6 @@ export type ProjectAlertType = {
 }
 
 export type verifyAddressValues = {
-  streetAddress?: string
   city?: string
   state?: string
   zipCode?: any
