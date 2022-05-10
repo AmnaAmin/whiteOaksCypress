@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 
-import { BiCalendar, BiCheck, BiCircle, BiDownload, BiUpload } from 'react-icons/bi'
+import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 
@@ -81,7 +81,7 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
-  const [status, setStatus] = useState([false, true, true, false, true, true])
+  const [status] = useState([false, true, true, false, true, true])
   return (
     <Box>
       <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>

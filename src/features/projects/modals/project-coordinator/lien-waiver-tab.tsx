@@ -217,29 +217,10 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Flex>
           </HStack>
 
-          <Button
-            colorScheme="CustomPrimaryColor"
-            onClick={() => SetClicked(true)}
-            _focus={{ outline: 'none' }}
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" onClick={() => SetClicked(true)}>
             <InformationCard clicked={clicked} />
           </Button>
-          <Button
-            ml={3}
-            onClick={onClose}
-            colorScheme="blue"
-            variant="outline"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button ml={3} onClick={onClose} colorScheme="brand" variant="ghost">
             {t('cancel')}
           </Button>
         </Flex>
