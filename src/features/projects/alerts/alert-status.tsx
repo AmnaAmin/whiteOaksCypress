@@ -127,22 +127,14 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
   return (
     <>
       {alert && (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} variant="custom" size="3xl">
           <ModalOverlay />
-          <ModalContent minW="45em" bg="#FFFFFF" rounded="0">
-            <ModalHeader
-              bg="gray.50"
-              borderBottom="1px solid #eee"
-              borderTop="2px solid #4E87F8"
-              fontSize="16px"
-              fontWeight={500}
-              color="gray.600"
-              mb="3"
-            >
+          <ModalContent>
+            <ModalHeader>
               {/* {alert.name} */}
               11 Joel CT
             </ModalHeader>
-            <ModalCloseButton size="lg" _focus={{ border: 'none' }} />
+            <ModalCloseButton />
             <ModalBody>
               <Box
                 minH="31.6em"
@@ -155,32 +147,11 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
                 <Box>{<AlertCard />}</Box>
               </Box>
             </ModalBody>
-            <ModalFooter display="flex" alignItems="center" mb="3">
-              <Button
-                variant="ghost"
-                onClick={onClose}
-                color="gray.600"
-                mr={3}
-                fontSize="14px"
-                fontWeight={600}
-                fontStyle="normal"
-                h="48px"
-                w="130px"
-              >
+            <ModalFooter>
+              <Button variant="outline" onClick={onClose} colorScheme="brand">
                 Close
               </Button>
-              <Button
-                colorScheme="CustomPrimaryColor"
-                _focus={{ outline: 'none' }}
-                rounded="6px"
-                type="submit"
-                form="newTransactionForm"
-                fontSize="14px"
-                fontWeight={600}
-                fontStyle="normal"
-                h="48px"
-                w="130px"
-              >
+              <Button type="submit" form="newTransactionForm" colorScheme="brand">
                 Save
               </Button>
             </ModalFooter>

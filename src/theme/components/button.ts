@@ -2,6 +2,12 @@ import { theme as chakraTheme } from '@chakra-ui/react'
 
 const ButtonVariants = {
   Button: {
+    baseStyle: {
+      ...chakraTheme.components.Button.baseStyle,
+      _focus: {
+        outline: 'none',
+      },
+    },
     variants: {
       solid: props => {
         return {
@@ -10,9 +16,6 @@ const ButtonVariants = {
           color: 'white',
           _hover: {
             bg: `${props.colorScheme}.500`,
-          },
-          _focus: {
-            outline: 'none',
           },
         }
       },
@@ -33,11 +36,11 @@ const ButtonVariants = {
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
           color: `${props.colorScheme}.400`,
-          _hover: {
-            bg: `${props.colorScheme}.50`,
-          },
           _focus: {
             outline: 'none',
+          },
+          _hover: {
+            bg: `${props.colorScheme}.50`,
           },
         }
       },

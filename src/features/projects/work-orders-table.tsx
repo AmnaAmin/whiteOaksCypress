@@ -63,7 +63,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange }: PropType, ref)
   const { columns } = useColumnWidthResize(
     [
       {
-        Header: 'WO Status',
+        Header: t('WOstatus') as string,
         accessor: 'statusLabel',
         Cell: ({ value, row }) => <WorkOrderStatus value={value} id={(row.original as any).status} />,
       },
