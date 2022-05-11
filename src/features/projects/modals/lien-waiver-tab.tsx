@@ -123,7 +123,9 @@ export const LienWaiverTab: React.FC<any> = props => {
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
 
-    if (!context) return
+    if (!context || !canvasRef.current) return
+    canvasRef.current.width = 1000
+    canvasRef.current.height = 64
 
     context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
     context.font = 'italic 500 12px Inter'
