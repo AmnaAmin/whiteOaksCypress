@@ -1,13 +1,11 @@
-import { Box, Icon } from '@chakra-ui/react'
+import { Grid, Icon } from '@chakra-ui/react'
 
 import React from 'react'
-// import { useTranslation } from 'react-i18next'
 import { BiClipboard, BiFile, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
 import { useVendorCards } from 'utils/pc-projects'
 import VendorFilterCard from './vendor-filter-card'
 
 const useVendorCardJson = cards => {
-  // const { t } = useTranslation()
   return [
     {
       id: 'active',
@@ -45,18 +43,10 @@ export const VendorFilters = ({ onSelectCard, selectedCard }) => {
   const cards = useVendorCardJson(values)
 
   return (
-    <>
-      <Box
-        justifyContent="space-between"
-        w="100%"
-        display="grid"
-        gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))"
-        gridGap="6"
-      >
-        {cards.map(card => {
-          return <VendorFilterCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
-        })}
-      </Box>
-    </>
+    <Grid justifyContent="space-between" w="100%" templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="6">
+      {cards.map(card => {
+        return <VendorFilterCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
+      })}
+    </Grid>
   )
 }

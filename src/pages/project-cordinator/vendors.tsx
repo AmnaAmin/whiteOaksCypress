@@ -2,7 +2,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { HStack, Box, Icon, Button, Spacer, Flex, Stack } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { VendorFilters } from 'features/project-coordinator/vendor/vendor-filter'
-import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor/vendorTable'
+import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor/vendor-table'
 import { t } from 'i18next'
 import { useState } from 'react'
 import { BsBoxArrowUp } from 'react-icons/bs'
@@ -22,14 +22,7 @@ const Vendors = () => {
       <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
 
       <HStack mt="1" mb="1">
-        <Button
-          _focus={{ outline: 'none' }}
-          variant="ghost"
-          color="#4E87F8"
-          fontSize="14px"
-          fontWeight={600}
-          onClick={() => setSelectedCard('')}
-        >
+        <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           Clear Filter
         </Button>
         <Spacer />
@@ -65,14 +58,11 @@ const Vendors = () => {
           ) : (
             <>
               <Button
-                bg="none"
+                variant="solid"
+                colorScheme="gray"
                 size="md"
-                color="#4E87F8"
-                _hover={{ bg: 'none' }}
-                _focus={{ border: 'none' }}
-                fontSize="12px"
-                fontStyle="normal"
-                fontWeight={500}
+                roundedTopLeft="0"
+                roundedTopRight="0"
                 onClick={() => {
                   if (vendorTableInstance) {
                     vendorTableInstance?.exportData('xlsx', false)
