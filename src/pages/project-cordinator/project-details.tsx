@@ -19,6 +19,7 @@ import ProjectDetailsTab from 'features/project-coordinator/project-details/proj
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+// import Vendor from 'features/projects/modals/project-coordinator/vendor-table'
 // import Client from 'features/projects/modals/project-coordinator/client-table'
 
 export const ProjectDetails: React.FC = props => {
@@ -75,6 +76,7 @@ export const ProjectDetails: React.FC = props => {
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
                     {/* <Client projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} /> */}
+                    {/* <Vendor projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose}/> */}
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
