@@ -6,6 +6,7 @@ import input from './components/input'
 import textArea from './components/textarea'
 import alert from './components/alert'
 import checkbox from './components/checkbox'
+import label from './components/label'
 
 export const theme = extendTheme({
   styles: {
@@ -125,5 +126,6 @@ export const theme = extendTheme({
     ...textArea,
     ...alert,
     ...checkbox,
+    ...label,
   },
 })

@@ -29,6 +29,7 @@ import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
+import { ProjectType } from 'types/project.type'
 
 const TabStyle = {
   fontWeight: 500,
@@ -44,10 +45,12 @@ const WorkOrderDetails = ({
   workOrder,
   onClose: close,
   onProjectTabChange,
+  projectData,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
+  projectData: ProjectType
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -108,7 +111,7 @@ const WorkOrderDetails = ({
         <ModalBody>
           <Stack spacing={5}>
             <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-              <TabList height="50px" alignItems={'end'}>
+              <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
                 <Flex h="40px">
                   <Tab
                     _focus={{ border: 'none' }}
@@ -135,18 +138,6 @@ const WorkOrderDetails = ({
                   >
                     {t('lienWaiver')}
                   </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('Payments')}
-                  </Tab>
 
                   <Tab
                     _focus={{ border: 'none' }}
@@ -160,6 +151,18 @@ const WorkOrderDetails = ({
                     sx={TabStyle}
                   >
                     {t('Invoice')}
+                  </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('Payments')}
                   </Tab>
                 </Flex>
                 {tabIndex === 3 && (
@@ -189,6 +192,9 @@ const WorkOrderDetails = ({
                 <TabPanel>
                   <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
+                <TabPanel p={0}>
+                  <InvoiceTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab
                     onClose={onClose}
@@ -207,10 +213,6 @@ const WorkOrderDetails = ({
                       datePermitsPulled: workOrder?.datePermitsPulled ?? '',
                     }}
                   />
-                </TabPanel>
-
-                <TabPanel p={0}>
-                  <InvoiceTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

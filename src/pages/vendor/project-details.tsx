@@ -100,6 +100,7 @@ const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <WorkOrdersTable
+                    projectData={projectData as ProjectType}
                     onTabChange={n => {
                       console.log(n)
                       setTabIndex(n)
