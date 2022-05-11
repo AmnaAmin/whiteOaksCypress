@@ -6,46 +6,46 @@ import ReactSelect from 'components/form/react-select'
 const DetailsTab = props => {
   return (
     <Box>
-      <SimpleGrid columns={1} minH="110px" alignItems={'center'}>
+      <Flex minH="110px">
         <FormControl>
-          <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+          <FormLabel variant="strong-label" size="md">
             Name
           </FormLabel>
-          <Input width="215px" readOnly />
+          <Input width="215px" variant="reguired-field" readOnly />
         </FormControl>
-      </SimpleGrid>
+      </Flex>
 
       <SimpleGrid w="86%" columns={4} spacing={4}>
         <Box>
           <FormControl height="40px">
-            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+            <FormLabel variant="strong-label" size="md">
               Address
             </FormLabel>
-            <Input readOnly />
+            <Input variant="reguired-field" readOnly />
           </FormControl>
         </Box>
         <Box>
           <FormControl>
-            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+            <FormLabel variant="strong-label" size="md">
               City
             </FormLabel>
-            <Input readOnly />
+            <Input variant="reguired-field" readOnly />
           </FormControl>
         </Box>
         <Box>
           <FormControl>
-            <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+            <FormLabel variant="strong-label" size="md">
               State
             </FormLabel>
-            <ReactSelect readOnly />
+            <ReactSelect selectProps={{ isBorderLeft: true }} readOnly />
           </FormControl>
         </Box>
         <Box>
           <FormControl>
-            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+            <FormLabel variant="strong-label" size="md">
               Zip Code
             </FormLabel>
-            <Input readOnly />
+            <Input variant="reguired-field" readOnly />
           </FormControl>
         </Box>
       </SimpleGrid>
@@ -54,15 +54,15 @@ const DetailsTab = props => {
         <Flex gap="15px">
           <Box>
             <FormControl height="40px">
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Contact
               </FormLabel>
-              <Input readOnly />
+              <Input variant="reguired-field" readOnly />
             </FormControl>
           </Box>
           <Box>
             <FormControl>
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Phone No
               </FormLabel>
               <Input readOnly />
@@ -71,7 +71,7 @@ const DetailsTab = props => {
 
           <Box>
             <FormControl>
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Exit
               </FormLabel>
               <Input w="109px" readOnly />
@@ -79,18 +79,18 @@ const DetailsTab = props => {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Email
               </FormLabel>
-              <Input readOnly />
+              <Input variant="reguired-field" readOnly />
             </FormControl>
           </Box>
           <Box w="215px">
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Market
               </FormLabel>
-              <ReactSelect readOnly />
+              <ReactSelect selectProps={{ isBorderLeft: true }} readOnly />
             </FormControl>
           </Box>
         </Flex>
@@ -104,15 +104,15 @@ const DetailsTab = props => {
         <Flex my={10} gap="15px">
           <Box>
             <FormControl height="40px">
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Contact
               </FormLabel>
-              <Input readOnly />
+              <Input variant="reguired-field" readOnly />
             </FormControl>
           </Box>
           <Box>
             <FormControl>
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Phone No
               </FormLabel>
               <Input readOnly />
@@ -121,7 +121,7 @@ const DetailsTab = props => {
 
           <Box>
             <FormControl>
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Exit
               </FormLabel>
               <Input w="109px" readOnly />
@@ -129,27 +129,29 @@ const DetailsTab = props => {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 City
               </FormLabel>
-              <Input readOnly />
+              <Input variant="reguired-field" readOnly />
             </FormControl>
           </Box>
           <Box w="215px">
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
                 Comments
               </FormLabel>
-              <Input readOnly />
+              <Input variant="reguired-field" readOnly />
             </FormControl>
           </Box>
         </Flex>
 
-        <Flex h="80px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
-          <Button colorScheme="brand" variant="outline" mr={3} onClick={props.onClose}>
+        <Flex h="90px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
+          <Button colorScheme="brand" variant="outline" size="lg" mr={3} onClick={props.onClose}>
             Close
           </Button>
-          <Button colorScheme="brand">Next</Button>
+          <Button colorScheme="brand" size="lg">
+            Next
+          </Button>
         </Flex>
       </Box>
     </Box>

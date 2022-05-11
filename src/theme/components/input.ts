@@ -12,10 +12,16 @@ const input = {
             color: 'gray.500',
             bg: 'white',
             _focus: inputFocusStateStyle,
+            _disabled: {
+              bg: 'gray.100',
+              borderColor: 'gray.200',
+              color: 'gray.500',
+              opacity: 0.7,
+            },
           },
         }
       },
-      'outline-with-left-border': props => {
+      'reguired-field': props => {
         return {
           field: {
             ...chakraTheme.components.Input.variants.outline(props).field,
