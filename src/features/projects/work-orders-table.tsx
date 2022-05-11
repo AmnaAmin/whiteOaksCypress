@@ -9,6 +9,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from './modals/work-order-details'
+import { ProjectType } from 'types/project.type'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -52,8 +53,9 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 interface PropType {
   onTabChange?: any
+  projectData: ProjectType
 }
-export const WorkOrdersTable = React.forwardRef(({ onTabChange }: PropType, ref) => {
+export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
@@ -63,7 +65,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange }: PropType, ref)
   const { columns } = useColumnWidthResize(
     [
       {
-        Header: 'WO Status',
+        Header: t('WOstatus') as string,
         accessor: 'statusLabel',
         Cell: ({ value, row }) => <WorkOrderStatus value={value} id={(row.original as any).status} />,
       },
@@ -101,6 +103,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange }: PropType, ref)
     <Box>
       <WorkOrderDetails
         workOrder={selectedWorkOrder as ProjectWorkOrderType}
+        projectData={projectData}
         onClose={() => {
           setSelectedWorkOrder(undefined)
           refetch()

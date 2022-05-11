@@ -189,7 +189,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       data-testid="primaryContact"
                       id="primaryContact"
                       type="text"
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('primaryContact', {
                         required: 'This is required',
                       })}
@@ -213,7 +213,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       id="businessPhoneNumber"
                       type="text"
                       data-testid="businessPhoneNumber"
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('businessPhoneNumber', {
                         required: 'This is required',
                       })}
@@ -281,7 +281,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl isInvalid={!!errors.primaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('primaryEmail', {
                         required: 'This is required',
                       })}
