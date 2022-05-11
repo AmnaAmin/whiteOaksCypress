@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
-import { SideBarClients } from 'features/project-coordinator/clients-flie/side-bar-clients'
+import { ClientsTable } from 'features/project-coordinator/clients-flie/clients-table'
 import { useRef } from 'react'
 
 const Clients = () => {
@@ -11,7 +11,7 @@ const Clients = () => {
         <Text fontSize="18px" fontWeight={500} color="gray.600">
           Clients Overview
         </Text>
-        <Button fontSize="18px" fontWeight={500} colorScheme="brand" variant="ghost">
+        <Button colorScheme="brand" variant="ghost">
           + New Client
         </Button>
       </Flex>
@@ -33,7 +33,7 @@ const Clients = () => {
         </Text>
       </Flex>
       <Box>
-        <SideBarClients ref={tabsContainerRef} />
+        <ClientsTable ref={tabsContainerRef} />
       </Box>
     </Box>
   )

@@ -2,16 +2,9 @@ import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import { usePcClients } from 'utils/pc-projects'
-// import { PieChart } from 'recharts'
+import { usePcClients } from 'utils/clients-table-api'
 
-// enum PROJECT_CATEGORY {
-//   WARNING = 1,
-//   INFO = 2,
-//   ERROR = 3,
-// }
-
-const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -42,7 +35,7 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const SideBarClients = React.forwardRef((props: any, ref) => {
+export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: PcData } = usePcClients()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
@@ -92,7 +85,7 @@ export const SideBarClients = React.forwardRef((props: any, ref) => {
         onRowClick={props.onRowClick}
         columns={columns}
         data={PcData || []}
-        TableRow={alertsRow}
+        TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"
       />
