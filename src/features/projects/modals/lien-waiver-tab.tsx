@@ -44,7 +44,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sigRef = useRef<HTMLImageElement>(null)
-
+  const [claimantsSignature, setClaimantsSignature] = useState('')
   const {
     register,
     formState: { errors },
@@ -91,16 +91,16 @@ export const LienWaiverTab: React.FC<any> = props => {
     const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
     setRecentLWFile(recentLW)
     setValue('claimantsSignature', signatureDoc?.s3Url)
+    setClaimantsSignature(signatureDoc?.s3Url ?? '')
   }, [documentsData, setValue])
 
   const generatePdf = useCallback(() => {
     let form = new jsPdf()
-    const value = getValues()
     const dimention = {
       width: sigRef?.current?.width,
       height: sigRef?.current?.height,
     }
-    convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
+    convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
       form = createForm(form, getValues(), dimention, dataUrl)
       const pdfUri = form.output('datauristring')
       const pdfBlob = form.output('bloburi')
@@ -118,7 +118,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         },
       ])
     })
-  }, [getValues])
+  }, [getValues, claimantsSignature])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
@@ -142,6 +142,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       },
     ])
     setValue('claimantsSignature', uri)
+    setClaimantsSignature(uri)
   }
 
   const onSignatureChange = value => {
@@ -149,6 +150,7 @@ export const LienWaiverTab: React.FC<any> = props => {
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
   const onRemoveSignature = () => {
+    setClaimantsSignature('')
     setValue('claimantsSignature', null)
     setValue('dateOfSignature', null)
   }
@@ -188,7 +190,7 @@ export const LienWaiverTab: React.FC<any> = props => {
 
                 <Button
                   bg="#4E87F8"
-                  disabled={!value.claimantsSignature || recentLWFile}
+                  disabled={!claimantsSignature || recentLWFile}
                   color="#FFFFFF"
                   float="right"
                   _hover={{ bg: 'royalblue' }}
@@ -250,7 +252,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 </Stack>
 
                 <HStack alignItems={'flex-start'} spacing="7">
-                  <FormControl isInvalid={!value.claimantsSignature} width={'20em'}>
+                  <FormControl isInvalid={!claimantsSignature} width={'20em'}>
                     <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
                       {t('claimantsSignature')}
                     </FormLabel>
@@ -258,9 +260,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                       <Image
                         mb="3"
-                        hidden={!value.claimantsSignature}
+                        hidden={!claimantsSignature}
                         maxW={'100%'}
-                        src={value.claimantsSignature}
+                        src={claimantsSignature}
                         {...register('claimantsSignature', {
                           required: 'This is required field',
                         })}
@@ -269,12 +271,10 @@ export const LienWaiverTab: React.FC<any> = props => {
 
                       <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
                         <BiEditAlt onClick={() => setOpenSignature(true)} color="#A0AEC0" />
-                        {value.claimantsSignature && (
-                          <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
-                        )}
+                        {claimantsSignature && <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />}
                       </HStack>
                     </Flex>
-                    {!value.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
+                    {!claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
                   </FormControl>
 
                   <FormInput
