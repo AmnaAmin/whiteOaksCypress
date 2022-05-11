@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { ProjectType } from 'types/project.type'
+import { CheckBoxes } from './client-market-tab'
 import DetailsTab from './clitent-details-tab'
 
 const Client: React.FC<{
@@ -94,7 +95,9 @@ const Client: React.FC<{
                   <TabPanel>
                     <DetailsTab onClose={onClose} />
                   </TabPanel>
-                  <TabPanel></TabPanel>
+                  <TabPanel>
+                    <CheckBoxes onClose={onClose} />
+                  </TabPanel>
                   <TabPanel></TabPanel>
                 </TabPanels>
               </Tabs>
