@@ -100,7 +100,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     expect(screen.getByTestId('next-to-lien-waiver-form')).not.toBeDisabled()
 
     // Add lien waiver to transaction.
-    await userEvent.click(screen.getByTestId('next-to-lien-waiver-form'))
+    await act(async () => await userEvent.click(screen.getByTestId('next-to-lien-waiver-form')))
 
     // Check lien waiver form rendered properly
     expect(screen.getByText('-$400')).toBeInTheDocument()

@@ -9,4 +9,9 @@ export const GlobalStyles = css`
     outline: none;
     box-shadow: none;
   }
+
+  .chakra-checkbox_control[data-focus] {
+    outline: none;
+    box-shadow: none;
+  }
 `

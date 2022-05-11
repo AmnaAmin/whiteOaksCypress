@@ -5,6 +5,7 @@ import modal from './components/modal'
 import input from './components/input'
 import textArea from './components/textarea'
 import alert from './components/alert'
+import checkbox from './components/checkbox'
 
 export const theme = extendTheme({
   styles: {
@@ -123,5 +124,6 @@ export const theme = extendTheme({
     ...input,
     ...textArea,
     ...alert,
+    ...checkbox,
   },
 })

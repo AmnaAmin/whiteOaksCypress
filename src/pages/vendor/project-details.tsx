@@ -4,7 +4,7 @@ import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
-import { AddNewTransactionModal } from 'features/projects/transactions/add-update-transaction'
+import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
