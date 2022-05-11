@@ -97,7 +97,6 @@ export const VendorTable: React.FC<ProjectProps> = ({
   const [filterVendors, setFilterVendors] = useState(vendors)
 
   useEffect(() => {
-    if (!selectedCard) setFilterVendors(vendors)
     setFilterVendors(
       vendors?.filter(
         vendor => !selectedCard || vendor.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
