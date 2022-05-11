@@ -1,37 +1,104 @@
-import React, { useState } from 'react'
-import { Button, FormControl, Grid, GridItem } from '@chakra-ui/react'
+import React, { useCallback, useState } from 'react'
+import { Button, FormControl, Grid, GridItem, toast } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
+import { useClients, useFPM, usePC, useSaveProjectDetails } from 'utils/pc-projects'
+import { ProjectInfo } from 'types/project.type'
+import { useToast } from '@chakra-ui/react'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
 }> = () => {
-  const { register, control } = useForm<{}>({})
-
   const [showModal, setShowModal] = useState(false)
+  const toast = useToast()
+  const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
-  const types = [
-    { value: '1', label: 'A' },
-    { value: '2', label: 'B' },
-    { value: '3', label: 'C' },
-  ]
+  const { data: fieldProjectManager } = useFPM()
+  const { data: projectCoordinator } = usePC()
+  const { data: client } = useClients()
+
+  const FPMs = fieldProjectManager
+    ? fieldProjectManager?.map(FPM => ({
+        label: FPM?.firstName,
+        value: FPM?.id,
+      }))
+    : null
+
+  const PCs = projectCoordinator
+    ? projectCoordinator?.map(PC => ({
+        label: PC?.firstName,
+        value: PC?.id,
+      }))
+    : null
+
+  const clients = client
+    ? client?.map(client => ({
+        label: client?.companyName,
+        value: client?.id,
+      }))
+    : null
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+    watch,
+    reset,
+  } = useForm<ProjectInfo>()
+
+  /* debug purpose */
+  const watchAllFields = watch()
+  React.useEffect(() => {
+    const subscription = watch(value => {
+      console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
+
+  const onSubmit = useCallback(
+    async value => {
+      const projectInfo = {
+        projectManager: value.projectManager,
+        projectCoordinator: value.projectCoordinator,
+        clientName: value.clientName,
+        superFirstName: value.superFirstName,
+        superEmailAddress: value.superEmailAddress,
+        superPhoneNumber: value.superPhoneNumber,
+        superPhoneNumberExtension: value.superPhoneNumberExtension,
+      }
+      console.log('payload', projectInfo)
+      saveProjectDetails(projectInfo, {
+        onSuccess() {
+          toast({
+            title: 'Project Details',
+            description: 'New Project has been created successfully.',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+        },
+      })
+    },
+    [saveProjectDetails],
+  )
 
   const onClose = () => {
     setShowModal(false)
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormSelect
-              errorMessage={''}
+              errorMessage={errors.projectManager && errors.projectManager?.message}
               label={'Field Project Manager'}
-              name={`FPM`}
+              name={`projectManager`}
               control={control}
-              options={types}
+              options={FPMs}
               rules={{ required: 'This is required field' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
@@ -40,11 +107,11 @@ export const ManageProject: React.FC<{
         <GridItem>
           <FormControl>
             <FormSelect
-              errorMessage={''}
+              errorMessage={errors.projectCoordinator && errors.projectCoordinator?.message}
               label={'Project Coordinator'}
               name={`projectCoordinator`}
               control={control}
-              options={types}
+              options={PCs}
               rules={{ required: 'This is required field' }}
             />
           </FormControl>
@@ -54,11 +121,11 @@ export const ManageProject: React.FC<{
         <GridItem>
           <FormControl>
             <FormSelect
-              errorMessage={''}
+              errorMessage={errors.clientName && errors.clientName?.message}
               label={'Client'}
-              name={`client`}
+              name={`clientName`}
               control={control}
-              options={types}
+              options={clients}
               rules={{ required: 'This is required field' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
@@ -67,12 +134,12 @@ export const ManageProject: React.FC<{
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.superFirstName && errors.superFirstName?.message}
               label={'Client Super Name'}
               placeholder=""
               register={register}
               rules={{ required: 'This is required field' }}
-              name={`clientSuperName`}
+              name={`superFirstName`}
             />
           </FormControl>
         </GridItem>
@@ -81,39 +148,36 @@ export const ManageProject: React.FC<{
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.superPhoneNumber && errors.superPhoneNumber?.message}
               label={'Super Phone'}
               placeholder=""
               register={register}
-              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
-              name={`superPhone`}
+              name={`superPhoneNumber`}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.superPhoneNumberExtension && errors.superPhoneNumberExtension?.message}
               label={'Ext.'}
               placeholder=""
               register={register}
-              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
-              name={`ext`}
+              name={`superPhoneNumberExtension`}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.superEmailAddress && errors.superEmailAddress?.message}
               label={'Super Email'}
               placeholder=""
               register={register}
-              //  controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
-              name={`superEmail`}
+              name={`superEmailAddress`}
             />
           </FormControl>
         </GridItem>
@@ -129,7 +193,6 @@ export const ManageProject: React.FC<{
           type="submit"
           ml="3"
           size="md"
-          // disabled={true}
         >
           {'Next'}
         </Button>

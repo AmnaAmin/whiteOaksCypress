@@ -44,7 +44,7 @@ export const useProjectDetails = (projectId?: string) => {
 
 export const useSaveProjectDetails = () => {
   const client = useClient()
-  const toast = useToast()
+  // const toast = useToast()
 
   return useMutation(
     (projectDetails: any) => {
@@ -54,15 +54,7 @@ export const useSaveProjectDetails = () => {
       })
     },
     {
-      onSuccess() {
-        toast({
-          title: 'Project Details',
-          description: 'New Project Details have been updated successfully.',
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        })
-      },
+      onSuccess() {},
     },
   )
 }
@@ -93,12 +85,21 @@ export const useProjectTypes = () => {
   const client = useClient()
 
   return useQuery('lk_value', async () => {
-    const response = await client(`lk_value`, {})
+    const response = await client(`lk_value?page=&size=&sort=value,asc`, {})
 
     return response?.data
   })
 }
 
+export const useProperties = () => {
+  const client = useClient()
+
+  return useQuery('properties', async () => {
+    const response = await client(`properties`, {})
+
+    return response?.data
+  })
+}
 export const useStates = () => {
   const client = useClient()
 
@@ -114,6 +115,36 @@ export const useMarkets = () => {
 
   return useQuery('markets', async () => {
     const response = await client(`markets`, {})
+
+    return response?.data
+  })
+}
+
+export const useFPM = () => {
+  const client = useClient()
+
+  return useQuery('FPM', async () => {
+    const response = await client(`users/usertype/5?sort=firstName,asc`, {})
+
+    return response?.data
+  })
+}
+
+export const usePC = () => {
+  const client = useClient()
+
+  return useQuery('PC', async () => {
+    const response = await client(`users/usertype/112?sort=firstName,asc`, {})
+
+    return response?.data
+  })
+}
+
+export const useClients = () => {
+  const client = useClient()
+
+  return useQuery('clients', async () => {
+    const response = await client(`clients?page=&size=&sort=companyName,asc`, {})
 
     return response?.data
   })

@@ -17,8 +17,6 @@ type InfoProps = {
 
 export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const { data: projectTypes } = useProjectTypes()
-  const { projectId } = useParams<{ projectId: string }>()
-  // const { data: project, refetch } = useProjectDetails(projectId)
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
   const types = projectTypes

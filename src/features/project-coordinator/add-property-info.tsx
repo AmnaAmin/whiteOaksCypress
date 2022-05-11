@@ -1,29 +1,39 @@
-import { Button, Checkbox, Divider, FormControl, Grid, GridItem, Stack, useDisclosure } from '@chakra-ui/react'
+import {
+  Button,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormLabel,
+  Grid,
+  GridItem,
+  Stack,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { ProjectInfo } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
-import { useMarkets, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
+import { useMarkets, useProperties, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
+// import { Typeahead } from 'react-bootstrap-typeahead'
 
 export const AddPropertyInfo = props => {
-  // const { mutate: saveAddress, data: addressPayload } = useAddressSettings()
-  // const { projectId } = useParams<{ projectId: string }>()
-  // const { data: address } = useAddressDetails(projectId)
   const [streetAddress, setStreetAddress] = useState()
   const [city, setCity] = useState()
   const [state, setState] = useState()
   const [zipCode, setZipCode] = useState()
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [check, setCheck] = useState(false)
-
+  const { data: properties } = useProperties()
+  console.log(properties)
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
   const { data: statesData } = useStates()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
+  const ref = React.createRef()
 
   // const { data: markets } = useMarkets()
   // console.log(markets)
@@ -46,6 +56,16 @@ export const AddPropertyInfo = props => {
   //       value: market?.id,
   //     }))
   //   : null
+
+  const typeAheadProperties = properties
+    ? properties?.map(property => ({
+        id: property?.id,
+        streetAddress: property?.streetAddress,
+        city: property?.city,
+        state: property?.state,
+        zip: property?.zip,
+      }))
+    : null
 
   const {
     register,
@@ -178,6 +198,25 @@ export const AddPropertyInfo = props => {
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
+            {/* <FormLabel>Address</FormLabel>
+            <Typeahead
+              required
+              maxHeight={400}
+              maxResults={10000}
+              align="left"
+              ref={ref}
+              shouldSelect={true}
+              allowNew
+              labelKey="streetAddress"
+              id="project-streetAddress"
+              newSelectionPrefix="(click to select)"
+              options={typeAheadProperties}
+              name={`streetAddress`}
+              // name="property.streetAddress"
+              //  onBlur={s => onTypeAheadAddressBlur(s)}
+              //  onChange={s => onTypeAheadAddressChange(s)}
+              placeholder="type property address..."
+            /> */}
             <FormInput
               errorMessage={errors.streetAddress && errors.streetAddress?.message}
               label={'Address'}

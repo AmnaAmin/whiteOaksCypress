@@ -179,6 +179,13 @@ export type ProjectInfo = {
   hoaEmailAddress?: string | null
   hoaPhone?: string | null
   hoaPhoneNumberExtension?: string
+  projectManager?: string
+  projectCoordinator?: string
+  clientName?: string
+  superFirstName?: string | null
+  superPhoneNumber?: string
+  superPhoneNumberExtension?: string
+  superEmailAddress?: string
 }
 
 export type Market = {

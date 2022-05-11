@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -28,7 +28,6 @@ type AddProjectFormProps = {
 
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const [tabIndex, setTabIndex] = useState(0)
-
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }

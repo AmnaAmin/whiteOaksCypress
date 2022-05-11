@@ -1,5 +1,5 @@
 import { Box, Button, Center, Divider, Flex, Stack, useDisclosure, VStack } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -11,7 +11,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
 import { ProjectDayFilters } from 'features/project-coordinator/project-days-filters'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
-import { useProjectTypes } from 'utils/pc-projects'
+import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, useStates } from 'utils/pc-projects'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -23,8 +23,6 @@ export const Projects = () => {
   } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { data: projectTypes } = useProjectTypes()
-
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.pcproject,
@@ -33,10 +31,20 @@ export const Projects = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-
   const onSave = columns => {
     postProjectColumn(columns)
   }
+
+  // Calling all APIs
+  const { data: properties } = useProperties()
+  const { data: projectTypes } = useProjectTypes()
+  const { data: statesData } = useStates()
+  const { data: fieldProjectManager } = useFPM()
+  const { data: projectCoordinator } = usePC()
+  const { data: client } = useClients()
+  //const { data: markets } = useMarkets()
+
+  useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client])
 
   return (
     <>
