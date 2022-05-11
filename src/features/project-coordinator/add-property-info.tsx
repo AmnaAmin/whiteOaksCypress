@@ -1,10 +1,10 @@
-import { Button, Checkbox, Divider, FormControl, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
+import { Button, Checkbox, Divider, FormControl, Grid, GridItem, Stack, useDisclosure } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
-import { verifyAddressValues } from 'types/project.type'
+import { ProjectInfo } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
-import { useVerifyAddressApi } from 'utils/pc-projects'
+import { useMarkets, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
@@ -19,30 +19,33 @@ export const AddPropertyInfo = props => {
   const [state, setState] = useState()
   const [zipCode, setZipCode] = useState()
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
+  const [check, setCheck] = useState(false)
 
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
+  const { data: statesData } = useStates()
+  const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
-  const states = [
+  // const { data: markets } = useMarkets()
+  // console.log(markets)
+
+  const states = statesData
+    ? statesData?.map(state => ({
+        label: state?.name,
+        value: state?.id,
+      }))
+    : null
+
+  const market = [
     { value: '1', label: 'A' },
     { value: '2', label: 'B' },
     { value: '3', label: 'C' },
   ]
-
-  const markets = [
-    { value: '1', label: 'A' },
-    { value: '2', label: 'B' },
-    { value: '3', label: 'C' },
-  ]
-
-  // const addressDefaultValue = address => {
-  //   const addressValues = {
-  //     streetAddress: address.streetAddress,
-  //     city: address.city,
-  //     state: address.state,
-  //     zipCode: address.zipCode,
-  //   }
-  //   return addressValues
-  // }
+  // const market = markets
+  //   ? markets?.map(market => ({
+  //       label: market?.metropolitanServiceArea,
+  //       value: market?.id,
+  //     }))
+  //   : null
 
   const {
     register,
@@ -51,7 +54,7 @@ export const AddPropertyInfo = props => {
     control,
     watch,
     reset,
-  } = useForm<verifyAddressValues>()
+  } = useForm<ProjectInfo>()
 
   /* debug purpose */
   const watchAllFields = watch()
@@ -72,14 +75,26 @@ export const AddPropertyInfo = props => {
         city: values.city,
         state: values.state,
         zipCode: values.zipCode,
+        market: values.market,
+        gateCode: values.gateCode,
+        lockBoxCode: values.lockBoxCode,
+        hoaPhone: values.hoaPhone,
+        hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
+        hoaEmailAddress: values.hoaEmailAddress,
       }
       setStreetAddress(addressInfo.streetAddress)
       setCity(addressInfo.city)
       setState(addressInfo.state)
       setZipCode(addressInfo.zipCode)
       setIsDuplicateAddress(true)
+      console.log('payload', addressInfo)
+      saveProjectDetails(addressInfo, {
+        onSuccess() {
+          props.setNextTab()
+        },
+      })
     },
-    [refetch, setStreetAddress, setCity, setState, setZipCode],
+    [refetch, setStreetAddress, setCity, setState, setZipCode, saveProjectDetails],
   )
 
   // Parse XML
@@ -116,6 +131,7 @@ export const AddPropertyInfo = props => {
     }
   }, [addressData])
 
+  const [showModal, setShowModal] = useState(false)
   const [projectPayload, setProjectPayload] = useState({})
   const [property, setProperty] = useState({})
   const [showVerificationUSPS, setShowVerificationUSPS] = useState(false)
@@ -137,11 +153,13 @@ export const AddPropertyInfo = props => {
     onOpen: onOpenAddressVerifyModalOpen,
   } = useDisclosure()
 
-  // const {
-  //   isOpen: isAddressDuplicateModalOpen,
-  //   onClose: onAddressDuplicateModalClose,
-  //   onOpen: onOpenAddressDuplicateModalOpen,
-  // } = useDisclosure()
+  const onClose = () => {
+    setShowModal(false)
+  }
+
+  const handleCheck = () => {
+    setCheck(!check)
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -152,7 +170,7 @@ export const AddPropertyInfo = props => {
             Project ID xxx using this address already exist & is in xxx state.
           </AlertDescription>
           <Divider orientation="vertical" h={6} marginLeft={6} />
-          <Checkbox type="checkbox" marginTop={1} marginLeft={6} color="#4E87F8">
+          <Checkbox type="checkbox" marginTop={1} marginLeft={6} color="#4E87F8" onChange={handleCheck}>
             Acknowledged
           </Checkbox>
         </Alert>
@@ -161,26 +179,23 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.streetAddress && errors.streetAddress?.message}
               label={'Address'}
               placeholder="Type Property Address . ."
               register={register}
-              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`streetAddress`}
-              // onChange={s => onTypeAheadAddressChange(s)}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.city && errors.city?.message}
               label={'City'}
               placeholder=""
               register={register}
-              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`city`}
@@ -190,13 +205,12 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormSelect
-              errorMessage={''}
+              errorMessage={errors.state && errors.state?.message}
               label={'State'}
               name={`state`}
               control={control}
               options={states}
               rules={{ required: 'This is required field' }}
-              //  controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -204,11 +218,10 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.zipCode && errors.zipCode?.message}
               label={'Zip'}
               placeholder=""
               register={register}
-              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`zipCode`}
@@ -216,17 +229,16 @@ export const AddPropertyInfo = props => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
             <FormSelect
-              errorMessage={''}
+              errorMessage={errors.market && errors.market?.message}
               label={'Markets'}
-              name={`markets`}
+              name={`market`}
               control={control}
-              options={markets}
+              options={market}
               rules={{ required: 'This is required field' }}
-              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -234,11 +246,10 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.gateCode && errors.gateCode?.message}
               label={'Gate Code'}
               placeholder=""
               register={register}
-              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`gateCode`}
             />
@@ -247,75 +258,69 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
-              label={'Lunch Box Code'}
+              errorMessage={errors.lockBoxCode && errors.lockBoxCode?.message}
+              label={'Lock Box Code'}
               placeholder=""
               register={register}
-              //  controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
-              name={`lunchBoxCode`}
+              name={`lockBoxCode`}
             />
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.hoaPhone && errors.hoaPhone?.message}
               label={'HOA Contact Phone'}
               placeholder=""
               register={register}
-              //  controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`HOAContactPhone`}
+              name={`hoaPhone`}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.hoaPhoneNumberExtension && errors.hoaPhoneNumberExtension?.message}
               label={'Ext.'}
               placeholder=""
               register={register}
-              //  controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
-              name={`ext`}
+              name={`hoaPhoneNumberExtension`}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.hoaEmailAddress && errors.hoaEmailAddress?.message}
               label={'HOA Contact Email'}
               placeholder=""
               register={register}
-              // controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`HOAContactEmail`}
+              name={`hoaEmailAddress`}
             />
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid display="flex" alignItems="center">
-        <Button // onClose={onAddressVerifyModalClose}
-          variant="ghost"
-          size="sm"
-        >
-          {'Close'}
-        </Button>
 
+      <Grid display="flex" position={'absolute'} right={10} bottom={5}>
+        <Button onClick={onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
+          {'Cancel'}
+        </Button>
         <Button
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
           _hover={{ bg: 'blue' }}
           ml="3"
-          size="sm"
+          size="md"
           type="submit"
+          disabled={!check && isDuplicateAddress}
           onClick={() => {
             refetch()
             onOpenAddressVerifyModalOpen()
@@ -333,16 +338,6 @@ export const AddPropertyInfo = props => {
         save={saveModalVerify}
         addressVerificationStatus={addressVerificationStatus}
       />
-
-      {/* <ModalDuplicateAddress
-        title="Address already exist"
-        content="Address already exist"
-        isOpen={isAddressDuplicateModalOpen}
-        onClose={onAddressDuplicateModalClose}
-        props={''} // onConfirm={onDeleteConfirmationModalClose}
-        save={saveModalVerify}
-        isDuplicateAddress={isDuplicateAddress}
-      /> */}
     </form>
   )
 }

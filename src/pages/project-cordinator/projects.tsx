@@ -11,6 +11,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
 import { ProjectDayFilters } from 'features/project-coordinator/project-days-filters'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
+import { useProjectTypes } from 'utils/pc-projects'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -22,6 +23,8 @@ export const Projects = () => {
   } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { data: projectTypes } = useProjectTypes()
+
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.pcproject,

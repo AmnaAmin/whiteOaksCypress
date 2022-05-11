@@ -153,8 +153,41 @@ export type ProjectAlertType = {
   dateCreated: string
 }
 
-export type verifyAddressValues = {
+// export type verifyAddressValues = {
+//   city?: string
+//   state?: string
+//   zipCode?: any
+// }
+
+export type ProjectInfo = {
+  name?: string
+  projectType?: number
+  woNumber?: string
+  poNumber?: string
+  clientStartDate?: string
+  clientDueDate?: string
+  woaStartDate?: string
+  sowOriginalContractAmount?: string
+  projectSOW?: any
+  streetAddress?: string
   city?: string
   state?: string
   zipCode?: any
+  market?: string
+  gateCode?: string
+  lockBoxCode?: string
+  hoaEmailAddress?: string | null
+  hoaPhone?: string | null
+  hoaPhoneNumberExtension?: string
+}
+
+export type Market = {
+  createdBy: string
+  createdDate: string | null
+  id: number
+  metropolitanServiceArea: string
+  modifiedBy: string
+  modifiedDate: string | null
+  stateId: number
+  stateName: string
 }

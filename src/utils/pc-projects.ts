@@ -1,4 +1,4 @@
-import { ProjectType } from 'types/project.type'
+import { Market, ProjectType } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { useToast } from '@chakra-ui/react'
@@ -28,35 +28,36 @@ export const useProjectCards = () => {
   })
 }
 
-export const useAddressDetails = (projectId?: string) => {
+export const useProjectDetails = (projectId?: string) => {
   const client = useClient()
 
   return useQuery(
-    'address-details',
+    'project-details',
     async () => {
       const response = await client(`projects/${projectId}`, { projectId })
 
       return response?.data
     },
-    // { enabled: false },
+    { enabled: false },
   )
 }
 
-export const useAddressSettings = () => {
+export const useSaveProjectDetails = () => {
   const client = useClient()
   const toast = useToast()
 
   return useMutation(
-    (settings: any) => {
-      return client('project', {
-        data: settings,
+    (projectDetails: any) => {
+      return client('projects', {
+        data: projectDetails,
+        method: 'POST',
       })
     },
     {
       onSuccess() {
         toast({
-          title: 'Update Settings',
-          description: 'Settings have been updated successfully.',
+          title: 'Project Details',
+          description: 'New Project Details have been updated successfully.',
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -87,3 +88,47 @@ export const useVerifyAddressApi = (streetAddress?: any, city?: string, state?: 
     { enabled: false },
   )
 }
+
+export const useProjectTypes = () => {
+  const client = useClient()
+
+  return useQuery('lk_value', async () => {
+    const response = await client(`lk_value`, {})
+
+    return response?.data
+  })
+}
+
+export const useStates = () => {
+  const client = useClient()
+
+  return useQuery('states', async () => {
+    const response = await client(`states`, {})
+
+    return response?.data
+  })
+}
+
+export const useMarkets = () => {
+  const client = useClient()
+
+  return useQuery('markets', async () => {
+    const response = await client(`markets`, {})
+
+    return response?.data
+  })
+}
+
+// export const useMarkets = () => {
+//   const client = useClient()
+
+//   const { data: markets, ...rest } = useQuery<Array<Market>>('markets', async () => {
+//     const response = await client(`markets`, {})
+//     return response?.data
+//   })
+
+//   return {
+//     markets,
+//     ...rest,
+//   }
+// }

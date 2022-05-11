@@ -1,5 +1,5 @@
-import React from 'react'
-import { FormControl, Grid, GridItem } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Button, FormControl, Grid, GridItem } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
@@ -9,15 +9,21 @@ export const ManageProject: React.FC<{
 }> = () => {
   const { register, control } = useForm<{}>({})
 
+  const [showModal, setShowModal] = useState(false)
+
   const types = [
     { value: '1', label: 'A' },
     { value: '2', label: 'B' },
     { value: '3', label: 'C' },
   ]
 
+  const onClose = () => {
+    setShowModal(false)
+  }
+
   return (
     <form>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormSelect
@@ -27,7 +33,6 @@ export const ManageProject: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              //   controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -41,7 +46,6 @@ export const ManageProject: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              //  controlStyle={{ w: '20em' }}
             />
           </FormControl>
         </GridItem>
@@ -56,7 +60,6 @@ export const ManageProject: React.FC<{
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              //    controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
@@ -68,7 +71,6 @@ export const ManageProject: React.FC<{
               label={'Client Super Name'}
               placeholder=""
               register={register}
-              //   controlStyle={{ w: '20em' }}
               rules={{ required: 'This is required field' }}
               name={`clientSuperName`}
             />
@@ -115,6 +117,22 @@ export const ManageProject: React.FC<{
             />
           </FormControl>
         </GridItem>
+      </Grid>
+      <Grid display="flex" position={'absolute'} right={10} bottom={5}>
+        <Button onClick={onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
+          {'Cancel'}
+        </Button>
+        <Button
+          colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue' }}
+          type="submit"
+          ml="3"
+          size="md"
+          // disabled={true}
+        >
+          {'Next'}
+        </Button>
       </Grid>
     </form>
   )

@@ -136,6 +136,7 @@ export function ModalVerifyAddress({
                       width={78}
                       height={30}
                       border="1px solid #4E87F8"
+                      onClick={onClose}
                     >
                       Save
                     </Button>
@@ -148,9 +149,6 @@ export function ModalVerifyAddress({
                     >
                       Continue with unverified address
                     </Checkbox>
-                    {/* <Button color="secondary" onClick={toggleSubModal} className="ml-2">
-                      Close
-                    </Button> */}
                   </Box>
                 </>
               )}

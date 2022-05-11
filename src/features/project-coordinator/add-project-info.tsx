@@ -1,26 +1,32 @@
-import React, { useState } from 'react'
-import { Button, FormControl, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { useForm } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { FormSelect } from 'components/react-hook-form-fields/select'
+import { useProjectDetails, useProjectTypes, useSaveProjectDetails } from 'utils/pc-projects'
+import { ProjectInfo } from 'types/project.type'
+import { useParams } from 'react-router-dom'
+import { readFileContent } from 'utils/vendor-details'
+import { currencyFormatter } from 'utils/stringFormatters'
 
-export const AddProjectInfo: React.FC<{
-  isLoading: boolean
-}> = () => {
-  const {
-    register,
-    formState: { errors },
-    control,
-  } = useForm<{}>({})
+type InfoProps = {
+  setNextTab: () => void
+  onClose: () => void
+}
 
-  const [startDate] = useState(new Date())
-  const types = [
-    { value: '1', label: 'A' },
-    { value: '2', label: 'B' },
-    { value: '3', label: 'C' },
-  ]
+export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
+  const { data: projectTypes } = useProjectTypes()
+  const { projectId } = useParams<{ projectId: string }>()
+  // const { data: project, refetch } = useProjectDetails(projectId)
+  const { mutate: saveProjectDetails } = useSaveProjectDetails()
+
+  const types = projectTypes
+    ? projectTypes?.map(type => ({
+        label: type?.value,
+        value: type?.id,
+      }))
+    : null
 
   const labelStyle = {
     fontSize: '14px',
@@ -32,86 +38,147 @@ export const AddProjectInfo: React.FC<{
     borderLeft: '1.5px solid #4E87F8',
   }
 
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+    watch,
+    reset,
+  } = useForm<ProjectInfo>()
+
+  /* debug purpose */
+  const watchAllFields = watch()
+  React.useEffect(() => {
+    const subscription = watch(value => {
+      console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
+
+  const onSubmit = useCallback(
+    async value => {
+      let fileContents: any = null
+      if (value.projectSOW && value.projectSOW[0]) {
+        fileContents = await readFileContent(value.projectSOW[0])
+      }
+      const projectPayload = {
+        name: value.name,
+        projectType: value.projectType,
+        woNumber: value.woNumber,
+        poNumber: value.poNumber,
+        clientStartDate: value.clientStartDate,
+        clientDueDate: value.clientDueDate,
+        woaStartDate: value.woaStartDate,
+        sowOriginalContractAmount: currencyFormatter(value.sowOriginalContractAmount),
+        projectSOW: value.projectSOW && value.projectSOW[0] ? value.projectSOW[0].name : null,
+        sowLink: fileContents,
+      }
+      console.log('payload', projectPayload)
+      saveProjectDetails(projectPayload, {
+        onSuccess() {
+          props.setNextTab()
+        },
+      })
+    },
+    [saveProjectDetails],
+  )
+
   return (
-    <form>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
-          <GridItem>
-            <FormControl>
-              <FormInput
-                errorMessage={''}
-                label={'Project Name'}
-                placeholder=""
-                register={register}
-                // controlStyle={{ w: '20em' }}
-                rules={{ required: 'This is required field' }}
-                name={`projectName`}
-              />
-            </FormControl>
-          </GridItem>
+          <FormControl>
+            <FormInput
+              errorMessage={errors.name && errors.name?.message}
+              label={'Project Name'}
+              placeholder=""
+              register={register}
+              rules={{ required: 'This is required field' }}
+              name={`name`}
+            />
+          </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormSelect
-              errorMessage={''}
+              errorMessage={errors.projectType && errors.projectType?.message}
               label={'Type'}
-              name={`type`}
+              name={`projectType`}
               control={control}
               options={types}
               rules={{ required: 'This is required field' }}
-              // controlStyle={{ w: '20em' }}
+              controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
             />
           </FormControl>
         </GridItem>
         <GridItem>
-          <GridItem>
-            <FormControl>
-              <FormInput
-                errorMessage={''}
-                label={'WO Number'}
-                placeholder=""
-                register={register}
-                //  controlStyle={{ w: '20em' }}
-                rules={{ required: 'This is required field' }}
-                name={`WONumber`}
-              />
-            </FormControl>
-          </GridItem>
+          <FormControl>
+            <FormInput
+              errorMessage={errors.woNumber && errors.woNumber?.message}
+              label={'WO Number'}
+              placeholder=""
+              register={register}
+              rules={{ required: 'This is required field' }}
+              name={`woNumber`}
+            />
+          </FormControl>
         </GridItem>
         <GridItem>
-          <GridItem>
-            <FormControl>
-              <FormInput
-                errorMessage={''}
-                label={'PO Number'}
-                placeholder=""
-                register={register}
-                //   controlStyle={{ w: '20em' }}
-                rules={{ required: 'This is required field' }}
-                name={`PONumber`}
-              />
-            </FormControl>
-          </GridItem>
+          <FormControl>
+            <FormInput
+              errorMessage={errors.poNumber && errors.poNumber?.message}
+              label={'PO Number'}
+              placeholder=""
+              register={register}
+              rules={{ required: 'This is required field' }}
+              name={`poNumber`}
+            />
+          </FormControl>
         </GridItem>
       </Grid>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
             <FormLabel sx={labelStyle}>Client Start Date</FormLabel>
-            <Input type="date" name={`clientStartDate`} placeholder={'mm/dd/yyyy'} sx={inputStyle} required />
+            <Input
+              type="date"
+              {...register('clientStartDate')}
+              name={`clientStartDate`}
+              placeholder={'mm/dd/yyyy'}
+              sx={inputStyle}
+              required
+            />
+            <FormErrorMessage>{errors.clientStartDate && errors.clientStartDate?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormLabel sx={labelStyle}>Client Due Date</FormLabel>
-            <Input type="date" name={`clientDueDate`} placeholder={'mm/dd/yyyy'} sx={inputStyle} required />
+            <Input
+              type="date"
+              {...register('clientDueDate')}
+              name={`clientDueDate`}
+              placeholder={'mm/dd/yyyy'}
+              sx={inputStyle}
+              required
+            />
+            <FormErrorMessage>{errors.clientDueDate && errors.clientDueDate?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormLabel sx={labelStyle}>WOA Start Date</FormLabel>
-            <Input type="date" name={`WOAStartDate`} placeholder={'mm/dd/yyyy'} sx={inputStyle} required />
+            <Input
+              type="date"
+              {...register('woaStartDate')}
+              name={`woaStartDate`}
+              placeholder={'mm/dd/yyyy'}
+              sx={inputStyle}
+              required
+            />
+            <FormErrorMessage>{errors.woaStartDate && errors.woaStartDate?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
       </Grid>
@@ -119,14 +186,13 @@ export const AddProjectInfo: React.FC<{
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors.sowOriginalContractAmount && errors.sowOriginalContractAmount?.message}
               label={'Original SOW Amount'}
               placeholder="$"
               register={register}
-              //  controlStyle={{ w: '20em' }}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`originalSOWAmount`}
+              name={`sowOriginalContractAmount`}
             />
           </FormControl>
         </GridItem>
@@ -136,12 +202,11 @@ export const AddProjectInfo: React.FC<{
               Upload Project SOW
             </FormLabel>
             <FormFileInput
-              errorMessage={''}
+              errorMessage={errors.projectSOW && errors.projectSOW?.message}
               label={''}
-              name={`uploadProjectSOW`}
+              name={`projectSOW`}
               register={register}
               isRequired={true}
-              //  style={{ w: '20em' }}
             >
               <Button
                 rounded="none"
@@ -158,27 +223,19 @@ export const AddProjectInfo: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid display="flex" alignItems="center">
-        <Button // onClick={onClose}
-          variant="ghost"
-          size="sm"
-        >
-          {'Close'}
-        </Button>
-
+      <Grid display="flex" position={'absolute'} right={10} bottom={5}>
         <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          _hover={{ bg: 'blue' }}
-          type="submit"
-          form="newProjectForm"
-          ml="3"
-          size="sm"
-          disabled={true}
+          variant="outline"
+          size="md"
+          color="#4E87F8"
+          border="2px solid #4E87F8" // onClick={onClose}
         >
+          {'Cancel'}
+        </Button>
+        <Button colorScheme="CustomPrimaryColor" type="submit" size="md" ml="3">
           {'Next'}
         </Button>
       </Grid>
     </form>
   )
-}
+})

@@ -29,6 +29,10 @@ type AddProjectFormProps = {
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const [tabIndex, setTabIndex] = useState(0)
 
+  const setNextTab = () => {
+    setTabIndex(tabIndex + 1)
+  }
+
   return (
     <>
       <Flex id="newProjectForm">
@@ -59,10 +63,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
               </TabList>
               <TabPanels mt="31px" h="100%">
                 <TabPanel p="0px" h="100%">
-                  <AddProjectInfo isLoading={false} />
+                  <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p="0px" h="100%">
-                  <AddPropertyInfo isLoading={false} />
+                  <AddPropertyInfo isLoading={false} setNextTab={setNextTab} />
                 </TabPanel>
                 <TabPanel p="0px" h="100%">
                   <ManageProject isLoading={false} />
@@ -84,33 +88,14 @@ type UpdateProjectProps = CustomModalProps & {
 
 export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="5xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="5xl" closeOnEsc={true} closeOnOverlayClick={true}>
       <ModalOverlay />
-      <ModalContent minH="500px">
+      <ModalContent minH="600px">
         <ModalHeader borderBottom="1px solid #eee">{'New Project'}</ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
-
-        <ModalBody px="6" pt="3" pb="1">
+        <ModalBody px="6">
           <AddProjectForm onClose={onClose} />
         </ModalBody>
-        {/* <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} variant="ghost" size="sm">
-            {'Close'}
-          </Button>
-
-          <Button
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
-            _hover={{ bg: 'blue' }}
-            type="submit"
-            form="newProjectForm"
-            ml="3"
-            size="sm"
-            disabled={true}
-          >
-            {'Next'}
-          </Button>
-        </ModalFooter> */}
       </ModalContent>
     </Modal>
   )
