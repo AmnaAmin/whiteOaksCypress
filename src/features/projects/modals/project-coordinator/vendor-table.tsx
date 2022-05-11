@@ -33,7 +33,7 @@ const Vendor: React.FC<{
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
-                  New Client
+                  Vendor Details
                 </Text>
                 <Text lineHeight="22px" h="22px">
                   A Chimney Sweep
