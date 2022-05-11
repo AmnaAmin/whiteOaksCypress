@@ -157,3 +157,8 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
   doc.text('$0.00', summaryX + 40, tableEndsY + 40)
   return doc
 }
+
+export const paymentsTerms = [
+  { value: 24, label: '20' },
+  { value: 25, label: '30' },
+]
