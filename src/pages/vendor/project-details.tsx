@@ -1,11 +1,10 @@
 import { useDisclosure, Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
-import { Box, Stack } from '@chakra-ui/react'
-import { Button } from 'components/button/button'
+import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
-import { AddNewTransactionModal } from 'features/projects/transactions/add-update-transaction'
+import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
@@ -101,6 +100,7 @@ const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <WorkOrdersTable
+                    projectData={projectData as ProjectType}
                     onTabChange={n => {
                       console.log(n)
                       setTabIndex(n)
