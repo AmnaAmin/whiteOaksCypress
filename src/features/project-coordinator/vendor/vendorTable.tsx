@@ -1,18 +1,10 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { dateFormat } from 'utils/date-time-utils'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useProjectAlerts } from 'utils/projects'
 import { useParams } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
-import { useTranslation } from 'react-i18next'
-
-enum PROJECT_CATEGORY {
-  WARNING = 1,
-  INFO = 2,
-  ERROR = 3,
-}
 
 const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -45,41 +37,47 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const AlertsTable = React.forwardRef((props: any, ref) => {
+export const VendorTable = React.forwardRef((props: any, ref) => {
   const { data } = useAuth()
   const account = data?.user
+
   const { projectId } = useParams<'projectId'>()
+
   const { data: alerts } = useProjectAlerts(projectId, account?.login)
-  const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: <input type="checkbox"></input>,
-        accessor: 'checkbox',
-        Cell: () => <input type="checkbox"></input>,
-      },
-      {
-        Header: t('name') as string,
+        Header: 'Status',
         accessor: 'subject',
       },
       {
-        Header: t('type') as string,
+        Header: 'Name',
         accessor: 'triggeredType',
       },
       {
-        Header: t('value') as string,
+        Header: 'Region',
         accessor: 'attribute',
       },
       {
-        Header: t('category') as string,
+        Header: 'State',
         accessor: 'category',
-        Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
-        Header: t('dateTriggered') as string,
+        Header: 'Active Date',
         accessor: 'dateCreated',
-        Cell: ({ value }) => dateFormat(value),
+      },
+      {
+        Header: 'COI-GL Expiration Date',
+        accessor: 'date',
+      },
+      {
+        Header: 'COI-WC Expiration Date',
+        accessor: 'now',
+      },
+      {
+        Header: 'EIN/SSN',
+        accessor: 'ein/ssn',
       },
     ],
     ref,

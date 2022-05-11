@@ -7,6 +7,8 @@ import SummaryIconFirst, {
   SummaryIconSixth,
   SummaryIconSeventh,
   SummaryIconEight,
+  SummaryIconNinth,
+  SummaryIconTenth,
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -32,7 +34,7 @@ const useProjectCardJson = cards => {
     },
     {
       id: 'active',
-      title: t('activeWO'),
+      title: 'Active',
       number: cards?.find(c => c.status === 8)?.count,
       IconElement: <IconElement Icon={SummaryIconSecond} bg="#E5ECF9" />,
     },
@@ -49,11 +51,12 @@ const useProjectCardJson = cards => {
       IconElement: <IconElement Icon={SummaryIconForth} bg="#FCE8D8" />,
     },
     {
-      id: 'pastDue',
-      title: t('pastDue'),
-      number: cards?.find(c => c.status === 62)?.count,
-      IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
+      id: 'invoiced',
+      title: 'Invoiced',
+      number: cards?.find(c => c.status === 11)?.count,
+      IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
     },
+
     {
       id: 'clientPaid',
       title: 'Client Paid',
@@ -67,10 +70,22 @@ const useProjectCardJson = cards => {
       IconElement: <IconElement Icon={SummaryIconSeventh} bg="#E2EFDF" />,
     },
     {
-      id: 'invoiced',
-      title: 'Invoiced',
-      number: cards?.find(c => c.status === 11)?.count,
-      IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
+      id: 'pastDue',
+      title: t('pastDue'),
+      number: cards?.find(c => c.status === 62)?.count,
+      IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
+    },
+    {
+      id: 'collection',
+      title: 'Collection',
+      number: cards?.find(c => c.status === '119')?.count,
+      IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
+    },
+    {
+      id: 'disputed',
+      title: 'Disputed',
+      number: cards?.find(c => c.status === '220')?.count,
+      IconElement: <IconElement Icon={SummaryIconNinth} bg="#FFF5F7" />,
     },
   ]
 }
@@ -78,11 +93,10 @@ const useProjectCardJson = cards => {
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useProjectCards()
   const cards = useProjectCardJson(values)
-  console.log(cards)
 
   return (
     <>
-      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(4, 1fr)" gridGap="15px">
+      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">
         {cards.map(card => {
           return <ProjectCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
         })}

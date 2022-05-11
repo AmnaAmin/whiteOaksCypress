@@ -1,7 +1,16 @@
-import { useDisclosure, Box } from '@chakra-ui/react'
-import { Button } from 'components/button/button'
+import {
+  useDisclosure,
+  Box,
+  Modal,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalHeader,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from '@chakra-ui/react'
 import React from 'react'
-import { Modal, ModalOverlay, ModalCloseButton, ModalHeader, ModalContent, ModalBody, ModalFooter } from './modal'
 export default {
   title: 'UI/Modal',
 }
@@ -20,10 +29,15 @@ export const ModalMedium = () => {
   return (
     <>
       {sizes.map(size => (
-        <Button onClick={() => handleSizeClick(size)} key={size} m={4}>{`Open ${size} Modal`}</Button>
+        <Button
+          onClick={() => handleSizeClick(size)}
+          key={size}
+          m={4}
+          colorScheme="brand"
+        >{`Open ${size} Modal`}</Button>
       ))}
 
-      <Modal onClose={onClose} size={size} isOpen={isOpen}>
+      <Modal onClose={onClose} size={size} isOpen={isOpen} variant="custom">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Modal Title</ModalHeader>
