@@ -1,5 +1,6 @@
 import { AddIcon } from '@chakra-ui/icons'
 import { HStack, Box, Icon, Grid, GridItem, Button, Spacer, useDisclosure } from '@chakra-ui/react'
+import NewVendorModal from 'features/project-coordinator/vendor/new-vendor-modal'
 import VendorFilterCard from 'features/project-coordinator/vendor/vendor-filter-card'
 import { VendorTable } from 'features/project-coordinator/vendor/vendorTable'
 import React, { useRef } from 'react'
@@ -7,7 +8,7 @@ import { BiClipboard, BiHourglass, BiMessageSquareError, BiFile } from 'react-ic
 
 const Vendors = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const { onOpen: onAlertModalOpen } = useDisclosure()
+  const { isOpen: isOpenDetailsModal, onOpen: onDetailsModalOpen, onClose: onDetailsModalClose } = useDisclosure()
   return (
     <Box mt="5">
       <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
@@ -59,6 +60,7 @@ const Vendors = () => {
             leftIcon={<Icon boxSize={3} as={AddIcon} />}
             fontSize="14px"
             fontWeight={600}
+            onClick={onDetailsModalOpen}
           >
             New Vendor
           </Button>
@@ -66,13 +68,9 @@ const Vendors = () => {
       </HStack>
 
       <Box>
-        <VendorTable
-          onRowClick={(e, row) => {
-            onAlertModalOpen()
-          }}
-          ref={tabsContainerRef}
-        />
+        <VendorTable ref={tabsContainerRef} />
       </Box>
+      <NewVendorModal isOpen={isOpenDetailsModal} onClose={onDetailsModalClose} />
     </Box>
   )
 }
