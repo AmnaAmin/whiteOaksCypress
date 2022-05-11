@@ -37,6 +37,7 @@ const License = () => {
           colorScheme="brand"
           variant="outline"
           mb="4"
+          mt="4"
           onClick={() =>
             append({
               licenseType: '',
@@ -45,8 +46,6 @@ const License = () => {
               expirationFile: null,
             })
           }
-          fontSize="14px"
-          fontWeight={500}
         >
           Add License
         </Button>
