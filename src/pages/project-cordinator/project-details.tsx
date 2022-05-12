@@ -13,9 +13,7 @@ import { ProjectType } from 'types/project.type'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-// import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
-// import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
@@ -80,6 +78,8 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
+                    {/* <Client projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} /> */}
+                    {/* <Vendor projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose}/> */}
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
