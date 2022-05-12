@@ -65,7 +65,7 @@ export const NotesTab = () => {
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 Enter New Note Here
               </FormLabel>
-              <Textarea flexWrap="wrap" minH="200px" {...register('message')} />
+              <Textarea flexWrap="wrap" minH="150px" {...register('message')} />
             </Box>
           </Flex>
         </Box>
