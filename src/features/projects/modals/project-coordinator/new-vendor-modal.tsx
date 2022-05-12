@@ -10,8 +10,8 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'components/tabs/tabs'
+import Details from 'features/project-coordinator/vendor/details'
 import React from 'react'
-import Details from './details'
 
 export const NewVendorTabs = () => {
   return (
