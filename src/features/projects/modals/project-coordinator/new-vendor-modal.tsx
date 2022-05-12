@@ -10,7 +10,7 @@ import {
 } from 'components/modal/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'components/tabs/tabs'
 import React from 'react'
-import Document from './document'
+import Document from '../../../project-coordinator/vendor/document'
 
 export const NewVendorTabs = () => {
   return (
