@@ -29,6 +29,7 @@ import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
+import { ProjectType } from 'types/project.type'
 
 const TabStyle = {
   fontWeight: 500,
@@ -44,10 +45,12 @@ const WorkOrderDetails = ({
   workOrder,
   onClose: close,
   onProjectTabChange,
+  projectData,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
+  projectData: ProjectType
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -77,10 +80,10 @@ const WorkOrderDetails = ({
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  Invoice # 432022
+                  Invoice {workOrder?.invoiceNumber ? `#` + workOrder?.invoiceNumber : ''}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  ADT RENOVATIONS
+                  {workOrder?.companyName}
                 </Text>
               </HStack>
             </Box>
@@ -91,11 +94,13 @@ const WorkOrderDetails = ({
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
               </Text>
-              <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
-                <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
-                  Active
-                </TagLabel>
-              </Tag>
+              {workOrder?.statusLabel && (
+                <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
+                  <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
+                    {workOrder?.statusLabel}
+                  </TagLabel>
+                </Tag>
+              )}
             </HStack>
           )}
         </ModalHeader>
@@ -106,7 +111,7 @@ const WorkOrderDetails = ({
         <ModalBody>
           <Stack spacing={5}>
             <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-              <TabList height="50px" alignItems={'end'}>
+              <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
                 <Flex h="40px">
                   <Tab
                     _focus={{ border: 'none' }}
@@ -133,18 +138,6 @@ const WorkOrderDetails = ({
                   >
                     {t('lienWaiver')}
                   </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('Payments')}
-                  </Tab>
 
                   <Tab
                     _focus={{ border: 'none' }}
@@ -158,6 +151,18 @@ const WorkOrderDetails = ({
                     sx={TabStyle}
                   >
                     {t('Invoice')}
+                  </Tab>
+                  <Tab
+                    _focus={{ border: 'none' }}
+                    _selected={{
+                      color: 'white',
+                      bg: '#4E87F8',
+                      fontWeight: 600,
+                      _hover: { backgroundColor: '#4E87F8' },
+                    }}
+                    sx={TabStyle}
+                  >
+                    {t('Payments')}
                   </Tab>
                 </Flex>
                 {tabIndex === 3 && (
@@ -182,10 +187,13 @@ const WorkOrderDetails = ({
 
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab onClose={onClose} />
+                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
                   <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
+                </TabPanel>
+                <TabPanel p={0}>
+                  <InvoiceTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab
@@ -205,10 +213,6 @@ const WorkOrderDetails = ({
                       datePermitsPulled: workOrder?.datePermitsPulled ?? '',
                     }}
                   />
-                </TabPanel>
-
-                <TabPanel p={0}>
-                  <InvoiceTab onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

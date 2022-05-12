@@ -52,7 +52,7 @@ const InvoicingAndPaymentTab = ({
             label="Pay Date Variance"
             InputElem={
               invoiceAndPaymentData.workOrderPayDateVariance ? (
-                <Text>{dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}</Text>
+                <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
               ) : (
                 <Text>MM/DD/YY</Text>
               )

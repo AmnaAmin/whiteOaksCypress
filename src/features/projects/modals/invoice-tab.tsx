@@ -18,14 +18,18 @@ import {
   Thead,
   Tr,
   VStack,
+  FormLabel,
+  Link,
 } from '@chakra-ui/react'
-
+import { currencyFormatter } from 'utils/stringFormatters'
+import { dateFormat } from 'utils/date-time-utils'
 import { useState } from 'react'
-
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
+import { jsPDF } from 'jspdf'
+import { createInvoice } from 'utils/vendor-projects'
 
-const InvoiceInfo: React.FC<{ title: string; date: string; icons: React.ElementType }> = ({ title, date, icons }) => {
+const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
     <Flex justifyContent="center">
       <Box pr={4}>
@@ -36,15 +40,29 @@ const InvoiceInfo: React.FC<{ title: string; date: string; icons: React.ElementT
           {title}
         </Text>
         <Text color="gray.500" lineHeight="20px" fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {date}
+          {value}
         </Text>
       </Box>
     </Flex>
   )
 }
 
-export const InvoiceTab = ({ onClose }) => {
-  const [items, setItems] = useState([] as any)
+export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
+  const [items, setItems] = useState([
+    {
+      item: '1',
+      description: 'Product1 Description',
+      unitPrice: '$124',
+      quantity: 4,
+      amount: '$496',
+    },
+    {
+      item: '2',
+      description: 'Product2 Description',
+      unitPrice: '$120',
+      quantity: '$600',
+    },
+  ] as any)
   const {
     register,
     handleSubmit,
@@ -72,15 +90,56 @@ export const InvoiceTab = ({ onClose }) => {
     // console.log('deleteValue', deleteValue)
   }
 
+  const generateInvoice = () => {
+    let doc = new jsPDF()
+    doc = createInvoice(doc, workOrder, projectData, items)
+    doc.save('invoice.pdf')
+  }
+
   return (
     <Box>
       <Box w="100%">
+        <Flex justifyContent={'flex-end'} mt="10px">
+          <Flex>
+            <FormLabel variant="strong-label" size="md" mt="10px">
+              Recent INV:
+            </FormLabel>
+          </Flex>
+          <Link href={workOrder?.invoiceLink} target={'_blank'} download _hover={{ textDecoration: 'none' }}>
+            <Button variant="ghost" colorScheme="brand" size="md">
+              {'invoice.pdf'}
+            </Button>
+          </Link>
+          <Button variant="solid" colorScheme="brand" size="md" ml="10px" onClick={generateInvoice}>
+            Generate Invoice
+          </Button>
+        </Flex>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
-          <InvoiceInfo title={'WO Original Amount'} date={'$40,170.6'} icons={BiDollarCircle} />
-          <InvoiceInfo title={'Final Invoice:'} date={'$40,170.6'} icons={BiDollarCircle} />
-          <InvoiceInfo title={'PO Number'} date={'xyz'} icons={BiFile} />
-          <InvoiceInfo title={'Invoice Date'} date={'10/02/2022'} icons={BiCalendar} />
-          <InvoiceInfo title={'Due Date'} date={'12/02/2022'} icons={BiCalendar} />
+          <InvoiceInfo
+            title={'WO Original Amount'}
+            value={currencyFormatter(workOrder?.clientOriginalApprovedAmount)}
+            icons={BiDollarCircle}
+          />
+          <InvoiceInfo
+            title={'Final Invoice:'}
+            value={currencyFormatter(workOrder?.finalInvoiceAmount)}
+            icons={BiDollarCircle}
+          />
+          <InvoiceInfo
+            title={'PO Number'}
+            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
+            icons={BiFile}
+          />
+          <InvoiceInfo
+            title={'Invoice Date'}
+            value={workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy'}
+            icons={BiCalendar}
+          />
+          <InvoiceInfo
+            title={'Due Date'}
+            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
+            icons={BiCalendar}
+          />
         </Grid>
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />

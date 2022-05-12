@@ -1,4 +1,8 @@
+import { Global } from '@emotion/react'
 import { theme } from '../src/theme/theme'
+import { GlobalStyles } from '../src/theme/global-css'
+import { ChakraProvider } from '@chakra-ui/react'
+import 'focus-visible/dist/focus-visible'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -32,8 +36,11 @@ export const parameters = {
 
 export const decorators = [
   Story => (
-    <div style={{ padding: '80px 15px 15px' }}>
-      <Story />
-    </div>
+    <ChakraProvider theme={theme}>
+      <Global styles={GlobalStyles} />
+      <div style={{ padding: '80px 15px 15px' }}>
+        <Story />
+      </div>
+    </ChakraProvider>
   ),
 ]

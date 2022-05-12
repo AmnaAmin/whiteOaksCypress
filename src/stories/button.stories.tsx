@@ -1,5 +1,4 @@
-import { VStack } from '@chakra-ui/layout'
-import { Button } from './button'
+import { VStack, Button } from '@chakra-ui/react'
 
 export default {
   title: 'UI/Button',

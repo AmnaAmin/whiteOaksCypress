@@ -1,5 +1,5 @@
 import { ProjectType } from 'types/project.type'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 
 export const usePCProject = (projectId?: string) => {
@@ -15,6 +15,14 @@ export const usePCProject = (projectId?: string) => {
     projectData,
     ...rest,
   }
+}
+
+export const useCall = () => {
+  const client = useClient()
+
+  return useMutation(entity => {
+    return client(`work-orders`, { method: 'PUT', data: entity })
+  })
 }
 
 export const useProjectCards = () => {

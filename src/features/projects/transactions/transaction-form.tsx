@@ -6,17 +6,16 @@ import {
   Input,
   Grid,
   GridItem,
-  ModalProps,
   Progress,
   Flex,
   Box,
   HStack,
+  Button,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from 'components/modal/modal'
-import { Button } from 'components/button/button'
+// import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
 import { useParams } from 'react-router'
 import {
@@ -24,6 +23,7 @@ import {
   parseChangeOrderAPIPayload,
   parseChangeOrderUpdateAPIPayload,
   parseTransactionToFormValues,
+  PAYMENT_TERMS_OPTIONS,
   transactionDefaultFormValues,
   useChangeOrderMutation,
   useChangeOrderUpdateMutation,
@@ -34,9 +34,10 @@ import {
   useTransactionTypes,
   useWorkOrderChangeOrders,
 } from 'utils/transactions'
-import { FormValues, SelectOption, TransactionTypeValues } from 'types/transaction.type'
+import { FormValues, SelectOption } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
+  useAgainstOptions,
   useFieldShowHideDecision,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
@@ -44,12 +45,12 @@ import {
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { DrawLienWaiver } from './draw-transaction-lien-waiver'
+import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 
 type AddUpdateTransactionFormProps = {
@@ -57,8 +58,9 @@ type AddUpdateTransactionFormProps = {
   selectedTransactionId?: number
 }
 
-const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClose, selectedTransactionId }) => {
+export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClose, selectedTransactionId }) => {
   const { t } = useTranslation()
+  const { isVendor, isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -67,7 +69,11 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
-  const { againstOptions, workOrdersKeyValues, isLoading: isAgainstLoading } = useProjectWorkOrders(projectId)
+  const {
+    againstOptions: againstSelectOptions,
+    workOrdersKeyValues,
+    isLoading: isAgainstLoading,
+  } = useProjectWorkOrders(projectId)
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
@@ -96,7 +102,6 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
     setValue,
     control,
     reset,
-    getValues,
   } = formReturn
 
   const {
@@ -105,18 +110,34 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
     isShowStatusField,
+    isTransactionTypeDrawAgainstProjectSOWSelected,
   } = useFieldShowHideDecision(control, transaction)
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control)
 
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
+
+  const onAgainstOptionSelect = (option: SelectOption) => {
+    if (option?.value !== AGAINST_DEFAULT_VALUE) {
+      setValue('paymentTerm', null)
+      setValue('invoicedDate', null)
+      setValue('workOrder', null)
+      setValue('changeOrder', null)
+    } else {
+      setValue('newExpectedCompletionDate', '')
+    }
+
+    resetExpectedCompletionDateFields(option)
+  }
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
       const queryOptions = {
         onSuccess() {
           onClose()
+          reset()
         },
       }
 
@@ -148,22 +169,45 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
   )
 
   useEffect(() => {
-    if (transaction && againstOptions) {
+    if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
-      const formValues = parseTransactionToFormValues(transaction, againstOptions)
+      const formValues = parseTransactionToFormValues(
+        transaction,
+        againstOptions,
+        workOrderSelectOptions,
+        changeOrderSelectOptions,
+      )
 
       reset(formValues)
+      setSelectedWorkOrderId(`${transaction.sowRelatedWorkOrderId}`)
     } else if (againstOptions) {
-      setValue('against', againstOptions?.[0])
+      if (isVendor) setValue('against', againstOptions?.[0])
+
       resetExpectedCompletionDateFields(againstOptions?.[0])
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transaction, againstOptions.length, setValue])
 
-  if (isFormLoading) return <ViewLoader />
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    transaction,
+    againstOptions.length,
+    setValue,
+    isVendor,
+    workOrderSelectOptions.length,
+    changeOrderSelectOptions.length,
+    isProjectCoordinator,
+    isAdmin,
+  ])
+
+  const onModalClose = () => {
+    reset()
+    onClose()
+  }
 
   return (
-    <Flex direction="column" minH="650px">
+    <Flex direction="column">
+      {isFormLoading && <ViewLoader />}
+      {isLienWaiverRequired && <LienWaiverAlert />}
+
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
       )}
@@ -231,7 +275,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
               </Grid>
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 215px)" gap={'1rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -251,16 +295,11 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                               size="md"
                               selectProps={{ isBorderLeft: true }}
                               onChange={(option: SelectOption) => {
-                                if (option.value !== TransactionTypeValues.changeOrder) {
-                                  reset({
-                                    ...defaultValues,
-                                    transactionType: option,
-                                    against: getValues('against'),
-                                  })
-                                  resetExpectedCompletionDateFields(getValues('against') as SelectOption)
-                                } else {
-                                  field.onChange(option)
-                                }
+                                reset({
+                                  ...defaultValues,
+                                  transactionType: option,
+                                })
+                                // resetExpectedCompletionDateFields(getValues('against') as SelectOption)
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -287,9 +326,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                             selectProps={{ isBorderLeft: true }}
                             options={againstOptions}
                             isDisabled={!!transaction}
-                            onChange={againstOption => {
-                              resetExpectedCompletionDateFields(againstOption)
-                              field.onChange(againstOption)
+                            onChange={option => {
+                              onAgainstOptionSelect(option)
+                              field.onChange(option)
                             }}
                           />
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -298,33 +337,6 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                     />
                   </FormControl>
                 </GridItem>
-
-                {isShowStatusField && (
-                  <GridItem>
-                    <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
-                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
-                        {t('status')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        name="status"
-                        rules={{ required: 'This is required' }}
-                        render={({ field, fieldState }) => (
-                          <>
-                            <Select
-                              {...field}
-                              options={transactionStatusOptions}
-                              onChange={statusOption => {
-                                field.onChange(statusOption)
-                              }}
-                            />
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                          </>
-                        )}
-                      />
-                    </FormControl>
-                  </GridItem>
-                )}
 
                 {isShowWorkOrderSelectField && (
                   <GridItem>
@@ -339,11 +351,14 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                         render={({ field, fieldState }) => (
                           <>
                             <Select
-                              options={workOrderSelectOptions}
                               {...field}
+                              isDisabled={!!transaction}
+                              selectProps={{ isBorderLeft: true }}
+                              options={workOrderSelectOptions}
                               onChange={option => {
-                                setSelectedWorkOrderId(option.value)
+                                console.log('option', option)
                                 field.onChange(option)
+                                setSelectedWorkOrderId(option.value)
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -365,7 +380,12 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                         rules={{ required: true }}
                         render={({ field, fieldState }) => (
                           <>
-                            <Select options={changeOrderSelectOptions} {...field} />
+                            <Select
+                              isDisabled={!!transaction}
+                              options={changeOrderSelectOptions}
+                              selectProps={{ isBorderLeft: true }}
+                              {...field}
+                            />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                           </>
                         )}
@@ -395,9 +415,137 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
                         css={calendarIcon}
                         {...register('newExpectedCompletionDate')}
                       />
-                      <FormErrorMessage>
-                        {errors.newExpectedCompletionDate && errors.newExpectedCompletionDate.message}
-                      </FormErrorMessage>
+                      <FormErrorMessage>{errors?.newExpectedCompletionDate?.message}</FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                )}
+
+                {isTransactionTypeDrawAgainstProjectSOWSelected && (
+                  <>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.paymentTerm} data-testid="paymentTerm-select-field">
+                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.600" fontWeight={500}>
+                          {t('paymentTerm')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          name="paymentTerm"
+                          rules={{ required: 'This is required' }}
+                          render={({ field, fieldState }) => (
+                            <>
+                              <Select
+                                {...field}
+                                selectProps={{ isBorderLeft: true }}
+                                options={PAYMENT_TERMS_OPTIONS}
+                                isDisabled={!!transaction}
+                                onChange={paymentTermOption => {
+                                  field.onChange(paymentTermOption)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )}
+                        />
+                      </FormControl>
+                    </GridItem>
+
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.invoicedDate}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.600"
+                          htmlFor="invoicedDate"
+                          whiteSpace="nowrap"
+                        >
+                          {t('invoicedDate')}
+                        </FormLabel>
+                        <Input
+                          data-testid="new-expected-completion-date"
+                          id="invoicedDate"
+                          type="date"
+                          css={calendarIcon}
+                          {...register('invoicedDate')}
+                        />
+                        <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.paidDate}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.600"
+                          htmlFor="paidDate"
+                          whiteSpace="nowrap"
+                        >
+                          {t('paidDate')}
+                        </FormLabel>
+                        <Input
+                          data-testid="new-expected-completion-date"
+                          id="paidDate"
+                          type="date"
+                          size="md"
+                          isDisabled={!transaction}
+                          css={calendarIcon}
+                          {...register('paidDate')}
+                        />
+                        <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.paidDateVariance}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.600"
+                          htmlFor="paidDateVariance"
+                          whiteSpace="nowrap"
+                        >
+                          {t('paidDateVariance')}
+                        </FormLabel>
+                        <Input
+                          data-testid="new-expected-completion-date"
+                          id="paidDateVariance"
+                          type="text"
+                          size="md"
+                          css={calendarIcon}
+                          isDisabled
+                          {...register('paidDateVariance')}
+                        />
+                        <FormErrorMessage>{errors?.paidDateVariance?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                  </>
+                )}
+
+                {isShowStatusField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
+                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                        {t('status')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="status"
+                        rules={{ required: 'This is required' }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <Select
+                              {...field}
+                              options={transactionStatusOptions}
+                              onChange={statusOption => {
+                                field.onChange(statusOption)
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
+                        )}
+                      />
                     </FormControl>
                   </GridItem>
                 )}
@@ -422,7 +570,7 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onClose} variant="outline" colorScheme="brand">
+          <Button onClick={onModalClose} variant="outline" colorScheme="brand">
             {t('close')}
           </Button>
         )}
@@ -436,7 +584,9 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
             isDisabled={amount === 0}
             onClick={event => {
               event.stopPropagation()
-              setIsShowLienWaiver(true)
+              setTimeout(() => {
+                setIsShowLienWaiver(true)
+              })
             }}
           >
             {t('next')}
@@ -454,49 +604,5 @@ const AddUpdateTransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onC
         )}
       </HStack>
     </Flex>
-  )
-}
-
-type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
-type AddNewTransactionProps = CustomModalProps
-type UpdateTransactionProps = CustomModalProps & {
-  selectedTransactionId: number
-}
-
-export const AddNewTransactionModal: React.FC<AddNewTransactionProps> = ({ isOpen, onClose }) => {
-  const { t } = useTranslation()
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
-      <ModalOverlay />
-      <ModalContent minH="700px">
-        <ModalHeader>{t('newTransaction')}</ModalHeader>
-        <ModalCloseButton />
-
-        <ModalBody>
-          <AddUpdateTransactionForm onClose={onClose} />
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  )
-}
-
-export const UpdateTransactionModal: React.FC<UpdateTransactionProps> = ({
-  isOpen,
-  onClose,
-  selectedTransactionId,
-}) => {
-  // const { transaction } = useTransaction(selectedTransactionIdd);
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
-      <ModalOverlay />
-      <ModalContent minH="700px">
-        <ModalHeader>Update Transaction</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <AddUpdateTransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} />
-        </ModalBody>
-      </ModalContent>
-    </Modal>
   )
 }

@@ -12,9 +12,10 @@ import {
 } from 'types/transaction.type'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
-import { dateFormat, dateISOFormat } from './date-time-utils'
+import { dateFormat, dateISOFormat, datePickerFormat } from './date-time-utils'
 import { useUserRolesSelector } from './redux-common-selectors'
 import { readFileContent } from './vendor-details'
+import { useMemo } from 'react'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -58,7 +59,7 @@ const adminOrOperationTransactionTypeOptions = [
 ]
 
 export const useTransactionTypes = () => {
-  const { isAdmin } = useUserRolesSelector()
+  const { isProjectCoordinator, isAdmin } = useUserRolesSelector()
   const transactionTypeOptions = [
     {
       value: TransactionTypeValues.changeOrder,
@@ -71,9 +72,10 @@ export const useTransactionTypes = () => {
   ]
 
   return {
-    transactionTypeOptions: isAdmin
-      ? [...transactionTypeOptions, ...adminOrOperationTransactionTypeOptions]
-      : transactionTypeOptions,
+    transactionTypeOptions:
+      isAdmin || isProjectCoordinator
+        ? [...transactionTypeOptions, ...adminOrOperationTransactionTypeOptions]
+        : transactionTypeOptions,
   }
 }
 
@@ -102,7 +104,7 @@ const WORK_ORDER_DEFAULT_OPTION = {
 export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
   let workOrderSelectOptions: SelectOption[] = []
   const client = useClient()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
 
   const { data: changeOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
     ['workordersWithChangeOrders', projectId],
@@ -115,10 +117,10 @@ export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
 
   const changeOrderOptions = changeOrders?.map(changeOrder => ({
     label: `${changeOrder.skillName} (${changeOrder.companyName})`,
-    value: changeOrder.id,
+    value: `${changeOrder.id}`,
   }))
 
-  if (isAdmin) {
+  if (isAdmin || isProjectCoordinator) {
     workOrderSelectOptions = changeOrderOptions
       ? [WORK_ORDER_DEFAULT_OPTION, ...changeOrderOptions]
       : [WORK_ORDER_DEFAULT_OPTION]
@@ -139,8 +141,7 @@ const AGAINST_DEFAULT_OPTION = {
 }
 
 export const useProjectWorkOrders = (projectId?: string) => {
-  let againstOptions: SelectOption[] = []
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const client = useClient()
 
   const { data: workOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
@@ -151,30 +152,41 @@ export const useProjectWorkOrders = (projectId?: string) => {
       return response?.data
     },
   )
-  const workOrderOptions = workOrders
-    ?.filter(wo => wo.statusLabel !== 'Paid')
-    .map(workOrder => ({
-      label: `${workOrder.companyName} (${workOrder.skillName})`,
-      value: workOrder.id,
-    }))
+
+  const workOrderOptions = useMemo(
+    () =>
+      workOrders
+        ?.filter(wo => wo.statusLabel !== 'Paid')
+        .map(workOrder => ({
+          label: `${workOrder.companyName} (${workOrder.skillName})`,
+          value: `${workOrder.id}`,
+        })),
+    [workOrders],
+  )
 
   const workOrdersKeyValues:
     | {
         [key: string]: ProjectWorkOrder
       }
-    | undefined = workOrders?.reduce(
-    (workOrdersKeyValues, workOrder) => ({
-      ...workOrdersKeyValues,
-      [workOrder.id]: workOrder,
-    }),
-    {},
+    | undefined = useMemo(
+    () =>
+      workOrders?.reduce(
+        (workOrdersKeyValues, workOrder) => ({
+          ...workOrdersKeyValues,
+          [workOrder.id]: workOrder,
+        }),
+        {},
+      ),
+    [workOrders],
   )
 
-  if (isAdmin) {
-    againstOptions = workOrderOptions ? [AGAINST_DEFAULT_OPTION, ...workOrderOptions] : [AGAINST_DEFAULT_OPTION]
-  } else {
-    againstOptions = workOrderOptions || againstOptions
-  }
+  const againstOptions: SelectOption[] = useMemo(() => {
+    if (isAdmin || isProjectCoordinator) {
+      return workOrderOptions ? [AGAINST_DEFAULT_OPTION, ...workOrderOptions] : [AGAINST_DEFAULT_OPTION]
+    } else {
+      return workOrderOptions || []
+    }
+  }, [workOrderOptions, isAdmin, isProjectCoordinator])
 
   return {
     workOrdersKeyValues,
@@ -204,10 +216,14 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
     },
   )
 
-  const changeOrderOptions = changeOrders?.map(workOrder => ({
-    label: `${workOrder.companyName} (${workOrder.skillName})`,
-    value: workOrder.id,
-  }))
+  const changeOrderOptions = useMemo(
+    () =>
+      changeOrders?.map(workOrder => ({
+        label: `$${workOrder.changeOrderAmount} (${workOrder.name})`,
+        value: workOrder.id,
+      })),
+    [changeOrders?.length],
+  )
 
   return {
     changeOrderSelectOptions: changeOrderOptions
@@ -223,9 +239,10 @@ export const parseChangeOrderAPIPayload = async (
 ): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
-  let attachment
 
   const document = formValues.attachment
+
+  let attachment
 
   if (document) {
     const fileContents = await readFileContent(document as File)
@@ -241,7 +258,7 @@ export const parseChangeOrderAPIPayload = async (
     formValues.against?.value === AGAINST_DEFAULT_VALUE
       ? {
           sowRelatedChangeOrderId: formValues.changeOrder?.value,
-          sowRelatedWorkOrderId: `${formValues.against?.value}`,
+          sowRelatedWorkOrderId: `${formValues.workOrder?.value}`,
           parentWorkOrderId: null,
         }
       : {
@@ -254,8 +271,10 @@ export const parseChangeOrderAPIPayload = async (
     createdBy: formValues.createdBy,
     newExpectedCompletionDate,
     expectedCompletionDate,
-    clientApprovedDate: null,
-    paidDate: null,
+    clientApprovedDate: dateISOFormat(formValues.invoicedDate as string),
+    paidDate: dateISOFormat(formValues.paidDate as string),
+    paymentTerm: formValues.paymentTerm?.value || null,
+    paidDateVariance: formValues.paidDateVariance || null,
     lineItems: formValues.transaction.map(transaction => ({
       description: transaction.description,
       whiteoaksCost: transaction.amount,
@@ -276,8 +295,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
 ): Promise<ChangeOrderUpdatePayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
+
   let attachment
-  console.log(formValues.attachment)
   if (formValues.attachment?.name) {
     const fileContents = await readFileContent(formValues.attachment as File)
     attachment = {
@@ -315,8 +334,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
     modifiedBy: formValues.createdBy as string,
     newExpectedCompletionDate,
     expectedCompletionDate,
-    clientApprovedDate: null,
-    paidDate: null,
+    clientApprovedDate: dateISOFormat(formValues.invoicedDate as string),
+    paidDate: dateISOFormat(formValues.paidDate as string),
     lineItems: formValues.transaction.map(t => ({
       id: t.id,
       description: t.description,
@@ -358,35 +377,59 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     against: null,
     changeOrder: null,
     workOrder: null,
-    expectedCompletionDate: '',
-    newExpectedCompletionDate: '',
     status: null,
     dateCreated: dateFormat(new Date()),
     createdBy,
     transaction: [TRANSACTION_FEILD_DEFAULT],
     attachment: null,
     lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
+    paymentRecieved: null,
+    invoicedDate: null,
+    paymentTerm: null,
+    paidDate: null,
+    paidDateVariance: '',
+    expectedCompletionDate: '',
+    newExpectedCompletionDate: '',
+    refundMaterial: false,
   }
 }
 
 export const parseTransactionToFormValues = (
   transaction: ChangeOrderType,
   againstOptions: SelectOption[],
+  workOrderOptions: SelectOption[],
+  changeOrderOptions: SelectOption[],
 ): FormValues => {
+  const findOption = (value, options): SelectOption | null => {
+    return options.find(option => option.value === value) ?? null
+  }
+
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
       value: transaction.transactionType,
     },
-    against: againstOptions.find(option => option.value === transaction.parentWorkOrderId) ?? null,
-    workOrder: null,
-    changeOrder: null,
-    status: TRANSACTION_STATUS_OPTIONS.find(option => option.value === transaction.status) ?? null,
-    expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string) ?? null,
+    against:
+      transaction.parentWorkOrderId === null
+        ? againstOptions[0]
+        : findOption(transaction.parentWorkOrderId?.toString(), againstOptions),
+    workOrder: findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions),
+    changeOrder:
+      transaction.sowRelatedChangeOrderId === null
+        ? changeOrderOptions[0]
+        : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions),
+    status: findOption(transaction.status, TRANSACTION_STATUS_OPTIONS),
+    expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string),
     newExpectedCompletionDate: '',
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
     attachment: transaction?.documents?.[0],
+    invoicedDate: datePickerFormat(transaction.clientApprovedDate as string),
+    paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
+    paidDate: datePickerFormat(transaction.paidDate as string),
+    paidDateVariance: '',
+    paymentRecieved: null,
+    refundMaterial: false,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
@@ -472,3 +515,26 @@ export const useTransaction = (transactionId?: number) => {
     ...rest,
   }
 }
+
+export const PAYMENT_TERMS_OPTIONS = [
+  {
+    value: '7',
+    label: '7',
+  },
+  {
+    value: '10',
+    label: '10',
+  },
+  {
+    value: '14',
+    label: '14',
+  },
+  {
+    value: '20',
+    label: '20',
+  },
+  {
+    value: '30',
+    label: '30',
+  },
+]

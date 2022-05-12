@@ -1,6 +1,6 @@
-import { Box, Spinner } from '@chakra-ui/react'
+import { Box, BoxProps, Spinner } from '@chakra-ui/react'
 
-export const ViewLoader = () => {
+export const ViewLoader: React.FC<BoxProps> = props => {
   return (
     <Box
       position="absolute"
@@ -15,8 +15,10 @@ export const ViewLoader = () => {
       justifyContent="center"
       alignItems="center"
       aria-label="loading"
+      zIndex="1"
     >
-      <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+      {/* <Box {...props} w="100%" h="100%" /> */}
+      <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" zIndex="2" />
     </Box>
   )
 }
