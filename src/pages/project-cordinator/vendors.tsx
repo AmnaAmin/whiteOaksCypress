@@ -1,6 +1,6 @@
 import { AddIcon } from '@chakra-ui/icons'
 import { HStack, Box, Icon, Grid, GridItem, Button, Spacer, useDisclosure } from '@chakra-ui/react'
-import NewVendorModal from 'features/project-coordinator/vendor/new-vendor-modal'
+import NewVendorModal from 'features/projects/modals/project-coordinator/new-vendor-modal'
 import VendorFilterCard from 'features/project-coordinator/vendor/vendor-filter-card'
 import { VendorTable } from 'features/project-coordinator/vendor/vendorTable'
 import React, { useRef } from 'react'

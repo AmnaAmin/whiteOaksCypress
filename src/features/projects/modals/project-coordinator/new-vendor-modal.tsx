@@ -9,8 +9,8 @@ import {
   ModalOverlay,
 } from 'components/modal/modal'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'components/tabs/tabs'
+import License from 'features/project-coordinator/vendor/License'
 import React from 'react'
-import License from './License'
 
 export const NewVendorTabs = () => {
   return (
