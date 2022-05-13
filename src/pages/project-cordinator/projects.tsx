@@ -27,6 +27,8 @@ export const Projects = () => {
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const [selectedDay, setSelectedDay] = useState<string>('')
+
   const [isClicked, setIsClicked] = useState(false)
 
   const setProjectTableInstance = tableInstance => {
@@ -71,7 +73,7 @@ export const Projects = () => {
           >
             All
           </Button>
-          <WeekDayFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
+          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
           <Button
             bg="none"
             color="#4E87F8"

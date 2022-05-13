@@ -49,7 +49,7 @@ const useWeekdayCardJson = days => {
   ]
 }
 
-export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
+export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
   const { data: values } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
 
@@ -65,8 +65,8 @@ export const WeekDayFilters = ({ onSelectCard, selectedCard }) => {
               count={day.number ? day.number : 0}
               key={day.id}
               {...day}
-              onSelectCard={onSelectCard}
-              selectedCard={selectedCard}
+              onSelectDay={onSelectDay}
+              selectedDay={selectedDay}
             />
           )
         })}

@@ -90,6 +90,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
 
 type ProjectProps = {
   selectedCard: string
+  selectedDay: string
   projectColumns: Column[]
   resizeElementRef: any
   setTableInstance: (tableInstance: any) => void
@@ -99,6 +100,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   projectColumns,
   resizeElementRef,
   selectedCard,
+  selectedDay,
 }) => {
   const { projects } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
@@ -107,7 +109,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 
   useEffect(() => {
     if (!selectedCard) setFilterProjects(projects)
-
     setFilterProjects(
       projects?.filter(
         project =>
@@ -123,7 +124,23 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
             })?.dueDate,
       ),
     )
-  }, [selectedCard, projects])
+    // Due Project Filter
+    if (selectedDay) {
+      setFilterProjects(
+        projects?.filter(
+          project =>
+            project.clientDueDate ===
+            days?.find(day => {
+              if (selectedDay === day.dayName) {
+                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+              } else if (selectedDay === 'All') {
+                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+              }
+            })?.dueDate,
+        ),
+      )
+    }
+  }, [selectedCard, selectedDay, projects])
 
   return (
     <Box ref={resizeElementRef} height="100%">
