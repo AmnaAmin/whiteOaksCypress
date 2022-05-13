@@ -6,11 +6,11 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Stack,
   useDisclosure,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { ProjectInfo } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
@@ -19,29 +19,32 @@ import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
-// import { Typeahead } from 'react-bootstrap-typeahead'
+import Select, { AriaOnFocus } from 'react-select'
 
 export const AddPropertyInfo = props => {
-  const [streetAddress, setStreetAddress] = useState()
-  const [city, setCity] = useState()
-  const [state, setState] = useState()
-  const [zipCode, setZipCode] = useState()
+  const [streetAddress, setStreetAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
+  const [zipCode, setZipCode] = useState('')
+  const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
+  const [verificationInProgress, setVerificationInProgress] = useState(false)
   const [check, setCheck] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // API calls
   const { data: properties } = useProperties()
-  console.log(properties)
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
   const { data: statesData } = useStates()
-  const { mutate: saveProjectDetails } = useSaveProjectDetails()
-  const ref = React.createRef()
-
   // const { data: markets } = useMarkets()
+  const { mutate: saveProjectDetails } = useSaveProjectDetails()
+
   // console.log(markets)
 
   const states = statesData
     ? statesData?.map(state => ({
         label: state?.name,
-        value: state?.id,
+        value: state?.code,
       }))
     : null
 
@@ -57,15 +60,37 @@ export const AddPropertyInfo = props => {
   //     }))
   //   : null
 
-  const typeAheadProperties = properties
+  const addressOptions = properties
     ? properties?.map(property => ({
-        id: property?.id,
-        streetAddress: property?.streetAddress,
-        city: property?.city,
-        state: property?.state,
-        zip: property?.zip,
+        label: property?.streetAddress,
+        value: property?.id,
       }))
     : null
+
+  const onMenuOpen = () => setIsMenuOpen(true)
+  const onMenuClose = () => setIsMenuOpen(false)
+
+  // Continue unverified Check
+  const handleCheck = () => {
+    setCheck(!check)
+  }
+
+  const labelStyle = {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'gray.600',
+  }
+
+  const inputStyle = {
+    color: 'gray.500',
+    fontSize: '14px',
+    fontWeight: '400',
+    type: 'text',
+    bg: 'white',
+    size: 'md',
+    borderLeft: '1.5px solid #4E87F8',
+    lineHeight: 2,
+  }
 
   const {
     register,
@@ -73,7 +98,7 @@ export const AddPropertyInfo = props => {
     handleSubmit,
     control,
     watch,
-    reset,
+    setValue,
   } = useForm<ProjectInfo>()
 
   /* debug purpose */
@@ -84,6 +109,19 @@ export const AddPropertyInfo = props => {
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
+
+  // On Street Address change, set values of City, State and Zip
+  const setAddressValues = e => {
+    setStreetAddress(e.label)
+    properties.find(property => {
+      if (streetAddress === property?.streetAddress) {
+        setValue('streetAddress', property.streetAddress)
+        setValue('city', property.city)
+        setValue('state', property.state)
+        setValue('zipCode', property.zipCode)
+      }
+    })
+  }
 
   const onSubmit = useCallback(
     async values => {
@@ -106,18 +144,14 @@ export const AddPropertyInfo = props => {
       setCity(addressInfo.city)
       setState(addressInfo.state)
       setZipCode(addressInfo.zipCode)
-      setIsDuplicateAddress(true)
-      console.log('payload', addressInfo)
       saveProjectDetails(addressInfo, {
-        onSuccess() {
-          props.setNextTab()
-        },
+        onSuccess() {},
       })
     },
     [refetch, setStreetAddress, setCity, setState, setZipCode, saveProjectDetails],
   )
 
-  // Parse XML
+  // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
       const parser = new xml2js.Parser()
@@ -127,6 +161,7 @@ export const AddPropertyInfo = props => {
           result.AddressValidateResponse.Address.forEach(record => {
             if (record.Error !== undefined) {
               setAddressVerificationStatus('failed')
+              setVerificationInProgress(true)
             } else {
               setAddressVerificationStatus('success')
               const address = {
@@ -139,47 +174,25 @@ export const AddPropertyInfo = props => {
               record.city = address.city
               record.state = address.state
               record.zipCode = address.zipCode
+              setStreetAddress(address.streetAddress)
+              setCity(address.city)
+              setState(address.state)
+              setZipCode(address.zipCode)
+              setVerificationInProgress(true)
             }
           })
         })
         .catch(function (err) {
           // Failed
         })
-
-      // const defaultAddress = addressDefaultValue(addressData)
-      // reset(defaultAddress)
     }
   }, [addressData])
-
-  const [showModal, setShowModal] = useState(false)
-  const [projectPayload, setProjectPayload] = useState({})
-  const [property, setProperty] = useState({})
-  const [showVerificationUSPS, setShowVerificationUSPS] = useState(false)
-  const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
-
-  const saveModalVerify = () => {
-    const property = {
-      ...projectPayload,
-      streetAddress: projectPayload,
-    }
-    const p = { ...projectPayload, ...{ property }, newProperty: property }
-
-    props.createEntity({ ...p })
-  }
 
   const {
     isOpen: isAddressVerifyModalOpen,
     onClose: onAddressVerifyModalClose,
     onOpen: onOpenAddressVerifyModalOpen,
   } = useDisclosure()
-
-  const onClose = () => {
-    setShowModal(false)
-  }
-
-  const handleCheck = () => {
-    setCheck(!check)
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -198,34 +211,29 @@ export const AddPropertyInfo = props => {
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
-            {/* <FormLabel>Address</FormLabel>
-            <Typeahead
-              required
-              maxHeight={400}
-              maxResults={10000}
-              align="left"
-              ref={ref}
-              shouldSelect={true}
-              allowNew
-              labelKey="streetAddress"
-              id="project-streetAddress"
-              newSelectionPrefix="(click to select)"
-              options={typeAheadProperties}
+            <FormLabel sx={labelStyle}>Address</FormLabel>
+            <Controller
+              control={control}
               name={`streetAddress`}
-              // name="property.streetAddress"
-              //  onBlur={s => onTypeAheadAddressBlur(s)}
-              //  onChange={s => onTypeAheadAddressChange(s)}
-              placeholder="type property address..."
-            /> */}
-            <FormInput
-              errorMessage={errors.streetAddress && errors.streetAddress?.message}
-              label={'Address'}
-              placeholder="Type Property Address . ."
-              register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
-              name={`streetAddress`}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="streetAddress"
+                    options={addressOptions}
+                    selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    sx={inputStyle}
+                    placeholder="Type address here.."
+                    onMenuOpen={onMenuOpen}
+                    onMenuClose={onMenuClose}
+                    onChange={setAddressValues}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
+            <FormErrorMessage>{errors.streetAddress && errors.streetAddress?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
@@ -264,6 +272,7 @@ export const AddPropertyInfo = props => {
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`zipCode`}
+              // value={zipCode}
             />
           </FormControl>
         </GridItem>
@@ -349,7 +358,12 @@ export const AddPropertyInfo = props => {
       </Grid>
 
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button onClick={onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
+        <Button // onClick={onClose}
+          variant="outline"
+          size="md"
+          color="#4E87F8"
+          border="2px solid #4E87F8"
+        >
           {'Cancel'}
         </Button>
         <Button
@@ -359,11 +373,17 @@ export const AddPropertyInfo = props => {
           ml="3"
           size="md"
           type="submit"
-          disabled={!check && isDuplicateAddress}
+          disabled={!check && isDuplicateAddress && !verificationInProgress}
           onClick={() => {
-            refetch()
+            setTimeout(() => {
+              refetch()
+            }, 2000)
             onOpenAddressVerifyModalOpen()
+            // if (onclose) {
+            //   props.setNextTab()
+            // }
           }}
+          //props.setNextTab()
         >
           {'Next'}
         </Button>
@@ -373,8 +393,7 @@ export const AddPropertyInfo = props => {
         content="Address Verification"
         isOpen={isAddressVerifyModalOpen}
         onClose={onAddressVerifyModalClose}
-        props={''} // onConfirm={onDeleteConfirmationModalClose}
-        save={saveModalVerify}
+        props={''}
         addressVerificationStatus={addressVerificationStatus}
       />
     </form>

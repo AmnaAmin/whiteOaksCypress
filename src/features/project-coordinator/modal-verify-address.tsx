@@ -25,7 +25,7 @@ interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
   onClose: () => void
-  save: () => void
+  // save: () => void
   title: string
   content: string
   props: string
@@ -83,7 +83,7 @@ export function ModalVerifyAddress({
             <ModalHeader fontWeight={500} color="gray.600" fontSize="18px" fontStyle="normal" mt="2" mb="-4">
               {title}
             </ModalHeader>
-            {/* <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} /> */}
+            <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
             <ModalBody>
               {addressVerificationStatus === 'verifying' && (
                 <Box className="uspsAdressVerification" marginTop={-2}>
@@ -112,6 +112,7 @@ export function ModalVerifyAddress({
                       position="absolute"
                       top="30"
                       right="55"
+                      onClick={onClose}
                     >
                       Continue
                     </Button>
