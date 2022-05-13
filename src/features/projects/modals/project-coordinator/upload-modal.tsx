@@ -20,9 +20,15 @@ import ReactSelect from '../../../../components/form/react-select'
 import React, { useState } from 'react'
 import { BiXCircle } from 'react-icons/bi'
 import { documentTypes } from 'utils/vendor-projects'
+import { useForm } from 'react-hook-form'
 
 export const UploadModal = ({ isOpen, onClose }) => {
   const [value, setValue] = useState<File>()
+  const { register, handleSubmit, reset } = useForm()
+
+  const onSubmit = data => {
+    console.log('upload data', data)
+  }
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -34,10 +40,11 @@ export const UploadModal = ({ isOpen, onClose }) => {
 
   const UploadFile = () => {
     document.getElementById('file')?.click()
+    reset()
   }
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)} id="formValues">
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="none">
         <ModalOverlay />
         <ModalContent w="700px" h="326px" rounded={3} borderTop="2px solid #4E87F8">
@@ -51,7 +58,7 @@ export const UploadModal = ({ isOpen, onClose }) => {
                 <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                   Document Type
                 </FormLabel>
-                <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
+                <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} {...register('options')} />
               </Box>
               <Box pt={7}>
                 <Input
@@ -60,18 +67,10 @@ export const UploadModal = ({ isOpen, onClose }) => {
                   pl={4}
                   color="blue"
                   type="file"
-                  css={{
-                    '&::-webkit-file-upload-button': {
-                      background: 'none',
-                      color: 'blue',
-                      border: 'none',
-                      padding: '8px',
-                      display: 'none',
-                    },
-                  }}
-                  onChange={onChange}
                   id="file"
                   hidden
+                  {...register('screenShot')}
+                  onChange={onChange}
                 />
 
                 {value && (
@@ -114,12 +113,21 @@ export const UploadModal = ({ isOpen, onClose }) => {
             >
               Close
             </Button>
-            <Button h="48px" w="130px" fontSize="14px" fontWeight={600} colorScheme="CustomPrimaryColor" color="white">
+            <Button
+              type="submit"
+              form="formValues"
+              h="48px"
+              w="130px"
+              fontSize="14px"
+              fontWeight={600}
+              colorScheme="CustomPrimaryColor"
+              color="white"
+            >
               Save
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </form>
   )
 }

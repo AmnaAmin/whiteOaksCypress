@@ -19,6 +19,7 @@ import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
+import { DocumentTable } from 'features/project-coordinator/project-details/document-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -159,6 +160,10 @@ export const ProjectDetails: React.FC = props => {
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
+              </TabPanel>
+
+              <TabPanel p="0px" mt="3">
+                <DocumentTable ref={tabsContainerRef} />
               </TabPanel>
             </TabPanels>
           </Tabs>
