@@ -63,14 +63,17 @@ const ButtonVariants = {
       sm: {
         minW: '70px',
         h: '32px',
+        fontSize: '12px',
       },
       md: {
         minW: '84px',
         h: '40px',
+        fontSize: '14px',
       },
       lg: {
         minW: '107px',
         h: '48px',
+        fontSize: '16px',
       },
     },
   },

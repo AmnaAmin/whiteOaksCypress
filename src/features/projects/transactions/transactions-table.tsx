@@ -5,8 +5,7 @@ import ReactTable, { RowProps } from 'components/table/react-table'
 import { useTransactions } from 'utils/transactions'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
-import { UpdateTransactionModal } from './add-update-transaction'
-import { TransactionTypeValues } from 'types/transaction.type'
+import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { useTranslation } from 'react-i18next'
 
@@ -131,13 +130,10 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row
-      const isEditableByVendorTransactionType =
-        original.transactionType === TransactionTypeValues.changeOrder ||
-        original.transactionType === TransactionTypeValues.draw
 
       setSelectedTransactionId(original.id)
 
-      if (original.status === 'PENDING' && isEditableByVendorTransactionType) {
+      if (original.status === 'PENDING') {
         onEditModalOpen()
       } else {
         onTransactionDetailsModalOpen()
