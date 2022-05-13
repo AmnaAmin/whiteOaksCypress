@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -30,6 +29,7 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
+import { Button } from 'components/button/button'
 
 const CreateATicket = () => {
   const toast = useToast()
@@ -259,9 +259,7 @@ const CreateATicket = () => {
                         }}
                         onClear={() => setValue(field.name, null)}
                       >
-                        <Text color="#4E87F8" fontWeight={500} fontSize="14px" fontStyle="normal">
-                          Choose File
-                        </Text>
+                        Choose File
                       </ChooseFileField>
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
