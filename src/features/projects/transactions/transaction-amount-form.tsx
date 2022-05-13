@@ -21,7 +21,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlineFileText, AiOutlinePlus } from 'react-icons/ai'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
-import { useTotalAmount } from './hooks'
+import { useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'utils/transactions'
@@ -66,6 +66,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     control,
     name: 'transaction',
   })
+
+  // useOnRefundMaterialCheckboxChange(control, update)
+
+  const { isShowRefundMaterialCheckbox } = useFieldShowHideDecision(control)
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
@@ -118,6 +122,18 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
     [setValue],
   )
 
+  const onRefundMaterialCheckboxChange = isChecked => {
+    const transaction = getValues('transaction')
+
+    transaction?.forEach((transactionField, index) => {
+      const amount = Math.abs(Number(transactionField.amount))
+      const amountValue = isChecked ? amount : -1 * amount
+
+      // @ts-ignore
+      setValue(`transaction.${index}.amount`, amountValue)
+    })
+  }
+
   return (
     <>
       <Flex justifyContent="space-between" w="100%" mt="30px" mb="15px">
@@ -150,6 +166,30 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
         <HStack>
+          {isShowRefundMaterialCheckbox && (
+            <Controller
+              control={control}
+              name="refundMaterial"
+              render={({ field: { name, value, onChange } }) => {
+                return (
+                  <Checkbox
+                    data-testid="refund-material"
+                    name={name}
+                    variant="link"
+                    _focus={{ outline: 'none' }}
+                    isChecked={!!value}
+                    onChange={event => {
+                      const isChecked = event.currentTarget.checked
+                      onRefundMaterialCheckboxChange(isChecked)
+                      onChange(isChecked)
+                    }}
+                  >
+                    Refund material
+                  </Checkbox>
+                )
+              }}
+            />
+          )}
           {values.attachment && values.attachment.s3Url && (
             <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
               <Flex>
@@ -202,7 +242,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
         </HStack>
       </Flex>
 
-      <Box border="1px solid #efefef" h="300px" overflow="auto">
+      <Box border="1px solid #efefef" h="200px" overflow="auto">
         <Table colorScheme="gray">
           <Thead bg="gray.50">
             <Tr>
@@ -256,6 +296,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                         data-testid={`transaction-description-${index}`}
                         type="text"
                         size="sm"
+                        autoComplete="off"
                         placeholder="description"
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
@@ -274,6 +315,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                           required: 'This is required field',
                         }}
                         render={({ field, fieldState }) => {
+                          console.log(field)
                           return (
                             <>
                               <Input
@@ -282,10 +324,18 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                                 type="number"
                                 size="sm"
                                 placeholder="amount"
+                                autoComplete="off"
+                                value={field.value}
                                 onChange={event => {
+                                  console.log('on amount change', event.currentTarget.value)
                                   const inputValue = Number(event.currentTarget.value)
+                                  const transactionTypeId = getValues('transactionType')?.value
+                                  const isRefundMaterialCheckboxChecked = getValues('refundMaterial')
+
                                   field.onChange(
-                                    TransactionTypeValues.draw === getValues('transactionType')?.value
+                                    TransactionTypeValues.draw === transactionTypeId ||
+                                      (TransactionTypeValues.material === transactionTypeId &&
+                                        !isRefundMaterialCheckboxChecked)
                                       ? -1 * Math.abs(inputValue)
                                       : inputValue,
                                   )

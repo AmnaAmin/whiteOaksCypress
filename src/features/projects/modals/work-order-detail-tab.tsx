@@ -15,9 +15,11 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 
-import { BiCalendar, BiCheck, BiCircle, BiDownload, BiUpload } from 'react-icons/bi'
+import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const CalenderCard = props => {
   return (
@@ -83,7 +85,88 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
   const [status, setStatus] = useState([false, true, true, false, true, true])
   const onMarkCompleted = () => {
-    setStatus([true, true, true, true, true, true])
+    setStatus([true, true, true, true, true, true])}
+  const [assignedItems] = useState([
+    {
+      sku: '8383',
+      productName: 'Debrish Trash',
+      details: 'Replace Buttons',
+      quantity: '4',
+      price: '$350',
+      workOrder: '77',
+      status: 'not completed',
+      comments: 'verified',
+    },
+    {
+      sku: '33454',
+      productName: 'Remove Satellite dish',
+      details: 'Remove all cables',
+      quantity: '12',
+      price: '$200',
+      workOrder: '77',
+      status: 'completed',
+      comments: 'verified',
+    },
+    {
+      sku: '74746',
+      productName: 'Install Blinders',
+      details: 'Replace Curtains',
+      quantity: '15',
+      price: '$400',
+      workOrder: '77',
+      status: 'completed',
+      comments: 'not verified',
+    },
+    {
+      sku: '65354',
+      productName: 'Wall Lock Box',
+      details: 'Home Depot Lock Box<',
+      quantity: '2',
+      price: '$150',
+      workOrder: '77',
+      status: 'not completed',
+      comments: 'not verified',
+    },
+  ])
+  const downloadPdf = () => {
+    const doc = new jsPDF()
+    const basicFont = undefined
+    const heading = 'Assigned Line Items'
+    doc.setFontSize(12)
+    doc.setFont(basicFont as any, 'bold')
+    const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
+    doc.text(heading, xHeading, 20)
+    doc.setFont(basicFont as any, 'normal')
+    autoTable(doc, {
+      startY: 30,
+      alternateRowStyles: { fillColor: '#FFFFFF' },
+      headStyles: { fillColor: '#F7FAFC', textColor: '#4A5568', lineColor: [0, 0, 0] },
+      theme: 'grid',
+      bodyStyles: { lineColor: '#B2F5EA', minCellHeight: 15 },
+      body: [
+        ...assignedItems.map(ai => {
+          return {
+            sku: ai.sku,
+            productName: ai.productName,
+            details: ai.details,
+            quantity: ai.quantity,
+            price: ai.price,
+            status: ai.status,
+            comments: ai.comments,
+          }
+        }),
+      ],
+      columns: [
+        { header: 'SKU', dataKey: 'sku' },
+        { header: 'Product Name', dataKey: 'productName' },
+        { header: 'Details', dataKey: 'details' },
+        { header: 'Quantity', dataKey: 'quantity' },
+        { header: 'Price', dataKey: 'price' },
+        { header: 'Status', dataKey: 'status' },
+        { header: 'Comments', dataKey: 'comments' },
+      ],
+    })
+    doc.save('assigned-items.pdf')
   }
   return (
     <Box>
@@ -106,18 +189,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
           </Text>
 
           <HStack>
-            <Button leftIcon={<BiDownload color="#4E87F8" />} mr={5} _focus={{ border: 'none' }} bg="white">
+            <Button leftIcon={<BiDownload color="#4E87F8" />} variant="ghost" colorScheme="brand" onClick={downloadPdf}>
               <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
                 Download as PDF
               </Text>
             </Button>
 
-            <Button
-              onClick={onMarkCompleted}
-              leftIcon={<BiCheck color="#4E87F8" />}
-              _focus={{ border: 'none' }}
-              bg="white"
-            >
+            <Button onClick={onMarkCompleted} leftIcon={<BiCheck color="#4E87F8" />} variant="ghost" colorScheme="brand">
               <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
                 Mark All Completed
               </Text>
@@ -141,88 +219,22 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
               </Tr>
             </Thead>
             <Tbody zIndex={1} fontWeight={400}>
-              <Tr>
-                <Td>#8383</Td>
-                <Td>Debrish Trash </Td>
-                <Td>Remove Trash from Outdoor</Td>
-                <Td>2</Td>
-                <Td>$450</Td>
-                <Td>
-                  <CheckboxStructure checked={status[0]} />
-                </Td>
-                <Td>
-                  <UploadImage Images={'Upload'} />
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>#33454</Td>
-                <Td>Remove Satellite dish </Td>
-                <Td>Remove all cables</Td>
-                <Td>12</Td>
-                <Td>$200</Td>
-                <Td>
-                  <CheckboxStructure checked={status[1]} />
-                </Td>
-                <Td>
-                  <UploadImage Images={'First23.img'} />
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>#74746</Td>
-                <Td>Install Blinders </Td>
-                <Td>Replace Curtains</Td>
-                <Td>15</Td>
-                <Td>$1400</Td>
-                <Td>
-                  <CheckboxStructure checked={status[2]} />
-                </Td>
-
-                <Td>
-                  <UploadImage Images={'First88.img'} />
-                </Td>
-              </Tr>
-
-              <Tr>
-                <Td>#65355</Td>
-                <Td>Push Button</Td>
-                <Td>Replace Buttons</Td>
-                <Td>3</Td>
-                <Td>$450</Td>
-                <Td>
-                  <CheckboxStructure checked={status[3]} />
-                </Td>
-                <Td>
-                  <UploadImage Images={'Upload'} />
-                </Td>
-              </Tr>
-
-              <Tr>
-                <Td>#65354</Td>
-                <Td>Wall Lock Box</Td>
-                <Td>Home Depot Lock Box</Td>
-                <Td>8</Td>
-                <Td>$150</Td>
-                <Td>
-                  <CheckboxStructure checked={status[4]} />
-                </Td>
-                <Td>
-                  <UploadImage Images={'Tsk19.img'} />
-                </Td>
-              </Tr>
-
-              <Tr>
-                <Td>#65354</Td>
-                <Td>Wall Lock Box</Td>
-                <Td>Home Depot Lock Box</Td>
-                <Td>8</Td>
-                <Td>$150</Td>
-                <Td>
-                  <CheckboxStructure checked={status[5]} />
-                </Td>
-                <Td>
-                  <UploadImage Images={'Tsk19.img'} />
-                </Td>
-              </Tr>
+              {assignedItems &&
+                assignedItems.map((item, i) => (
+                  <Tr>
+                    <Td>{item.sku}</Td>
+                    <Td>{item.productName} </Td>
+                    <Td>{item.details}</Td>
+                    <Td>{item.quantity}</Td>
+                    <Td>{item.price}</Td>
+                    <Td>
+                      <CheckboxStructure checked={item.status === 'completed'} />
+                    </Td>
+                    <Td>
+                      <UploadImage Images={'Upload'} />
+                    </Td>
+                  </Tr>
+                ))}
             </Tbody>
           </Table>
         </Box>
