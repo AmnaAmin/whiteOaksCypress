@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
-import { useProjects } from 'utils/projects'
+import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
 import { t } from 'i18next'
+import moment from 'moment'
 
 export const PROJECT_COLUMNS = [
   {
@@ -89,6 +90,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
 
 type ProjectProps = {
   selectedCard: string
+  selectedDay: string
   projectColumns: Column[]
   resizeElementRef: any
   setTableInstance: (tableInstance: any) => void
@@ -98,9 +100,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   projectColumns,
   resizeElementRef,
   selectedCard,
+  selectedDay,
 }) => {
   const { projects } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
+
+  const { data: days } = useWeekDayProjectsDue()
 
   useEffect(() => {
     if (!selectedCard) setFilterProjects(projects)
@@ -110,7 +115,23 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
           !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
       ),
     )
-  }, [selectedCard, projects])
+    // Due Project Filter
+    if (selectedDay) {
+      setFilterProjects(
+        projects?.filter(
+          project =>
+            project.clientDueDate ===
+            days?.find(day => {
+              if (selectedDay === day.dayName) {
+                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+              } else if (selectedDay === 'All') {
+                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+              }
+            })?.dueDate,
+        ),
+      )
+    }
+  }, [selectedCard, selectedDay, projects])
 
   return (
     <Box ref={resizeElementRef} height="100%">
