@@ -112,16 +112,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard ||
-          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
-          project.clientDueDate ===
-            days?.find(day => {
-              if (selectedCard === day.dayName) {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              } else if (selectedCard === 'All') {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              }
-            })?.dueDate,
+          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
       ),
     )
     // Due Project Filter

@@ -112,6 +112,7 @@ export const Projects = () => {
         <Box w="100%" flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
           <ProjectsTable
             selectedCard={selectedCard as string}
+            selectedDay={selectedDay as string}
             setTableInstance={setProjectTableInstance}
             resizeElementRef={resizeElementRef}
             projectColumns={tableColumns}
