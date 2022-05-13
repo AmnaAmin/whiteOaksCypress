@@ -5,22 +5,20 @@ import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
 import { useTranslation } from 'react-i18next'
-import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
+import { TransactionsTable } from 'features/projects/transactions/transactions-table'
+// import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
 import { usePCProject } from 'utils/pc-projects'
 import { ProjectType } from 'types/project.type'
-import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
-import { TableNames } from 'types/table-column.types'
-import TableColumnSettings from 'components/table/table-column-settings'
-import { BsBoxArrowUp } from 'react-icons/bs'
+// import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+// import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-// import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
-// import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -28,15 +26,20 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
-  const setProjectTableInstance = tableInstance => {
-    setInstance(tableInstance)
-  }
-  const onSave = columns => {
-    postProjectColumn(columns)
-  }
+  // const [projectTableInstance, setInstance] = useState<any>(null)
+  // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
+  // const setProjectTableInstance = tableInstance => {
+  //   setInstance(tableInstance)
+  // }
+  // const onSave = columns => {
+  //   postProjectColumn(columns)
+  // }
+  const {
+    isOpen: isOpenTransactionModal,
+    onClose: onTransactionModalClose,
+    onOpen: onTransactionModalOpen,
+  } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
@@ -50,7 +53,7 @@ export const ProjectDetails: React.FC = props => {
         {tabIndex === 1}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="filled" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
               <Tab>{t('Transactions')}</Tab>
               <Tab>{t('projectDetails')}</Tab>
@@ -75,6 +78,8 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
+                    {/* <Client projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} /> */}
+                    {/* <Vendor projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose}/> */}
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
@@ -91,7 +96,7 @@ export const ProjectDetails: React.FC = props => {
                 )}
                 {tabIndex === 0 && (
                   <>
-                    <Button
+                    {/* <Button
                       bg="#FFFFFF"
                       color="#4E87F8"
                       border="1px solid #4E87F8"
@@ -111,8 +116,8 @@ export const ProjectDetails: React.FC = props => {
                         <BsBoxArrowUp />
                       </Box>
                       {t('export')}
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
                       bg="#FFFFFF"
                       color="#4E87F8"
                       border="1px solid #4E87F8"
@@ -123,15 +128,8 @@ export const ProjectDetails: React.FC = props => {
                       {settingColumns && (
                         <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
                       )}
-                    </Button>
-                    <Button
-                      bg="#4E87F8"
-                      color="#FFFFFF"
-                      size="md"
-                      fontSize="12px"
-                      _hover={{ bg: 'royalblue' }}
-                      // onClick={onTransactionModalOpen}
-                    >
+                    </Button> */}
+                    <Button variant="ghost" colorScheme="brand" onClick={onTransactionModalOpen}>
                       {t('newTransaction')}
                     </Button>
                   </>
@@ -150,11 +148,7 @@ export const ProjectDetails: React.FC = props => {
                   </FormControl>
                 </Box>
                 <Box h="100%">
-                  <TransactionsTable
-                    setTableInstance={setProjectTableInstance}
-                    projectColumns={tableColumns}
-                    resizeElementRef={resizeElementRef}
-                  />
+                  <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px" mt="3">
@@ -169,6 +163,7 @@ export const ProjectDetails: React.FC = props => {
             </TabPanels>
           </Tabs>
         </Stack>
+        <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
         <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
       </Stack>
     </>

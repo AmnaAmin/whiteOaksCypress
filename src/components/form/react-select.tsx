@@ -24,7 +24,7 @@ export const chakraStyles = {
     return {
       ...provided,
       pointerEvents: 'auto',
-      background: '#F7FAFC',
+      // background: '#F7FAFC',
     }
   },
   singleValue: (provider: any) => ({
@@ -80,12 +80,13 @@ export const chakraStyles = {
       ...provider,
       ...borderLeftStyle,
       borderRadius: '6px',
-      bg: '#F7FAFC',
+      // bg: '#F7FAFC',
       fontSize: getFontSize(state),
       _focus: inputFocusStateStyle,
       _disabled: {
         opacity: 0.7,
         cursor: 'not-allowed',
+        bg: '#F7FAFC',
       },
     }
   },
