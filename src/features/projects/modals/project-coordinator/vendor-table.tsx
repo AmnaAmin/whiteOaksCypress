@@ -17,12 +17,10 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { ProjectType } from 'types/project.type'
-
 import { CheckBoxes } from './client-market-tab'
+import VendorDetails from './vendor-detail-tab'
 
-import DetailsTab from './clitent-details-tab'
-
-const Client: React.FC<{
+const Vendor: React.FC<{
   projectData: ProjectType
   isOpen: boolean
   onClose: () => void
@@ -36,7 +34,7 @@ const Client: React.FC<{
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
-                  New Client
+                  Vendor Details
                 </Text>
                 <Text lineHeight="22px" h="22px">
                   A Chimney Sweep
@@ -61,7 +59,7 @@ const Client: React.FC<{
                         _hover: { backgroundColor: '#4E87F8' },
                       }}
                     >
-                      Details
+                      Vendor Details
                     </Tab>
                     <Tab
                       minW="109px"
@@ -70,6 +68,48 @@ const Client: React.FC<{
                         color: 'white',
                         bg: '#4E87F8',
                         fontWeight: 600,
+                        _hover: { backgroundColor: '#4E87F8' },
+                      }}
+                      //   sx={TabStyle}
+                    >
+                      Documents
+                    </Tab>
+                    <Tab
+                      minW="109px"
+                      _focus={{ border: 'none' }}
+                      _selected={{
+                        color: 'white',
+                        bg: '#4E87F8',
+                        fontWeight: 600,
+                        id: 'checkId',
+                        _hover: { backgroundColor: '#4E87F8' },
+                      }}
+                      //   sx={TabStyle}
+                    >
+                      License
+                    </Tab>
+                    <Tab
+                      minW="109px"
+                      _focus={{ border: 'none' }}
+                      _selected={{
+                        color: 'white',
+                        bg: '#4E87F8',
+                        fontWeight: 600,
+                        id: 'checkId',
+                        _hover: { backgroundColor: '#4E87F8' },
+                      }}
+                      //   sx={TabStyle}
+                    >
+                      Trade
+                    </Tab>
+                    <Tab
+                      minW="109px"
+                      _focus={{ border: 'none' }}
+                      _selected={{
+                        color: 'white',
+                        bg: '#4E87F8',
+                        fontWeight: 600,
+                        id: 'checkId',
                         _hover: { backgroundColor: '#4E87F8' },
                       }}
                       //   sx={TabStyle}
@@ -88,22 +128,23 @@ const Client: React.FC<{
                       }}
                       //   sx={TabStyle}
                     >
-                      Notes
+                      Audit Logs
                     </Tab>
                   </Flex>
                 </TabList>
 
                 <TabPanels>
-                  <TabPanel>
-                    <DetailsTab onClose={onClose} />
+                  <TabPanel px="0px">
+                    <VendorDetails onClose={onClose} />
                   </TabPanel>
-
                   <TabPanel></TabPanel>
-
+                  <TabPanel></TabPanel>
                   <TabPanel>
                     <CheckBoxes onClose={onClose} />
                   </TabPanel>
-
+                  <TabPanel>
+                    <CheckBoxes onClose={onClose} />
+                  </TabPanel>
                   <TabPanel></TabPanel>
                 </TabPanels>
               </Tabs>
@@ -115,4 +156,4 @@ const Client: React.FC<{
   )
 }
 
-export default Client
+export default Vendor

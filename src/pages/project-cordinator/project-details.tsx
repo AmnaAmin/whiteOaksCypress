@@ -18,6 +18,7 @@ import ProjectDetailsTab from 'features/project-coordinator/project-details/proj
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+import { NotesTab } from 'features/project-coordinator/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 
 export const ProjectDetails: React.FC = props => {
@@ -77,8 +78,9 @@ export const ProjectDetails: React.FC = props => {
                         <BiAddToQueue size={14} />
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
+
                     </Flex>
-                    {/* <Client projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} /> */}
+
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
@@ -158,6 +160,12 @@ export const ProjectDetails: React.FC = props => {
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
+              </TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel px="0">
+                <NotesTab />
               </TabPanel>
             </TabPanels>
           </Tabs>
