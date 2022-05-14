@@ -104,17 +104,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
         </Flex>
       </Box>
       <Flex borderTop="2px solid #E2E8F0" alignItems="center" w="100%" h="100px" justifyContent="end">
-        <Button
-          type="submit"
-          colorScheme="brand"
-          _focus={{ outline: 'none' }}
-          data-testid="saveMarkets"
-          fontWeight={600}
-          fontStyle="normal"
-          fontSize="14px"
-          h="48px"
-          w="130px"
-        >
+        <Button type="submit" colorScheme="brand" _focus={{ outline: 'none' }} data-testid="saveMarkets">
           {t('save')}
         </Button>
       </Flex>

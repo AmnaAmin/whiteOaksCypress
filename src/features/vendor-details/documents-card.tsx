@@ -391,16 +391,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
         alignItems="center"
         justifyContent="end"
       >
-        <Button
-          colorScheme="brand"
-          type="submit"
-          data-testid="saveDocumentCards"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button colorScheme="brand" type="submit" data-testid="saveDocumentCards">
           {t('next')}
         </Button>
       </Flex>

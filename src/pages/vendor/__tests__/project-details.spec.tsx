@@ -25,7 +25,7 @@ const chooseFileByLabel = (labelRegExp: RegExp) => {
   expect(screen.getByText(/dummy-file\.png/)).toBeInTheDocument()
 }
 
-jest.setTimeout(50000)
+jest.setTimeout(150000)
 
 describe('Porject Details: Document tab test cases', () => {
   test('Should render project details page and switch to document tab', async () => {

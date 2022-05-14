@@ -3,6 +3,8 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { AuthProvider } from 'utils/auth-context'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { theme } from 'theme/theme'
+import { Global } from '@emotion/react'
+import { GlobalStyles } from 'theme/global-css'
 
 let queryConfig = {}
 
@@ -39,6 +41,7 @@ export const Providers: React.FC = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
+        <Global styles={GlobalStyles} />
         {/* @ts-ignore */}
         <AuthProvider>{children}</AuthProvider>
       </ChakraProvider>

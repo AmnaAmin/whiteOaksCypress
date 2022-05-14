@@ -3,11 +3,17 @@ import { Select as ReactSelect } from 'chakra-react-select'
 import { inputBorderLeftStyle, inputFocusStateStyle } from 'theme/common-style'
 import { AnyCnameRecord } from 'dns'
 
-// const fontSizes = {
-//   sm: 'sm',
-//   md: 'md',
-//   lg: 'lg',
-// }
+const fontSizes = {
+  sm: '13px',
+  md: '14px',
+  lg: '16px',
+}
+
+const getFontSize = (state: any) => {
+  const size = state?.selectProps?.size
+
+  return fontSizes[size] || size
+}
 // Custom styles for components which do not have a chakra equivalent
 export const chakraStyles = {
   // When disabled, react-select sets the pointer-state to none
@@ -18,7 +24,7 @@ export const chakraStyles = {
     return {
       ...provided,
       pointerEvents: 'auto',
-      background: '#F7FAFC',
+      // background: '#F7FAFC',
     }
   },
   singleValue: (provider: any) => ({
@@ -31,9 +37,17 @@ export const chakraStyles = {
     boxShadow: 'lg',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: 'gray.300',
+    borderColor: 'gray.200',
     borderRadius: 'md',
     bg: 'white',
+  }),
+  option: (provider: any, state: any) => ({
+    ...provider,
+    fontSize: getFontSize(state),
+    bg: state.isSelected ? 'brand.300' : 'white',
+    _hover: {
+      bg: state.isSelected ? 'brand.400' : 'gray.100',
+    },
   }),
   valueContainer(provided: any, { selectProps: { size } }: any) {
     const px = {
@@ -56,8 +70,9 @@ export const chakraStyles = {
       color: 'gray.500',
     },
   }),
-  control: (provider: any, options) => {
-    const { isBorderLeft } = options.selectProps?.selectProps || {}
+  control: (provider: any, state) => {
+    const { selectProps } = state
+    const { isBorderLeft } = selectProps?.selectProps || {}
 
     const borderLeftStyle = isBorderLeft ? inputBorderLeftStyle : {}
 
@@ -65,8 +80,14 @@ export const chakraStyles = {
       ...provider,
       ...borderLeftStyle,
       borderRadius: '6px',
-      bg: '#F7FAFC',
+      // bg: '#F7FAFC',
+      fontSize: getFontSize(state),
       _focus: inputFocusStateStyle,
+      _disabled: {
+        opacity: 0.7,
+        cursor: 'not-allowed',
+        bg: '#F7FAFC',
+      },
     }
   },
   // menuList: () => ({}),
@@ -76,11 +97,14 @@ export const chakraStyles = {
   // group: () => ({}),
 }
 
-type SelectProps = any
+type SelectProps = any & {
+  selectProps: {
+    isBorderLeft: boolean
+  }
+}
 
 const Select = forwardRef((props: SelectProps, ref: any) => (
   <ReactSelect
-    // defaultMenuIsOpen
     ref={ref}
     chakraStyles={chakraStyles}
     {...props}

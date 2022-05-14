@@ -102,7 +102,7 @@ const VendorProfilePassword = () => {
   }
 
   return (
-    <Stack mt="40px" ml="20px">
+    <Stack mt="40px" ml="20px" boxSizing="border-box">
       <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
         {/* Password for [vendor@devtek.ai] */}
         Password
@@ -124,12 +124,18 @@ const VendorProfilePassword = () => {
               />
               <InputRightElement>
                 <Button
-                  h="1.75rem"
-                  size="sm"
                   onClick={handleClick}
+                  h="1.30rem"
+                  size="sm"
                   bg="#FFFFFF"
-                  _hover={{ bg: '#FFFFFF' }}
+                  color="gray.600"
+                  _hover={{
+                    bg: 'gray.100',
+                    color: 'gray.600',
+                  }}
+                  minW="10px"
                   _focus={{ border: 'none' }}
+                  mb="1.5"
                 >
                   {show ? <BsEye /> : <BsEyeSlash />}
                 </Button>
@@ -163,12 +169,18 @@ const VendorProfilePassword = () => {
                 />
                 <InputRightElement>
                   <Button
-                    h="1.75rem"
-                    size="sm"
                     onClick={handleClickSecond}
+                    h="1.30rem"
+                    size="sm"
                     bg="#FFFFFF"
-                    _hover={{ bg: '#FFFFFF' }}
+                    color="gray.600"
+                    _hover={{
+                      bg: 'gray.100',
+                      color: 'gray.600',
+                    }}
+                    minW="10px"
                     _focus={{ border: 'none' }}
+                    mb="1.5"
                   >
                     {showSecondField ? <BsEye /> : <BsEyeSlash />}
                   </Button>
@@ -193,12 +205,18 @@ const VendorProfilePassword = () => {
                 />
                 <InputRightElement>
                   <Button
-                    h="1.75rem"
+                    h="1.30rem"
                     size="sm"
-                    onClick={handleClickThird}
                     bg="#FFFFFF"
-                    _hover={{ bg: '#FFFFFF' }}
+                    color="gray.600"
+                    _hover={{
+                      bg: 'gray.100',
+                      color: 'gray.600',
+                    }}
+                    minW="10px"
+                    onClick={handleClickThird}
                     _focus={{ border: 'none' }}
+                    mb="1.5"
                   >
                     {showThirdField ? <BsEye /> : <BsEyeSlash />}
                   </Button>
@@ -245,15 +263,7 @@ const VendorProfilePassword = () => {
         </VStack>
 
         <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="100px">
-          <Button
-            colorScheme="brand"
-            type="submit"
-            fontSize="14px"
-            fontWeight={600}
-            fontStyle="normal"
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </Flex>

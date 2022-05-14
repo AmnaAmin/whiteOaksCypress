@@ -1,5 +1,4 @@
 import { InputProps } from '@chakra-ui/input'
-import {} from '@chakra-ui/theme-tools'
 import { css } from '@emotion/react'
 
 export const disabledInputStyle = {
@@ -30,6 +29,6 @@ export const calendarIcon = css`
   ::-webkit-calendar-picker-indicator {
     background: url('https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png')
       center/80% no-repeat;
-    color: black;
+    color: '#ddd';
   }
 `

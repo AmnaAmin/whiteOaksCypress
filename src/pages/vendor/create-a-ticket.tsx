@@ -284,15 +284,7 @@ const CreateATicket = () => {
             justifyContent="end"
             borderTop="2px solid #E2E8F0"
           >
-            <Button
-              type="submit"
-              colorScheme="brand"
-              fontSize="14px"
-              fontWeight={600}
-              fontStyle="normal"
-              h="48px"
-              w="130px"
-            >
+            <Button type="submit" colorScheme="brand">
               Save
             </Button>
           </Flex>

@@ -44,7 +44,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sigRef = useRef<HTMLImageElement>(null)
-
+  const [claimantsSignature, setClaimantsSignature] = useState('')
   const {
     register,
     formState: { errors },
@@ -91,16 +91,16 @@ export const LienWaiverTab: React.FC<any> = props => {
     const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
     setRecentLWFile(recentLW)
     setValue('claimantsSignature', signatureDoc?.s3Url)
+    setClaimantsSignature(signatureDoc?.s3Url ?? '')
   }, [documentsData, setValue])
 
   const generatePdf = useCallback(() => {
     let form = new jsPdf()
-    const value = getValues()
     const dimention = {
       width: sigRef?.current?.width,
       height: sigRef?.current?.height,
     }
-    convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
+    convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
       form = createForm(form, getValues(), dimention, dataUrl)
       const pdfUri = form.output('datauristring')
       const pdfBlob = form.output('bloburi')
@@ -118,12 +118,14 @@ export const LienWaiverTab: React.FC<any> = props => {
         },
       ])
     })
-  }, [getValues])
+  }, [getValues, claimantsSignature])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
 
-    if (!context) return
+    if (!context || !canvasRef.current) return
+    canvasRef.current.width = 1000
+    canvasRef.current.height = 64
 
     context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
     context.font = 'italic 500 12px Inter'
@@ -142,6 +144,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       },
     ])
     setValue('claimantsSignature', uri)
+    setClaimantsSignature(uri)
   }
 
   const onSignatureChange = value => {
@@ -149,6 +152,7 @@ export const LienWaiverTab: React.FC<any> = props => {
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
   const onRemoveSignature = () => {
+    setClaimantsSignature('')
     setValue('claimantsSignature', null)
     setValue('dateOfSignature', null)
   }
@@ -173,13 +177,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                     <Button
                       colorScheme="brand"
                       variant="ghost"
-                      fontSize="14px"
-                      fontWeight={500}
-                      bg="white"
-                      color="#4E87F8"
                       float="right"
                       mr={3}
-                      h="48px"
                       onClick={() => downloadFile(recentLWFile.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
@@ -190,15 +189,9 @@ export const LienWaiverTab: React.FC<any> = props => {
 
                 <Button
                   colorScheme="brand"
-                  disabled={!value.claimantsSignature || recentLWFile}
-                  color="#FFFFFF"
+                  disabled={!claimantsSignature || recentLWFile}
                   float="right"
                   onClick={generatePdf}
-                  fontStyle="normal"
-                  fontSize="14px"
-                  fontWeight={600}
-                  h="48px"
-                  w="130px"
                 >
                   <Box pos="relative" right="6px"></Box>
                   Generate LW
@@ -251,7 +244,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 </Stack>
 
                 <HStack alignItems={'flex-start'} spacing="7">
-                  <FormControl isInvalid={!value.claimantsSignature} width={'20em'}>
+                  <FormControl isInvalid={!claimantsSignature} width={'20em'}>
                     <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
                       {t('claimantsSignature')}
                     </FormLabel>
@@ -259,9 +252,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                       <Image
                         mb="3"
-                        hidden={!value.claimantsSignature}
+                        hidden={!claimantsSignature}
                         maxW={'100%'}
-                        src={value.claimantsSignature}
+                        src={claimantsSignature}
                         {...register('claimantsSignature', {
                           required: 'This is required field',
                         })}
@@ -270,12 +263,10 @@ export const LienWaiverTab: React.FC<any> = props => {
 
                       <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
                         <BiEditAlt onClick={() => setOpenSignature(true)} color="#A0AEC0" />
-                        {value.claimantsSignature && (
-                          <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
-                        )}
+                        {claimantsSignature && <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />}
                       </HStack>
                     </Flex>
-                    {!value.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
+                    {!claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
                   </FormControl>
 
                   <FormInput
@@ -303,28 +294,10 @@ export const LienWaiverTab: React.FC<any> = props => {
         </FormControl>
         <Divider />
         <ModalFooter mt={3}>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            color="gray.700"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
             {t('close')}
           </Button>
-          <Button
-            colorScheme="brand"
-            type="submit"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </ModalFooter>

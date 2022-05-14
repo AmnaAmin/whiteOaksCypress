@@ -3,7 +3,7 @@ import { act, getByText, render, screen, selectOption, waitForLoadingToFinish } 
 import App from 'App'
 import userEvent from '@testing-library/user-event'
 
-jest.setTimeout(50000)
+jest.setTimeout(150000)
 
 describe('Porject Details: Transaction tab test cases', () => {
   test('User should create new transaction', async () => {
@@ -100,7 +100,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     expect(screen.getByTestId('next-to-lien-waiver-form')).not.toBeDisabled()
 
     // Add lien waiver to transaction.
-    await userEvent.click(screen.getByTestId('next-to-lien-waiver-form'))
+    await act(async () => await userEvent.click(screen.getByTestId('next-to-lien-waiver-form')))
 
     // Check lien waiver form rendered properly
     expect(screen.getByText('-$400')).toBeInTheDocument()

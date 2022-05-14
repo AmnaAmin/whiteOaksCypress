@@ -53,7 +53,7 @@ const InvoicingAndPaymentTab = ({
             label="Pay Date Variance"
             InputElem={
               invoiceAndPaymentData.workOrderPayDateVariance ? (
-                <Text>{dateFormat(invoiceAndPaymentData?.workOrderPayDateVariance)}</Text>
+                <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
               ) : (
                 <Text>MM/DD/YY</Text>
               )
@@ -195,15 +195,7 @@ const InvoicingAndPaymentTab = ({
       </HStack>
       <Divider />
       <ModalFooter pb="15px" pt="15px">
-        <Button
-          colorScheme="brand"
-          onClick={onClose}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button colorScheme="brand" onClick={onClose}>
           {t('close')}
         </Button>
       </ModalFooter>

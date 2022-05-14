@@ -159,15 +159,7 @@ const Settings = React.forwardRef((props, ref) => {
           justifyContent="end"
           borderTop="2px solid #E2E8F0"
         >
-          <Button
-            colorScheme="brand"
-            type="submit"
-            fontSize="14px"
-            fontWeight={600}
-            fontStyle="normal"
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </Flex>
