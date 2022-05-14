@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Box, HStack, VStack, Center, Divider, Flex } from '@chakra-ui/react'
+import { Box, HStack, VStack, Center, Flex } from '@chakra-ui/react'
 import { MdAdd } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -173,30 +173,7 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
                     downloadableFile={licenseValues?.[index].downloadableFile}
                     testId={`expirationFile-` + index}
                   >
-                    <>
-                      <Flex
-                        justifyContent={'space-between'}
-                        // variant="outline"
-                        // size="lg"
-                        rounded={4}
-                        bg="gray.100"
-                        h="36px"
-                        w={120}
-                      >
-                        <Button
-                          rounded="none"
-                          roundedLeft={5}
-                          fontSize="14px"
-                          fontWeight={500}
-                          bg="gray.100"
-                          h="36px"
-                          w={120}
-                        >
-                          {t('chooseFile')}
-                        </Button>
-                        <Divider orientation="vertical" />
-                      </Flex>
-                    </>
+                    {t('chooseFile')}
                   </FormFileInput>
                 </VStack>
               </HStack>

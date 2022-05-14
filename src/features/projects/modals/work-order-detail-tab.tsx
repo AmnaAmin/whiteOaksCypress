@@ -83,8 +83,10 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
-
-  const [assignedItems] = useState([
+  const onMarkCompleted = () => {
+    setAssignedItems(assignedItems => assignedItems.map(item => ({ ...item, status: 'completed' })))
+  }
+  const [assignedItems, setAssignedItems] = useState([
     {
       sku: '8383',
       productName: 'Debrish Trash',
@@ -175,10 +177,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
           title="Expected Completion"
           value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
         />
-        <CalenderCard
-          title=" Completed by Vendor​"
-          value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
-        />
+        <CalenderCard title="Completed by Vendor" value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)} />
       </SimpleGrid>
       <Box pt={6}>
         <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
@@ -191,8 +190,15 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
               Download as PDF
             </Button>
 
-            <Button leftIcon={<BiCheck color="#4E87F8" />} variant="ghost" colorScheme="brand">
-              Mark All Completed
+            <Button
+              onClick={onMarkCompleted}
+              leftIcon={<BiCheck color="#4E87F8" />}
+              variant="ghost"
+              colorScheme="brand"
+            >
+              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                Mark All Completed
+              </Text>
             </Button>
           </HStack>
         </Flex>

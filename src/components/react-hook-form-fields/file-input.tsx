@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import { UseFormRegister, UseFormRegisterReturn } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
+import { Button } from 'components/button/button'
 
 type FileInputProps = {
   errorMessage: any
@@ -71,7 +72,19 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
           : {},
       )}
     >
-      {props.children}
+      <Button
+        rounded="none"
+        roundedLeft={5}
+        fontSize="14px"
+        fontWeight={500}
+        color="gray.600"
+        size="md"
+        ml={0}
+        colorScheme="gray"
+        w={120}
+      >
+        {props.children}
+      </Button>
     </FileUpload>
     <Box h={7}>
       {downloadableLink(props.downloadableFile)}
@@ -99,7 +112,7 @@ const FileUpload = (props: FileUploadProps) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <Box className="form-file-input" rounded={6} h="40px" w="293px" p={0} border="1px solid #CBD5E0">
+    <Box className="form-file-input" rounded={6} w="293px" p={0} border="1px solid #CBD5E0">
       <InputGroup onClick={handleClick}>
         <input
           type={'file'}
@@ -114,16 +127,15 @@ const FileUpload = (props: FileUploadProps) => {
           data-testid={props.testId}
         />
         {children}
-        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px">
+        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px" alignItems="center">
           {inputRef.current && (
             <Box
               color="#4E87F8"
               fontWeight={500}
               fontStyle="normal"
-              fontSize="12px"
+              fontSize="14px"
               as="span"
               ml="20px"
-              mt="7px"
               mr={5}
               whiteSpace="nowrap"
               overflow="hidden"
