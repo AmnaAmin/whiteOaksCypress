@@ -51,8 +51,14 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction) => {
   const transactionType = useWatch({ name: 'transactionType', control })
+  const against = useWatch({ name: 'against', control })
 
-  return !transaction && transactionType?.value === TransactionTypeValues.draw
+  return (
+    !transaction &&
+    transactionType?.value === TransactionTypeValues.draw &&
+    against &&
+    against.value !== AGAINST_DEFAULT_VALUE
+  )
 }
 
 export const useSelectedWorkOrder = (

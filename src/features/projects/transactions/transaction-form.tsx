@@ -497,27 +497,27 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                       </FormControl>
                     </GridItem>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paidDateVariance}>
+                      <FormControl isInvalid={!!errors.payDateVariance}>
                         <FormLabel
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
                           color="gray.600"
-                          htmlFor="paidDateVariance"
+                          htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
-                          {t('paidDateVariance')}
+                          {t('payDateVariance')}
                         </FormLabel>
                         <Input
                           data-testid="new-expected-completion-date"
-                          id="paidDateVariance"
+                          id="payDateVariance"
                           type="text"
                           size="md"
                           css={calendarIcon}
                           isDisabled
-                          {...register('paidDateVariance')}
+                          {...register('payDateVariance')}
                         />
-                        <FormErrorMessage>{errors?.paidDateVariance?.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
                   </>
