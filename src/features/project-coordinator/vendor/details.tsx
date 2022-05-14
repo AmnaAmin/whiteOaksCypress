@@ -14,63 +14,68 @@ import {
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  Color: 'gray.600',
-}
-
 const Details = () => {
   return (
     <Stack spacing={3}>
       <Grid templateColumns="repeat(3,215px)" rowGap="6" columnGap="4">
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Business Name</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              Business Name
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Score</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Score
+            </FormLabel>
 
             <ReactSelect selectProps={{ isBorderLeft: true }} />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Status</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Status
+            </FormLabel>
             <ReactSelect selectProps={{ isBorderLeft: true }} />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Primary Contact</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              Primary Contact
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Primary Email</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              Primary Email
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem></GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Secondary Contact</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Secondary Contact
+            </FormLabel>
 
-            <Input />
+            <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Secondary Email</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Secondary Email
+            </FormLabel>
 
-            <Input />
+            <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem></GridItem>
@@ -79,30 +84,37 @@ const Details = () => {
       <HStack spacing="4" pb="2" pt="2">
         <Box w="215px">
           <FormControl>
-            <FormLabel sx={labelStyle}>Business Phone No</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              Business Phone No
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </Box>
-        <Box w="109px">
+        <Box>
           <FormControl>
-            <FormLabel sx={labelStyle}>Ext</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Ext
+            </FormLabel>
 
-            <Input />
+            <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
           </FormControl>
         </Box>
         <Box w="215px">
           <FormControl>
-            <FormLabel sx={labelStyle}>State</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              State
+            </FormLabel>
 
-            <Input />
+            <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
           </FormControl>
         </Box>
         <Box w="109px">
           <FormControl>
-            <FormLabel sx={labelStyle}>Ext</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Ext
+            </FormLabel>
 
-            <Input />
+            <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
           </FormControl>
         </Box>
       </HStack>
@@ -110,51 +122,60 @@ const Details = () => {
       <Grid templateColumns="repeat(4,215px)" rowGap="6" columnGap="4">
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Street Address</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              Street Address
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>City</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              City
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>State</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              State
+            </FormLabel>
 
             <ReactSelect selectProps={{ isBorderLeft: true }} />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Zipcode</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              Zipcode
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Capacity</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Capacity
+            </FormLabel>
 
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>EIN</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              EIN
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>SIN</FormLabel>
-
-            <Input w="215px" variant="outline-with-left-border" size="md" placeholder="Input size medium" />
+            <FormLabel variant="strong-label" size="md">
+              SIN
+            </FormLabel>
+            <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
           </FormControl>
         </GridItem>
         <GridItem></GridItem>
@@ -163,7 +184,9 @@ const Details = () => {
       <Box>
         <Stack alignItems="center" direction="row">
           <VStack alignItems="start">
-            <Text sx={labelStyle}>Payment Method</Text>
+            <Text fontSize="14px" fontWeight={500} color="gray.600">
+              Payment Method
+            </Text>
             <HStack>
               <Checkbox colorScheme="gray">Credit Card</Checkbox>
               <Checkbox colorScheme="gray">Check</Checkbox>
@@ -172,7 +195,7 @@ const Details = () => {
           </VStack>
           <Box w="215px">
             <FormControl>
-              <FormLabel sx={labelStyle} mb="0">
+              <FormLabel variant="strong-label" size="md" mb="0">
                 Payments Terms
               </FormLabel>
               <ReactSelect selectProps={{ isBorderLeft: true }} />
