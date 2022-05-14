@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -30,6 +29,7 @@ import { useDocuments } from 'utils/vendor-projects'
 import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -175,13 +175,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                     </FormLabel>
 
                     <Button
-                      fontSize="14px"
-                      fontWeight={500}
-                      bg="white"
-                      color="#4E87F8"
+                      colorScheme="brand"
+                      variant="ghost"
                       float="right"
                       mr={3}
-                      h="48px"
                       onClick={() => downloadFile(recentLWFile.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
@@ -191,17 +188,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                 )}
 
                 <Button
-                  bg="#4E87F8"
+                  colorScheme="brand"
                   disabled={!claimantsSignature || recentLWFile}
-                  color="#FFFFFF"
                   float="right"
-                  _hover={{ bg: 'royalblue' }}
                   onClick={generatePdf}
-                  fontStyle="normal"
-                  fontSize="14px"
-                  fontWeight={600}
-                  h="48px"
-                  w="130px"
                 >
                   <Box pos="relative" right="6px"></Box>
                   Generate LW
@@ -304,29 +294,10 @@ export const LienWaiverTab: React.FC<any> = props => {
         </FormControl>
         <Divider />
         <ModalFooter mt={3}>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            color="gray.700"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
             {t('close')}
           </Button>
-          <Button
-            colorScheme="CustomPrimaryColor"
-            type="submit"
-            _focus={{ outline: 'none' }}
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </ModalFooter>

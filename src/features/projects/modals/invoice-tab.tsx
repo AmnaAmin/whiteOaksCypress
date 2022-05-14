@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -21,6 +20,8 @@ import {
   FormLabel,
   Link,
 } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
+
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 import { useState } from 'react'
@@ -185,6 +186,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
                           type="submit"
                           size="xs"
                           variant="ghost"
+                          colorScheme="brand"
                           my={0.5}
                           fontSize="14px"
                           fontWeight={600}
@@ -284,30 +286,10 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
         </Box>
       </Box>
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           Close
         </Button>
-        <Button
-          _focus={{ outline: 'none' }}
-          colorScheme={'CustomPrimaryColor'}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          Save
-        </Button>
+        <Button colorScheme="brand">Save</Button>
       </HStack>
     </Box>
   )

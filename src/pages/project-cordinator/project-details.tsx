@@ -78,7 +78,6 @@ export const ProjectDetails: React.FC = props => {
                         <BiAddToQueue size={14} />
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
-
                     </Flex>
 
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />

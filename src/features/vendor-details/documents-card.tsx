@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
+import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -14,6 +14,7 @@ import {
 } from 'utils/vendor-details'
 import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
+import { Button } from 'components/button/button'
 
 const labelStyle = {
   fontSize: '14px',
@@ -335,17 +336,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
         alignItems="center"
         justifyContent="end"
       >
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          type="submit"
-          data-testid="saveDocumentCards"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button colorScheme="brand" type="submit" data-testid="saveDocumentCards">
           {t('next')}
         </Button>
       </Flex>

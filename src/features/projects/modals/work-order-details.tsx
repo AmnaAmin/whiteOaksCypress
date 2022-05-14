@@ -167,20 +167,15 @@ const WorkOrderDetails = ({
                 </Flex>
                 {tabIndex === 3 && (
                   <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
-                    <Flex fontSize="14px" fontWeight={500} mr={1}>
-                      <Text mr={2}>Recent INV:</Text>
-                      <Text color="#4E87F8">Invc4.pdf</Text>
+                    <Flex mr={1} alignItems="center">
+                      <Text fontSize="14px" fontWeight={500} mr={2}>
+                        Recent INV:
+                      </Text>
+                      <Button variant="ghost" colorScheme="brand">
+                        Invc4.pdf
+                      </Button>
                     </Flex>
-                    <Button
-                      fontSize="14px"
-                      fontWeight={600}
-                      h="48px"
-                      w="130px"
-                      colorScheme="CustomPrimaryColor"
-                      _focus={{ outline: 'none' }}
-                    >
-                      Generate
-                    </Button>
+                    <Button colorScheme="brand">Generate</Button>
                   </HStack>
                 )}
               </TabList>
