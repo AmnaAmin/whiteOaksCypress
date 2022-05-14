@@ -7,6 +7,7 @@ import textArea from './components/textarea'
 import alert from './components/alert'
 import checkbox from './components/checkbox'
 import label from './components/label'
+import spinner from './components/spinner'
 
 export const theme = extendTheme({
   styles: {
@@ -127,5 +128,6 @@ export const theme = extendTheme({
     ...alert,
     ...checkbox,
     ...label,
+    ...spinner,
   },
 })

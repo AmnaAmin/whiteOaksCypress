@@ -1,6 +1,12 @@
-import { Box, BoxProps, Spinner } from '@chakra-ui/react'
+import { Spinner } from '@chakra-ui/spinner'
+import { Box } from '@chakra-ui/react'
 
-export const ViewLoader: React.FC<BoxProps> = props => {
+export default {
+  title: 'UI/Spinner',
+  component: Spinner,
+}
+
+export const SpinnerDefault = () => {
   return (
     <Box
       position="absolute"
@@ -9,6 +15,7 @@ export const ViewLoader: React.FC<BoxProps> = props => {
       top="0"
       bottom="0"
       width="100%"
+      height="100vh"
       display="flex"
       flexDirection="column"
       justifyContent="center"
