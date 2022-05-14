@@ -85,7 +85,7 @@ export const chakraStyles = {
       _disabled: {
         opacity: 0.7,
         cursor: 'not-allowed',
-        bg: 'gray.200',
+        bg: 'gray.100',
       },
     }
   },
