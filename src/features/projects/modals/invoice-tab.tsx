@@ -48,7 +48,7 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 }
 
 export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
-  const [allowManualEntry] = useState(false)
+  const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [items, setItems] = useState([
     {
       item: '1',
