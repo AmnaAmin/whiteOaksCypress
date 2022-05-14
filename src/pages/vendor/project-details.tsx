@@ -1,7 +1,7 @@
 import { useDisclosure, Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
@@ -42,10 +42,9 @@ const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
-  const preventNewTransaction = useMemo(() => {
-    return projectData?.vendorWOStatusValue.toLowerCase() === 'paid'
-  }, [projectData])
+  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
   return (
     <>

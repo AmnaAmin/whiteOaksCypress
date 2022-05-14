@@ -44,6 +44,9 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
   return (
     <>
@@ -78,7 +81,6 @@ export const ProjectDetails: React.FC = props => {
                         <BiAddToQueue size={14} />
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
-
                     </Flex>
 
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
@@ -97,40 +99,12 @@ export const ProjectDetails: React.FC = props => {
                 )}
                 {tabIndex === 0 && (
                   <>
-                    {/* <Button
-                      bg="#FFFFFF"
-                      color="#4E87F8"
-                      border="1px solid #4E87F8"
-                      marginRight={1}
-                      size="md"
-                      fontSize="12px"
-                      fontWeight={500}
-                      fontStyle="normal"
-                      _hover={{ bg: 'none' }}
-                      onClick={() => {
-                        if (projectTableInstance) {
-                          projectTableInstance?.exportData('xlsx', false)
-                        }
-                      }}
+                    <Button
+                      variant="ghost"
+                      colorScheme="brand"
+                      onClick={onTransactionModalOpen}
+                      isDisabled={preventNewTransaction}
                     >
-                      <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                        <BsBoxArrowUp />
-                      </Box>
-                      {t('export')}
-                    </Button> */}
-                    {/* <Button
-                      bg="#FFFFFF"
-                      color="#4E87F8"
-                      border="1px solid #4E87F8"
-                      _hover={{ bg: 'none' }}
-                      marginRight={1}
-                      size="md"
-                    >
-                      {settingColumns && (
-                        <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
-                      )}
-                    </Button> */}
-                    <Button variant="ghost" colorScheme="brand" onClick={onTransactionModalOpen}>
                       {t('newTransaction')}
                     </Button>
                   </>
