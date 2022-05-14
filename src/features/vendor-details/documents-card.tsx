@@ -134,18 +134,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                 testId="fileInputW9Document"
                 isRequired={documents.w9DocumentUrl ? false : true}
               >
-                <Button
-                  rounded="none"
-                  roundedLeft={5}
-                  fontSize="14px"
-                  fontWeight={500}
-                  color="gray.600"
-                  bg="gray.100"
-                  h="36px"
-                  w={120}
-                >
-                  {t('chooseFile')}
-                </Button>
+                {t('chooseFile')}
               </FormFileInput>
             </Box>
             <Box ml={6} pt={5}>
@@ -187,18 +176,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputAgreement"
                   isRequired={changedDateFields.includes('agreementSignedDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -246,18 +224,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputInsurance"
                   isRequired={changedDateFields.includes('autoInsuranceExpDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -302,18 +269,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputCoiGlExp"
                   isRequired={changedDateFields.includes('COIGLExpDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -358,18 +314,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputCoiWcExp"
                   isRequired={changedDateFields.includes('coiWcExpDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
