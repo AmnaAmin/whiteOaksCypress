@@ -156,7 +156,10 @@ export const useProjectWorkOrders = (projectId?: string) => {
   const workOrderOptions = useMemo(
     () =>
       workOrders
-        ?.filter(wo => wo.statusLabel !== 'Paid')
+        ?.filter(wo => {
+          const status = wo.statusLabel?.toLowerCase()
+          return !(status === 'paid' || status === 'cancelled')
+        })
         .map(workOrder => ({
           label: `${workOrder.companyName} (${workOrder.skillName})`,
           value: `${workOrder.id}`,
