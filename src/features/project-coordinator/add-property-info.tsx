@@ -121,6 +121,7 @@ export const AddPropertyInfo = props => {
         setValue('zipCode', property.zipCode)
       }
     })
+    setIsDuplicateAddress(true)
   }
 
   const onSubmit = useCallback(
@@ -379,11 +380,8 @@ export const AddPropertyInfo = props => {
               refetch()
             }, 2000)
             onOpenAddressVerifyModalOpen()
-            // if (onclose) {
-            //   props.setNextTab()
-            // }
+            setIsDuplicateAddress(true)
           }}
-          //props.setNextTab()
         >
           {'Next'}
         </Button>
