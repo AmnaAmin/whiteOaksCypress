@@ -4,6 +4,7 @@ import { Box, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input, Flex } 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
+import last from 'lodash/last'
 import {
   readFileContent,
   useSaveSettings,
@@ -17,11 +18,14 @@ import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
+import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
 
 const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
   const { data: account, refetch } = useAccountDetails()
-  // const [lang, setLanguage] = useState(account?.langKey);
+  const [preview, setPreview] = useState<string | null>(null)
+  const [imgFile, setImgFile] = useState<any>(null)
+
   const { i18n, t } = useTranslation()
 
   const settingsDefaultValue = account => {
@@ -30,7 +34,7 @@ const Settings = React.forwardRef((props, ref) => {
       lastName: account.lastName,
       email: account.login,
       language: account.langKey,
-      profilePicture: null,
+      profilePicture: account.imageUrl,
     }
     return settings
   }
@@ -53,6 +57,13 @@ const Settings = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (account) {
       const defaultSettings = settingsDefaultValue(account)
+      setPreview(account.imageUrl)
+      if (account.imageUrl) {
+        convertImageUrltoDataURL(account.imageUrl).then(dataUrl => {
+          var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
+          setImgFile(fileData)
+        })
+      }
       reset(defaultSettings)
     }
   }, [account, reset])
