@@ -14,12 +14,19 @@ import { Controller, useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { ProjectInfo } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
-import { useMarkets, useProperties, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
-import xml2js from 'xml2js'
+import {
+  // useMarkets,
+  useProperties,
+  useSaveProjectDetails,
+  useStates,
+  useVerifyAddressApi,
+} from 'utils/pc-projects'
+// import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
-import Select, { AriaOnFocus } from 'react-select'
+// import Select from 'react-select'
+import Creatable from 'react-select/creatable' //check for input on select
 
 export const AddPropertyInfo = props => {
   const [streetAddress, setStreetAddress] = useState('')
@@ -30,7 +37,7 @@ export const AddPropertyInfo = props => {
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [verificationInProgress, setVerificationInProgress] = useState(false)
   const [check, setCheck] = useState(false)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  // const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // API calls
   const { data: properties } = useProperties()
@@ -67,12 +74,13 @@ export const AddPropertyInfo = props => {
       }))
     : null
 
-  const onMenuOpen = () => setIsMenuOpen(true)
-  const onMenuClose = () => setIsMenuOpen(false)
+  // const onMenuOpen = () => setIsMenuOpen(true)
+  // const onMenuClose = () => setIsMenuOpen(false)
 
   // Continue unverified Check
   const handleCheck = () => {
     setCheck(!check)
+    setIsDuplicateAddress(false)
   }
 
   const labelStyle = {
@@ -120,6 +128,7 @@ export const AddPropertyInfo = props => {
         setValue('state', property.state)
         setValue('zipCode', property.zipCode)
       }
+      return streetAddress // to remove return error on find - check!
     })
     setIsDuplicateAddress(true)
   }
@@ -145,6 +154,7 @@ export const AddPropertyInfo = props => {
       setCity(addressInfo.city)
       setState(addressInfo.state)
       setZipCode(addressInfo.zipCode)
+      setIsDuplicateAddress(false)
       saveProjectDetails(addressInfo, {
         onSuccess() {},
       })
@@ -155,7 +165,9 @@ export const AddPropertyInfo = props => {
   // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
-      const parser = new xml2js.Parser()
+      var XMLParser = require('react-xml-parser')
+      var parser = new XMLParser().parseFromString(addressData.data)
+      // const parser = new xml2js.Parser()
       parser
         .parseStringPromise(addressData.data)
         .then(function (result) {
@@ -219,15 +231,15 @@ export const AddPropertyInfo = props => {
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <Creatable
                     id="streetAddress"
                     options={addressOptions}
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
                     placeholder="Type address here.."
-                    onMenuOpen={onMenuOpen}
-                    onMenuClose={onMenuClose}
+                    // onMenuOpen={onMenuOpen}
+                    // onMenuClose={onMenuClose}
                     onChange={setAddressValues}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

@@ -11,7 +11,15 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
 import { ProjectDayFilters } from 'features/project-coordinator/project-days-filters'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
-import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, useStates } from 'utils/pc-projects'
+import {
+  useClients,
+  useFPM,
+  //useMarkets,
+  usePC,
+  useProjectTypes,
+  useProperties,
+  useStates,
+} from 'utils/pc-projects'
 
 export const Projects = () => {
   const { t } = useTranslation()

@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { FormSelect } from 'components/react-hook-form-fields/select'
-import { useProjectDetails, useProjectTypes, useSaveProjectDetails } from 'utils/pc-projects'
+import { useProjectTypes, useSaveProjectDetails } from 'utils/pc-projects'
 import { ProjectInfo } from 'types/project.type'
-import { useParams } from 'react-router-dom'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
 
@@ -42,7 +41,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     handleSubmit,
     control,
     watch,
-    reset,
   } = useForm<ProjectInfo>()
 
   /* debug purpose */

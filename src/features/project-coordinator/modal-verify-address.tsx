@@ -9,13 +9,9 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Text,
-  Flex,
-  Input,
   GridItem,
   Grid,
   Checkbox,
-  Icon,
   Box,
 } from '@chakra-ui/react'
 import FailedIcon from 'icons/failed-icon'
@@ -42,9 +38,7 @@ export function ModalVerifyAddress({
   props,
   addressVerificationStatus,
 }: VerifyAddressBoxProps) {
-  const [closeModal, setCloseModal] = useState(isOpen)
   const [continueUnverified, setContinueUnverified] = useState(false)
-  const toggleSubModal = () => props
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="xl">

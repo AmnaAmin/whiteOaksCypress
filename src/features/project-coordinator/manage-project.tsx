@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react'
-import { Button, FormControl, Grid, GridItem, toast } from '@chakra-ui/react'
+import React, { useCallback } from 'react'
+import { Button, FormControl, Grid, GridItem } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
@@ -10,7 +10,7 @@ import { useToast } from '@chakra-ui/react'
 export const ManageProject: React.FC<{
   isLoading: boolean
 }> = () => {
-  const [showModal, setShowModal] = useState(false)
+  // const [showModal, setShowModal] = useState(false)
   const toast = useToast()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
@@ -45,7 +45,6 @@ export const ManageProject: React.FC<{
     handleSubmit,
     control,
     watch,
-    reset,
   } = useForm<ProjectInfo>()
 
   /* debug purpose */
@@ -84,9 +83,9 @@ export const ManageProject: React.FC<{
     [saveProjectDetails],
   )
 
-  const onClose = () => {
-    setShowModal(false)
-  }
+  // const onClose = () => {
+  //   setShowModal(false)
+  // }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -183,7 +182,13 @@ export const ManageProject: React.FC<{
         </GridItem>
       </Grid>
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button onClick={onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
+        <Button
+          // onClick={onClose}
+          variant="outline"
+          size="md"
+          color="#4E87F8"
+          border="2px solid #4E87F8"
+        >
           {'Cancel'}
         </Button>
         <Button

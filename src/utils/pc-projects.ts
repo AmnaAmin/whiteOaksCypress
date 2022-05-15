@@ -1,7 +1,6 @@
 import { Market, ProjectType } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
-import { useToast } from '@chakra-ui/react'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -113,12 +112,26 @@ export const useStates = () => {
 export const useMarkets = () => {
   const client = useClient()
 
-  return useQuery('markets', async () => {
+  const { data: markets, ...rest } = useQuery<Array<Market>>('markets', async () => {
     const response = await client(`markets`, {})
-
     return response?.data
   })
+
+  return {
+    markets,
+    ...rest,
+  }
 }
+
+// export const useMarkets = () => {
+//   const client = useClient()
+
+//   return useQuery('markets', async () => {
+//     const response = await client(`markets`, {})
+
+//     return response?.data
+//   })
+// }
 
 export const useFPM = () => {
   const client = useClient()
