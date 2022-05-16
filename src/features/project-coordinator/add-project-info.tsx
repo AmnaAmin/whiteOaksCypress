@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { useProjectTypes, useSaveProjectDetails } from 'utils/pc-projects'
-import { ProjectInfo } from 'types/project.type'
+import { ProjectFormValues } from 'types/project.type'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
 
@@ -41,7 +41,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     handleSubmit,
     control,
     watch,
-  } = useForm<ProjectInfo>()
+  } = useForm<ProjectFormValues>()
 
   /* debug purpose */
   const watchAllFields = watch()
@@ -52,36 +52,36 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
 
-  const onSubmit = useCallback(
-    async value => {
-      let fileContents: any = null
-      if (value.projectSOW && value.projectSOW[0]) {
-        fileContents = await readFileContent(value.projectSOW[0])
-      }
-      const projectPayload = {
-        name: value.name,
-        projectType: value.projectType,
-        woNumber: value.woNumber,
-        poNumber: value.poNumber,
-        clientStartDate: value.clientStartDate,
-        clientDueDate: value.clientDueDate,
-        woaStartDate: value.woaStartDate,
-        sowOriginalContractAmount: currencyFormatter(value.sowOriginalContractAmount),
-        projectSOW: value.projectSOW && value.projectSOW[0] ? value.projectSOW[0].name : null,
-        sowLink: fileContents,
-      }
-      console.log('payload', projectPayload)
-      saveProjectDetails(projectPayload, {
-        onSuccess() {
-          props.setNextTab()
-        },
-      })
-    },
-    [saveProjectDetails],
-  )
+  // const onSubmit = useCallback(
+  //   async value => {
+  //     let fileContents: any = null
+  //     if (value.projectSOW && value.projectSOW[0]) {
+  //       fileContents = await readFileContent(value.projectSOW[0])
+  //     }
+  //     const projectPayload = {
+  //       name: value.name,
+  //       projectType: value.projectType,
+  //       woNumber: value.woNumber,
+  //       poNumber: value.poNumber,
+  //       clientStartDate: value.clientStartDate,
+  //       clientDueDate: value.clientDueDate,
+  //       woaStartDate: value.woaStartDate,
+  //       sowOriginalContractAmount: currencyFormatter(value.sowOriginalContractAmount),
+  //       projectSOW: value.projectSOW && value.projectSOW[0] ? value.projectSOW[0].name : null,
+  //       sowLink: fileContents,
+  //     }
+  //     console.log('payload', projectPayload)
+  //     saveProjectDetails(projectPayload, {
+  //       onSuccess() {
+  //         props.setNextTab()
+  //       },
+  //     })
+  //   },
+  //   [saveProjectDetails],
+  // )
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
@@ -232,6 +232,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           {'Next'}
         </Button>
       </Grid>
-    </form>
+    </>
   )
 })

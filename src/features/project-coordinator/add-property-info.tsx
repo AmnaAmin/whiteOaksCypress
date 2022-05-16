@@ -10,9 +10,9 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useFormContext } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
-import { ProjectInfo } from 'types/project.type'
+import { ProjectFormValues } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
 import { useMarkets, useProperties, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
@@ -37,7 +37,6 @@ export const AddPropertyInfo = props => {
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
   const { data: statesData } = useStates()
   const { data: markets } = useMarkets()
-  const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
   const states = statesData
     ? statesData?.map(state => ({
@@ -90,7 +89,7 @@ export const AddPropertyInfo = props => {
     control,
     watch,
     setValue,
-  } = useForm<ProjectInfo>()
+  } = useFormContext<ProjectFormValues>()
 
   /* debug purpose */
   const watchAllFields = watch()
@@ -116,37 +115,6 @@ export const AddPropertyInfo = props => {
     })
     setIsDuplicateAddress(false)
   }
-
-  const onSubmit = useCallback(
-    async values => {
-      setTimeout(() => {
-        refetch()
-      }, 2000)
-      const addressInfo = {
-        streetAddress: values.streetAddress,
-        city: values.city,
-        state: values.state,
-        zipCode: values.zipCode,
-        market: values.market,
-        gateCode: values.gateCode,
-        lockBoxCode: values.lockBoxCode,
-        hoaPhone: values.hoaPhone,
-        hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
-        hoaEmailAddress: values.hoaEmailAddress,
-      }
-      setStreetAddress(addressInfo.streetAddress)
-      setCity(addressInfo.city)
-      setState(addressInfo.state)
-      setZipCode(addressInfo.zipCode)
-      setIsDuplicateAddress(false)
-      saveProjectDetails(addressInfo, {
-        onSuccess() {
-          props.setNextTab()
-        },
-      })
-    },
-    [refetch, setStreetAddress, setCity, setState, setZipCode, saveProjectDetails],
-  )
 
   // Parse XML to Verify Address
   useEffect(() => {
@@ -192,7 +160,7 @@ export const AddPropertyInfo = props => {
   } = useDisclosure()
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
       {isDuplicateAddress && (
         <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
           <AlertIcon />
@@ -366,12 +334,12 @@ export const AddPropertyInfo = props => {
           _hover={{ bg: 'blue' }}
           ml="3"
           size="md"
-          type="submit"
+          //  type="submit"
           disabled={!check && isDuplicateAddress && !verificationInProgress}
           onClick={() => {
-            setTimeout(() => {
-              refetch()
-            }, 2000)
+            // setTimeout(() => {
+            //   refetch()
+            // }, 2000)
             onOpenAddressVerifyModalOpen()
           }}
         >
@@ -386,6 +354,6 @@ export const AddPropertyInfo = props => {
         props={''}
         addressVerificationStatus={addressVerificationStatus}
       />
-    </form>
+    </>
   )
 }

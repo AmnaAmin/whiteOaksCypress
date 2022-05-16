@@ -159,7 +159,7 @@ export type ProjectAlertType = {
 //   zipCode?: any
 // }
 
-export type ProjectInfo = {
+export type ProjectFormValues = {
   name?: string
   projectType?: number
   woNumber?: string

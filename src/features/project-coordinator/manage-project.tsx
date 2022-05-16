@@ -4,7 +4,7 @@ import { FormInput } from 'components/react-hook-form-fields/input'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { useClients, useFPM, usePC, useSaveProjectDetails } from 'utils/pc-projects'
-import { ProjectInfo } from 'types/project.type'
+import { ProjectFormValues } from 'types/project.type'
 import { useToast } from '@chakra-ui/react'
 
 export const ManageProject: React.FC<{
@@ -45,7 +45,7 @@ export const ManageProject: React.FC<{
     handleSubmit,
     control,
     watch,
-  } = useForm<ProjectInfo>()
+  } = useForm<ProjectFormValues>()
 
   /* debug purpose */
   const watchAllFields = watch()
@@ -56,39 +56,8 @@ export const ManageProject: React.FC<{
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
 
-  const onSubmit = useCallback(
-    async value => {
-      const projectInfo = {
-        projectManager: value.projectManager,
-        projectCoordinator: value.projectCoordinator,
-        clientName: value.clientName,
-        superFirstName: value.superFirstName,
-        superEmailAddress: value.superEmailAddress,
-        superPhoneNumber: value.superPhoneNumber,
-        superPhoneNumberExtension: value.superPhoneNumberExtension,
-      }
-      console.log('payload', projectInfo)
-      saveProjectDetails(projectInfo, {
-        onSuccess() {
-          toast({
-            title: 'Project Details',
-            description: 'New Project has been created successfully.',
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-          })
-        },
-      })
-    },
-    [saveProjectDetails],
-  )
-
-  // const onClose = () => {
-  //   setShowModal(false)
-  // }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
@@ -202,6 +171,6 @@ export const ManageProject: React.FC<{
           {'Next'}
         </Button>
       </Grid>
-    </form>
+    </>
   )
 }
