@@ -14,19 +14,13 @@ import { Controller, useForm } from 'react-hook-form'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { ProjectInfo } from 'types/project.type'
 import { useCallback, useEffect, useState } from 'react'
-import {
-  // useMarkets,
-  useProperties,
-  useSaveProjectDetails,
-  useStates,
-  useVerifyAddressApi,
-} from 'utils/pc-projects'
-// import xml2js from 'xml2js'
+import { useMarkets, useProperties, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
+import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
-// import Select from 'react-select'
-import Creatable from 'react-select/creatable' //check for input on select
+import Select from 'react-select'
+// import Creatable from 'react-select/creatable' //check for input on select
 
 export const AddPropertyInfo = props => {
   const [streetAddress, setStreetAddress] = useState('')
@@ -37,16 +31,13 @@ export const AddPropertyInfo = props => {
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [verificationInProgress, setVerificationInProgress] = useState(false)
   const [check, setCheck] = useState(false)
-  // const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // API calls
   const { data: properties } = useProperties()
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
   const { data: statesData } = useStates()
-  // const { data: markets } = useMarkets()
+  const { data: markets } = useMarkets()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
-
-  // console.log(markets)
 
   const states = statesData
     ? statesData?.map(state => ({
@@ -55,17 +46,12 @@ export const AddPropertyInfo = props => {
       }))
     : null
 
-  const market = [
-    { value: '1', label: 'A' },
-    { value: '2', label: 'B' },
-    { value: '3', label: 'C' },
-  ]
-  // const market = markets
-  //   ? markets?.map(market => ({
-  //       label: market?.metropolitanServiceArea,
-  //       value: market?.id,
-  //     }))
-  //   : null
+  const market = markets
+    ? markets?.map(market => ({
+        label: market?.metropolitanServiceArea,
+        value: market?.id,
+      }))
+    : null
 
   const addressOptions = properties
     ? properties?.map(property => ({
@@ -73,9 +59,6 @@ export const AddPropertyInfo = props => {
         value: property?.id,
       }))
     : null
-
-  // const onMenuOpen = () => setIsMenuOpen(true)
-  // const onMenuClose = () => setIsMenuOpen(false)
 
   // Continue unverified Check
   const handleCheck = () => {
@@ -127,10 +110,11 @@ export const AddPropertyInfo = props => {
         setValue('city', property.city)
         setValue('state', property.state)
         setValue('zipCode', property.zipCode)
+        setIsDuplicateAddress(true)
       }
-      return streetAddress // to remove return error on find - check!
+      return streetAddress
     })
-    setIsDuplicateAddress(true)
+    setIsDuplicateAddress(false)
   }
 
   const onSubmit = useCallback(
@@ -156,7 +140,9 @@ export const AddPropertyInfo = props => {
       setZipCode(addressInfo.zipCode)
       setIsDuplicateAddress(false)
       saveProjectDetails(addressInfo, {
-        onSuccess() {},
+        onSuccess() {
+          props.setNextTab()
+        },
       })
     },
     [refetch, setStreetAddress, setCity, setState, setZipCode, saveProjectDetails],
@@ -165,9 +151,7 @@ export const AddPropertyInfo = props => {
   // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
-      var XMLParser = require('react-xml-parser')
-      var parser = new XMLParser().parseFromString(addressData.data)
-      // const parser = new xml2js.Parser()
+      const parser = new xml2js.Parser()
       parser
         .parseStringPromise(addressData.data)
         .then(function (result) {
@@ -231,15 +215,13 @@ export const AddPropertyInfo = props => {
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Creatable
+                  <Select
                     id="streetAddress"
                     options={addressOptions}
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
                     placeholder="Type address here.."
-                    // onMenuOpen={onMenuOpen}
-                    // onMenuClose={onMenuClose}
                     onChange={setAddressValues}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -285,7 +267,6 @@ export const AddPropertyInfo = props => {
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`zipCode`}
-              // value={zipCode}
             />
           </FormControl>
         </GridItem>
@@ -392,7 +373,6 @@ export const AddPropertyInfo = props => {
               refetch()
             }, 2000)
             onOpenAddressVerifyModalOpen()
-            setIsDuplicateAddress(true)
           }}
         >
           {'Next'}
