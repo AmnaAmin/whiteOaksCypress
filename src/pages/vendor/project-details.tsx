@@ -42,6 +42,10 @@ const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
+
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
@@ -84,6 +88,7 @@ const ProjectDetails: React.FC = props => {
                     variant="ghost"
                     colorScheme="brand"
                     leftIcon={<BiAddToQueue />}
+                    isDisabled={preventNewTransaction}
                   >
                     {t('newTransaction')}
                   </Button>

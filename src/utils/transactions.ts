@@ -156,7 +156,10 @@ export const useProjectWorkOrders = (projectId?: string) => {
   const workOrderOptions = useMemo(
     () =>
       workOrders
-        ?.filter(wo => wo.statusLabel !== 'Paid')
+        ?.filter(wo => {
+          const status = wo.statusLabel?.toLowerCase()
+          return !(status === 'paid' || status === 'cancelled')
+        })
         .map(workOrder => ({
           label: `${workOrder.companyName} (${workOrder.skillName})`,
           value: `${workOrder.id}`,
@@ -254,15 +257,17 @@ export const parseChangeOrderAPIPayload = async (
     }
   }
 
+  const isAgainstProjectSOWSelected = formValues.against?.value === AGAINST_DEFAULT_VALUE
+
   const againstProjectSOWPayload =
-    formValues.against?.value === AGAINST_DEFAULT_VALUE
+    isAgainstProjectSOWSelected && formValues.transactionType?.value === TransactionTypeValues.changeOrder
       ? {
           sowRelatedChangeOrderId: formValues.changeOrder?.value,
           sowRelatedWorkOrderId: `${formValues.workOrder?.value}`,
           parentWorkOrderId: null,
         }
       : {
-          parentWorkOrderId: `${formValues.against?.value}`,
+          parentWorkOrderId: isAgainstProjectSOWSelected ? null : `${formValues.against?.value}`,
         }
 
   return {
@@ -274,7 +279,7 @@ export const parseChangeOrderAPIPayload = async (
     clientApprovedDate: dateISOFormat(formValues.invoicedDate as string),
     paidDate: dateISOFormat(formValues.paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
-    paidDateVariance: formValues.paidDateVariance || null,
+    payDateVariance: formValues.payDateVariance || '',
     lineItems: formValues.transaction.map(transaction => ({
       description: transaction.description,
       whiteoaksCost: transaction.amount,
@@ -387,7 +392,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     invoicedDate: null,
     paymentTerm: null,
     paidDate: null,
-    paidDateVariance: '',
+    payDateVariance: '',
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refundMaterial: false,
@@ -427,7 +432,7 @@ export const parseTransactionToFormValues = (
     invoicedDate: datePickerFormat(transaction.clientApprovedDate as string),
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
-    paidDateVariance: '',
+    payDateVariance: '',
     paymentRecieved: null,
     refundMaterial: false,
     transaction:

@@ -16,8 +16,6 @@ import {
   Stack,
   Divider,
   HStack,
-  TagLabel,
-  Tag,
   Box,
   Flex,
   Button,
@@ -30,6 +28,7 @@ import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
 import { ProjectType } from 'types/project.type'
+import Status from '../status'
 
 const TabStyle = {
   fontWeight: 500,
@@ -94,13 +93,7 @@ const WorkOrderDetails = ({
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
               </Text>
-              {workOrder?.statusLabel && (
-                <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
-                  <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
-                    {workOrder?.statusLabel}
-                  </TagLabel>
-                </Tag>
-              )}
+              {workOrder?.statusLabel && <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />}
             </HStack>
           )}
         </ModalHeader>
@@ -167,20 +160,15 @@ const WorkOrderDetails = ({
                 </Flex>
                 {tabIndex === 3 && (
                   <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
-                    <Flex fontSize="14px" fontWeight={500} mr={1}>
-                      <Text mr={2}>Recent INV:</Text>
-                      <Text color="#4E87F8">Invc4.pdf</Text>
+                    <Flex mr={1} alignItems="center">
+                      <Text fontSize="14px" fontWeight={500} mr={2}>
+                        Recent INV:
+                      </Text>
+                      <Button variant="ghost" colorScheme="brand">
+                        Invc4.pdf
+                      </Button>
                     </Flex>
-                    <Button
-                      fontSize="14px"
-                      fontWeight={600}
-                      h="48px"
-                      w="130px"
-                      colorScheme="CustomPrimaryColor"
-                      _focus={{ outline: 'none' }}
-                    >
-                      Generate
-                    </Button>
+                    <Button colorScheme="brand">Generate</Button>
                   </HStack>
                 )}
               </TabList>

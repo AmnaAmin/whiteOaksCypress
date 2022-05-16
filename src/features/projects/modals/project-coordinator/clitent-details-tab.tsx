@@ -145,7 +145,6 @@ const DetailsTab = props => {
           </Box>
         </Flex>
 
-
         <Flex h="90px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
           <Button colorScheme="brand" variant="outline" size="lg" mr={3} onClick={props.onClose}>
             Close

@@ -4,7 +4,6 @@ import {
   Text,
   Flex,
   SimpleGrid,
-  Button,
   Checkbox,
   TableContainer,
   Table,
@@ -17,6 +16,7 @@ import React, { useState } from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -187,9 +187,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
 
           <HStack>
             <Button leftIcon={<BiDownload color="#4E87F8" />} variant="ghost" colorScheme="brand" onClick={downloadPdf}>
-              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
-                Download as PDF
-              </Text>
+              Download as PDF
             </Button>
 
             <Button
@@ -243,30 +241,10 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
       </TableContainer>
 
       <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           {t('close')}
         </Button>
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          {t('save')}
-        </Button>
+        <Button colorScheme="brand">{t('save')}</Button>
       </Flex>
     </Box>
   )
