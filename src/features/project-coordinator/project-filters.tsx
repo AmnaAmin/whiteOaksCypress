@@ -76,16 +76,16 @@ const useProjectCardJson = cards => {
       IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
     },
     {
-      id: 'collection',
-      title: 'Collection',
-      number: cards?.find(c => c.status === '119')?.count,
-      IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
-    },
-    {
       id: 'disputed',
       title: 'Disputed',
       number: cards?.find(c => c.status === '220')?.count,
       IconElement: <IconElement Icon={SummaryIconNinth} bg="#FFF5F7" />,
+    },
+    {
+      id: 'collection',
+      title: 'Collection',
+      number: cards?.find(c => c.status === '119')?.count,
+      IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
     },
   ]
 }
