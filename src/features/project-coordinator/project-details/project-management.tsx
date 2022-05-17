@@ -43,8 +43,8 @@ const ProjectManagement = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="35vh">
-          <Grid templateColumns="repeat(4,1fr)" rowGap="10" columnGap="1" w="61%">
+        <Stack minH="35vh" spacing={14}>
+          <Grid templateColumns="repeat(4,1fr)" rowGap={10} columnGap={4} w="908px">
             <GridItem>
               <FormControl w="215px">
                 <FormLabel sx={labelStyle}>Status</FormLabel>
@@ -258,29 +258,17 @@ const ProjectManagement = () => {
               </FormControl>
             </GridItem>
           </Grid>
-        </Box>
 
-        <Stack w="100%">
-          <Box pr="8">
-            <Divider border="1px solid" />
-          </Box>
-          <Box w="100%" minH="70px">
-            <Button
-              mt="8px"
-              mr="7"
-              float={'right'}
-              colorScheme="CustomPrimaryColor"
-              _focus={{ outline: 'none' }}
-              w="130px"
-              h="48px"
-              fontSize="14px"
-              fontStyle="normal"
-              fontWeight={500}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
+          <Stack>
+            <Box pr="8">
+              <Divider border="1px solid" />
+            </Box>
+            <Box w="100%" pb="3">
+              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
+                Save
+              </Button>
+            </Box>
+          </Stack>
         </Stack>
       </form>
     </Box>
