@@ -45,7 +45,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
       />
-      <Button rounded={0} roundedLeft={5} color="gray.600" size="md" fontSize="14px" fontWeight={500}>
+      <Button rounded={0} roundedLeft={5} variant="choose-file" colorScheme={isError ? 'red' : 'gray'}>
         {children}
       </Button>
       <Box flex="1" position="relative" overflow="hidden">

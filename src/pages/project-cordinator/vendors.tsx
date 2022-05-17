@@ -11,8 +11,7 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'utils/table-column-settings'
 
 const Vendors = () => {
-  const { isOpen: isOpenNewVendorModal, onClose: onNewVendorModalClose, onOpen: onNewVendorModalOpen } = useDisclosure()
-
+  const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [vendorTableInstance, setInstance] = useState<any>(null)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)

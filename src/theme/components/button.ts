@@ -53,6 +53,18 @@ const ButtonVariants = {
           },
         }
       },
+      'choose-file': props => {
+        return {
+          ...chakraTheme.components.Button.variants.outline(props),
+          borderWidth: '0 1px 0 0',
+          color: `${props.colorScheme}.500`,
+          bg: `${props.colorScheme}.100`,
+          _hover: {
+            color: `${props.colorScheme}.600`,
+            bg: `${props.colorScheme}.200`,
+          },
+        }
+      },
     },
 
     sizes: {

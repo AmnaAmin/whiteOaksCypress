@@ -104,6 +104,7 @@ export const ProjectDetails: React.FC = props => {
                       colorScheme="brand"
                       onClick={onTransactionModalOpen}
                       isDisabled={preventNewTransaction}
+                      leftIcon={<BiAddToQueue />}
                     >
                       {t('newTransaction')}
                     </Button>

@@ -36,3 +36,11 @@ export const InputStates = () => {
     </VStack>
   )
 }
+
+export const InputFile = () => {
+  return (
+    <VStack>
+      <Input w="215px" variant="reguired-field" type="file" />
+    </VStack>
+  )
+}
