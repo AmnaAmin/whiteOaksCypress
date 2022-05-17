@@ -8,7 +8,6 @@ import {
   Text,
   Divider,
   Input,
-  Button,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -26,6 +25,7 @@ import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateM
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { Button } from 'components/button/button'
 
 const textStyle = {
   color: '#4A5568',
@@ -189,7 +189,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       data-testid="primaryContact"
                       id="primaryContact"
                       type="text"
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('primaryContact', {
                         required: 'This is required',
                       })}
@@ -213,7 +213,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       id="businessPhoneNumber"
                       type="text"
                       data-testid="businessPhoneNumber"
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('businessPhoneNumber', {
                         required: 'This is required',
                       })}
@@ -281,7 +281,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl isInvalid={!!errors.primaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('primaryEmail', {
                         required: 'This is required',
                       })}
@@ -302,7 +302,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
             </Box>
 
             <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
-              <Button type="submit" data-testid="saveDetails" variant="solid" size="lg" colorScheme="brand">
+              <Button type="submit" data-testid="saveDetails" colorScheme="brand">
                 {t('save')}
               </Button>
             </Flex>

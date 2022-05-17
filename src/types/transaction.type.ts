@@ -2,6 +2,8 @@ export type ProjectWorkOrder = {
   businessEmailAddress: string
   businessPhoneNumber: string
   capacity: number
+  name: string
+  changeOrderAmount: number
   clientApprovedAmount: number
   clientOriginalApprovedAmount: number
   companyName: string
@@ -130,8 +132,14 @@ export interface FormValues {
   status: SelectOption | null
   expectedCompletionDate: string
   newExpectedCompletionDate: string
-  lienWaiver?: LienWaiverFormValues
   attachment: any
+  invoicedDate: string | null
+  paymentTerm: SelectOption | null
+  paidDate: string | null
+  payDateVariance: string
+  paymentRecieved: string | null
+  refundMaterial: boolean | null
+  lienWaiver?: LienWaiverFormValues
 }
 
 export type ChangeTransaction = {
@@ -155,6 +163,8 @@ export type ChangeOrderPayload = {
   paidDate: string | null
   lineItems: ChangeTransaction[]
   projectId: string
+  paymentTerm: string | null
+  payDateVariance: string | null
   documents?: Array<any>
 }
 
