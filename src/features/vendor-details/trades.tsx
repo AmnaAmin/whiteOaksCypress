@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Box, Button, Flex, useToast } from '@chakra-ui/react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
+import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
 import {
   parseTradeAPIDataToFormValues,
   parseTradeFormValuesToAPIPayload,
@@ -15,7 +15,17 @@ import { t } from 'i18next'
 
 // import 'components/translation/i18n';
 
-export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData = {} }) => {
+type tradesFormProps = {
+  submitForm: (values: any) => void
+  onClose?: () => void
+  vendorProfileData: VendorProfile | {}
+  trades?: Array<Trade>
+}
+
+export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void }> = ({
+  vendorProfileData = {},
+  onClose,
+}) => {
   const toast = useToast()
   const { data: trades, isLoading } = useTrades()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
@@ -40,13 +50,13 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vend
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <TradeForm submitForm={onSubmit} vendorProfileData={vendorProfileData} trades={trades} />
+        <TradeForm submitForm={onSubmit} vendorProfileData={vendorProfileData} trades={trades} onClose={onClose} />
       )}
     </Box>
   )
 }
 
-export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
+export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tradesFormProps) => {
   // const { t } = useTranslation()
 
   const {
@@ -67,7 +77,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
 
   useEffect(() => {
     if (trades?.length) {
-      const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData)
+      const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
 
       reset(tradeFormValues)
     }
@@ -105,6 +115,11 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades }) => {
         </Flex>
       </Box>
       <Flex alignItems="center" w="100%" h="100px" justifyContent="end" borderTop="2px solid #E2E8F0">
+        {onClose && (
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+            Cancel
+          </Button>
+        )}
         <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveVendorSkills">
           {t('save')}
         </Button>

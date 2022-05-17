@@ -5,7 +5,6 @@ import App from 'App'
 import userEvent from '@testing-library/user-event'
 import { DocumentsForm } from 'features/vendor-details/documents-card'
 import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
-
 jest.setTimeout(150000)
 
 const chooseFilebyTestId = (id, filename) => {
@@ -46,7 +45,7 @@ describe('Vendor Profile Documents', () => {
 
   it('W9 document is required for submitting form', async () => {
     const mockSave = jest.fn()
-    directRender(<DocumentsForm vendor={VENDOR_DATA} onSubmit={mockSave} />)
+    directRender(<DocumentsForm vendor={VENDOR_DATA as any} onSubmit={mockSave} />)
     /* data from api doesnot have w9 document, hence submit will not be called */
     act(() => {
       fireEvent.submit(screen.getByTestId('saveDocumentCards'))
@@ -63,7 +62,7 @@ describe('Vendor Profile Documents', () => {
 
   it('With a change in date, document upload is required', async () => {
     const mockSave = jest.fn()
-    directRender(<DocumentsForm vendor={VENDOR_DATA} onSubmit={mockSave} />)
+    directRender(<DocumentsForm vendor={VENDOR_DATA as any} onSubmit={mockSave} />)
     /* change date field, without uploading corresponding document - submit will not be called */
     act(() => {
       fireEvent.change(screen.getByTestId('agreementSignedDate'), {

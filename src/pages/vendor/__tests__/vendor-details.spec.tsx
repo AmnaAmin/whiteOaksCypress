@@ -39,7 +39,7 @@ describe('Vendor Profile Test Cases', () => {
 
   it('Validating primary contact field', async () => {
     const mockSave = jest.fn()
-    directRender(<DetailsForm vendorProfileData={VENDOR_DATA} submitForm={mockSave} />)
+    directRender(<DetailsForm vendorProfileData={VENDOR_DATA as any} submitForm={mockSave} />)
     act(() => {
       fireEvent.input(screen.getByTestId('primaryContact'), {
         target: {
@@ -54,7 +54,7 @@ describe('Vendor Profile Test Cases', () => {
 
   it('Validating business phoneNumber field', async () => {
     const mockSave = jest.fn()
-    directRender(<DetailsForm vendorProfileData={VENDOR_DATA} submitForm={mockSave} />)
+    directRender(<DetailsForm vendorProfileData={VENDOR_DATA as any} submitForm={mockSave} />)
     act(() => {
       fireEvent.input(screen.getByTestId('businessPhoneNumber'), {
         target: {
@@ -69,7 +69,7 @@ describe('Vendor Profile Test Cases', () => {
 
   it('Validating primary email field', async () => {
     const mockSave = jest.fn()
-    directRender(<DetailsForm vendorProfileData={VENDOR_DATA} submitForm={mockSave} />)
+    directRender(<DetailsForm vendorProfileData={VENDOR_DATA as any} submitForm={mockSave} />)
     act(() => {
       fireEvent.input(screen.getByTestId('primaryEmail'), {
         target: {
@@ -84,7 +84,7 @@ describe('Vendor Profile Test Cases', () => {
 
   it('Save success with default values', async () => {
     const mockSave = jest.fn()
-    directRender(<DetailsForm vendorProfileData={VENDOR_DATA} submitForm={mockSave} />)
+    directRender(<DetailsForm vendorProfileData={VENDOR_DATA as any} submitForm={mockSave} />)
     act(() => {
       fireEvent.submit(screen.getByTestId('saveDetails'))
     })

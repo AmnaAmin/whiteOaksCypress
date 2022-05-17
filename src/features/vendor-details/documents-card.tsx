@@ -25,6 +25,13 @@ const labelStyle = {
 type DocumentsProps = {
   setNextTab: () => void
   vendor: VendorProfile
+  onClose?: () => void
+}
+
+type DocumentFormProps = {
+  vendor: VendorProfile
+  onSubmit: (values: any) => void
+  onClose?: () => void
 }
 
 const downloadableDocument = (link, text, testid?) => {
@@ -66,12 +73,12 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
   return (
     <Box w="100%">
-      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit}></DocumentsForm>
+      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit} onClose={props.onClose}></DocumentsForm>
     </Box>
   )
 })
 
-export const DocumentsForm = ({ vendor, onSubmit }) => {
+export const DocumentsForm = ({ vendor, onSubmit, onClose }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const defaultValue = vendor => {
@@ -336,6 +343,12 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
         alignItems="center"
         justifyContent="end"
       >
+        {onClose && (
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+            Cancel
+          </Button>
+        )}
+
         <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
           {t('next')}
         </Button>

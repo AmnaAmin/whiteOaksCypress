@@ -41,6 +41,13 @@ type FieldInfoCardProps = {
   icon?: React.ElementType
   testid?: string
 }
+
+type detailsFormProps = {
+  vendorProfileData: VendorProfile
+  submitForm: (values: any) => void
+  onClose?: () => void
+}
+
 const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
   return (
     <Box>
@@ -64,6 +71,7 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
 
 export const Details: React.FC<{
   vendorProfileData: VendorProfile
+  onClose?: () => void
 }> = props => {
   const { vendorProfileData } = props
   const toast = useToast()
@@ -142,12 +150,12 @@ export const Details: React.FC<{
           <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
         </GridItem>
       </Grid>
-      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} />
+      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} onClose={props.onClose} />
     </Flex>
   )
 }
 
-export const DetailsForm = ({ submitForm, vendorProfileData }) => {
+export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsFormProps) => {
   const { t } = useTranslation()
   const {
     register,
@@ -302,6 +310,11 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
             </Box>
 
             <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
+              {onClose && (
+                <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+                  Cancel
+                </Button>
+              )}
               <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="brand">
                 {t('save')}
               </Button>

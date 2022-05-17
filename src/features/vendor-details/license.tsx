@@ -23,6 +23,12 @@ import { Button } from 'components/button/button'
 type LicenseProps = {
   setNextTab: () => void
   vendor: VendorProfile
+  onClose?: () => void
+}
+type licenseFormProps = {
+  vendor: VendorProfile
+  onSubmit: (values: any) => void
+  onClose?: () => void
 }
 
 export const License = React.forwardRef((props: LicenseProps, ref) => {
@@ -45,12 +51,12 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 
   return (
     <Box>
-      <LicenseForm vendor={props.vendor} onSubmit={onSubmit} />
+      <LicenseForm vendor={props.vendor} onSubmit={onSubmit} onClose={props.onClose} />
     </Box>
   )
 })
 
-export const LicenseForm = ({ vendor, onSubmit }) => {
+export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => {
   const [startDate] = useState(new Date())
   const { t } = useTranslation()
 
@@ -116,7 +122,7 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" minH="60vh" spacing="15px" ml="8px">
+        <VStack align="start" h="500px" spacing="15px" ml="8px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
               <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -196,6 +202,12 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
           justifyContent="end"
           borderTop="2px solid #E2E8F0"
         >
+          {onClose && (
+            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+              Cancel
+            </Button>
+          )}
+
           <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveLicenses">
             {t('next')}
           </Button>
