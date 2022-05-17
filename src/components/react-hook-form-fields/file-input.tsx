@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import { UseFormRegister, UseFormRegisterReturn } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
+import { Button } from 'components/button/button'
 
 type FileInputProps = {
   errorMessage: any
@@ -56,7 +57,7 @@ export const downloadableLink = (downloadableFile: any) => {
 
 export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
   <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
-    <FormLabel fontSize={props.size || 'lg'} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis" mb="0">
+    <FormLabel fontSize={props.size || 'lg'} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
       {props.label}
     </FormLabel>
     <FileUpload
@@ -71,7 +72,19 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
           : {},
       )}
     >
-      {props.children}
+      <Button
+        rounded="none"
+        roundedLeft={5}
+        fontSize="14px"
+        fontWeight={500}
+        color="gray.600"
+        size="md"
+        ml={0}
+        colorScheme="gray"
+        w={120}
+      >
+        {props.children}
+      </Button>
     </FileUpload>
     <Box h={7}>
       {downloadableLink(props.downloadableFile)}
@@ -114,16 +127,15 @@ const FileUpload = (props: FileUploadProps) => {
           data-testid={props.testId}
         />
         {children}
-        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px">
+        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px" alignItems="center">
           {inputRef.current && (
             <Box
               color="#4E87F8"
               fontWeight={500}
               fontStyle="normal"
-              fontSize="12px"
+              fontSize="14px"
               as="span"
               ml="20px"
-              mt="7px"
               mr={5}
               whiteSpace="nowrap"
               overflow="hidden"

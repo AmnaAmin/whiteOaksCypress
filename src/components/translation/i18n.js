@@ -71,7 +71,10 @@ i18n.use(initReactI18next).init({
         against: 'Against',
         changeOrder: 'Change Order',
         workOrder: 'Work Order',
+        paymentTerm: 'Payment Term',
         newExpectedCompletionDate: 'New Expected Completion Date',
+        paidDate: 'Paid Date',
+        paidDateVariance: 'Paid Date Variance',
         addNewRow: 'Add New Row',
         deleteRow: 'Delete Row',
         attachment: 'Attachment',
@@ -99,11 +102,13 @@ i18n.use(initReactI18next).init({
         issue: 'Issue',
         expectedCompletion: 'Expected Completion',
         lienWaiver: 'Lien Waiver',
+        reject: 'Reject',
         inovice: 'Invoice',
         WOIssued: 'WO Issued',
         WOOriginalAmount: 'WO Original Amount',
         expectedStartDate: 'Expected Start Date',
         expectedCompletionDate: 'Expected Completion Date',
+        invoicedDate: 'Invoiced Date',
         addSignature: 'Add Signature',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
@@ -126,7 +131,6 @@ i18n.use(initReactI18next).init({
         expectedPayDate: 'Expected Pay Date',
         paymentTerms: 'Payment Terms',
         payDateVariance: 'Pay Date Variance',
-        paidDate: 'Paid Date',
         finalInvoice: 'Final Invoice',
         uploadInvoice: 'Upload Invoice',
         // Lean-Weiver
@@ -140,9 +144,15 @@ i18n.use(initReactI18next).init({
         informationSection:
           'This document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant`s schedule to receive or receipt of payment from the financial institution on which the following check is drawn:',
         // Projects-Documents
+        document: 'Document',
         documentType: 'Document Type',
         fileType: 'File Type',
         vendorGL: 'Vendor/GL',
+        createdDate: 'Created Date',
+        // Projects-Alerts
+        value: 'Value',
+        category: 'Category',
+        dateTriggered: 'Date Triggered',
 
         // VENDOR
         details: 'Details',
@@ -268,7 +278,11 @@ i18n.use(initReactI18next).init({
         against: 'estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',
+        paymentTerm: 'Plazo de Pago',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
+        invoicedDate: 'Fecha Facturada',
+        paidDate: 'Fecha de Pago',
+        paidDateVariance: 'Variación de La Fecha de Pago',
         addNewRow: 'Añadir Nueva Fila',
         deleteRow: 'Borrar Fila',
         attachment: 'Adjunto Archivo',
@@ -291,6 +305,7 @@ i18n.use(initReactI18next).init({
         lienWaiver: 'Exención de gravamen',
         Inovice: 'Factura',
         WOIssued: 'Emitido WO',
+        reject: 'Rechazar',
         WOOriginalAmount: 'Cantidad Original WO',
         expectedStartDate: 'Fecha de Inicio Esperada',
         expectedCompletionDate: 'Fecha de Finalización Prevista',
@@ -316,7 +331,6 @@ i18n.use(initReactI18next).init({
         expectedPayDate: 'Fecha de Pago Esperada',
         paymentTerms: 'Términos de pago',
         payDateVariance: 'Variación de la fecha de pago',
-        paidDate: 'Fecha de Pago',
         finalInvoice: 'Factura Final',
         uploadInvoice: 'Cargar factura',
         // Lean-Weiver
@@ -330,9 +344,15 @@ i18n.use(initReactI18next).init({
         informationSection:
           'Este documento renuncia y libera el gravamen, el aviso de suspensión de pago y los derechos de fianza de pago que tiene el reclamante por la mano de obra y el servicio prestados, y el equipo y el material entregados al cliente en este trabajo hasta la fecha de finalización de este documento. Los derechos basados ​​en la mano de obra o el servicio proporcionado, o el equipo o el material entregado, de conformidad con una orden de cambio por escrito que haya sido completamente ejecutada por las partes antes de la fecha en que el reclamante firme este documento, se renuncian y se liberan mediante este documento, a menos que enumerados como una excepción a continuación. Este documento es efectivo solo en el cronograma del reclamante para recibir o recibir el pago de la institución financiera contra la cual se gira el siguiente cheque:',
         // Projects-Documents
+        document: 'Documento',
         documentType: 'Tipo de Documento',
         fileType: 'Tipo de Archivo',
         vendorGL: 'Vendedor/GL',
+        createdDate: 'Fecha de creación',
+        // Projects-Alerts
+        value: 'Valor',
+        category: 'Categoría',
+        dateTriggered: 'Fecha de activación',
 
         // VENDOR-PROFILE
         details: 'Detalles',

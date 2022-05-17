@@ -9,17 +9,20 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { t } from 'i18next'
 // import 'components/translation/i18n';
 
-export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData }) => {
+export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData = {} }) => {
   const toast = useToast()
   const { markets, isLoading } = useMarkets()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
 
   const onSubmit = (formValues: VendorMarketFormValues) => {
-    const vendorProfilePayload: VendorProfilePayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData)
+    const vendorProfilePayload: Partial<VendorProfilePayload> = parseMarketFormValuesToAPIPayload(
+      formValues,
+      vendorProfileData,
+    )
 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
@@ -46,7 +49,6 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ ven
 }
 
 export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
-  const { t } = useTranslation()
   const {
     handleSubmit,
     control,
@@ -72,7 +74,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
   }, [markets, vendorProfileData, reset])
 
   return (
-    <form onSubmit={handleSubmit(submitForm)}>
+    <form onSubmit={handleSubmit(submitForm)} id="market">
       <Box h="65vh" mt={14}>
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {tradeCheckboxes.map((checkbox, index) => {
@@ -103,17 +105,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
         </Flex>
       </Box>
       <Flex borderTop="2px solid #E2E8F0" alignItems="center" w="100%" h="100px" justifyContent="end">
-        <Button
-          type="submit"
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          data-testid="saveMarkets"
-          fontWeight={600}
-          fontStyle="normal"
-          fontSize="14px"
-          h="48px"
-          w="130px"
-        >
+        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets">
           {t('save')}
         </Button>
       </Flex>

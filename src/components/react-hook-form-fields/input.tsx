@@ -23,6 +23,7 @@ type InputProps = {
   value?: string
   weight?: number
   testId?: string
+  variant?: string
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
@@ -35,9 +36,11 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
       {...props.labelStyle}
       htmlFor={props.name}
     >
-      <Box color="#718096" fontSize="1.5rem" pos="relative" right="5px">
-        {props.icon}
-      </Box>
+      {props.icon && (
+        <Box color="#718096" fontSize="1.5rem" mr="2">
+          {props.icon}
+        </Box>
+      )}
 
       {props.label}
     </FormLabel>

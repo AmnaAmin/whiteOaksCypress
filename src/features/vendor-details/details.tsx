@@ -8,13 +8,13 @@ import {
   Text,
   Divider,
   Input,
-  Button,
   FormControl,
   FormLabel,
   FormErrorMessage,
   Grid,
   GridItem,
   useToast,
+  Button,
 } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
 import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-icons/bi'
@@ -178,7 +178,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
       {!vendorProfileData ? (
         <BlankSlate />
       ) : (
-        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm">
+        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
             <Box flex="1">
               <Box mb="22px">
@@ -189,7 +189,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       data-testid="primaryContact"
                       id="primaryContact"
                       type="text"
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('primaryContact', {
                         required: 'This is required',
                       })}
@@ -213,7 +213,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                       id="businessPhoneNumber"
                       type="text"
                       data-testid="businessPhoneNumber"
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('businessPhoneNumber', {
                         required: 'This is required',
                       })}
@@ -281,7 +281,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   <FormControl isInvalid={!!errors.primaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
-                      variant="outline-with-left-border"
+                      variant="reguired-field"
                       {...register('primaryEmail', {
                         required: 'This is required',
                       })}
@@ -302,7 +302,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
             </Box>
 
             <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
-              <Button type="submit" data-testid="saveDetails" variant="solid" size="lg" colorScheme="brand">
+              <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="brand">
                 {t('save')}
               </Button>
             </Flex>
