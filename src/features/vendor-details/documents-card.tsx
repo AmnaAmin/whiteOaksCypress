@@ -25,6 +25,13 @@ const labelStyle = {
 type DocumentsProps = {
   setNextTab: () => void
   vendor: VendorProfile
+  onClose?: () => void
+}
+
+type DocumentFormProps = {
+  vendor: VendorProfile
+  onSubmit: (values: any) => void
+  onClose?: () => void
 }
 
 const downloadableDocument = (link, text, testid?) => {
@@ -41,6 +48,7 @@ const downloadableDocument = (link, text, testid?) => {
 }
 
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
+  const { vendor = {}, setNextTab } = props
   const { mutate: saveDocuments } = useSaveVendorDetails()
 
   const onSubmit = useCallback(
@@ -53,24 +61,24 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
         coiglExpirationDate: convertDateTimeToServer(values.coiGlExpDate),
         coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
       }
-      const vendorPayload = createVendorPayload(updatedObject, props.vendor)
+      const vendorPayload = createVendorPayload(updatedObject, vendor)
       saveDocuments(vendorPayload, {
         onSuccess() {
-          props.setNextTab()
+          setNextTab()
         },
       })
     },
-    [props, saveDocuments],
+    [vendor, setNextTab, saveDocuments],
   )
 
   return (
     <Box w="100%">
-      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit}></DocumentsForm>
+      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit} onClose={props.onClose}></DocumentsForm>
     </Box>
   )
 })
 
-export const DocumentsForm = ({ vendor, onSubmit }) => {
+export const DocumentsForm = ({ vendor, onSubmit, onClose }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const defaultValue = vendor => {
@@ -112,7 +120,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
       <Box w="940px">
-        <HStack direction="row" spacing="60px">
+        <HStack spacing={24}>
           <Flex minWidth="250px" alignSelf="baseline" mt="8px">
             <Box width="25px" fontSize="20px">
               <BiFile color="#718096" />
@@ -134,18 +142,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                 testId="fileInputW9Document"
                 isRequired={documents.w9DocumentUrl ? false : true}
               >
-                <Button
-                  rounded="none"
-                  roundedLeft={5}
-                  fontSize="14px"
-                  fontWeight={500}
-                  color="gray.600"
-                  bg="gray.100"
-                  h="36px"
-                  w={120}
-                >
-                  {t('chooseFile')}
-                </Button>
+                {t('chooseFile')}
               </FormFileInput>
             </Box>
             <Box ml={6} pt={5}>
@@ -187,18 +184,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputAgreement"
                   isRequired={changedDateFields.includes('agreementSignedDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -246,18 +232,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputInsurance"
                   isRequired={changedDateFields.includes('autoInsuranceExpDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -302,18 +277,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputCoiGlExp"
                   isRequired={changedDateFields.includes('COIGLExpDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -358,18 +322,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
                   testId="fileInputCoiWcExp"
                   isRequired={changedDateFields.includes('coiWcExpDate')}
                 >
-                  <Button
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="36px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
+                  {t('chooseFile')}
                 </FormFileInput>
               </Box>
               <Box ml={6} pt={5}>
@@ -390,17 +343,13 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
         alignItems="center"
         justifyContent="end"
       >
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          type="submit"
-          data-testid="saveDocumentCards"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        {onClose && (
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+            Cancel
+          </Button>
+        )}
+
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
           {t('next')}
         </Button>
       </Flex>

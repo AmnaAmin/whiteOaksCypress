@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -21,6 +20,8 @@ import {
   FormLabel,
   Link,
 } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
+
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 import { useState } from 'react'
@@ -48,6 +49,7 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 }
 
 export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
+  const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [items, setItems] = useState([
     {
       item: '1',
@@ -169,97 +171,101 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
                           <Td>
                             <Flex justifyContent="space-between" alignItems="center">
                               <Text>{item.amount}</Text>
-                              <Text>
-                                <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
-                              </Text>
+                              {allowManualEntry && (
+                                <Text>
+                                  <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
+                                </Text>
+                              )}
                             </Flex>
                           </Td>
                         </Tr>
                       )
                     })}
                   </Tbody>
-                  <Tfoot>
-                    <Tr>
-                      <Td pt="0" pb={6}>
-                        <Button
-                          type="submit"
-                          size="xs"
-                          variant="ghost"
-                          my={0.5}
-                          fontSize="14px"
-                          fontWeight={600}
-                          color="#4E87F8"
-                        >
-                          +Add New Item
-                        </Button>
+                  {allowManualEntry && (
+                    <Tfoot>
+                      <Tr>
+                        <Td pt="0" pb={6}>
+                          <Button
+                            type="submit"
+                            size="xs"
+                            variant="ghost"
+                            my={0.5}
+                            fontSize="14px"
+                            fontWeight={600}
+                            color="#4E87F8"
+                          >
+                            +Add New Item
+                          </Button>
 
-                        <FormControl isInvalid={!!errors.item?.message}>
-                          <Input
-                            w={165}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="item"
-                            {...register('item', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
+                          <FormControl isInvalid={!!errors.item?.message}>
+                            <Input
+                              w={165}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="item"
+                              {...register('item', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
 
-                      <Td>
-                        <FormControl isInvalid={!!errors.description?.message}>
-                          <Input
-                            w={149}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="description"
-                            {...register('description', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.unitPrice?.message}>
-                          <Input
-                            w={149}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="unitPrice"
-                            {...register('unitPrice', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.quantity?.message}>
-                          <Input
-                            w={84}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="quantity"
-                            {...register('quantity', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.amount?.message}>
-                          <Input
-                            w={84}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="amount"
-                            {...register('amount', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                    </Tr>
-                  </Tfoot>
+                        <Td>
+                          <FormControl isInvalid={!!errors.description?.message}>
+                            <Input
+                              w={149}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="description"
+                              {...register('description', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.unitPrice?.message}>
+                            <Input
+                              w={149}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="unitPrice"
+                              {...register('unitPrice', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.quantity?.message}>
+                            <Input
+                              w={84}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="quantity"
+                              {...register('quantity', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.amount?.message}>
+                            <Input
+                              w={84}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="amount"
+                              {...register('amount', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                      </Tr>
+                    </Tfoot>
+                  )}
                 </Table>
               </form>
 
@@ -284,30 +290,10 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
         </Box>
       </Box>
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           Close
         </Button>
-        <Button
-          _focus={{ outline: 'none' }}
-          colorScheme={'CustomPrimaryColor'}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          Save
-        </Button>
+        <Button colorScheme="brand">Save</Button>
       </HStack>
     </Box>
   )

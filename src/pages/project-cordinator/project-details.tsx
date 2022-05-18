@@ -13,13 +13,12 @@ import { ProjectType } from 'types/project.type'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-// import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
-// import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+import { NotesTab } from 'features/project-coordinator/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 
 export const ProjectDetails: React.FC = props => {
@@ -45,6 +44,9 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
   return (
     <>
@@ -80,6 +82,7 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
+
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
@@ -96,40 +99,13 @@ export const ProjectDetails: React.FC = props => {
                 )}
                 {tabIndex === 0 && (
                   <>
-                    {/* <Button
-                      bg="#FFFFFF"
-                      color="#4E87F8"
-                      border="1px solid #4E87F8"
-                      marginRight={1}
-                      size="md"
-                      fontSize="12px"
-                      fontWeight={500}
-                      fontStyle="normal"
-                      _hover={{ bg: 'none' }}
-                      onClick={() => {
-                        if (projectTableInstance) {
-                          projectTableInstance?.exportData('xlsx', false)
-                        }
-                      }}
+                    <Button
+                      variant="ghost"
+                      colorScheme="brand"
+                      onClick={onTransactionModalOpen}
+                      isDisabled={preventNewTransaction}
+                      leftIcon={<BiAddToQueue />}
                     >
-                      <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                        <BsBoxArrowUp />
-                      </Box>
-                      {t('export')}
-                    </Button> */}
-                    {/* <Button
-                      bg="#FFFFFF"
-                      color="#4E87F8"
-                      border="1px solid #4E87F8"
-                      _hover={{ bg: 'none' }}
-                      marginRight={1}
-                      size="md"
-                    >
-                      {settingColumns && (
-                        <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
-                      )}
-                    </Button> */}
-                    <Button variant="ghost" colorScheme="brand" onClick={onTransactionModalOpen}>
                       {t('newTransaction')}
                     </Button>
                   </>
@@ -159,6 +135,12 @@ export const ProjectDetails: React.FC = props => {
                 <Box h="100%" w="100%">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
+              </TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel px="0">
+                <NotesTab />
               </TabPanel>
             </TabPanels>
           </Tabs>

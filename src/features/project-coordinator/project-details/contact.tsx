@@ -31,8 +31,8 @@ const Contact = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack h="50vh" spacing={20} mt="7">
-          <HStack spacing={5}>
+        <Stack minH="50vh" spacing={20} mt="7">
+          <HStack spacing={4}>
             <Box h="40px">
               <FormControl w="215px">
                 <FormLabel sx={labelStyle}>Field Project Manager</FormLabel>
@@ -78,7 +78,7 @@ const Contact = () => {
             </Box>
           </HStack>
 
-          <HStack spacing={5}>
+          <HStack spacing={4}>
             <Box h="40px">
               <FormControl w="215px">
                 <FormLabel sx={labelStyle}>Project Coordinator</FormLabel>
@@ -124,7 +124,7 @@ const Contact = () => {
             </Box>
           </HStack>
 
-          <HStack spacing={5}>
+          <HStack spacing={4}>
             <Box h="40px">
               <FormControl isInvalid={errors.superEmailName}>
                 <FormLabel sx={labelStyle} htmlFor="superEmailName">
@@ -202,8 +202,18 @@ const Contact = () => {
               <FormErrorMessage></FormErrorMessage>
             </FormControl>
           </Box>
+          <Stack>
+            <Box pr="8">
+              <Divider border="1px solid" />
+            </Box>
+            <Box w="100%" pb="3">
+              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
+                Save
+              </Button>
+            </Box>
+          </Stack>
         </Stack>
-
+        {/* 
         <Stack w="100%">
           <Box pr="8">
             <Divider border="1px solid" />
@@ -225,7 +235,7 @@ const Contact = () => {
               Save
             </Button>
           </Box>
-        </Stack>
+        </Stack> */}
       </form>
     </Box>
   )

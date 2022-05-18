@@ -45,8 +45,8 @@ const InvoiceAndPayments = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack minH="39vh" spacing={20}>
-          <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%" columnGap={4}>
+        <Stack minH="39vh" spacing={14}>
+          <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="908px" columnGap={4}>
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
                 <FormLabel htmlFor="originSowAmount" sx={labelStyle}>

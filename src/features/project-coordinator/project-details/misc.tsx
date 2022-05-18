@@ -8,11 +8,14 @@ import {
   Grid,
   GridItem,
   Input,
+  InputGroup,
+  InputRightElement,
   Stack,
+  Icon,
 } from '@chakra-ui/react'
-import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
+import { BiCalendar } from 'react-icons/bi'
 
 const labelStyle = {
   fontSize: '14px',
@@ -27,10 +30,8 @@ const inputTextStyle = {
 }
 
 function Misc() {
-  const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -43,188 +44,76 @@ function Misc() {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="51vh">
-          <Grid templateColumns="repeat(4,1fr)" rowGap={7} w="60%">
+        <Stack minH="51vh" spacing={14}>
+          <Grid templateColumns="repeat(4,1fr)" rowGap={7} columnGap={4} w="908px">
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Created</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.created && errors.created?.message}
-                  label={''}
-                  name={`created`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="created"
-                  onChange={e => {
-                    if (!changedDateFields.includes('created')) {
-                      setChangeDateFields([...changedDateFields, 'created'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Active</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.active && errors.active?.message}
-                  label={''}
-                  name={`active`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="active"
-                  onChange={e => {
-                    if (!changedDateFields.includes('active')) {
-                      setChangeDateFields([...changedDateFields, 'active'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Punch</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.punch && errors.punch?.message}
-                  label={''}
-                  name={`punch`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="punch"
-                  onChange={e => {
-                    if (!changedDateFields.includes('punch')) {
-                      setChangeDateFields([...changedDateFields, 'punch'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Closed</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.coiWcExpDate && errors.coiWcExpDate?.message}
-                  label={''}
-                  name={`coiWcExpDate`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="coiWcExpDate"
-                  onChange={e => {
-                    if (!changedDateFields.includes('coiWcExpDate')) {
-                      setChangeDateFields([...changedDateFields, 'coiWcExpDate'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Paid</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.clientPaid && errors.clientPaid?.message}
-                  label={''}
-                  name={`clientPaid`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="clientPaid"
-                  onChange={e => {
-                    if (!changedDateFields.includes('clientPaid')) {
-                      setChangeDateFields([...changedDateFields, 'clientPaid'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Collection</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.collection && errors.collection?.message}
-                  label={''}
-                  name={`collection`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="collection"
-                  onChange={e => {
-                    if (!changedDateFields.includes('collection')) {
-                      setChangeDateFields([...changedDateFields, 'collection'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Disputed</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.disputed && errors.disputed?.message}
-                  label={''}
-                  name={`disputed`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="disputed"
-                  onChange={e => {
-                    if (!changedDateFields.includes('disputed')) {
-                      setChangeDateFields([...changedDateFields, 'disputed'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -232,52 +121,20 @@ function Misc() {
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Invoice</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.woaInvoice && errors.woaInvoice?.message}
-                  label={''}
-                  name={`woaInvoice`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="woaInvoice"
-                  onChange={e => {
-                    if (!changedDateFields.includes('woaInvoice')) {
-                      setChangeDateFields([...changedDateFields, 'woaInvoice'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Paid</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    backgroundColor: '#EDF2F7',
-                  }}
-                  errorMessage={errors.woaPaid && errors.woaPaid?.message}
-                  label={''}
-                  name={`woaPaid`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    fontSize: '14px',
-                  }}
-                  testId="woaPaid"
-                  onChange={e => {
-                    if (!changedDateFields.includes('woaPaid')) {
-                      setChangeDateFields([...changedDateFields, 'woaPaid'])
-                    }
-                  }}
-                />
+                <InputGroup>
+                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
+                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
+                </InputGroup>
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -288,14 +145,7 @@ function Misc() {
                 <FormLabel sx={labelStyle} htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input
-                  sx={inputTextStyle}
-                  bg="#EDF2F7"
-                  id="dueDate"
-                  {...register('dueDateVariance', {
-                    required: 'This is required',
-                  })}
-                />
+                <Input sx={inputTextStyle} isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -305,14 +155,7 @@ function Misc() {
                   Final Date Variance
                 </FormLabel>
 
-                <Input
-                  sx={inputTextStyle}
-                  bg="#EDF2F7"
-                  id="finalDate"
-                  {...register('finalDateVariance', {
-                    required: 'This is required',
-                  })}
-                />
+                <Input sx={inputTextStyle} isDisabled={true} id="finalDate" {...register('finalDateVariance')} />
                 <FormErrorMessage>{errors.finalDateVariance && errors.finalDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -321,39 +164,23 @@ function Misc() {
                 <FormLabel sx={labelStyle} htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input
-                  sx={inputTextStyle}
-                  bg="#EDF2F7"
-                  id="payVariance"
-                  {...register('payVariance', { required: 'This is required' })}
-                />
+                <Input sx={inputTextStyle} isDisabled={true} id="payVariance" {...register('payVariance')} />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
           </Grid>
-        </Box>
-        <Stack w="100%">
-          <Box pr="8">
-            <Divider border="1px solid" />
-          </Box>
-          <Box w="100%" minH="70px">
-            <Button
-              mt="8px"
-              mr="7"
-              float={'right'}
-              colorScheme="CustomPrimaryColor"
-              _focus={{ outline: 'none' }}
-              w="130px"
-              h="40px"
-              fontSize="14px"
-              fontStyle="normal"
-              fontWeight={500}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
+
+          <Stack>
+            <Box pr="8">
+              <Divider border="1px solid" />
+            </Box>
+            <Box w="100%" pb="3">
+              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
+                Save
+              </Button>
+            </Box>
+          </Stack>
         </Stack>
       </form>
     </Box>

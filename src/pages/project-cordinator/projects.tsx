@@ -9,8 +9,8 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PlusIcon from 'icons/plus-icon'
-import { ProjectDayFilters } from 'features/project-coordinator/project-days-filters'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
+import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -27,12 +27,26 @@ export const Projects = () => {
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const [selectedDay, setSelectedDay] = useState<string>('')
+
+  const [isClicked, setIsClicked] = useState(false)
+
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
 
   const onSave = columns => {
     postProjectColumn(columns)
+  }
+
+  const clearAll = () => {
+    setSelectedCard('')
+    setIsClicked(false)
+  }
+
+  const allDays = () => {
+    setSelectedCard('All')
+    setIsClicked(true)
   }
 
   return (
@@ -44,8 +58,35 @@ export const Projects = () => {
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
           <Box fontWeight={'bold'}>Due Projects</Box>
         </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1}>
-          <ProjectDayFilters />
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
+          <Button
+            bg={isClicked ? '#4E87F8' : 'none'}
+            color={isClicked ? 'white' : 'black'}
+            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
+            _focus={{ border: 'none' }}
+            fontSize="12px"
+            fontStyle="normal"
+            fontWeight={500}
+            alignContent="right"
+            onClick={allDays}
+            rounded={20}
+          >
+            All
+          </Button>
+          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          <Button
+            bg="none"
+            color="#4E87F8"
+            _hover={{ bg: 'none' }}
+            _focus={{ border: 'none' }}
+            fontSize="12px"
+            fontStyle="normal"
+            fontWeight={500}
+            alignContent="right"
+            onClick={clearAll}
+          >
+            Clear All
+          </Button>
           <Button
             bg="none"
             color="#4E87F8"
@@ -65,12 +106,11 @@ export const Projects = () => {
             New Project
           </Button>
         </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}></Stack>
-        <Divider></Divider>
-        <br></br>
-        <Box w="100%" flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}></Stack>
+        <Box w="100%" minH="500px" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
           <ProjectsTable
             selectedCard={selectedCard as string}
+            selectedDay={selectedDay as string}
             setTableInstance={setProjectTableInstance}
             resizeElementRef={resizeElementRef}
             projectColumns={tableColumns}

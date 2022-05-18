@@ -4,7 +4,6 @@ import {
   Text,
   Flex,
   SimpleGrid,
-  Button,
   Checkbox,
   TableContainer,
   Table,
@@ -17,6 +16,7 @@ import React, { useState } from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -83,8 +83,10 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
-
-  const [assignedItems] = useState([
+  const onMarkCompleted = () => {
+    setAssignedItems(assignedItems => assignedItems.map(item => ({ ...item, status: 'completed' })))
+  }
+  const [assignedItems, setAssignedItems] = useState([
     {
       sku: '8383',
       productName: 'Debrish Trash',
@@ -175,10 +177,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
           title="Expected Completion"
           value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
         />
-        <CalenderCard
-          title=" Completed by Vendor​"
-          value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
-        />
+        <CalenderCard title="Completed by Vendor" value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)} />
       </SimpleGrid>
       <Box pt={6}>
         <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
@@ -188,12 +187,15 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
 
           <HStack>
             <Button leftIcon={<BiDownload color="#4E87F8" />} variant="ghost" colorScheme="brand" onClick={downloadPdf}>
-              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
-                Download as PDF
-              </Text>
+              Download as PDF
             </Button>
 
-            <Button leftIcon={<BiCheck color="#4E87F8" />} variant="ghost" colorScheme="brand">
+            <Button
+              onClick={onMarkCompleted}
+              leftIcon={<BiCheck color="#4E87F8" />}
+              variant="ghost"
+              colorScheme="brand"
+            >
               <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
                 Mark All Completed
               </Text>
@@ -239,30 +241,10 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
       </TableContainer>
 
       <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           {t('close')}
         </Button>
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          {t('save')}
-        </Button>
+        <Button colorScheme="brand">{t('save')}</Button>
       </Flex>
     </Box>
   )

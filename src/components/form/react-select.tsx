@@ -80,13 +80,12 @@ export const chakraStyles = {
       ...provider,
       ...borderLeftStyle,
       borderRadius: '6px',
-      // bg: '#F7FAFC',
       fontSize: getFontSize(state),
       _focus: inputFocusStateStyle,
       _disabled: {
         opacity: 0.7,
         cursor: 'not-allowed',
-        bg: '#F7FAFC',
+        bg: 'gray.100',
       },
     }
   },
