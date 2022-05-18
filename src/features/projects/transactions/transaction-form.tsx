@@ -12,7 +12,7 @@ import {
   HStack,
   Button,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
 // import { Button } from 'components/button/button'
@@ -34,7 +34,7 @@ import {
   useTransactionTypes,
   useWorkOrderChangeOrders,
 } from 'utils/transactions'
-import { FormValues, SelectOption } from 'types/transaction.type'
+import { ChangeOrderType, FormValues, SelectOption } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
   useAgainstOptions,
@@ -52,6 +52,61 @@ import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
+
+const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
+  const { t } = useTranslation()
+  const { control } = useFormContext<FormValues>()
+  const { isShowExpectedCompletionDateField } = useFieldShowHideDecision(control, transaction)
+
+  return (
+    <Grid
+      templateColumns="repeat(4, fit-content(100px))"
+      gap={'1rem 30px'}
+      borderBottom="2px solid"
+      borderColor="gray.200"
+      py="5"
+    >
+      <GridItem>
+        <Controller
+          name="dateCreated"
+          control={control}
+          render={({ field: { name, onChange, value } }) => {
+            return <ReadOnlyInput label={t('dateCreated')} name={name} onChange={onChange} value={value as string} />
+          }}
+        />
+      </GridItem>
+
+      <GridItem>
+        <Controller
+          name="createdBy"
+          control={control}
+          render={({ field: { name, onChange, value } }) => {
+            return <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
+          }}
+        />
+      </GridItem>
+      {isShowExpectedCompletionDateField && (
+        <GridItem>
+          <Controller
+            name="expectedCompletionDate"
+            control={control}
+            render={({ field: { name, onChange, value } }) => {
+              return (
+                <ReadOnlyInput
+                  testId="expected-completion-date"
+                  label={t('expectedCompletionDate')}
+                  name={name}
+                  onChange={onChange}
+                  value={value as string}
+                />
+              )
+            }}
+          />
+        </GridItem>
+      )}
+    </Grid>
+  )
+}
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -105,7 +160,6 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
   } = formReturn
 
   const {
-    isShowExpectedCompletionDateField,
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
@@ -218,64 +272,10 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
           {!isShowLienWaiver ? (
             <Box flex={1}>
               {/** Readonly information of Transaction */}
-              <Grid
-                templateColumns="repeat(4, fit-content(100px))"
-                gap={'1rem 30px'}
-                borderBottom="2px solid"
-                borderColor="gray.200"
-                py="5"
-              >
-                <GridItem>
-                  <Controller
-                    name="dateCreated"
-                    control={control}
-                    render={({ field: { name, onChange, value } }) => {
-                      return (
-                        <ReadOnlyInput
-                          label={t('dateCreated')}
-                          name={name}
-                          onChange={onChange}
-                          value={value as string}
-                        />
-                      )
-                    }}
-                  />
-                </GridItem>
-
-                <GridItem>
-                  <Controller
-                    name="createdBy"
-                    control={control}
-                    render={({ field: { name, onChange, value } }) => {
-                      return (
-                        <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
-                      )
-                    }}
-                  />
-                </GridItem>
-                {isShowExpectedCompletionDateField && (
-                  <GridItem>
-                    <Controller
-                      name="expectedCompletionDate"
-                      control={control}
-                      render={({ field: { name, onChange, value } }) => {
-                        return (
-                          <ReadOnlyInput
-                            testId="expected-completion-date"
-                            label={t('expectedCompletionDate')}
-                            name={name}
-                            onChange={onChange}
-                            value={value as string}
-                          />
-                        )
-                      }}
-                    />
-                  </GridItem>
-                )}
-              </Grid>
+              <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4" minH="180px">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -497,27 +497,27 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                       </FormControl>
                     </GridItem>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paidDateVariance}>
+                      <FormControl isInvalid={!!errors.payDateVariance}>
                         <FormLabel
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
                           color="gray.600"
-                          htmlFor="paidDateVariance"
+                          htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
-                          {t('paidDateVariance')}
+                          {t('payDateVariance')}
                         </FormLabel>
                         <Input
                           data-testid="new-expected-completion-date"
-                          id="paidDateVariance"
+                          id="payDateVariance"
                           type="text"
                           size="md"
                           css={calendarIcon}
                           isDisabled
-                          {...register('paidDateVariance')}
+                          {...register('payDateVariance')}
                         />
-                        <FormErrorMessage>{errors?.paidDateVariance?.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
                   </>

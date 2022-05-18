@@ -5,7 +5,7 @@ import { TradeList } from 'features/vendor-details/trades'
 import { MarketList } from 'features/vendor-details/markets'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Box, Stack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { License } from 'features/vendor-details/license'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 // import { t } from 'i18next';
@@ -28,12 +28,16 @@ const profileTabStyle = {
 const VendorProfilePage: React.FC = props => {
   const { t } = useTranslation()
   const { vendorId } = useUserProfile() as Account
-  const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId)
+  const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
   const [tabIndex, setTabIndex] = useState(0)
-
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
+  useEffect(() => {
+    if (tabIndex === 1) {
+      refetch()
+    }
+  }, [tabIndex])
 
   return (
     <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
