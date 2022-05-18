@@ -14,6 +14,7 @@ import {
   Grid,
   GridItem,
   useToast,
+  Button,
 } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
 import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-icons/bi'
@@ -25,7 +26,6 @@ import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateM
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { Button } from 'components/button/button'
 
 const textStyle = {
   color: '#4A5568',
@@ -41,6 +41,13 @@ type FieldInfoCardProps = {
   icon?: React.ElementType
   testid?: string
 }
+
+type detailsFormProps = {
+  vendorProfileData: VendorProfile
+  submitForm: (values: any) => void
+  onClose?: () => void
+}
+
 const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
   return (
     <Box>
@@ -64,6 +71,7 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
 
 export const Details: React.FC<{
   vendorProfileData: VendorProfile
+  onClose?: () => void
 }> = props => {
   const { vendorProfileData } = props
   const toast = useToast()
@@ -142,12 +150,12 @@ export const Details: React.FC<{
           <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
         </GridItem>
       </Grid>
-      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} />
+      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} onClose={props.onClose} />
     </Flex>
   )
 }
 
-export const DetailsForm = ({ submitForm, vendorProfileData }) => {
+export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsFormProps) => {
   const { t } = useTranslation()
   const {
     register,
@@ -178,7 +186,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
       {!vendorProfileData ? (
         <BlankSlate />
       ) : (
-        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm">
+        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
             <Box flex="1">
               <Box mb="22px">
@@ -302,7 +310,12 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
             </Box>
 
             <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
-              <Button type="submit" data-testid="saveDetails" colorScheme="brand">
+              {onClose && (
+                <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+                  Cancel
+                </Button>
+              )}
+              <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="brand">
                 {t('save')}
               </Button>
             </Flex>

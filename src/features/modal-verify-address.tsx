@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import {
   Modal,
   ModalOverlay,
@@ -9,42 +8,26 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Text,
-  Flex,
-  Input,
   GridItem,
   Grid,
   Checkbox,
-  Icon,
   Box,
 } from '@chakra-ui/react'
-import FailedIcon from 'icons/failed-icon'
-import SuccessIcon from 'icons/success-icon'
-import VerifyingIcon from 'icons/verifying-icon'
+import FailedIcon from '../icons/failed-icon'
+import SuccessIcon from '../icons/success-icon'
+import VerifyingIcon from '../icons/verifying-icon'
 interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
   onClose: () => void
-  save: () => void
   title: string
   content: string
   props: string
   addressVerificationStatus: string
 }
 
-export function ModalVerifyAddress({
-  isOpen,
-  isLoading = false,
-  onClose,
-  // onConfirm,
-  title,
-  content,
-  props,
-  addressVerificationStatus,
-}: VerifyAddressBoxProps) {
-  const [closeModal, setCloseModal] = useState(isOpen)
+export function ModalVerifyAddress({ isOpen, onClose, title, addressVerificationStatus }: VerifyAddressBoxProps) {
   const [continueUnverified, setContinueUnverified] = useState(false)
-  const toggleSubModal = () => props
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="xl">
@@ -83,7 +66,7 @@ export function ModalVerifyAddress({
             <ModalHeader fontWeight={500} color="gray.600" fontSize="18px" fontStyle="normal" mt="2" mb="-4">
               {title}
             </ModalHeader>
-            {/* <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} /> */}
+            <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
             <ModalBody>
               {addressVerificationStatus === 'verifying' && (
                 <Box className="uspsAdressVerification" marginTop={-2}>
@@ -148,9 +131,6 @@ export function ModalVerifyAddress({
                     >
                       Continue with unverified address
                     </Checkbox>
-                    {/* <Button color="secondary" onClick={toggleSubModal} className="ml-2">
-                      Close
-                    </Button> */}
                   </Box>
                 </>
               )}

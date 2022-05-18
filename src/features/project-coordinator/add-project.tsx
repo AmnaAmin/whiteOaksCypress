@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -26,7 +26,6 @@ import { ProjectFormValues } from 'types/project.type'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useToast } from '@chakra-ui/react'
-import { useProjectDetails } from 'utils/pc-projects'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -34,52 +33,11 @@ type AddProjectFormProps = {
 
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const toast = useToast()
-  const { data: projects, refetch } = useProjectDetails()
 
   const [tabIndex, setTabIndex] = useState(0)
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
-
-  // const newProjectDefaultValue = projects => {
-  //   const defaultValues = {
-  //     name: '',
-  //     projectType: '',
-  //     woNumber: '',
-  //     poNumber: '',
-  //     clientStartDate: '',
-  //     clientDueDate: '',
-  //     woaStartDate: '',
-  //     sowOriginalContractAmount: '',
-  //     projectSOW: null,
-  //     sowLink: null,
-  //     streetAddress: '',
-  //     city: '',
-  //     state: '',
-  //     zipCode: '',
-  //     market: '',
-  //     gateCode: '',
-  //     lockBoxCode: '',
-  //     hoaPhone: '',
-  //     hoaPhoneNumberExtension: '',
-  //     hoaEmailAddress: '',
-  //     projectManager: '',
-  //     projectCoordinator: '',
-  //     clientName: '',
-  //     superFirstName: '',
-  //     superEmailAddress: '',
-  //     superPhoneNumber: '',
-  //     superPhoneNumberExtension: '',
-  //   }
-  //   return defaultValues
-  // }
-
-  // useEffect(() => {
-  //   if (projects) {
-  //     const defaultSettings = newProjectDefaultValue(projects)
-  //     reset(defaultSettings)
-  //   }
-  // }, [projects, reset])
 
   const methods = useFormContext<ProjectFormValues>()
 

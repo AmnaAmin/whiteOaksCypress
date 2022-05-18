@@ -85,7 +85,7 @@ export const AddPropertyInfo = props => {
   const {
     register,
     formState: { errors },
-    handleSubmit,
+    // handleSubmit,
     control,
     watch,
     setValue,
