@@ -32,23 +32,12 @@ export const AddPropertyInfo = props => {
     { value: '3', label: 'C' },
   ]
 
-  const addressDefaultValue = address => {
-    const addressValues = {
-      streetAddress: address.streetAddress,
-      city: address.city,
-      state: address.state,
-      zipCode: address.zipCode,
-    }
-    return addressValues
-  }
-
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
     watch,
-    reset,
   } = useForm<verifyAddressValues>()
 
   /* debug purpose */
@@ -107,26 +96,10 @@ export const AddPropertyInfo = props => {
         .catch(function (err) {
           // Failed
         })
-
-      // const defaultAddress = addressDefaultValue(addressData)
-      // reset(defaultAddress)
     }
   }, [addressData])
 
-  const [projectPayload, setProjectPayload] = useState({})
-  const [property, setProperty] = useState({})
-  const [showVerificationUSPS, setShowVerificationUSPS] = useState(false)
   const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
-
-  const saveModalVerify = () => {
-    const property = {
-      ...projectPayload,
-      streetAddress: projectPayload,
-    }
-    const p = { ...projectPayload, ...{ property }, newProperty: property }
-
-    props.createEntity({ ...p })
-  }
 
   const {
     isOpen: isAddressVerifyModalOpen,
@@ -140,7 +113,7 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={''}
+              errorMessage={errors}
               label={'Address'}
               placeholder="Type Property Address . ."
               register={register}
@@ -309,7 +282,7 @@ export const AddPropertyInfo = props => {
         isOpen={isAddressVerifyModalOpen}
         onClose={onAddressVerifyModalClose}
         props={''} // onConfirm={onDeleteConfirmationModalClose}
-        save={saveModalVerify}
+        // save={saveModalVerify}
         addressVerificationStatus={addressVerificationStatus}
       />
     </form>

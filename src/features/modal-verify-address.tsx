@@ -21,7 +21,6 @@ interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
   onClose: () => void
-  save: () => void
   title: string
   content: string
   props: string
