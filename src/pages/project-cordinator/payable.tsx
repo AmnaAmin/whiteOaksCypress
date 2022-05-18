@@ -4,7 +4,8 @@ import { PayableFiltter } from 'features/project-coordinator/payable/payable-fil
 import { PayableTable } from 'features/project-coordinator/payable/payable-table'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { useState } from 'react'
-import { BiSync } from 'react-icons/bi'
+import { BiExport, BiSync } from 'react-icons/bi'
+import { FaAtom } from 'react-icons/fa'
 
 export const Payable: React.FC = () => {
   const [isClicked, setIsClicked] = useState(false)
@@ -64,14 +65,15 @@ export const Payable: React.FC = () => {
       </Box>
 
       <Flex justifyContent="end" h="100px">
-        <Flex bg="white" h="50px">
-          <Button colorScheme="brand" variant="ghost">
-            Export
-          </Button>
-          <Button colorScheme="brand" variant="ghost">
-            Settings
-          </Button>
-        </Flex>
+        <Button colorScheme="brand" variant="ghost">
+          <Icon as={BiExport} fontSize="18px" mr={2} />
+          Export
+        </Button>
+        <Divider orientation="vertical" height="30px" border="2px solid" />
+        <Button colorScheme="brand" variant="ghost" m={0}>
+          <Icon as={FaAtom} fontSize="18px" mr={2} />
+          Settings
+        </Button>
       </Flex>
     </Box>
   )
