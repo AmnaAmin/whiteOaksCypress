@@ -10,6 +10,7 @@ export enum STATUS {
   Pending = 'pending',
   Denied = 'denied',
   Cancelled = 'cancelled',
+  Invoiced = 'Invoiced',
 }
 
 const STATUS_COLOR = {
@@ -21,6 +22,7 @@ const STATUS_COLOR = {
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
+  [STATUS.Invoiced]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
 }
 
 const Status = ({ value, id }: { value: string; id: string }) => {
