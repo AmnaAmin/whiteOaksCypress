@@ -14,14 +14,17 @@ import 'components/translation/i18n'
 import { Account } from 'types/account.types'
 import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import PcDetails from 'features/project-coordinator/vendor/details'
 
 type Props = {
   vendorPropfileData?: VendorProfile
   onClose?: () => void
+  vendorModalType?: string
 }
 
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorPropfileData
+  const VendorType = props.vendorModalType
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -37,17 +40,21 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         <Tab data-testid="license">{t('License')}</Tab>
         <Tab data-testid="tradetab">{t('trade')}</Tab>
         <Tab data-testid="markettab">{t('market')}</Tab>
+        {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
       </TabList>
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          {vendorProfileData && (
+          {vendorProfileData ? (
             <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          ) : (
+            <PcDetails VendorType={VendorType!} onClose={props.onClose} />
           )}
         </TabPanel>
         <TabPanel p="0px">
           <Box h="100%" w="100%">
             <DocumentsCard
+              VendorType={VendorType!}
               setNextTab={setNextTab}
               vendor={vendorProfileData as VendorProfile}
               onClose={props.onClose}
