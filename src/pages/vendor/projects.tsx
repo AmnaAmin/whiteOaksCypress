@@ -52,11 +52,7 @@ const Projects = () => {
                   <Button
                     mr="1"
                     variant="ghost"
-                    color="#4E87F8"
-                    _focus={{ border: 'none' }}
-                    fontSize="12px"
-                    fontStyle="normal"
-                    fontWeight={500}
+                    colorScheme="brand"
                     onClick={() => {
                       if (projectTableInstance) {
                         projectTableInstance?.exportData('xlsx', false)

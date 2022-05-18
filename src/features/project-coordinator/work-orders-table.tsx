@@ -6,9 +6,10 @@ import ReactTable, { RowProps } from 'components/table/react-table'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
-import { ProjectWorkOrderType } from 'types/project.type'
+import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderStatus from 'features/projects/work-order-status'
 import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'
+import { usePCProject } from 'utils/pc-projects'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -60,6 +61,8 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
 
+  const { projectData } = usePCProject(projectId)
+
   const { columns } = useColumnWidthResize(
     [
       {
@@ -110,6 +113,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           setSelectedWorkOrder(undefined)
           refetch()
         }}
+        projectData={projectData as ProjectType}
       />
       {isLoading && (
         <Center>

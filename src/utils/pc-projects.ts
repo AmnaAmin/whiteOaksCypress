@@ -1,6 +1,7 @@
 import { ProjectType } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
+import { Vendors } from 'types/vendor.types'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -15,6 +16,14 @@ export const usePCProject = (projectId?: string) => {
     projectData,
     ...rest,
   }
+}
+
+export const useCall = () => {
+  const client = useClient()
+
+  return useMutation(entity => {
+    return client(`work-orders`, { method: 'PUT', data: entity })
+  })
 }
 
 export const useProjectCards = () => {
@@ -90,6 +99,16 @@ export const useProjectTypes = () => {
   })
 }
 
+export const useVendorCards = () => {
+  const client = useClient()
+
+  return useQuery('vendorsCards', async () => {
+    const response = await client(`vendorsCards`, {})
+
+    return response?.data
+  })
+}
+
 export const useProperties = () => {
   const client = useClient()
 
@@ -150,16 +169,18 @@ export const useClients = () => {
   })
 }
 
-// export const useMarkets = () => {
-//   const client = useClient()
+const VENDOR_QUERY_KEY = 'vendor'
+export const useVendor = () => {
+  const client = useClient()
 
-//   const { data: markets, ...rest } = useQuery<Array<Market>>('markets', async () => {
-//     const response = await client(`markets`, {})
-//     return response?.data
-//   })
+  const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
+    const response = await client(`view-vendors`, {})
 
-//   return {
-//     markets,
-//     ...rest,
-//   }
-// }
+    return response?.data
+  })
+
+  return {
+    vendors: data,
+    ...rest,
+  }
+}

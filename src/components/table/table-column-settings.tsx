@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button,
   Box,
   List,
   ListItem,
@@ -24,6 +23,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { t } from 'i18next'
 // import { useTranslation } from 'react-i18next';
 import 'components/translation/i18n'
+import { Button } from 'components/button/button'
 
 type ColumnType = {
   id?: number
@@ -91,10 +91,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
       <Button
         ml="1"
         variant="ghost"
-        color="#4E87F8"
-        fontSize="12px"
-        fontStyle="normal"
-        fontWeight={500}
+        colorScheme="brand"
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
@@ -187,28 +184,10 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              color="gray.600"
-              mr={3}
-              fontStyle="normal"
-              fontSize="14px"
-              fontWeight={600}
-              h="48px"
-              w="130px"
-            >
+            <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid" mr={3}>
               Close
             </Button>
-            <Button
-              colorScheme="CustomPrimaryColor"
-              onClick={saveModal}
-              fontStyle="normal"
-              fontSize="14px"
-              fontWeight={600}
-              h="48px"
-              w="130px"
-            >
+            <Button colorScheme="brand" onClick={saveModal}>
               Save
             </Button>
           </ModalFooter>

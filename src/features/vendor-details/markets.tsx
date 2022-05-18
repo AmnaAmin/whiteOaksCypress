@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
+import { Box, Flex, useToast } from '@chakra-ui/react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { VendorMarketFormValues, VendorProfile, VendorProfilePayload } from 'types/vendor.types'
 import {
@@ -11,6 +11,7 @@ import {
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { Button } from 'components/button/button'
 // import 'components/translation/i18n';
 
 export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData }) => {
@@ -103,17 +104,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
         </Flex>
       </Box>
       <Flex borderTop="2px solid #E2E8F0" alignItems="center" w="100%" h="100px" justifyContent="end">
-        <Button
-          type="submit"
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          data-testid="saveMarkets"
-          fontWeight={600}
-          fontStyle="normal"
-          fontSize="14px"
-          h="48px"
-          w="130px"
-        >
+        <Button type="submit" colorScheme="brand" _focus={{ outline: 'none' }} data-testid="saveMarkets">
           {t('save')}
         </Button>
       </Flex>

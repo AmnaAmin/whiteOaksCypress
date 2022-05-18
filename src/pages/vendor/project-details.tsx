@@ -4,7 +4,7 @@ import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
-import { AddNewTransactionModal } from 'features/projects/transactions/add-update-transaction'
+import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
@@ -42,6 +42,10 @@ const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
+
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
@@ -84,6 +88,7 @@ const ProjectDetails: React.FC = props => {
                     variant="ghost"
                     colorScheme="brand"
                     leftIcon={<BiAddToQueue />}
+                    isDisabled={preventNewTransaction}
                   >
                     {t('newTransaction')}
                   </Button>
@@ -100,6 +105,7 @@ const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <WorkOrdersTable
+                    projectData={projectData as ProjectType}
                     onTabChange={n => {
                       console.log(n)
                       setTabIndex(n)
