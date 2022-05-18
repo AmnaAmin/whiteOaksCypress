@@ -48,7 +48,8 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
 
   const { data: documents, ...rest } = useQuery<Array<Document>>(['documents', projectId], async () => {
     const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
-    return response?.data
+
+    return response?.data ? response?.data : []
   })
 
   return {

@@ -13,13 +13,13 @@ import { ProjectType } from 'types/project.type'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue } from 'react-icons/bi'
-import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
-import { DocumentTable } from 'features/project-coordinator/project-details/document-table'
+import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
+import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -85,13 +85,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button
-                    _hover={{ bg: 'gray.200' }}
-                    color="blue"
-                    fontSize={14}
-                    fontWeight={500}
-                    onClick={OnUploadMdal}
-                  >
+                  <Button variant="ghost" colorScheme="brand" onClick={OnUploadMdal}>
                     Upload
                   </Button>
                 )}
@@ -163,13 +157,13 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
 
               <TabPanel p="0px" mt="3">
-                <DocumentTable ref={tabsContainerRef} />
+                <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
             </TabPanels>
           </Tabs>
         </Stack>
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
-        <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
+        <UploadDocumentModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
       </Stack>
     </>
   )

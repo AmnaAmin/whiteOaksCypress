@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
@@ -8,6 +8,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
+import { BiDownArrowCircle } from 'react-icons/bi'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
@@ -97,7 +98,13 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         accessor: 'createdDate',
         id: 'createdDate',
         Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
+          return (
+            <Flex alignItems="center">
+              <Box mr={2}>{dateFormat(value)}</Box>
+              <Spacer w="100px" />
+              <Icon as={BiDownArrowCircle} color="#4E87F8" fontSize={24} />
+            </Flex>
+          )
         },
       },
     ],
