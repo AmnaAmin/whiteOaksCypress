@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Box, Button, Flex, useToast } from '@chakra-ui/react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { VendorMarketFormValues, VendorProfile, VendorProfilePayload } from 'types/vendor.types'
+import { Market, VendorMarketFormValues, VendorProfile, VendorProfilePayload } from 'types/vendor.types'
 import {
   parseMarketAPIDataToFormValues,
   parseMarketFormValuesToAPIPayload,
@@ -9,17 +9,30 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { t } from 'i18next'
 // import 'components/translation/i18n';
 
-export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ vendorProfileData }) => {
+type marketFormProps = {
+  submitForm: (values: any) => void
+  onClose?: () => void
+  vendorProfileData: VendorProfile | {}
+  markets?: Array<Market>
+}
+
+export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void }> = ({
+  vendorProfileData = {},
+  onClose,
+}) => {
   const toast = useToast()
   const { markets, isLoading } = useMarkets()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
 
   const onSubmit = (formValues: VendorMarketFormValues) => {
-    const vendorProfilePayload: VendorProfilePayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData)
+    const vendorProfilePayload: Partial<VendorProfilePayload> = parseMarketFormValuesToAPIPayload(
+      formValues,
+      vendorProfileData,
+    )
 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
@@ -39,14 +52,13 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile }> = ({ ven
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <MarketForm submitForm={onSubmit} vendorProfileData={vendorProfileData} markets={markets} />
+        <MarketForm submitForm={onSubmit} vendorProfileData={vendorProfileData} markets={markets} onClose={onClose} />
       )}
     </Box>
   )
 }
 
-export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
-  const { t } = useTranslation()
+export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: marketFormProps) => {
   const {
     handleSubmit,
     control,
@@ -65,14 +77,14 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
 
   useEffect(() => {
     if (markets?.length && vendorProfileData) {
-      const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData)
+      const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
 
       reset(tradeFormValues)
     }
   }, [markets, vendorProfileData, reset])
 
   return (
-    <form onSubmit={handleSubmit(submitForm)}>
+    <form onSubmit={handleSubmit(submitForm)} id="market">
       <Box h="65vh" mt={14}>
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {tradeCheckboxes.map((checkbox, index) => {
@@ -103,17 +115,13 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets }) => {
         </Flex>
       </Box>
       <Flex borderTop="2px solid #E2E8F0" alignItems="center" w="100%" h="100px" justifyContent="end">
-        <Button
-          type="submit"
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          data-testid="saveMarkets"
-          fontWeight={600}
-          fontStyle="normal"
-          fontSize="14px"
-          h="48px"
-          w="130px"
-        >
+        {onClose && (
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+            Cancel
+          </Button>
+        )}
+
+        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets">
           {t('save')}
         </Button>
       </Flex>

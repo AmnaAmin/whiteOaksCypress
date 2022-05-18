@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   HStack,
   Input,
   Modal,
@@ -20,6 +19,7 @@ import ReactSelect from '../../../../components/form/react-select'
 import React, { useState } from 'react'
 import { BiXCircle } from 'react-icons/bi'
 import { documentTypes } from 'utils/vendor-projects'
+import { Button } from 'components/button/button'
 
 export const UploadModal = ({ isOpen, onClose }) => {
   const [value, setValue] = useState<File>()
@@ -114,7 +114,7 @@ export const UploadModal = ({ isOpen, onClose }) => {
             >
               Close
             </Button>
-            <Button h="48px" w="130px" fontSize="14px" fontWeight={600} colorScheme="CustomPrimaryColor" color="white">
+            <Button h="48px" w="130px" fontSize="14px" fontWeight={600} colorScheme="brand" color="white">
               Save
             </Button>
           </ModalFooter>

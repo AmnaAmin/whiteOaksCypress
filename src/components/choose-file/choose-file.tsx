@@ -30,12 +30,13 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
       borderWidth="1px"
       borderStyle="solid"
       borderColor={isError ? 'red' : '#ddd'}
-      rounded="4"
+      rounded="6"
       onClick={() => inputRef?.current?.click()}
       bg="white"
       _hover={{
         borderColor: 'gray.400',
       }}
+      alignItems="center"
     >
       <input
         {...inputProps}
@@ -44,15 +45,26 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
       />
-      <Button>{children}</Button>
-      <Box flex="1" p="2" position="relative" overflow="hidden">
+      <Button rounded={0} roundedLeft={5} variant="choose-file" colorScheme={isError ? 'red' : 'gray'}>
+        {children}
+      </Button>
+      <Box flex="1" position="relative" overflow="hidden">
         {value && (
-          <Flex>
-            <Text flex="1" textAlign="left" whiteSpace="nowrap" title={value as string}>
+          <Flex alignItems="center">
+            <Text
+              whiteSpace="nowrap"
+              title={value as string}
+              isTruncated
+              w="170px"
+              color="#4E87F8"
+              fontSize="14px"
+              fontWeight={500}
+              pl={3}
+            >
               {value}
             </Text>
             <Button
-              variant="unstyled"
+              variant="link"
               size="xs"
               colorScheme="red"
               onClick={onFileClear}

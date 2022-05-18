@@ -54,7 +54,7 @@ describe('Vendor Profile Trade Test Cases', () => {
 
   it('Trade form saves successfully', async () => {
     const mockSave = jest.fn()
-    directRender(<TradeForm vendorProfileData={VENDOR_DATA} submitForm={mockSave} trades={VENDOR_SKILLS} />)
+    directRender(<TradeForm vendorProfileData={VENDOR_DATA} submitForm={mockSave} trades={VENDOR_SKILLS as any} />)
     act(() => {
       fireEvent.submit(screen.getByTestId('saveVendorSkills'))
     })

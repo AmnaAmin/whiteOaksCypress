@@ -3,7 +3,6 @@ import { theme as chakraTheme } from '@chakra-ui/react'
 const alert = {
   Alert: {
     baseStyle: props => {
-      console.log('props', props)
       return {
         background: 'gray',
       }

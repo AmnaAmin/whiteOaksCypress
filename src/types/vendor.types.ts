@@ -270,3 +270,14 @@ export type SettingsValues = {
   language?: any
   profilePicture?: any
 }
+
+export type Vendors = {
+  statusLabel: string
+  companyName: string
+  region: string
+  state: string
+  createdDate: string
+  coiglExpirationDate: string
+  coiWcExpirationDate: string
+  einNumber: string
+}

@@ -61,30 +61,10 @@ export const SignatureTab = props => {
         </FormControl>
         <Divider />
         <ModalFooter mt={6}>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            w="130px"
-            h="48px"
-            color="gray.700"
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
-          >
+          <Button variant="outline" colorScheme="brand" mr={3} onClick={onClose}>
             {t('close')}
           </Button>
-          <Button
-            data-testid="save-signature"
-            colorScheme="CustomPrimaryColor"
-            w="130px"
-            h="48px"
-            type="submit"
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
-            onClick={handleSubmit(onSubmit)}
-          >
+          <Button data-testid="save-signature" colorScheme="brand" type="submit" onClick={handleSubmit(onSubmit)}>
             {t('Apply')}
           </Button>
         </ModalFooter>

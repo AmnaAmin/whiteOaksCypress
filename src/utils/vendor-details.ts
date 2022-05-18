@@ -50,7 +50,7 @@ export const useAccountDetails = () => {
 export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
-  return useMutation((payload: VendorProfilePayload) => client(`vendors`, { data: payload, method: 'PUT' }), {
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }), {
     onSuccess(response) {
       console.log('response', response)
     },
@@ -123,8 +123,8 @@ export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: Vendo
 
 export const parseTradeFormValuesToAPIPayload = (
   formValues: VendorTradeFormValues,
-  vendorData: VendorProfile,
-): VendorProfilePayload => {
+  vendorData: VendorProfile | {},
+): Partial<VendorProfilePayload> => {
   return {
     ...vendorData,
     vendorSkills: formValues.trades
@@ -151,8 +151,8 @@ export const parseMarketAPIDataToFormValues = (
 
 export const parseMarketFormValuesToAPIPayload = (
   formValues: VendorMarketFormValues,
-  vendorData: VendorProfile,
-): VendorProfilePayload => {
+  vendorData: VendorProfile | {},
+): Partial<VendorProfilePayload> => {
   return {
     ...vendorData,
     markets: formValues.markets
