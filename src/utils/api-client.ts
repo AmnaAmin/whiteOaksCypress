@@ -39,6 +39,13 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       } else {
         return Promise.reject(data)
       }
+    } else if (contentType && contentType.includes('text/xml')) {
+      const data = await response.text()
+      if (response.ok) {
+        return { data, headers: response.headers }
+      } else {
+        return Promise.reject(data)
+      }
     }
 
     return Promise.resolve({ data: null })
