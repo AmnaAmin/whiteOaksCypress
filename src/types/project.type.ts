@@ -152,3 +152,10 @@ export type ProjectAlertType = {
   category: string
   dateCreated: string
 }
+
+export type verifyAddressValues = {
+  streetAddress?: string
+  city?: string
+  state?: string
+  zipCode?: any
+}

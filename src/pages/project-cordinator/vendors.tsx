@@ -30,13 +30,13 @@ const Vendors = () => {
         <Spacer />
         <Box pt="4">
           <Button
+            onClick={onNewVendorModalOpen}
             _focus={{ outline: 'none' }}
             variant="ghost"
             color="#4E87F8"
             leftIcon={<Icon boxSize={3} as={AddIcon} />}
             fontSize="14px"
             fontWeight={600}
-            onClick={onNewVendorModalOpen}
           >
             New Vendor
           </Button>
