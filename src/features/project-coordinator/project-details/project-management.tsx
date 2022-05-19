@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 
 const labelStyle = {
