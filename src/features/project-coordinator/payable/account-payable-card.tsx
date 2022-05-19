@@ -16,7 +16,7 @@ export const AccountPaybleCard = (props: AccountPaybleCardType) => {
   return (
     <Card
       bg="white"
-      p={5}
+      p={6}
       borderRadius={8}
       border="1px solid transparent"
       borderTop="4px solid transparent"
