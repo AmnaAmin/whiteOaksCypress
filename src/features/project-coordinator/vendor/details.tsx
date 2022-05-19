@@ -12,55 +12,113 @@ import {
   FormLabel,
   Button,
   Flex,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { t } from 'i18next'
 import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
 const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ onClose, VendorType }) => {
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+  } = useForm()
+
+  const onSubmit = values => {
+    console.log(values)
+  }
   return (
     <Stack spacing={3}>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid templateColumns="repeat(3,215px)" rowGap="6" columnGap="4">
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.businessName}>
               <FormLabel variant="strong-label" size="md">
                 Business Name
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('businessName', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.businessName && errors.businessName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.score}>
               <FormLabel variant="strong-label" size="md">
                 Score
               </FormLabel>
-
-              <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <Controller
+                control={control}
+                name="score"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.status}>
               <FormLabel variant="strong-label" size="md">
                 Status
               </FormLabel>
-              <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <Controller
+                control={control}
+                name="status"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.primaryContact}>
               <FormLabel variant="strong-label" size="md">
                 Primary Contact
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('primaryContact', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.primaryEmail}>
               <FormLabel variant="strong-label" size="md">
                 Primary Email
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('primaryEmail', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
@@ -87,11 +145,20 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
 
         <HStack spacing="4" pb="2" pt="2">
           <Box w="215px">
-            <FormControl>
+            <FormControl isInvalid={errors.businessPhoneNo}>
               <FormLabel variant="strong-label" size="md">
                 Business Phone No
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('businessPhoneNo', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.businessPhoneNo && errors.businessPhoneNo.message}</FormErrorMessage>
             </FormControl>
           </Box>
           <Box>
@@ -125,61 +192,123 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
 
         <Grid templateColumns="repeat(4,215px)" rowGap="6" columnGap="4">
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.streetAdress}>
               <FormLabel variant="strong-label" size="md">
-                Street Address
+                Street Adress
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('streetAdress', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.city}>
               <FormLabel variant="strong-label" size="md">
                 City
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('city', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.city && errors.city.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.state}>
               <FormLabel variant="strong-label" size="md">
                 State
               </FormLabel>
-
-              <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <Controller
+                control={control}
+                name="state"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.zipCode}>
               <FormLabel variant="strong-label" size="md">
-                Zipcode
+                Zip Code
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('zipCode', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.capacity}>
               <FormLabel variant="strong-label" size="md">
                 Capacity
               </FormLabel>
-
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('capacity', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.capacity && errors.capacity.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.ein}>
               <FormLabel variant="strong-label" size="md">
                 EIN
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('ein', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.ein && errors.ein.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={errors.sin}>
               <FormLabel variant="strong-label" size="md">
                 SIN
               </FormLabel>
-              <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
+              <Input
+                {...register('sin', {
+                  required: 'This is required',
+                })}
+                w="215px"
+                variant="reguired-field"
+                size="md"
+                placeholder="Input size medium"
+              />
+              <FormErrorMessage>{errors.sin && errors.sin.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
@@ -200,11 +329,21 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               </HStack>
             </VStack>
             <Box w="215px">
-              <FormControl>
-                <FormLabel variant="strong-label" size="md" mb="0">
-                  Payments Terms
+              <FormControl isInvalid={errors.paymentTerms}>
+                <FormLabel variant="strong-label" size="md">
+                  Payment Terms
                 </FormLabel>
-                <ReactSelect selectProps={{ isBorderLeft: true }} />
+                <Controller
+                  control={control}
+                  name="paymentTerms"
+                  rules={{ required: 'This is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
               </FormControl>
             </Box>
           </Stack>
