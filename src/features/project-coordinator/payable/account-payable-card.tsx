@@ -25,7 +25,7 @@ export const AccountPaybleCard = (props: AccountPaybleCardType) => {
       id={props.Id}
     >
       <Stack>
-        <Box>
+        <Box lineHeight="32px">
           <Text fontSize="18px" fontWeight={600}>
             {props.value}
           </Text>

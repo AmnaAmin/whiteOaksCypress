@@ -48,7 +48,7 @@ const payableData = [
 
 export const PayableFiltter = ({ cardSelected, onSelected }) => {
   return (
-    <Grid gap="10" gridTemplateColumns="repeat(auto-fit,minmax(160px,1fr))">
+    <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(160px,1fr))">
       {payableData.map(data => {
         return (
           <AccountPaybleCard

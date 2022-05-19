@@ -24,6 +24,11 @@ export const Payable: React.FC = () => {
   }
   return (
     <Box>
+      <Box mb={2}>
+        <Text fontSize="18px" fontWeight={500} color="gray.600">
+          Account Payable
+        </Text>
+      </Box>
       <Box>
         <PayableFiltter onSelected={setSelectedCard} cardSelected={selectedCard} />
       </Box>
