@@ -133,11 +133,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
       setSelectedTransactionId(original.id)
 
-      if (original.status === 'PENDING') {
-        onEditModalOpen()
-      } else {
-        onTransactionDetailsModalOpen()
-      }
+      onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )
