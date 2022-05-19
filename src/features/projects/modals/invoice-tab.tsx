@@ -53,10 +53,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
   const [items, setItems] = useState(
     transactions && transactions.length > 0 ? transactions.filter(co => co.parentWorkOrderId === workOrder.id) : [],
   )
+  // Sum of all positive transactions (Change Orders)
   const subTotal =
     items.length > 0 &&
     items.map(it => it.changeOrderAmount > 0 && parseFloat(it.changeOrderAmount))?.reduce((sum, x) => sum + x)
 
+  // Sum of all negative transactions (Draws)
   const amountPaid =
     items.length > 0 &&
     items.map(it => it.changeOrderAmount < 0 && parseFloat(it.changeOrderAmount))?.reduce((sum, x) => sum + x)
