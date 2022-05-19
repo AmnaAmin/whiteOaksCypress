@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react'
 import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { useProjectTypes, useSaveProjectDetails } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
+import Select from 'react-select'
 
 type InfoProps = {
   setNextTab: () => void
@@ -97,15 +98,23 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormSelect
-              errorMessage={errors.projectType && errors.projectType?.message}
-              label={'Type'}
-              name={`projectType`}
+            <FormLabel sx={labelStyle}>Type</FormLabel>
+            <Controller
               control={control}
-              options={types}
+              name={`projectType`}
               rules={{ required: 'This is required field' }}
-              controlStyle={{ w: '20em' }}
-              elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="projectType"
+                    options={types}
+                    // selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    sx={inputStyle}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
           </FormControl>
         </GridItem>
@@ -209,7 +218,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                 roundedLeft={5}
                 fontSize={14}
                 fontWeight={500}
-                bg="#EDF2F7"
+                // bg="#EDF2F7"
                 h="37px"
                 color="#4A5568"
               >

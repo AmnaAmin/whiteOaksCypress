@@ -11,10 +11,9 @@ import {
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useForm, useFormContext } from 'react-hook-form'
-import { FormSelect } from 'components/react-hook-form-fields/select'
 import { ProjectFormValues } from 'types/project.type'
-import { useCallback, useEffect, useState } from 'react'
-import { useMarkets, useProperties, useSaveProjectDetails, useStates, useVerifyAddressApi } from 'utils/pc-projects'
+import { useEffect, useState } from 'react'
+import { useMarkets, useProperties, useStates, useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
@@ -119,6 +118,9 @@ export const AddPropertyInfo = props => {
   // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
+      setTimeout(() => {
+        refetch()
+      }, 2000)
       const parser = new xml2js.Parser()
       parser
         .parseStringPromise(addressData.data)
@@ -186,7 +188,7 @@ export const AddPropertyInfo = props => {
                   <Select
                     id="streetAddress"
                     options={addressOptions}
-                    selected={value}
+                    // selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
                     placeholder="Type address here.."
@@ -196,13 +198,13 @@ export const AddPropertyInfo = props => {
                 </>
               )}
             />
-            <FormErrorMessage>{errors.streetAddress && errors.streetAddress?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors?.streetAddress && errors?.streetAddress?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.city && errors.city?.message}
+              errorMessage={errors?.city && errors?.city?.message}
               label={'City'}
               placeholder=""
               register={register}
@@ -214,21 +216,30 @@ export const AddPropertyInfo = props => {
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormSelect
-              errorMessage={errors.state && errors.state?.message}
-              label={'State'}
-              name={`state`}
+            <FormLabel sx={labelStyle}>State</FormLabel>
+            <Controller
               control={control}
-              options={states}
+              name={`state`}
               rules={{ required: 'This is required field' }}
-              elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="state"
+                    options={states}
+                    // selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    sx={inputStyle}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.zipCode && errors.zipCode?.message}
+              errorMessage={errors?.zipCode && errors?.zipCode?.message}
               label={'Zip'}
               placeholder=""
               register={register}
@@ -242,21 +253,30 @@ export const AddPropertyInfo = props => {
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
-            <FormSelect
-              errorMessage={errors.market && errors.market?.message}
-              label={'Markets'}
-              name={`market`}
+            <FormLabel sx={labelStyle}>Market</FormLabel>
+            <Controller
               control={control}
-              options={market}
+              name={`market`}
               rules={{ required: 'This is required field' }}
-              elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="market"
+                    options={market}
+                    // selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    sx={inputStyle}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.gateCode && errors.gateCode?.message}
+              errorMessage={errors?.gateCode && errors?.gateCode?.message}
               label={'Gate Code'}
               placeholder=""
               register={register}
@@ -268,7 +288,7 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.lockBoxCode && errors.lockBoxCode?.message}
+              errorMessage={errors?.lockBoxCode && errors?.lockBoxCode?.message}
               label={'Lock Box Code'}
               placeholder=""
               register={register}
@@ -282,7 +302,7 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.hoaPhone && errors.hoaPhone?.message}
+              errorMessage={errors?.hoaPhone && errors?.hoaPhone?.message}
               label={'HOA Contact Phone'}
               placeholder=""
               register={register}
@@ -295,7 +315,7 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.hoaPhoneNumberExtension && errors.hoaPhoneNumberExtension?.message}
+              errorMessage={errors?.hoaPhoneNumberExtension && errors?.hoaPhoneNumberExtension?.message}
               label={'Ext.'}
               placeholder=""
               register={register}
@@ -307,7 +327,7 @@ export const AddPropertyInfo = props => {
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.hoaEmailAddress && errors.hoaEmailAddress?.message}
+              errorMessage={errors?.hoaEmailAddress && errors?.hoaEmailAddress?.message}
               label={'HOA Contact Email'}
               placeholder=""
               register={register}
@@ -337,9 +357,9 @@ export const AddPropertyInfo = props => {
           //  type="submit"
           disabled={!check && isDuplicateAddress && !verificationInProgress}
           onClick={() => {
-            // setTimeout(() => {
-            //   refetch()
-            // }, 2000)
+            setTimeout(() => {
+              refetch()
+            }, 2000)
             onOpenAddressVerifyModalOpen()
           }}
         >

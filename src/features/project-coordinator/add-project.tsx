@@ -21,11 +21,12 @@ import {
 import { AddProjectInfo } from './add-project-info'
 import { AddPropertyInfo } from './add-property-info'
 import { ManageProject } from './manage-project'
-import { FormProvider, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useToast } from '@chakra-ui/react'
+import { useSaveProjectDetails } from 'utils/pc-projects'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -33,13 +34,49 @@ type AddProjectFormProps = {
 
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const toast = useToast()
+  const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
   const [tabIndex, setTabIndex] = useState(0)
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
 
-  const methods = useFormContext<ProjectFormValues>()
+  const methods = useForm<ProjectFormValues>({
+    defaultValues: {
+      name: '',
+      projectType: '',
+      woNumber: '',
+      poNumber: '',
+      clientStartDate: '',
+      clientDueDate: '',
+      woaStartDate: '',
+      sowOriginalContractAmount: '',
+      projectSOW: '',
+      sowLink: '',
+      streetAddress: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      market: '',
+      gateCode: '',
+      lockBoxCode: '',
+      hoaPhone: '',
+      hoaPhoneNumberExtension: '',
+      hoaEmailAddress: '',
+      projectManager: '',
+      projectCoordinator: '',
+      clientName: '',
+      superFirstName: '',
+      superEmailAddress: '',
+      superPhoneNumber: '',
+      superPhoneNumberExtension: '',
+    },
+  })
+
+  const { handleSubmit } = methods
+
+  // const { handleSubmit } = useForm<ProjectFormValues>()
+  // const methods = useFormContext<ProjectFormValues>()
 
   const onSubmit = useCallback(
     async values => {
@@ -76,6 +113,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         superPhoneNumber: values.superPhoneNumber,
         superPhoneNumberExtension: values.superPhoneNumberExtension,
       }
+
       console.log('new payload', newProjectPayload)
       saveProjectDetails(newProjectPayload, {
         onSuccess() {
@@ -94,7 +132,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 
   return (
     <>
-      <Flex id="newProjectForm">
+      <Flex>
         <Grid
           templateColumns="repeat(4, 1fr)"
           gap={'1rem 0.5rem'}
@@ -105,7 +143,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         >
           <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
             <FormProvider {...methods}>
-              <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
                 <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="7">
                   <TabList color="#4A5568">
                     <Tab
@@ -206,21 +244,4 @@ export const UpdateProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClo
       </ModalContent>
     </Modal>
   )
-}
-function saveProjectDetails(
-  addressInfo: {
-    streetAddress: any
-    city: any
-    state: any
-    zipCode: any
-    market: any
-    gateCode: any
-    lockBoxCode: any
-    hoaPhone: any
-    hoaPhoneNumberExtension: any
-    hoaEmailAddress: any
-  },
-  arg1: { onSuccess(): void },
-) {
-  throw new Error('Function not implemented.')
 }

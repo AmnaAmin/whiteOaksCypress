@@ -1,19 +1,14 @@
-import React, { useCallback } from 'react'
-import { Button, FormControl, Grid, GridItem } from '@chakra-ui/react'
+import React from 'react'
+import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { useForm } from 'react-hook-form'
-import { FormSelect } from 'components/react-hook-form-fields/select'
-import { useClients, useFPM, usePC, useSaveProjectDetails } from 'utils/pc-projects'
+import { Controller, useForm } from 'react-hook-form'
+import { useClients, useFPM, usePC } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
-import { useToast } from '@chakra-ui/react'
+import Select from 'react-select'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
 }> = () => {
-  // const [showModal, setShowModal] = useState(false)
-  const toast = useToast()
-  const { mutate: saveProjectDetails } = useSaveProjectDetails()
-
   const { data: fieldProjectManager } = useFPM()
   const { data: projectCoordinator } = usePC()
   const { data: client } = useClients()
@@ -42,7 +37,6 @@ export const ManageProject: React.FC<{
   const {
     register,
     formState: { errors },
-    handleSubmit,
     control,
     watch,
   } = useForm<ProjectFormValues>()
@@ -61,26 +55,43 @@ export const ManageProject: React.FC<{
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
-            <FormSelect
-              errorMessage={errors.projectManager && errors.projectManager?.message}
-              label={'Field Project Manager'}
-              name={`projectManager`}
+            <FormLabel>Field Project Manager</FormLabel>
+            <Controller
               control={control}
-              options={FPMs}
+              name={`projectManager`}
               rules={{ required: 'This is required field' }}
-              elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="projectManager"
+                    options={FPMs}
+                    selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormSelect
-              errorMessage={errors.projectCoordinator && errors.projectCoordinator?.message}
-              label={'Project Coordinator'}
-              name={`projectCoordinator`}
+            <FormLabel>Project Coordinator</FormLabel>
+            <Controller
               control={control}
-              options={PCs}
+              name={`projectCoordinator`}
               rules={{ required: 'This is required field' }}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="projectCoordinator"
+                    options={PCs}
+                    selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
           </FormControl>
         </GridItem>
@@ -88,14 +99,22 @@ export const ManageProject: React.FC<{
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
-            <FormSelect
-              errorMessage={errors.clientName && errors.clientName?.message}
-              label={'Client'}
-              name={`clientName`}
+            <FormLabel>Client</FormLabel>
+            <Controller
               control={control}
-              options={clients}
+              name={`clientName`}
               rules={{ required: 'This is required field' }}
-              elementStyle={{ bg: 'gray.50', borderLeft: '1.5px solid #4E87F8' }}
+              render={({ field: { value }, fieldState }) => (
+                <>
+                  <Select
+                    id="clientName"
+                    options={clients}
+                    selected={value}
+                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
             />
           </FormControl>
         </GridItem>

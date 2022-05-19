@@ -161,7 +161,7 @@ export type ProjectAlertType = {
 
 export type ProjectFormValues = {
   name?: string
-  projectType?: number
+  projectType?: number | string
   woNumber?: string
   poNumber?: string
   clientStartDate?: string
@@ -169,6 +169,7 @@ export type ProjectFormValues = {
   woaStartDate?: string
   sowOriginalContractAmount?: string
   projectSOW?: any
+  sowLink: string
   streetAddress?: string
   city?: string
   state?: string
