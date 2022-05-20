@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Spacer, Divider } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
@@ -8,7 +8,10 @@ import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
-import { BiDownArrowCircle } from 'react-icons/bi'
+import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { Button } from 'components/button/button'
+import { FaAtom } from 'react-icons/fa'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
@@ -55,6 +58,7 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
 }
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
+  const { isProjectCoordinator } = useUserRolesSelector()
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
@@ -120,6 +124,19 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         tableHeight="calc(100vh - 300px)"
         name="vendor-document-table"
       />
+      {isProjectCoordinator && (
+        <Flex justifyContent="end">
+          <Button variant="ghost" colorScheme="brand">
+            <Icon as={BiExport} fontSize="18px" mr={1} />
+            Export
+          </Button>
+          <Divider orientation="vertical" border="2px solid" h="35px" />
+          <Button variant="ghost" colorScheme="brand" m={0}>
+            <Icon as={FaAtom} fontSize="18px" mr={1} />
+            Export
+          </Button>
+        </Flex>
+      )}
     </Box>
   )
 })
