@@ -155,6 +155,9 @@ i18n.use(initReactI18next).init({
         category: 'Category',
         dateTriggered: 'Date Triggered',
 
+        // Project - Notes
+        notes: 'Notes',
+
         // VENDOR
         details: 'Details',
         market: 'Market',
