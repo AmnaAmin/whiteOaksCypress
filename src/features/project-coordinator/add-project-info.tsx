@@ -1,13 +1,10 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useForm } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
-import { FormSelect } from 'components/react-hook-form-fields/select'
-import { useProjectTypes, useSaveProjectDetails } from 'utils/pc-projects'
+import { useProjectTypes } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
-import { readFileContent } from 'utils/vendor-details'
-import { currencyFormatter } from 'utils/stringFormatters'
 import Select from 'react-select'
 
 type InfoProps = {
@@ -17,7 +14,6 @@ type InfoProps = {
 
 export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const { data: projectTypes } = useProjectTypes()
-  const { mutate: saveProjectDetails } = useSaveProjectDetails()
 
   const types = projectTypes
     ? projectTypes?.map(type => ({
@@ -39,47 +35,8 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const {
     register,
     formState: { errors },
-    handleSubmit,
     control,
-    watch,
   } = useForm<ProjectFormValues>()
-
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {
-      console.log('Value Change', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
-
-  // const onSubmit = useCallback(
-  //   async value => {
-  //     let fileContents: any = null
-  //     if (value.projectSOW && value.projectSOW[0]) {
-  //       fileContents = await readFileContent(value.projectSOW[0])
-  //     }
-  //     const projectPayload = {
-  //       name: value.name,
-  //       projectType: value.projectType,
-  //       woNumber: value.woNumber,
-  //       poNumber: value.poNumber,
-  //       clientStartDate: value.clientStartDate,
-  //       clientDueDate: value.clientDueDate,
-  //       woaStartDate: value.woaStartDate,
-  //       sowOriginalContractAmount: currencyFormatter(value.sowOriginalContractAmount),
-  //       projectSOW: value.projectSOW && value.projectSOW[0] ? value.projectSOW[0].name : null,
-  //       sowLink: fileContents,
-  //     }
-  //     console.log('payload', projectPayload)
-  //     saveProjectDetails(projectPayload, {
-  //       onSuccess() {
-  //         props.setNextTab()
-  //       },
-  //     })
-  //   },
-  //   [saveProjectDetails],
-  // )
 
   return (
     <>
@@ -229,15 +186,10 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
       </Grid>
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button
-          variant="outline"
-          size="md"
-          color="#4E87F8"
-          border="2px solid #4E87F8" // onClick={onClose}
-        >
+        <Button variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8" onClick={props.onClose}>
           {'Cancel'}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" type="submit" size="md" ml="3">
+        <Button colorScheme="CustomPrimaryColor" size="md" ml="3" onClick={props.setNextTab}>
           {'Next'}
         </Button>
       </Grid>

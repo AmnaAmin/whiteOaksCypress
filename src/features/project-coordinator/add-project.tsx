@@ -73,7 +73,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const { handleSubmit } = methods
+  const { handleSubmit, watch, setValue } = methods
 
   // const { handleSubmit } = useForm<ProjectFormValues>()
   // const methods = useFormContext<ProjectFormValues>()
@@ -130,6 +130,15 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     [saveProjectDetails],
   )
 
+  /* debug purpose */
+  const watchAllFields = watch()
+  React.useEffect(() => {
+    const subscription = watch(value => {
+      console.log('Value Change', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch, watchAllFields])
+
   return (
     <>
       <Flex>
@@ -174,10 +183,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                       <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <AddPropertyInfo isLoading={false} setNextTab={setNextTab} />
+                      <AddPropertyInfo isLoading={false} setNextTab={setNextTab} onClose={onClose} />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <ManageProject isLoading={false} />
+                      <ManageProject isLoading={false} onClose={onClose} />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

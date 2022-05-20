@@ -21,7 +21,11 @@ import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import Select from 'react-select'
 // import Creatable from 'react-select/creatable' //check for input on select
 
-export const AddPropertyInfo = props => {
+export const AddPropertyInfo: React.FC<{
+  isLoading: boolean
+  setNextTab: () => void
+  onClose: () => void
+}> = props => {
   const [streetAddress, setStreetAddress] = useState('')
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
@@ -84,20 +88,9 @@ export const AddPropertyInfo = props => {
   const {
     register,
     formState: { errors },
-    // handleSubmit,
     control,
-    watch,
     setValue,
   } = useFormContext<ProjectFormValues>()
-
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {
-      console.log('Value Change', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
 
   // On Street Address change, set values of City, State and Zip
   const setAddressValues = e => {
@@ -340,12 +333,7 @@ export const AddPropertyInfo = props => {
       </Grid>
 
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button // onClick={onClose}
-          variant="outline"
-          size="md"
-          color="#4E87F8"
-          border="2px solid #4E87F8"
-        >
+        <Button onClick={props.onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
           {'Cancel'}
         </Button>
         <Button
@@ -361,6 +349,7 @@ export const AddPropertyInfo = props => {
               refetch()
             }, 2000)
             onOpenAddressVerifyModalOpen()
+            props.setNextTab()
           }}
         >
           {'Next'}

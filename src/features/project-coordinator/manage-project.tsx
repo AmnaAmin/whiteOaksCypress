@@ -8,7 +8,8 @@ import Select from 'react-select'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
-}> = () => {
+  onClose: () => void
+}> = props => {
   const { data: fieldProjectManager } = useFPM()
   const { data: projectCoordinator } = usePC()
   const { data: client } = useClients()
@@ -40,15 +41,6 @@ export const ManageProject: React.FC<{
     control,
     watch,
   } = useForm<ProjectFormValues>()
-
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {
-      console.log('Value Change', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
 
   return (
     <>
@@ -170,13 +162,7 @@ export const ManageProject: React.FC<{
         </GridItem>
       </Grid>
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button
-          // onClick={onClose}
-          variant="outline"
-          size="md"
-          color="#4E87F8"
-          border="2px solid #4E87F8"
-        >
+        <Button onClick={props.onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
           {'Cancel'}
         </Button>
         <Button
