@@ -64,6 +64,7 @@ i18n.use(initReactI18next).init({
         contactNo: 'Contact No',
         WODueDate: 'WO Due Date',
         trade: 'Trade',
+        auditLogs: 'Audit Logs',
         totalAmount: 'Total Amount',
         submit: 'Submit',
         approvedBy: 'Approved By',
@@ -153,6 +154,9 @@ i18n.use(initReactI18next).init({
         value: 'Value',
         category: 'Category',
         dateTriggered: 'Date Triggered',
+
+        // Project - Notes
+        notes: 'Notes',
 
         // VENDOR
         details: 'Details',
@@ -271,6 +275,7 @@ i18n.use(initReactI18next).init({
         contactNo: 'Número de Contacto',
         WODueDate: 'Fecha de vencimiento de OT',
         trade: 'Comercio',
+        auditsLogs: 'registros de auditoría',
         totalAmount: 'Cantidad Total',
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
