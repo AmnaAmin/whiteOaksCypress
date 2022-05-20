@@ -42,6 +42,7 @@ export type ProjectType = {
   profitTotal: number
   projectClosedDate: string | null
   projectManager: string
+  projectCoordinator: string
   projectManagerId: number
   projectManagerPhoneNumber: string
   projectRelatedCost: number

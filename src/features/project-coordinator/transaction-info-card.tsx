@@ -11,9 +11,11 @@ import { TransactionInfoCardDetails } from './transaction-info-card-details'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
-    <Center flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="14px" fontWeight={500} color="gray.500">
-        <Text color="gray.600">{title}</Text>
+    <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
+      <Box fontSize="14px" color="gray.500">
+        <Text color="gray.600" fontWeight={500}>
+          {title}
+        </Text>
         {isLoading ? <BlankSlate size="sm" /> : children}
       </Box>
     </Center>
@@ -53,17 +55,22 @@ export const TransactionInfoCard: React.FC<{
             )}
           </Box>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('WODueDate')}>
+        <InfoStructureCard isLoading={isLoading} title={t('Client')}>
+          <Text noOfLines={1}>{projectData?.clientName}</Text>
+        </InfoStructureCard>
+        <InfoStructureCard isLoading={isLoading} title={t('Project Due')}>
           <Text>{dateFormat(projectData?.clientDueDate as string)}</Text>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('contactName')}>
-          <Text>{projectData?.clientName}</Text>
+        <InfoStructureCard isLoading={isLoading} title={t('FPM Name')}>
+          <Text noOfLines={1}>{projectData?.projectManager}</Text>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('contactNo')}>
-          <Text>{projectData?.projectManagerPhoneNumber}</Text>
+        <InfoStructureCard isLoading={isLoading} title={t('FPM Contact')}>
+          <Text fontSize={13}>{projectData?.projectManagerPhoneNumber}</Text>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('address')} flex={2}>
-          {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
+        <InfoStructureCard isLoading={isLoading} title={t('address')} flex={1.5}>
+          <Text
+            noOfLines={1}
+          >{`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}</Text>
         </InfoStructureCard>
         <InfoStructureCard isLoading={isLoading} title="" border="none">
           {isSeeMore && (
