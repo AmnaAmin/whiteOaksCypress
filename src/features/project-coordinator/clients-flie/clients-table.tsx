@@ -2,11 +2,9 @@ import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import { useProjectAlerts } from 'utils/projects'
-import { useParams } from 'react-router-dom'
-import { useAuth } from 'utils/auth-context'
+import { usePcClients } from 'utils/clients-table-api'
 
-const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -37,47 +35,45 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const VendorTable = React.forwardRef((props: any, ref) => {
-  const { data } = useAuth()
-  const account = data?.user
-
-  const { projectId } = useParams<'projectId'>()
-
-  const { data: alerts } = useProjectAlerts(projectId, account?.login)
+export const ClientsTable = React.forwardRef((props: any, ref) => {
+  const { data: PcData } = usePcClients()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: 'Status',
-        accessor: 'subject',
-      },
-      {
         Header: 'Name',
-        accessor: 'triggeredType',
+        accessor: 'companyName',
       },
       {
-        Header: 'Region',
-        accessor: 'attribute',
+        Header: 'Contact',
+        accessor: 'contacts[0].contact',
       },
       {
-        Header: 'State',
-        accessor: 'category',
+        Header: 'Address',
+        accessor: 'streetAddress',
       },
       {
-        Header: 'Active Date',
-        accessor: 'dateCreated',
+        Header: 'Phone',
+        accessor: 'contacts[0].phoneNumber',
       },
       {
-        Header: 'COI-GL Expiration Date',
-        accessor: 'date',
+        Header: 'Email',
+        accessor: 'contacts[0].emailAddress',
+        // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
-        Header: 'COI-WC Expiration Date',
-        accessor: 'now',
+        Header: 'Contact',
+        accessor: 'accountPayableContactInfos[0].contact',
       },
       {
-        Header: 'EIN/SSN',
-        accessor: 'ein/ssn',
+        Header: 'Email',
+        accessor: 'accountPayableContactInfos[0].emailAddress',
+      },
+
+      {
+        Header: 'Phone',
+        accessor: 'accountPayableContactInfos[0].phoneNumber',
+        // Cell: ({ value }) => dateFormat(value),
       },
     ],
     ref,
@@ -88,8 +84,8 @@ export const VendorTable = React.forwardRef((props: any, ref) => {
       <ReactTable
         onRowClick={props.onRowClick}
         columns={columns}
-        data={alerts || []}
-        TableRow={alertsRow}
+        data={PcData || []}
+        TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"
       />

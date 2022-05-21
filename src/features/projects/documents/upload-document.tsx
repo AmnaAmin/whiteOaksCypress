@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalBody,
-  Button,
   FormControl,
   FormLabel,
   HStack,
@@ -27,6 +26,7 @@ import { Document } from 'types/vendor.types'
 
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
+import { Button } from 'components/button/button'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -113,20 +113,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         resetUpload()
         onClose()
       }}
-      size="md"
+      size="3xl"
+      variant="custom"
     >
       <ModalOverlay />
-      <ModalContent minW="700px" minH="317px">
-        <ModalHeader
-          fontSize="16px"
-          fontWeight={500}
-          fontStyle="normal"
-          color="gray.600"
-          borderBottom="1px solid #E2E8F0"
-          borderTop="2px solid #4E87F8"
-        >
-          {t('upload')}
-        </ModalHeader>
+      <ModalContent minH="317px">
+        <ModalHeader>{t('upload')}</ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
@@ -176,13 +168,10 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         inputRef.current.click()
                       }
                     }}
-                    fontSize="14px"
-                    fontWeight={500}
-                    fontStyle="normal"
-                    bg="none"
-                    color="#4E87F8"
+                    variant="ghost"
+                    colorScheme="brand"
                   >
-                    {t('chooseFile')}{' '}
+                    {t('chooseFile')}
                   </Button>
                 )}
               </HStack>
@@ -190,34 +179,18 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             </VStack>
           </FormControl>
         </ModalBody>
-        <ModalFooter display="flex" alignItems="center" borderTop="1px solid #E2E8F0">
+        <ModalFooter>
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={() => {
               resetUpload()
               onClose()
             }}
-            color="gray.700"
-            mr={3}
-            fontSize="14px"
-            fontWeight={600}
-            fontStyle="normal"
-            h="48px"
-            w="130px"
+            colorScheme="brand"
           >
             {t('close')}
           </Button>
-          <Button
-            onClick={uploadDocument}
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
-            type="submit"
-            fontSize="14px"
-            fontWeight={600}
-            fontStyle="normal"
-            h="48px"
-            w="130px"
-          >
+          <Button onClick={uploadDocument} colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </ModalFooter>

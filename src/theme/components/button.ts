@@ -2,10 +2,14 @@ import { theme as chakraTheme } from '@chakra-ui/react'
 
 const ButtonVariants = {
   Button: {
+    baseStyle: {
+      ...chakraTheme.components.Button.baseStyle,
+      _focus: {
+        outline: 'none',
+      },
+    },
     variants: {
       solid: props => {
-        // const style = buttonSize(props.size)
-
         return {
           ...chakraTheme.components.Button.variants.solid(props),
           bg: `${props.colorScheme}.300`,
@@ -13,17 +17,11 @@ const ButtonVariants = {
           _hover: {
             bg: `${props.colorScheme}.500`,
           },
-          _focus: {
-            outline: 'none',
-          },
         }
       },
       outline: props => {
-        // const style = buttonSize(props.size)
-
         return {
           ...chakraTheme.components.Button.variants.outline(props),
-          // ...style,
           borderColor: `${props.colorScheme}.400`,
           color: `${props.colorScheme}.400`,
           _hover: {
@@ -35,17 +33,35 @@ const ButtonVariants = {
         }
       },
       ghost: props => {
-        // const style = buttonSize(props.size)
-
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
-          // ...style,
           color: `${props.colorScheme}.400`,
+          _focus: {
+            outline: 'none',
+          },
           _hover: {
             bg: `${props.colorScheme}.50`,
           },
-          _focus: {
-            outline: 'none',
+        }
+      },
+      link: props => {
+        return {
+          ...chakraTheme.components.Button.variants.link(props),
+          color: `${props.colorScheme}.300`,
+          _hover: {
+            color: `${props.colorScheme}.500`,
+          },
+        }
+      },
+      'choose-file': props => {
+        return {
+          ...chakraTheme.components.Button.variants.outline(props),
+          borderWidth: '0 1px 0 0',
+          color: `${props.colorScheme}.500`,
+          bg: `${props.colorScheme}.100`,
+          _hover: {
+            color: `${props.colorScheme}.600`,
+            bg: `${props.colorScheme}.200`,
           },
         }
       },
@@ -59,14 +75,17 @@ const ButtonVariants = {
       sm: {
         minW: '70px',
         h: '32px',
+        fontSize: '12px',
       },
       md: {
         minW: '84px',
         h: '40px',
+        fontSize: '14px',
       },
       lg: {
         minW: '107px',
         h: '48px',
+        fontSize: '16px',
       },
     },
   },

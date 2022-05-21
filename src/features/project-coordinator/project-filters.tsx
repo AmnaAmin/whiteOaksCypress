@@ -7,6 +7,8 @@ import SummaryIconFirst, {
   SummaryIconSixth,
   SummaryIconSeventh,
   SummaryIconEight,
+  SummaryIconNinth,
+  SummaryIconTenth,
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -27,50 +29,63 @@ const useProjectCardJson = cards => {
     {
       id: 'new',
       title: 'New',
-      number: cards?.find(c => c.status === 7)?.count,
+      number: cards?.find(c => c.status === 7)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconFirst} bg="#F9F1DA" />,
     },
     {
       id: 'active',
-      title: t('activeWO'),
-      number: cards?.find(c => c.status === 8)?.count,
+      title: 'Active',
+      number: cards?.find(c => c.status === 8)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSecond} bg="#E5ECF9" />,
     },
     {
       id: 'punch',
       title: 'Punch',
-      number: cards?.find(c => c.status === 9)?.count,
+      number: cards?.find(c => c.status === 9)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
     },
     {
       id: 'closed',
       title: 'Closed',
-      number: cards?.find(c => c.status === 10)?.count,
+      number: cards?.find(c => c.status === 10)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconForth} bg="#FCE8D8" />,
     },
     {
-      id: 'pastDue',
-      title: t('pastDue'),
-      number: cards?.find(c => c.status === 62)?.count,
-      IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
+      id: 'invoiced',
+      title: 'Invoiced',
+      number: cards?.find(c => c.status === 11)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
     },
+
     {
       id: 'clientPaid',
       title: 'Client Paid',
-      number: cards?.find(c => c.status === 72)?.count,
+      number: cards?.find(c => c.status === 72)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSixth} bg="#FEEBCB" />,
     },
     {
       id: 'overpayment',
       title: 'Overpayment',
-      number: cards?.find(c => c.status === 109)?.count,
+      number: cards?.find(c => c.status === 109)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSeventh} bg="#E2EFDF" />,
     },
     {
-      id: 'invoiced',
-      title: 'Invoiced',
-      number: cards?.find(c => c.status === 11)?.count,
-      IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
+      id: 'pastDue',
+      title: t('pastDue'),
+      number: cards?.find(c => c.status === 62)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
+    },
+    {
+      id: 'disputed',
+      title: 'Disputed',
+      number: cards?.find(c => c.status === '220')?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconNinth} bg="#FFF5F7" />,
+    },
+    {
+      id: 'collection',
+      title: 'Collection',
+      number: cards?.find(c => c.status === '119')?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
     },
   ]
 }
@@ -78,11 +93,10 @@ const useProjectCardJson = cards => {
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values } = useProjectCards()
   const cards = useProjectCardJson(values)
-  console.log(cards)
 
   return (
     <>
-      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(4, 1fr)" gridGap="15px">
+      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">
         {cards.map(card => {
           return <ProjectCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
         })}

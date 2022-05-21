@@ -105,30 +105,10 @@ const WorkOrderDetailTab = props => {
         </SimpleGrid>
       </Box>
       <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button
-          variant="ghost"
-          onClick={props.onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          {t('close')}
+        <Button onClick={props.onClose} colorScheme="brand" variant="ghost">
+          {t('cancel')}
         </Button>
-        <Button
-          colorScheme="CustomPrimaryColor"
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          {t('save')}
-        </Button>
+        <Button colorScheme="brand">{t('save')}</Button>
       </Flex>
     </Box>
   )

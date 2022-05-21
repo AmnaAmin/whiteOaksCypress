@@ -16,6 +16,7 @@ import {
   Tab,
   TabPanel,
   TabPanels,
+  Flex,
 } from '@chakra-ui/react'
 import { AddProjectInfo } from './add-project-info'
 import { AddPropertyInfo } from './add-property-info'
@@ -30,7 +31,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 
   return (
     <>
-      <form id="newTransactionForm">
+      <Flex id="newProjectForm">
         <Grid
           templateColumns="repeat(4, 1fr)"
           gap={'1rem 0.5rem'}
@@ -70,7 +71,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             </Tabs>
           </Stack>
         </Grid>
-      </form>
+      </Flex>
     </>
   )
 }
@@ -92,7 +93,7 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
         <ModalBody px="6" pt="3" pb="1">
           <AddProjectForm onClose={onClose} />
         </ModalBody>
-        <ModalFooter display="flex" alignItems="center">
+        {/* <ModalFooter display="flex" alignItems="center">
           <Button onClick={onClose} variant="ghost" size="sm">
             {'Close'}
           </Button>
@@ -109,7 +110,7 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
           >
             {'Next'}
           </Button>
-        </ModalFooter>
+        </ModalFooter> */}
       </ModalContent>
     </Modal>
   )

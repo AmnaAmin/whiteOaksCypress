@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -18,14 +17,18 @@ import {
   Thead,
   Tr,
   VStack,
+  FormLabel,
+  Link,
 } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
+
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
-
 import { useState } from 'react'
-
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
+import { jsPDF } from 'jspdf'
+import { createInvoice } from 'utils/vendor-projects'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -45,8 +48,23 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTab = ({ onClose, workOrder }) => {
-  const [items, setItems] = useState([] as any)
+export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
+  const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
+  const [items, setItems] = useState([
+    {
+      item: '1',
+      description: 'Product1 Description',
+      unitPrice: '$124',
+      quantity: 4,
+      amount: '$496',
+    },
+    {
+      item: '2',
+      description: 'Product2 Description',
+      unitPrice: '$120',
+      quantity: '$600',
+    },
+  ] as any)
   const {
     register,
     handleSubmit,
@@ -74,9 +92,30 @@ export const InvoiceTab = ({ onClose, workOrder }) => {
     // console.log('deleteValue', deleteValue)
   }
 
+  const generateInvoice = () => {
+    let doc = new jsPDF()
+    doc = createInvoice(doc, workOrder, projectData, items)
+    doc.save('invoice.pdf')
+  }
+
   return (
     <Box>
       <Box w="100%">
+        <Flex justifyContent={'flex-end'} mt="10px">
+          <Flex>
+            <FormLabel variant="strong-label" size="md" mt="10px">
+              Recent INV:
+            </FormLabel>
+          </Flex>
+          <Link href={workOrder?.invoiceLink} target={'_blank'} download _hover={{ textDecoration: 'none' }}>
+            <Button variant="ghost" colorScheme="brand" size="md">
+              {'invoice.pdf'}
+            </Button>
+          </Link>
+          <Button variant="solid" colorScheme="brand" size="md" ml="10px" onClick={generateInvoice}>
+            Generate Invoice
+          </Button>
+        </Flex>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo
             title={'WO Original Amount'}
@@ -90,7 +129,7 @@ export const InvoiceTab = ({ onClose, workOrder }) => {
           />
           <InvoiceInfo
             title={'PO Number'}
-            value={workOrder.invoiceNumber ? workOrder.invoiceNumber : ''}
+            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
             icons={BiFile}
           />
           <InvoiceInfo
@@ -132,97 +171,101 @@ export const InvoiceTab = ({ onClose, workOrder }) => {
                           <Td>
                             <Flex justifyContent="space-between" alignItems="center">
                               <Text>{item.amount}</Text>
-                              <Text>
-                                <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
-                              </Text>
+                              {allowManualEntry && (
+                                <Text>
+                                  <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
+                                </Text>
+                              )}
                             </Flex>
                           </Td>
                         </Tr>
                       )
                     })}
                   </Tbody>
-                  <Tfoot>
-                    <Tr>
-                      <Td pt="0" pb={6}>
-                        <Button
-                          type="submit"
-                          size="xs"
-                          variant="ghost"
-                          my={0.5}
-                          fontSize="14px"
-                          fontWeight={600}
-                          color="#4E87F8"
-                        >
-                          +Add New Item
-                        </Button>
+                  {allowManualEntry && (
+                    <Tfoot>
+                      <Tr>
+                        <Td pt="0" pb={6}>
+                          <Button
+                            type="submit"
+                            size="xs"
+                            variant="ghost"
+                            my={0.5}
+                            fontSize="14px"
+                            fontWeight={600}
+                            color="#4E87F8"
+                          >
+                            +Add New Item
+                          </Button>
 
-                        <FormControl isInvalid={!!errors.item?.message}>
-                          <Input
-                            w={165}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="item"
-                            {...register('item', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
+                          <FormControl isInvalid={!!errors.item?.message}>
+                            <Input
+                              w={165}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="item"
+                              {...register('item', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
 
-                      <Td>
-                        <FormControl isInvalid={!!errors.description?.message}>
-                          <Input
-                            w={149}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="description"
-                            {...register('description', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.unitPrice?.message}>
-                          <Input
-                            w={149}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="unitPrice"
-                            {...register('unitPrice', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.quantity?.message}>
-                          <Input
-                            w={84}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="quantity"
-                            {...register('quantity', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.amount?.message}>
-                          <Input
-                            w={84}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="amount"
-                            {...register('amount', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                    </Tr>
-                  </Tfoot>
+                        <Td>
+                          <FormControl isInvalid={!!errors.description?.message}>
+                            <Input
+                              w={149}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="description"
+                              {...register('description', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.unitPrice?.message}>
+                            <Input
+                              w={149}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="unitPrice"
+                              {...register('unitPrice', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.quantity?.message}>
+                            <Input
+                              w={84}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="quantity"
+                              {...register('quantity', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.amount?.message}>
+                            <Input
+                              w={84}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="amount"
+                              {...register('amount', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                      </Tr>
+                    </Tfoot>
+                  )}
                 </Table>
               </form>
 
@@ -247,30 +290,10 @@ export const InvoiceTab = ({ onClose, workOrder }) => {
         </Box>
       </Box>
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
-        <Button
-          variant="ghost"
-          onClick={onClose}
-          mr={3}
-          color="gray.700"
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
+        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           Close
         </Button>
-        <Button
-          _focus={{ outline: 'none' }}
-          colorScheme={'CustomPrimaryColor'}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          Save
-        </Button>
+        <Button colorScheme="brand">Save</Button>
       </HStack>
     </Box>
   )

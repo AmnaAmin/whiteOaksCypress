@@ -14,10 +14,12 @@ const tabsVariants = {
               bg: `${props.colorScheme}.50`,
             },
             _selected: {
+              borderBottomColor: `${props.colorScheme}.300`,
               bg: `${props.colorScheme}.300`,
               color: 'white',
               fontWeight: 600,
               _hover: {
+                borderBottomColor: `${props.colorScheme}.500`,
                 bg: `${props.colorScheme}.500`,
               },
             },

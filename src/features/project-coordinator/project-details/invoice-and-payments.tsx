@@ -11,10 +11,9 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { t } from 'i18next'
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
 
@@ -31,10 +30,7 @@ const inputTextStyle = {
 }
 
 const InvoiceAndPayments = () => {
-  const [changedDateFields, setChangeDateFields] = useState<string[]>([])
-
   const {
-    control,
     handleSubmit,
     register,
     reset,
@@ -49,8 +45,8 @@ const InvoiceAndPayments = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box h="39vh">
-          <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="60%">
+        <Stack minH="39vh" spacing={14}>
+          <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="908px" columnGap={4}>
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
                 <FormLabel htmlFor="originSowAmount" sx={labelStyle}>
@@ -111,7 +107,6 @@ const InvoiceAndPayments = () => {
                   name={`uploadInvoice`}
                   register={register}
                   testId="fileInputAgreement"
-                  isRequired={changedDateFields.includes('agreementSignedDate')}
                   style={{ w: '215px', h: '40px' }}
                 >
                   <Button
@@ -133,25 +128,8 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>Invoice back date</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors.invoiceBackDate && errors.invoiceBackDate?.message}
-                  label={''}
-                  name={`invoiceBackDate`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                  onChange={e => {
-                    if (!changedDateFields.includes('invoiceBackDate')) {
-                      setChangeDateFields([...changedDateFields, 'invoiceBackDate'])
-                    }
-                  }}
-                />
+                <Input borderLeft="2px solid #4E87F8" placeholder="mm/dd/yyyy" />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -165,40 +143,14 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl sx={inputTextStyle}>
                 <FormLabel sx={labelStyle}>WOA Expected Pay</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors.woaExpectedPay && errors.woaExpectedPay?.message}
-                  label={''}
-                  name={`woaExpectedPay`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                  onChange={e => {
-                    if (!changedDateFields.includes('woaExpectedPay')) {
-                      setChangeDateFields([...changedDateFields, 'woaExpectedPay'])
-                    }
-                  }}
-                />
+                <Input borderLeft="2px solid #4E87F8" placeholder="mm/dd/yyyy" />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem display="grid" alignItems="end">
               <Box mt="1">
-                <Button
-                  fontSize="14px"
-                  fontWeight={500}
-                  variant="ghost"
-                  colorScheme="CustomPrimaryColor"
-                  leftIcon={<BiDownload />}
-                  _hover={{ bg: 'gray.100' }}
-                  _focus={{ outline: 'none' }}
-                  _active={{ bg: 'none' }}
-                >
+                <Button variant="outline" colorScheme="brand" leftIcon={<BiDownload />}>
                   Original SOW
                 </Button>
               </Box>
@@ -259,29 +211,17 @@ const InvoiceAndPayments = () => {
             </GridItem>
             <GridItem></GridItem>
           </Grid>
-        </Box>
 
-        <Stack w="100%">
-          <Box pr="8">
-            <Divider border="1px solid" />
-          </Box>
-          <Box w="100%" minH="70px">
-            <Button
-              mt="8px"
-              mr="7"
-              float={'right'}
-              colorScheme="CustomPrimaryColor"
-              _focus={{ outline: 'none' }}
-              w="130px"
-              h="48px"
-              fontSize="14px"
-              fontStyle="normal"
-              fontWeight={500}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
+          <Stack>
+            <Box pr="8">
+              <Divider border="1px solid" />
+            </Box>
+            <Box w="100%" pb="3">
+              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
+                Save
+              </Button>
+            </Box>
+          </Stack>
         </Stack>
       </form>
     </Box>
