@@ -1,5 +1,5 @@
 import { Grid } from '@chakra-ui/react'
-import { AccountPaybleCard } from './account-payable-card'
+import { AccountFilterCard } from './account-filter-card'
 
 const payableData = [
   {
@@ -51,7 +51,7 @@ export const PayableFiltter = ({ cardSelected, onSelected }) => {
     <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(160px,1fr))">
       {payableData.map(data => {
         return (
-          <AccountPaybleCard
+          <AccountFilterCard
             key={data.id}
             IconColor={data.iconColor}
             value={data.value}
