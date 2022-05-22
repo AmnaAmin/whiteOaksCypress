@@ -83,7 +83,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         accessor: 'vendorName',
       },
       {
-        Header: t('workOrder') || '',
+        Header: t('trade') || '',
         accessor: 'workOrderName',
         id: 'workOrderName',
       },
