@@ -1,8 +1,8 @@
-import { ReuseCompo } from 'components/payable-receivable/reuse-component'
+import { PayableReceivable } from 'components/payable-receivable/payable-receivable'
 import React from 'react'
 
 const Receivable = () => {
-  return <ReuseCompo topTitle={'Account Receivable'} ID={'receivable'} />
+  return <PayableReceivable topTitle={'Account Receivable'} ID={'receivable'} />
 }
 
 export default Receivable

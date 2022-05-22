@@ -13,7 +13,7 @@ type payableReceivable = {
   ID: number | string
 }
 
-export const ReuseCompo = (props: payableReceivable) => {
+export const PayableReceivable = (props: payableReceivable) => {
   const [isClicked, setIsClicked] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
