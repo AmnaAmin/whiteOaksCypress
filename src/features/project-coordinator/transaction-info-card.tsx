@@ -1,21 +1,21 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, Text, Button } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, FormLabel } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from '../projects/status'
-import { useTranslation } from 'react-i18next'
 import { ProjectType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useState } from 'react'
 import { TransactionInfoCardDetails } from './transaction-info-card-details'
+import { Button } from 'components/button/button'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
-        <Text color="gray.600" fontWeight={500}>
+        <FormLabel variant="strong-label" size="md">
           {title}
-        </Text>
+        </FormLabel>
         {isLoading ? <BlankSlate size="sm" /> : children}
       </Box>
     </Center>
@@ -26,7 +26,6 @@ export const TransactionInfoCard: React.FC<{
   projectData: ProjectType
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
-  const { t } = useTranslation()
   const [isSeeMore, setSeeMore] = useState(true)
   const [isSeeLess, setSeeLess] = useState(false)
   const [isShowMoreDetails, setShowMoreDetails] = useState(false)
@@ -43,34 +42,46 @@ export const TransactionInfoCard: React.FC<{
         marginBottom={isShowMoreDetails ? '-32px' : ''}
         borderBottom={isShowMoreDetails ? '1px solid #E5E5E5' : 'none'}
       >
-        <InfoStructureCard title={t('projectID')} isLoading={isLoading}>
-          <Text>{projectData?.id}</Text>
+        <InfoStructureCard title={'Project ID'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md">
+            {projectData?.id}{' '}
+          </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('Status')}>
-          <Box>
-            {projectData?.projectStatus ? (
-              <Status value={projectData?.projectStatus} id={projectData?.projectStatus} />
-            ) : (
-              <Text>--</Text>
-            )}
-          </Box>
+        <InfoStructureCard title={'Status'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md">
+            <Box>
+              {projectData?.projectStatus ? (
+                <Status value={projectData?.projectStatus} id={projectData?.projectStatus} />
+              ) : (
+                <FormLabel>--</FormLabel>
+              )}
+            </Box>
+          </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('Client')}>
-          <Text noOfLines={1}>{projectData?.clientName}</Text>
+        <InfoStructureCard title={'Client'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md" noOfLines={1}>
+            {projectData?.clientName}
+          </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('Project Due')}>
-          <Text>{dateFormat(projectData?.clientDueDate as string)}</Text>
+        <InfoStructureCard title={'Project Due'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md">
+            {dateFormat(projectData?.clientDueDate as string)}
+          </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('FPM Name')}>
-          <Text noOfLines={1}>{projectData?.projectManager}</Text>
+        <InfoStructureCard title={'FPM Name'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md" noOfLines={1}>
+            {projectData?.projectManager}
+          </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('FPM Contact')}>
-          <Text fontSize={13}>{projectData?.projectManagerPhoneNumber}</Text>
+        <InfoStructureCard title={'FPM Contact'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md">
+            {projectData?.projectManagerPhoneNumber}
+          </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title={t('address')} flex={1.5}>
-          <Text
-            noOfLines={1}
-          >{`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}</Text>
+        <InfoStructureCard title={'Address'} isLoading={isLoading}>
+          <FormLabel variant="light-label" size="md" noOfLines={1}>
+            {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
+          </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard isLoading={isLoading} title="" border="none">
           {isSeeMore && (

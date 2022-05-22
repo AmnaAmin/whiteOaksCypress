@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, Text, HStack, VStack, Tooltip } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, HStack, VStack, Tooltip, FormLabel } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import { ProjectType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -9,9 +9,9 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
   return (
     <Center flexDir="column" px={4}>
       <Box fontSize="14px" color="gray.500">
-        <Text color="gray.600" fontWeight={500}>
+        <FormLabel variant="strong-label" size="md">
           {title}
-        </Text>
+        </FormLabel>
         {isLoading ? <BlankSlate size="sm" /> : children}
       </Box>
     </Center>
@@ -41,15 +41,19 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'Project Name'} isLoading={isLoading} />
             </Box>
             <Box width="125px">
-              <Text noOfLines={1}>{projectData?.name}</Text>
+              <FormLabel variant="light-label" size="md" noOfLines={1}>
+                {projectData?.name}
+              </FormLabel>
             </Box>
           </HStack>
           <HStack>
-            <Box marginRight={1}>
+            <Box marginRight={2}>
               <InfoStructureCard title={'Project Type'} isLoading={isLoading} />
             </Box>
             <Box width="125px">
-              <Text>{projectData?.projectTypeLabel}</Text>
+              <FormLabel variant="light-label" size="md">
+                {projectData?.projectTypeLabel}
+              </FormLabel>
             </Box>
           </HStack>
         </VStack>
@@ -59,7 +63,9 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'Client Start Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <Text width="100px">{dateFormat(projectData?.clientStartDate as string)}</Text>
+              <FormLabel variant="light-label" size="md" width="100px">
+                {dateFormat(projectData?.clientStartDate as string)}
+              </FormLabel>
             </Box>
           </HStack>
           <HStack>
@@ -67,7 +73,9 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'Client End Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <Text width="100px">{dateFormat(projectData?.clientDueDate as string)}</Text>
+              <FormLabel variant="light-label" size="md" width="100px">
+                {dateFormat(projectData?.clientDueDate as string)}
+              </FormLabel>
             </Box>
           </HStack>
         </VStack>
@@ -77,7 +85,9 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'WOA Start Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <Text width="100px">{dateFormat(projectData?.woaStartDate as string)}</Text>
+              <FormLabel variant="light-label" size="md" width="100px">
+                {dateFormat(projectData?.woaStartDate as string)}
+              </FormLabel>
             </Box>
           </HStack>
           <HStack>
@@ -85,19 +95,23 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'WOA End Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <Text width="100px">{dateFormat(projectData?.woaCompletionDate as string)}</Text>
+              <FormLabel variant="light-label" size="md" width="100px">
+                {dateFormat(projectData?.woaCompletionDate as string)}
+              </FormLabel>
             </Box>
           </HStack>
         </VStack>
         <VStack flex={2}>
           <HStack>
             <Tooltip label="Project Coordinator Name" color="black" placement="top">
-              <Box>
+              <Box marginRight={3}>
                 <InfoStructureCard title={'PC Name'} isLoading={isLoading} />
               </Box>
             </Tooltip>
             <Box>
-              <Text marginRight={3}>{projectData?.projectCoordinator} </Text>
+              <FormLabel variant="light-label" size="md">
+                {projectData?.projectCoordinator}
+              </FormLabel>
             </Box>
           </HStack>
           <HStack>
@@ -107,7 +121,9 @@ export const TransactionInfoCardDetails: React.FC<{
               </Box>
             </Tooltip>
             <Box>
-              <Text>{account?.telephoneNumber}</Text>
+              <FormLabel variant="light-label" size="md">
+                {account?.telephoneNumber}
+              </FormLabel>
             </Box>
           </HStack>
         </VStack>
