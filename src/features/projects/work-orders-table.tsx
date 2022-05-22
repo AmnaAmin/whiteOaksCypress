@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { useTransactions } from 'utils/transactions'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
@@ -56,9 +57,10 @@ interface PropType {
   projectData: ProjectType
 }
 export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-  const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+  const { transactions = [] } = useTransactions(projectId)
+  const { t } = useTranslation()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
 
@@ -108,6 +110,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
           setSelectedWorkOrder(undefined)
           refetch()
         }}
+        transactions={transactions}
         onProjectTabChange={onTabChange}
       />
       {isLoading && (

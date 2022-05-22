@@ -32,7 +32,7 @@ import { createInvoice } from 'utils/vendor-projects'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
-    <Flex justifyContent="center">
+    <Flex justifyContent="left">
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -48,23 +48,21 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
+export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) => {
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
-  const [items, setItems] = useState([
-    {
-      item: '1',
-      description: 'Product1 Description',
-      unitPrice: '$124',
-      quantity: 4,
-      amount: '$496',
-    },
-    {
-      item: '2',
-      description: 'Product2 Description',
-      unitPrice: '$120',
-      quantity: '$600',
-    },
-  ] as any)
+  const [items, setItems] = useState(
+    transactions && transactions.length > 0 ? transactions.filter(co => co.parentWorkOrderId === workOrder.id) : [],
+  )
+  // Sum of all positive transactions (Change Orders)
+  const subTotal =
+    items.length > 0 &&
+    items.map(it => it.changeOrderAmount > 0 && parseFloat(it.changeOrderAmount))?.reduce((sum, x) => sum + x)
+
+  // Sum of all negative transactions (Draws)
+  const amountPaid =
+    items.length > 0 &&
+    items.map(it => it.changeOrderAmount < 0 && parseFloat(it.changeOrderAmount))?.reduce((sum, x) => sum + x)
+
   const {
     register,
     handleSubmit,
@@ -117,11 +115,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
           </Button>
         </Flex>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
-          <InvoiceInfo
-            title={'WO Original Amount'}
-            value={currencyFormatter(workOrder?.clientOriginalApprovedAmount)}
-            icons={BiDollarCircle}
-          />
+          <InvoiceInfo title={'Invoice No.'} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={'Final Invoice:'}
             value={currencyFormatter(workOrder?.finalInvoiceAmount)}
@@ -155,8 +149,6 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
                     <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
                       <Td>Item</Td>
                       <Td>Description</Td>
-                      <Td>Unit Price </Td>
-                      <Td>Quantity</Td>
                       <Td>Amount</Td>
                     </Tr>
                   </Thead>
@@ -164,13 +156,11 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
                     {items.map((item, index) => {
                       return (
                         <Tr h="72px">
-                          <Td>{item.item}</Td>
-                          <Td>{item.description}</Td>
-                          <Td>{item.unitPrice}</Td>
-                          <Td>{item.quantity}</Td>
+                          <Td>{item.id}</Td>
+                          <Td>{item.name}</Td>
                           <Td>
                             <Flex justifyContent="space-between" alignItems="center">
-                              <Text>{item.amount}</Text>
+                              <Text>{item.changeOrderAmount}</Text>
                               {allowManualEntry && (
                                 <Text>
                                   <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
@@ -273,15 +263,15 @@ export const InvoiceTab = ({ onClose, workOrder, projectData }) => {
                 <Box>
                   <HStack w={300} height="60px" justifyContent="space-between">
                     <Text>Subtotal:</Text>
-                    <Text>$1710.00</Text>
+                    <Text>{currencyFormatter(subTotal)}</Text>
                   </HStack>
                   <HStack w={300} height="60px" justifyContent="space-between">
                     <Text>Total Amount Paid:</Text>
-                    <Text>$1710.00</Text>
+                    <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
                   </HStack>
                   <HStack w={300} height="60px" justifyContent="space-between">
                     <Text>Balance Due:</Text>
-                    <Text>$0.00</Text>
+                    <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
                   </HStack>
                 </Box>
               </VStack>
