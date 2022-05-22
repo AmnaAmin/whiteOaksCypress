@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -170,17 +168,6 @@ function Misc() {
             </GridItem>
             <GridItem></GridItem>
           </Grid>
-
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
       </form>
     </Box>

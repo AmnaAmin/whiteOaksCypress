@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -202,40 +202,7 @@ const Contact = () => {
               <FormErrorMessage></FormErrorMessage>
             </FormControl>
           </Box>
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
-        {/* 
-        <Stack w="100%">
-          <Box pr="8">
-            <Divider border="1px solid" />
-          </Box>
-          <Box w="100%" minH="70px">
-            <Button
-              mt="8px"
-              mr="7"
-              float={'right'}
-              colorScheme="CustomPrimaryColor"
-              _focus={{ outline: 'none' }}
-              w="130px"
-              h="48px"
-              fontSize="14px"
-              fontStyle="normal"
-              fontWeight={500}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
-        </Stack> */}
       </form>
     </Box>
   )

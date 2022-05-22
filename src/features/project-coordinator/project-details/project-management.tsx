@@ -1,17 +1,5 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  Stack,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -30,7 +18,6 @@ const inputTextStyle = {
 const ProjectManagement = () => {
   const {
     register,
-    control,
     formState: { errors },
     handleSubmit,
   } = useForm({
@@ -124,82 +111,25 @@ const ProjectManagement = () => {
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Start</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors?.woaStart?.message}
-                  label={''}
-                  name={`woaStart`}
-                  control={control}
-                  rules={{ required: 'This is required field' }}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>WOA Completion</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors?.woaCompletion?.message}
-                  label={''}
-                  name={`woaCompletion`}
-                  rules={{ required: 'This is required field' }}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Start</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors?.clientStart?.message}
-                  label={''}
-                  name={`clientStart`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  rules={{ required: 'This is required field' }}
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Due</FormLabel>
-
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors?.clientDue?.message}
-                  label={''}
-                  name={`clientDue`}
-                  control={control}
-                  rules={{ required: 'This is required field' }}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -207,55 +137,16 @@ const ProjectManagement = () => {
                 <FormLabel sx={labelStyle} whiteSpace="nowrap">
                   Client Click Walk Through
                 </FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors?.clientClickWalkThrough?.message}
-                  label={''}
-                  name={`clientClickWalkThrough`}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  rules={{ required: 'This is required field' }}
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel sx={labelStyle}>Client Sign Off</FormLabel>
-                <FormDatePicker
-                  elementStyle={{
-                    borderLeft: '2px solid #4E87F8',
-                  }}
-                  errorMessage={errors?.clientSignOff?.message}
-                  label={''}
-                  name={`clientSignOff`}
-                  rules={{ required: 'This is required field' }}
-                  control={control}
-                  placeholder="mm/dd/yyyy"
-                  style={{
-                    width: '215px',
-                    height: '40px',
-                  }}
-                />
+                <Input type="date" />
               </FormControl>
             </GridItem>
           </Grid>
-
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
       </form>
     </Box>

@@ -1,15 +1,4 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  Stack,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -222,16 +211,6 @@ const Location = () => {
             </GridItem>
             <GridItem></GridItem>
           </Grid>
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
       </form>
     </Box>
