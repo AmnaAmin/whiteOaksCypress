@@ -104,26 +104,21 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 }) => {
   const { projects } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
-  const [pastDueId, setPastDueId] = useState(projects)
 
   const { data: days } = useWeekDayProjectsDue()
 
   useEffect(() => {
-    if (selectedCard === 'pastDue') {
-      setPastDueId(projects?.filter(project => project?.pastDue))
-      const idPastDue =
-        0 ||
-        pastDueId?.map(project => {
-          return { id: project?.id }
-        })
-      console.log(idPastDue?.filter(pastDue => pastDue?.id)) //?.forEach(pastDue => pastDue?.value))
-      console.log(idPastDue?.forEach(pastDue => pastDue?.id))
-    }
+    // To get pastDue Ids
+    const pastDueIds = projects?.filter(project => project?.pastDue)
+    const idPastDue = pastDueIds?.find(project => project?.id)
+
     if (!selectedCard && !selectedDay) setFilterProjects(projects)
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          !selectedCard ||
+          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
+          (selectedCard === 'pastDue' && project?.id === idPastDue?.id),
       ),
     )
 
@@ -158,3 +153,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     </Box>
   )
 }
+
+// function multiSelectFilter(rows, columnIds, idPastDue) {
+//   return idPastDue.length === 0 ? rows : rows.filter(row => idPastDue.includes(String(row.original[columnIds])))
+// }
+
+// console.log(multiSelectFilter)
