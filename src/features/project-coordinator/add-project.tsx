@@ -73,7 +73,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const { handleSubmit, watch, setValue } = methods
+  const { handleSubmit, watch } = methods
 
   // const { handleSubmit } = useForm<ProjectFormValues>()
   // const methods = useFormContext<ProjectFormValues>()
