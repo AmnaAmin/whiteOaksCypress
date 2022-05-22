@@ -163,7 +163,7 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
-        <UploadDocumentModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
+        <UploadDocumentModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} projectId={projectId} />
       </Stack>
     </>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Spacer, Divider } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Divider, Center } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
@@ -24,13 +24,13 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
       {...row.getRowProps({
         style,
       })}
-      onClick={() => {
-        // @ts-ignore
-        const s3Url = row.original?.s3Url
-        if (s3Url) {
-          downloadFile(s3Url)
-        }
-      }}
+      // onClick={() => {
+      //   // @ts-ignore
+      //   const s3Url = row.original?.s3Url
+      //   if (s3Url) {
+      //     downloadFile(s3Url)
+      //   }
+      // }}
     >
       {row.cells.map(cell => {
         return (
@@ -53,6 +53,20 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
           </Td>
         )
       })}
+      <Center mr={3}>
+        <Icon
+          as={BiDownArrowCircle}
+          color="#4E87F8"
+          fontSize={24}
+          onClick={() => {
+            // @ts-ignore
+            const s3Url = row.original?.s3Url
+            if (s3Url) {
+              downloadFile(s3Url)
+            }
+          }}
+        />
+      </Center>
     </Tr>
   )
 }
@@ -102,13 +116,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         accessor: 'createdDate',
         id: 'createdDate',
         Cell({ value }) {
-          return (
-            <Flex alignItems="center">
-              <Box mr={2}>{dateFormat(value)}</Box>
-              <Spacer w="100px" />
-              <Icon as={BiDownArrowCircle} color="#4E87F8" fontSize={24} />
-            </Flex>
-          )
+          return <Box mr={2}>{dateFormat(value)}</Box>
         },
       },
     ],
