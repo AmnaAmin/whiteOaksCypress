@@ -24,13 +24,13 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
       {...row.getRowProps({
         style,
       })}
-      // onClick={() => {
-      //   // @ts-ignore
-      //   const s3Url = row.original?.s3Url
-      //   if (s3Url) {
-      //     downloadFile(s3Url)
-      //   }
-      // }}
+      onClick={() => {
+        // @ts-ignore
+        const s3Url = row.original?.s3Url._blank
+        if (s3Url) {
+          downloadFile(s3Url)
+        }
+      }}
     >
       {row.cells.map(cell => {
         return (
@@ -53,6 +53,13 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
           </Td>
         )
       })}
+      {/* <a
+        id="download"
+        // @ts-ignore
+        href={row.original?.s3Url}
+        target="_blank"
+        hidden
+      /> */}
       <Center mr={3}>
         <Icon
           as={BiDownArrowCircle}
