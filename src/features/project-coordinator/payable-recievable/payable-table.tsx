@@ -35,7 +35,7 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const PayableTable = React.forwardRef((props: any, ref) => {
-  const { columns, resizeElementRef } = useColumnWidthResize(
+  const { columns } = useColumnWidthResize(
     [
       {
         Header: 'Id',
@@ -65,12 +65,33 @@ export const PayableTable = React.forwardRef((props: any, ref) => {
         Header: 'Final Invoice',
         accessor: 'Final Invoice',
       },
+
+      {
+        Header: 'Markets',
+        accessor: 'Markets',
+      },
+      {
+        Header: 'WO Start Date',
+        accessor: 'WO Start Date',
+      },
+      {
+        Header: 'WO Completed Date',
+        accessor: 'WO Completed Date',
+      },
+      {
+        Header: 'WO Issue Date',
+        accessor: 'WO Issue Date',
+      },
+      {
+        Header: 'Checkbox',
+        accessor: 'Checkbox',
+      },
     ],
     ref,
   )
 
   return (
-    <Box ref={resizeElementRef}>
+    <Box overflow="auto" width="100%">
       <ReactTable
         onRowClick={props.onRowClick}
         columns={columns}

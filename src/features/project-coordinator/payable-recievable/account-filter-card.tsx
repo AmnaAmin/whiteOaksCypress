@@ -12,10 +12,11 @@ type AccountPaybleCardType = {
   cardSelected: string
 }
 
-export const AccountPaybleCard = (props: AccountPaybleCardType) => {
+export const AccountFilterCard = (props: AccountPaybleCardType) => {
   return (
     <Card
       bg="white"
+      _hover={{ bg: '#EBF8FF' }}
       p={6}
       borderRadius={8}
       border="1px solid transparent"
