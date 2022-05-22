@@ -17,7 +17,6 @@ import {
   Divider,
   HStack,
   Box,
-  Flex,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
