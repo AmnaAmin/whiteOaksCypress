@@ -1,4 +1,4 @@
-import { Box, Button, Divider, HStack, Icon, Stack } from '@chakra-ui/react'
+import { Box, Button, Divider, Icon, Stack } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import Location from './location'
@@ -19,41 +19,47 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
         onChange={index => setTabIndex(index)}
       >
         <TabList bg={props.id === 'Receivable' ? '' : '#F7FAFC'} rounded="6px 6px 0 0" pt="7">
-          <HStack spacing={5}>
-            <Tab>Project Management</Tab>
-            <Tab>Invoicing & payment</Tab>
-            <Tab>Contacts</Tab>
-            <Tab>Location</Tab>
-            <Tab>Misc</Tab>
-          </HStack>
+          <Tab>Project Management</Tab>
+          <Tab>Invoicing & payment</Tab>
+          <Tab>Contacts</Tab>
+          <Tab>Location</Tab>
+          <Tab>Misc</Tab>
         </TabList>
 
-        <TabPanels>
-          <TabPanel mt="12" p="0" ml="6">
+        <TabPanels mt="31px">
+          <TabPanel p="0" ml="2">
             <ProjectManagement />
           </TabPanel>
 
-          <TabPanel mt="12" p="0" ml="6">
+          <TabPanel p="0" ml="2">
             <InvoiceAndPayments />
           </TabPanel>
 
-          <TabPanel mt="12" p="0" ml="6">
+          <TabPanel p="0" ml="2">
             <Contact />
           </TabPanel>
-          <TabPanel mt="12" p="0" ml="6">
+          <TabPanel p="0" ml="2">
             <Location />
           </TabPanel>
 
-          <TabPanel mt="12" p="0" ml="6">
+          <TabPanel p="0" ml="2">
             <Misc />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>
-              <Box>
+              <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit">
+                <Button
+                  mt="8px"
+                  mr="7"
+                  float={'right'}
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  form="project"
+                >
                   Save
                 </Button>
                 {props.onClose && (
@@ -83,12 +89,21 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
           )}
           {tabIndex === 1 && (
             <Stack>
-              <Box>
+              <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
 
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit">
+                <Button
+                  mt="8px"
+                  mr="7"
+                  float={'right'}
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  size="md"
+                  form="invoice"
+                >
                   Save
                 </Button>
                 {props.onClose && (
@@ -100,6 +115,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                       float={'right'}
                       variant="outline"
                       colorScheme="brand"
+                      size="md"
                     >
                       Cancel
                     </Button>
@@ -118,11 +134,19 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
           )}
           {tabIndex === 2 && (
             <Stack>
-              <Box>
+              <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit">
+                <Button
+                  mt="8px"
+                  mr="7"
+                  float={'right'}
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  form="contact"
+                >
                   Save
                 </Button>
                 {props.onClose && (
@@ -152,11 +176,19 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
           )}
           {tabIndex === 3 && (
             <Stack>
-              <Box>
+              <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit">
+                <Button
+                  mt="8px"
+                  mr="7"
+                  float={'right'}
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  form="location"
+                >
                   Save
                 </Button>
                 {props.onClose && (
@@ -186,11 +218,11 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
           )}
           {tabIndex === 4 && (
             <Stack>
-              <Box>
+              <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit">
+                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit" form="misc">
                   Save
                 </Button>
                 {props.onClose && (

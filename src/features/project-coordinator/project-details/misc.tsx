@@ -15,18 +15,6 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
 
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'gray.600',
-}
-
-const inputTextStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'blackAlpha.500',
-}
-
 function Misc() {
   const {
     register,
@@ -41,12 +29,14 @@ function Misc() {
   }
   return (
     <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack minH="51vh" spacing={14}>
-          <Grid templateColumns="repeat(4,1fr)" rowGap={7} columnGap={4} w="908px">
+      <form onSubmit={handleSubmit(onSubmit)} id="misc">
+        <Stack minH="43vh">
+          <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Created</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Created
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -56,7 +46,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Active</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Active
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -66,7 +58,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Punch</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Punch
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -76,7 +70,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Closed</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Closed
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -87,7 +83,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Client Paid</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Client Paid
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -97,7 +95,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Collection</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Collection
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -107,7 +107,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Disputed</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  Disputed
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -118,7 +120,9 @@ function Misc() {
             <GridItem></GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>WOA Invoice</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  WOA Invoice
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -128,7 +132,9 @@ function Misc() {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>WOA Paid</FormLabel>
+                <FormLabel variant="strong-label" size="md">
+                  WOA Paid
+                </FormLabel>
                 <InputGroup>
                   <Input placeholder="mm/dd/yyyy" isDisabled={true} />
                   <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
@@ -140,29 +146,29 @@ function Misc() {
             <GridItem></GridItem>
             <GridItem>
               <FormControl isInvalid={errors.dueDateVariance} w="215px">
-                <FormLabel sx={labelStyle} htmlFor="dueDateVariance">
+                <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input sx={inputTextStyle} isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
+                <Input isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.finalDateVariance} w="215px">
-                <FormLabel sx={labelStyle} htmlFor="finalDateVariance">
+                <FormLabel variant="strong-label" size="md" htmlFor="finalDateVariance">
                   Final Date Variance
                 </FormLabel>
 
-                <Input sx={inputTextStyle} isDisabled={true} id="finalDate" {...register('finalDateVariance')} />
+                <Input isDisabled={true} id="finalDate" {...register('finalDateVariance')} />
                 <FormErrorMessage>{errors.finalDateVariance && errors.finalDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.payVariance} w="215px">
-                <FormLabel sx={labelStyle} htmlFor="payVariance">
+                <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input sx={inputTextStyle} isDisabled={true} id="payVariance" {...register('payVariance')} />
+                <Input isDisabled={true} id="payVariance" {...register('payVariance')} />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>

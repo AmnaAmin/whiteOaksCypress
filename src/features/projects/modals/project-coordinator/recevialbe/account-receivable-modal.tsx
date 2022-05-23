@@ -29,7 +29,7 @@ const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void }>
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody pl="3" pr="3">
           <ProjectDetailsTab id="Receivable" onClose={props.onClose} />
         </ModalBody>
       </ModalContent>
