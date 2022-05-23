@@ -153,9 +153,3 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     </Box>
   )
 }
-
-// function multiSelectFilter(rows, columnIds, idPastDue) {
-//   return idPastDue.length === 0 ? rows : rows.filter(row => idPastDue.includes(String(row.original[columnIds])))
-// }
-
-// console.log(multiSelectFilter)
