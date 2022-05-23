@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useProjectTypes } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
@@ -36,7 +36,12 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     register,
     formState: { errors },
     control,
-  } = useForm<ProjectFormValues>()
+    setValue,
+  } = useFormContext<ProjectFormValues>()
+
+  const setProjectType = e => {
+    setValue('projectType', e.label)
+  }
 
   return (
     <>
@@ -65,9 +70,10 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                   <Select
                     id="projectType"
                     options={types}
-                    // selected={value}
+                    selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
+                    onChange={setProjectType}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -170,15 +176,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               register={register}
               isRequired={true}
             >
-              <Button
-                rounded="none"
-                roundedLeft={5}
-                fontSize={14}
-                fontWeight={500}
-                // bg="#EDF2F7"
-                h="37px"
-                color="#4A5568"
-              >
+              <Button rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} h="37px" color="#4A5568">
                 {'ChooseFile'}
               </Button>
             </FormFileInput>

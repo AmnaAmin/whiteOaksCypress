@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { useClients, useFPM, usePC } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
 import Select from 'react-select'
@@ -39,8 +39,20 @@ export const ManageProject: React.FC<{
     register,
     formState: { errors },
     control,
-    watch,
-  } = useForm<ProjectFormValues>()
+    setValue,
+  } = useFormContext<ProjectFormValues>()
+
+  const setFPM = e => {
+    setValue('projectManager', e.label)
+  }
+
+  const setPC = e => {
+    setValue('projectCoordinator', e.label)
+  }
+
+  const setClient = e => {
+    setValue('clientName', e.label)
+  }
 
   return (
     <>
@@ -59,6 +71,7 @@ export const ManageProject: React.FC<{
                     options={FPMs}
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    onChange={setFPM}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -80,6 +93,7 @@ export const ManageProject: React.FC<{
                     options={PCs}
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    onChange={setPC}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -103,6 +117,7 @@ export const ManageProject: React.FC<{
                     options={clients}
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+                    onChange={setClient}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -166,10 +181,11 @@ export const ManageProject: React.FC<{
           {'Cancel'}
         </Button>
         <Button
+          type="submit"
+          form="newProjectForm"
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
           _hover={{ bg: 'blue' }}
-          type="submit"
           ml="3"
           size="md"
         >

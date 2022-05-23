@@ -10,7 +10,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { Controller, useForm, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useEffect, useState } from 'react'
 import { useMarkets, useProperties, useStates, useVerifyAddressApi } from 'utils/pc-projects'
@@ -108,6 +108,10 @@ export const AddPropertyInfo: React.FC<{
     setIsDuplicateAddress(false)
   }
 
+  const setStates = e => {
+    setValue('state', e.label)
+  }
+
   // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
@@ -181,7 +185,7 @@ export const AddPropertyInfo: React.FC<{
                   <Select
                     id="streetAddress"
                     options={addressOptions}
-                    // selected={value}
+                    selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
                     placeholder="Type address here.."
@@ -219,9 +223,10 @@ export const AddPropertyInfo: React.FC<{
                   <Select
                     id="state"
                     options={states}
-                    // selected={value}
+                    selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
+                    onChange={setStates}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -256,7 +261,7 @@ export const AddPropertyInfo: React.FC<{
                   <Select
                     id="market"
                     options={market}
-                    // selected={value}
+                    selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
                   />
@@ -342,7 +347,6 @@ export const AddPropertyInfo: React.FC<{
           _hover={{ bg: 'blue' }}
           ml="3"
           size="md"
-          //  type="submit"
           disabled={!check && isDuplicateAddress && !verificationInProgress}
           onClick={() => {
             setTimeout(() => {

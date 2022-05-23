@@ -21,7 +21,7 @@ import {
 import { AddProjectInfo } from './add-project-info'
 import { AddPropertyInfo } from './add-property-info'
 import { ManageProject } from './manage-project'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
@@ -73,7 +73,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const { handleSubmit, watch } = methods
+  const { watch, handleSubmit } = methods
 
   // const { handleSubmit } = useForm<ProjectFormValues>()
   // const methods = useFormContext<ProjectFormValues>()
