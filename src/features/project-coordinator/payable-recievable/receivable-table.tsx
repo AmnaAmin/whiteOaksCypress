@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
+import data from './moc-data-receivable.json'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -34,79 +35,83 @@ const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const ReceivableTable = React.forwardRef((props: any, ref) => {
-  const { columns } = useColumnWidthResize(
-    [
-      {
-        Header: 'Id',
-        accessor: 'Id',
-      },
-      {
-        Header: 'Client',
-        accessor: 'Client',
-      },
-      {
-        Header: 'Address',
-        accessor: 'Address',
-      },
-      {
-        Header: 'terms',
-        accessor: 'terms',
-      },
-      {
-        Header: 'Payment Terms',
-        accessor: 'Payment Terms',
-      },
-      {
-        Header: 'Expected pay date',
-        accessor: 'Expected pay date',
-      },
-      {
-        Header: 'Balance',
-        accessor: 'Balance',
-      },
-      {
-        Header: 'final invoice',
-        accessor: 'final invoice',
-      },
-      {
-        Header: 'Markets',
-        accessor: 'Markets',
-      },
-      {
-        Header: 'WO Invoice Date',
-        accessor: 'WO Invoice Date',
-      },
-      {
-        Header: 'PO No',
-        accessor: 'PO No',
-      },
-      {
-        Header: 'WO No',
-        accessor: 'WO No',
-      },
-      {
-        Header: 'Invoice No',
-        accessor: 'Invoice No',
-      },
-      {
-        Header: ' Checkbox',
-        accessor: ' Checkbox',
-      },
-    ],
-    ref,
-  )
+export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
+  (props, ref) => {
+    const { columns } = useColumnWidthResize(
+      [
+        {
+          Header: 'Id',
+          accessor: 'id',
+        },
+        {
+          Header: 'Client',
+          accessor: 'client',
+        },
+        {
+          Header: 'Address',
+          accessor: 'streetAddress',
+        },
+        {
+          Header: 'terms',
+          accessor: 'terms',
+        },
+        {
+          Header: 'Payment Terms',
+          accessor: 'paymentTerms',
+        },
+        {
+          Header: 'Expected pay date',
+          accessor: 'expectedPayDate',
+        },
+        {
+          Header: 'Balance',
+          accessor: 'balance',
+        },
+        {
+          Header: 'final invoice',
+          accessor: 'finalInvoice',
+        },
+        {
+          Header: 'Markets',
+          accessor: 'markets',
+        },
+        {
+          Header: 'WO Invoice Date',
+          accessor: 'woInvoiceDate',
+        },
+        {
+          Header: 'PO No',
+          accessor: 'poNumber',
+        },
+        {
+          Header: 'WO No',
+          accessor: 'woNumber',
+        },
+        {
+          Header: 'Invoice No',
+          accessor: 'invoiceNumber',
+        },
+        {
+          Header: ' Checkbox',
+          accessor: ' checkbox',
+        },
+      ],
+      ref,
+    )
 
-  return (
-    <Box overflow="auto" width="100%">
-      <ReactTable
-        onRowClick={props.onRowClick}
-        columns={columns}
-        data={[]}
-        TableRow={receivableRow}
-        tableHeight="calc(100vh - 300px)"
-        name="alerts-table"
-      />
-    </Box>
-  )
-})
+    console.log(data)
+
+    return (
+      <Box overflow="auto" width="100%">
+        <ReactTable
+          columns={columns}
+          setTableInstance={props.setTableInstance}
+          data={data}
+          TableRow={receivableRow}
+          tableHeight="calc(100vh - 300px)"
+          name="alerts-table"
+        />
+      </Box>
+    )
+  },
+)
