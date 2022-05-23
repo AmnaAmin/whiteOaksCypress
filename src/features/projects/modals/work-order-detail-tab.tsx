@@ -12,7 +12,7 @@ import {
   Tbody,
   Td,
 } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { BiCalendar, BiCheck, BiDownload, BiUpload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +20,7 @@ import { Button } from 'components/button/button'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
 
 const CalenderCard = props => {
   return (
@@ -39,10 +40,11 @@ const CalenderCard = props => {
   )
 }
 
-const CheckboxStructure = ({ checked }) => {
+const CheckboxStructure = ({ checked, id, onChange }) => {
   return (
     <Box>
       <Checkbox
+        id={id}
         isChecked={checked}
         rounded="6px"
         colorScheme="none"
@@ -55,7 +57,9 @@ const CheckboxStructure = ({ checked }) => {
         boxShadow="0px 0px 4px -2px "
         justifyContent="center"
         fontSize={14}
-        // fontWeight={500}
+        onChange={e => {
+          onChange(e, id)
+        }}
       >
         {checked ? 'Completed' : 'Not Completed'}
       </Checkbox>
@@ -83,51 +87,61 @@ const UploadImage: React.FC<{ Images }> = ({ Images }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   const { t } = useTranslation()
-  const onMarkCompleted = () => {
-    setAssignedItems(assignedItems => assignedItems.map(item => ({ ...item, status: 'completed' })))
-  }
-  const [assignedItems, setAssignedItems] = useState([
-    {
-      sku: '8383',
-      productName: 'Debrish Trash',
-      details: 'Replace Buttons',
-      quantity: '4',
-      price: '$350',
-      workOrder: '77',
-      status: 'not completed',
-      comments: 'verified',
+  const [assignedItems, setAssignedItems] = useState(
+    workOrder.assignedItems ?? [
+      {
+        id: '8383',
+        productName: 'Debrish Trash',
+        description: 'Replace Buttons',
+        quantity: '4',
+        price: '350',
+        workOrderId: '77',
+        isCompleted: true,
+        isVerified: true,
+      },
+      {
+        id: '33454',
+        productName: 'Remove Satellite dish',
+        description: 'Remove all cables',
+        quantity: '12',
+        price: '200',
+        workOrderId: '77',
+        isCompleted: true,
+        isVerified: false,
+      },
+      {
+        id: '74746',
+        productName: 'Install Blinders',
+        description: 'Replace Curtains',
+        quantity: '15',
+        price: '400',
+        workOrderId: '77',
+        isCompleted: false,
+        isVerified: false,
+      },
+    ],
+  )
+  const { mutate: updateWorkOrderDetails, isSuccess } = useUpdateWorkOrderMutation()
+
+  const onMarkCompleted = useCallback(
+    value => {
+      setAssignedItems(assignedItems => assignedItems.map(item => ({ ...item, isCompleted: value })))
     },
-    {
-      sku: '33454',
-      productName: 'Remove Satellite dish',
-      details: 'Remove all cables',
-      quantity: '12',
-      price: '$200',
-      workOrder: '77',
-      status: 'completed',
-      comments: 'verified',
+    [assignedItems, setAssignedItems],
+  )
+
+  const onStatusChange = useCallback(
+    (e, id) => {
+      const items = assignedItems.map(x => (x.id === id ? { ...x, isCompleted: !x.isCompleted } : x))
+      setAssignedItems([...items])
     },
-    {
-      sku: '74746',
-      productName: 'Install Blinders',
-      details: 'Replace Curtains',
-      quantity: '15',
-      price: '$400',
-      workOrder: '77',
-      status: 'completed',
-      comments: 'not verified',
-    },
-    {
-      sku: '65354',
-      productName: 'Wall Lock Box',
-      details: 'Home Depot Lock Box<',
-      quantity: '2',
-      price: '$150',
-      workOrder: '77',
-      status: 'not completed',
-      comments: 'not verified',
-    },
-  ])
+    [assignedItems, setAssignedItems],
+  )
+
+  const saveWorkOrderDetails = useCallback(() => {
+    updateWorkOrderDetails({ ...workOrder, assignedItems })
+  }, [assignedItems])
+
   const downloadPdf = () => {
     const doc = new jsPDF()
     const basicFont = undefined
@@ -146,24 +160,24 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
       body: [
         ...assignedItems.map(ai => {
           return {
-            sku: ai.sku,
+            id: ai.id,
             productName: ai.productName,
             details: ai.details,
             quantity: ai.quantity,
             price: ai.price,
-            status: ai.status,
-            comments: ai.comments,
+            isCompleted: ai.isCompleted,
+            isVerified: ai.isVerified,
           }
         }),
       ],
       columns: [
-        { header: 'SKU', dataKey: 'sku' },
+        { header: 'SKU', dataKey: 'id' },
         { header: 'Product Name', dataKey: 'productName' },
         { header: 'Details', dataKey: 'details' },
         { header: 'Quantity', dataKey: 'quantity' },
         { header: 'Price', dataKey: 'price' },
-        { header: 'Status', dataKey: 'status' },
-        { header: 'Comments', dataKey: 'comments' },
+        { header: 'Status', dataKey: 'isCompleted' },
+        { header: 'Verified', dataKey: 'isVerified' },
       ],
     })
     doc.save('assigned-items.pdf')
@@ -189,17 +203,34 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
             <Button leftIcon={<BiDownload color="#4E87F8" />} variant="ghost" colorScheme="brand" onClick={downloadPdf}>
               Download as PDF
             </Button>
-
-            <Button
-              onClick={onMarkCompleted}
-              leftIcon={<BiCheck color="#4E87F8" />}
-              variant="ghost"
-              colorScheme="brand"
-            >
-              <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
-                Mark All Completed
-              </Text>
-            </Button>
+            {assignedItems.every(e => {
+              return e.isCompleted
+            }) ? (
+              <Button
+                onClick={() => {
+                  onMarkCompleted(false)
+                }}
+                variant="ghost"
+                colorScheme="brand"
+              >
+                <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                  Mark All as Incomplete
+                </Text>
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  onMarkCompleted(true)
+                }}
+                leftIcon={<BiCheck color="#4E87F8" />}
+                variant="ghost"
+                colorScheme="brand"
+              >
+                <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
+                  Mark All Completed
+                </Text>
+              </Button>
+            )}
           </HStack>
         </Flex>
       </Box>
@@ -222,13 +253,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
               {assignedItems &&
                 assignedItems.map((item, i) => (
                   <Tr>
-                    <Td>{item.sku}</Td>
+                    <Td>{item.id}</Td>
                     <Td>{item.productName} </Td>
                     <Td>{item.details}</Td>
                     <Td>{item.quantity}</Td>
                     <Td>{item.price}</Td>
                     <Td>
-                      <CheckboxStructure checked={item.status === 'completed'} />
+                      <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
                     </Td>
                     <Td>
                       <UploadImage Images={'Upload'} />
@@ -244,7 +275,9 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
         <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           {t('close')}
         </Button>
-        <Button colorScheme="brand">{t('save')}</Button>
+        <Button colorScheme="brand" onClick={saveWorkOrderDetails}>
+          {t('save')}
+        </Button>
       </Flex>
     </Box>
   )
