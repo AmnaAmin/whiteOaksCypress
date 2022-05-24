@@ -14,7 +14,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Select from 'components/form/react-select'
-import ChooseFileField from 'components/choose-file/choose-file-vendor'
+import ChooseFileField from 'components/choose-file/choose-file'
 import { Controller, useForm } from 'react-hook-form'
 // import { disabledInputStyle } from '../theme/common-style'
 import {
