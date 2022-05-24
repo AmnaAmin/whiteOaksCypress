@@ -1,4 +1,4 @@
-import ChooseFileField from './choose-file'
+import ChooseFileField from './choose-file-old'
 import { Grid, GridItem } from '@chakra-ui/react'
 
 export default {
