@@ -130,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   <RouterLink to="/password">Password</RouterLink>
                 </MenuItem>
                 <MenuItem>
-                  <Link target="_blank" href="https://13.212.88.107/" title="help">
+                  <Link target="_blank" href="https://13.212.88.107/" title="help" fontSize="14px" color="#4A5568">
                     Help
                   </Link>
                 </MenuItem>
