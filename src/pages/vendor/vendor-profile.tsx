@@ -15,6 +15,7 @@ import { Account } from 'types/account.types'
 import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PcDetails from 'features/project-coordinator/vendor/details'
+import { Card } from 'features/login-form-centered/Card'
 
 type Props = {
   vendorPropfileData?: VendorProfile
@@ -33,49 +34,51 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   }
 
   return (
-    <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
-      <TabList>
-        <Tab>{t('details')}</Tab>
-        <Tab data-testid="documents">{t('documents')}</Tab>
-        <Tab data-testid="license">{t('License')}</Tab>
-        <Tab data-testid="tradetab">{t('trade')}</Tab>
-        <Tab data-testid="markettab">{t('market')}</Tab>
-        {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-      </TabList>
+    <Card p="18px" px="0">
+      <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
+        <TabList>
+          <Tab>{t('details')}</Tab>
+          <Tab data-testid="documents">{t('documents')}</Tab>
+          <Tab data-testid="license">{t('License')}</Tab>
+          <Tab data-testid="tradetab">{t('trade')}</Tab>
+          <Tab data-testid="markettab">{t('market')}</Tab>
+          {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+        </TabList>
 
-      <TabPanels mt="31px">
-        <TabPanel p="0px">
-          {vendorProfileData ? (
-            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
-          ) : (
-            <PcDetails VendorType={VendorType!} onClose={props.onClose} />
-          )}
-        </TabPanel>
-        <TabPanel p="0px">
-          <Box h="100%" w="100%">
-            <DocumentsCard
-              VendorType={VendorType!}
-              setNextTab={setNextTab}
-              vendor={vendorProfileData as VendorProfile}
-              onClose={props.onClose}
-            />
-          </Box>
-        </TabPanel>
-        <TabPanel p="0px">
-          <Box h="100%" w="100%">
-            <License setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
-          </Box>
-        </TabPanel>
-        <TabPanel p="0px">
-          <TradeList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
-        </TabPanel>
-        <TabPanel p="0px">
-          <MarketList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
-        </TabPanel>
-        <TabPanel p="0px"></TabPanel>
-        <TabPanel p="0px"></TabPanel>
-      </TabPanels>
-    </Tabs>
+        <TabPanels mt="31px">
+          <TabPanel p="0px">
+            {vendorProfileData ? (
+              <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+            ) : (
+              <PcDetails VendorType={VendorType!} onClose={props.onClose} />
+            )}
+          </TabPanel>
+          <TabPanel p="0px">
+            <Box h="100%" w="100%">
+              <DocumentsCard
+                VendorType={VendorType!}
+                setNextTab={setNextTab}
+                vendor={vendorProfileData as VendorProfile}
+                onClose={props.onClose}
+              />
+            </Box>
+          </TabPanel>
+          <TabPanel p="0px">
+            <Box h="100%" w="100%">
+              <License setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
+            </Box>
+          </TabPanel>
+          <TabPanel p="0px">
+            <TradeList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          </TabPanel>
+          <TabPanel p="0px">
+            <MarketList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          </TabPanel>
+          <TabPanel p="0px"></TabPanel>
+          <TabPanel p="0px"></TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Card>
   )
 }
 
