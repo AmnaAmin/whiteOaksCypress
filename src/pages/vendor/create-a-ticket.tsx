@@ -264,7 +264,7 @@ const CreateATicket = () => {
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    <Box>{downloadDocument(document, 'doc3.Png')}</Box>
+                    <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
                   </HStack>
                 )
               }}
