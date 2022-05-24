@@ -171,23 +171,26 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   return (
     <Box>
       <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="WO Issued" value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
-        <CalenderCard title="Expected Start " value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
+        <CalenderCard title={t('WOIssued')} value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
+        <CalenderCard title={t('expectedStart')} value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
         <CalenderCard
-          title="Expected Completion"
+          title={t('expectedCompletion')}
           value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
         />
-        <CalenderCard title="Completed by Vendor" value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)} />
+        <CalenderCard
+          title={t('completedByVendor')}
+          value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
+        />
       </SimpleGrid>
       <Box pt={6}>
         <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
           <Text fontSize="16px" fontWeight={500} color="gray.600">
-            Assigned Line Items
+            {t('assignedLineItems')}
           </Text>
 
           <HStack>
             <Button leftIcon={<BiDownload color="#4E87F8" />} variant="ghost" colorScheme="brand" onClick={downloadPdf}>
-              Download as PDF
+              {t('downloadPDF')}
             </Button>
 
             <Button
@@ -197,7 +200,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
               colorScheme="brand"
             >
               <Text fontStyle="normal" fontWeight={600} fontSize="14px" color="#4E87F8">
-                Mark All Completed
+                {t('markCompleted')}
               </Text>
             </Button>
           </HStack>
@@ -209,13 +212,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
           <Table variant="simple" size="md" fontSize={14} color="gray.600" whiteSpace="initial">
             <Thead bg=" #F7FAFC" position="sticky" top={0} zIndex={2} fontWeight={600}>
               <Tr>
-                <Td>SKU</Td>
-                <Td>Product Name</Td>
-                <Td>Details</Td>
-                <Td>Quantity</Td>
-                <Td>Price</Td>
-                <Td>Status</Td>
-                <Td>Images</Td>
+                <Td>{t('SKU')}</Td>
+                <Td>{t('productName')}</Td>
+                <Td>{t('details')}</Td>
+                <Td>{t('quantity')}</Td>
+                <Td>{t('price')}</Td>
+                <Td>{t('status')}</Td>
+                <Td>{t('images')}</Td>
               </Tr>
             </Thead>
             <Tbody zIndex={1} fontWeight={400}>

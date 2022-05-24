@@ -35,11 +35,11 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
       date: vendorEntity?.coiglExpirationDate,
     },
     {
-      title: 'Agreement Signed',
+      title: t('agreementSigned'),
       date: vendorEntity?.agreementSignedDate,
     },
     {
-      title: 'Auto Insurance',
+      title: t('autoInsurance'),
       date: vendorEntity?.autoInsuranceExpirationDate,
     },
   ].filter(item => item.date)
@@ -102,11 +102,11 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
           gridGap="15px"
         >
-          <SimpleSlider heading={t('Insurance Expiration')} data={defaultData} isLoading={isLoading} />
+          <SimpleSlider heading={t('insuranceExpiration')} data={defaultData} isLoading={isLoading} />
 
           <SimpleSlider
             isLoading={isLoading}
-            heading={t('License Expiration')}
+            heading={t('licenseExpiration')}
             data={vendorEntity?.licenseDocuments
               ?.sort((curr: any, pre: any) => pre.id - curr.id)
               .map((licenseDocument: LicenseDocument) => ({
