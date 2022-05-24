@@ -1,4 +1,4 @@
-import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex } from '@chakra-ui/react'
+import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, Icon } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -12,7 +12,7 @@ import { ProjectType } from 'types/project.type'
 // import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
-import { BiAddToQueue } from 'react-icons/bi'
+import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
@@ -86,6 +86,7 @@ export const ProjectDetails: React.FC = props => {
                 )}
                 {tabIndex === 3 && (
                   <Button variant="ghost" colorScheme="brand" onClick={OnUploadMdal}>
+                    <Icon as={BiUpload} fontSize="16px" mr={2} />
                     Upload
                   </Button>
                 )}

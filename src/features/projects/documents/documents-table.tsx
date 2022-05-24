@@ -15,66 +15,66 @@ import { FaAtom } from 'react-icons/fa'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: 'gray.100',
-      }}
-      cursor="pointer"
-      {...row.getRowProps({
-        style,
-      })}
-      onClick={() => {
-        // @ts-ignore
-        const s3Url = row.original?.s3Url._blank
-        if (s3Url) {
-          downloadFile(s3Url)
-        }
-      }}
+    <a
+      // @ts-ignore
+      href={row.original?.s3Url}
+      target="blank_"
     >
-      {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
-            <Flex alignItems="center" h="60px">
-              <Text
-                noOfLines={2}
-                title={cell.value}
-                padding="0 15px"
-                fontWeight={400}
-                fontStyle="normal"
-                mt="10px"
-                mb="10px"
-                fontSize="14px"
-                color="#4A5568"
-              >
-                {cell.render('Cell')}
-              </Text>
-            </Flex>
-          </Td>
-        )
-      })}
-      {/* <a
-        id="download"
-        // @ts-ignore
-        href={row.original?.s3Url}
-        target="_blank"
-        hidden
-      /> */}
-      <Center mr={3}>
-        <Icon
-          as={BiDownArrowCircle}
-          color="#4E87F8"
-          fontSize={24}
-          onClick={() => {
-            // @ts-ignore
-            const s3Url = row.original?.s3Url
-            if (s3Url) {
-              downloadFile(s3Url)
-            }
-          }}
-        />
-      </Center>
-    </Tr>
+      <Tr
+        bg="white"
+        _hover={{
+          background: 'gray.100',
+        }}
+        cursor="pointer"
+        {...row.getRowProps({
+          style,
+        })}
+        // onClick={() => {
+        //   // @ts-ignore
+        //   const s3Url = row.original?.s3Url
+        //   if (s3Url) {
+        //     downloadFile(s3Url)
+        //   }
+        // }}
+      >
+        {row.cells.map(cell => {
+          return (
+            <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+              <Flex alignItems="center" h="60px">
+                <Text
+                  noOfLines={2}
+                  title={cell.value}
+                  padding="0 15px"
+                  fontWeight={400}
+                  fontStyle="normal"
+                  mt="10px"
+                  mb="10px"
+                  fontSize="14px"
+                  color="#4A5568"
+                >
+                  {cell.render('Cell')}
+                </Text>
+              </Flex>
+            </Td>
+          )
+        })}
+
+        <Center mr={3}>
+          <Icon
+            as={BiDownArrowCircle}
+            color="#4E87F8"
+            fontSize={24}
+            onClick={() => {
+              // @ts-ignore
+              const s3Url = row.original?.s3Url
+              if (s3Url) {
+                downloadFile(s3Url)
+              }
+            }}
+          />
+        </Center>
+      </Tr>
+    </a>
   )
 }
 
