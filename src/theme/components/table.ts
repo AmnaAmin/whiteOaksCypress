@@ -7,18 +7,17 @@ const TableVariants = {
         return {
           // @ts-ignore
           ...chakraTheme.components.Table.variants.simple(props),
-          fontSize: '14px',
-          color: 'gray.600',
-          whiteSpace: 'initial',
-          border: '1px solid #E2E8F0',
-          fontStyle: 'normal',
+          table: {
+            fontSize: '14px',
+            whiteSpace: 'initial',
+            fontStyle: 'normal',
+            color: 'gray.600',
+          },
           thead: {
             tr: {
               background: '#F7FAFC',
               fontWeight: 500,
-              fontSize: '14px',
               bg: 'gray.50',
-              color: 'gray.600',
               h: '72px',
             },
           },
@@ -26,9 +25,7 @@ const TableVariants = {
             tr: {
               h: '72px',
               bg: 'white',
-              fontSize: '14px',
               fontWeight: 400,
-              color: 'gray.600',
             },
           },
         }
