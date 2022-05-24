@@ -14,6 +14,7 @@ import {
   InputGroup,
   useToast,
   Flex,
+  Icon,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 // import { InputGroup } from 'react-bootstrap';
@@ -122,23 +123,14 @@ const VendorProfilePassword = () => {
                 rounded="6px"
                 borderLeft="2px solid #4E87F8"
               />
-              <InputRightElement>
-                <Button
+              <InputRightElement h="40px">
+                <Icon
+                  as={show ? BsEyeSlash : BsEye}
                   onClick={handleClick}
-                  h="1.30rem"
-                  size="sm"
-                  bg="#FFFFFF"
+                  fontSize="13px"
                   color="gray.600"
-                  _hover={{
-                    bg: 'gray.100',
-                    color: 'gray.600',
-                  }}
-                  minW="10px"
-                  _focus={{ border: 'none' }}
-                  mb="1.5"
-                >
-                  {show ? <BsEye /> : <BsEyeSlash />}
-                </Button>
+                  _hover={{ color: 'black' }}
+                />
               </InputRightElement>
             </InputGroup>
 
@@ -167,23 +159,14 @@ const VendorProfilePassword = () => {
                     setStrength(score)
                   }}
                 />
-                <InputRightElement>
-                  <Button
+                <InputRightElement h="40px">
+                  <Icon
+                    as={showSecondField ? BsEyeSlash : BsEye}
                     onClick={handleClickSecond}
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
+                    fontSize="13px"
                     color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showSecondField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
               <Box>
@@ -203,23 +186,14 @@ const VendorProfilePassword = () => {
                   rounded="6px"
                   borderLeft="2px solid #4E87F8"
                 />
-                <InputRightElement>
-                  <Button
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
-                    color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
+                <InputRightElement h="40px">
+                  <Icon
+                    as={showThirdField ? BsEyeSlash : BsEye}
                     onClick={handleClickThird}
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showThirdField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    fontSize="13px"
+                    color="gray.600"
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
               <Box>
