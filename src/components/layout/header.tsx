@@ -130,7 +130,15 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   <RouterLink to="/password">Password</RouterLink>
                 </MenuItem>
                 <MenuItem>
-                  <Link target="_blank" href="https://13.212.88.107/" title="help">
+                  <Link
+                    color="gray.600"
+                    fontWeight={400}
+                    fontSize="14px"
+                    target="_blank"
+                    href="https://13.212.88.107/"
+                    title="help"
+                    _hover={{ textDecorationLine: 'none' }}
+                  >
                     Help
                   </Link>
                 </MenuItem>
@@ -147,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                     color="#4A5568"
                     width="100%"
                   >
-                    Signout
+                    Sign out
                   </Box>
                 </MenuItem>
               </MenuList>
