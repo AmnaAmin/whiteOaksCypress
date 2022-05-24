@@ -55,8 +55,8 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
 
   return (
     <>
-      <Stack direction="row" justify="left" marginTop={1}>
-        <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" />
+      <Stack direction="row" justify="left" marginTop={1} alignItems="center">
+        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
         {days.map(day => {
           return (
             <WeekdayCard
@@ -70,7 +70,7 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
             />
           )
         })}
-        <Divider orientation="vertical" height="35px" border="1px solid #A0AEC0 !important" />
+        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
       </Stack>
     </>
   )

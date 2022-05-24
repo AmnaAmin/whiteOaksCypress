@@ -1,8 +1,8 @@
-import { Heading } from '@chakra-ui/react'
+import { PayableReceivable } from 'components/payable-receivable/payable-receivable'
 import React from 'react'
 
 const Receivable = () => {
-  return <Heading>Receivable Page...</Heading>
+  return <PayableReceivable topTitle={'Account Receivable'} ID={'receivable'} />
 }
 
 export default Receivable

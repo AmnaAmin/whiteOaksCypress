@@ -108,13 +108,20 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   const { data: days } = useWeekDayProjectsDue()
 
   useEffect(() => {
-    if (!selectedCard) setFilterProjects(projects)
+    // To get pastDue Ids
+    const pastDueIds = projects?.filter(project => project?.pastDue)
+    const idPastDue = pastDueIds?.find(project => project?.id)
+
+    if (!selectedCard && !selectedDay) setFilterProjects(projects)
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          !selectedCard ||
+          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
+          (selectedCard === 'pastDue' && project?.id === idPastDue?.id),
       ),
     )
+
     // Due Project Filter
     if (selectedDay) {
       setFilterProjects(
