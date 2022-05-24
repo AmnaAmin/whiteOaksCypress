@@ -164,7 +164,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Business Name',
         capacity: 'Capacity',
-        last4digits: 'Last 4 digits of the SSN /TIN',
+        last4digits: 'Last 4 digits of SSN/EIN',
         paymentMethods: 'Payment Methods',
         streetAddress: 'Street Address',
         state: 'State',
@@ -365,7 +365,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         capacity: 'Capacidad',
-        last4digits: 'Últimos 4 dígitos del SSN/TIN',
+        last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',
         streetAddress: 'Dirección',
         state: 'Expresar',
