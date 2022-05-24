@@ -128,6 +128,8 @@ i18n.use(initReactI18next).init({
         images: 'Images',
         invoicedDate: 'Invoiced Date',
         addSignature: 'Add Signature',
+        typeName: 'Type Your Name Here',
+        LWrequired: 'Lien Waiver is required for Draw Transaction.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -140,6 +142,7 @@ i18n.use(initReactI18next).init({
         claimantsSignature: 'Claimant`s Signature',
         claimantsTitle: 'Claimant`s Title',
         dateOfSignature: 'Date Of Signature',
+        apply: 'Apply',
         // Project-Lean-Weiver
         readMore: 'Read More',
         readLess: 'Read Less',
@@ -232,6 +235,7 @@ i18n.use(initReactI18next).init({
         next: 'Next',
         back: 'Back',
         cancel: 'Cancel',
+        insurances: 'Insurances',
         // Vendor-profile-license
         addLicense: 'Add License',
         licenseType: 'License Type',
@@ -240,12 +244,32 @@ i18n.use(initReactI18next).init({
         fileInput: 'File Input',
 
         // Settings Page
-        settingsFor: 'Settings for',
+        settings: 'Settings',
         firstName: 'First Name',
         lastName: 'Last Name',
         language: 'Language',
         profilePicture: 'Profile Picture',
         changePicture: 'Change your Profile Picture',
+
+        // Password Page
+        password: 'Password',
+        currentPassword: 'Current Password',
+        newPassword: 'New Password',
+        newPasswordConfirmation: 'New Password Confirmation',
+        passwordStrength: 'Password Strength',
+
+        // Support Page
+        createTicket: 'Create a Ticket',
+        issueType: 'Issue Type',
+        severity: 'Severity',
+        title: 'Title',
+        descriptions: 'Description (1000) Characters',
+        uploadFile: 'Upload File',
+
+        // Header
+        help: 'Help',
+        support: 'Support',
+        signOut: 'Sign Out',
       },
     },
     es: {
@@ -367,6 +391,8 @@ i18n.use(initReactI18next).init({
         price: 'Precio',
         images: 'Imágenes',
         addSignature: 'Agregar Firma',
+        typeName: 'Escribe tu nombre aquí',
+        LWrequired: 'Se requiere exención de gravamen para la transacción de giro.',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
         jobLocation: 'Locación de Trabajo',
@@ -379,6 +405,7 @@ i18n.use(initReactI18next).init({
         claimantsSignature: 'Firma del Reclamante',
         claimantsTitle: 'Título del reclamante',
         dateOfSignature: 'Fecha de la Firma',
+        apply: 'Aplicar',
         // Project - Lean-Weiver
         readMore: 'Lee mas',
         readLess: 'Leer menos',
@@ -471,6 +498,8 @@ i18n.use(initReactI18next).init({
         next: 'Próximo',
         back: 'Espalda',
         cancel: 'Cancelar',
+        insurances: 'Seguros',
+
         // Vendor-profile-license
         addLicense: 'Agregar Licencia',
         licenseType: 'Tipo de Licencia',
@@ -478,12 +507,29 @@ i18n.use(initReactI18next).init({
         expiryDate: 'Fecha de Caducidad',
         fileInput: 'Entrada de Archivo',
         // Settings Page
-        settingsFor: 'Ajustes para',
+        settings: 'Ajustes',
         firstName: 'Primer Nombre',
         lastName: 'Apellido',
         language: 'Idioma',
         profilePicture: 'Foto de perfil',
         changePicture: 'Cambia tu foto de perfil',
+        // Password Page
+        password: 'Clave',
+        currentPassword: 'Contraseña actual',
+        newPassword: 'Nueva contraseña',
+        newPasswordConfirmation: 'Nueva confirmación de contraseña',
+        passwordStrength: 'Seguridad de la contraseña',
+        // Support Page
+        createTicket: 'Crear un boleto',
+        issueType: 'Tipo de problema',
+        severity: 'Gravedad',
+        title: 'Título',
+        descriptions: 'Descripción (1000) Caracteres',
+        uploadFile: 'Subir archivo',
+        // Header
+        help: 'Ayudar',
+        support: 'Apoyo',
+        signOut: 'Desconectar',
       },
     },
   },
