@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   HStack,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -131,7 +132,9 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
                 <MenuItem>
-                  <RouterLink to="/help">{t('help')}</RouterLink>
+                  <Link target="_blank" href="https://13.212.88.107/">
+                    {t('help')}
+                  </Link>
                 </MenuItem>
                 <MenuItem>
                   <RouterLink to="/support">{t('support')}</RouterLink>

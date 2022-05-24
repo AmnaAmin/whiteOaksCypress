@@ -21,7 +21,7 @@ const payableData = [
     text: '14 Days',
     value: '$299,354.87',
     number: 5,
-    iconColor: 'green',
+    iconColor: 'green.200',
   },
   {
     id: '4',
