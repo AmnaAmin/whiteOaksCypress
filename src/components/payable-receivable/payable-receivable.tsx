@@ -76,7 +76,11 @@ export const PayableReceivable = (props: payableReceivable) => {
       </Stack>
       <Divider border="2px solid #E2E8F0" />
       <Box mt={2}>
-        {props.ID === 'receivable' ? <ReceivableTable /> : <PayableTable setTableInstance={setProjectTableInstance} />}
+        {props.ID === 'receivable' ? (
+          <ReceivableTable setTableInstance={setProjectTableInstance} />
+        ) : (
+          <PayableTable setTableInstance={setProjectTableInstance} />
+        )}
       </Box>
 
       <Flex justifyContent="end" h="100px">
