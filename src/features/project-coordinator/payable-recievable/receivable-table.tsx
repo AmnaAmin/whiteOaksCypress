@@ -99,8 +99,6 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
       ref,
     )
 
-    console.log(data)
-
     return (
       <Box overflow="auto" width="100%">
         <ReactTable
