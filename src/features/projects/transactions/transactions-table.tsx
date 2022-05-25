@@ -8,6 +8,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { useTranslation } from 'react-i18next'
+import numeral from 'numeral'
 import Status from '../status'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -70,6 +71,9 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
       {
         Header: t('totalAmount') as string,
         accessor: 'transactionTotal',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0[.]00')
+        },
       },
       {
         Header: t('status') as string,
@@ -105,11 +109,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
       setSelectedTransactionId(original.id)
 
-      if (original.status === 'PENDING') {
-        onEditModalOpen()
-      } else {
-        onTransactionDetailsModalOpen()
-      }
+      onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )

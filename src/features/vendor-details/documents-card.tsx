@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Box, Divider, Flex, HStack, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -14,7 +14,6 @@ import {
 } from 'utils/vendor-details'
 import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
-import { Button } from 'components/button/button'
 
 const labelStyle = {
   fontSize: '14px',
@@ -26,6 +25,15 @@ const labelStyle = {
 type DocumentsProps = {
   setNextTab: () => void
   vendor: VendorProfile
+  onClose?: () => void
+  VendorType: string
+}
+
+type DocumentFormProps = {
+  vendor: VendorProfile
+  onSubmit: (values: any) => void
+  onClose?: () => void
+  VendorType?: string
 }
 
 const downloadableDocument = (link, text, testid?) => {
@@ -42,6 +50,7 @@ const downloadableDocument = (link, text, testid?) => {
 }
 
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
+  const { vendor = {}, setNextTab } = props
   const { mutate: saveDocuments } = useSaveVendorDetails()
 
   const onSubmit = useCallback(
@@ -54,24 +63,29 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
         coiglExpirationDate: convertDateTimeToServer(values.coiGlExpDate),
         coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
       }
-      const vendorPayload = createVendorPayload(updatedObject, props.vendor)
+      const vendorPayload = createVendorPayload(updatedObject, vendor)
       saveDocuments(vendorPayload, {
         onSuccess() {
-          props.setNextTab()
+          setNextTab()
         },
       })
     },
-    [props, saveDocuments],
+    [vendor, setNextTab, saveDocuments],
   )
 
   return (
     <Box w="100%">
-      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit}></DocumentsForm>
+      <DocumentsForm
+        VendorType={props.VendorType}
+        vendor={props.vendor}
+        onSubmit={onSubmit}
+        onClose={props.onClose}
+      ></DocumentsForm>
     </Box>
   )
 })
 
-export const DocumentsForm = ({ vendor, onSubmit }) => {
+export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const defaultValue = vendor => {
@@ -113,7 +127,7 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
       <Box w="940px">
-        <HStack direction="row" spacing="60px">
+        <HStack spacing={24}>
           <Flex minWidth="250px" alignSelf="baseline" mt="8px">
             <Box width="25px" fontSize="20px">
               <BiFile color="#718096" />
@@ -336,9 +350,20 @@ export const DocumentsForm = ({ vendor, onSubmit }) => {
         alignItems="center"
         justifyContent="end"
       >
-        <Button colorScheme="brand" type="submit" data-testid="saveDocumentCards">
-          {t('next')}
-        </Button>
+        {onClose && (
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+            Cancel
+          </Button>
+        )}
+        {VendorType === 'detail' ? (
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            {t('save')}
+          </Button>
+        ) : (
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            {t('next')}
+          </Button>
+        )}
       </Flex>
     </form>
   )

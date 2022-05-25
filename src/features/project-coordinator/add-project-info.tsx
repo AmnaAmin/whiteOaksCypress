@@ -161,6 +161,27 @@ export const AddProjectInfo: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
+      <Grid display="flex" alignItems="center">
+        <Button // onClick={onClose}
+          variant="ghost"
+          size="sm"
+        >
+          {'Close'}
+        </Button>
+
+        <Button
+          colorScheme="CustomPrimaryColor"
+          _focus={{ outline: 'none' }}
+          _hover={{ bg: 'blue' }}
+          type="submit"
+          form="newProjectForm"
+          ml="3"
+          size="sm"
+          disabled={true}
+        >
+          {'Next'}
+        </Button>
+      </Grid>
     </form>
   )
 }

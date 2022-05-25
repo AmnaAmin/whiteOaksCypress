@@ -18,7 +18,7 @@ import ProjectDetailsTab from 'features/project-coordinator/project-details/proj
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
-import { NotesTab } from 'features/project-coordinator/notes-tab'
+import { NotesTab } from '../../features/common/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 
 export const ProjectDetails: React.FC = props => {
@@ -104,6 +104,7 @@ export const ProjectDetails: React.FC = props => {
                       colorScheme="brand"
                       onClick={onTransactionModalOpen}
                       isDisabled={preventNewTransaction}
+                      leftIcon={<BiAddToQueue />}
                     >
                       {t('newTransaction')}
                     </Button>

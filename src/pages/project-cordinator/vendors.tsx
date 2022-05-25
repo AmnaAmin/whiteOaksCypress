@@ -1,8 +1,9 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { HStack, Box, Icon, Button, Spacer, Flex, Stack } from '@chakra-ui/react'
+import { HStack, Box, Icon, Button, Spacer, Flex, Stack, useDisclosure } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { VendorFilters } from 'features/project-coordinator/vendor/vendor-filter'
 import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor/vendor-table'
+import NewVendorModal from 'features/projects/modals/project-coordinator/new-vendor-modal'
 import { t } from 'i18next'
 import { useState } from 'react'
 import { BsBoxArrowUp } from 'react-icons/bs'
@@ -10,6 +11,7 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'utils/table-column-settings'
 
 const Vendors = () => {
+  const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [vendorTableInstance, setInstance] = useState<any>(null)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
@@ -28,6 +30,7 @@ const Vendors = () => {
         <Spacer />
         <Box pt="4">
           <Button
+            onClick={onNewVendorModalOpen}
             _focus={{ outline: 'none' }}
             variant="ghost"
             color="#4E87F8"
@@ -78,6 +81,7 @@ const Vendors = () => {
           )}
         </Flex>
       </Stack>
+      <NewVendorModal isOpen={isOpenNewVendorModal} onClose={onNewVendorModalClose} />
     </Box>
   )
 }

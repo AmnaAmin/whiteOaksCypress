@@ -136,7 +136,7 @@ export interface FormValues {
   invoicedDate: string | null
   paymentTerm: SelectOption | null
   paidDate: string | null
-  paidDateVariance: string
+  payDateVariance: string
   paymentRecieved: string | null
   refundMaterial: boolean | null
   lienWaiver?: LienWaiverFormValues
@@ -164,7 +164,7 @@ export type ChangeOrderPayload = {
   lineItems: ChangeTransaction[]
   projectId: string
   paymentTerm: string | null
-  paidDateVariance: string | null
+  payDateVariance: string | null
   documents?: Array<any>
 }
 
@@ -180,6 +180,7 @@ export type ChangeOrderUpdatePayload = {
   approvedBy: string | null
   transactionType: number
   parentWorkOrderId: number | null
+  paymentTerm: string | null
   createdDate1: string | null
   createdBy: string
   modifiedDate1: string | null

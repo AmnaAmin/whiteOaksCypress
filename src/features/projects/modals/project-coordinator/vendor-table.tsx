@@ -1,5 +1,4 @@
 import {
-  Flex,
   HStack,
   Modal,
   ModalBody,
@@ -7,24 +6,29 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
-import React from 'react'
-import { ProjectType } from 'types/project.type'
-import { CheckBoxes } from './client-market-tab'
-import VendorDetails from './vendor-detail-tab'
 
-const Vendor: React.FC<{
-  projectData: ProjectType
-  isOpen: boolean
-  onClose: () => void
-}> = ({ projectData, isOpen, onClose }) => {
+import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
+import React, { useCallback, useEffect } from 'react'
+import { ProjectWorkOrderType } from 'types/project.type'
+
+const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkOrderType; onClose: () => void }) => {
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+
+  const onClose = useCallback(() => {
+    onCloseDisclosure()
+    close()
+  }, [close, onCloseDisclosure])
+
+  useEffect(() => {
+    if (vendorDetails) {
+      onOpen()
+    } else {
+      onCloseDisclosure()
+    }
+  }, [onCloseDisclosure, onOpen, vendorDetails])
   return (
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
@@ -44,111 +48,7 @@ const Vendor: React.FC<{
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody justifyContent="center">
-            <Stack spacing={5}>
-              <Tabs variant="enclosed" whiteSpace="nowrap">
-                <TabList height="50px" alignItems={'end'}>
-                  <Flex h="40px">
-                    <Tab
-                      _focus={{ border: 'none' }}
-                      minW="109px"
-                      //   sx={TabStyle}
-                      _selected={{
-                        color: 'white',
-                        bg: '#4E87F8',
-                        fontWeight: 600,
-                        _hover: { backgroundColor: '#4E87F8' },
-                      }}
-                    >
-                      Vendor Details
-                    </Tab>
-                    <Tab
-                      minW="109px"
-                      _focus={{ border: 'none' }}
-                      _selected={{
-                        color: 'white',
-                        bg: '#4E87F8',
-                        fontWeight: 600,
-                        _hover: { backgroundColor: '#4E87F8' },
-                      }}
-                      //   sx={TabStyle}
-                    >
-                      Documents
-                    </Tab>
-                    <Tab
-                      minW="109px"
-                      _focus={{ border: 'none' }}
-                      _selected={{
-                        color: 'white',
-                        bg: '#4E87F8',
-                        fontWeight: 600,
-                        id: 'checkId',
-                        _hover: { backgroundColor: '#4E87F8' },
-                      }}
-                      //   sx={TabStyle}
-                    >
-                      License
-                    </Tab>
-                    <Tab
-                      minW="109px"
-                      _focus={{ border: 'none' }}
-                      _selected={{
-                        color: 'white',
-                        bg: '#4E87F8',
-                        fontWeight: 600,
-                        id: 'checkId',
-                        _hover: { backgroundColor: '#4E87F8' },
-                      }}
-                      //   sx={TabStyle}
-                    >
-                      Trade
-                    </Tab>
-                    <Tab
-                      minW="109px"
-                      _focus={{ border: 'none' }}
-                      _selected={{
-                        color: 'white',
-                        bg: '#4E87F8',
-                        fontWeight: 600,
-                        id: 'checkId',
-                        _hover: { backgroundColor: '#4E87F8' },
-                      }}
-                      //   sx={TabStyle}
-                    >
-                      Market
-                    </Tab>
-                    <Tab
-                      minW="109px"
-                      _focus={{ border: 'none' }}
-                      _selected={{
-                        color: 'white',
-                        bg: '#4E87F8',
-                        fontWeight: 600,
-                        id: 'checkId',
-                        _hover: { backgroundColor: '#4E87F8' },
-                      }}
-                      //   sx={TabStyle}
-                    >
-                      Audit Logs
-                    </Tab>
-                  </Flex>
-                </TabList>
-
-                <TabPanels>
-                  <TabPanel px="0px">
-                    <VendorDetails onClose={onClose} />
-                  </TabPanel>
-                  <TabPanel></TabPanel>
-                  <TabPanel></TabPanel>
-                  <TabPanel>
-                    <CheckBoxes onClose={onClose} />
-                  </TabPanel>
-                  <TabPanel>
-                    <CheckBoxes onClose={onClose} />
-                  </TabPanel>
-                  <TabPanel></TabPanel>
-                </TabPanels>
-              </Tabs>
-            </Stack>
+            <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>

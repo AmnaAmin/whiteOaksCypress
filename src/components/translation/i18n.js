@@ -64,6 +64,7 @@ i18n.use(initReactI18next).init({
         contactNo: 'Contact No',
         WODueDate: 'WO Due Date',
         trade: 'Trade',
+        auditLogs: 'Audit Logs',
         totalAmount: 'Total Amount',
         submit: 'Submit',
         approvedBy: 'Approved By',
@@ -154,13 +155,16 @@ i18n.use(initReactI18next).init({
         category: 'Category',
         dateTriggered: 'Date Triggered',
 
+        // Project - Notes
+        notes: 'Notes',
+
         // VENDOR
         details: 'Details',
         market: 'Market',
         // Vendor-profile-details
         businessName: 'Business Name',
         capacity: 'Capacity',
-        last4digits: 'Last 4 digits of the SSN /TIN',
+        last4digits: 'Last 4 digits of SSN/EIN',
         paymentMethods: 'Payment Methods',
         streetAddress: 'Street Address',
         state: 'State',
@@ -271,6 +275,7 @@ i18n.use(initReactI18next).init({
         contactNo: 'Número de Contacto',
         WODueDate: 'Fecha de vencimiento de OT',
         trade: 'Comercio',
+        auditsLogs: 'registros de auditoría',
         totalAmount: 'Cantidad Total',
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
@@ -360,7 +365,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         capacity: 'Capacidad',
-        last4digits: 'Últimos 4 dígitos del SSN/TIN',
+        last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',
         streetAddress: 'Dirección',
         state: 'Expresar',

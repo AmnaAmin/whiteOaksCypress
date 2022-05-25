@@ -58,7 +58,7 @@ export const Projects = () => {
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
           <Box fontWeight={'bold'}>Due Projects</Box>
         </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} paddingLeft={5}>
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
           <Button
             bg={isClicked ? '#4E87F8' : 'none'}
             color={isClicked ? 'white' : 'black'}
@@ -106,10 +106,8 @@ export const Projects = () => {
             New Project
           </Button>
         </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}></Stack>
-        <Divider></Divider>
-        <br></br>
-        <Box w="100%" flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}></Stack>
+        <Box w="100%" minH="500px" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
           <ProjectsTable
             selectedCard={selectedCard as string}
             selectedDay={selectedDay as string}

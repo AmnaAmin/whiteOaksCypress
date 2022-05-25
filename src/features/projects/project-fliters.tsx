@@ -37,13 +37,13 @@ const useVendorCardJson = cards => {
     {
       id: 'invoiced',
       title: t('completedInvoiced'),
-      number: cards?.find(c => c.label === 'completedAndInvoiced')?.count,
+      number: cards?.find(c => c.label === 'invoiced')?.count,
       IconElement: <IconElement Icon={SummaryIconThird} bg="#FCE8D8" />,
     },
     {
       id: 'notInvoiced',
       title: t('completednotPaid'),
-      number: cards?.find(c => c.label === 'notInvoiced')?.count,
+      number: cards?.find(c => c.label === 'declined')?.count,
       IconElement: <IconElement Icon={SummaryIconForth} bg="#E2EFDF" />,
     },
     {

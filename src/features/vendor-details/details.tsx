@@ -14,6 +14,7 @@ import {
   Grid,
   GridItem,
   useToast,
+  Button,
 } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
 import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-icons/bi'
@@ -25,7 +26,6 @@ import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateM
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { Button } from 'components/button/button'
 
 const textStyle = {
   color: '#4A5568',
@@ -41,29 +41,34 @@ type FieldInfoCardProps = {
   icon?: React.ElementType
   testid?: string
 }
+
+type detailsFormProps = {
+  vendorProfileData: VendorProfile
+  submitForm: (values: any) => void
+  onClose?: () => void
+}
+
 const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
   return (
     <Box>
       <HStack alignItems="start">
-        {icon && <Icon as={icon} boxSize={7} color="#718096" mr={2} />}
+        {icon && <Icon as={icon} boxSize={7} color="#718096" mr={3} />}
         <VStack spacing={1} alignItems="start">
           <Text color="#4A5568" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
             {title}
           </Text>
-          <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal" pb="20px">
+          <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal">
             {value}
           </Text>
         </VStack>
       </HStack>
-      <Box w="95%">
-        <Divider />
-      </Box>
     </Box>
   )
 }
 
 export const Details: React.FC<{
   vendorProfileData: VendorProfile
+  onClose?: () => void
 }> = props => {
   const { vendorProfileData } = props
   const toast = useToast()
@@ -92,7 +97,7 @@ export const Details: React.FC<{
 
   return (
     <Flex h="100%" direction="column">
-      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="100%" mb="30px">
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="30px">
         <GridItem>
           <FieldInfoCard
             testid="businessName"
@@ -123,7 +128,9 @@ export const Details: React.FC<{
           />
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="100%" mb="40px">
+      <Divider border="2px solid" borderColor="gray.200" mb="27px" />
+
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="40px">
         <GridItem>
           <FieldInfoCard
             testid="streetAddress"
@@ -142,12 +149,12 @@ export const Details: React.FC<{
           <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
         </GridItem>
       </Grid>
-      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} />
+      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} onClose={props.onClose} />
     </Flex>
   )
 }
 
-export const DetailsForm = ({ submitForm, vendorProfileData }) => {
+export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsFormProps) => {
   const { t } = useTranslation()
   const {
     register,
@@ -178,7 +185,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
       {!vendorProfileData ? (
         <BlankSlate />
       ) : (
-        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm">
+        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
             <Box flex="1">
               <Box mb="22px">
@@ -201,6 +208,32 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                     <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
                     <Input bg="white" {...register('secondaryContact')} id="secondaryContact" type="text" />
                     <FormErrorMessage>{errors.secondaryContact && errors.secondaryContact.message}</FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Box>
+
+              <Box mb="22px">
+                <Stack direction="row" spacing={4}>
+                  {/* Primary Email => Input */}
+
+                  <FormControl isInvalid={!!errors.primaryEmail} w="215px">
+                    <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
+                    <Input
+                      variant="reguired-field"
+                      {...register('primaryEmail', {
+                        required: 'This is required',
+                      })}
+                      id="primaryEmail"
+                      data-testid="primaryEmail"
+                      type="text"
+                    />
+                    <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
+                    <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
+                    <Input {...register('secondaryEmail')} id="secondaryEmail" type="text" />
+                    <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
                   </FormControl>
                 </Stack>
               </Box>
@@ -241,6 +274,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                           <Input
                             {...field}
                             id="SecondaryNo"
+                            variant="reguired-field"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
                             type="text"
@@ -273,36 +307,15 @@ export const DetailsForm = ({ submitForm, vendorProfileData }) => {
                   </FormControl>
                 </Stack>
               </Box>
-
-              <Box mb="22px">
-                <Stack direction="row" spacing={4}>
-                  {/* Primary Email => Input */}
-
-                  <FormControl isInvalid={!!errors.primaryEmail} w="215px">
-                    <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
-                    <Input
-                      variant="reguired-field"
-                      {...register('primaryEmail', {
-                        required: 'This is required',
-                      })}
-                      id="primaryEmail"
-                      data-testid="primaryEmail"
-                      type="text"
-                    />
-                    <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
-                    <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
-                    <Input {...register('secondaryEmail')} id="secondaryEmail" type="text" />
-                    <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
-                  </FormControl>
-                </Stack>
-              </Box>
             </Box>
 
-            <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
-              <Button type="submit" data-testid="saveDetails" colorScheme="brand">
+            <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="70px">
+              {onClose && (
+                <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+                  Cancel
+                </Button>
+              )}
+              <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="brand">
                 {t('save')}
               </Button>
             </Flex>
