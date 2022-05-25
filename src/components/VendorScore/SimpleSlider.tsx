@@ -59,7 +59,7 @@ export const SimpleSlider: React.FC<{
             fontStyle="normal"
             fontWeight={500}
             fontSize="18px"
-            color="#4A5568"
+            color="gray.600"
             pb={3}
             mx={{ base: 'unset', lg: 'unset', '2xl': '5' }}
           >
@@ -78,7 +78,7 @@ export const SimpleSlider: React.FC<{
           ) : (
             <Flex marginTop="25px" justifyContent="center" alignItems="center" fontSize="15px" fontWeight="normal">
               <RiErrorWarningFill fontSize="30px" color="#718096" />
-              <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
+              <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color="gray.700">
                 You dont have any {props.heading} expiration
               </Text>
             </Flex>
