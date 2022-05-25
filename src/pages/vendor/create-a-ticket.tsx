@@ -264,7 +264,6 @@ const CreateATicket = () => {
                         {t('chooseFile')}
                       </ChooseFileField>
 
-
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
                     {field.value && (
