@@ -3,13 +3,13 @@ import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from './modals/work-order-details'
 import { ProjectType } from 'types/project.type'
+import Status from './status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -67,7 +67,8 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
       {
         Header: t('WOstatus') as string,
         accessor: 'statusLabel',
-        Cell: ({ value, row }) => <WorkOrderStatus value={value} id={(row.original as any).status} />,
+        //@ts-ignore
+        Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
       },
       {
         Header: t('trade') as string,
