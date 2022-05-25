@@ -66,6 +66,7 @@ export const documentTypes = [
   { value: 58, label: 'Other' },
   { value: 19, label: 'Photos' },
   { value: 18, label: 'Reciept' },
+  { value: 17, label: 'Change Order' },
 ]
 
 export const documentScore = [

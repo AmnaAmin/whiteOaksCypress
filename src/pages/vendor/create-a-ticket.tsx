@@ -1,12 +1,12 @@
 import React from 'react'
 import {
   Box,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Grid,
+  VStack,
   HStack,
   Input,
   Text,
@@ -88,9 +88,9 @@ const CreateATicket = () => {
   const downloadDocument = (link, text) => {
     return (
       <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-        <Flex>
+        <Flex ml={1}>
           <BiDownload fontSize="sm" />
-          <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
+          <Text ml="5px" fontSize="12px" fontStyle="normal">
             {text}
           </Text>
         </Flex>
@@ -249,11 +249,11 @@ const CreateATicket = () => {
               rules={{ required: 'This is required field' }}
               render={({ field, fieldState }) => {
                 return (
-                  <HStack spacing={5} alignItems="baseline">
+                  <VStack alignItems="baseline">
                     <Box>
                       <ChooseFileField
                         name={field.name}
-                        value={field.value?.name}
+                        value={field.value ? field.value?.name : 'Choose File'}
                         isError={!!fieldState.error?.message}
                         onChange={(file: any) => {
                           onFileChange(file)
@@ -261,18 +261,19 @@ const CreateATicket = () => {
                         }}
                         onClear={() => setValue(field.name, null)}
                       >
-                        {t('chooseFile')}{' '}
+                        {t('chooseFile')}
                       </ChooseFileField>
+
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
-                  </HStack>
+                    {field.value && (
+                      <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )}
+                  </VStack>
                 )
               }}
             />
-
-            <Divider />
           </FormControl>
 
           <Flex
