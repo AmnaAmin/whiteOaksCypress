@@ -4,6 +4,7 @@ import { Box, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input, Flex } 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
+import last from 'lodash/last'
 import {
   readFileContent,
   useSaveSettings,
@@ -17,11 +18,14 @@ import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
+import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
 
 const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
   const { data: account, refetch } = useAccountDetails()
-  // const [lang, setLanguage] = useState(account?.langKey);
+  const [preview, setPreview] = useState<string | null>(null)
+  const [imgFile, setImgFile] = useState<any>(null)
+
   const { i18n, t } = useTranslation()
 
   const settingsDefaultValue = account => {
@@ -30,7 +34,7 @@ const Settings = React.forwardRef((props, ref) => {
       lastName: account.lastName,
       email: account.login,
       language: account.langKey,
-      profilePicture: null,
+      profilePicture: account.imageUrl,
     }
     return settings
   }
@@ -53,6 +57,13 @@ const Settings = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (account) {
       const defaultSettings = settingsDefaultValue(account)
+      setPreview(account.imageUrl)
+      if (account.imageUrl) {
+        convertImageUrltoDataURL(account.imageUrl).then(dataUrl => {
+          var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
+          setImgFile(fileData)
+        })
+      }
       reset(defaultSettings)
     }
   }, [account, reset])
@@ -69,25 +80,26 @@ const Settings = React.forwardRef((props, ref) => {
   const onSubmit = useCallback(
     async values => {
       let fileContents: any = null
-      if (values.profilePicture && values.profilePicture[0]) {
-        fileContents = await readFileContent(values.profilePicture[0])
+      if (imgFile) {
+        fileContents = await readFileContent(imgFile)
       }
       const settingsPayload = {
         firstName: values.firstName,
         lastName: values.lastName,
         langKey: values.language,
         login: values.email,
-        avatarName: values.profilePicture && values.profilePicture[0] ? values.profilePicture[0].type : null,
+        avatarName: imgFile?.type ?? null,
         avatar: fileContents,
       }
       saveSettings(settingsPayload)
-      setTimeout(() => {
-        refetch()
-      }, 2000) // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
+      // setTimeout(() => {
+      //   refetch()
+      // }, 2000) // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
       // setLanguage(values.language);
       i18n.changeLanguage(values.language)
+      console.log('preview', settingsPayload)
     },
-    [i18n, refetch, saveSettings],
+    [i18n, refetch, saveSettings, imgFile],
   )
 
   return (
@@ -96,12 +108,13 @@ const Settings = React.forwardRef((props, ref) => {
         <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
           {t('settings')}
         </Text>
+
         <Stack mb="10">
           <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
             {t('profilePicture')}
           </Text>
           <HStack spacing={4}>
-            <PreviewImg />
+            <PreviewImg preview={preview} onPreviewChange={setPreview} onImageFileChange={setImgFile} />
             <Text fontSize="14px" fontWeight={400} color="gray.600">
               {t('changePicture')}
             </Text>
@@ -116,7 +129,7 @@ const Settings = React.forwardRef((props, ref) => {
                 {t('email')}
               </Text>
               <Text fontSize="14px" fontWeight={400} color="gray.500">
-                Vendor@devtek.ai
+                {account?.login}
               </Text>
             </VStack>
           </HStack>
@@ -167,9 +180,8 @@ const Settings = React.forwardRef((props, ref) => {
   )
 })
 
-export const PreviewImg = () => {
+export const PreviewImg = ({ preview, onPreviewChange, onImageFileChange }) => {
   const defaultImage = 'https://bit.ly/sage-adebayo'
-  const [preview, setPreview] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -180,8 +192,9 @@ export const PreviewImg = () => {
 
   const handleImageChange = e => {
     const file = e.target.files[0]
+    onImageFileChange(file)
     const reader = new FileReader()
-    reader.onloadend = () => setPreview(reader.result as string)
+    reader.onloadend = () => onPreviewChange(reader.result as string)
     reader.readAsDataURL(file)
   }
 
