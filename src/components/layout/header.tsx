@@ -25,6 +25,10 @@ import { Notification } from './notification'
 
 // const Notification = React.lazy(() => import("./notification"));
 
+const hoverEffect = {
+  _hover: { bg: 'blue.50' },
+}
+
 const UserInfo: React.FC = () => {
   const { data } = useAuth()
   const account = data?.user
@@ -110,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-          <HStack spacing={4} _hover={{ bg: 'gray.100', rounded: '6px' }} pl="1">
+          <HStack spacing={4} _hover={{ bg: 'blue.50', rounded: '6px' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
@@ -122,19 +126,19 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <UserInfo />
               </MenuButton>
               <MenuList minWidth="279px">
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/settings">Settings</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/password">Password</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/help">help</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/support">Support</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <Box
                     onClick={logout}
                     fontSize="14px"

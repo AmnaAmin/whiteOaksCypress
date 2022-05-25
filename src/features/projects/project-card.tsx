@@ -22,11 +22,11 @@ export const ProjectCard = (props: multitypes) => {
         alignItems="center"
         justifyContent="space-between"
         border="1px solid transparent"
-        borderBottom="5px solid transparent"
+        borderTop="4px solid transparent"
         pointerEvents={props.disabled ? 'none' : 'auto'}
         onClick={() => props.onSelectCard(props.selectedCard !== props.id && props.id)}
         borderColor={props.selectedCard === props.id ? '#4E87F8' : ''}
-        _hover={{ border: '4px solid #E2E8F0' }}
+        _hover={{ bg: 'blue.50' }}
       >
         <Flex height="100%">
           <Text marginLeft={'20px'}> {props.IconElement}</Text>

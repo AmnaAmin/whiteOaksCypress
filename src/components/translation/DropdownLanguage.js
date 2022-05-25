@@ -10,6 +10,7 @@ const languageStyle = {
   fontWeight: 500,
   fontSize: '16px',
   color: '#4A5568',
+  _hover: { background: 'blue.50' },
 }
 
 const DropdownLanguage = () => {
@@ -50,7 +51,7 @@ const DropdownLanguage = () => {
     <Menu placement="bottom">
       <MenuButton
         p="1"
-        _hover={{ bg: 'gray.100', rounded: '6px' }}
+        _hover={{ bg: 'blue.50', rounded: '6px' }}
         onChange={handleLangChange}
         variant="text"
         // colorScheme="blue"
