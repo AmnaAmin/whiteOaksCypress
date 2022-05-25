@@ -1,8 +1,19 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
@@ -14,6 +25,7 @@ import {
 } from 'utils/vendor-details'
 import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
+import ChooseFileField from 'components/choose-file/choose-file'
 
 const labelStyle = {
   fontSize: '14px',
@@ -108,6 +120,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     watch,
     getValues,
     reset,
+    setValue,
+    clearErrors,
   } = useForm<DocumentsCardFormValues>({ defaultValues })
 
   useEffect(() => {
@@ -124,6 +138,32 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
+
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+        <Flex ml={1}>
+          <BiDownload fontSize="sm" />
+          <Text ml="5px" fontSize="12px" fontStyle="normal">
+            {text}
+          </Text>
+        </Flex>
+      </a>
+    )
+  }
+
+  const readFile = (event: any, name: any) => {
+    setValue(name, event.target?.result?.split(',')?.[1])
+    clearErrors(name)
+  }
+
+  const onFileChange = (document: File, name: any) => {
+    if (!document) return
+    const reader = new FileReader()
+    reader.addEventListener('load', event => readFile(event, name))
+    reader.readAsDataURL(document)
+  }
+
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
       <Box w="940px">
@@ -138,6 +178,43 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}
               </Text>
             </Box>
+          </Flex>
+          <Flex>
+            <FormControl mt="40px" w="290px" mb="40px" isInvalid={!!errors.w9Document?.message}>
+              <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" padding={2}>
+                {t('uploadFile')}{' '}
+              </FormLabel>
+              <Controller
+                name="w9Document"
+                control={control}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box>
+                        <ChooseFileField
+                          required={documents.w9DocumentUrl ? false : true}
+                          name={field.name}
+                          value={field.value ? field.name : 'Choose File'}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            onFileChange(file, field.name)
+                            field.onChange(file)
+                          }}
+                          onClear={() => setValue(field.name, undefined)}
+                        >
+                          {t('chooseFile')}
+                        </ChooseFileField>
+
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                      {downloadableDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
+                      {/* {field.value && <Box>{downloadDocument(document, field.value ? field?.name : 'doc.png')}</Box>} */}
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
           </Flex>
           <Flex>
             <Box pr="30px">
