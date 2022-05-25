@@ -48,6 +48,11 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       }
     }
 
+    if (contentType && contentType.includes('application/problem+json')) {
+      const data = await response.json()
+      return Promise.reject(data)
+    }
+
     return Promise.resolve({ data: null })
   })
 }

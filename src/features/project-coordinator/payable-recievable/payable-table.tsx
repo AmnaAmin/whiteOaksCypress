@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
+import data from './moc-data.json'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -34,72 +35,74 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const PayableTable = React.forwardRef((props: any, ref) => {
-  const { columns } = useColumnWidthResize(
-    [
-      {
-        Header: 'Id',
-        accessor: 'Id',
-      },
-      {
-        Header: 'Vendor Name',
-        accessor: 'Vendor Name',
-      },
-      {
-        Header: 'Property Address',
-        accessor: 'Property Address',
-      },
-      {
-        Header: 'Vendor Address',
-        accessor: 'Vendor Address',
-      },
-      {
-        Header: 'Payment Terms',
-        accessor: 'Payment Terms',
-      },
-      {
-        Header: 'Expected pay date',
-        accessor: 'Expected pay date',
-      },
-      {
-        Header: 'Final Invoice',
-        accessor: 'Final Invoice',
-      },
+export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
+  (props, ref) => {
+    const { columns } = useColumnWidthResize(
+      [
+        {
+          Header: 'Id',
+          accessor: 'id',
+        },
+        {
+          Header: 'Vendor Name',
+          accessor: 'vendorName',
+        },
+        {
+          Header: 'Property Address',
+          accessor: 'propertyAddress',
+        },
+        {
+          Header: 'Vendor Address',
+          accessor: 'vendorAddress',
+        },
+        {
+          Header: 'Payment Terms',
+          accessor: 'paymentTerms',
+        },
+        {
+          Header: 'Expected pay date',
+          accessor: 'expectedPayDate',
+        },
+        {
+          Header: 'Final Invoice',
+          accessor: 'finalInvoice',
+        },
 
-      {
-        Header: 'Markets',
-        accessor: 'Markets',
-      },
-      {
-        Header: 'WO Start Date',
-        accessor: 'WO Start Date',
-      },
-      {
-        Header: 'WO Completed Date',
-        accessor: 'WO Completed Date',
-      },
-      {
-        Header: 'WO Issue Date',
-        accessor: 'WO Issue Date',
-      },
-      {
-        Header: 'Checkbox',
-        accessor: 'Checkbox',
-      },
-    ],
-    ref,
-  )
+        {
+          Header: 'Markets',
+          accessor: 'markets',
+        },
+        {
+          Header: 'WO Start Date',
+          accessor: 'woStarteDate',
+        },
+        {
+          Header: 'WO Completed Date',
+          accessor: 'woCompleteDate',
+        },
+        {
+          Header: 'WO Issue Date',
+          accessor: 'woIssueDate',
+        },
+        {
+          Header: 'Checkbox',
+          accessor: 'checkbox',
+        },
+      ],
+      ref,
+    )
 
-  return (
-    <Box overflow="auto" width="100%">
-      <ReactTable
-        onRowClick={props.onRowClick}
-        columns={columns}
-        data={[]}
-        TableRow={payableRow}
-        tableHeight="calc(100vh - 300px)"
-        name="alerts-table"
-      />
-    </Box>
-  )
-})
+    return (
+      <Box overflow="auto" width="100%">
+        <ReactTable
+          columns={columns}
+          setTableInstance={props.setTableInstance}
+          data={data}
+          TableRow={payableRow}
+          tableHeight="calc(100vh - 300px)"
+          name="alerts-table"
+        />
+      </Box>
+    )
+  },
+)

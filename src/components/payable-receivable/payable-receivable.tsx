@@ -14,6 +14,8 @@ type payableReceivable = {
 }
 
 export const PayableReceivable = (props: payableReceivable) => {
+  const [projectTableInstance, setInstance] = useState<any>(null)
+
   const [isClicked, setIsClicked] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
@@ -27,6 +29,10 @@ export const PayableReceivable = (props: payableReceivable) => {
   const allDays = () => {
     setSelectedCard('All')
     setIsClicked(true)
+  }
+
+  const setProjectTableInstance = tableInstance => {
+    setInstance(tableInstance)
   }
   return (
     <Box>
@@ -69,10 +75,24 @@ export const PayableReceivable = (props: payableReceivable) => {
         </Button>
       </Stack>
       <Divider border="2px solid #E2E8F0" />
-      <Box mt={2}>{props.ID === 'receivable' ? <ReceivableTable /> : <PayableTable />}</Box>
+      <Box mt={2}>
+        {props.ID === 'receivable' ? (
+          <ReceivableTable setTableInstance={setProjectTableInstance} />
+        ) : (
+          <PayableTable setTableInstance={setProjectTableInstance} />
+        )}
+      </Box>
 
       <Flex justifyContent="end" h="100px">
-        <Button colorScheme="brand" variant="ghost">
+        <Button
+          colorScheme="brand"
+          variant="ghost"
+          onClick={() => {
+            if (projectTableInstance) {
+              projectTableInstance?.exportData('xlsx', false)
+            }
+          }}
+        >
           <Icon as={BiExport} fontSize="18px" mr={2} />
           Export
         </Button>
