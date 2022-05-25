@@ -25,7 +25,7 @@ type DatePickerProps = {
   rules?: any
   size?: 'lg' | 'sm'
   style?: any
-  defaultValue?: Date
+  defaultValue?: Date | string | null
   placeholder?: string
   onChange?: (e) => void
   testId?: string
