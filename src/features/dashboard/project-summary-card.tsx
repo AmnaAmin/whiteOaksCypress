@@ -21,7 +21,7 @@ export const ProjectSummaryCard = (props: cardprops) => {
       justifyContent={{ base: 'unset', xl: 'center' }}
     >
       <Center bg={props.Iconbgcolor} borderRadius="4px" marginRight="10px" p={3} h={45} w={45} rounded={50}>
-        <Icon as={BigIcon} fontSize={20} />
+        <Icon as={BigIcon} boxSize={6} color="gray.600" />
       </Center>
       <Flex fontSize="32px" direction="column" w="auto" lineHeight={1.2}>
         {isLoading ? (
@@ -37,7 +37,7 @@ export const ProjectSummaryCard = (props: cardprops) => {
             </Box>
           </Flex>
         )}
-        <Text fontWeight={400} fontSize={16} color="gray.600" pb={3}>
+        <Text fontWeight={400} fontSize={16} color="gray.600">
           {props.name}
         </Text>
       </Flex>

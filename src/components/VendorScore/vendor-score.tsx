@@ -54,11 +54,19 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
         mb="10px"
       >
         <Card minH={156} rounded="2xl">
-          <VStack alignItems="start">
+          <VStack alignItems="start" mt="3">
             {isLoading ? (
               <BlankSlate width="60px" h="8px" />
             ) : (
-              <Tag rounded="6px" size="lg" color="#2AB450" bg="#E7F8EC" fontStyle="normal" fontWeight={500}>
+              <Tag
+                rounded="6px"
+                // size="md"
+                fontSize="14px"
+                color="blue.300"
+                bg="#E7F8EC"
+                fontStyle="normal"
+                fontWeight={500}
+              >
                 {vendorEntity?.statusLabel}
               </Tag>
             )}
@@ -71,12 +79,14 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               justifyContent="space-between"
               w="100%"
             >
-              <Text>{t('vendorScore')}</Text>
+              <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal">
+                {t('vendorScore')}
+              </Text>
               <Flex alignItems="center">
-                <Text fontSize="20px" data-testid="vendor-score">
+                <Text fontSize="18px" fontWeight={500} color="gray.600" data-testid="vendor-score">
                   {vendorEntity?.score}
                 </Text>
-                <Text fontSize="20px" px="1">
+                <Text fontSize="18px" fontWeight={500} color="gray.600" px="1">
                   out of 5
                 </Text>
               </Flex>
