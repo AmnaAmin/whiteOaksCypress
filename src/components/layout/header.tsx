@@ -25,10 +25,6 @@ import { Notification } from './notification'
 
 // const Notification = React.lazy(() => import("./notification"));
 
-const hoverEffect = {
-  _hover: { bg: 'blue.50' },
-}
-
 const UserInfo: React.FC = () => {
   const { data } = useAuth()
   const account = data?.user
@@ -126,19 +122,19 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <UserInfo />
               </MenuButton>
               <MenuList minWidth="279px">
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/settings">Settings</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/password">Password</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/help">help</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/support">Support</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <Box
                     onClick={logout}
                     fontSize="14px"

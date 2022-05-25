@@ -10,7 +10,6 @@ const languageStyle = {
   fontWeight: 500,
   fontSize: '16px',
   color: '#4A5568',
-  _hover: { background: 'blue.50' },
 }
 
 const DropdownLanguage = () => {
