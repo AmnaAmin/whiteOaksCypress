@@ -36,6 +36,7 @@ const InvoicingAndPaymentTab = ({
       <HStack mt={30} spacing="10px">
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('paymentTermDate')}
             InputElem={
@@ -49,6 +50,7 @@ const InvoicingAndPaymentTab = ({
         </Box>
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiFile />}
             label={t('payDateVariance')}
             InputElem={
@@ -62,6 +64,7 @@ const InvoicingAndPaymentTab = ({
         </Box>
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('paymentTerm')}
             InputElem={
@@ -76,6 +79,7 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('paid')}
             InputElem={
@@ -88,9 +92,11 @@ const InvoicingAndPaymentTab = ({
           />
         </Box>
       </HStack>
-      <HStack spacing="10px">
+      <Divider borderBottomWidth={2} orientation="horizontal" pt={5} />
+      <HStack pt={30} spacing="10px">
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('LWDate')}
             InputElem={
@@ -105,6 +111,7 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('permitDate')}
             InputElem={
@@ -119,6 +126,7 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('paymentProcessed')}
             InputElem={
@@ -133,6 +141,7 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('invoiceSubmitted')}
             InputElem={
@@ -145,9 +154,11 @@ const InvoicingAndPaymentTab = ({
           />
         </Box>
       </HStack>
-      <HStack>
+      <Divider borderBottomWidth={2} orientation="horizontal" pt={5} />
+      <HStack py={30}>
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
             label={t('expectedPay')}
             InputElem={
@@ -162,6 +173,7 @@ const InvoicingAndPaymentTab = ({
 
         {/* <Box w="25%">
           <InputView
+          showDivider={false}
             Icon={<BiDollarCircle />}
             label="Final Invoice:"
             InputElem={<Text>{currencyFormatter(invoiceAndPaymentData?.finalInvoiceAmount)} </Text>}
@@ -169,6 +181,7 @@ const InvoicingAndPaymentTab = ({
         </Box> */}
         <Box w="25%">
           <InputView
+            showDivider={false}
             label={t('WOOriginalAmount')}
             Icon={<BiDollarCircle />}
             InputElem={
@@ -183,6 +196,7 @@ const InvoicingAndPaymentTab = ({
 
         {/* <Box w="25%">
           <InputView
+          showDivider={false}
             label="Upload Invoice"
             Icon={<BiFile />}
             InputElem={

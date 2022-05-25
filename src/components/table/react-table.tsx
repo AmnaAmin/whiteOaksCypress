@@ -38,14 +38,23 @@ function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter
       onChange={e => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
-      placeholder={`Search ${count} records...`}
-      css={{ borderRadius: '6px !important' }}
+      // placeholder={`Search ${count} records...`}
+      borderRadius="4px"
+      height="24px"
+      paddingX={2}
     />
   )
 }
+
+type SortBy = {
+  id?: string
+  desc?: boolean
+}
+
 interface Props {
   columns: Array<Column<object>>
   data: Array<object>
+  sortBy?: SortBy
 }
 
 export function useCustomTable(props: Props) {
@@ -69,7 +78,7 @@ export function useCustomTable(props: Props) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [{ id: 'type', desc: false }],
+        sortBy: [{ id: 'type', desc: false, ...props.sortBy }],
       },
     },
     useBlockLayout,
@@ -122,10 +131,10 @@ export const TableHeader = ({ headerGroups }) => {
                 <Flex py="2" px="2" pl="7" alignItems="center">
                   <Text
                     fontSize="14px"
-                    color="#4A5568"
+                    color="gray.600"
                     fontWeight={500}
                     fontStyle="normal"
-                    textTransform="capitalize"
+                    textTransform="none"
                     mr="2"
                     mt="20px"
                     mb="20px"
@@ -135,7 +144,7 @@ export const TableHeader = ({ headerGroups }) => {
                     display="inline-block"
                     title={title}
                   >
-                    {typeof title === 'string' ? title.toLowerCase() : title}
+                    {title}
                   </Text>
                   {column.isSorted ? (
                     column.isSortedDesc ? (
