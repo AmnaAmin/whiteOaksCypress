@@ -1,5 +1,5 @@
 import React from 'react'
-import { VStack, Text, Flex, Box, Tag, Progress } from '@chakra-ui/react'
+import { VStack, Text, Flex, Box, Progress } from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -9,6 +9,7 @@ import 'components/translation/i18n'
 import { LicenseDocument } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import Status from 'features/projects/status'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -35,11 +36,11 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
       date: vendorEntity?.coiglExpirationDate,
     },
     {
-      title: 'Agreement Signed',
+      title: t('agreementSigned'),
       date: vendorEntity?.agreementSignedDate,
     },
     {
-      title: 'Auto Insurance',
+      title: t('autoInsurance'),
       date: vendorEntity?.autoInsuranceExpirationDate,
     },
   ].filter(item => item.date)
@@ -58,17 +59,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             {isLoading ? (
               <BlankSlate width="60px" h="8px" />
             ) : (
-              <Tag
-                rounded="6px"
-                // size="lg"
-                fontSize="14px"
-                color="blue.300"
-                bg="#E7F8EC"
-                fontStyle="normal"
-                fontWeight={500}
-              >
-                {vendorEntity?.statusLabel}
-              </Tag>
+              <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
             )}
             <Flex
               pt={4}
@@ -112,11 +103,11 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
           gridGap="15px"
         >
-          <SimpleSlider heading={t('Insurance Expiration')} data={defaultData} isLoading={isLoading} />
+          <SimpleSlider heading={t('insuranceExpiration')} data={defaultData} isLoading={isLoading} />
 
           <SimpleSlider
             isLoading={isLoading}
-            heading={t('License Expiration')}
+            heading={t('licenseExpiration')}
             data={vendorEntity?.licenseDocuments
               ?.sort((curr: any, pre: any) => pre.id - curr.id)
               .map((licenseDocument: LicenseDocument) => ({
