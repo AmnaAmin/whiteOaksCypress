@@ -174,18 +174,21 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   return (
     <Box>
       <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="WO Issued" value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
-        <CalenderCard title="Expected Start " value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
+        <CalenderCard title={t('WOIssued')} value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
+        <CalenderCard title={t('expectedStart')} value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
         <CalenderCard
-          title="Expected Completion"
+          title={t('expectedCompletion')}
           value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
         />
-        <CalenderCard title="Completed by Vendor" value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)} />
+        <CalenderCard
+          title={t('completedByVendor')}
+          value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
+        />
       </SimpleGrid>
       <Box pt={6}>
         <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
           <Text fontSize="16px" fontWeight={500} color="gray.600">
-            Assigned Line Items
+            {t('assignedLineItems')}
           </Text>
 
           <HStack>

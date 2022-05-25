@@ -62,8 +62,7 @@ const Dashboard: React.FC = () => {
               fontSize="18px"
               lineHeight="28px"
             >
-              {/* {t('paid')} */}
-              WO Paid
+              {t('WOpaid')}
             </Text>
             <Spacer />
             <Box mt="20px" mr="30px" w="140px">

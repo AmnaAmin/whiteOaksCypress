@@ -171,7 +171,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 {recentLWFile && (
                   <Flex alignItems={'center'}>
                     <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                      Recent LW:
+                      {t('recentLW')}:
                     </FormLabel>
 
                     <Button
@@ -194,7 +194,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   onClick={generatePdf}
                 >
                   <Box pos="relative" right="6px"></Box>
-                  Generate LW
+                  {t('generateLW')}{' '}
                 </Button>
               </Flex>
             </Flex>
