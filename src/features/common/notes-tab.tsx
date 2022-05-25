@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text } from '
 import { Button } from 'components/button/button'
 import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import notesAddminData from './notes-admin-data.json'
+import notesAddminData from '../project-coordinator/notes-admin-data.json'
 
 const MessagesTypes: React.FC<{ user?: string; other?: string }> = ({ user, other }) => {
   return (
@@ -48,7 +48,7 @@ export const NotesTab = () => {
   return (
     <form onSubmit={handleSubmit(Submit)}>
       <Box bg="white" rounded={16}>
-        <Box p="40px 100px 0px 65px " overflow="auto">
+        <Box overflow="auto">
           <Box h={390} overflow="auto">
             {notesAddminData.map(data => {
               return <MessagesTypes other={data.message} />

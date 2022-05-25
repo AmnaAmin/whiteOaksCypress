@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
-import { ClientsTable } from 'features/project-coordinator/clients-flie/clients-table'
+import { ClientsTable } from 'features/project-coordinator/clients/clients-table'
 import { useRef } from 'react'
 
 const Clients = () => {

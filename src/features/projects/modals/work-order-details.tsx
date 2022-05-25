@@ -17,8 +17,6 @@ import {
   Divider,
   HStack,
   Box,
-  Flex,
-  Button,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
@@ -28,28 +26,23 @@ import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
 import { ProjectType } from 'types/project.type'
+import { TransactionType } from 'types/transaction.type'
 import Status from '../status'
-
-const TabStyle = {
-  fontWeight: 500,
-  fontSize: '14px',
-  fontStyle: 'normal',
-  color: 'gray.600',
-  _hover: {
-    backgroundColor: 'gray.200',
-  },
-}
+import { NotesTab } from '../../common/notes-tab'
+import { countInCircle } from 'theme/common-style'
 
 const WorkOrderDetails = ({
   workOrder,
   onClose: close,
   onProjectTabChange,
   projectData,
+  transactions,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
   projectData: ProjectType
+  transactions: Array<TransactionType>
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -75,11 +68,11 @@ const WorkOrderDetails = ({
 
       <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
         <ModalHeader h="64px" py={4} display="flex" alignItems="center">
-          {tabIndex === 3 && (
+          {tabIndex === 2 && (
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  Invoice {workOrder?.invoiceNumber ? `#` + workOrder?.invoiceNumber : ''}
+                  WO {workOrder?.id ? `#` + workOrder?.id : ''}
                 </Text>
                 <Text lineHeight="22px" h="22px">
                   {workOrder?.companyName}
@@ -88,7 +81,7 @@ const WorkOrderDetails = ({
             </Box>
           )}
 
-          {tabIndex !== 3 && (
+          {tabIndex !== 2 && (
             <HStack spacing={4}>
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
@@ -103,76 +96,19 @@ const WorkOrderDetails = ({
         <Divider mb={3} />
         <ModalBody>
           <Stack spacing={5}>
-            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
+            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" whiteSpace="nowrap">
               <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
-                <Flex h="40px">
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    minW={180}
-                    sx={TabStyle}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                  >
-                    {t('workOrderDetails')}
-                  </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('lienWaiver')}
-                  </Tab>
-
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      id: 'checkId',
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('Invoice')}
-                  </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('Payments')}
-                  </Tab>
-                </Flex>
-                {tabIndex === 3 && (
-                  <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
-                    <Flex mr={1} alignItems="center">
-                      <Text fontSize="14px" fontWeight={500} mr={2}>
-                        Recent INV:
-                      </Text>
-                      <Button variant="ghost" colorScheme="brand">
-                        Invc4.pdf
-                      </Button>
-                    </Flex>
-                    <Button colorScheme="brand">Generate</Button>
-                  </HStack>
-                )}
+                <Tab minW={180}>{t('workOrderDetails')}</Tab>
+                <Tab>{t('lienWaiver')}</Tab>
+                <Tab>{t('Invoice')}</Tab>
+                <Tab>{t('Payments')}</Tab>
+                <Tab>
+                  {t('Notes')}
+                  <Box ml="5px" style={countInCircle}>
+                    2
+                  </Box>
+                </Tab>
               </TabList>
-
               <TabPanels>
                 <TabPanel p="0px">
                   <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
@@ -181,7 +117,12 @@ const WorkOrderDetails = ({
                   <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p={0}>
-                  <InvoiceTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                  <InvoiceTab
+                    projectData={projectData}
+                    workOrder={workOrder}
+                    transactions={transactions}
+                    onClose={onClose}
+                  />
                 </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab
@@ -201,6 +142,9 @@ const WorkOrderDetails = ({
                       datePermitsPulled: workOrder?.datePermitsPulled ?? '',
                     }}
                   />
+                </TabPanel>
+                <TabPanel p="20px">
+                  <NotesTab />
                 </TabPanel>
               </TabPanels>
             </Tabs>

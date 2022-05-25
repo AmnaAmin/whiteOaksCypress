@@ -48,8 +48,8 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
           <DatePicker
             style={props.style}
             popperContainer={CalendarContainer}
-            selected={props.defaultValue}
-            value={value}
+            selected={new Date(value)}
+            value={value || ''}
             onBlur={onBlur}
             onChange={val => {
               const format = getFormattedDate(val)

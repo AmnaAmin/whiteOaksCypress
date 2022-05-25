@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "vendorName": "Renos",
+    "propertyAddress": "927 LABURNUM LN",
+    "vendorAddress": "6",
+    "paymentTerms": "Draw",
+    "expectedPayDate": "11/14/2021",
+    "balance": "$4000.00",
+    "finalInvoice": "$4000.00",
+    "markets": "Atlanta",
+    "woStarteDate": "11/14/2021",
+    "woCompleteDate": "414 Street",
+    "woIssueDate": "6",
+    "checkBox": ""
+  }
+]
