@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Center } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Divider, Center, Image } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
@@ -14,6 +14,7 @@ import { Button } from 'components/button/button'
 import { FaAtom } from 'react-icons/fa'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
+  console.log(row)
   return (
     <a
       // @ts-ignore
@@ -40,6 +41,8 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
         {row.cells.map(cell => {
           return (
             <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+              {/** @ts-ignore */}
+              <Image src={row.original?.s3Url} height="30px" w="30px" />
               <Flex alignItems="center" h="60px">
                 <Text
                   noOfLines={2}
