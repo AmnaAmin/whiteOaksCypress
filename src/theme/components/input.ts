@@ -1,6 +1,12 @@
 import { theme as chakraTheme } from '@chakra-ui/react'
 import { inputBorderLeftStyle, inputFocusStateStyle } from 'theme/common-style'
 
+const inputDisableStyle = {
+  bg: 'gray.100',
+  borderColor: 'gray.200',
+  color: 'gray.400',
+  opacity: 0.8,
+}
 const input = {
   Input: {
     variants: {
@@ -12,12 +18,7 @@ const input = {
             color: 'gray.500',
             bg: 'white',
             _focus: inputFocusStateStyle,
-            _disabled: {
-              bg: 'gray.100',
-              borderColor: 'gray.200',
-              color: 'gray.500',
-              opacity: 0.7,
-            },
+            _disabled: inputDisableStyle,
           },
         }
       },
@@ -30,6 +31,10 @@ const input = {
             color: 'gray.500',
             bg: 'white',
             _focus: inputFocusStateStyle,
+            _disabled: {
+              ...inputDisableStyle,
+              ...inputBorderLeftStyle,
+            },
           },
         }
       },

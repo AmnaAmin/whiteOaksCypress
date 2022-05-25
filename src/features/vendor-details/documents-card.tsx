@@ -26,12 +26,14 @@ type DocumentsProps = {
   setNextTab: () => void
   vendor: VendorProfile
   onClose?: () => void
+  VendorType: string
 }
 
 type DocumentFormProps = {
   vendor: VendorProfile
   onSubmit: (values: any) => void
   onClose?: () => void
+  VendorType?: string
 }
 
 const downloadableDocument = (link, text, testid?) => {
@@ -73,12 +75,17 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
   return (
     <Box w="100%">
-      <DocumentsForm vendor={props.vendor} onSubmit={onSubmit} onClose={props.onClose}></DocumentsForm>
+      <DocumentsForm
+        VendorType={props.VendorType}
+        vendor={props.vendor}
+        onSubmit={onSubmit}
+        onClose={props.onClose}
+      ></DocumentsForm>
     </Box>
   )
 })
 
-export const DocumentsForm = ({ vendor, onSubmit, onClose }: DocumentFormProps) => {
+export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const defaultValue = vendor => {
@@ -200,7 +207,7 @@ export const DocumentsForm = ({ vendor, onSubmit, onClose }: DocumentFormProps) 
         </Box>
 
         <Text fontSize="18px" fontWeight={500} color="gray.600" mt={6}>
-          Insurances
+          {t('insurances')}
         </Text>
 
         <Box mt={6}>
@@ -348,10 +355,15 @@ export const DocumentsForm = ({ vendor, onSubmit, onClose }: DocumentFormProps) 
             Cancel
           </Button>
         )}
-
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-          {t('next')}
-        </Button>
+        {VendorType === 'detail' ? (
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            {t('save')}
+          </Button>
+        ) : (
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            {t('next')}
+          </Button>
+        )}
       </Flex>
     </form>
   )

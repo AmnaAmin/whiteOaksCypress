@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, Tag, TagLabel } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useTransactions } from 'utils/transactions'
@@ -8,27 +8,8 @@ import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { useTranslation } from 'react-i18next'
-
-const STATUS_TAG_COLOR_SCHEME = {
-  denied: {
-    bg: 'purple.100',
-    color: 'purple.600',
-  },
-
-  approved: {
-    bg: '#E7F8EC',
-    color: '#2AB450',
-  },
-  cancelled: {
-    bg: 'red.100',
-    color: 'red.400',
-  },
-
-  pending: {
-    bg: '#FEEBCB',
-    color: '#C05621',
-  },
-}
+import numeral from 'numeral'
+import Status from '../status'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -90,20 +71,15 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
       {
         Header: t('totalAmount') as string,
         accessor: 'transactionTotal',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0[.]00')
+        },
       },
       {
         Header: t('status') as string,
         accessor: 'status',
-        Cell(cellInfo) {
-          const value = (cellInfo.value || '').toLowerCase()
-          return (
-            <Tag rounded="6px" textTransform="capitalize" size="md" {...STATUS_TAG_COLOR_SCHEME[value]}>
-              <TagLabel fontWeight={400} fontSize="14px" fontStyle="normal" lineHeight="20px" p="3px">
-                {value}
-              </TagLabel>
-            </Tag>
-          )
-        },
+        //@ts-ignore
+        Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
       },
       {
         Header: t('submit') as string,
@@ -133,11 +109,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
       setSelectedTransactionId(original.id)
 
-      if (original.status === 'PENDING') {
-        onEditModalOpen()
-      } else {
-        onTransactionDetailsModalOpen()
-      }
+      onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )

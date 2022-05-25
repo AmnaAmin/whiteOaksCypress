@@ -11,7 +11,7 @@ const tabsVariants = {
             roundedTopEnd: '6px',
             roundedTopStart: '6px',
             _hover: {
-              bg: `${props.colorScheme}.50`,
+              bg: `gray.200`,
             },
             _selected: {
               borderBottomColor: `${props.colorScheme}.300`,

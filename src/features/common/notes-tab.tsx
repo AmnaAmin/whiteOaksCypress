@@ -2,7 +2,8 @@ import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text } from '
 import { Button } from 'components/button/button'
 import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import notesAddminData from './notes-admin-data.json'
+import notesAddminData from '../project-coordinator/notes-admin-data.json'
+import { useTranslation } from 'react-i18next'
 
 const MessagesTypes: React.FC<{ user?: string; other?: string }> = ({ user, other }) => {
   return (
@@ -38,6 +39,7 @@ const MessagesTypes: React.FC<{ user?: string; other?: string }> = ({ user, othe
 export const NotesTab = () => {
   const [messages, setMessage] = useState([] as any)
   const { handleSubmit, register, reset, control } = useForm()
+  const { t } = useTranslation()
 
   const message = useWatch({ name: 'message', control })
   const Submit = data => {
@@ -48,7 +50,7 @@ export const NotesTab = () => {
   return (
     <form onSubmit={handleSubmit(Submit)}>
       <Box bg="white" rounded={16}>
-        <Box p="40px 100px 0px 65px " overflow="auto">
+        <Box overflow="auto">
           <Box h={390} overflow="auto">
             {notesAddminData.map(data => {
               return <MessagesTypes other={data.message} />
@@ -63,7 +65,7 @@ export const NotesTab = () => {
             <Box w="125px" />
             <Box w="100%">
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-                Enter New Note Here
+                {t('enterNewNote')}
               </FormLabel>
               <Textarea flexWrap="wrap" minH="150px" {...register('message')} />
             </Box>
@@ -71,8 +73,9 @@ export const NotesTab = () => {
         </Box>
 
         <Flex mt={5} borderTop="1px solid #E2E8F0" h="92px" justifyContent="end" alignItems="center" pr={3}>
+          <Button colorScheme="brand">{t('cancel')}</Button>
           <Button type="submit" colorScheme="brand" isDisabled={!message}>
-            Submit
+            {t('save')}
           </Button>
         </Flex>
       </Box>
