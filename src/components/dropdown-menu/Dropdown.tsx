@@ -122,7 +122,7 @@ const chakraComponents = {
           sx={{
             ...inputStyles.field,
             bg: '#FFFFFF',
-            _hover: { backgroundColor: 'gray.100' },
+            _hover: { backgroundColor: 'blue.50' },
             border: 'none',
             p: 0,
             overflow: 'hidden',
