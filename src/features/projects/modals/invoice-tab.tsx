@@ -29,6 +29,7 @@ import { useForm } from 'react-hook-form'
 import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
 import { jsPDF } from 'jspdf'
 import { createInvoice } from 'utils/vendor-projects'
+import { useTranslation } from 'react-i18next'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -49,6 +50,7 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 }
 
 export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) => {
+  const { t } = useTranslation()
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [items, setItems] = useState(
     transactions && transactions.length > 0 ? transactions.filter(co => co.parentWorkOrderId === workOrder.id) : [],
@@ -102,7 +104,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
         <Flex justifyContent={'flex-end'} mt="10px">
           <Flex>
             <FormLabel variant="strong-label" size="md" mt="10px">
-              Recent INV:
+              {t('recentINV')}:
             </FormLabel>
           </Flex>
           <Link href={workOrder?.invoiceLink} target={'_blank'} download _hover={{ textDecoration: 'none' }}>
@@ -111,28 +113,28 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
             </Button>
           </Link>
           <Button variant="solid" colorScheme="brand" size="md" ml="10px" onClick={generateInvoice}>
-            Generate Invoice
+            {t('generateINV')}
           </Button>
         </Flex>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
-          <InvoiceInfo title={'Invoice No.'} value={workOrder?.invoiceNumber} icons={BiFile} />
+          <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
-            title={'Final Invoice:'}
+            title={t('finalInvoice')}
             value={currencyFormatter(workOrder?.finalInvoiceAmount)}
             icons={BiDollarCircle}
           />
           <InvoiceInfo
-            title={'PO Number'}
+            title={t('PONumber')}
             value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
             icons={BiFile}
           />
           <InvoiceInfo
-            title={'Invoice Date'}
+            title={t('invoiceDate')}
             value={workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
           <InvoiceInfo
-            title={'Due Date'}
+            title={t('dueDate')}
             value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
@@ -147,9 +149,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
                 <Table colorScheme="teal" size="lg">
                   <Thead position="sticky" top={0} zIndex={2}>
                     <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
-                      <Td>Item</Td>
-                      <Td>Description</Td>
-                      <Td>Amount</Td>
+                      <Td>{t('item')}</Td>
+                      <Td>{t('description')}</Td>
+                      <Td>{t('amount')}</Td>
                     </Tr>
                   </Thead>
                   <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
@@ -185,7 +187,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
                             fontWeight={600}
                             color="#4E87F8"
                           >
-                            +Add New Item
+                            +{t('addNewItem')}
                           </Button>
 
                           <FormControl isInvalid={!!errors.item?.message}>
@@ -262,15 +264,15 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
               <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
                 <Box>
                   <HStack w={300} height="60px" justifyContent="space-between">
-                    <Text>Subtotal:</Text>
+                    <Text>{t('subTotal')}:</Text>
                     <Text>{currencyFormatter(subTotal)}</Text>
                   </HStack>
                   <HStack w={300} height="60px" justifyContent="space-between">
-                    <Text>Total Amount Paid:</Text>
+                    <Text>{t('totalAmountPaid')}:</Text>
                     <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
                   </HStack>
                   <HStack w={300} height="60px" justifyContent="space-between">
-                    <Text>Balance Due:</Text>
+                    <Text>{t('balanceDue')}:</Text>
                     <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
                   </HStack>
                 </Box>
@@ -281,9 +283,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
       </Box>
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
         <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
-          Close
+          {t('close')}
         </Button>
-        <Button colorScheme="brand">Save</Button>
+        <Button colorScheme="brand">{t('save')}</Button>
       </HStack>
     </Box>
   )

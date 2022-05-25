@@ -38,7 +38,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Payment Term Date"
+            label={t('paymentTermDate')}
             InputElem={
               invoiceAndPaymentData.paymentTermDate ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
@@ -52,7 +52,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiFile />}
-            label="Pay Date Variance"
+            label={t('payDateVariance')}
             InputElem={
               invoiceAndPaymentData.workOrderPayDateVariance ? (
                 <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
@@ -66,7 +66,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Payment Terms:"
+            label={t('paymentTerm')}
             InputElem={
               invoiceAndPaymentData?.paymentTerm ? (
                 <Text>{invoiceAndPaymentData?.paymentTerm} </Text>
@@ -81,7 +81,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Paid"
+            label={t('paid')}
             InputElem={
               invoiceAndPaymentData?.datePaid ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
@@ -98,7 +98,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="LW Date"
+            label={t('LWDate')}
             InputElem={
               invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
@@ -113,7 +113,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Permit Date"
+            label={t('permitDate')}
             InputElem={
               invoiceAndPaymentData?.datePermitsPulled ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
@@ -128,7 +128,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Payment Processed"
+            label={t('paymentProcessed')}
             InputElem={
               invoiceAndPaymentData?.datePaymentProcessed ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
@@ -143,7 +143,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Invoice Submitted:"
+            label={t('invoiceSubmitted')}
             InputElem={
               invoiceAndPaymentData.dateInvoiceSubmitted ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
@@ -160,7 +160,7 @@ const InvoicingAndPaymentTab = ({
           <InputView
             showDivider={false}
             Icon={<BiCalendar />}
-            label="Expected Pay"
+            label={t('expectedPay')}
             InputElem={
               invoiceAndPaymentData.expectedPaymentDate ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
@@ -182,7 +182,7 @@ const InvoicingAndPaymentTab = ({
         <Box w="25%">
           <InputView
             showDivider={false}
-            label="WO Original Amount:"
+            label={t('WOOriginalAmount')}
             Icon={<BiDollarCircle />}
             InputElem={
               invoiceAndPaymentData.clientOriginalApprovedAmount ? (

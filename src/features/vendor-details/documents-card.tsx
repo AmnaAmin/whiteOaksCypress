@@ -207,7 +207,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
         </Box>
 
         <Text fontSize="18px" fontWeight={500} color="gray.600" mt={6}>
-          Insurances
+          {t('insurances')}
         </Text>
 
         <Box mt={6}>
