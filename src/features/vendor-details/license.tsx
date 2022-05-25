@@ -133,7 +133,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                       onClick={() => removeLicense(index)}
                       data-testid={`removeLicense-` + index}
                       cursor="pointer"
-                      boxSize={8}
+                      boxSize={5}
                       mt="6px"
                     />
                   </Center>
@@ -164,6 +164,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
+                  variant="reguired-field"
                 />
 
                 <FormDatePicker

@@ -1,6 +1,6 @@
 import { Button, Box, Text, Flex } from '@chakra-ui/react'
 import * as React from 'react'
-import { BiUpload } from 'react-icons/bi'
+import { CloseIcon } from '@chakra-ui/icons'
 
 type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   onClear?: () => void
@@ -22,9 +22,11 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
 
   return (
     <Box
+      // outline="1px solid green"
       as="button"
+      display="flex"
       w="100%"
-      minW="215px"
+      minW="300px"
       borderWidth="1px"
       borderStyle="solid"
       borderColor={isError ? 'red' : '#ddd'}
@@ -34,6 +36,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
       _hover={{
         borderColor: 'gray.400',
       }}
+      alignItems="center"
     >
       <input
         {...inputProps}
@@ -42,30 +45,34 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
       />
-      <Box flex="1" position="relative" overflow="hidden" height="40px">
+      <Button rounded={0} roundedLeft={5} variant="choose-file" colorScheme={isError ? 'red' : 'gray'}>
+        {children}
+      </Button>
+      <Box flex="1" position="relative" overflow="hidden">
         {value && (
           <Flex alignItems="center">
             <Text
               whiteSpace="nowrap"
               title={value as string}
               isTruncated
-              color={isError ? 'red' : '#4E87F8'}
+              w="170px"
+              color="#4E87F8"
               fontSize="14px"
-              p={2}
-              marginLeft={2}
+              fontWeight={500}
+              pl={3}
             >
               {value}
             </Text>
             <Button
               variant="link"
-              size="xl"
-              colorScheme={isError ? 'red' : 'blue'}
+              size="xs"
+              colorScheme="red"
               onClick={onFileClear}
               position="absolute"
-              right="5"
+              right="0"
               bg="white"
             >
-              <BiUpload />
+              <CloseIcon w="10px" />
             </Button>
           </Flex>
         )}
