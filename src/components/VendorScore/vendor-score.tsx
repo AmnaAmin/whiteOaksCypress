@@ -1,5 +1,5 @@
 import React from 'react'
-import { VStack, Text, Flex, Box, Tag, Progress } from '@chakra-ui/react'
+import { VStack, Text, Flex, Box, Progress } from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -9,6 +9,7 @@ import 'components/translation/i18n'
 import { LicenseDocument } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import Status from 'features/projects/status'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -58,9 +59,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             {isLoading ? (
               <BlankSlate width="60px" h="8px" />
             ) : (
-              <Tag rounded="6px" size="lg" color="#2AB450" bg="#E7F8EC" fontStyle="normal" fontWeight={500}>
-                {vendorEntity?.statusLabel}
-              </Tag>
+              <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
             )}
             <Flex
               pt={4}
