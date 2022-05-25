@@ -30,6 +30,8 @@ import { TransactionType } from 'types/transaction.type'
 import Status from '../status'
 import { NotesTab } from '../../common/notes-tab'
 import { countInCircle } from 'theme/common-style'
+import { useDocuments } from 'utils/vendor-projects'
+import { useParams } from 'react-router-dom'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -47,6 +49,10 @@ const WorkOrderDetails = ({
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
+  const { projectId } = useParams<'projectId'>()
+  const { documents: documentsData = [] } = useDocuments({
+    projectId,
+  })
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -111,13 +117,19 @@ const WorkOrderDetails = ({
               </TabList>
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
+                  <WorkOrderDetailTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
-                  <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
+                  <LienWaiverTab
+                    documentsData={documentsData}
+                    onProjectTabChange={onProjectTabChange}
+                    lienWaiverData={workOrder}
+                    onClose={onClose}
+                  />
                 </TabPanel>
                 <TabPanel p={0}>
                   <InvoiceTab
+                    documentsData={documentsData}
                     projectData={projectData}
                     workOrder={workOrder}
                     transactions={transactions}

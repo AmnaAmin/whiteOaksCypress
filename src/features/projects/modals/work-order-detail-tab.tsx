@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { currencyFormatter } from 'utils/stringFormatters'
+import { createInvoicePdf } from 'utils/work-order'
 
 const CalenderCard = props => {
   return (
@@ -74,7 +74,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
   )
 } */
 
-const WorkOrderDetailTab = ({ onClose, workOrder }) => {
+const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const { t } = useTranslation()
   const [assignedItems, setAssignedItems] = useState(
     workOrder.assignedItems ?? [
@@ -132,43 +132,8 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
   }, [assignedItems])
 
   const downloadPdf = () => {
-    const doc = new jsPDF()
-    const basicFont = undefined
-    const heading = 'Assigned Line Items'
-    doc.setFontSize(12)
-    doc.setFont(basicFont as any, 'bold')
-    const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
-    doc.text(heading, xHeading, 20)
-    doc.setFont(basicFont as any, 'normal')
-    autoTable(doc, {
-      startY: 30,
-      alternateRowStyles: { fillColor: '#FFFFFF' },
-      headStyles: { fillColor: '#F7FAFC', textColor: '#4A5568', lineColor: [0, 0, 0] },
-      theme: 'grid',
-      bodyStyles: { lineColor: '#B2F5EA', minCellHeight: 15 },
-      body: [
-        ...assignedItems.map(ai => {
-          return {
-            id: ai.id,
-            productName: ai.productName,
-            details: ai.details,
-            quantity: ai.quantity,
-            price: ai.price,
-            isCompleted: ai.isCompleted,
-            isVerified: ai.isVerified,
-          }
-        }),
-      ],
-      columns: [
-        { header: 'SKU', dataKey: 'id' },
-        { header: 'Product Name', dataKey: 'productName' },
-        { header: 'Details', dataKey: 'details' },
-        { header: 'Quantity', dataKey: 'quantity' },
-        { header: 'Price', dataKey: 'price' },
-        { header: 'Status', dataKey: 'isCompleted' },
-        { header: 'Verified', dataKey: 'isVerified' },
-      ],
-    })
+    let doc = new jsPDF()
+    doc = createInvoicePdf(doc, workOrder, projectData, assignedItems)
     doc.save('assigned-items.pdf')
   }
   return (
@@ -185,67 +150,70 @@ const WorkOrderDetailTab = ({ onClose, workOrder }) => {
           value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
         />
       </SimpleGrid>
-      <Box pt={6}>
-        <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
-          <Text fontSize="16px" fontWeight={500} color="gray.600">
-            {t('assignedLineItems')}
-          </Text>
+      {assignedItems && (
+        <>
+          <Box pt={6}>
+            <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
+              <Text fontSize="16px" fontWeight={500} color="gray.600">
+                Assigned Line Items
+              </Text>
 
-          <HStack>
-            <Button leftIcon={<BiDownload />} variant="outline" colorScheme="brand" size="lg" onClick={downloadPdf}>
-              Download as PDF
-            </Button>
-            <Checkbox
-              size="md"
-              colorScheme="brand"
-              onChange={e => {
-                onMarkCompleted(e.target.checked)
-              }}
-              isChecked={assignedItems.every(e => {
-                return e.isCompleted
-              })}
-            >
-              <FormLabel variant="strong-label" size="md" mt="7px">
-                Mark all Completed
-              </FormLabel>
-            </Checkbox>
-          </HStack>
-        </Flex>
-      </Box>
-      <Box h={340} overflow="auto" mb={9}>
-        <Table variant="simple" size="md">
-          <Thead>
-            <Tr>
-              <Td>SKU</Td>
-              <Td>Product Name</Td>
-              <Td>Details</Td>
-              <Td>Quantity</Td>
-              <Td>Price</Td>
-              <Td>Status</Td>
-              {/*<Td>Images</Td>*/}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {assignedItems &&
-              assignedItems.map((item, i) => (
+              <HStack>
+                <Button leftIcon={<BiDownload />} variant="outline" colorScheme="brand" size="md" onClick={downloadPdf}>
+                  Download as PDF
+                </Button>
+                <Checkbox
+                  size="md"
+                  colorScheme="brand"
+                  onChange={e => {
+                    onMarkCompleted(e.target.checked)
+                  }}
+                  isChecked={assignedItems.every(e => {
+                    return e.isCompleted
+                  })}
+                >
+                  <FormLabel variant="strong-label" size="md" mt="7px">
+                    Mark all Completed
+                  </FormLabel>
+                </Checkbox>
+              </HStack>
+            </Flex>
+          </Box>
+          <Box h={340} overflow="auto" mb={9}>
+            <Table border="1px solid #E2E8F0" variant="simple" size="md">
+              <Thead>
                 <Tr>
-                  <Td>{item.id}</Td>
-                  <Td>{item.productName} </Td>
-                  <Td>{item.description}</Td>
-                  <Td>{item.quantity}</Td>
-                  <Td>{currencyFormatter(item.price)}</Td>
-                  <Td>
-                    <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
-                  </Td>
-                  {/*<Td>
+                  <Td>SKU</Td>
+                  <Td>Product Name</Td>
+                  <Td>Details</Td>
+                  <Td>Quantity</Td>
+                  <Td>Price</Td>
+                  <Td>Status</Td>
+                  {/*<Td>Images</Td>*/}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {assignedItems &&
+                  assignedItems.map((item, i) => (
+                    <Tr>
+                      <Td>{item.id}</Td>
+                      <Td>{item.productName} </Td>
+                      <Td>{item.description}</Td>
+                      <Td>{item.quantity}</Td>
+                      <Td>{currencyFormatter(item.price)}</Td>
+                      <Td>
+                        <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
+                      </Td>
+                      {/*<Td>
                     <UploadImage Images={'Upload'} />
                   </Td>*/}
-                </Tr>
-              ))}
-          </Tbody>
-        </Table>
-      </Box>
-
+                    </Tr>
+                  ))}
+              </Tbody>
+            </Table>
+          </Box>
+        </>
+      )}
       <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
         <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
           {t('cancel')}

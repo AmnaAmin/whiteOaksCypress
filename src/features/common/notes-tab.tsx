@@ -73,8 +73,9 @@ export const NotesTab = () => {
         </Box>
 
         <Flex mt={5} borderTop="1px solid #E2E8F0" h="92px" justifyContent="end" alignItems="center" pr={3}>
+          <Button colorScheme="brand">{t('cancel')}</Button>
           <Button type="submit" colorScheme="brand" isDisabled={!message}>
-            {t('submit')}
+            {t('save')}
           </Button>
         </Flex>
       </Box>

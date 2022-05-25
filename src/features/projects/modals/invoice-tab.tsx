@@ -16,18 +16,18 @@ import {
   Thead,
   Tr,
   VStack,
-  FormLabel,
-  Link,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
-
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
-import { useState } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiDollarCircle, BiFile, BiXCircle } from 'react-icons/bi'
+import { BiCalendar, BiDollarCircle, BiFile, BiXCircle, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { jsPDF } from 'jspdf'
 import { createInvoice } from 'utils/vendor-projects'
+import { downloadFile } from 'utils/file-utils'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
+import { useToast } from '@chakra-ui/toast'
 import { useTranslation } from 'react-i18next'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
@@ -48,9 +48,13 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) => {
-  const { t } = useTranslation()
+export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData }) => {
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
+  const [recentInvoice, setRecentInvoice] = useState<any>(null)
+  const [documents, setDocuments] = useState<any[]>([])
+  const { mutate: updateInvoice } = useUpdateWorkOrderMutation()
+  const { t } = useTranslation()
+  const toast = useToast()
   const [items, setItems] = useState(
     transactions && transactions.length > 0 ? transactions.filter(co => co.parentWorkOrderId === workOrder.id) : [],
   )
@@ -67,7 +71,6 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -79,10 +82,44 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
     },
   })
 
-  const onSubmit = data => {
-    // console.log(data)
-    setItems(state => [...state, { ...data }])
-    reset()
+  useEffect(() => {
+    if (documentsData && documentsData.length > 0) {
+      const invoice = documentsData.find(d => d.documentType === 48)
+      if (invoice) {
+        setRecentInvoice({ s3Url: invoice.s3Url, fileType: invoice.fileType })
+      }
+    }
+  }, [documentsData])
+
+  const generatePdf = useCallback(async () => {
+    let form = new jsPDF()
+    form = await createInvoice(form, workOrder, projectData, items, { subTotal, amountPaid })
+    const pdfUri = form.output('datauristring')
+    const pdfBlob = form.output('bloburi')
+    setRecentInvoice({
+      s3Url: pdfBlob,
+      fileType: 'Invoice.pdf',
+    })
+    setDocuments([
+      ...documentsData,
+      {
+        documentType: 48,
+        fileObject: pdfUri.split(',')[1],
+        fileObjectContentType: 'application/pdf',
+        fileType: 'Invoice.pdf',
+      },
+    ])
+    toast({
+      title: 'Invoice',
+      description: 'New invoice generated',
+      status: 'info',
+      duration: 9000,
+      isClosable: true,
+    })
+  }, [])
+
+  const onSubmit = () => {
+    updateInvoice({ ...workOrder, documents })
   }
 
   const DeleteItems = Id => {
@@ -91,30 +128,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
     // console.log('deleteValue', deleteValue)
   }
 
-  const generateInvoice = () => {
-    let doc = new jsPDF()
-    doc = createInvoice(doc, workOrder, projectData, items)
-    doc.save('invoice.pdf')
-  }
-
   return (
     <Box>
       <Box w="100%">
-        <Flex justifyContent={'flex-end'} mt="10px">
-          <Flex>
-            <FormLabel variant="strong-label" size="md" mt="10px">
-              {t('recentINV')}:
-            </FormLabel>
-          </Flex>
-          <Link href={workOrder?.invoiceLink} target={'_blank'} download _hover={{ textDecoration: 'none' }}>
-            <Button variant="ghost" colorScheme="brand" size="md">
-              {'invoice.pdf'}
-            </Button>
-          </Link>
-          <Button variant="solid" colorScheme="brand" size="md" ml="10px" onClick={generateInvoice}>
-            {t('generateINV')}
-          </Button>
-        </Flex>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
@@ -144,12 +160,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
         <Box>
           <Box h="400px" overflow="auto">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Table variant="simple" size="md">
+              <Table border="1px solid #E2E8F0" variant="simple" size="md">
                 <Thead>
                   <Tr>
                     <Td>Item</Td>
                     <Td>Description</Td>
-                    <Td>Amount</Td>
+                    <Td>Total</Td>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -278,12 +294,32 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions }) =>
           </Box>
         </Box>
       </Box>
-      <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
-        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
-          {t('close')}
-        </Button>
-        <Button colorScheme="brand">{t('save')}</Button>
-      </HStack>
+      <Flex h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
+        <HStack justifyContent="start" w="100%">
+          {recentInvoice && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              onClick={() => downloadFile(recentInvoice.s3Url)}
+              leftIcon={<BiDownload />}
+            >
+              See {'invoice.pdf'}
+            </Button>
+          )}
+          <Button variant="outline" colorScheme="brand" size="md" leftIcon={<BiSpreadsheet />} onClick={generatePdf}>
+            Generate Invoice
+          </Button>
+        </HStack>
+        <HStack justifyContent="end">
+          <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+            {t('cancel')}
+          </Button>
+          <Button colorScheme="brand" onClick={onSubmit}>
+            {t('save')}
+          </Button>
+        </HStack>
+      </Flex>
     </Box>
   )
 }

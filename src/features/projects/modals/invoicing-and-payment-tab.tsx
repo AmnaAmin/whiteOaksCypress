@@ -196,7 +196,7 @@ const InvoicingAndPaymentTab = ({
       <Divider />
       <ModalFooter pb="15px" pt="15px">
         <Button colorScheme="brand" onClick={onClose}>
-          {t('close')}
+          {t('cancel')}
         </Button>
       </ModalFooter>
     </Stack>
