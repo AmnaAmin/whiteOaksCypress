@@ -27,7 +27,7 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 // Define a default UI for filtering
 
 function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
-  const count = preFilteredRows.length
+  // const count = preFilteredRows.length
 
   return (
     <Input

@@ -1,7 +1,8 @@
-import React from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import React, { useCallback } from 'react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
+import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
 import data from './moc-data-receivable.json'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -49,15 +50,15 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
         },
         {
           Header: 'Address',
-          accessor: 'streetAddress',
+          accessor: 'address',
         },
         {
           Header: 'terms',
           accessor: 'terms',
         },
         {
-          Header: 'Payment Terms',
-          accessor: 'paymentTerms',
+          Header: 'Payment Types',
+          accessor: 'paymentTypes',
         },
         {
           Header: 'Expected pay date',
@@ -93,15 +94,29 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
         },
         {
           Header: ' Checkbox',
-          accessor: ' checkbox',
+          accessor: ' Checkbox',
         },
       ],
       ref,
     )
 
+    const {
+      isOpen: isAccountReceivableModal,
+      onOpen: onAccountReceivableModalOpen,
+      onClose: onAccountReceivableModalClose,
+    } = useDisclosure()
+
+    const onRowClick = useCallback(
+      (_, row) => {
+        onAccountReceivableModalOpen()
+      },
+      [onAccountReceivableModalOpen],
+    )
+
     return (
       <Box overflow="auto" width="100%">
         <ReactTable
+          onRowClick={onRowClick}
           columns={columns}
           setTableInstance={props.setTableInstance}
           data={data}
@@ -109,6 +124,7 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
           tableHeight="calc(100vh - 300px)"
           name="alerts-table"
         />
+        <AccountReceivableModal isOpen={isAccountReceivableModal} onClose={onAccountReceivableModalClose} />
       </Box>
     )
   },
