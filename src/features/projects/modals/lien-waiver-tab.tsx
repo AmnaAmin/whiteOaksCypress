@@ -22,10 +22,9 @@ import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiCaretDown, BiCaretUp, BiEditAlt, BiTrash } from 'react-icons/bi'
-import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
-import { useDocuments } from 'utils/vendor-projects'
+import { createForm, getHelpText } from 'utils/lien-waiver'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
@@ -33,13 +32,10 @@ import { Button } from 'components/button/button'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose, onProjectTabChange } = props
-  const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
+  const { lienWaiverData, onClose, onProjectTabChange, documentsData } = props
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
-  const { projectId } = useParams<'projectId'>()
-  const { documents: documentsData = [] } = useDocuments({
-    projectId,
-  })
+
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -80,7 +76,6 @@ export const LienWaiverTab: React.FC<any> = props => {
   useEffect(() => {
     if (isSuccess) {
       onProjectTabChange?.(2)
-      onClose()
     }
   }, [isSuccess, onClose])
 
@@ -295,7 +290,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         <Divider />
         <ModalFooter mt={3}>
           <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
-            {t('close')}
+            {t('cancel')}
           </Button>
           <Button colorScheme="brand" type="submit">
             {t('save')}
