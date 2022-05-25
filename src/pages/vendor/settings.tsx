@@ -94,17 +94,16 @@ const Settings = React.forwardRef((props, ref) => {
     <Box mt="40px" ml="20px" h="65vh">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
-          {/* {t('settingsFor')} [{account ? account.email : null}] */}
-          Settings
+          {t('settings')}
         </Text>
         <Stack mb="10">
           <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
-            Profile Picture
+            {t('profilePicture')}
           </Text>
           <HStack spacing={4}>
             <PreviewImg />
             <Text fontSize="14px" fontWeight={400} color="gray.600">
-              Change your profile picture
+              {t('changePicture')}
             </Text>
           </HStack>
         </Stack>
@@ -114,7 +113,7 @@ const Settings = React.forwardRef((props, ref) => {
             <Icon boxSize={5} as={BiBriefcase} color="gray.500" mt="2px" />
             <VStack align="start" spacing={0}>
               <Text fontSize="14px" fontWeight={500} color="gray.600">
-                Email
+                {t('email')}
               </Text>
               <Text fontSize="14px" fontWeight={400} color="gray.500">
                 Vendor@devtek.ai
@@ -129,7 +128,7 @@ const Settings = React.forwardRef((props, ref) => {
           <FormInput
             errorMessage={errors.firstName && errors.firstName?.message}
             label={t('firstName')}
-            placeholder={'First Name'}
+            placeholder={t('firstName')}
             register={register}
             controlStyle={{ w: '215px' }}
             elementStyle={{
@@ -142,7 +141,7 @@ const Settings = React.forwardRef((props, ref) => {
           <FormInput
             errorMessage={errors.lastName && errors.lastName?.message}
             label={t('lastName')}
-            placeholder="Last Name"
+            placeholder={t('lastName')}
             register={register}
             controlStyle={{ w: '215px' }}
             elementStyle={{ bg: 'white' }}

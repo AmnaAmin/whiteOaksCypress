@@ -100,10 +100,10 @@ const WorkOrderDetails = ({
               <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
                 <Tab minW={180}>{t('workOrderDetails')}</Tab>
                 <Tab>{t('lienWaiver')}</Tab>
-                <Tab>{t('Invoice')}</Tab>
-                <Tab>{t('Payments')}</Tab>
+                <Tab>{t('invoice')}</Tab>
+                <Tab>{t('payments')}</Tab>
                 <Tab>
-                  {t('Notes')}
+                  {t('notes')}
                   <Box ml="5px" style={countInCircle}>
                     2
                   </Box>

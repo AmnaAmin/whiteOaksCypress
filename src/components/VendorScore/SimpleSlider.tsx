@@ -9,6 +9,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { chunk } from 'lodash'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { useTranslation } from 'react-i18next'
 
 const isDateExpired = (date: string) => {
   const currentDate = new Date()
@@ -35,6 +36,8 @@ export const SimpleSlider: React.FC<{
     nextArrow: <GoChevronRight color="#A3A9B4" />,
   }
   const [slider, setSlider] = useState<any[]>([])
+  const { t } = useTranslation()
+
   useEffect(() => {
     setSlider(chunk(props.data, 3))
   }, [props.data])
@@ -79,7 +82,7 @@ export const SimpleSlider: React.FC<{
             <Flex marginTop="25px" justifyContent="center" alignItems="center" fontSize="15px" fontWeight="normal">
               <RiErrorWarningFill fontSize="30px" color="#718096" />
               <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
-                You dont have any {props.heading} expiration
+                {t('errorWarning')} {props.heading}
               </Text>
             </Flex>
           )}
