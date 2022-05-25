@@ -45,9 +45,9 @@ const inputFieldStyle = {
 
 const VendorProfilePassword = () => {
   const { mutate: updatePassword } = usePasswordUpdateMutation()
-  const [show, setShow] = useState(false)
-  const [showSecondField, setShowSecondField] = useState(false)
-  const [showThirdField, setShowThirdField] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState(false)
+  const [newPassword, setNewPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState(false)
   const toast = useToast()
 
   const [strength, setStrength] = useState(0)
@@ -75,11 +75,11 @@ const VendorProfilePassword = () => {
     }
   }, [strength])
 
-  const handleClick = () => setShow(!show)
+  const handleClick = () => setCurrentPassword(!currentPassword)
 
-  const handleClickSecond = () => setShowSecondField(!showSecondField)
+  const handleClickSecond = () => setNewPassword(!newPassword)
 
-  const handleClickThird = () => setShowThirdField(!showThirdField)
+  const handleClickThird = () => setConfirmPassword(!confirmPassword)
 
   const {
     register,
@@ -116,7 +116,7 @@ const VendorProfilePassword = () => {
 
             <InputGroup size="lg">
               <Input
-                type={show ? 'text' : 'password'}
+                type={currentPassword ? 'text' : 'password'}
                 sx={inputFieldStyle}
                 id="currentPassword"
                 {...register('currentPassword')}
@@ -125,7 +125,7 @@ const VendorProfilePassword = () => {
               />
               <InputRightElement h="40px">
                 <Icon
-                  as={show ? BsEyeSlash : BsEye}
+                  as={currentPassword ? BsEyeSlash : BsEye}
                   onClick={handleClick}
                   fontSize="13px"
                   color="gray.600"
@@ -143,7 +143,7 @@ const VendorProfilePassword = () => {
 
               <InputGroup size="lg">
                 <Input
-                  type={showSecondField ? 'text' : 'password'}
+                  type={newPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
                   id="newPassword"
                   {...register('newPassword')}
@@ -161,7 +161,7 @@ const VendorProfilePassword = () => {
                 />
                 <InputRightElement h="40px">
                   <Icon
-                    as={showSecondField ? BsEyeSlash : BsEye}
+                    as={newPassword ? BsEyeSlash : BsEye}
                     onClick={handleClickSecond}
                     fontSize="13px"
                     color="gray.600"
@@ -179,7 +179,7 @@ const VendorProfilePassword = () => {
 
               <InputGroup size="lg">
                 <Input
-                  type={showThirdField ? 'text' : 'password'}
+                  type={confirmPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
                   id="confirmPassword"
                   {...register('confirmPassword')}
@@ -188,7 +188,7 @@ const VendorProfilePassword = () => {
                 />
                 <InputRightElement h="40px">
                   <Icon
-                    as={showThirdField ? BsEyeSlash : BsEye}
+                    as={confirmPassword ? BsEyeSlash : BsEye}
                     onClick={handleClickThird}
                     fontSize="13px"
                     color="gray.600"
