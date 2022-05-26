@@ -39,12 +39,22 @@ export const PROJECT_COLUMNS = [
     accessor: 'pastDueWorkorders',
   },
   {
-    Header: t('expectedPaymentDate'),
-    accessor: 'vendorWOExpectedPaymentDate',
-    Cell({ value, row }) {
+    Header: t('DueDateWO'),
+    accessor: 'clientDueDate',
+    Cell({ value }) {
       return dateFormat(value)
     },
-    getCellExportValue(row, col) {
+    getCellExportValue(row) {
+      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+    },
+  },
+  {
+    Header: t('expectedPaymentDate'),
+    accessor: 'vendorWOExpectedPaymentDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
+    getCellExportValue(row) {
       return dateFormat(row.values.vendorWOExpectedPaymentDate)
     },
   },
@@ -130,6 +140,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         name="my-table"
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
+        sortBy={{ id: 'id', desc: true }}
       />
     </Box>
   )

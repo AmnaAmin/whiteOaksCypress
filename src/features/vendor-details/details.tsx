@@ -309,7 +309,15 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
               </Box>
             </Box>
 
-            <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="70px">
+            <Flex
+              pt="9px"
+              w="100%"
+              h="70px"
+              alignItems="center"
+              justifyContent="end"
+              borderTop="2px solid #E2E8F0"
+              mt="40px"
+            >
               {onClose && (
                 <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
                   Cancel

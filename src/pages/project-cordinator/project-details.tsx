@@ -20,6 +20,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import { NotesTab } from '../../features/common/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
+import { Card } from 'components/card/card'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -128,7 +129,9 @@ export const ProjectDetails: React.FC = props => {
                 </Box>
               </TabPanel>
               <TabPanel p="0px" mt="3">
-                <ProjectDetailsTab />
+                <Card rounded="16px" padding="0">
+                  <ProjectDetailsTab />
+                </Card>
               </TabPanel>
 
               <TabPanel p="0px" h="0px">

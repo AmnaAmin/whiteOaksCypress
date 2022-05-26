@@ -26,7 +26,7 @@ import { PasswordFormValues } from 'types/account.types'
 import { successMessage } from 'utils/api-messages'
 import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 
 const textStyle = {
@@ -48,6 +48,7 @@ const VendorProfilePassword = () => {
   const [showSecondField, setShowSecondField] = useState(false)
   const [showThirdField, setShowThirdField] = useState(false)
   const toast = useToast()
+  const { t } = useTranslation()
 
   const [strength, setStrength] = useState(0)
   const { type, colorScheme } = useMemo(() => {
@@ -105,14 +106,13 @@ const VendorProfilePassword = () => {
     <Stack mt="40px" ml="20px" boxSizing="border-box">
       <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
         {/* Password for [vendor@devtek.ai] */}
-        Password
+        {t('password')}
       </Text>
 
       <form onSubmit={handleSubmit(onsubmit)}>
         <VStack spacing={7} h="35vh" align="start">
           <FormControl isInvalid={!!errors.currentPassword} w="215px">
-            <FormLabel sx={textStyle}>Current Password</FormLabel>
-
+            <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
             <InputGroup size="lg">
               <Input
                 type={show ? 'text' : 'password'}
@@ -147,8 +147,7 @@ const VendorProfilePassword = () => {
 
           <HStack pb="8">
             <FormControl isInvalid={!!errors.newPassword} w="215px" h="60px">
-              <FormLabel sx={textStyle}>New Password</FormLabel>
-
+              <FormLabel sx={textStyle}>{t('newPassword')}</FormLabel>
               <InputGroup size="lg">
                 <Input
                   type={showSecondField ? 'text' : 'password'}
@@ -192,7 +191,7 @@ const VendorProfilePassword = () => {
             </FormControl>
 
             <FormControl isInvalid={!!errors.confirmPassword} w="215px" h="60px">
-              <FormLabel sx={textStyle}>New password confirmation</FormLabel>
+              <FormLabel sx={textStyle}>{t('newPasswordConfirmation')}</FormLabel>
 
               <InputGroup size="lg">
                 <Input
@@ -230,7 +229,7 @@ const VendorProfilePassword = () => {
 
           <FormControl height={29}>
             <FormLabel fontStyle="normal" fontSize="10px" fontWeight={400} lineHeight="15px" color="#374151">
-              Password Strength
+              {t('passwordStrength')}
             </FormLabel>
 
             <SimpleGrid columns={3} row={1} gap={5} w="215px">
