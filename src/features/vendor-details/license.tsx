@@ -176,18 +176,20 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   testId={`expiryDate-` + index}
                 />
                 <VStack>
-                  <FormFileInput
-                    errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
-                    // label={t('fileInput')}
-                    name={`licenses.${index}.expirationFile`}
-                    register={register}
-                    style={{ minW: '20em', mt: '25px' }}
-                    isRequired={true}
-                    downloadableFile={licenseValues?.[index].downloadableFile}
-                    testId={`expirationFile-` + index}
-                  >
-                    {t('chooseFile')}
-                  </FormFileInput>
+                  <Box h="100px">
+                    <FormFileInput
+                      errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
+                      // label={t('fileInput')}
+                      name={`licenses.${index}.expirationFile`}
+                      register={register}
+                      style={{ minW: '20em', mt: '25px' }}
+                      isRequired={true}
+                      downloadableFile={licenseValues?.[index].downloadableFile}
+                      testId={`expirationFile-` + index}
+                    >
+                      {t('chooseFile')}
+                    </FormFileInput>
+                  </Box>
                 </VStack>
               </HStack>
             )
