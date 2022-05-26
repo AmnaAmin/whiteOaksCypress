@@ -14,6 +14,7 @@ import {
   InputGroup,
   useToast,
   Flex,
+  Icon,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 // import { InputGroup } from 'react-bootstrap';
@@ -44,9 +45,9 @@ const inputFieldStyle = {
 
 const VendorProfilePassword = () => {
   const { mutate: updatePassword } = usePasswordUpdateMutation()
-  const [show, setShow] = useState(false)
-  const [showSecondField, setShowSecondField] = useState(false)
-  const [showThirdField, setShowThirdField] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState(false)
+  const [newPassword, setNewPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState(false)
   const toast = useToast()
   const { t } = useTranslation()
 
@@ -75,11 +76,11 @@ const VendorProfilePassword = () => {
     }
   }, [strength])
 
-  const handleClick = () => setShow(!show)
+  const handleClick = () => setCurrentPassword(!currentPassword)
 
-  const handleClickSecond = () => setShowSecondField(!showSecondField)
+  const handleClickSecond = () => setNewPassword(!newPassword)
 
-  const handleClickThird = () => setShowThirdField(!showThirdField)
+  const handleClickThird = () => setConfirmPassword(!confirmPassword)
 
   const {
     register,
@@ -115,30 +116,21 @@ const VendorProfilePassword = () => {
             <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
             <InputGroup size="lg">
               <Input
-                type={show ? 'text' : 'password'}
+                type={currentPassword ? 'text' : 'password'}
                 sx={inputFieldStyle}
                 id="currentPassword"
                 {...register('currentPassword')}
                 rounded="6px"
                 borderLeft="2px solid #4E87F8"
               />
-              <InputRightElement>
-                <Button
+              <InputRightElement h="40px">
+                <Icon
+                  as={currentPassword ? BsEyeSlash : BsEye}
                   onClick={handleClick}
-                  h="1.30rem"
-                  size="sm"
-                  bg="#FFFFFF"
+                  fontSize="13px"
                   color="gray.600"
-                  _hover={{
-                    bg: 'gray.100',
-                    color: 'gray.600',
-                  }}
-                  minW="10px"
-                  _focus={{ border: 'none' }}
-                  mb="1.5"
-                >
-                  {show ? <BsEye /> : <BsEyeSlash />}
-                </Button>
+                  _hover={{ color: 'black' }}
+                />
               </InputRightElement>
             </InputGroup>
 
@@ -150,7 +142,7 @@ const VendorProfilePassword = () => {
               <FormLabel sx={textStyle}>{t('newPassword')}</FormLabel>
               <InputGroup size="lg">
                 <Input
-                  type={showSecondField ? 'text' : 'password'}
+                  type={newPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
                   id="newPassword"
                   {...register('newPassword')}
@@ -166,23 +158,14 @@ const VendorProfilePassword = () => {
                     setStrength(score)
                   }}
                 />
-                <InputRightElement>
-                  <Button
+                <InputRightElement h="40px">
+                  <Icon
+                    as={newPassword ? BsEyeSlash : BsEye}
                     onClick={handleClickSecond}
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
+                    fontSize="13px"
                     color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showSecondField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
               <Box>
@@ -195,30 +178,21 @@ const VendorProfilePassword = () => {
 
               <InputGroup size="lg">
                 <Input
-                  type={showThirdField ? 'text' : 'password'}
+                  type={confirmPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
                   id="confirmPassword"
                   {...register('confirmPassword')}
                   rounded="6px"
                   borderLeft="2px solid #4E87F8"
                 />
-                <InputRightElement>
-                  <Button
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
-                    color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
+                <InputRightElement h="40px">
+                  <Icon
+                    as={confirmPassword ? BsEyeSlash : BsEye}
                     onClick={handleClickThird}
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showThirdField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    fontSize="13px"
+                    color="gray.600"
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
               <Box>

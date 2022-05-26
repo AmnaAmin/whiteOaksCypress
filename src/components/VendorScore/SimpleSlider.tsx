@@ -62,7 +62,7 @@ export const SimpleSlider: React.FC<{
             fontStyle="normal"
             fontWeight={500}
             fontSize="18px"
-            color="#4A5568"
+            color="gray.600"
             pb={3}
             mx={{ base: 'unset', lg: 'unset', '2xl': '5' }}
           >

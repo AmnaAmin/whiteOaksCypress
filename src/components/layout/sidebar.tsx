@@ -7,6 +7,7 @@ export const Sidebar: React.FC<BoxProps> = props => {
       overflowY="auto"
       maxH="full"
       mt="12px"
+      pb="2"
       lineHeight="taller"
       {...props}
       sx={{
