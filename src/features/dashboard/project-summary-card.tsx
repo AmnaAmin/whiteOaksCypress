@@ -28,7 +28,7 @@ export const ProjectSummaryCard = (props: cardprops) => {
           <BlankSlate width="100%" h="10px" />
         ) : (
           <Flex alignItems="center">
-            <Box data-testid={props.testId} fontWeight={600} fontSize={18} fontStyle="normal" color="gray.600">
+            <Box data-testid={props.testId} fontWeight={600} fontSize="18px" fontStyle="normal" color="gray.600">
               {props.number}
               {props.numbertext}
             </Box>

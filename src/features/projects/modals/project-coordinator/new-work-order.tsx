@@ -19,7 +19,7 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
-import { dateFormatter } from 'utils/new-work-order'
+import { dateFormatter } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { documentTypes } from 'utils/vendor-projects'
 

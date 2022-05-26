@@ -14,6 +14,7 @@ import {
   InputGroup,
   useToast,
   Flex,
+  Icon,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 // import { InputGroup } from 'react-bootstrap';
@@ -26,7 +27,7 @@ import { PasswordFormValues } from 'types/account.types'
 import { successMessage } from 'utils/api-messages'
 import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 
 const textStyle = {
@@ -44,10 +45,11 @@ const inputFieldStyle = {
 
 const VendorProfilePassword = () => {
   const { mutate: updatePassword } = usePasswordUpdateMutation()
-  const [show, setShow] = useState(false)
-  const [showSecondField, setShowSecondField] = useState(false)
-  const [showThirdField, setShowThirdField] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState(false)
+  const [newPassword, setNewPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState(false)
   const toast = useToast()
+  const { t } = useTranslation()
 
   const [strength, setStrength] = useState(0)
   const { type, colorScheme } = useMemo(() => {
@@ -74,11 +76,11 @@ const VendorProfilePassword = () => {
     }
   }, [strength])
 
-  const handleClick = () => setShow(!show)
+  const handleClick = () => setCurrentPassword(!currentPassword)
 
-  const handleClickSecond = () => setShowSecondField(!showSecondField)
+  const handleClickSecond = () => setNewPassword(!newPassword)
 
-  const handleClickThird = () => setShowThirdField(!showThirdField)
+  const handleClickThird = () => setConfirmPassword(!confirmPassword)
 
   const {
     register,
@@ -105,40 +107,30 @@ const VendorProfilePassword = () => {
     <Stack mt="40px" ml="20px" boxSizing="border-box">
       <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
         {/* Password for [vendor@devtek.ai] */}
-        Password
+        {t('password')}
       </Text>
 
       <form onSubmit={handleSubmit(onsubmit)}>
         <VStack spacing={7} h="35vh" align="start">
           <FormControl isInvalid={!!errors.currentPassword} w="215px">
-            <FormLabel sx={textStyle}>Current Password</FormLabel>
-
+            <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
             <InputGroup size="lg">
               <Input
-                type={show ? 'text' : 'password'}
+                type={currentPassword ? 'text' : 'password'}
                 sx={inputFieldStyle}
                 id="currentPassword"
                 {...register('currentPassword')}
                 rounded="6px"
                 borderLeft="2px solid #4E87F8"
               />
-              <InputRightElement>
-                <Button
+              <InputRightElement h="40px">
+                <Icon
+                  as={currentPassword ? BsEyeSlash : BsEye}
                   onClick={handleClick}
-                  h="1.30rem"
-                  size="sm"
-                  bg="#FFFFFF"
+                  fontSize="13px"
                   color="gray.600"
-                  _hover={{
-                    bg: 'gray.100',
-                    color: 'gray.600',
-                  }}
-                  minW="10px"
-                  _focus={{ border: 'none' }}
-                  mb="1.5"
-                >
-                  {show ? <BsEye /> : <BsEyeSlash />}
-                </Button>
+                  _hover={{ color: 'black' }}
+                />
               </InputRightElement>
             </InputGroup>
 
@@ -147,11 +139,10 @@ const VendorProfilePassword = () => {
 
           <HStack pb="8">
             <FormControl isInvalid={!!errors.newPassword} w="215px" h="60px">
-              <FormLabel sx={textStyle}>New Password</FormLabel>
-
+              <FormLabel sx={textStyle}>{t('newPassword')}</FormLabel>
               <InputGroup size="lg">
                 <Input
-                  type={showSecondField ? 'text' : 'password'}
+                  type={newPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
                   id="newPassword"
                   {...register('newPassword')}
@@ -167,23 +158,14 @@ const VendorProfilePassword = () => {
                     setStrength(score)
                   }}
                 />
-                <InputRightElement>
-                  <Button
+                <InputRightElement h="40px">
+                  <Icon
+                    as={newPassword ? BsEyeSlash : BsEye}
                     onClick={handleClickSecond}
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
+                    fontSize="13px"
                     color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showSecondField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
               <Box>
@@ -192,34 +174,25 @@ const VendorProfilePassword = () => {
             </FormControl>
 
             <FormControl isInvalid={!!errors.confirmPassword} w="215px" h="60px">
-              <FormLabel sx={textStyle}>New password confirmation</FormLabel>
+              <FormLabel sx={textStyle}>{t('newPasswordConfirmation')}</FormLabel>
 
               <InputGroup size="lg">
                 <Input
-                  type={showThirdField ? 'text' : 'password'}
+                  type={confirmPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
                   id="confirmPassword"
                   {...register('confirmPassword')}
                   rounded="6px"
                   borderLeft="2px solid #4E87F8"
                 />
-                <InputRightElement>
-                  <Button
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
-                    color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
+                <InputRightElement h="40px">
+                  <Icon
+                    as={confirmPassword ? BsEyeSlash : BsEye}
                     onClick={handleClickThird}
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showThirdField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    fontSize="13px"
+                    color="gray.600"
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
               <Box>
@@ -230,7 +203,7 @@ const VendorProfilePassword = () => {
 
           <FormControl height={29}>
             <FormLabel fontStyle="normal" fontSize="10px" fontWeight={400} lineHeight="15px" color="#374151">
-              Password Strength
+              {t('passwordStrength')}
             </FormLabel>
 
             <SimpleGrid columns={3} row={1} gap={5} w="215px">

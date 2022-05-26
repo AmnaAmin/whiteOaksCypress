@@ -36,7 +36,7 @@ export const useProject = (projectId?: string) => {
 export const useProjectWorkOrders = projectId => {
   const client = useClient()
 
-  return useQuery<ProjectWorkOrderType[]>('GetProjectWorkOrders', async () => {
+  return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
     const response = await client(`project/${projectId}/workorders`, {})
 
     return response?.data
