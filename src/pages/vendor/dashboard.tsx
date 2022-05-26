@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
           pl={3}
           rounded="13px"
           flex={1}
-          ml={{ base: 0, xl: '12px' }}
+          ml={{ base: 0, xl: '15px' }}
           mt={{ base: '30px', xl: 0 }}
           bg="#FDFDFF"
         >

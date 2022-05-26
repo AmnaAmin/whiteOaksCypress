@@ -20,7 +20,7 @@ export const ProjectSummary = () => {
       borderRadius="15px"
       bg="whiteAlpha.900"
       direction="column"
-      mb="15px"
+      mb="10px"
       boxSizing="border-box"
       px={{ base: '5px', md: '25px', xl: 'unset' }}
       minH={123}
