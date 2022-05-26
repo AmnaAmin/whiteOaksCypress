@@ -240,8 +240,8 @@ const CreateATicket = () => {
           </Box>
 
           <FormControl mt="40px" w="290px" mb="40px" isInvalid={!!errors.attachment?.message}>
-            <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" padding={2}>
-              {t('uploadFile')}{' '}
+            <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" mb={1}>
+              File Upload
             </FormLabel>
             <Controller
               name="attachment"
