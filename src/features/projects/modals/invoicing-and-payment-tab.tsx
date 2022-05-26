@@ -1,4 +1,4 @@
-import { Stack, Box, HStack, Text, Button, ModalFooter, Divider } from '@chakra-ui/react'
+import { Stack, Box, HStack, Text, ModalFooter, Divider } from '@chakra-ui/react'
 
 import React from 'react'
 import { BiDollarCircle, BiFile, BiCalendar } from 'react-icons/bi'
@@ -6,6 +6,7 @@ import InputView from 'components/input-view/input-view'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 type InvoiceAndPaymentData = {
   dateInvoiceSubmitted: string
@@ -35,8 +36,9 @@ const InvoicingAndPaymentTab = ({
       <HStack mt={30} spacing="10px">
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Payment Term Date"
+            label={t('paymentTermDate')}
             InputElem={
               invoiceAndPaymentData.paymentTermDate ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
@@ -48,8 +50,9 @@ const InvoicingAndPaymentTab = ({
         </Box>
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiFile />}
-            label="Pay Date Variance"
+            label={t('payDateVariance')}
             InputElem={
               invoiceAndPaymentData.workOrderPayDateVariance ? (
                 <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
@@ -61,8 +64,9 @@ const InvoicingAndPaymentTab = ({
         </Box>
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Payment Terms:"
+            label={t('paymentTerm')}
             InputElem={
               invoiceAndPaymentData?.paymentTerm ? (
                 <Text>{invoiceAndPaymentData?.paymentTerm} </Text>
@@ -75,8 +79,9 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Paid"
+            label={t('paid')}
             InputElem={
               invoiceAndPaymentData?.datePaid ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
@@ -87,11 +92,13 @@ const InvoicingAndPaymentTab = ({
           />
         </Box>
       </HStack>
-      <HStack spacing="10px">
+      <Divider borderBottomWidth={2} orientation="horizontal" pt={5} />
+      <HStack pt={30} spacing="10px">
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="LW Date"
+            label={t('LWDate')}
             InputElem={
               invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
@@ -104,8 +111,9 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Permit Date"
+            label={t('permitDate')}
             InputElem={
               invoiceAndPaymentData?.datePermitsPulled ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
@@ -118,8 +126,9 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Payment Processed"
+            label={t('paymentProcessed')}
             InputElem={
               invoiceAndPaymentData?.datePaymentProcessed ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
@@ -132,8 +141,9 @@ const InvoicingAndPaymentTab = ({
 
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Invoice Submitted:"
+            label={t('invoiceSubmitted')}
             InputElem={
               invoiceAndPaymentData.dateInvoiceSubmitted ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
@@ -144,11 +154,13 @@ const InvoicingAndPaymentTab = ({
           />
         </Box>
       </HStack>
-      <HStack>
+      <Divider borderBottomWidth={2} orientation="horizontal" pt={5} />
+      <HStack py={30}>
         <Box w="25%">
           <InputView
+            showDivider={false}
             Icon={<BiCalendar />}
-            label="Expected Pay"
+            label={t('expectedPay')}
             InputElem={
               invoiceAndPaymentData.expectedPaymentDate ? (
                 <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
@@ -161,6 +173,7 @@ const InvoicingAndPaymentTab = ({
 
         {/* <Box w="25%">
           <InputView
+          showDivider={false}
             Icon={<BiDollarCircle />}
             label="Final Invoice:"
             InputElem={<Text>{currencyFormatter(invoiceAndPaymentData?.finalInvoiceAmount)} </Text>}
@@ -168,7 +181,8 @@ const InvoicingAndPaymentTab = ({
         </Box> */}
         <Box w="25%">
           <InputView
-            label="WO Original Amount:"
+            showDivider={false}
+            label={t('WOOriginalAmount')}
             Icon={<BiDollarCircle />}
             InputElem={
               invoiceAndPaymentData.clientOriginalApprovedAmount ? (
@@ -182,6 +196,7 @@ const InvoicingAndPaymentTab = ({
 
         {/* <Box w="25%">
           <InputView
+          showDivider={false}
             label="Upload Invoice"
             Icon={<BiFile />}
             InputElem={
@@ -194,17 +209,8 @@ const InvoicingAndPaymentTab = ({
       </HStack>
       <Divider />
       <ModalFooter pb="15px" pt="15px">
-        <Button
-          colorScheme="CustomPrimaryColor"
-          onClick={onClose}
-          _focus={{ outline: 'none' }}
-          fontStyle="normal"
-          fontSize="14px"
-          fontWeight={600}
-          h="48px"
-          w="130px"
-        >
-          {t('close')}
+        <Button colorScheme="brand" onClick={onClose}>
+          {t('cancel')}
         </Button>
       </ModalFooter>
     </Stack>

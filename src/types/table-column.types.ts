@@ -26,4 +26,5 @@ export enum TableNames {
   workOrder = 'workOrder',
   alerts = 'alerts',
   pcproject = 'pc-project',
+  vendors = 'vendors',
 }

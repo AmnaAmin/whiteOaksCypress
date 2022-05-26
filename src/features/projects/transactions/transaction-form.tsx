@@ -12,7 +12,7 @@ import {
   HStack,
   Button,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
 // import { Button } from 'components/button/button'
@@ -34,10 +34,13 @@ import {
   useTransactionTypes,
   useWorkOrderChangeOrders,
 } from 'utils/transactions'
-import { FormValues, SelectOption } from 'types/transaction.type'
+import { ChangeOrderType, FormValues, SelectOption } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
   useAgainstOptions,
+  useCalculatePayDateVariance,
+  useFieldDisabledEnabledDecision,
+  useFieldRequiredDecision,
   useFieldShowHideDecision,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
@@ -52,6 +55,61 @@ import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
+
+const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
+  const { t } = useTranslation()
+  const { control } = useFormContext<FormValues>()
+  const { isShowExpectedCompletionDateField } = useFieldShowHideDecision(control, transaction)
+
+  return (
+    <Grid
+      templateColumns="repeat(4, fit-content(100px))"
+      gap={'1rem 30px'}
+      borderBottom="2px solid"
+      borderColor="gray.200"
+      py="5"
+    >
+      <GridItem>
+        <Controller
+          name="dateCreated"
+          control={control}
+          render={({ field: { name, onChange, value } }) => {
+            return <ReadOnlyInput label={t('dateCreated')} name={name} onChange={onChange} value={value as string} />
+          }}
+        />
+      </GridItem>
+
+      <GridItem>
+        <Controller
+          name="createdBy"
+          control={control}
+          render={({ field: { name, onChange, value } }) => {
+            return <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
+          }}
+        />
+      </GridItem>
+      {isShowExpectedCompletionDateField && (
+        <GridItem>
+          <Controller
+            name="expectedCompletionDate"
+            control={control}
+            render={({ field: { name, onChange, value } }) => {
+              return (
+                <ReadOnlyInput
+                  testId="expected-completion-date"
+                  label={t('expectedCompletionDate')}
+                  name={name}
+                  onChange={onChange}
+                  value={value as string}
+                />
+              )
+            }}
+          />
+        </GridItem>
+      )}
+    </Grid>
+  )
+}
 
 type AddUpdateTransactionFormProps = {
   onClose: () => void
@@ -105,17 +163,23 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
   } = formReturn
 
   const {
-    isShowExpectedCompletionDateField,
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
   } = useFieldShowHideDecision(control, transaction)
+  const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
+  const { isUpdateForm, isAproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
+    control,
+    transaction,
+  )
+
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
   const againstOptions = useAgainstOptions(againstSelectOptions, control)
+  const payDateVariance = useCalculatePayDateVariance(control)
 
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
@@ -218,64 +282,10 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
           {!isShowLienWaiver ? (
             <Box flex={1}>
               {/** Readonly information of Transaction */}
-              <Grid
-                templateColumns="repeat(4, fit-content(100px))"
-                gap={'1rem 30px'}
-                borderBottom="2px solid"
-                borderColor="gray.200"
-                py="5"
-              >
-                <GridItem>
-                  <Controller
-                    name="dateCreated"
-                    control={control}
-                    render={({ field: { name, onChange, value } }) => {
-                      return (
-                        <ReadOnlyInput
-                          label={t('dateCreated')}
-                          name={name}
-                          onChange={onChange}
-                          value={value as string}
-                        />
-                      )
-                    }}
-                  />
-                </GridItem>
-
-                <GridItem>
-                  <Controller
-                    name="createdBy"
-                    control={control}
-                    render={({ field: { name, onChange, value } }) => {
-                      return (
-                        <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
-                      )
-                    }}
-                  />
-                </GridItem>
-                {isShowExpectedCompletionDateField && (
-                  <GridItem>
-                    <Controller
-                      name="expectedCompletionDate"
-                      control={control}
-                      render={({ field: { name, onChange, value } }) => {
-                        return (
-                          <ReadOnlyInput
-                            testId="expected-completion-date"
-                            label={t('expectedCompletionDate')}
-                            name={name}
-                            onChange={onChange}
-                            value={value as string}
-                          />
-                        )
-                      }}
-                    />
-                  </GridItem>
-                )}
-              </Grid>
+              <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4" minH="180px">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -291,7 +301,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                             <Select
                               {...field}
                               options={transactionTypeOptions}
-                              isDisabled={!!transaction}
+                              isDisabled={isUpdateForm}
                               size="md"
                               selectProps={{ isBorderLeft: true }}
                               onChange={(option: SelectOption) => {
@@ -325,7 +335,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                             {...field}
                             selectProps={{ isBorderLeft: true }}
                             options={againstOptions}
-                            isDisabled={!!transaction}
+                            isDisabled={isUpdateForm}
                             onChange={option => {
                               onAgainstOptionSelect(option)
                               field.onChange(option)
@@ -352,7 +362,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                           <>
                             <Select
                               {...field}
-                              isDisabled={!!transaction}
+                              isDisabled={isUpdateForm}
                               selectProps={{ isBorderLeft: true }}
                               options={workOrderSelectOptions}
                               onChange={option => {
@@ -381,7 +391,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                         render={({ field, fieldState }) => (
                           <>
                             <Select
-                              isDisabled={!!transaction}
+                              isDisabled={isUpdateForm}
                               options={changeOrderSelectOptions}
                               selectProps={{ isBorderLeft: true }}
                               {...field}
@@ -437,7 +447,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                                 {...field}
                                 selectProps={{ isBorderLeft: true }}
                                 options={PAYMENT_TERMS_OPTIONS}
-                                isDisabled={!!transaction}
+                                isDisabled={isUpdateForm}
                                 onChange={paymentTermOption => {
                                   field.onChange(paymentTermOption)
                                 }}
@@ -465,8 +475,12 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                           data-testid="new-expected-completion-date"
                           id="invoicedDate"
                           type="date"
+                          variant={isInvoicedDateRequired ? 'reguired-field' : 'outline'}
                           css={calendarIcon}
-                          {...register('invoicedDate')}
+                          isDisabled={isAproved}
+                          {...register('invoicedDate', {
+                            required: isInvoicedDateRequired ? 'This is required field.' : '',
+                          })}
                         />
                         <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
                       </FormControl>
@@ -488,36 +502,38 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                           data-testid="new-expected-completion-date"
                           id="paidDate"
                           type="date"
+                          variant={isPaidDateRequired ? 'reguired-field' : 'outline'}
                           size="md"
-                          isDisabled={!transaction}
+                          isDisabled={isPaidDateDisabled}
                           css={calendarIcon}
-                          {...register('paidDate')}
+                          {...register('paidDate', { required: isPaidDateRequired ? 'This is required field.' : '' })}
                         />
                         <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paidDateVariance}>
+                      <FormControl isInvalid={!!errors.payDateVariance}>
                         <FormLabel
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
                           color="gray.600"
-                          htmlFor="paidDateVariance"
+                          htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
-                          {t('paidDateVariance')}
+                          {t('payDateVariance')}
                         </FormLabel>
                         <Input
                           data-testid="new-expected-completion-date"
-                          id="paidDateVariance"
+                          id="payDateVariance"
                           type="text"
                           size="md"
+                          value={payDateVariance}
                           css={calendarIcon}
                           isDisabled
-                          {...register('paidDateVariance')}
+                          {...register('payDateVariance')}
                         />
-                        <FormErrorMessage>{errors?.paidDateVariance?.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
                   </>
@@ -538,6 +554,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                             <Select
                               {...field}
                               options={transactionStatusOptions}
+                              isDisabled={isStatusDisabled}
                               onChange={statusOption => {
                                 field.onChange(statusOption)
                               }}
@@ -551,7 +568,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                 )}
               </Grid>
 
-              <TransactionAmountForm formReturn={formReturn} />
+              <TransactionAmountForm formReturn={formReturn} transaction={transaction} />
             </Box>
           ) : (
             <Box flex={1}>

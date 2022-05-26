@@ -14,99 +14,98 @@ import 'components/translation/i18n'
 import { Account } from 'types/account.types'
 import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import PcDetails from 'features/project-coordinator/vendor/details'
+import { AuditLogs, AUDIT_LOGS_COLUMNS } from 'features/vendor-details/audit-logs'
+import { useTableColumnSettings } from 'utils/table-column-settings'
+import { TableNames } from 'types/table-column.types'
+import { Card } from 'features/login-form-centered/Card'
 
-const profileTabStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  fontStyle: 'normal',
-  color: 'gray.600',
-  _hover: {
-    backgroundColor: 'gray.200',
-  },
+type Props = {
+  vendorPropfileData?: VendorProfile
+  onClose?: () => void
+  vendorModalType?: string
 }
 
-const VendorProfilePage: React.FC = props => {
+export const VendorProfileTabs: React.FC<Props> = props => {
+  const vendorProfileData = props.vendorPropfileData
+  const VendorType = props.vendorModalType
   const { t } = useTranslation()
-  const { vendorId } = useUserProfile() as Account
-  const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId)
   const [tabIndex, setTabIndex] = useState(0)
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
+  const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.vendors)
+
+  return (
+    <Card p="18px" px="0">
+      <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
+        <TabList>
+          <Tab>{t('details')}</Tab>
+          <Tab data-testid="documents">{t('documents')}</Tab>
+          <Tab data-testid="license">{t('License')}</Tab>
+          <Tab data-testid="tradetab">{t('trade')}</Tab>
+          <Tab data-testid="markettab">{t('market')}</Tab>
+          {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+        </TabList>
+
+        <TabPanels mt="31px">
+          <TabPanel p="0px">
+            {vendorProfileData ? (
+              <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+            ) : (
+              <PcDetails VendorType={VendorType!} onClose={props.onClose} />
+            )}
+          </TabPanel>
+          <TabPanel p="0px">
+            <Box h="100%" w="100%">
+              <DocumentsCard
+                VendorType={VendorType!}
+                setNextTab={setNextTab}
+                vendor={vendorProfileData as VendorProfile}
+                onClose={props.onClose}
+              />
+            </Box>
+          </TabPanel>
+          <TabPanel p="0px">
+            <Box h="100%" w="100%">
+              <License setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
+            </Box>
+          </TabPanel>
+          <TabPanel p="0px">
+            <TradeList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          </TabPanel>
+          <TabPanel p="0px">
+            <MarketList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          </TabPanel>
+          <TabPanel p="0px">
+            <Box overflow="auto">
+              <AuditLogs
+                isLoading={isLoading}
+                onClose={props.onClose}
+                resizeElementRef={resizeElementRef}
+                projectColumns={tableColumns}
+              />
+            </Box>
+          </TabPanel>
+          <TabPanel p="0px"></TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Card>
+  )
+}
+
+const VendorProfilePage: React.FC<Props> = props => {
+  // const [buttonIndex,setButtonIndex] = useState(0)
+  const { vendorId } = useUserProfile() as Account
+  const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId)
 
   return (
     <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (
-        <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)}>
-          <TabList>
-            <Tab
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-              _focus={{ border: 'none' }}
-              sx={profileTabStyle}
-            >
-              {t('details')}
-            </Tab>
-            <Tab
-              data-testid="documents"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-              _focus={{ border: 'none' }}
-              sx={profileTabStyle}
-            >
-              {t('documents')}
-            </Tab>
-            <Tab
-              data-testid="license"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-              _focus={{ border: 'none' }}
-              sx={profileTabStyle}
-            >
-              {t('License')}
-            </Tab>
-            <Tab
-              data-testid="tradetab"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-              _focus={{ border: 'none' }}
-              sx={profileTabStyle}
-            >
-              {t('trade')}
-            </Tab>
-            <Tab
-              data-testid="markettab"
-              _selected={{ color: 'white', bg: '#4E87F8', fontWeight: 600, _hover: { backgroundColor: '#4E87F8' } }}
-              _focus={{ border: 'none' }}
-              sx={profileTabStyle}
-            >
-              {t('market')}
-            </Tab>
-          </TabList>
-
-          <TabPanels mt="31px">
-            <TabPanel p="0px">
-              <Details vendorProfileData={vendorProfileData as VendorProfile} />
-            </TabPanel>
-            <TabPanel p="0px">
-              <Box h="100%" w="100%">
-                <DocumentsCard setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} />
-              </Box>
-            </TabPanel>
-            <TabPanel p="0px">
-              <Box h="100%" w="100%">
-                <License setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} />
-              </Box>
-            </TabPanel>
-            <TabPanel p="0px">
-              <TradeList vendorProfileData={vendorProfileData as VendorProfile} />
-            </TabPanel>
-            <TabPanel p="0px">
-              <MarketList vendorProfileData={vendorProfileData as VendorProfile} />
-            </TabPanel>
-            <TabPanel p="0px"></TabPanel>
-            <TabPanel p="0px"></TabPanel>
-          </TabPanels>
-        </Tabs>
+        <VendorProfileTabs vendorPropfileData={vendorProfileData} onClose={props.onClose} />
       )}
     </Stack>
   )

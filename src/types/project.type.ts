@@ -42,6 +42,7 @@ export type ProjectType = {
   profitTotal: number
   projectClosedDate: string | null
   projectManager: string
+  projectCoordinator: string
   projectManagerId: number
   projectManagerPhoneNumber: string
   projectRelatedCost: number
@@ -151,4 +152,11 @@ export type ProjectAlertType = {
   attribute: string
   category: string
   dateCreated: string
+}
+
+export type verifyAddressValues = {
+  streetAddress?: string
+  city?: string
+  state?: string
+  zipCode?: any
 }

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -23,23 +22,20 @@ import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiCaretDown, BiCaretUp, BiEditAlt, BiTrash } from 'react-icons/bi'
-import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
-import { useDocuments } from 'utils/vendor-projects'
+import { createForm, getHelpText } from 'utils/lien-waiver'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose, onProjectTabChange } = props
-  const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
+  const { lienWaiverData, onClose, onProjectTabChange, documentsData } = props
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
-  const { projectId } = useParams<'projectId'>()
-  const { documents: documentsData = [] } = useDocuments({
-    projectId,
-  })
+
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -80,7 +76,6 @@ export const LienWaiverTab: React.FC<any> = props => {
   useEffect(() => {
     if (isSuccess) {
       onProjectTabChange?.(2)
-      onClose()
     }
   }, [isSuccess, onClose])
 
@@ -171,17 +166,14 @@ export const LienWaiverTab: React.FC<any> = props => {
                 {recentLWFile && (
                   <Flex alignItems={'center'}>
                     <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                      Recent LW:
+                      {t('recentLW')}:
                     </FormLabel>
 
                     <Button
-                      fontSize="14px"
-                      fontWeight={500}
-                      bg="white"
-                      color="#4E87F8"
+                      colorScheme="brand"
+                      variant="ghost"
                       float="right"
                       mr={3}
-                      h="48px"
                       onClick={() => downloadFile(recentLWFile.s3Url)}
                     >
                       <Box pos="relative" right="6px"></Box>
@@ -191,20 +183,13 @@ export const LienWaiverTab: React.FC<any> = props => {
                 )}
 
                 <Button
-                  bg="#4E87F8"
+                  colorScheme="brand"
                   disabled={!claimantsSignature || recentLWFile}
-                  color="#FFFFFF"
                   float="right"
-                  _hover={{ bg: 'royalblue' }}
                   onClick={generatePdf}
-                  fontStyle="normal"
-                  fontSize="14px"
-                  fontWeight={600}
-                  h="48px"
-                  w="130px"
                 >
                   <Box pos="relative" right="6px"></Box>
-                  Generate LW
+                  {t('generateLW')}{' '}
                 </Button>
               </Flex>
             </Flex>
@@ -304,29 +289,10 @@ export const LienWaiverTab: React.FC<any> = props => {
         </FormControl>
         <Divider />
         <ModalFooter mt={3}>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            color="gray.700"
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
-            {t('close')}
+          <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
+            {t('cancel')}
           </Button>
-          <Button
-            colorScheme="CustomPrimaryColor"
-            type="submit"
-            _focus={{ outline: 'none' }}
-            fontStyle="normal"
-            fontSize="14px"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
+          <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </ModalFooter>

@@ -71,7 +71,7 @@ describe('Vendor Profile License', () => {
 
   it('Save form after adding a new license', async () => {
     const mockSave = jest.fn()
-    directRender(<LicenseForm vendor={VENDOR_DATA} onSubmit={mockSave} />)
+    directRender(<LicenseForm vendor={VENDOR_DATA as any} onSubmit={mockSave} />)
     await waitFor(() => {
       act(() => {
         fireEvent.click(screen.getByTestId('addLicense'))
