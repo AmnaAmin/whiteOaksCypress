@@ -126,7 +126,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
   }, [watch, watchAllFields])
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-      <Box w="940px">
+      <Box>
         <HStack spacing={24}>
           <Flex minWidth="250px" alignSelf="baseline" mt="8px">
             <Box width="25px" fontSize="20px">
@@ -344,7 +344,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       <Flex
         id="footer"
         w="100%"
-        h="100px"
+        pt="14px"
+        h="50px"
+        mt="40px"
         minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"
