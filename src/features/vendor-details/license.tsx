@@ -57,7 +57,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 })
 
 export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => {
-  const [startDate] = useState(new Date())
+  const [startDate] = useState(null)
   const { t } = useTranslation()
 
   const defaultValues: LicenseFormValues = useMemo(() => {
@@ -104,6 +104,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
     <Box>
       <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
+          _hover={{ bg: '#EBF8FF' }}
           variant="outline"
           ml="13px"
           colorScheme="brand"
@@ -112,7 +113,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             append({
               licenseType: '',
               licenseNumber: '',
-              expiryDate: startDate.toDateString(),
+              expiryDate: startDate,
               expirationFile: null,
             })
           }
@@ -133,7 +134,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                       onClick={() => removeLicense(index)}
                       data-testid={`removeLicense-` + index}
                       cursor="pointer"
-                      boxSize={8}
+                      boxSize={5}
                       mt="6px"
                     />
                   </Center>
@@ -164,7 +165,9 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
+                  variant="reguired-field"
                 />
+
                 <FormDatePicker
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
                   label={t('expiryDate')}
@@ -173,6 +176,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   rules={{ required: 'This is required field' }}
                   style={{ maxW: '215px' }}
                   defaultValue={startDate}
+                  placeholder="mm/dd/yy"
                   testId={`expiryDate-` + index}
                 />
                 <VStack>

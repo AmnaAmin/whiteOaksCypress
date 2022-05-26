@@ -26,7 +26,7 @@ type DatePickerProps = {
   rules?: any
   size?: 'lg' | 'sm'
   style?: any
-  defaultValue?: Date
+  defaultValue?: Date | string | null
   placeholder?: string
   onChange?: (e) => void
   testId?: string
@@ -49,7 +49,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
           <DatePicker
             style={props.style}
             popperContainer={CalendarContainer}
-            selected={new Date(value)}
+            selected={value ? new Date(value) : new Date()}
             value={value || ''}
             onBlur={onBlur}
             onChange={val => {
