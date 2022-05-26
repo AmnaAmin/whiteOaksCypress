@@ -76,40 +76,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const { t } = useTranslation()
-  const [assignedItems, setAssignedItems] = useState(
-    workOrder.assignedItems ?? [
-      {
-        id: '8383',
-        productName: 'Debrish Trash',
-        description: 'Replace Buttons',
-        quantity: '4',
-        price: '350',
-        workOrderId: '77',
-        isCompleted: true,
-        isVerified: true,
-      },
-      {
-        id: '33454',
-        productName: 'Remove Satellite dish',
-        description: 'Remove all cables',
-        quantity: '12',
-        price: '200',
-        workOrderId: '77',
-        isCompleted: true,
-        isVerified: false,
-      },
-      {
-        id: '74746',
-        productName: 'Install Blinders',
-        description: 'Replace Curtains',
-        quantity: '15',
-        price: '400',
-        workOrderId: '77',
-        isCompleted: false,
-        isVerified: false,
-      },
-    ],
-  )
+  const [assignedItems, setAssignedItems] = useState(workOrder.assignedItems ?? [])
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation()
 
   const onMarkCompleted = useCallback(
@@ -150,7 +117,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
           value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
         />
       </SimpleGrid>
-      {assignedItems && (
+      {assignedItems && assignedItems.length > 0 && (
         <>
           <Box pt={6}>
             <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">

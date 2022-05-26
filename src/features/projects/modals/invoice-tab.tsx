@@ -27,7 +27,6 @@ import { jsPDF } from 'jspdf'
 import { createInvoice } from 'utils/vendor-projects'
 import { downloadFile } from 'utils/file-utils'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { useToast } from '@chakra-ui/toast'
 import { useTranslation } from 'react-i18next'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
@@ -51,10 +50,8 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData }) => {
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
-  const [documents, setDocuments] = useState<any[]>([])
   const { mutate: updateInvoice } = useUpdateWorkOrderMutation()
   const { t } = useTranslation()
-  const toast = useToast()
   const [items, setItems] = useState(
     transactions && transactions.length > 0 ? transactions.filter(co => co.parentWorkOrderId === workOrder.id) : [],
   )
@@ -70,7 +67,6 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -95,32 +91,20 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     let form = new jsPDF()
     form = await createInvoice(form, workOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
-    const pdfBlob = form.output('bloburi')
-    setRecentInvoice({
-      s3Url: pdfBlob,
-      fileType: 'Invoice.pdf',
-    })
-    setDocuments([
-      ...documentsData,
-      {
-        documentType: 48,
-        fileObject: pdfUri.split(',')[1],
-        fileObjectContentType: 'application/pdf',
-        fileType: 'Invoice.pdf',
-      },
-    ])
-    toast({
-      title: 'Invoice',
-      description: 'New invoice generated',
-      status: 'info',
-      duration: 9000,
-      isClosable: true,
+
+    updateInvoice({
+      ...workOrder,
+      documents: [
+        ...documentsData,
+        {
+          documentType: 48,
+          fileObject: pdfUri.split(',')[1],
+          fileObjectContentType: 'application/pdf',
+          fileType: 'Invoice.pdf',
+        },
+      ],
     })
   }, [])
-
-  const onSubmit = () => {
-    updateInvoice({ ...workOrder, documents })
-  }
 
   const DeleteItems = Id => {
     const deleteValue = items.filter((value, id) => id !== Id)
@@ -159,7 +143,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
         <Box>
           <Box h="400px" overflow="auto">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form>
               <Table border="1px solid #E2E8F0" variant="simple" size="md">
                 <Thead>
                   <Tr>
@@ -314,9 +298,6 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         <HStack justifyContent="end">
           <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
             {t('cancel')}
-          </Button>
-          <Button colorScheme="brand" onClick={onSubmit}>
-            {t('save')}
           </Button>
         </HStack>
       </Flex>
