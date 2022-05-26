@@ -29,6 +29,7 @@ const CalenderCard = props => {
 }
 
 const CheckboxStructure = ({ checked, id, onChange }) => {
+  const { t } = useTranslation()
   return (
     <Box>
       <Checkbox
@@ -49,7 +50,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
           onChange(e, id)
         }}
       >
-        {'Completed'}
+        {t('completed')}
       </Checkbox>
     </Box>
   )
@@ -155,12 +156,12 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
           <Box pt={6}>
             <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
               <Text fontSize="16px" fontWeight={500} color="gray.600">
-                Assigned Line Items
+                {t('assignedLineItems')}
               </Text>
 
               <HStack>
                 <Button leftIcon={<BiDownload />} variant="outline" colorScheme="brand" size="md" onClick={downloadPdf}>
-                  Download as PDF
+                  {t('downloadPDF')}
                 </Button>
                 <Checkbox
                   size="md"
@@ -173,7 +174,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                   })}
                 >
                   <FormLabel variant="strong-label" size="md" mt="7px">
-                    Mark all Completed
+                    {t('markCompleted')}
                   </FormLabel>
                 </Checkbox>
               </HStack>
@@ -184,11 +185,11 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
               <Thead>
                 <Tr>
                   <Td>SKU</Td>
-                  <Td>Product Name</Td>
-                  <Td>Details</Td>
-                  <Td>Quantity</Td>
-                  <Td>Price</Td>
-                  <Td>Status</Td>
+                  <Td>{t('productName')}</Td>
+                  <Td>{t('details')}</Td>
+                  <Td>{t('quantity')}</Td>
+                  <Td>{t('price')}</Td>
+                  <Td>{t('status')}</Td>
                   {/*<Td>Images</Td>*/}
                 </Tr>
               </Thead>

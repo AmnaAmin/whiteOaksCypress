@@ -76,7 +76,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                   {vendorEntity?.score}
                 </Text>
                 <Text fontSize="20px" px="1">
-                  out of 5
+                  {t('outOf')} 5
                 </Text>
               </Flex>
             </Flex>
