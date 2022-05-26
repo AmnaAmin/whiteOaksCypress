@@ -265,7 +265,7 @@ i18n.use(initReactI18next).init({
         severity: 'Severity',
         title: 'Title',
         descriptions: 'Description (1000) Characters',
-        uploadFile: 'Upload File',
+        fileUpload: 'File Upload ',
 
         // Header
         help: 'Help',
@@ -527,7 +527,7 @@ i18n.use(initReactI18next).init({
         severity: 'Gravedad',
         title: 'Título',
         descriptions: 'Descripción (1000) Caracteres',
-        uploadFile: 'Subir archivo',
+        fileUpload: 'Subir archivo',
         // Header
         help: 'Ayudar',
         support: 'Apoyo',
