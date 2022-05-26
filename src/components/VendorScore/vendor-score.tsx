@@ -70,12 +70,14 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               justifyContent="space-between"
               w="100%"
             >
-              <Text>{t('vendorScore')}</Text>
+              <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal">
+                {t('vendorScore')}
+              </Text>
               <Flex alignItems="center">
-                <Text fontSize="20px" data-testid="vendor-score">
+                <Text fontSize="18px" fontWeight={500} color="gray.600" data-testid="vendor-score">
                   {vendorEntity?.score}
                 </Text>
-                <Text fontSize="20px" px="1">
+                <Text fontSize="18px" fontWeight={500} color="gray.600" px="1">
                   out of 5
                 </Text>
               </Flex>
