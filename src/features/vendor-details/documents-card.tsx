@@ -354,7 +354,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       <Flex
         id="footer"
         w="100%"
-        h="100px"
+        pt="14px"
+        h="50px"
+        mt="40px"
         minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"

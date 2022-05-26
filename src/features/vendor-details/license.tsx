@@ -122,7 +122,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" h="500px" spacing="15px" ml="8px" overflow="auto">
+        <VStack align="start" h="450px" spacing="15px" ml="8px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
               <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -199,7 +199,8 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           id="footer"
           mt="20px"
           w="100%"
-          h="100px"
+          pt="12px"
+          h="70px"
           alignItems="center"
           justifyContent="end"
           borderTop="2px solid #E2E8F0"

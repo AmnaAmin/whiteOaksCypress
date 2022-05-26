@@ -27,8 +27,6 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 // Define a default UI for filtering
 
 function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
-  const count = preFilteredRows.length
-
   return (
     <Input
       bg="white"
@@ -38,7 +36,6 @@ function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter
       onChange={e => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
-      // placeholder={`Search ${count} records...`}
       borderRadius="4px"
       height="24px"
       paddingX={2}

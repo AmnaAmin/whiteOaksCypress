@@ -1,4 +1,4 @@
-import { VStack, Table, Box, Thead, Tr, Td, Tbody } from '@chakra-ui/react'
+import { Table, Box, Thead, Tr, Td, Tbody } from '@chakra-ui/react'
 
 export default {
   title: 'UI/Table',
