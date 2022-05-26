@@ -52,19 +52,16 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
   return (
     <Box>
       <HStack alignItems="start">
-        {icon && <Icon as={icon} boxSize={7} color="#718096" mr={2} />}
+        {icon && <Icon as={icon} boxSize={7} color="#718096" mr={3} />}
         <VStack spacing={1} alignItems="start">
           <Text color="#4A5568" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
             {title}
           </Text>
-          <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal" pb="20px">
+          <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal">
             {value}
           </Text>
         </VStack>
       </HStack>
-      <Box w="95%">
-        <Divider />
-      </Box>
     </Box>
   )
 }
@@ -100,7 +97,7 @@ export const Details: React.FC<{
 
   return (
     <Flex h="100%" direction="column">
-      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="100%" mb="30px">
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="30px">
         <GridItem>
           <FieldInfoCard
             testid="businessName"
@@ -131,7 +128,9 @@ export const Details: React.FC<{
           />
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="100%" mb="40px">
+      <Divider border="2px solid" borderColor="gray.200" mb="27px" />
+
+      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="40px">
         <GridItem>
           <FieldInfoCard
             testid="streetAddress"
@@ -215,6 +214,32 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
 
               <Box mb="22px">
                 <Stack direction="row" spacing={4}>
+                  {/* Primary Email => Input */}
+
+                  <FormControl isInvalid={!!errors.primaryEmail} w="215px">
+                    <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
+                    <Input
+                      variant="reguired-field"
+                      {...register('primaryEmail', {
+                        required: 'This is required',
+                      })}
+                      id="primaryEmail"
+                      data-testid="primaryEmail"
+                      type="text"
+                    />
+                    <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+                  </FormControl>
+
+                  <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
+                    <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
+                    <Input {...register('secondaryEmail')} id="secondaryEmail" type="text" />
+                    <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Box>
+
+              <Box mb="22px">
+                <Stack direction="row" spacing={4}>
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
                     <Input
@@ -249,6 +274,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                           <Input
                             {...field}
                             id="SecondaryNo"
+                            variant="reguired-field"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
                             type="text"
@@ -281,35 +307,17 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                   </FormControl>
                 </Stack>
               </Box>
-
-              <Box mb="22px">
-                <Stack direction="row" spacing={4}>
-                  {/* Primary Email => Input */}
-
-                  <FormControl isInvalid={!!errors.primaryEmail} w="215px">
-                    <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
-                    <Input
-                      variant="reguired-field"
-                      {...register('primaryEmail', {
-                        required: 'This is required',
-                      })}
-                      id="primaryEmail"
-                      data-testid="primaryEmail"
-                      type="text"
-                    />
-                    <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
-                  </FormControl>
-
-                  <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
-                    <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
-                    <Input {...register('secondaryEmail')} id="secondaryEmail" type="text" />
-                    <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
-                  </FormControl>
-                </Stack>
-              </Box>
             </Box>
 
-            <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="30px">
+            <Flex
+              pt="9px"
+              w="100%"
+              h="70px"
+              alignItems="center"
+              justifyContent="end"
+              borderTop="2px solid #E2E8F0"
+              mt="40px"
+            >
               {onClose && (
                 <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
                   Cancel

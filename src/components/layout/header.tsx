@@ -23,6 +23,7 @@ import { useAuth } from 'utils/auth-context'
 import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
+import { useTranslation } from 'react-i18next'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -64,6 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
   // const [showNotification, setShowNotification] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
@@ -124,18 +126,26 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               </MenuButton>
               <MenuList minWidth="279px">
                 <MenuItem>
-                  <RouterLink to="/settings">Settings</RouterLink>
+                  <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
                 <MenuItem>
-                  <RouterLink to="/password">Password</RouterLink>
+                  <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
                 <MenuItem>
-                  <Link target="_blank" href="https://13.212.88.107/" title="help">
-                    Help
+                  <Link
+                    color="gray.600"
+                    fontWeight={400}
+                    fontSize="14px"
+                    target="_blank"
+                    href="https://13.212.88.107/"
+                    title="help"
+                    _hover={{ textDecorationLine: 'none' }}
+                  >
+                    {t('help')}
                   </Link>
                 </MenuItem>
                 <MenuItem>
-                  <RouterLink to="/support">Support</RouterLink>
+                  <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
                 <MenuItem>
                   <Box
@@ -147,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                     color="#4A5568"
                     width="100%"
                   >
-                    Signout
+                    {t('signOut')}
                   </Box>
                 </MenuItem>
               </MenuList>

@@ -66,7 +66,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     await waitForLoadingToFinish()
 
     expect(await screen.findByText(`CO-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
-    expect(screen.getByText('3000')).toBeInTheDocument()
+    expect(screen.getByText('$3,000')).toBeInTheDocument()
   })
 
   // We should resume this test case After Draw flow Lien Waiver support added
@@ -137,7 +137,7 @@ describe('Porject Details: Transaction tab test cases', () => {
     // await waitForLoadingToFinish()
 
     // expect(await screen.findByText(`DR-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
-    // expect(screen.getByText('-400')).toBeInTheDocument()
+    // expect(screen.getByText('-$400')).toBeInTheDocument()
   })
 
   test('New transaction form validation should work properly', async () => {
@@ -197,6 +197,6 @@ describe('Porject Details: Transaction tab test cases', () => {
     // Chakra UI toast message rendered twice in DOM, that's why we are going to assert like this.
     expect((await screen.findAllByText('Transaction has been updated successfully.')).length).toBeGreaterThan(0)
 
-    expect(await screen.findByText('2980')).toBeInTheDocument()
+    expect(await screen.findByText('$2,980')).toBeInTheDocument()
   })
 })

@@ -40,10 +40,12 @@ type LienWaiverProps = {
 }
 
 export const LienWaiverAlert = () => {
+  const { t } = useTranslation()
+
   return (
     <Alert status="info" variant="custom" size="sm">
       <AlertIcon />
-      <AlertDescription>Lien Waiver is required for Draw Transaction.</AlertDescription>
+      <AlertDescription>{t('LWrequired')}</AlertDescription>
       <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
     </Alert>
   )
@@ -138,7 +140,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
             {recentLWFile && (
               <Flex alignItems={'center'} mr="2">
                 <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                  Recent LW:
+                  {'recentLW'}:
                 </FormLabel>
 
                 <Button
@@ -163,7 +165,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               onClick={generatePdf}
             >
               <Box pos="relative" right="6px"></Box>
-              Generate LW
+              {'generateLW'}
             </Button>
           </Flex>
         </Flex>

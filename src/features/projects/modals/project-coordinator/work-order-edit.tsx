@@ -148,7 +148,7 @@ const WorkOrderDetails = ({
                     }}
                     sx={TabStyle}
                   >
-                    {t('Invoice')}
+                    {t('invoice')}
                   </Tab>
                   <Tab
                     _focus={{ border: 'none' }}
@@ -160,7 +160,7 @@ const WorkOrderDetails = ({
                     }}
                     sx={TabStyle}
                   >
-                    {t('Payments')}
+                    {t('payments')}
                   </Tab>
                   <Tab
                     _focus={{ border: 'none' }}
@@ -173,7 +173,7 @@ const WorkOrderDetails = ({
                     }}
                     sx={TabStyle}
                   >
-                    {t('Notes')}
+                    {t('notes')}
                   </Tab>
                 </Flex>
               </TabList>
