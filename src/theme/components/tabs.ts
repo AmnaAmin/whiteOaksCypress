@@ -20,7 +20,7 @@ const tabsVariants = {
               fontWeight: 600,
               _hover: {
                 borderBottomColor: `${props.colorScheme}.500`,
-                bg: `${props.colorScheme}.400`,
+                bg: `#2A61CE`,
               },
             },
           },

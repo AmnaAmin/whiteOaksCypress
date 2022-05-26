@@ -59,6 +59,9 @@ type HeaderProps = {
   toggleMenu?: () => void
 }
 
+const hoverEffect = {
+  _focus: { background: 'blue.50' },
+}
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
@@ -122,19 +125,19 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <UserInfo />
               </MenuButton>
               <MenuList minWidth="279px">
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/settings">Settings</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/password">Password</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/help">help</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <RouterLink to="/support">Support</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <Box
                     onClick={logout}
                     fontSize="14px"

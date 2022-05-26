@@ -232,7 +232,7 @@ const chakraComponents = {
           fontWeight: 400,
           fontSize: '14px',
           textAlign: 'start',
-          bg: isFocused ? item._focus.bg : 'transparent',
+          bg: isFocused ? 'blue.50' : 'white',
           ...(isDisabled && item._disabled),
         }}
         ref={innerRef}
