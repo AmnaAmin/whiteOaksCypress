@@ -83,8 +83,8 @@ export const Details: React.FC<{
       updateVendorProfileDetails(payload, {
         onSuccess() {
           toast({
-            title: 'Update Vendor Profile Details',
-            description: 'Vendor profile details has been saved successfully.',
+            title: t('updateProfile'),
+            description: t('updateProfileSuccess'),
             status: 'success',
             isClosable: true,
             position: 'top-left',

@@ -246,6 +246,15 @@ i18n.use(initReactI18next).init({
         licenseNumber: 'License Number',
         expiryDate: 'Expiry Date',
         fileInput: 'File Input',
+        //Vendor-profile-Success
+        updateDetails: 'Update Vendor Details',
+        updateDetailsSuccess: 'Vendor Details have been updated successfully.',
+        updateProfile: 'Update Vendor Profile Details',
+        updateProfileSuccess: 'Vendor Profile Details have been updated successfully.',
+        updateMarkets: 'Update Vendor Profile Markest',
+        updateMarketsSuccess: 'Vendor profile markets have been saved successfully.',
+        updateTrades: 'Update Vendor Profile Trades',
+        updateTradesSuccess: 'Vendor profile trades have been saved successfully.',
 
         // Settings Page
         settings: 'Settings',
@@ -514,6 +523,15 @@ i18n.use(initReactI18next).init({
         licenseNumber: 'Número de Licencia',
         expiryDate: 'Fecha de Caducidad',
         fileInput: 'Entrada de Archivo',
+        //Vendor-profile-Success
+        updateDetails: 'Actualizar detalles del proveedor',
+        updateDetailsSuccess: 'Los detalles del proveedor se han actualizado con éxito.',
+        updateProfile: 'Actualizar los detalles del perfil del proveedor',
+        updateProfileSuccess: 'Los detalles del perfil del proveedor se han actualizado correctamente.',
+        updateMarkets: 'Actualizar mercados de perfiles de proveedores',
+        updateMarketsSuccess: 'Los mercados de perfiles de proveedores se han guardado correctamente.',
+        updateTrades: 'Actualizar intercambios de perfiles de proveedores',
+        updateTradesSuccess: 'Las transacciones del perfil del proveedor se han guardado correctamente.',
         // Settings Page
         settings: 'Ajustes',
         firstName: 'Primer Nombre',

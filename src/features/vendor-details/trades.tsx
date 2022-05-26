@@ -36,8 +36,8 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
         toast({
-          title: 'Update Vendor Profile Trades',
-          description: 'Vendor profile trades has been saved successfully.',
+          title: t('updateTrades'),
+          description: t('updateTradesSuccess'),
           status: 'success',
           isClosable: true,
         })
