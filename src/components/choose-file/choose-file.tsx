@@ -51,8 +51,8 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
               isTruncated
               color={isError ? 'red' : '#4E87F8'}
               fontSize="14px"
-              p={2}
-              marginLeft={2}
+              pt={2}
+              marginLeft={3}
             >
               {value}
             </Text>
@@ -64,6 +64,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
               position="absolute"
               right="5"
               bg="white"
+              pt={2}
             >
               <BiUpload />
             </Button>
