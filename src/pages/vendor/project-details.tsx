@@ -42,9 +42,9 @@ const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
-  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+  const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
 
-  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
+  const preventNewTransaction = !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
 
   return (
     <>

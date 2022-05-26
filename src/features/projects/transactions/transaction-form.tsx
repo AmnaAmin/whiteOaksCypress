@@ -158,6 +158,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
     register,
     formState: { errors },
     setValue,
+    getValues,
     control,
     reset,
   } = formReturn
@@ -219,7 +220,10 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
 
   const resetExpectedCompletionDateFields = useCallback(
     (againstOption: SelectOption) => {
+      console.log('againstOption', againstOption)
+      console.log(againstOption && againstOption?.value !== AGAINST_DEFAULT_VALUE)
       if (againstOption && againstOption?.value !== AGAINST_DEFAULT_VALUE) {
+        console.log('expecteddate', workOrdersKeyValues?.[againstOption.value].workOrderExpectedCompletionDate)
         const expectedCompletionDate = dateFormat(
           workOrdersKeyValues?.[againstOption.value].workOrderExpectedCompletionDate ?? '',
         )
@@ -244,10 +248,6 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
 
       reset(formValues)
       setSelectedWorkOrderId(`${transaction.sowRelatedWorkOrderId}`)
-    } else if (againstOptions) {
-      if (isVendor) setValue('against', againstOptions?.[0])
-
-      resetExpectedCompletionDateFields(againstOptions?.[0])
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,8 +262,24 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
     isAdmin,
   ])
 
+  const { transactionType } = getValues()
+
+  useEffect(
+    function updateAgainstOption() {
+      if (transaction) return
+
+      if (againstOptions.length === 1 && transactionType) {
+        setValue('against', againstOptions?.[0])
+        resetExpectedCompletionDateFields(againstOptions?.[0])
+      } else if (againstOptions.length > 1) {
+        setValue('against', null)
+      }
+    },
+    [againstOptions, transactionType, transaction],
+  )
+
   const onModalClose = () => {
-    reset()
+    reset(defaultValues)
     onClose()
   }
 
@@ -304,11 +320,11 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                               isDisabled={isUpdateForm}
                               size="md"
                               selectProps={{ isBorderLeft: true }}
-                              onChange={(option: SelectOption) => {
-                                reset({
-                                  ...defaultValues,
-                                  transactionType: option,
-                                })
+                              onChange={async (option: SelectOption) => {
+                                const formValues = { ...defaultValues, transactionType: option }
+
+                                reset(formValues)
+
                                 // resetExpectedCompletionDateFields(getValues('against') as SelectOption)
                               }}
                             />
