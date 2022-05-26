@@ -99,7 +99,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             wrapperStyle={{
               lineHeight: '31px',
               position: 'relative',
-              bottom: 'calc(100% + 50px)',
+              bottom: 'calc(100% + 35px)',
               left: 50,
             }}
             iconType="circle"
