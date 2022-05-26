@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormLabel, HStack, Text } from '@chakra-ui/react'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -158,11 +158,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </Box>
           </Flex>
         </HStack>
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
-        <Box mt={12}>
+        <Box mt={5}>
           <Text sx={labelStyle}>{t('agreementSignedDate')}</Text>
           <HStack alignItems="baseline" spacing={24}>
             <Box h="40px">
@@ -202,13 +202,17 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
-        <Text fontSize="18px" fontWeight={500} color="gray.600" mt={6}>
-          {t('insurances')}
-        </Text>
+        <Flex align="center">
+          <FormLabel mt={2} variant="strong-label" size="lg">
+            Insurances
+          </FormLabel>
+
+          <Divider border="2px solid" />
+        </Flex>
 
         <Box mt={6}>
           <Text sx={labelStyle}>{t('autoInsuranceExpDate')}</Text>
@@ -250,11 +254,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
-        <Box mt={8}>
+        <Box mt={5}>
           <Text sx={labelStyle}>{t('COIGLExpDate')}</Text>
           <HStack alignItems="baseline" spacing={24}>
             <Box>
@@ -295,9 +299,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
         <Box mt={8}>
           <Text sx={labelStyle}>{t('COIWCExpDate')}</Text>
