@@ -73,6 +73,7 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
       )}
     >
       <Button
+        variant="choose-file"
         rounded="none"
         roundedLeft={5}
         fontSize="14px"
