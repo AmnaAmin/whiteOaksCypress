@@ -26,6 +26,7 @@ type DatePickerProps = {
   rules?: any
   size?: 'lg' | 'sm'
   style?: any
+  isRequired?: boolean
   defaultValue?: Date | string | null
   placeholder?: string
   onChange?: (e) => void
@@ -36,7 +37,7 @@ const CalendarContainer = ({ children }) => {
 }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
-  <FormControl {...props.style} size={props.size || 'lg'}>
+  <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
     <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
       {props.label}
     </FormLabel>
@@ -61,6 +62,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
             customInput={
               <DatePickerInput
                 disable={props.disabled}
+                variant={props.isRequired}
                 testId={props.testId}
                 size={props.size || 'lg'}
                 style={props.elementStyle}
@@ -91,6 +93,7 @@ const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<H
       ref={ref}
       data-testid={props.testId}
       disabled={props.disable}
+      variant={props.variant ? 'reguired-field' : 'outline'}
     />
 
     <InputRightElement className="InputLeft" pointerEvents="none" zIndex={1}>

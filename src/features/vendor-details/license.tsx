@@ -146,10 +146,11 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   control={control}
                   options={licenseTypes}
                   rules={{ required: 'This is required field' }}
-                  controlStyle={{ maxW: '215px' }}
+                  controlStyle={{ W: '215px' }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #4E87F8',
+                    w: '215px',
                   }}
                   testId={`licenseType-` + index}
                 />
@@ -161,6 +162,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{
                     bg: 'white',
+                    w: '215px',
                   }}
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
@@ -174,8 +176,13 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   name={`licenses.${index}.expiryDate`}
                   control={control}
                   rules={{ required: 'This is required field' }}
-                  style={{ maxW: '215px' }}
+                  style={{ w: '215px' }}
+                  elementStyle={{
+                    bg: 'white',
+                    w: '215px',
+                  }}
                   defaultValue={startDate}
+                  isRequired={true}
                   placeholder="mm/dd/yy"
                   testId={`expiryDate-` + index}
                 />
