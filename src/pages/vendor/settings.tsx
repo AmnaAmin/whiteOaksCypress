@@ -106,7 +106,7 @@ const Settings = React.forwardRef((props, ref) => {
   return (
     <Card py="0">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box mt="40px" ml="20px" h="63vh">
+        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
           <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
             {t('settings')}
           </Text>
@@ -165,15 +165,7 @@ const Settings = React.forwardRef((props, ref) => {
             />
           </HStack>
         </Box>
-        <Flex
-          id="footer"
-          w="100%"
-          h="100px"
-          mt="100px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
+        <Flex id="footer" w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
