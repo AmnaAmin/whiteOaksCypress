@@ -100,9 +100,9 @@ const CreateATicket = () => {
   }
 
   return (
-    <Card pb="0">
-      <Box mt="40px" ml="20px">
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <Card py="0">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
           <Box>
             <Text fontSize="18px" fontWeight={500} color="gray.600" mb="8">
               {t('createTicket')}
@@ -275,22 +275,20 @@ const CreateATicket = () => {
               }}
             />
           </FormControl>
-
-          <Flex
-            flexDirection="row-reverse"
-            w="100%"
-            h="100px"
-            mt="100px"
-            alignItems="center"
-            justifyContent="end"
-            borderTop="2px solid #E2E8F0"
-          >
-            <Button type="submit" colorScheme="brand">
-              Save
-            </Button>
-          </Flex>
-        </form>
-      </Box>
+        </Box>
+        <Flex
+          flexDirection="row-reverse"
+          w="100%"
+          h="100px"
+          alignItems="center"
+          justifyContent="end"
+          borderTop="2px solid #E2E8F0"
+        >
+          <Button type="submit" colorScheme="brand">
+            Save
+          </Button>
+        </Flex>
+      </form>
     </Card>
   )
 }
