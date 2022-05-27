@@ -100,14 +100,14 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
               lineHeight: '31px',
               position: 'relative',
               bottom: 'calc(100% + 35px)',
-              left: 50,
+              left: '36px',
             }}
             iconType="circle"
             iconSize={10}
             align="right"
             formatter={value => {
               return (
-                <Box display="inline-flex" marginInlineEnd="40px" data-testid={'legend-' + value}>
+                <Box display="inline-flex" marginInlineEnd="30px" data-testid={'legend-' + value}>
                   <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
                     {value}
                   </Box>
