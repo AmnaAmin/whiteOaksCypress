@@ -254,16 +254,14 @@ const CreateATicket = () => {
                     <Box>
                       <ChooseFileField
                         name={field.name}
-                        value={field.value ? field.value?.name : 'Choose File'}
+                        value={field.value ? field.value?.name : t('chooseFile')}
                         isError={!!fieldState.error?.message}
                         onChange={(file: any) => {
                           onFileChange(file)
                           field.onChange(file)
                         }}
                         onClear={() => setValue(field.name, null)}
-                      >
-                        {t('chooseFile')}
-                      </ChooseFileField>
+                      ></ChooseFileField>
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
