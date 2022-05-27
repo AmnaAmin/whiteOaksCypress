@@ -89,7 +89,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             }}
           />
 
-          <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" />
+          <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
 
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Closed" fill="#FB8832" radius={[10, 10, 0, 0]} />

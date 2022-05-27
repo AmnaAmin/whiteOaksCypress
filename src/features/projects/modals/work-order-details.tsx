@@ -98,7 +98,7 @@ const WorkOrderDetails = ({
           )}
         </ModalHeader>
 
-        <ModalCloseButton m={3} _focus={{ outline: 'none' }} />
+        <ModalCloseButton m={3} _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <Divider mb={3} />
         <ModalBody>
