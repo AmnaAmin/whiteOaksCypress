@@ -52,7 +52,7 @@ const SignatureModal = ({
         <ModalHeader color="gray.700" fontWeight={500} fontSize="16px" fontStyle="normal">
           {t('addSignature')}
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         <Divider mb={3} />
         <ModalBody h="50vh" overflow="scroll">
           <Stack w={{ base: '900px', xl: '100%' }} spacing={5}>
