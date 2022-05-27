@@ -182,7 +182,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
         </>
       )}
       <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
+        <Button variant="outline" colorScheme="brand" onClick={onClose}>
           {t('cancel')}
         </Button>
         <Button colorScheme="brand" onClick={saveWorkOrderDetails}>
