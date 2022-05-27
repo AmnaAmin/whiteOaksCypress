@@ -42,7 +42,7 @@ export const Layout: React.FC = props => {
                 <Stack align="start" spacing={3}>
                   {menu?.map(item => (
                     <Box w="201px" key={item.pathTo}>
-                      <SidebarLink pathTo={item.pathTo} title={item.title} icon={<item.Icon />} />
+                      <SidebarLink pathTo={item.pathTo} title={item.title} icon={<item.Icon color={item.color} />} />
                     </Box>
                   ))}
                 </Stack>
