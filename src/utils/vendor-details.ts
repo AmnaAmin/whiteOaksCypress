@@ -13,6 +13,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { convertDateTimeFromServer, customFormat } from './date-time-utils'
+import { useTranslation } from 'react-i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -176,6 +177,7 @@ export const DOCUMENTS_TYPES = {
 export const useSaveVendorDetails = () => {
   const client = useClient()
   const toast = useToast()
+  const { t } = useTranslation()
 
   return useMutation(
     (licenses: any) => {
@@ -187,8 +189,8 @@ export const useSaveVendorDetails = () => {
     {
       onSuccess() {
         toast({
-          title: 'Update Vendor Details',
-          description: 'Vendor Details have been updated successfully.',
+          title: t('updateDetails'),
+          description: t('updateDetailsSuccess'),
           status: 'success',
           duration: 9000,
           isClosable: true,
