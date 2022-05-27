@@ -106,13 +106,12 @@ const VendorProfilePassword = () => {
 
   return (
     <Card py="0">
-      <Stack mt="40px" ml="20px" boxSizing="border-box">
-        <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
-          {/* Password for [vendor@devtek.ai] */}
-          {t('password')}
-        </Text>
-
-        <form onSubmit={handleSubmit(onsubmit)}>
+      <form onSubmit={handleSubmit(onsubmit)}>
+        <Stack mt="40px" ml="20px" boxSizing="border-box" h="63vh">
+          <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
+            {/* Password for [vendor@devtek.ai] */}
+            {t('password')}
+          </Text>
           <VStack spacing={7} h="35vh" align="start">
             <FormControl isInvalid={!!errors.currentPassword} w="215px">
               <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
@@ -236,14 +235,14 @@ const VendorProfilePassword = () => {
               </SimpleGrid>
             </FormControl>
           </VStack>
+        </Stack>
 
-          <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="100px">
-            <Button colorScheme="brand" type="submit">
-              {t('save')}
-            </Button>
-          </Flex>
-        </form>
-      </Stack>
+        <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="100px">
+          <Button colorScheme="brand" type="submit">
+            {t('save')}
+          </Button>
+        </Flex>
+      </form>
     </Card>
   )
 }
