@@ -286,7 +286,7 @@ export const LienWaiverTab: React.FC<any> = props => {
               </Button>
             )}
           </HStack>
-          <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
+          <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
           <Button colorScheme="brand" type="submit">

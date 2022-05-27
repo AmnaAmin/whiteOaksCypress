@@ -86,7 +86,7 @@ export const NotesTab = props => {
 
         <Flex mt={5} borderTop="1px solid #E2E8F0" h="92px" justifyContent="end" alignItems="center" pr={3}>
           {onClose && (
-            <Button colorScheme="brand" onClick={onClose}>
+            <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>
           )}
