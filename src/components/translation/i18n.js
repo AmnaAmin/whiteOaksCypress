@@ -53,6 +53,12 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
 
+        //  Projects - Table Setting Columns
+        projectTypeLabel: 'Type',
+        vendorWOStatusValue: 'WO Status',
+        pastDueWorkorders: 'Past Due WO',
+        vendorWOExpectedPaymentDate: 'Expected Payment Date',
+
         // Projects-Transactions
         updateTransaction: 'Update Transaction',
         newTransaction: 'New Transaction',
@@ -334,6 +340,13 @@ i18n.use(initReactI18next).init({
         region: 'Región',
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
+
+        //  Projects - Table Setting Columns
+        projectTypeLabel: 'Escribe',
+        vendorWOStatusValue: 'Estado WO',
+        pastDueWorkorders: 'Vencido WO',
+        vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
+
         // Project-Details
         status: 'Estado',
 
