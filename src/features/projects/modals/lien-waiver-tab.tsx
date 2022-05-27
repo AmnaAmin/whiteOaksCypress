@@ -21,11 +21,10 @@ import jsPdf from 'jspdf'
 import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiEditAlt, BiTrash } from 'react-icons/bi'
-import { useParams } from 'react-router-dom'
+import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
-import { useDocuments } from 'utils/vendor-projects'
+import { createForm, getHelpText } from 'utils/lien-waiver'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
@@ -33,13 +32,10 @@ import { Button } from 'components/button/button'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose, onProjectTabChange } = props
-  const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
+  const { lienWaiverData, onClose, onProjectTabChange, documentsData } = props
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
-  const { projectId } = useParams<'projectId'>()
-  const { documents: documentsData = [] } = useDocuments({
-    projectId,
-  })
+
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -74,13 +70,19 @@ export const LienWaiverTab: React.FC<any> = props => {
     }
   }
   const onSubmit = formValues => {
-    const lienWaiverData = parseValuesToPayload(formValues, documents)
-    updateLienWaiver(lienWaiverData)
+    const submitForm = documents => {
+      const lienWaiverData = parseValuesToPayload(formValues, documents)
+      updateLienWaiver(lienWaiverData)
+    }
+    if (recentLWFile) {
+      submitForm(documents)
+      return
+    }
+    generatePdf(submitForm)
   }
   useEffect(() => {
     if (isSuccess) {
       onProjectTabChange?.(2)
-      onClose()
     }
   }, [isSuccess, onClose])
 
@@ -94,31 +96,36 @@ export const LienWaiverTab: React.FC<any> = props => {
     setClaimantsSignature(signatureDoc?.s3Url ?? '')
   }, [documentsData, setValue])
 
-  const generatePdf = useCallback(() => {
-    let form = new jsPdf()
-    const dimention = {
-      width: sigRef?.current?.width,
-      height: sigRef?.current?.height,
-    }
-    convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
-      form = createForm(form, getValues(), dimention, dataUrl)
-      const pdfUri = form.output('datauristring')
-      const pdfBlob = form.output('bloburi')
-      setRecentLWFile({
-        s3Url: pdfBlob,
-        fileType: 'Lien-Waver-Form.pdf',
-      })
-      setDocuments(doc => [
-        ...doc,
-        {
-          documentType: 26,
-          fileObject: pdfUri.split(',')[1],
-          fileObjectContentType: 'application/pdf',
+  const generatePdf = useCallback(
+    onComplete => {
+      let form = new jsPdf()
+      const dimention = {
+        width: sigRef?.current?.width,
+        height: sigRef?.current?.height,
+      }
+      convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
+        form = createForm(form, getValues(), dimention, dataUrl)
+        const pdfUri = form.output('datauristring')
+        const pdfBlob = form.output('bloburi')
+        setRecentLWFile({
+          s3Url: pdfBlob,
           fileType: 'Lien-Waver-Form.pdf',
-        },
-      ])
-    })
-  }, [getValues, claimantsSignature])
+        })
+        const docs = [
+          ...documents,
+          {
+            documentType: 26,
+            fileObject: pdfUri.split(',')[1],
+            fileObjectContentType: 'application/pdf',
+            fileType: 'Lien-Waver-Form.pdf',
+          },
+        ]
+        setDocuments(docs)
+        onComplete(docs)
+      })
+    },
+    [getValues, claimantsSignature],
+  )
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
@@ -140,7 +147,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         documentType: 108,
         fileObject: uri?.split(',')[1],
         fileObjectContentType: 'image/png',
-        fileType: 'Claimants Signature.png',
+        fileType: 'Claimants-Signature.png',
       },
     ])
     setValue('claimantsSignature', uri)
@@ -167,36 +174,6 @@ export const LienWaiverTab: React.FC<any> = props => {
               <Box flex="4" minW="59em">
                 <HelpText>{getHelpText()}</HelpText>
               </Box>
-              <Flex pos="absolute" top={0} right={0} flex="1">
-                {recentLWFile && (
-                  <Flex alignItems={'center'}>
-                    <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                      Recent LW:
-                    </FormLabel>
-
-                    <Button
-                      colorScheme="brand"
-                      variant="ghost"
-                      float="right"
-                      mr={3}
-                      onClick={() => downloadFile(recentLWFile.s3Url)}
-                    >
-                      <Box pos="relative" right="6px"></Box>
-                      {recentLWFile.fileType}
-                    </Button>
-                  </Flex>
-                )}
-
-                <Button
-                  colorScheme="brand"
-                  disabled={!claimantsSignature || recentLWFile}
-                  float="right"
-                  onClick={generatePdf}
-                >
-                  <Box pos="relative" right="6px"></Box>
-                  Generate LW
-                </Button>
-              </Flex>
             </Flex>
             <Box>
               <VStack alignItems="start">
@@ -294,8 +271,23 @@ export const LienWaiverTab: React.FC<any> = props => {
         </FormControl>
         <Divider />
         <ModalFooter mt={3}>
+          <HStack justifyContent="start" w="100%">
+            {recentLWFile && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                mr={3}
+                onClick={() => downloadFile(recentLWFile.s3Url)}
+                leftIcon={<BiDownload />}
+              >
+                <Box pos="relative" right="6px"></Box>
+                {recentLWFile.fileType}
+              </Button>
+            )}
+          </HStack>
           <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
-            {t('close')}
+            {t('cancel')}
           </Button>
           <Button colorScheme="brand" type="submit">
             {t('save')}

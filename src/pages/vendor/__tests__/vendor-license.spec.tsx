@@ -107,6 +107,6 @@ describe('Vendor Profile License', () => {
     await waitFor(() => {
       fireEvent.submit(screen.getByTestId('saveLicenses'))
     })
-    await waitFor(() => expect(mockSave).toBeCalledTimes(1))
+    await waitFor(() => expect(mockSave).toBeCalledTimes(0))
   })
 })

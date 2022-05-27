@@ -1,8 +1,5 @@
 import { Text } from '@chakra-ui/react'
-import { useClient } from 'utils/auth-context'
-import React from 'react'
 import { t } from 'i18next'
-import { useMutation } from 'react-query'
 import { dateFormat } from './date-time-utils'
 
 const headings = {
@@ -146,10 +143,4 @@ export const createForm = (form, values, signatureDimention, imageUrl) => {
   form.text(`${dateOfSignature}: ${values.dateOfSignature ? dateFormat(values.dateOfSignature) : ''}`, 20, o)
 
   return form
-}
-
-export const useLienWaiverMutation = () => {
-  const client = useClient()
-
-  return useMutation(payload => client(`work-orders`, { data: payload, method: 'PUT' }))
 }

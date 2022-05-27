@@ -1,23 +1,12 @@
-import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'gray.600',
-}
-
-const inputTextStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'blackAlpha.500',
-}
+import { Controller, useForm } from 'react-hook-form'
 
 const Contact = () => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -30,23 +19,34 @@ const Contact = () => {
 
   return (
     <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack minH="50vh" spacing={20} mt="7">
-          <HStack spacing={4}>
+      <form onSubmit={handleSubmit(onSubmit)} id="contact">
+        <Stack minH="42vh" spacing={14} mt="7">
+          <HStack spacing="16px">
             <Box h="40px">
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Field Project Manager</FormLabel>
-                <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <FormControl w="215px" isInvalid={errors.projectManager}>
+                <FormLabel variant="strong-label" size="md">
+                  Field Project Manager
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="projectManager"
+                  rules={{ required: 'This is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
               </FormControl>
             </Box>
 
             <Box h="40px">
               <FormControl isInvalid={errors.fpmPhone}>
-                <FormLabel sx={labelStyle} htmlFor="fpmPhone">
+                <FormLabel variant="strong-label" size="md" htmlFor="fpmPhone">
                   FPM Phone
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   placeholder="098-987-2233"
                   id="fpmPhone"
                   {...register('fpmPhone', {
@@ -61,11 +61,10 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel sx={labelStyle} htmlFor="ext">
+                <FormLabel variant="strong-label" size="md" htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="ext"
                   {...register('ext', {
                     required: 'This is required',
@@ -78,21 +77,32 @@ const Contact = () => {
             </Box>
           </HStack>
 
-          <HStack spacing={4}>
+          <HStack spacing="16px">
             <Box h="40px">
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Project Coordinator</FormLabel>
-                <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <FormControl w="215px" isInvalid={errors.projectCoordinator}>
+                <FormLabel variant="strong-label" size="md">
+                  Project Coordinator
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="projectCoordinator"
+                  rules={{ required: 'This is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
               </FormControl>
             </Box>
 
             <Box h="40px">
               <FormControl isInvalid={errors.pcPhone}>
-                <FormLabel sx={labelStyle} htmlFor="pcPhone">
+                <FormLabel variant="strong-label" size="md" htmlFor="pcPhone">
                   PC Phone
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   placeholder="098-987-2233"
                   id="pcPhone"
                   {...register('pcPhone', {
@@ -107,11 +117,10 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel sx={labelStyle} htmlFor="ext">
+                <FormLabel variant="strong-label" size="md" htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="ext"
                   {...register('ext', {
                     required: 'This is required',
@@ -124,14 +133,13 @@ const Contact = () => {
             </Box>
           </HStack>
 
-          <HStack spacing={4}>
+          <HStack spacing="16px">
             <Box h="40px">
               <FormControl isInvalid={errors.superEmailName}>
-                <FormLabel sx={labelStyle} htmlFor="superEmailName">
+                <FormLabel variant="strong-label" size="md" htmlFor="superEmailName">
                   Super Email Name
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="superEmailName"
                   {...register('superEmailName', {
                     required: 'This is required',
@@ -144,11 +152,10 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.superPhone}>
-                <FormLabel sx={labelStyle} htmlFor="superPhone">
+                <FormLabel variant="strong-label" size="md" htmlFor="superPhone">
                   Super Phone
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="superPhone"
                   {...register('superPhone', {
                     required: 'This is required',
@@ -160,11 +167,10 @@ const Contact = () => {
             </Box>
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel sx={labelStyle} htmlFor="ext">
+                <FormLabel variant="strong-label" size="md" htmlFor="ext">
                   Ext
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="ext"
                   {...register('ext', {
                     required: 'This is required',
@@ -177,11 +183,10 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.superEmail}>
-                <FormLabel sx={labelStyle} htmlFor="superEmail">
+                <FormLabel variant="strong-label" size="md" htmlFor="superEmail">
                   Super Email
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="superEmail"
                   {...register('superEmail', {
                     required: 'This is required',
@@ -194,48 +199,24 @@ const Contact = () => {
           </HStack>
 
           <Box h="40px">
-            <FormControl w="215px">
-              <FormLabel sx={labelStyle} htmlFor="client">
+            <FormControl w="215px" isInvalid={errors.client}>
+              <FormLabel variant="strong-label" size="md" htmlFor="client">
                 Client
               </FormLabel>
-              <ReactSelect selectProps={{ isBorderLeft: true }} />
-              <FormErrorMessage></FormErrorMessage>
+              <Controller
+                control={control}
+                name="client"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
             </FormControl>
           </Box>
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
-        {/* 
-        <Stack w="100%">
-          <Box pr="8">
-            <Divider border="1px solid" />
-          </Box>
-          <Box w="100%" minH="70px">
-            <Button
-              mt="8px"
-              mr="7"
-              float={'right'}
-              colorScheme="CustomPrimaryColor"
-              _focus={{ outline: 'none' }}
-              w="130px"
-              h="48px"
-              fontSize="14px"
-              fontStyle="normal"
-              fontWeight={500}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
-        </Stack> */}
       </form>
     </Box>
   )

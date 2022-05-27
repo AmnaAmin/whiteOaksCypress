@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Box, Button, Divider, Flex, HStack, Text } from '@chakra-ui/react'
-import { BiDownload, BiFile } from 'react-icons/bi'
+import { Box, Button, Divider, Flex, FormLabel, HStack, Text } from '@chakra-ui/react'
+import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
@@ -124,45 +124,55 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
+
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
       <Box w="940px">
-        <HStack spacing={24}>
-          <Flex minWidth="250px" alignSelf="baseline" mt="8px">
-            <Box width="25px" fontSize="20px">
-              <BiFile color="#718096" />
-            </Box>
-            <Box fontSize="16px" fontWeight={600}>
-              <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
-              <Text color="gray.500" fontStyle="normal" fontWeight={400} fontSize="14px" data-testid="w9DocumentDate">
-                {documents.w9DocumentDate ? documents.w9DocumentDate : 'mm/dd/yyyy'}
-              </Text>
-            </Box>
-          </Flex>
-          <Flex>
-            <Box pr="30px">
-              <FormFileInput
-                errorMessage={errors.w9Document && errors.w9Document?.message}
-                label={''}
-                name={`w9Document`}
-                register={register}
-                testId="fileInputW9Document"
-                isRequired={documents.w9DocumentUrl ? false : true}
-              >
-                {t('chooseFile')}
-              </FormFileInput>
-            </Box>
-            <Box ml={6} pt={5}>
-              {downloadableDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
-              {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
-            </Box>
-          </Flex>
-        </HStack>
-        <Box w="940px">
-          <Divider border="1px solid " />
-        </Box>
+        <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
 
-        <Box mt={12}>
+        <HStack spacing={24}>
+          <Box>
+            <FormDatePicker
+              disabled={true}
+              errorMessage={errors.w9DocumentDate && errors.w9DocumentDate?.message}
+              label={''}
+              name={`w9DocumentDate`}
+              control={control}
+              placeholder="mm/dd/yyyy"
+              style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+              testId="w9DocumentDate"
+              onChange={e => {
+                if (!changedDateFields.includes('w9DocumentDate')) {
+                  setChangeDateFields([...changedDateFields, 'w9DocumentDate'])
+                }
+              }}
+            />
+          </Box>
+
+          <Box>
+            <FormFileInput
+              errorMessage={errors.w9Document && errors.w9Document?.message}
+              label={''}
+              name={`w9Document`}
+              register={register}
+              testId="fileInputW9Document"
+              isRequired={documents.w9DocumentUrl ? false : true}
+            >
+              {t('chooseFile')}
+            </FormFileInput>
+            {documents.w9DocumentUrl && (
+              <Box>
+                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
+                {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
+              </Box>
+            )}
+          </Box>
+        </HStack>
+        {/* <Box w="940px">
+          <Divider border="1px solid " />
+        </Box> */}
+
+        <Box mt={5}>
           <Text sx={labelStyle}>{t('agreementSignedDate')}</Text>
           <HStack alignItems="baseline" spacing={24}>
             <Box h="40px">
@@ -181,34 +191,38 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 }}
               />
             </Box>
-            <Flex>
-              <Box pr="30px">
-                <FormFileInput
-                  errorMessage={errors.agreement && errors.agreement?.message}
-                  label={''}
-                  name={`agreement`}
-                  register={register}
-                  testId="fileInputAgreement"
-                  isRequired={changedDateFields.includes('agreementSignedDate')}
-                >
-                  {t('chooseFile')}
-                </FormFileInput>
-              </Box>
-              <Box ml={6} pt={5}>
-                {downloadableDocument(documents.agreementUrl, 'Agreement', 'agreementLink')}
-                {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
-              </Box>
-            </Flex>
+            <Box>
+              <FormFileInput
+                errorMessage={errors.agreement && errors.agreement?.message}
+                label={''}
+                name={`agreement`}
+                register={register}
+                testId="fileInputAgreement"
+                isRequired={changedDateFields.includes('agreementSignedDate')}
+              >
+                {t('chooseFile')}
+              </FormFileInput>
+              {documents.agreementUrl && (
+                <Box>
+                  {downloadableDocument(documents.agreementUrl, 'Agreement', 'agreementLink')}
+                  {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
+                </Box>
+              )}
+            </Box>
           </HStack>
         </Box>
 
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
-        <Text fontSize="18px" fontWeight={500} color="gray.600" mt={6}>
-          Insurances
-        </Text>
+        <Flex align="center">
+          <FormLabel mt={2} variant="strong-label" size="lg">
+            {t('insurances')}
+          </FormLabel>
+
+          <Divider border="2px solid" />
+        </Flex>
 
         <Box mt={6}>
           <Text sx={labelStyle}>{t('autoInsuranceExpDate')}</Text>
@@ -229,32 +243,32 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 }}
               />
             </Box>
-            <Flex>
-              <Box pr="30px">
-                <FormFileInput
-                  errorMessage={errors.insurance && errors.insurance?.message}
-                  label={''}
-                  name={`insurance`}
-                  register={register}
-                  testId="fileInputInsurance"
-                  isRequired={changedDateFields.includes('autoInsuranceExpDate')}
-                >
-                  {t('chooseFile')}
-                </FormFileInput>
-              </Box>
-              <Box ml={6} pt={5}>
-                {downloadableDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
-                {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
-              </Box>
-            </Flex>
+            <Box>
+              <FormFileInput
+                errorMessage={errors.insurance && errors.insurance?.message}
+                label={''}
+                name={`insurance`}
+                register={register}
+                testId="fileInputInsurance"
+                isRequired={changedDateFields.includes('autoInsuranceExpDate')}
+              >
+                {t('chooseFile')}
+              </FormFileInput>
+              {documents.insuranceUrl && (
+                <Box>
+                  {downloadableDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
+                  {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
+                </Box>
+              )}
+            </Box>
           </HStack>
         </Box>
 
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
-        <Box mt={8}>
+        <Box mt={5}>
           <Text sx={labelStyle}>{t('COIGLExpDate')}</Text>
           <HStack alignItems="baseline" spacing={24}>
             <Box>
@@ -274,30 +288,30 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
               />
             </Box>
 
-            <Flex w="100%" pr="20px">
-              <Box pr="30px">
-                <FormFileInput
-                  errorMessage={errors.coiGlExpFile && errors.coiGlExpFile?.message}
-                  label={''}
-                  name={`coiGlExpFile`}
-                  register={register}
-                  testId="fileInputCoiGlExp"
-                  isRequired={changedDateFields.includes('COIGLExpDate')}
-                >
-                  {t('chooseFile')}
-                </FormFileInput>
-              </Box>
-              <Box ml={6} pt={5}>
-                {downloadableDocument(documents.insuranceUrl, 'General Liability', 'coiGlExpLink')}
-                {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
-              </Box>
-            </Flex>
+            <Box>
+              <FormFileInput
+                errorMessage={errors.coiGlExpFile && errors.coiGlExpFile?.message}
+                label={''}
+                name={`coiGlExpFile`}
+                register={register}
+                testId="fileInputCoiGlExp"
+                isRequired={changedDateFields.includes('COIGLExpDate')}
+              >
+                {t('chooseFile')}
+              </FormFileInput>
+              {documents.coiGLExpUrl && (
+                <Box>
+                  {downloadableDocument(documents.insuranceUrl, 'General Liability', 'coiGlExpLink')}
+                  {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
+                </Box>
+              )}
+            </Box>
           </HStack>
         </Box>
 
-        <Box w="940px">
+        {/* <Box w="940px">
           <Divider border="1px solid " />
-        </Box>
+        </Box> */}
 
         <Box mt={8}>
           <Text sx={labelStyle}>{t('COIWCExpDate')}</Text>
@@ -319,32 +333,34 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
               />
             </Box>
 
-            <Flex w="100%" pr="20px">
-              <Box pr="30px">
-                <FormFileInput
-                  errorMessage={errors.coiWcExpFile && errors.coiWcExpFile?.message}
-                  label={''}
-                  name={`coiWcExpFile`}
-                  register={register}
-                  testId="fileInputCoiWcExp"
-                  isRequired={changedDateFields.includes('coiWcExpDate')}
-                >
-                  {t('chooseFile')}
-                </FormFileInput>
-              </Box>
-              <Box ml={6} pt={5}>
-                {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
+            <Box>
+              <FormFileInput
+                errorMessage={errors.coiWcExpFile && errors.coiWcExpFile?.message}
+                label={''}
+                name={`coiWcExpFile`}
+                register={register}
+                testId="fileInputCoiWcExp"
+                isRequired={changedDateFields.includes('coiWcExpDate')}
+              >
+                {t('chooseFile')}
+              </FormFileInput>
+              {documents.coiWcExpUrl && (
+                <Box>
+                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
 
-                {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
-              </Box>
-            </Flex>
+                  {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
+                </Box>
+              )}
+            </Box>
           </HStack>
         </Box>
       </Box>
       <Flex
         id="footer"
         w="100%"
-        h="100px"
+        pt="14px"
+        h="50px"
+        mt="40px"
         minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"

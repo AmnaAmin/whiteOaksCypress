@@ -20,6 +20,8 @@ export const ProjectCard = (props: multitypes) => {
         borderRadius="8px"
         bg="#FFFFFF"
         alignItems="center"
+        transition="0.3s all"
+        cursor="pointer"
         justifyContent="space-between"
         border="1px solid transparent"
         borderTop="4px solid transparent"

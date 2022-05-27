@@ -40,7 +40,7 @@ describe('Vendor Projects Test Cases', () => {
     fireEvent.click(screen.getAllByTestId('project-table-row')[0])
 
     await waitFor(() => {
-      expect(global.window.location.pathname).toEqual(`/project-details/2775`)
+      expect(global.window.location.pathname).toEqual(`/project-details/2962` || 'project-details/2775')
     })
   })
 })

@@ -86,7 +86,7 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
         {props.children}
       </Button>
     </FileUpload>
-    <Box h={7}>
+    <Box mt="10px">
       {downloadableLink(props.downloadableFile)}
       <FormErrorMessage m="0px">{props.errorMessage}</FormErrorMessage>
     </Box>

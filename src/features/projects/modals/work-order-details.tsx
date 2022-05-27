@@ -17,8 +17,6 @@ import {
   Divider,
   HStack,
   Box,
-  Flex,
-  Button,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
@@ -28,22 +26,34 @@ import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
 import { ProjectType } from 'types/project.type'
+import { TransactionType } from 'types/transaction.type'
 import Status from '../status'
+import { WorkOrderNotes } from './work-order-notes'
+import { countInCircle } from 'theme/common-style'
+import { useDocuments } from 'utils/vendor-projects'
+import { useParams } from 'react-router-dom'
 
 const WorkOrderDetails = ({
   workOrder,
   onClose: close,
   onProjectTabChange,
   projectData,
+  transactions,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
   projectData: ProjectType
+  transactions: Array<TransactionType>
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
+  const { projectId } = useParams<'projectId'>()
+  const { documents: documentsData = [] } = useDocuments({
+    projectId,
+  })
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -65,11 +75,11 @@ const WorkOrderDetails = ({
 
       <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
         <ModalHeader h="64px" py={4} display="flex" alignItems="center">
-          {tabIndex === 3 && (
+          {tabIndex === 2 && (
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  Invoice {workOrder?.invoiceNumber ? `#` + workOrder?.invoiceNumber : ''}
+                  WO {workOrder?.id ? `#` + workOrder?.id : ''}
                 </Text>
                 <Text lineHeight="22px" h="22px">
                   {workOrder?.companyName}
@@ -78,7 +88,7 @@ const WorkOrderDetails = ({
             </Box>
           )}
 
-          {tabIndex !== 3 && (
+          {tabIndex !== 2 && (
             <HStack spacing={4}>
               <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
                 {t('editVendorWorkOrder')}
@@ -93,39 +103,39 @@ const WorkOrderDetails = ({
         <Divider mb={3} />
         <ModalBody>
           <Stack spacing={5}>
-            <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-              <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
-                <Flex h="40px">
-                  <Tab>{t('workOrderDetails')}</Tab>
-                  <Tab>{t('lienWaiver')}</Tab>
-
-                  <Tab>{t('Invoice')}</Tab>
-                  <Tab>{t('Payments')}</Tab>
-                </Flex>
-                {tabIndex === 3 && (
-                  <HStack w="100%" justifyContent={'end'} mb={2} alignItems={'end'}>
-                    <Flex mr={1} alignItems="center">
-                      <Text fontSize="14px" fontWeight={500} mr={2}>
-                        Recent INV:
-                      </Text>
-                      <Button variant="ghost" colorScheme="brand">
-                        Invc4.pdf
-                      </Button>
-                    </Flex>
-                    <Button colorScheme="brand">Generate</Button>
-                  </HStack>
-                )}
+            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" size="md">
+              <TabList color="gray.500">
+                <Tab minW={180}>{t('workOrderDetails')}</Tab>
+                <Tab>{t('lienWaiver')}</Tab>
+                <Tab>{t('invoice')}</Tab>
+                <Tab>{t('payments')}</Tab>
+                <Tab>
+                  {t('notes')}
+                  <Box ml="5px" style={countInCircle}>
+                    {notesCount}
+                  </Box>
+                </Tab>
               </TabList>
-
               <TabPanels>
                 <TabPanel p="0px">
-                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
+                  <WorkOrderDetailTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
-                  <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
+                  <LienWaiverTab
+                    documentsData={documentsData}
+                    onProjectTabChange={onProjectTabChange}
+                    lienWaiverData={workOrder}
+                    onClose={onClose}
+                  />
                 </TabPanel>
                 <TabPanel p={0}>
-                  <InvoiceTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                  <InvoiceTab
+                    documentsData={documentsData}
+                    projectData={projectData}
+                    workOrder={workOrder}
+                    transactions={transactions}
+                    onClose={onClose}
+                  />
                 </TabPanel>
                 <TabPanel p="0px">
                   <InvoicingAndPaymentTab
@@ -145,6 +155,9 @@ const WorkOrderDetails = ({
                       datePermitsPulled: workOrder?.datePermitsPulled ?? '',
                     }}
                   />
+                </TabPanel>
+                <TabPanel p="20px">
+                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

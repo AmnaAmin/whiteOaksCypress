@@ -39,7 +39,7 @@ const chakraStyles = {
 
   singleValue: provided => ({
     ...provided,
-    color: '#4A5568',
+    color: '#2D3748',
     fontSize: '16px',
     fontWeight: 400,
   }),
@@ -230,7 +230,7 @@ const chakraComponents = {
           w: '100%',
           color: 'gray.600',
           fontWeight: 400,
-          fontSize: '14px',
+          fontSize: '12px',
           textAlign: 'start',
           bg: isFocused ? 'blue.50' : 'white',
           ...(isDisabled && item._disabled),
