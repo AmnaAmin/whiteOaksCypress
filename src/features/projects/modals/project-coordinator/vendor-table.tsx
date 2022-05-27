@@ -46,7 +46,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
               </HStack>
             </HStack>
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
           </ModalBody>
