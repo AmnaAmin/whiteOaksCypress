@@ -284,7 +284,6 @@ i18n.use(initReactI18next).init({
         title: 'Title',
         descriptions: 'Description (1000) Characters',
         fileUpload: 'File Upload',
-
         // Header
         help: 'Help',
         support: 'Support',

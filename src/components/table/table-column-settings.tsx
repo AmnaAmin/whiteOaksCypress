@@ -117,7 +117,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           >
             {t('columnSettings')}
           </ModalHeader>
-          <ModalCloseButton _focus={{ border: 'none' }} />
+          <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
           <ModalBody h="50vh" overflowY="scroll">
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
@@ -145,7 +145,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                 fontSize="1em"
                                 fontWeight={600}
                                 backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                                _hover={{ bg: 'gray.100' }}
+                                _hover={{ bg: 'blue.50' }}
                               >
                                 <HStack spacing="24px">
                                   <BiGridVertical

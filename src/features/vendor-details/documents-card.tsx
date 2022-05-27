@@ -149,7 +149,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             />
           </Box>
 
-          <Box>
+          <Box h="75px">
             <FormFileInput
               errorMessage={errors.w9Document && errors.w9Document?.message}
               label={''}

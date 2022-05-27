@@ -31,6 +31,7 @@ import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
+import { Card } from 'components/card/card'
 
 const CreateATicket = () => {
   const toast = useToast()
@@ -99,14 +100,13 @@ const CreateATicket = () => {
   }
 
   return (
-    <>
-      <Box mt="40px" ml="20px">
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <Card py="0">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
           <Box>
             <Text fontSize="18px" fontWeight={500} color="gray.600" mb="8">
               {t('createTicket')}
             </Text>
-
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
               {/* <FormControl>
                 <FormLabel htmlFor="createdBy" fontSize="16px">
@@ -272,7 +272,6 @@ const CreateATicket = () => {
               }}
             />
           </FormControl>
-
           <Flex
             flexDirection="row-reverse"
             w="100%"
@@ -288,7 +287,6 @@ const CreateATicket = () => {
           </Flex>
         </form>
       </Box>
-    </>
   )
 }
 
