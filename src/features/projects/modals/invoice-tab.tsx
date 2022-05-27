@@ -28,6 +28,7 @@ import { createInvoice } from 'utils/vendor-projects'
 import { downloadFile } from 'utils/file-utils'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useTranslation } from 'react-i18next'
+import { STATUS } from '../status'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -280,7 +281,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       </Box>
       <Flex h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
         <HStack justifyContent="start" w="100%">
-          {recentInvoice && (
+          {workOrder?.statusLabel !== STATUS.Cancel && recentInvoice && (
             <Button
               variant="outline"
               colorScheme="brand"
@@ -291,7 +292,14 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               See {'invoice.pdf'}
             </Button>
           )}
-          <Button variant="outline" colorScheme="brand" size="md" leftIcon={<BiSpreadsheet />} onClick={generatePdf}>
+          <Button
+            variant="outline"
+            disabled={workOrder?.statusLabel !== STATUS.Cancel}
+            colorScheme="brand"
+            size="md"
+            leftIcon={<BiSpreadsheet />}
+            onClick={generatePdf}
+          >
             Generate Invoice
           </Button>
         </HStack>
