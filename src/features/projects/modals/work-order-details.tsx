@@ -28,7 +28,7 @@ import { InvoiceTab } from './invoice-tab'
 import { ProjectType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
 import Status from '../status'
-import { NotesTab } from '../../common/notes-tab'
+import { WorkOrderNotes } from './work-order-notes'
 import { countInCircle } from 'theme/common-style'
 import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router-dom'
@@ -49,6 +49,7 @@ const WorkOrderDetails = ({
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [] } = useDocuments({
     projectId,
@@ -102,8 +103,8 @@ const WorkOrderDetails = ({
         <Divider mb={3} />
         <ModalBody>
           <Stack spacing={5}>
-            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" whiteSpace="nowrap">
-              <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
+            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" size="md">
+              <TabList color="gray.500">
                 <Tab minW={180}>{t('workOrderDetails')}</Tab>
                 <Tab>{t('lienWaiver')}</Tab>
                 <Tab>{t('invoice')}</Tab>
@@ -111,7 +112,7 @@ const WorkOrderDetails = ({
                 <Tab>
                   {t('notes')}
                   <Box ml="5px" style={countInCircle}>
-                    2
+                    {notesCount}
                   </Box>
                 </Tab>
               </TabList>
@@ -156,7 +157,7 @@ const WorkOrderDetails = ({
                   />
                 </TabPanel>
                 <TabPanel p="20px">
-                  <NotesTab />
+                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
