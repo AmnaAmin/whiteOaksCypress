@@ -132,7 +132,7 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
     }
 
     return againstOptions
-  }, [transactionType])
+  }, [transactionType, againstOptions])
 }
 
 export const useCalculatePayDateVariance = (control: Control<FormValues, any>) => {
