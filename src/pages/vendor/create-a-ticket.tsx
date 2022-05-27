@@ -31,6 +31,7 @@ import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
+import { Card } from 'components/card/card'
 
 const CreateATicket = () => {
   const toast = useToast()
@@ -99,7 +100,7 @@ const CreateATicket = () => {
   }
 
   return (
-    <>
+    <Card pb="0">
       <Box mt="40px" ml="20px">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box>
@@ -290,7 +291,7 @@ const CreateATicket = () => {
           </Flex>
         </form>
       </Box>
-    </>
+    </Card>
   )
 }
 
