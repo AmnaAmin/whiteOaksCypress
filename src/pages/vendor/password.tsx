@@ -105,7 +105,7 @@ const VendorProfilePassword = () => {
   }
 
   return (
-    <Card pb="0">
+    <Card py="0">
       <Stack mt="40px" ml="20px" boxSizing="border-box">
         <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
           {/* Password for [vendor@devtek.ai] */}

@@ -104,7 +104,7 @@ const Settings = React.forwardRef((props, ref) => {
   )
 
   return (
-    <Card pb="0">
+    <Card py="0">
       <Box mt="40px" ml="20px">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>

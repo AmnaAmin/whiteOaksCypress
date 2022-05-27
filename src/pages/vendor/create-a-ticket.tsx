@@ -100,7 +100,7 @@ const CreateATicket = () => {
   }
 
   return (
-    <Card pb="0">
+    <Card py="0">
       <Box mt="40px" ml="20px">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box>
