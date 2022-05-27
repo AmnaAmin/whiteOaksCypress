@@ -283,7 +283,7 @@ const CreateATicket = () => {
             borderTop="2px solid #E2E8F0"
           >
             <Button type="submit" colorScheme="brand">
-              Save
+              {t('save')}
             </Button>
           </Flex>
         </form>
