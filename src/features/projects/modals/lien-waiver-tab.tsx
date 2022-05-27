@@ -23,7 +23,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText } from 'utils/lien-waiver'
+import { createForm, GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
@@ -172,7 +172,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <VStack align="start" spacing="30px">
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Box flex="4" minW="59em">
-                <HelpText>{getHelpText()}</HelpText>
+                <HelpText>{GetHelpText()}</HelpText>
               </Box>
             </Flex>
             <Box>
@@ -286,7 +286,7 @@ export const LienWaiverTab: React.FC<any> = props => {
               </Button>
             )}
           </HStack>
-          <Button variant="ghost" colorScheme="brand" mr={3} onClick={onClose} border="1px solid">
+          <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
           <Button colorScheme="brand" type="submit">

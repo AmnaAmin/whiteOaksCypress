@@ -37,8 +37,8 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
         toast({
-          title: 'Update Vendor Profile Markets',
-          description: 'Vendor profile markets has been saved successfully.',
+          title: t('updateMarkets'),
+          description: t('updateMarketsSuccess'),
           status: 'success',
           isClosable: true,
           position: 'top-left',

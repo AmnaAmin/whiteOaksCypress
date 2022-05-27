@@ -209,7 +209,7 @@ const InvoicingAndPaymentTab = ({
       </HStack>
       <Divider />
       <ModalFooter pb="15px" pt="15px">
-        <Button colorScheme="brand" onClick={onClose}>
+        <Button variant="outline" colorScheme="brand" onClick={onClose}>
           {t('cancel')}
         </Button>
       </ModalFooter>

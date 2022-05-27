@@ -29,6 +29,7 @@ import { downloadFile } from 'utils/file-utils'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useTranslation } from 'react-i18next'
 import { STATUS } from '../status'
+import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -53,18 +54,29 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { mutate: updateInvoice } = useUpdateWorkOrderMutation()
   const { t } = useTranslation()
-  const [items, setItems] = useState(
-    transactions && transactions.length > 0 ? transactions.filter(co => co.parentWorkOrderId === workOrder.id) : [],
-  )
-  // Sum of all transactions (Change Orders)
-  const subTotal =
-    items.length > 0 &&
-    items.map(it => it.transactionType !== 30 && parseFloat(it.changeOrderAmount))?.reduce((sum, x) => sum + x)
+  const [items, setItems] = useState<Array<TransactionType>>([])
+  const [subTotal, setSubTotal] = useState(0)
+  const [amountPaid, setAmountPaid] = useState(0)
 
-  // Sum of all Draws
-  const amountPaid =
-    items.length > 0 &&
-    items.map(it => it.transactionType === 30 && parseFloat(it.changeOrderAmount))?.reduce((sum, x) => sum + x)
+  useEffect(() => {
+    if (transactions && transactions.length > 0) {
+      const transactionItems = transactions.filter(co => co.parentWorkOrderId === workOrder.id)
+      setItems(transactionItems)
+
+      // Draw Transaction Type = 30
+      const changeOrders = transactionItems.filter(it => it.transactionType !== TransactionTypeValues.draw)
+      const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
+
+      // Sum of all transactions (Change Orders)
+      if (changeOrders && changeOrders.length > 0) {
+        setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
+      }
+      // Sum of all Draws
+      if (drawTransactions && drawTransactions.length > 0) {
+        setAmountPaid(drawTransactions.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
+      }
+    }
+  }, [transactions])
 
   const {
     register,
@@ -148,8 +160,8 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               <Table border="1px solid #E2E8F0" variant="simple" size="md">
                 <Thead>
                   <Tr>
-                    <Td>Item</Td>
-                    <Td>Description</Td>
+                    <Td>{t('item')}</Td>
+                    <Td>{t('description')}</Td>
                     <Td>Total</Td>
                   </Tr>
                 </Thead>
@@ -263,15 +275,15 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
             <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
               <Box>
                 <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>Subtotal:</Text>
+                  <Text>{t('subTotal')}:</Text>
                   <Text>{currencyFormatter(subTotal)}</Text>
                 </HStack>
                 <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>Total Amount Paid:</Text>
+                  <Text>{t('totalAmountPaid')}:</Text>
                   <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
                 </HStack>
                 <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>Balance Due:</Text>
+                  <Text>{t('balanceDue')}</Text>
                   <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
                 </HStack>
               </Box>
@@ -289,7 +301,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               onClick={() => downloadFile(recentInvoice.s3Url)}
               leftIcon={<BiDownload />}
             >
-              See {'invoice.pdf'}
+              {t('see')} {'invoice.pdf'}
             </Button>
           )}
           <Button
@@ -300,11 +312,11 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
             leftIcon={<BiSpreadsheet />}
             onClick={generatePdf}
           >
-            Generate Invoice
+              {t('generateINV')}
           </Button>
         </HStack>
         <HStack justifyContent="end">
-          <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+          <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
         </HStack>

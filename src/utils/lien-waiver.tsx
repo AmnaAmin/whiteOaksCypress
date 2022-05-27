@@ -1,6 +1,7 @@
 import { Text } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { dateFormat } from './date-time-utils'
+import { useTranslation } from 'react-i18next'
 
 const headings = {
   first: t('firstHeading'),
@@ -43,11 +44,14 @@ const signature = {
 const dateOfSignature = 'Date of Signature'
 const claimantsSignature = 'Claimant`s Signature'
 
-export const getHelpText = () => {
+export const GetHelpText = () => {
+  const { t } = useTranslation()
+
   return (
     <>
       <Text fontSize="14px" fontWeight={500} color="gray.600">
-        {headings.first}
+        {t('firstHeading')}
+        {/* {headings.first} */}
       </Text>
       <br />
       <Text fontSize="14px" fontWeight="400" color="gray.500" w="724px" whiteSpace="normal">
@@ -55,7 +59,7 @@ export const getHelpText = () => {
       </Text>
       <br />
       <Text fontSize="14px" fontWeight={500} color="gray.600">
-        {headings.third}
+        {t('thirdHeading')}
       </Text>
       <br />
       <Text fontSize="14px" fontWeight="400" color="gray.500" w="740px" whiteSpace="normal">
