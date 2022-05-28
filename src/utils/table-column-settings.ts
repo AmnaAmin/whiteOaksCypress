@@ -68,7 +68,7 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
           userId: email,
           type: tableName,
         })
-      }) //.sort((a, b) => a.order - b.order)
+      })
     : columns.map((col, index) => {
         return generateSettingColumn({
           field: col.Header as string,
@@ -78,7 +78,6 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
           type: tableName,
         })
       })
-  console.log(settingColumns)
 
   const filteredColumns = columns.filter(col => {
     return !settingColumns?.find(pCol => {
