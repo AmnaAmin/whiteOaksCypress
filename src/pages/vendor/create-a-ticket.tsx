@@ -107,7 +107,6 @@ const CreateATicket = () => {
             <Text fontSize="18px" fontWeight={500} color="gray.600" mb="8">
               {t('createTicket')}
             </Text>
-
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
               {/* <FormControl>
                 <FormLabel htmlFor="createdBy" fontSize="16px">
@@ -273,21 +272,21 @@ const CreateATicket = () => {
               }}
             />
           </FormControl>
-        </Box>
-        <Flex
-          flexDirection="row-reverse"
-          w="100%"
-          h="100px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
-          <Button type="submit" colorScheme="brand">
-            Save
-          </Button>
-        </Flex>
-      </form>
-    </Card>
+          <Flex
+            flexDirection="row-reverse"
+            w="100%"
+            h="100px"
+            mt="100px"
+            alignItems="center"
+            justifyContent="end"
+            borderTop="2px solid #E2E8F0"
+          >
+            <Button type="submit" colorScheme="brand">
+              {t('save')}
+            </Button>
+          </Flex>
+        </form>
+      </Box>
   )
 }
 
