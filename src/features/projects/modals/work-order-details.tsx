@@ -103,7 +103,7 @@ const WorkOrderDetails = ({
         <Divider mb={3} />
         <Stack spacing={5}>
           <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" size="md">
-            <TabList color="gray.500">
+            <TabList color="gray.500" pl="20px">
               <Tab minW={180}>{t('workOrderDetails')}</Tab>
               <Tab>{t('lienWaiver')}</Tab>
               <Tab>{t('invoice')}</Tab>
@@ -155,7 +155,7 @@ const WorkOrderDetails = ({
                   }}
                 />
               </TabPanel>
-              <TabPanel p="20px">
+              <TabPanel>
                 <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
               </TabPanel>
             </TabPanels>

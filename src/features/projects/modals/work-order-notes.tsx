@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { ModalBody } from '@chakra-ui/react'
 import { useNotes, useNoteMutation } from 'utils/work-order'
 import { NotesTab } from '../../common/notes-tab'
 import { useAccountDetails } from 'utils/vendor-details'
@@ -26,7 +27,16 @@ export const WorkOrderNotes: React.FC<any> = props => {
     }
     createNotes(payload)
   }
-  return <NotesTab saveNote={saveNote} notes={notes} onClose={onClose} />
+  return (
+    <NotesTab
+      saveNote={saveNote}
+      notes={notes}
+      onClose={onClose}
+      messageBoxStyle={{ height: '100px' }}
+      chatListStyle={{ height: '250px' }}
+      pageLayoutStyle={{ height: '400px', padding: '25px' }}
+    />
+  )
 }
 
 export default WorkOrderNotes
