@@ -121,7 +121,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         projects?.filter(
           project =>
             project.clientDueDate ===
-            days?.forEach(day => {
+            days?.find(day => {
               if (selectedDay === day.dayName) {
                 return moment.utc(day?.dueDate).format('YYYY-MM-DD')
               } else if (selectedDay === 'All') {
