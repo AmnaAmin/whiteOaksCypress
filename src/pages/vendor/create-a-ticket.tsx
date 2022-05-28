@@ -285,8 +285,9 @@ const CreateATicket = () => {
               {t('save')}
             </Button>
           </Flex>
-        </form>
-      </Box>
+        </Box>
+      </form>
+    </Card>
   )
 }
 
