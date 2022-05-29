@@ -180,6 +180,7 @@ export type ChangeOrderUpdatePayload = {
   approvedBy: string | null
   transactionType: number
   parentWorkOrderId: number | null
+  paymentTerm: string | null
   createdDate1: string | null
   createdBy: string
   modifiedDate1: string | null

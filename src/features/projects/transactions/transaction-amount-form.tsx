@@ -21,8 +21,8 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlineFileText, AiOutlinePlus } from 'react-icons/ai'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
-import { useFieldShowHideDecision, useTotalAmount } from './hooks'
-import { FormValues, TransactionTypeValues } from 'types/transaction.type'
+import { useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
+import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'utils/transactions'
 import { MdOutlineCancel } from 'react-icons/md'
@@ -31,9 +31,13 @@ import { BiDownload } from 'react-icons/bi'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
+  transaction?: ChangeOrderType
 }
 
-export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ formReturn }) => {
+export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
+  formReturn,
+  transaction: changeOrder,
+}) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -70,6 +74,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
   // useOnRefundMaterialCheckboxChange(control, update)
 
   const { isShowRefundMaterialCheckbox } = useFieldShowHideDecision(control)
+  const { isAproved } = useFieldDisabledEnabledDecision(control, changeOrder)
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
@@ -145,6 +150,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             borderColor="#4E87F8"
             color="#4E87F8"
             onClick={addRow}
+            isDisabled={isAproved}
             leftIcon={<AiOutlinePlus color="#4E87F8" />}
           >
             {t('addNewRow')}
@@ -156,9 +162,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
             ml="10px"
             borderColor="#4E87F8"
             color="#4E87F8"
-            disabled={!someChecked}
             leftIcon={<RiDeleteBinLine color="#4E87F8" />}
             onClick={onDeleteConfirmationModalOpen}
+            isDisabled={!someChecked || isAproved}
           >
             {t('deleteRow')}
           </Button>
@@ -178,6 +184,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                     variant="link"
                     _focus={{ outline: 'none' }}
                     isChecked={!!value}
+                    isDisabled={isAproved}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
                       onRefundMaterialCheckboxChange(isChecked)
@@ -230,11 +237,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                   inputRef.current.click()
                 }
               }}
-              leftIcon={<AiOutlineFileText color="#4E87F8" />}
+              leftIcon={<AiOutlineFileText />}
               variant="ghost"
               size="sm"
-              borderColor="#4E87F8"
-              color="#4E87F8"
+              colorScheme="brand"
+              isDisabled={isAproved}
             >
               {t('attachment')}
             </Button>
@@ -251,6 +258,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                   <Checkbox
                     data-testid="all-checkbox"
                     isChecked={allChecked}
+                    isDisabled={isAproved}
                     isIndeterminate={isIndeterminate}
                     onChange={toggleAllCheckboxes}
                   />
@@ -267,7 +275,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
           <Tbody>
             {transactionFields.map((transactionField, index) => {
               return (
-                <Tr key={`field${index}`}>
+                <Tr key={transactionField.id}>
                   {transactionFields?.length > 1 && (
                     <Td px="3">
                       <Controller
@@ -279,6 +287,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                               data-testid={`checkbox-${index}`}
                               key={name}
                               name={name}
+                              isDisabled={isAproved}
                               isChecked={transactionField.checked}
                               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                 transactionField.checked = event.currentTarget.checked
@@ -298,6 +307,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                         size="sm"
                         autoComplete="off"
                         placeholder="description"
+                        isDisabled={isAproved}
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
                         })}
@@ -315,7 +325,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                           required: 'This is required field',
                         }}
                         render={({ field, fieldState }) => {
-                          console.log(field)
                           return (
                             <>
                               <Input
@@ -324,10 +333,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
                                 type="number"
                                 size="sm"
                                 placeholder="amount"
+                                isDisabled={isAproved}
                                 autoComplete="off"
                                 value={field.value}
                                 onChange={event => {
-                                  console.log('on amount change', event.currentTarget.value)
                                   const inputValue = Number(event.currentTarget.value)
                                   const transactionTypeId = getValues('transactionType')?.value
                                   const isRefundMaterialCheckboxChecked = getValues('refundMaterial')
@@ -356,7 +365,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({ fo
       </Box>
       <Flex p="3" flexDirection="row-reverse" borderWidth="0 1px 1px 1px" borderStyle="solid" borderColor="gray.100">
         <Text data-testid="total-amount" color="gray.600" fontSize="14px" fontWeight={500} fontStyle="normal">
-          Total: {totalAmount}
+          {t('total')}: {totalAmount}
         </Text>
       </Flex>
 

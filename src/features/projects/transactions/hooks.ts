@@ -3,9 +3,10 @@ import {
   FormValues,
   ProjectWorkOrder,
   SelectOption,
+  TransactionStatusValues,
   TransactionTypeValues,
 } from 'types/transaction.type'
-import { AGAINST_DEFAULT_VALUE } from 'utils/transactions'
+import { AGAINST_DEFAULT_VALUE, calculatePayDateVariance } from 'utils/transactions'
 import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
@@ -33,6 +34,29 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowRefundMaterialCheckbox,
+  }
+}
+
+export const useFieldRequiredDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
+  const status = useWatch({ name: 'status', control })
+  const isStatusApproved = status?.value === TransactionStatusValues.approved
+
+  return {
+    isPaidDateRequired: isStatusApproved,
+    isInvoicedDateRequired: isStatusApproved,
+  }
+}
+
+export const useFieldDisabledEnabledDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
+  // const { isAdmin } = useUserRolesSelector()
+  const isUpdateForm = !!transaction
+  const isStatusApproved = transaction?.status === TransactionStatusValues.approved
+
+  return {
+    isUpdateForm,
+    isAproved: isStatusApproved,
+    isPaidDateDisabled: !transaction || isStatusApproved,
+    isStatusDisabled: isStatusApproved,
   }
 }
 
@@ -108,5 +132,13 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
     }
 
     return againstOptions
-  }, [transactionType])
+  }, [transactionType, againstOptions])
+}
+
+export const useCalculatePayDateVariance = (control: Control<FormValues, any>) => {
+  const invoicedDate = useWatch({ name: 'invoicedDate', control })
+  const paidDate = useWatch({ name: 'paidDate', control })
+  const paymentTerm = useWatch({ name: 'paymentTerm', control })
+
+  return calculatePayDateVariance(invoicedDate, paidDate, paymentTerm?.value)
 }

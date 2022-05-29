@@ -7,17 +7,18 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
-import { getHelpText, useLienWaiverMutation } from 'utils/lien-waiver'
+import { GetHelpText } from 'utils/lien-waiver'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
-import { dateFormatter } from 'utils/new-work-order'
+import { dateFormatter } from 'utils/date-time-utils'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose } = props
-  const { mutate: updateLienWaiver, isSuccess } = useLienWaiverMutation()
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [] } = useDocuments({
@@ -123,7 +124,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <VStack align="start" spacing="30px">
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Box flex="4" minW="59em">
-                <HelpText>{getHelpText()}</HelpText>
+                <HelpText>{GetHelpText()}</HelpText>
               </Box>
               <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (

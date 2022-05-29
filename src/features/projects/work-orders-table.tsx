@@ -2,21 +2,22 @@ import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { useTransactions } from 'utils/transactions'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import WorkOrderStatus from './work-order-status'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from './modals/work-order-details'
 import { ProjectType } from 'types/project.type'
+import Status from './status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
       _hover={{
-        background: 'gray.100',
+        background: 'gray.50',
       }}
       onClick={e => {
         if (onRowClick) {
@@ -56,9 +57,10 @@ interface PropType {
   projectData: ProjectType
 }
 export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-  const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+  const { transactions = [] } = useTransactions(projectId)
+  const { t } = useTranslation()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
 
@@ -67,7 +69,8 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
       {
         Header: t('WOstatus') as string,
         accessor: 'statusLabel',
-        Cell: ({ value, row }) => <WorkOrderStatus value={value} id={(row.original as any).status} />,
+        //@ts-ignore
+        Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
       },
       {
         Header: t('trade') as string,
@@ -108,6 +111,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
           setSelectedWorkOrder(undefined)
           refetch()
         }}
+        transactions={transactions}
         onProjectTabChange={onTabChange}
       />
       {isLoading && (

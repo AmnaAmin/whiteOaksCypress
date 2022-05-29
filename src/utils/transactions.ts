@@ -16,6 +16,8 @@ import { dateFormat, dateISOFormat, datePickerFormat } from './date-time-utils'
 import { useUserRolesSelector } from './redux-common-selectors'
 import { readFileContent } from './vendor-details'
 import { useMemo } from 'react'
+import addDays from 'date-fns/addDays'
+import differenceInDays from 'date-fns/differenceInDays'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -262,8 +264,10 @@ export const parseChangeOrderAPIPayload = async (
   const againstProjectSOWPayload =
     isAgainstProjectSOWSelected && formValues.transactionType?.value === TransactionTypeValues.changeOrder
       ? {
-          sowRelatedChangeOrderId: formValues.changeOrder?.value,
-          sowRelatedWorkOrderId: `${formValues.workOrder?.value}`,
+          sowRelatedChangeOrderId:
+            formValues.changeOrder?.value === CHANGE_ORDER_DEFAULT_VALUE ? null : `${formValues.changeOrder?.value}`,
+          sowRelatedWorkOrderId:
+            formValues.workOrder?.value === WORK_ORDER_DEFAULT_VALUE ? null : `${formValues.workOrder?.value}`,
           parentWorkOrderId: null,
         }
       : {
@@ -314,15 +318,18 @@ export const parseChangeOrderUpdateAPIPayload = async (
     attachment = formValues.attachment
   }
 
+  const againstProjectSOWSelected = formValues.against?.value === AGAINST_DEFAULT_VALUE
   const againstProjectSOWPayload =
-    formValues.against?.value === AGAINST_DEFAULT_VALUE
+    againstProjectSOWSelected && formValues.transactionType?.value === TransactionTypeValues.changeOrder
       ? {
-          sowRelatedChangeOrderId: formValues.changeOrder?.value,
-          sowRelatedWorkOrderId: `${formValues.against?.value}`,
+          sowRelatedChangeOrderId:
+            formValues.changeOrder?.value === CHANGE_ORDER_DEFAULT_VALUE ? null : `${formValues.changeOrder?.value}`,
+          sowRelatedWorkOrderId:
+            formValues.workOrder?.value === WORK_ORDER_DEFAULT_VALUE ? null : `${formValues.workOrder?.value}`,
           parentWorkOrderId: null,
         }
       : {
-          parentWorkOrderId: formValues.against?.value,
+          parentWorkOrderId: againstProjectSOWSelected ? null : formValues.against?.value,
         }
 
   return {
@@ -339,6 +346,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     modifiedBy: formValues.createdBy as string,
     newExpectedCompletionDate,
     expectedCompletionDate,
+    paymentTerm: formValues.paymentTerm?.value || null,
     clientApprovedDate: dateISOFormat(formValues.invoicedDate as string),
     paidDate: dateISOFormat(formValues.paidDate as string),
     lineItems: formValues.transaction.map(t => ({
@@ -399,6 +407,16 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
   }
 }
 
+type DateType = string | Date | null
+
+export const calculatePayDateVariance = (invoicedDate: DateType, paidDate: DateType, paymentTerm) => {
+  if (!invoicedDate || !paidDate) return ''
+
+  const expectedPaymentDate = addDays(new Date(invoicedDate), Number(paymentTerm))
+
+  return differenceInDays(expectedPaymentDate, new Date(paidDate))?.toString() || ''
+}
+
 export const parseTransactionToFormValues = (
   transaction: ChangeOrderType,
   againstOptions: SelectOption[],
@@ -408,6 +426,11 @@ export const parseTransactionToFormValues = (
   const findOption = (value, options): SelectOption | null => {
     return options.find(option => option.value === value) ?? null
   }
+  const payDateVariance = calculatePayDateVariance(
+    transaction.clientApprovedDate,
+    transaction.paidDate,
+    transaction.paymentTerm,
+  )
 
   return {
     transactionType: {
@@ -432,7 +455,7 @@ export const parseTransactionToFormValues = (
     invoicedDate: datePickerFormat(transaction.clientApprovedDate as string),
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
-    payDateVariance: '',
+    payDateVariance,
     paymentRecieved: null,
     refundMaterial: false,
     transaction:

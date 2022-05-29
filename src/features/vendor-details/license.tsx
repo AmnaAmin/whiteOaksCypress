@@ -57,7 +57,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 })
 
 export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => {
-  const [startDate] = useState(new Date())
+  const [startDate] = useState(null)
   const { t } = useTranslation()
 
   const defaultValues: LicenseFormValues = useMemo(() => {
@@ -104,6 +104,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
     <Box>
       <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
+          _hover={{ bg: '#EBF8FF' }}
           variant="outline"
           ml="13px"
           colorScheme="brand"
@@ -112,7 +113,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             append({
               licenseType: '',
               licenseNumber: '',
-              expiryDate: startDate.toDateString(),
+              expiryDate: startDate,
               expirationFile: null,
             })
           }
@@ -122,7 +123,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" h="500px" spacing="15px" ml="8px" overflow="auto">
+        <VStack align="start" h="450px" spacing="15px" ml="8px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
               <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -133,7 +134,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                       onClick={() => removeLicense(index)}
                       data-testid={`removeLicense-` + index}
                       cursor="pointer"
-                      boxSize={8}
+                      boxSize={5}
                       mt="6px"
                     />
                   </Center>
@@ -145,10 +146,11 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   control={control}
                   options={licenseTypes}
                   rules={{ required: 'This is required field' }}
-                  controlStyle={{ maxW: '215px' }}
+                  controlStyle={{ W: '215px' }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #4E87F8',
+                    w: '215px',
                   }}
                   testId={`licenseType-` + index}
                 />
@@ -160,34 +162,45 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{
                     bg: 'white',
+                    w: '215px',
                   }}
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
+                  variant="reguired-field"
                 />
+
                 <FormDatePicker
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
                   label={t('expiryDate')}
                   name={`licenses.${index}.expiryDate`}
                   control={control}
                   rules={{ required: 'This is required field' }}
-                  style={{ maxW: '215px' }}
+                  style={{ w: '215px' }}
+                  elementStyle={{
+                    bg: 'white',
+                    w: '215px',
+                  }}
                   defaultValue={startDate}
+                  isRequired={true}
+                  placeholder="mm/dd/yy"
                   testId={`expiryDate-` + index}
                 />
                 <VStack>
-                  <FormFileInput
-                    errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
-                    // label={t('fileInput')}
-                    name={`licenses.${index}.expirationFile`}
-                    register={register}
-                    style={{ minW: '20em', mt: '25px' }}
-                    isRequired={true}
-                    downloadableFile={licenseValues?.[index].downloadableFile}
-                    testId={`expirationFile-` + index}
-                  >
-                    {t('chooseFile')}
-                  </FormFileInput>
+                  <Box h="100px">
+                    <FormFileInput
+                      errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
+                      // label={t('fileInput')}
+                      name={`licenses.${index}.expirationFile`}
+                      register={register}
+                      style={{ minW: '20em', mt: '25px' }}
+                      isRequired={true}
+                      downloadableFile={licenseValues?.[index].downloadableFile}
+                      testId={`expirationFile-` + index}
+                    >
+                      {t('chooseFile')}
+                    </FormFileInput>
+                  </Box>
                 </VStack>
               </HStack>
             )
@@ -197,7 +210,8 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           id="footer"
           mt="20px"
           w="100%"
-          h="100px"
+          pt="12px"
+          h="70px"
           alignItems="center"
           justifyContent="end"
           borderTop="2px solid #E2E8F0"

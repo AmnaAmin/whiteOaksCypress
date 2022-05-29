@@ -52,7 +52,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       woaStartDate: '',
       sowOriginalContractAmount: '',
       projectSOW: '',
-      sowLink: '',
+      // sowLink: '',
       streetAddress: '',
       city: '',
       state: '',

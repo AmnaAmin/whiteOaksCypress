@@ -42,28 +42,35 @@ const Dashboard: React.FC = () => {
         w="100%"
         pb="10px"
       >
-        <Card rounded="13px" flex={1} bg="#FDFDFF">
-          <Flex mb="20px" mt="10px">
-            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="17px">
+        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF">
+          <Flex mb="5px" mt="25px">
+            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
             </Text>
           </Flex>
           <Overview vendorId={vendorId} />
         </Card>
 
-        <Card p={0} rounded="13px" flex={1} ml={{ base: 0, xl: '12px' }} mt={{ base: '30px', xl: 0 }} bg="#FDFDFF">
+        <Card
+          p={0}
+          pl={3}
+          rounded="13px"
+          flex={1}
+          ml={{ base: 0, xl: '15px' }}
+          mt={{ base: '30px', xl: 0 }}
+          bg="#FDFDFF"
+        >
           <Flex mb="20px">
             <Text
               mt="25px"
-              ml="22px"
+              ml="25px"
               color="gray.600"
               fontStyle="normal"
               fontWeight={500}
               fontSize="18px"
               lineHeight="28px"
             >
-              {/* {t('paid')} */}
-              WO Paid
+              {t('WOpaid')}
             </Text>
             <Spacer />
             <Box mt="20px" mr="30px" w="140px">

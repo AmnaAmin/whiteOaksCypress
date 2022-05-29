@@ -255,7 +255,7 @@ export const AddPropertyInfo: React.FC<{
             <Controller
               control={control}
               name={`market`}
-              rules={{ required: 'This is required field' }}
+              // rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
                   <Select
