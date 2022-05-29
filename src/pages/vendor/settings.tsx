@@ -5,24 +5,20 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
 import last from 'lodash/last'
-import {
-  readFileContent,
-  useSaveSettings,
-  //  languageOptions,
-  useAccountDetails,
-} from 'utils/vendor-details'
-// import { FormSelect } from 'components/react-hook-form-fields/select'
+import { readFileContent, useSaveSettings, useAccountDetails } from 'utils/vendor-details'
 import { FormInput } from 'components/react-hook-form-fields/input'
-// import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
 import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
 import { Card } from 'components/card/card'
+import { useAuth } from 'utils/auth-context'
 
 const Settings = React.forwardRef((props, ref) => {
-  const { mutate: saveSettings } = useSaveSettings()
+  const { mutate: saveSettings, isSuccess } = useSaveSettings()
+  const { account: accountApi } = useAuth()
+
   const { data: account, refetch } = useAccountDetails()
   const [preview, setPreview] = useState<string | null>(null)
   const [imgFile, setImgFile] = useState<any>(null)
@@ -45,6 +41,11 @@ const Settings = React.forwardRef((props, ref) => {
     const element = document.getElementById('Avatar')
     element?.classList.add('form-file-input')
   }, [refetch])
+
+  useEffect(() => {
+    if (!isSuccess) return
+    accountApi?.()
+  }, [isSuccess])
 
   const {
     register,
@@ -93,12 +94,8 @@ const Settings = React.forwardRef((props, ref) => {
         avatar: fileContents,
       }
       saveSettings(settingsPayload)
-      // setTimeout(() => {
-      //   refetch()
-      // }, 2000) // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
-      // setLanguage(values.language);
+
       i18n.changeLanguage(values.language)
-      console.log('preview', settingsPayload)
     },
     [i18n, refetch, saveSettings, imgFile],
   )
