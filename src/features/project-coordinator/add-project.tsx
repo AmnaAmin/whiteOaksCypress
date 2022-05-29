@@ -125,6 +125,15 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             isClosable: true,
           })
         },
+        onError(error: any) {
+          toast({
+            title: 'Project Details',
+            description: (error.title as string) ?? 'Unable to save project.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          })
+        },
       })
     },
     [saveProjectDetails],
