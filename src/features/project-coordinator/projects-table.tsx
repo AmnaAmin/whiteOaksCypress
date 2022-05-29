@@ -7,6 +7,7 @@ import Status from '../projects/status'
 import { Column } from 'react-table'
 import { t } from 'i18next'
 import moment from 'moment'
+import { datePickerFormat } from 'utils/date-time-utils'
 
 export const PROJECT_COLUMNS = [
   {
@@ -128,13 +129,16 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         projects?.filter(
           project =>
             project.clientDueDate ===
-            days?.forEach(day => {
-              if (selectedDay === day.dayName) {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              } else if (selectedDay === 'All') {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              }
-            })?.dueDate,
+            datePickerFormat(
+              days?.find(day => {
+                if (selectedDay === day.dayName) {
+                  console.log('1', moment.utc(day?.dueDate).format('YYYY-MM-DD'))
+                  return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+                } else if (selectedDay === 'All') {
+                  return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+                }
+              })?.dueDate,
+            ),
         ),
       )
     }
