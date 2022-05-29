@@ -47,8 +47,16 @@ const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote
     </Flex>
   )
 }
+type NotesProps = {
+  notes: Array<any>
+  saveNote: (note) => void
+  onClose?: () => void
+  messageBoxStyle?: any
+  chatListStyle?: any
+  pageLayoutStyle?: any
+}
 
-export const NotesTab = props => {
+export const NotesTab = (props: NotesProps) => {
   const { notes, saveNote, onClose, messageBoxStyle, chatListStyle, pageLayoutStyle } = props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -72,7 +80,7 @@ export const NotesTab = props => {
     <form onSubmit={handleSubmit(Submit)}>
       <ModalBody>
         <Box {...pageLayoutStyle} bg="white" rounded={16}>
-          <Box {...chatListStyle} overflow="auto">
+          <Box h={chatListStyle.height || '300px'} {...chatListStyle} overflow="auto">
             {notes && notes.length > 0 && (
               <Box>
                 {notes.map(note => {
@@ -91,7 +99,12 @@ export const NotesTab = props => {
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 {t('enterNewNote')}
               </FormLabel>
-              <Textarea flexWrap="wrap" maxH={80} resize="none" {...register('message')} />
+              <Textarea
+                flexWrap="wrap"
+                h={messageBoxStyle.height || '200px'}
+                {...messageBoxStyle}
+                {...register('message')}
+              />
             </Box>
           </Flex>
         </Box>

@@ -32,8 +32,8 @@ export const WorkOrderNotes: React.FC<any> = props => {
       saveNote={saveNote}
       notes={notes}
       onClose={onClose}
-      messageBoxStyle={{ height: '100px' }}
-      chatListStyle={{ height: '250px' }}
+      messageBoxStyle={{ height: '120px', resize: 'none' }}
+      chatListStyle={{ height: '200px' }}
       pageLayoutStyle={{ height: '400px', padding: '25px' }}
     />
   )

@@ -75,27 +75,17 @@ const WorkOrderDetails = ({
 
       <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
         <ModalHeader h="64px" py={4} display="flex" alignItems="center">
-          {tabIndex === 2 && (
-            <Box>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
-                <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  WO {workOrder?.id ? `#` + workOrder?.id : ''}
-                </Text>
-                <Text lineHeight="22px" h="22px">
-                  {workOrder?.companyName}
-                </Text>
-              </HStack>
-            </Box>
-          )}
-
-          {tabIndex !== 2 && (
-            <HStack spacing={4}>
-              <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
-                {t('editVendorWorkOrder')}
+          <Box>
+            <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
+              <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
+                WO {workOrder?.id ? `#` + workOrder?.id : ''}
+              </Text>
+              <Text lineHeight="22px" h="22px">
+                {workOrder?.companyName}
               </Text>
               {workOrder?.statusLabel && <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />}
             </HStack>
-          )}
+          </Box>
         </ModalHeader>
 
         <ModalCloseButton m={3} _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
@@ -155,7 +145,7 @@ const WorkOrderDetails = ({
                   }}
                 />
               </TabPanel>
-              <TabPanel>
+              <TabPanel p={0}>
                 <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
               </TabPanel>
             </TabPanels>
