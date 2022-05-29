@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  ModalBody,
   Text,
   Tabs,
   TabList,
@@ -48,7 +47,7 @@ const WorkOrderDetails = ({
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [tabIndex, setTabIndex] = useState(0)
+  // const [tabIndex, setTabIndex] = useState(0)
   const [notesCount, setNotesCount] = useState(0)
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [] } = useDocuments({
@@ -65,7 +64,6 @@ const WorkOrderDetails = ({
       onOpen()
     } else {
       onCloseDisclosure()
-      setTabIndex(0)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 
@@ -78,7 +76,7 @@ const WorkOrderDetails = ({
           <Box>
             <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
               <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
-                WO {workOrder?.id ? `#` + workOrder?.id : ''}
+                WO {workOrder?.id ? workOrder?.id : ''}
               </Text>
               <Text lineHeight="22px" h="22px">
                 {workOrder?.companyName}
@@ -92,7 +90,7 @@ const WorkOrderDetails = ({
 
         <Divider mb={3} />
         <Stack spacing={5}>
-          <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" size="md">
+          <Tabs variant="enclosed" colorScheme="brand" size="md">
             <TabList color="gray.500" pl="20px">
               <Tab minW={180}>{t('workOrderDetails')}</Tab>
               <Tab>{t('lienWaiver')}</Tab>
@@ -106,10 +104,10 @@ const WorkOrderDetails = ({
               </Tab>
             </TabList>
             <TabPanels>
-              <TabPanel p="0px">
+              <TabPanel p={0}>
                 <WorkOrderDetailTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p={0}>
                 <LienWaiverTab
                   documentsData={documentsData}
                   onProjectTabChange={onProjectTabChange}
@@ -126,7 +124,7 @@ const WorkOrderDetails = ({
                   onClose={onClose}
                 />
               </TabPanel>
-              <TabPanel p="0px">
+              <TabPanel p={0}>
                 <InvoicingAndPaymentTab
                   onClose={onClose}
                   invoiceAndPaymentData={{

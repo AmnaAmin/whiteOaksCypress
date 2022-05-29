@@ -1,6 +1,4 @@
-import { Stack, Box, HStack, Text, ModalFooter, Divider, ModalBody, Flex } from '@chakra-ui/react'
-
-import React from 'react'
+import { Box, HStack, Text, ModalFooter, Divider, ModalBody, Flex } from '@chakra-ui/react'
 import { BiDollarCircle, BiFile, BiCalendar } from 'react-icons/bi'
 import InputView from 'components/input-view/input-view'
 import { currencyFormatter } from 'utils/stringFormatters'
@@ -32,9 +30,9 @@ const InvoicingAndPaymentTab = ({
 }) => {
   const { t } = useTranslation()
   return (
-    <Stack>
+    <Box>
       <ModalBody h="400px">
-        <HStack mt={30} spacing="10px" justifyContent={'center'}>
+        <HStack pt="30px" spacing="10px" justifyContent={'center'}>
           <Box w="20%">
             <InputView
               showDivider={false}
@@ -218,7 +216,7 @@ const InvoicingAndPaymentTab = ({
           </Button>
         </Flex>
       </ModalFooter>
-    </Stack>
+    </Box>
   )
 }
 
