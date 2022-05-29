@@ -1,8 +1,8 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import data from './moc-data.json'
+import { Column } from 'react-table'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -34,75 +34,74 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     </Tr>
   )
 }
+type ProjectProps = {
+  payableColumns: Column[]
+  resizeElementRef?: any
+  setTableInstance: (tableInstance: any) => void
+}
+export const PayableTable: React.FC<ProjectProps> = ({ setTableInstance, payableColumns, resizeElementRef }) => {
+  // const { columns } = useColumnWidthResize([
+  //   {
+  //     Header: 'Id',
+  //     accessor: 'id',
+  //   },
+  //   {
+  //     Header: 'Vendor Name',
+  //     accessor: 'vendorName',
+  //   },
+  //   {
+  //     Header: 'Property Address',
+  //     accessor: 'propertyAddress',
+  //   },
+  //   {
+  //     Header: 'Vendor Address',
+  //     accessor: 'vendorAddress',
+  //   },
+  //   {
+  //     Header: 'Payment Terms',
+  //     accessor: 'paymentTerms',
+  //   },
+  //   {
+  //     Header: 'Expected pay date',
+  //     accessor: 'expectedPayDate',
+  //   },
+  //   {
+  //     Header: 'Final Invoice',
+  //     accessor: 'finalInvoice',
+  //   },
 
-export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
-  (props, ref) => {
-    const { columns } = useColumnWidthResize(
-      [
-        {
-          Header: 'Id',
-          accessor: 'id',
-        },
-        {
-          Header: 'Vendor Name',
-          accessor: 'vendorName',
-        },
-        {
-          Header: 'Property Address',
-          accessor: 'propertyAddress',
-        },
-        {
-          Header: 'Vendor Address',
-          accessor: 'vendorAddress',
-        },
-        {
-          Header: 'Payment Terms',
-          accessor: 'paymentTerms',
-        },
-        {
-          Header: 'Expected pay date',
-          accessor: 'expectedPayDate',
-        },
-        {
-          Header: 'Final Invoice',
-          accessor: 'finalInvoice',
-        },
+  //   {
+  //     Header: 'Markets',
+  //     accessor: 'markets',
+  //   },
+  //   {
+  //     Header: 'WO Start Date',
+  //     accessor: 'woStarteDate',
+  //   },
+  //   {
+  //     Header: 'WO Completed Date',
+  //     accessor: 'woCompleteDate',
+  //   },
+  //   {
+  //     Header: 'WO Issue Date',
+  //     accessor: 'woIssueDate',
+  //   },
+  //   {
+  //     Header: 'Checkbox',
+  //     accessor: 'checkbox',
+  //   },
+  // ])
 
-        {
-          Header: 'Markets',
-          accessor: 'markets',
-        },
-        {
-          Header: 'WO Start Date',
-          accessor: 'woStarteDate',
-        },
-        {
-          Header: 'WO Completed Date',
-          accessor: 'woCompleteDate',
-        },
-        {
-          Header: 'WO Issue Date',
-          accessor: 'woIssueDate',
-        },
-        {
-          Header: 'Checkbox',
-          accessor: 'checkbox',
-        },
-      ],
-      ref,
-    )
-
-    return (
-      <Box overflow="auto" width="100%">
-        <ReactTable
-          columns={columns}
-          setTableInstance={props.setTableInstance}
-          data={data}
-          TableRow={payableRow}
-          tableHeight="calc(100vh - 300px)"
-          name="alerts-table"
-        />
-      </Box>
-    )
-  },
-)
+  return (
+    <Box overflow="auto" width="100%">
+      <ReactTable
+        columns={payableColumns}
+        setTableInstance={setTableInstance}
+        data={data}
+        TableRow={payableRow}
+        tableHeight="calc(100vh - 300px)"
+        name="alerts-table"
+      />
+    </Box>
+  )
+}

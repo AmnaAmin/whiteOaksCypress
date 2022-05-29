@@ -51,7 +51,7 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
   const client = useClient()
   const { email } = useUserProfile() as Account
 
-  const { data: savedColumns, ...rest } = useQuery<TableColumnSetting[]>('GetProjectColumn', async () => {
+  const { data: savedColumns, ...rest } = useQuery<TableColumnSetting[]>('GetGridColumn', async () => {
     const response = await client(`column/${tableName}`, {})
 
     return response?.data
@@ -91,7 +91,7 @@ export const useTableColumnSettingsUpdateMutation = (tableName: TableNames) => {
   const queryClient = useQueryClient()
 
   return useMutation(
-    'PostProjectColumn',
+    'PostGridColumn',
     async (payload: TableColumnSetting) => {
       const response = await client(`column/${tableName}`, { data: payload })
 
@@ -99,7 +99,7 @@ export const useTableColumnSettingsUpdateMutation = (tableName: TableNames) => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(['GetProjectColumn'])
+        queryClient.invalidateQueries(['GetGridColumn'])
       },
     },
   )

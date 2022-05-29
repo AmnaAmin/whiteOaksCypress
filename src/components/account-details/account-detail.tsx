@@ -1,20 +1,35 @@
 import { Box, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
+import TableColumnSettings from 'components/table/table-column-settings'
 import { PayableFiltter } from 'features/project-coordinator/payable-recievable/filtter'
 import { PayableTable } from 'features/project-coordinator/payable-recievable/payable-table'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { useState } from 'react'
 import { BiExport, BiSync } from 'react-icons/bi'
-import { FaAtom } from 'react-icons/fa'
+import { Column } from 'react-table'
+
+type ColumnType = {
+  id?: number
+  field: string
+  order: number
+  hide: boolean
+  contentKey
+}
 
 type payableReceivable = {
   topTitle: string
-  ID: number | string
+  ID?: number | string
+  tableColumns: Column[]
+  resizeElementRef?: any
+  columns?: ColumnType[]
+  onSave: (columns: any) => void
+  isLoading?: boolean
 }
 
-export const PayableReceivable = (props: payableReceivable) => {
+export const AccountDetail = (props: payableReceivable) => {
   const [projectTableInstance, setInstance] = useState<any>(null)
+  // const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
 
   const [isClicked, setIsClicked] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
@@ -34,6 +49,10 @@ export const PayableReceivable = (props: payableReceivable) => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
+
+  // const onSave = columns => {
+  //   postGridColumn(columns)
+  // }
   return (
     <Box>
       <FormLabel variant="strong-label" size="lg">
@@ -77,9 +96,17 @@ export const PayableReceivable = (props: payableReceivable) => {
       <Divider border="2px solid #E2E8F0" />
       <Box mt={2}>
         {props.ID === 'receivable' ? (
-          <ReceivableTable setTableInstance={setProjectTableInstance} />
+          <ReceivableTable
+            recievableColumns={props.tableColumns}
+            resizeElementRef={props.resizeElementRef}
+            setTableInstance={setProjectTableInstance}
+          />
         ) : (
-          <PayableTable setTableInstance={setProjectTableInstance} />
+          <PayableTable
+            payableColumns={props.tableColumns}
+            resizeElementRef={props.resizeElementRef}
+            setTableInstance={setProjectTableInstance}
+          />
         )}
       </Box>
 
@@ -97,10 +124,11 @@ export const PayableReceivable = (props: payableReceivable) => {
           Export
         </Button>
         <Divider orientation="vertical" height="30px" border="2px solid" />
-        <Button colorScheme="brand" variant="ghost" m={0}>
-          <Icon as={FaAtom} fontSize="18px" mr={2} />
-          Settings
-        </Button>
+        <>
+          {props.columns && (
+            <TableColumnSettings disabled={props.isLoading} onSave={props.onSave} columns={props.columns} />
+          )}
+        </>
       </Flex>
     </Box>
   )
