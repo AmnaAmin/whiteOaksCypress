@@ -99,13 +99,13 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
                       name={name}
                       key={name}
                       isChecked={value.checked}
-                      data-testid={`marketChecks.${value.id}`}
+                      data-testid={`marketChecks.${value.market.id}`}
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
                     >
-                      {value.metropolitanServiceArea}
+                      {value.market.metropolitanServiceArea}
                     </CheckboxButton>
                   )
                 }}

@@ -284,6 +284,9 @@ i18n.use(initReactI18next).init({
         title: 'Title',
         descriptions: 'Description (1000) Characters',
         fileUpload: 'File Upload',
+        createTicketTitle: 'Create Ticket',
+        createTicketSuccessMessage: 'Ticket created successfully.',
+        createTicketErrorMessage: 'Create ticket api cause some error.',
         // Header
         help: 'Help',
         support: 'Support',
@@ -564,6 +567,9 @@ i18n.use(initReactI18next).init({
         title: 'Título',
         descriptions: 'Descripción (1000) Caracteres',
         fileUpload: 'Subir archivo',
+        createTicketTitle: 'Crear Ticket',
+        createTicketSuccessMessage: 'Ticket creado con éxito.',
+        createTicketErrorMessage: 'Crear ticket api causa algún error.',
         // Header
         help: 'Ayudar',
         support: 'Apoyo',
