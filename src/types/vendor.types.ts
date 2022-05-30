@@ -284,4 +284,8 @@ export type Vendors = {
   coiglExpirationDate: string
   coiWcExpirationDate: string
   einNumber: string
+  capacity: number
+  availableCapacity: number
+  skills: string
+  market: string
 }
