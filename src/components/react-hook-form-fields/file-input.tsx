@@ -1,5 +1,5 @@
 import React, { useRef, ReactNode } from 'react'
-import { Box, Flex, FormErrorMessage, FormControl, FormLabel, InputGroup } from '@chakra-ui/react'
+import { Box, Flex, FormErrorMessage, FormControl, FormLabel, InputGroup, Text } from '@chakra-ui/react'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import { UseFormRegister, UseFormRegisterReturn } from 'react-hook-form'
@@ -36,14 +36,15 @@ export const downloadableLink = (downloadableFile: any) => {
     <>
       {downloadableFile && downloadableFile.url && (
         <a href={downloadableFile.url} download style={{ color: '#4E87F8' }}>
-          <Flex pt="10px">
-            <BiDownload fontSize="16px" />
+          <Flex>
+            <BiDownload size="30px" fontSize="16px" />
             <Box
+              mt="5px"
               ml="7px"
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="ellipsis"
-              fontSize="14px"
+              fontSize="13px"
               fontWeight={500}
             >
               {downloadableFile.name}
@@ -73,6 +74,7 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
       )}
     >
       <Button
+        variant="choose-file"
         rounded="none"
         roundedLeft={5}
         fontSize="14px"
@@ -86,8 +88,8 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
         {props.children}
       </Button>
     </FileUpload>
-    <Box h={7}>
-      {downloadableLink(props.downloadableFile)}
+    <Box mt="10px" w="290px">
+      <Text isTruncated>{downloadableLink(props.downloadableFile)}</Text>
       <FormErrorMessage m="0px">{props.errorMessage}</FormErrorMessage>
     </Box>
   </FormControl>

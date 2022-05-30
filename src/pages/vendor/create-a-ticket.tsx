@@ -1,12 +1,12 @@
 import React from 'react'
 import {
   Box,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Grid,
+  VStack,
   HStack,
   Input,
   Text,
@@ -30,9 +30,12 @@ import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 import { Button } from 'components/button/button'
+import { useTranslation } from 'react-i18next'
+import { Card } from 'components/card/card'
 
 const CreateATicket = () => {
   const toast = useToast()
+  const { t } = useTranslation()
   const { mutate: createTicket } = useCreateTicketMutation()
   const { email } = useUserProfile() as Account
   const defaultValues = React.useMemo(() => {
@@ -86,9 +89,9 @@ const CreateATicket = () => {
   const downloadDocument = (link, text) => {
     return (
       <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-        <Flex>
+        <Flex ml={1}>
           <BiDownload fontSize="sm" />
-          <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
+          <Text ml="5px" fontSize="12px" fontStyle="normal">
             {text}
           </Text>
         </Flex>
@@ -97,12 +100,12 @@ const CreateATicket = () => {
   }
 
   return (
-    <>
-      <Box mt="40px" ml="20px">
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <Card py="0">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
           <Box>
             <Text fontSize="18px" fontWeight={500} color="gray.600" mb="8">
-              Create A Ticket
+              {t('createTicket')}
             </Text>
 
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
@@ -139,7 +142,7 @@ const CreateATicket = () => {
               <HStack spacing={3}>
                 <FormControl isInvalid={!!errors.issueType} w="215px">
                   <FormLabel htmlFor="issueType" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                    Issue Type
+                    {t('issueType')}{' '}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -161,7 +164,7 @@ const CreateATicket = () => {
 
                 <FormControl isInvalid={!!errors.severity} w="215px">
                   <FormLabel htmlFor="severity" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                    Severity
+                    {t('severity')}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -179,7 +182,7 @@ const CreateATicket = () => {
 
               <FormControl isInvalid={!!errors.title?.message} w="320px">
                 <FormLabel htmlFor="title" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                  Title
+                  {t('title')}
                 </FormLabel>
                 <Input
                   h="40px"
@@ -215,7 +218,7 @@ const CreateATicket = () => {
           <Box w="434px" mt="30px">
             <FormControl isInvalid={!!errors.description?.message}>
               <FormLabel htmlFor="description" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                Description (1000 Characters)
+                {t('descriptions')}{' '}
               </FormLabel>
               <Textarea
                 size="lg"
@@ -238,8 +241,8 @@ const CreateATicket = () => {
           </Box>
 
           <FormControl mt="40px" w="290px" mb="40px" isInvalid={!!errors.attachment?.message}>
-            <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" padding={2}>
-              Upload File
+            <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" mb={1}>
+              {t('fileUpload')}
             </FormLabel>
             <Controller
               name="attachment"
@@ -247,11 +250,11 @@ const CreateATicket = () => {
               rules={{ required: 'This is required field' }}
               render={({ field, fieldState }) => {
                 return (
-                  <HStack spacing={5} alignItems="baseline">
+                  <VStack alignItems="baseline">
                     <Box>
                       <ChooseFileField
                         name={field.name}
-                        value={field.value?.name}
+                        value={field.value ? field.value?.name : 'Choose File'}
                         isError={!!fieldState.error?.message}
                         onChange={(file: any) => {
                           onFileChange(file)
@@ -259,36 +262,34 @@ const CreateATicket = () => {
                         }}
                         onClear={() => setValue(field.name, null)}
                       >
-                        Choose File
+                        {t('chooseFile')}
                       </ChooseFileField>
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    <Box>{downloadDocument(document, 'doc3.Png')}</Box>
-                  </HStack>
+                    {field.value && (
+                      <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )}
+                  </VStack>
                 )
               }}
             />
-
-            <Divider />
           </FormControl>
-
-          <Flex
-            flexDirection="row-reverse"
-            w="100%"
-            h="100px"
-            mt="100px"
-            alignItems="center"
-            justifyContent="end"
-            borderTop="2px solid #E2E8F0"
-          >
-            <Button type="submit" colorScheme="brand">
-              Save
-            </Button>
-          </Flex>
-        </form>
-      </Box>
-    </>
+        </Box>
+        <Flex
+          flexDirection="row-reverse"
+          w="100%"
+          h="100px"
+          alignItems="center"
+          justifyContent="end"
+          borderTop="2px solid #E2E8F0"
+        >
+          <Button type="submit" colorScheme="brand">
+            Save
+          </Button>
+        </Flex>
+      </form>
+    </Card>
   )
 }
 

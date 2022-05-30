@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Center, Spinner } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useVendor } from 'utils/pc-projects'
 import { Column } from 'react-table'
 import Status from 'features/projects/status'
+import Vendor from 'features/projects/modals/project-coordinator/vendor-table'
+import { ProjectWorkOrderType } from 'types/project.type'
 
 export const VENDOR_COLUMNS = [
   {
@@ -41,7 +43,7 @@ export const VENDOR_COLUMNS = [
   },
 ]
 
-const VendorRow: React.FC<RowProps> = ({ row, style }) => {
+const VendorRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -50,6 +52,11 @@ const VendorRow: React.FC<RowProps> = ({ row, style }) => {
         '& > td > a': {
           color: '#333',
         },
+      }}
+      onClick={e => {
+        if (onRowClick) {
+          onRowClick(e, row)
+        }
       }}
       {...row.getRowProps({
         style,
@@ -103,18 +110,34 @@ export const VendorTable: React.FC<ProjectProps> = ({
       ),
     )
   }, [selectedCard, vendors])
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   return (
     <Box ref={resizeElementRef}>
-      <ReactTable
-        isLoading={isLoading}
-        columns={projectColumns}
-        data={filterVendors ? filterVendors : []}
-        TableRow={VendorRow}
-        name="vendor-table"
-        tableHeight="calc(100vh - 350px)"
-        setTableInstance={setTableInstance}
+      <Vendor
+        vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
+        onClose={() => {
+          setSelectedWorkOrder(undefined)
+        }}
       />
+
+      {isLoading && (
+        <Center>
+          <Spinner size="xl" />
+        </Center>
+      )}
+      {vendors && (
+        <ReactTable
+          isLoading={isLoading}
+          columns={projectColumns}
+          data={filterVendors ? filterVendors : []}
+          TableRow={VendorRow}
+          name="vendor-table"
+          tableHeight="calc(100vh - 350px)"
+          setTableInstance={setTableInstance}
+          onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+        />
+      )}
     </Box>
   )
 }
