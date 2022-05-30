@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   VStack,
+  ModalBody,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { convertImageToDataURL } from 'components/table/util'
@@ -164,10 +165,9 @@ export const LienWaiverTab: React.FC<any> = props => {
     setValue('dateOfSignature', null)
   }
   return (
-    <Stack>
+    <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-
-      <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
+      <ModalBody h="400px" p="25px" overflow={'auto'}>
         <FormControl>
           <VStack align="start" spacing="30px">
             <Flex w="100%" alignContent="space-between" pos="relative">
@@ -269,32 +269,33 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Box>
           </VStack>
         </FormControl>
-        <Divider />
-        <ModalFooter mt={3}>
-          <HStack justifyContent="start" w="100%">
-            {recentLWFile && (
-              <Button
-                variant="outline"
-                colorScheme="brand"
-                size="md"
-                mr={3}
-                onClick={() => downloadFile(recentLWFile.s3Url)}
-                leftIcon={<BiDownload />}
-              >
-                <Box pos="relative" right="6px"></Box>
-                {recentLWFile.fileType}
-              </Button>
-            )}
-          </HStack>
+      </ModalBody>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+        <Flex justifyContent="start" w="100%">
+          {recentLWFile && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              mr={3}
+              onClick={() => downloadFile(recentLWFile.s3Url)}
+              leftIcon={<BiDownload />}
+            >
+              <Box pos="relative" right="6px"></Box>
+              {recentLWFile.fileType}
+            </Button>
+          )}
+        </Flex>
+        <Flex justifyContent="end">
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
-        </ModalFooter>
-      </form>
-    </Stack>
+        </Flex>
+      </ModalFooter>
+    </form>
   )
 }
 
