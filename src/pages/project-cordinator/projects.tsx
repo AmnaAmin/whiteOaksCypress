@@ -28,7 +28,6 @@ export const Projects = () => {
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-
   const [isClicked, setIsClicked] = useState(false)
 
   const setProjectTableInstance = tableInstance => {
@@ -40,12 +39,12 @@ export const Projects = () => {
   }
 
   const clearAll = () => {
-    setSelectedCard('')
+    setSelectedDay('')
     setIsClicked(false)
   }
 
   const allDays = () => {
-    setSelectedCard('All')
+    setSelectedDay('All')
     setIsClicked(true)
   }
 
