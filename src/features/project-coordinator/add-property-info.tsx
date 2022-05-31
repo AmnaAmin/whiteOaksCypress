@@ -94,9 +94,8 @@ export const AddPropertyInfo: React.FC<{
 
   // On Street Address change, set values of City, State and Zip
   const setAddressValues = e => {
-    setStreetAddress(e.label)
     properties.find(property => {
-      if (streetAddress === property?.streetAddress) {
+      if (e.label === property?.streetAddress) {
         setValue('streetAddress', property.streetAddress)
         setValue('city', property.city)
         setValue('state', property.state)
@@ -112,12 +111,13 @@ export const AddPropertyInfo: React.FC<{
     setValue('state', e.label)
   }
 
+  const setMarket = e => {
+    setValue('market', e.value)
+  }
+
   // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
-      setTimeout(() => {
-        refetch()
-      }, 2000)
       const parser = new xml2js.Parser()
       parser
         .parseStringPromise(addressData.data)
@@ -264,6 +264,7 @@ export const AddPropertyInfo: React.FC<{
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     sx={inputStyle}
+                    onChange={setMarket}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>

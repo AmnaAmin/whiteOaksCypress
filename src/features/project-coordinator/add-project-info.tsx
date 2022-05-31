@@ -107,7 +107,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           </FormControl>
         </GridItem>
       </Grid>
-      {/* <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
             <FormLabel sx={labelStyle}>Client Start Date</FormLabel>
@@ -150,7 +150,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
             <FormErrorMessage>{errors.woaStartDate && errors.woaStartDate?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
-      </Grid> */}
+      </Grid>
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" mt={6}>
         <GridItem>
           <FormControl>

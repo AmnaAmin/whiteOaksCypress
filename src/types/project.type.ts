@@ -176,9 +176,9 @@ export type ProjectFormValues = {
   hoaEmailAddress?: string | null
   hoaPhone?: string | null
   hoaPhoneNumberExtension?: string
-  projectManager?: any
+  // projectManager?: any
   projectManagerId?: number
-  projectManagerPhoneNumber?: string
+  // projectManagerPhoneNumber?: string
   projectCoordinator?: string
   clientName?: string
   superFirstName?: string | null
