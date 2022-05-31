@@ -154,15 +154,10 @@ export type ProjectAlertType = {
   dateCreated: string
 }
 
-// export type verifyAddressValues = {
-//   city?: string
-//   state?: string
-//   zipCode?: any
-// }
-
 export type ProjectFormValues = {
   name?: string
-  projectType?: number | string
+  projectType?: number
+  projectTypeLabel: string
   woNumber?: string
   poNumber?: string
   clientStartDate?: string
@@ -181,7 +176,9 @@ export type ProjectFormValues = {
   hoaEmailAddress?: string | null
   hoaPhone?: string | null
   hoaPhoneNumberExtension?: string
-  projectManager?: string
+  projectManager?: any
+  projectManagerId?: number
+  projectManagerPhoneNumber?: string
   projectCoordinator?: string
   clientName?: string
   superFirstName?: string | null

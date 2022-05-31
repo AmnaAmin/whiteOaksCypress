@@ -26,7 +26,10 @@ import { ProjectFormValues } from 'types/project.type'
 import { readFileContent } from 'utils/vendor-details'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useToast } from '@chakra-ui/react'
-import { useSaveProjectDetails } from 'utils/pc-projects'
+import { useFPM, useSaveProjectDetails } from 'utils/pc-projects'
+import { datePickerFormat, dateISOFormat, getFormattedDate, convertDateTimeFromServer } from 'utils/date-time-utils'
+import { convertDateTimeToServerISO } from 'components/table/util'
+import { dateFormat } from 'utils/date-time-utils'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -35,7 +38,7 @@ type AddProjectFormProps = {
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const toast = useToast()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
-
+  const { data: fieldProjectManager } = useFPM()
   const [tabIndex, setTabIndex] = useState(0)
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -44,7 +47,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const methods = useForm<ProjectFormValues>({
     defaultValues: {
       name: '',
-      projectType: '',
+      projectType: 0,
+      projectTypeLabel: '',
       woNumber: '',
       poNumber: '',
       clientStartDate: '',
@@ -63,7 +67,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       hoaPhone: '',
       hoaPhoneNumberExtension: '',
       hoaEmailAddress: '',
-      projectManager: '',
+      projectManager: [],
+      projectManagerId: 0,
+      projectManagerPhoneNumber: '',
       projectCoordinator: '',
       clientName: '',
       superFirstName: '',
@@ -84,15 +90,21 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       if (values.projectSOW && values.projectSOW[0]) {
         fileContents = await readFileContent(values.projectSOW[0])
       }
+      let projectManager: any = null
+      fieldProjectManager?.map(FPM => {
+        if (values.projectManagerId === FPM.id) {
+          projectManager = [FPM]
+        }
+      })
       const newProjectPayload = {
         name: values.name,
         projectType: values.projectType,
         woNumber: values.woNumber,
         poNumber: values.poNumber,
-        clientStartDate: values.clientStartDate,
-        clientDueDate: values.clientDueDate,
-        woaStartDate: values.woaStartDate,
-        sowOriginalContractAmount: currencyFormatter(values.sowOriginalContractAmount),
+        clientStartDate: convertDateTimeFromServer(values.clientStartDate) as string,
+        clientDueDate: convertDateTimeFromServer(values.clientDueDate) as string,
+        woaStartDate: convertDateTimeFromServer(values.woaStartDate) as string,
+        sowOriginalContractAmount: values.sowOriginalContractAmount, // currencyFormatter(values.sowOriginalContractAmount),
         projectSOW: values.projectSOW && values.projectSOW[0] ? values.projectSOW[0].name : null,
         sowLink: fileContents,
         streetAddress: values.streetAddress,
@@ -105,7 +117,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         hoaPhone: values.hoaPhone,
         hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
         hoaEmailAddress: values.hoaEmailAddress,
-        projectManager: values.projectManager,
+        projectManager: projectManager,
+        projectManagerId: values.projectManagerId,
         projectCoordinator: values.projectCoordinator,
         clientName: values.clientName,
         superFirstName: values.superFirstName,

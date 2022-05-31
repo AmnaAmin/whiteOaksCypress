@@ -16,7 +16,7 @@ export const ManageProject: React.FC<{
 
   const FPMs = fieldProjectManager
     ? fieldProjectManager?.map(FPM => ({
-        label: FPM?.firstName,
+        label: FPM?.firstName + ' ' + FPM?.lastName,
         value: FPM?.id,
       }))
     : null
@@ -43,7 +43,7 @@ export const ManageProject: React.FC<{
   } = useFormContext<ProjectFormValues>()
 
   const setFPM = e => {
-    setValue('projectManager', e.label)
+    setValue('projectManagerId', e.value)
   }
 
   const setPC = e => {
@@ -62,12 +62,12 @@ export const ManageProject: React.FC<{
             <FormLabel>Field Project Manager</FormLabel>
             <Controller
               control={control}
-              name={`projectManager`}
+              name={`projectManagerId`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
                   <Select
-                    id="projectManager"
+                    id="projectManagerId"
                     options={FPMs}
                     selected={value}
                     elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
