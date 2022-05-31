@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+// import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
-import data from './moc-data-receivable.json'
+// import data from './moc-data-receivable.json'
 import { Column } from 'react-table'
+import { usePCReveviable } from 'utils/account-receivable'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -43,65 +44,8 @@ type ProjectProps = {
   setTableInstance: (tableInstance: any) => void
 }
 
-export const ReceivableTable: React.FC<ProjectProps> = ({ setTableInstance, recievableColumns, resizeElementRef }) => {
-  const { columns } = useColumnWidthResize([
-    {
-      Header: 'Id',
-      accessor: 'id',
-    },
-    {
-      Header: 'Client',
-      accessor: 'client',
-    },
-    {
-      Header: 'Address',
-      accessor: 'address',
-    },
-    {
-      Header: 'terms',
-      accessor: 'terms',
-    },
-    {
-      Header: 'Payment Types',
-      accessor: 'paymentTypes',
-    },
-    {
-      Header: 'Expected pay date',
-      accessor: 'expectedPayDate',
-    },
-    {
-      Header: 'Balance',
-      accessor: 'balance',
-    },
-    {
-      Header: 'final invoice',
-      accessor: 'finalInvoice',
-    },
-    {
-      Header: 'Markets',
-      accessor: 'markets',
-    },
-    {
-      Header: 'WO Invoice Date',
-      accessor: 'woInvoiceDate',
-    },
-    {
-      Header: 'PO No',
-      accessor: 'poNumber',
-    },
-    {
-      Header: 'WO No',
-      accessor: 'woNumber',
-    },
-    {
-      Header: 'Invoice No',
-      accessor: 'invoiceNumber',
-    },
-    {
-      Header: ' Checkbox',
-      accessor: ' Checkbox',
-    },
-  ])
+export const ReceivableTable: React.FC<ProjectProps> = ({ setTableInstance, recievableColumns }) => {
+  const { receivableData, isLoading } = usePCReveviable()
 
   const {
     isOpen: isAccountReceivableModal,
@@ -115,7 +59,6 @@ export const ReceivableTable: React.FC<ProjectProps> = ({ setTableInstance, reci
     },
     [onAccountReceivableModalOpen],
   )
-  console.log('not-working', recievableColumns, 'working', columns)
 
   return (
     <Box overflow="auto" width="100%">
@@ -123,7 +66,8 @@ export const ReceivableTable: React.FC<ProjectProps> = ({ setTableInstance, reci
         onRowClick={onRowClick}
         columns={recievableColumns}
         setTableInstance={setTableInstance}
-        data={data}
+        data={receivableData?.arList}
+        isLoading={isLoading}
         TableRow={receivableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"

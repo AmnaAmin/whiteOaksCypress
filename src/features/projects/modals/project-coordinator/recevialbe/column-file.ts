@@ -1,43 +1,43 @@
 export const RECEIVABLE_COLUMNS = [
   {
     Header: 'Id',
-    accessor: 'id',
+    accessor: 'projectId',
   },
   {
     Header: 'Client',
-    accessor: 'client',
+    accessor: 'clientName',
   },
   {
     Header: 'Address',
-    accessor: 'address',
+    accessor: 'propertyAddress',
   },
   {
-    Header: 'terms',
-    accessor: 'terms',
+    Header: 'Terms',
+    accessor: 'paymentTerm',
   },
   {
     Header: 'Payment Types',
-    accessor: 'paymentTypes',
+    accessor: 'transactionType',
   },
   {
     Header: 'Expected pay date',
-    accessor: 'expectedPayDate',
+    accessor: 'expectedPaymentDate',
   },
   {
     Header: 'Balance',
-    accessor: 'balance',
+    accessor: 'amount',
   },
   {
     Header: 'final invoice',
-    accessor: 'finalInvoice',
+    accessor: 'famount',
   },
   {
     Header: 'Markets',
-    accessor: 'markets',
+    accessor: 'marketName',
   },
   {
     Header: 'WO Invoice Date',
-    accessor: 'woInvoiceDate',
+    accessor: 'woaInvoiceDate',
   },
   {
     Header: 'PO No',
