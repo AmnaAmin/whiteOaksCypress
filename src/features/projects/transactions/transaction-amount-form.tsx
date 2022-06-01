@@ -210,13 +210,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             </a>
           )}
           {document ? (
-            <Box
-              color="barColor.100"
-              border="1px solid #e2e8f0"
-              // a
-              borderRadius="4px"
-              fontSize="16px"
-            >
+            <Box color="barColor.100" border="1px solid #e2e8f0" borderRadius="4px" fontSize="16px">
               <HStack spacing="5px" h="31px" padding="10px" align="center">
                 <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                   {document?.name || document.fileType}
@@ -252,7 +246,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       <Box border="1px solid #efefef" h="200px" overflow="auto">
         <Table colorScheme="gray">
           <Thead bg="gray.50">
-            <Tr>
+            <Tr height="0px !important">
               {transactionFields?.length > 1 && (
                 <Th px="3">
                   <Checkbox

@@ -69,6 +69,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
             disabled
             color="gray.500"
             fontSize="14px"
+            isTruncated
           />
         </FormControl>
       </Box>
