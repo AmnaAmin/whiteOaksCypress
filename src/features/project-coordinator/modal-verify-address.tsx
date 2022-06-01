@@ -21,11 +21,10 @@ interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
   onClose: () => void
-  // save: () => void
   title: string
-  content: string
-  props: string
   addressVerificationStatus: string
+  setNextTab: () => void
+  props: any
 }
 
 export function ModalVerifyAddress({
@@ -34,9 +33,8 @@ export function ModalVerifyAddress({
   onClose,
   // onConfirm,
   title,
-  content,
-  props,
   addressVerificationStatus,
+  props,
 }: VerifyAddressBoxProps) {
   const [continueUnverified, setContinueUnverified] = useState(false)
 
@@ -106,7 +104,10 @@ export function ModalVerifyAddress({
                       position="absolute"
                       top="30"
                       right="55"
-                      onClick={onClose}
+                      onClick={() => {
+                        onClose()
+                        props.setNextTab()
+                      }}
                     >
                       Continue
                     </Button>
@@ -131,7 +132,10 @@ export function ModalVerifyAddress({
                       width={78}
                       height={30}
                       border="1px solid #4E87F8"
-                      onClick={onClose}
+                      onClick={() => {
+                        onClose()
+                        props.setNextTab()
+                      }}
                     >
                       Save
                     </Button>

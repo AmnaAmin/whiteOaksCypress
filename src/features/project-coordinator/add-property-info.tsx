@@ -18,7 +18,7 @@ import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
-import Select from 'react-select'
+import ReactSelect from 'components/form/react-select'
 // import Creatable from 'react-select/creatable' //check for input on select
 
 export const AddPropertyInfo: React.FC<{
@@ -34,6 +34,12 @@ export const AddPropertyInfo: React.FC<{
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [verificationInProgress, setVerificationInProgress] = useState(false)
   const [check, setCheck] = useState(false)
+
+  const [tabIndex, setTabIndex] = useState(0)
+
+  const setNextTab = () => {
+    setTabIndex(tabIndex + 1)
+  }
 
   // API calls
   const { data: properties } = useProperties()
@@ -66,23 +72,7 @@ export const AddPropertyInfo: React.FC<{
   const handleCheck = () => {
     setCheck(!check)
     setIsDuplicateAddress(false)
-  }
-
-  const labelStyle = {
-    fontSize: '14px',
-    fontWeight: 500,
-    color: 'gray.600',
-  }
-
-  const inputStyle = {
-    color: 'gray.500',
-    fontSize: '14px',
-    fontWeight: '400',
-    type: 'text',
-    bg: 'white',
-    size: 'md',
-    borderLeft: '1.5px solid #4E87F8',
-    lineHeight: 2,
+    // setValue('acknowledgeCheck', true)
   }
 
   const {
@@ -100,6 +90,8 @@ export const AddPropertyInfo: React.FC<{
         setValue('city', property.city)
         setValue('state', property.state)
         setValue('zipCode', property.zipCode)
+        setValue('propertyId', property.id)
+        setValue('property', property)
         setIsDuplicateAddress(true)
       }
       return streetAddress
@@ -112,7 +104,7 @@ export const AddPropertyInfo: React.FC<{
   }
 
   const setMarket = e => {
-    setValue('market', e.value)
+    setValue('newMarketId', e.value)
   }
 
   // Parse XML to Verify Address
@@ -175,21 +167,22 @@ export const AddPropertyInfo: React.FC<{
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Address</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Address
+            </FormLabel>
             <Controller
               control={control}
               name={`streetAddress`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="streetAddress"
                     options={addressOptions}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-                    sx={inputStyle}
                     placeholder="Type address here.."
                     onChange={setAddressValues}
+                    selectProps={{ isBorderLeft: true }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -213,20 +206,21 @@ export const AddPropertyInfo: React.FC<{
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>State</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              State
+            </FormLabel>
             <Controller
               control={control}
               name={`state`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="state"
                     options={states}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-                    sx={inputStyle}
                     onChange={setStates}
+                    selectProps={{ isBorderLeft: true }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -251,20 +245,21 @@ export const AddPropertyInfo: React.FC<{
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Market</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Market
+            </FormLabel>
             <Controller
               control={control}
-              name={`market`}
-              // rules={{ required: 'This is required field' }}
+              name={`newMarketId`}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="market"
                     options={market}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-                    sx={inputStyle}
                     onChange={setMarket}
+                    selectProps={{ isBorderLeft: true }}
+                    rules={{ required: 'This is required field' }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -279,7 +274,6 @@ export const AddPropertyInfo: React.FC<{
               label={'Gate Code'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`gateCode`}
             />
           </FormControl>
@@ -291,7 +285,6 @@ export const AddPropertyInfo: React.FC<{
               label={'Lock Box Code'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`lockBoxCode`}
             />
           </FormControl>
@@ -305,8 +298,6 @@ export const AddPropertyInfo: React.FC<{
               label={'HOA Contact Phone'}
               placeholder=""
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-              rules={{ required: 'This is required field' }}
               name={`hoaPhone`}
             />
           </FormControl>
@@ -318,7 +309,6 @@ export const AddPropertyInfo: React.FC<{
               label={'Ext.'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`hoaPhoneNumberExtension`}
             />
           </FormControl>
@@ -330,8 +320,6 @@ export const AddPropertyInfo: React.FC<{
               label={'HOA Contact Email'}
               placeholder=""
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-              rules={{ required: 'This is required field' }}
               name={`hoaEmailAddress`}
             />
           </FormControl>
@@ -354,7 +342,7 @@ export const AddPropertyInfo: React.FC<{
               refetch()
             }, 2000)
             onOpenAddressVerifyModalOpen()
-            props.setNextTab()
+            // props.setNextTab()
           }}
         >
           {'Next'}
@@ -362,11 +350,11 @@ export const AddPropertyInfo: React.FC<{
       </Grid>
       <ModalVerifyAddress
         title="Address Verification"
-        content="Address Verification"
         isOpen={isAddressVerifyModalOpen}
         onClose={onAddressVerifyModalClose}
-        props={''}
         addressVerificationStatus={addressVerificationStatus}
+        setNextTab={setNextTab}
+        props={props}
       />
     </>
   )

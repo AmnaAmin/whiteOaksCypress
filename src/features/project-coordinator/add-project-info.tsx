@@ -5,7 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useProjectTypes } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
-import Select from 'react-select'
+import ReactSelect from 'components/form/react-select'
 
 type InfoProps = {
   setNextTab: () => void
@@ -22,11 +22,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
       }))
     : null
 
-  const labelStyle = {
-    fontSize: '14px',
-    fontWeight: 500,
-    color: 'gray.600',
-  }
   const inputStyle = {
     bg: 'white',
     borderLeft: '1.5px solid #4E87F8',
@@ -54,26 +49,26 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               label={'Project Name'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`name`}
             />
           </FormControl>
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Type</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Type
+            </FormLabel>
             <Controller
               control={control}
               name={`projectType`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="projectType"
                     options={types}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
-                    sx={inputStyle}
+                    selectProps={{ isBorderLeft: true }}
                     onChange={setProjectType}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -89,7 +84,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               label={'WO Number'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`woNumber`}
             />
           </FormControl>
@@ -101,7 +95,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               label={'PO Number'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`poNumber`}
             />
           </FormControl>
@@ -110,12 +103,14 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
-            <FormLabel sx={labelStyle}>Client Start Date</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Client Start Date
+            </FormLabel>
             <Input
               type="date"
               {...register('clientStartDate')}
               name={`clientStartDate`}
-              // placeholder={'mm/dd/yyyy'}
+              placeholder={'mm/dd/yyyy'}
               sx={inputStyle}
               required
             />
@@ -124,7 +119,9 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>Client Due Date</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Client Due Date
+            </FormLabel>
             <Input
               type="date"
               {...register('clientDueDate')}
@@ -138,7 +135,9 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel sx={labelStyle}>WOA Start Date</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              WOA Start Date
+            </FormLabel>
             <Input
               type="date"
               {...register('woaStartDate')}
@@ -151,13 +150,13 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" mt={6}>
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" mt={3}>
         <GridItem>
           <FormControl>
             <FormInput
               errorMessage={errors.sowOriginalContractAmount && errors.sowOriginalContractAmount?.message}
               label={'Original SOW Amount'}
-              placeholder="$"
+              placeholder="$0"
               register={register}
               elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
@@ -167,17 +166,17 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel fontSize="14px" color="gray.600" fontWeight={500} marginBottom={0}>
+            <FormLabel variant="strong-label" size="md" marginBottom={0}>
               Upload Project SOW
             </FormLabel>
             <FormFileInput
-              errorMessage={errors.projectSOW && errors.projectSOW?.message}
+              errorMessage={errors.documents && errors.documents?.message}
               label={''}
-              name={`projectSOW`}
+              name={`documents`}
               register={register}
-              isRequired={true}
+              rules={{ required: 'This is required field' }}
             >
-              <Button rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} h="37px" color="#4A5568">
+              <Button bg="none" rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} h="37px" color="#4A5568">
                 {'ChooseFile'}
               </Button>
             </FormFileInput>

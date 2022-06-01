@@ -155,6 +155,7 @@ export type ProjectAlertType = {
 }
 
 export type ProjectFormValues = {
+  acknowledgeCheck?: boolean
   name?: string
   projectType?: number
   projectTypeLabel: string
@@ -162,29 +163,38 @@ export type ProjectFormValues = {
   poNumber?: string
   clientStartDate?: string
   clientDueDate?: string
+  clientSignoffDate?: string
+  clientWalkthroughDate?: string
   woaStartDate?: string
   sowOriginalContractAmount?: string
-  projectSOW?: any
+  sowDocumentFile?: any
+  documents?: any
   sowLink: string
   streetAddress?: string
   city?: string
   state?: string
   zipCode?: any
-  market?: string
+  newMarketId?: string
   gateCode?: string
   lockBoxCode?: string
   hoaEmailAddress?: string | null
   hoaPhone?: string | null
   hoaPhoneNumberExtension?: string
-  // projectManager?: any
   projectManagerId?: number
-  // projectManagerPhoneNumber?: string
   projectCoordinator?: string
+  projectCoordinatorId?: number
   clientName?: string
-  superFirstName?: string | null
+  clientId?: number
+  superLastName?: string | null
   superPhoneNumber?: string
   superPhoneNumberExtension?: string
   superEmailAddress?: string
+  projectClosedDate?: string
+  projectExpectedCloseDate?: string
+  projectStartDate?: string
+  woaCompletionDate?: string
+  propertyId?: number
+  property?: any
 }
 
 export type Market = {

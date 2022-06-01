@@ -42,6 +42,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 
   const methods = useForm<ProjectFormValues>({
     defaultValues: {
+      acknowledgeCheck: false,
       name: '',
       projectType: 0,
       projectTypeLabel: '',
@@ -49,14 +50,17 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       poNumber: '',
       clientStartDate: '',
       clientDueDate: '',
+      clientSignoffDate: '',
+      clientWalkthroughDate: '',
       woaStartDate: '',
-      sowOriginalContractAmount: '',
-      projectSOW: '',
+      sowOriginalContractAmount: '$0',
+      sowDocumentFile: '',
+      documents: '',
       streetAddress: '',
       city: '',
       state: '',
       zipCode: '',
-      market: '',
+      newMarketId: '',
       gateCode: '',
       lockBoxCode: '',
       hoaPhone: '',
@@ -64,11 +68,19 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       hoaEmailAddress: '',
       projectManagerId: 0,
       projectCoordinator: '',
+      projectCoordinatorId: 0,
       clientName: '',
-      superFirstName: '',
+      clientId: 0,
+      superLastName: '',
       superEmailAddress: '',
       superPhoneNumber: '',
       superPhoneNumberExtension: '',
+      projectClosedDate: '',
+      projectExpectedCloseDate: '',
+      projectStartDate: '',
+      woaCompletionDate: '',
+      propertyId: 0,
+      property: '',
     },
   })
 
@@ -77,8 +89,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const onSubmit = useCallback(
     async values => {
       let fileContents: any = null
-      if (values.projectSOW && values.projectSOW[0]) {
-        fileContents = await readFileContent(values.projectSOW[0])
+      if (values.documents && values.documents[0]) {
+        fileContents = await readFileContent(values.documents[0])
       }
       const newProjectPayload = {
         name: values.name,
@@ -89,13 +101,12 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         clientDueDate: dateISOFormat(values.clientDueDate),
         woaStartDate: dateISOFormat(values.woaStartDate),
         sowOriginalContractAmount: values.sowOriginalContractAmount,
-        projectSOW: values.projectSOW && values.projectSOW[0] ? values.projectSOW[0].name : null,
-        sowLink: fileContents,
+        sowDocumentFile: fileContents,
         streetAddress: values.streetAddress,
         city: values.city,
         state: values.state,
         zipCode: values.zipCode,
-        market: values.market,
+        newMarketId: values.market,
         gateCode: values.gateCode,
         lockBoxCode: values.lockBoxCode,
         hoaPhone: values.hoaPhone,
@@ -104,10 +115,12 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         projectManagerId: values.projectManagerId,
         projectCoordinator: values.projectCoordinator,
         clientName: values.clientName,
-        superFirstName: values.superFirstName,
+        clientId: values.clientId,
+        superLastName: values.superLastName,
         superEmailAddress: values.superEmailAddress,
         superPhoneNumber: values.superPhoneNumber,
         superPhoneNumberExtension: values.superPhoneNumberExtension,
+        propertyId: values.propertyId,
       }
 
       console.log('new payload', newProjectPayload)

@@ -4,7 +4,7 @@ import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useClients, useFPM, usePC } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
-import Select from 'react-select'
+import ReactSelect from 'components/form/react-select'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
@@ -48,10 +48,12 @@ export const ManageProject: React.FC<{
 
   const setPC = e => {
     setValue('projectCoordinator', e.label)
+    setValue('projectCoordinatorId', e.value)
   }
 
   const setClient = e => {
     setValue('clientName', e.label)
+    setValue('clientId', e.value)
   }
 
   return (
@@ -59,19 +61,21 @@ export const ManageProject: React.FC<{
       <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
-            <FormLabel>Field Project Manager</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Field Project Manager
+            </FormLabel>
             <Controller
               control={control}
               name={`projectManagerId`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="projectManagerId"
                     options={FPMs}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     onChange={setFPM}
+                    selectProps={{ isBorderLeft: true }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -81,19 +85,21 @@ export const ManageProject: React.FC<{
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel>Project Coordinator</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Project Coordinator
+            </FormLabel>
             <Controller
               control={control}
               name={`projectCoordinator`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="projectCoordinator"
                     options={PCs}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     onChange={setPC}
+                    selectProps={{ isBorderLeft: true }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -101,23 +107,23 @@ export const ManageProject: React.FC<{
             />
           </FormControl>
         </GridItem>
-      </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
-            <FormLabel>Client</FormLabel>
+            <FormLabel variant="strong-label" size="md">
+              Client
+            </FormLabel>
             <Controller
               control={control}
               name={`clientName`}
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <Select
+                  <ReactSelect
                     id="clientName"
                     options={clients}
                     selected={value}
-                    elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
                     onChange={setClient}
+                    selectProps={{ isBorderLeft: true }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -128,17 +134,16 @@ export const ManageProject: React.FC<{
         <GridItem>
           <FormControl>
             <FormInput
-              errorMessage={errors.superFirstName && errors.superFirstName?.message}
+              errorMessage={errors.superLastName && errors.superLastName?.message}
               label={'Client Super Name'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
-              name={`superFirstName`}
+              name={`superLastName`}
             />
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -146,7 +151,6 @@ export const ManageProject: React.FC<{
               label={'Super Phone'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`superPhoneNumber`}
             />
           </FormControl>
@@ -158,19 +162,18 @@ export const ManageProject: React.FC<{
               label={'Ext.'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`superPhoneNumberExtension`}
+              elementStyle={{ width: '125px' }}
             />
           </FormControl>
         </GridItem>
-        <GridItem>
+        <GridItem mb={120}>
           <FormControl>
             <FormInput
               errorMessage={errors.superEmailAddress && errors.superEmailAddress?.message}
               label={'Super Email'}
               placeholder=""
               register={register}
-              rules={{ required: 'This is required field' }}
               name={`superEmailAddress`}
             />
           </FormControl>
