@@ -145,7 +145,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         <Box flex="1">
           <Button
             data-testid="add-new-row-button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             borderColor="#4E87F8"
             color="#4E87F8"
@@ -157,7 +157,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           </Button>
           <Button
             data-testid="delete-row-button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             ml="10px"
             borderColor="#4E87F8"
@@ -238,7 +238,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 }
               }}
               leftIcon={<AiOutlineFileText />}
-              variant="ghost"
+              variant="outline"
               size="sm"
               colorScheme="brand"
               isDisabled={isAproved}
@@ -306,7 +306,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         type="text"
                         size="sm"
                         autoComplete="off"
-                        placeholder="description"
+                        placeholder="Add Description here"
                         isDisabled={isAproved}
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
@@ -332,7 +332,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                 data-testid={`transaction-amount-${index}`}
                                 type="number"
                                 size="sm"
-                                placeholder="amount"
+                                placeholder="Add Amount"
                                 isDisabled={isAproved}
                                 autoComplete="off"
                                 value={field.value}
@@ -363,8 +363,17 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           </Tbody>
         </Table>
       </Box>
-      <Flex p="3" flexDirection="row-reverse" borderWidth="0 1px 1px 1px" borderStyle="solid" borderColor="gray.100">
-        <Text data-testid="total-amount" color="gray.600" fontSize="14px" fontWeight={500} fontStyle="normal">
+      <Flex flexDirection="row-reverse" borderWidth="0 1px 1px 1px" borderStyle="solid" borderColor="gray.100">
+        <Text
+          data-testid="total-amount"
+          color="gray.600"
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+          borderLeft="1px solid #E2E8F0"
+          mr="129px"
+          p="20px"
+        >
           {t('total')}: {totalAmount}
         </Text>
       </Flex>
