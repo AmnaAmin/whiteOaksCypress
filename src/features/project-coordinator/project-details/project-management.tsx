@@ -1,9 +1,19 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import {
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  InputGroup,
+  Stack,
+} from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-const ProjectManagement = () => {
+const ProjectManagement: React.FC<{ id?: string }> = props => {
   const {
     register,
     formState: { errors },
@@ -18,7 +28,7 @@ const ProjectManagement = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="project">
-        <Stack minH="32vh">
+        <Stack minH={props.id === 'Receivable' ? '290px' : '430px'}>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.status}>
@@ -31,7 +41,7 @@ const ProjectManagement = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} />
+                      <ReactSelect {...field} isDisabled />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -49,7 +59,7 @@ const ProjectManagement = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} isDisabled />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -89,9 +99,10 @@ const ProjectManagement = () => {
             <GridItem>
               <FormControl isInvalid={!!errors.projectName} w="215px">
                 <FormLabel variant="strong-label" size="md" htmlFor="projectName">
-                  Project Number
+                  Project Name
                 </FormLabel>
                 <Input
+                  variant="reguired-field"
                   placeholder="PC project 1"
                   id="projectName"
                   {...register('projectName', {
@@ -106,7 +117,7 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Start
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -123,7 +134,9 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Start
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <InputGroup>
+                  <Input variant="reguired-field" type="date" />
+                </InputGroup>
               </FormControl>
             </GridItem>
             <GridItem>
@@ -137,7 +150,7 @@ const ProjectManagement = () => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
-                  Client Click Walk Through
+                  Client Walkthrough
                 </FormLabel>
                 <Input type="date" />
               </FormControl>

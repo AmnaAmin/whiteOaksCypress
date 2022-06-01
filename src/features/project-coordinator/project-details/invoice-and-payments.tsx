@@ -1,12 +1,23 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+  VStack,
+} from '@chakra-ui/react'
+import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
-import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { t } from 'i18next'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
 
-const InvoiceAndPayments = () => {
+const InvoiceAndPayments: React.FC<{ id?: string }> = props => {
   const {
     handleSubmit,
     register,
@@ -23,7 +34,7 @@ const InvoiceAndPayments = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="invoice">
-        <Stack minH="32vh">
+        <Stack minH={props.id === 'Receivable' ? '290px' : '430px'}>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" w="908px" columnGap="16px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
@@ -60,7 +71,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.invoiceNo}>
                 <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
-                  Invoice no
+                  Invoice Number
                 </FormLabel>
                 <Input
                   id="invoiceNo"
@@ -73,39 +84,45 @@ const InvoiceAndPayments = () => {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel mb="0" variant="strong-label" size="md">
+                <FormLabel variant="strong-label" size="md">
                   Upload Invoice
                 </FormLabel>
-                <FormFileInput
-                  errorMessage={errors.agreement && errors.agreement?.message}
-                  label={''}
-                  name={`uploadInvoice`}
-                  register={register}
-                  testId="fileInputAgreement"
-                  style={{ w: '215px', h: '40px' }}
-                >
-                  <Button
-                    _focus={{ outline: 'none' }}
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="38px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
-                </FormFileInput>
+                <Controller
+                  name="attachment"
+                  control={control}
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value ? field.value?.name : t('chooseFile')}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              // onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            // onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {/* {field.value && (
+                      // <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )} */}
+                      </VStack>
+                    )
+                  }}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  Invoice back date
+                  Invoice Back Date
                 </FormLabel>
-                <Input w="215px" variant="reguired-field" size="md" placeholder="mm/dd/yyyy" />
+                <Input w="215px" size="md" placeholder="mm/dd/yyyy" />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -113,7 +130,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.paymentsTerms}>
                 <FormLabel variant="strong-label" size="md">
-                  Payments terms
+                  Payments Terms
                 </FormLabel>
                 <Controller
                   control={control}
@@ -121,7 +138,7 @@ const InvoiceAndPayments = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect {...field} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -134,14 +151,14 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Expected Pay
                 </FormLabel>
-                <Input w="215px" variant="reguired-field" size="md" type="date" />
+                <Input w="215px" size="md" type="date" />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem display="grid" alignItems="end" h="67.3px">
               <Box mt="1">
-                <Button variant="outline" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
+                <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
                   Download Original SOW
                 </Button>
               </Box>
@@ -159,7 +176,6 @@ const InvoiceAndPayments = () => {
                   placeholder="$0.00"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
@@ -178,7 +194,6 @@ const InvoiceAndPayments = () => {
                   placeholder="$1200"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.remainingPayment && errors.remainingPayment.message}</FormErrorMessage>
@@ -197,7 +212,6 @@ const InvoiceAndPayments = () => {
                   placeholder="$0"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>

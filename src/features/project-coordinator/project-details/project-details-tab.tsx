@@ -18,7 +18,12 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
         colorScheme="brand"
         onChange={index => setTabIndex(index)}
       >
-        <TabList bg={props.id === 'Receivable' ? '' : '#F7FAFC'} rounded="6px 6px 0 0" pt="7">
+        <TabList
+          bg={props.id === 'Receivable' ? '' : '#F7FAFC'}
+          rounded="6px 6px 0 0"
+          pt="7"
+          mx={props.id === 'Receivable' ? '32px' : ''}
+        >
           <Tab>Project Management</Tab>
           <Tab>Invoicing & payment</Tab>
           <Tab>Contacts</Tab>
@@ -27,23 +32,23 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
         </TabList>
 
         <TabPanels mt="31px">
-          <TabPanel p="0" ml="2">
-            <ProjectManagement />
+          <TabPanel p="0" ml="32px">
+            <ProjectManagement id={props.id} />
           </TabPanel>
 
-          <TabPanel p="0" ml="2">
-            <InvoiceAndPayments />
+          <TabPanel p="0" ml="32px">
+            <InvoiceAndPayments id={props.id} />
           </TabPanel>
 
-          <TabPanel p="0" ml="2">
-            <Contact />
+          <TabPanel p="0" ml="32px">
+            <Contact id={props.id} />
           </TabPanel>
-          <TabPanel p="0" ml="2">
-            <Location />
+          <TabPanel p="0" ml="32px">
+            <Location id={props.id} />
           </TabPanel>
 
-          <TabPanel p="0" ml="2">
-            <Misc />
+          <TabPanel p="0" ml="32px">
+            <Misc id={props.id} />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>
@@ -53,7 +58,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -76,6 +81,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -96,7 +102,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -121,6 +127,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -140,7 +147,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -163,6 +170,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -182,7 +190,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -205,6 +213,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -239,6 +248,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
