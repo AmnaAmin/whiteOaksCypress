@@ -1,4 +1,4 @@
-import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex } from '@chakra-ui/react'
+import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -99,9 +99,18 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 0 && (
-                  <>
+                  <HStack mb="10px" spacing="16px">
+                    <Box>
+                      <FormControl display="flex" alignItems="center">
+                        <FormLabel htmlFor="view-details" mb="0" variant="light-label" size="md">
+                          View Details
+                        </FormLabel>
+                        <Switch size="sm" id="view-details" />
+                      </FormControl>
+                    </Box>
+
                     <Button
-                      variant="ghost"
+                      variant="solid"
                       colorScheme="brand"
                       onClick={onTransactionModalOpen}
                       isDisabled={preventNewTransaction}
@@ -109,21 +118,13 @@ export const ProjectDetails: React.FC = props => {
                     >
                       {t('newTransaction')}
                     </Button>
-                  </>
+                  </HStack>
                 )}
               </Box>
             </TabList>
 
             <TabPanels h="100%">
-              <TabPanel p="0px" h="100%" mt="31px">
-                <Box mb="5">
-                  <FormControl display="flex" alignItems="center">
-                    <FormLabel htmlFor="view-details" mb="0">
-                      View Details
-                    </FormLabel>
-                    <Switch id="view-details" />
-                  </FormControl>
-                </Box>
+              <TabPanel p="0px" h="100%" mt="7px">
                 <Box h="100%">
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
