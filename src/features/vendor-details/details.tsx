@@ -96,61 +96,63 @@ export const Details: React.FC<{
   )
 
   return (
-    <Flex h="100%" direction="column">
-      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="30px">
-        <GridItem>
-          <FieldInfoCard
-            testid="businessName"
-            title={t('businessName')}
-            value={`${vendorProfileData?.companyName}`}
-            icon={BiBriefcase}
-          />
-        </GridItem>
-        <GridItem>
-          <FieldInfoCard title={t('capacity')} value={`${vendorProfileData?.capacity}`} icon={BiUser} />
-        </GridItem>
-        <GridItem>
-          <FieldInfoCard
-            title={t('last4digits')}
-            value={`${vendorProfileData?.einNumber?.slice(-4)}`}
-            icon={BiCreditCardFront}
-          />
-        </GridItem>
-        <GridItem>
-          <FieldInfoCard
-            title={t('paymentMethods')}
-            value={
-              vendorProfileData?.paymentOptions?.length > 0
-                ? vendorProfileData.paymentOptions.map(po => po.name).toString()
-                : 'none'
-            }
-            icon={BiCreditCardFront}
-          />
-        </GridItem>
-      </Grid>
-      <Divider border="2px solid" borderColor="gray.200" mb="27px" />
+    <>
+      <Flex h="565px" direction="column">
+        <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="30px">
+          <GridItem>
+            <FieldInfoCard
+              testid="businessName"
+              title={t('businessName')}
+              value={`${vendorProfileData?.companyName}`}
+              icon={BiBriefcase}
+            />
+          </GridItem>
+          <GridItem>
+            <FieldInfoCard title={t('capacity')} value={`${vendorProfileData?.capacity}`} icon={BiUser} />
+          </GridItem>
+          <GridItem>
+            <FieldInfoCard
+              title={t('last4digits')}
+              value={`${vendorProfileData?.einNumber?.slice(-4)}`}
+              icon={BiCreditCardFront}
+            />
+          </GridItem>
+          <GridItem>
+            <FieldInfoCard
+              title={t('paymentMethods')}
+              value={
+                vendorProfileData?.paymentOptions?.length > 0
+                  ? vendorProfileData.paymentOptions.map(po => po.name).toString()
+                  : 'none'
+              }
+              icon={BiCreditCardFront}
+            />
+          </GridItem>
+        </Grid>
+        <Divider border="1px solid" borderColor="gray.200" mb="27px" />
 
-      <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="40px">
-        <GridItem>
-          <FieldInfoCard
-            testid="streetAddress"
-            title={t('streetAddress')}
-            value={`${vendorProfileData?.streetAddress}`}
-            icon={BiMapPin}
-          />
-        </GridItem>
-        <GridItem>
-          <FieldInfoCard title={t('state')} value={`${vendorProfileData?.state}`} icon={BiTrip} />
-        </GridItem>
-        <GridItem>
-          <FieldInfoCard title={t('city')} value={`${vendorProfileData?.city}`} icon={HiOutlineLocationMarker} />
-        </GridItem>
-        <GridItem>
-          <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
-        </GridItem>
-      </Grid>
-      <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} onClose={props.onClose} />
-    </Flex>
+        <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="40px">
+          <GridItem>
+            <FieldInfoCard
+              testid="streetAddress"
+              title={t('streetAddress')}
+              value={`${vendorProfileData?.streetAddress}`}
+              icon={BiMapPin}
+            />
+          </GridItem>
+          <GridItem>
+            <FieldInfoCard title={t('state')} value={`${vendorProfileData?.state}`} icon={BiTrip} />
+          </GridItem>
+          <GridItem>
+            <FieldInfoCard title={t('city')} value={`${vendorProfileData?.city}`} icon={HiOutlineLocationMarker} />
+          </GridItem>
+          <GridItem>
+            <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
+          </GridItem>
+        </Grid>
+        <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} onClose={props.onClose} />
+      </Flex>
+    </>
   )
 }
 
@@ -187,8 +189,8 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
       ) : (
         <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
-            <Box flex="1">
-              <Box mb="22px">
+            <VStack alignItems="start" spacing="32px">
+              <Box>
                 <Stack spacing={4} direction={['row']}>
                   <FormControl w="215px" isInvalid={!!errors.primaryContact}>
                     <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
@@ -212,7 +214,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                 </Stack>
               </Box>
 
-              <Box mb="22px">
+              <Box>
                 <Stack direction="row" spacing={4}>
                   {/* Primary Email => Input */}
 
@@ -238,7 +240,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                 </Stack>
               </Box>
 
-              <Box mb="22px">
+              <Box>
                 <Stack direction="row" spacing={4}>
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
@@ -307,22 +309,22 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                   </FormControl>
                 </Stack>
               </Box>
-            </Box>
-
+            </VStack>
             <Flex
-              pt="9px"
+              pt="12px"
+              mt="50px"
               w="100%"
-              h="70px"
               alignItems="center"
               justifyContent="end"
-              borderTop="2px solid #E2E8F0"
-              mt="40px"
+              borderTop="2px solid"
+              borderTopColor="#E2E8F0"
             >
               {onClose && (
                 <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
                   Cancel
                 </Button>
               )}
+
               <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="brand">
                 {t('save')}
               </Button>
