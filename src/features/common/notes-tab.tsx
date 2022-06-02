@@ -1,4 +1,15 @@
-import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text } from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Flex,
+  Textarea,
+  WrapItem,
+  Center,
+  FormLabel,
+  Text,
+  ModalBody,
+  ModalFooter,
+} from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -36,9 +47,17 @@ const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote
     </Flex>
   )
 }
+type NotesProps = {
+  notes: Array<any>
+  saveNote: (note) => void
+  onClose?: () => void
+  messageBoxStyle?: any
+  chatListStyle?: any
+  pageLayoutStyle?: any
+}
 
-export const NotesTab = props => {
-  const { notes, saveNote, onClose } = props
+export const NotesTab = (props: NotesProps) => {
+  const { notes, saveNote, onClose, messageBoxStyle, chatListStyle, pageLayoutStyle } = props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
@@ -59,32 +78,39 @@ export const NotesTab = props => {
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
-      <Box bg="white" rounded={16}>
-        <Box overflow="auto">
-          {notes && notes.length > 0 && (
-            <Box h={390} overflow="auto">
-              {notes.map(note => {
-                return note.createdBy === account.login ? (
-                  <MessagesTypes userNote={note} />
-                ) : (
-                  <MessagesTypes otherNote={note} />
-                )
-              })}
-              <div ref={messagesEndRef} />
-            </Box>
-          )}
-          <Flex>
-            <Box w="125px" />
+      <ModalBody>
+        <Box {...pageLayoutStyle} bg="white" rounded={16}>
+          <Box h={chatListStyle.height || '300px'} {...chatListStyle} overflow="auto">
+            {notes && notes.length > 0 && (
+              <Box>
+                {notes.map(note => {
+                  return note.createdBy === account.login ? (
+                    <MessagesTypes userNote={note} />
+                  ) : (
+                    <MessagesTypes otherNote={note} />
+                  )
+                })}
+                <div ref={messagesEndRef} />
+              </Box>
+            )}
+          </Box>
+          <Flex mt="10px">
             <Box w="100%">
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 {t('enterNewNote')}
               </FormLabel>
-              <Textarea flexWrap="wrap" minH="150px" {...register('message')} />
+              <Textarea
+                flexWrap="wrap"
+                h={messageBoxStyle.height || '200px'}
+                {...messageBoxStyle}
+                {...register('message')}
+              />
             </Box>
           </Flex>
         </Box>
-
-        <Flex mt={5} borderTop="1px solid #E2E8F0" h="92px" justifyContent="end" alignItems="center" pr={3}>
+      </ModalBody>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+        <Flex justifyContent="end">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
@@ -94,7 +120,7 @@ export const NotesTab = props => {
             {t('save')}
           </Button>
         </Flex>
-      </Box>
+      </ModalFooter>
     </form>
   )
 }

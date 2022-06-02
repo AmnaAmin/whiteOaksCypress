@@ -16,6 +16,8 @@ import {
   Thead,
   Tr,
   VStack,
+  ModalFooter,
+  ModalBody,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { currencyFormatter } from 'utils/stringFormatters'
@@ -33,7 +35,7 @@ import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
-    <Flex justifyContent="left">
+    <Flex justifyContent="start">
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -127,8 +129,8 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   return (
     <Box>
-      <Box w="100%">
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
+      <ModalBody h="400px" pl="25px" pr="25px">
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={t('finalInvoice')}
@@ -155,7 +157,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
-          <Box h="400px" overflow="auto">
+          <Box h="250px" overflow="auto">
             <form>
               <Table border="1px solid #E2E8F0" variant="simple" size="md">
                 <Thead>
@@ -290,8 +292,8 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
             </VStack>
           </Box>
         </Box>
-      </Box>
-      <Flex h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
+      </ModalBody>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
           {workOrder?.statusLabel !== STATUS.Cancel && recentInvoice && (
             <Button
@@ -312,7 +314,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
             leftIcon={<BiSpreadsheet />}
             onClick={generatePdf}
           >
-              {t('generateINV')}
+            {t('generateINV')}
           </Button>
         </HStack>
         <HStack justifyContent="end">
@@ -320,7 +322,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
             {t('cancel')}
           </Button>
         </HStack>
-      </Flex>
+      </ModalFooter>
     </Box>
   )
 }
