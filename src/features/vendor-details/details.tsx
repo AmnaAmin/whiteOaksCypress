@@ -83,8 +83,8 @@ export const Details: React.FC<{
       updateVendorProfileDetails(payload, {
         onSuccess() {
           toast({
-            title: 'Update Vendor Profile Details',
-            description: 'Vendor profile details has been saved successfully.',
+            title: t('updateProfile'),
+            description: t('updateProfileSuccess'),
             status: 'success',
             isClosable: true,
             position: 'top-left',
@@ -241,7 +241,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
               <Box mb="22px">
                 <Stack direction="row" spacing={4}>
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
-                    <FormLabel sx={textStyle}>{t('businessPhoneName')}</FormLabel>
+                    <FormLabel sx={textStyle}>{t('businessPhoneNo')}</FormLabel>
                     <Input
                       id="businessPhoneNumber"
                       type="text"

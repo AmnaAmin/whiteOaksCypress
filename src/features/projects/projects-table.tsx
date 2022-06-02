@@ -69,7 +69,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
       <Tr
         bg="white"
         _hover={{
-          background: 'gray.100',
+          background: 'gray.50',
           '& > td > a': {
             color: '#333',
           },

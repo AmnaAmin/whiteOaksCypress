@@ -76,7 +76,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="16px" fontWeight={500} color="gray.600">
           {transaction?.name}
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody px="6" py="8">
           <VStack alignItems="left" mt="5">

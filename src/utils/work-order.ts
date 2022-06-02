@@ -1,5 +1,5 @@
 import { useClient } from 'utils/auth-context'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useToast } from '@chakra-ui/toast'
 import { useParams } from 'react-router-dom'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
@@ -42,7 +42,54 @@ export const useUpdateWorkOrderMutation = () => {
     },
   )
 }
+export const useNoteMutation = projectId => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
 
+  return useMutation(
+    (payload: any) => {
+      return client('notes', {
+        data: payload,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['notes', projectId])
+        toast({
+          title: 'Note',
+          description: 'Note has been saved successfully.',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Note',
+          description: (error.title as string) ?? 'Unable to save note.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) => {
+  const client = useClient()
+
+  const { data: notes, ...rest } = useQuery<Array<Document>>(['notes', workOrderId], async () => {
+    const response = await client(`notes?workOrderId.equals=${workOrderId}&sort=modifiedDate,asc`, {})
+    return response?.data
+  })
+
+  return {
+    notes,
+    ...rest,
+  }
+}
 export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
   const invoiceInfo = [
     { label: 'Property Address:', value: workOrder.propertyAddress },
