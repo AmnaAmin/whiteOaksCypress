@@ -40,58 +40,6 @@ type ProjectProps = {
   setTableInstance: (tableInstance: any) => void
 }
 export const PayableTable: React.FC<ProjectProps> = ({ setTableInstance, payableColumns, resizeElementRef }) => {
-  // const { columns } = useColumnWidthResize([
-  //   {
-  //     Header: 'Id',
-  //     accessor: 'id',
-  //   },
-  //   {
-  //     Header: 'Vendor Name',
-  //     accessor: 'vendorName',
-  //   },
-  //   {
-  //     Header: 'Property Address',
-  //     accessor: 'propertyAddress',
-  //   },
-  //   {
-  //     Header: 'Vendor Address',
-  //     accessor: 'vendorAddress',
-  //   },
-  //   {
-  //     Header: 'Payment Terms',
-  //     accessor: 'paymentTerms',
-  //   },
-  //   {
-  //     Header: 'Expected pay date',
-  //     accessor: 'expectedPayDate',
-  //   },
-  //   {
-  //     Header: 'Final Invoice',
-  //     accessor: 'finalInvoice',
-  //   },
-
-  //   {
-  //     Header: 'Markets',
-  //     accessor: 'markets',
-  //   },
-  //   {
-  //     Header: 'WO Start Date',
-  //     accessor: 'woStarteDate',
-  //   },
-  //   {
-  //     Header: 'WO Completed Date',
-  //     accessor: 'woCompleteDate',
-  //   },
-  //   {
-  //     Header: 'WO Issue Date',
-  //     accessor: 'woIssueDate',
-  //   },
-  //   {
-  //     Header: 'Checkbox',
-  //     accessor: 'checkbox',
-  //   },
-  // ])
-
   return (
     <Box overflow="auto" width="100%">
       <ReactTable

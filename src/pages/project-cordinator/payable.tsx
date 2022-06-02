@@ -1,4 +1,4 @@
-import { AccountDetail } from 'components/account-details/account-detail'
+import { AccountDetail } from 'features/project-coordinator/payable-recievable/account-details/account-detail'
 import { PAYABLE_COLUMNS } from 'features/projects/modals/project-coordinator/recevialbe/column-file'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
