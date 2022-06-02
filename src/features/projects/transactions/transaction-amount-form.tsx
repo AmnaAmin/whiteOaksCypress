@@ -275,7 +275,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           <Tbody>
             {transactionFields.map((transactionField, index) => {
               return (
-                <Tr key={transactionField.id}>
+                <Tr key={`field${index}`}>
                   {transactionFields?.length > 1 && (
                     <Td px="3">
                       <Controller

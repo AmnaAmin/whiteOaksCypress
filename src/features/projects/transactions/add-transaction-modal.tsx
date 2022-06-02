@@ -12,7 +12,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>{t('newTransaction')}</ModalHeader>
-        <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton />
 
         <ModalBody>
           <TransactionForm onClose={onClose} />

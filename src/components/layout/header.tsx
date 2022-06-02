@@ -61,9 +61,6 @@ type HeaderProps = {
   toggleMenu?: () => void
 }
 
-const hoverEffect = {
-  _focus: { background: 'blue.50' },
-}
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
@@ -116,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-          <HStack spacing={4} _hover={{ bg: 'blue.50', rounded: '6px' }} pl="1">
+          <HStack spacing={4} _hover={{ bg: 'gray.100', rounded: '6px' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
@@ -128,13 +125,13 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <UserInfo />
               </MenuButton>
               <MenuList minWidth="279px">
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <Link
                     color="gray.600"
                     fontWeight={400}
@@ -147,10 +144,10 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                     {t('help')}
                   </Link>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem>
                   <Box
                     onClick={logout}
                     fontSize="14px"

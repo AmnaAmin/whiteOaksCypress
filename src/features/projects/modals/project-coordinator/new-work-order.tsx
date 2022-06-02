@@ -69,7 +69,7 @@ const NewWorkOrder: React.FC<{
           <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
             New Work Order
           </ModalHeader>
-          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+          <ModalCloseButton />
           <ModalBody justifyContent="center">
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>

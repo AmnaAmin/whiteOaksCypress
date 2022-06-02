@@ -12,7 +12,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 const Projects = () => {
   const { t } = useTranslation()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.project,
@@ -23,7 +23,7 @@ const Projects = () => {
   }
 
   const onSave = columns => {
-    postGridColumn(columns)
+    postProjectColumn(columns)
   }
 
   return (

@@ -122,7 +122,7 @@ const chakraComponents = {
           sx={{
             ...inputStyles.field,
             bg: '#FFFFFF',
-            _hover: { backgroundColor: 'blue.50' },
+            _hover: { backgroundColor: 'gray.100' },
             border: 'none',
             p: 0,
             overflow: 'hidden',
@@ -232,7 +232,7 @@ const chakraComponents = {
           fontWeight: 400,
           fontSize: '12px',
           textAlign: 'start',
-          bg: isFocused ? 'blue.50' : 'white',
+          bg: isFocused ? item._focus.bg : 'transparent',
           ...(isDisabled && item._disabled),
         }}
         ref={innerRef}

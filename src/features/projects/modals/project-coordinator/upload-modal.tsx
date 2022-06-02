@@ -44,7 +44,7 @@ export const UploadModal = ({ isOpen, onClose }) => {
           <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
             Upload
           </ModalHeader>
-          <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
+          <ModalCloseButton _focus={{ outline: 'none' }} />
           <ModalBody justifyContent="center">
             <HStack h="100%" alignItems="center">
               <Box w={215}>

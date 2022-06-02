@@ -37,8 +37,8 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
         toast({
-          title: t('updateMarkets'),
-          description: t('updateMarketsSuccess'),
+          title: 'Update Vendor Profile Markets',
+          description: 'Vendor profile markets has been saved successfully.',
           status: 'success',
           isClosable: true,
           position: 'top-left',
@@ -99,13 +99,13 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
                       name={name}
                       key={name}
                       isChecked={value.checked}
-                      data-testid={`marketChecks.${value.market.id}`}
+                      data-testid={`marketChecks.${value.id}`}
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
                     >
-                      {value.market.metropolitanServiceArea}
+                      {value.metropolitanServiceArea}
                     </CheckboxButton>
                   )
                 }}

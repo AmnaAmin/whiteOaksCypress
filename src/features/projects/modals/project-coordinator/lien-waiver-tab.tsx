@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
-import { GetHelpText } from 'utils/lien-waiver'
+import { getHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useDocuments } from 'utils/vendor-projects'
 
@@ -124,7 +124,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <VStack align="start" spacing="30px">
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Box flex="4" minW="59em">
-                <HelpText>{GetHelpText()}</HelpText>
+                <HelpText>{getHelpText()}</HelpText>
               </Box>
               <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (

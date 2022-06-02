@@ -18,7 +18,7 @@ const NewVendorModal: React.FC<NewVendorModalType> = props => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>New Vendor</ModalHeader>
-          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+          <ModalCloseButton />
           <ModalBody>
             <NewVendorTabs onClose={props.onClose} />
           </ModalBody>

@@ -143,7 +143,7 @@ export const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="0px"></TabPanel>
 
               <TabPanel px="0">
-                <NotesTab notes={[]} saveNote={() => {}} />
+                <NotesTab />
               </TabPanel>
             </TabPanels>
           </Tabs>

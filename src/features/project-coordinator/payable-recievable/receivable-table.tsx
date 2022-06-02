@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+// import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
-import data from './moc-data-receivable.json'
+// import data from './moc-data-receivable.json'
+import { Column } from 'react-table'
+import { usePCReveviable } from 'utils/account-receivable'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -36,96 +38,41 @@ const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
-  (props, ref) => {
-    const { columns } = useColumnWidthResize(
-      [
-        {
-          Header: 'Id',
-          accessor: 'id',
-        },
-        {
-          Header: 'Client',
-          accessor: 'client',
-        },
-        {
-          Header: 'Address',
-          accessor: 'address',
-        },
-        {
-          Header: 'terms',
-          accessor: 'terms',
-        },
-        {
-          Header: 'Payment Types',
-          accessor: 'paymentTypes',
-        },
-        {
-          Header: 'Expected pay date',
-          accessor: 'expectedPayDate',
-        },
-        {
-          Header: 'Balance',
-          accessor: 'balance',
-        },
-        {
-          Header: 'final invoice',
-          accessor: 'finalInvoice',
-        },
-        {
-          Header: 'Markets',
-          accessor: 'markets',
-        },
-        {
-          Header: 'WO Invoice Date',
-          accessor: 'woInvoiceDate',
-        },
-        {
-          Header: 'PO No',
-          accessor: 'poNumber',
-        },
-        {
-          Header: 'WO No',
-          accessor: 'woNumber',
-        },
-        {
-          Header: 'Invoice No',
-          accessor: 'invoiceNumber',
-        },
-        {
-          Header: ' Checkbox',
-          accessor: ' Checkbox',
-        },
-      ],
-      ref,
-    )
+type ProjectProps = {
+  recievableColumns: Column[]
+  resizeElementRef?: any
+  setTableInstance: (tableInstance: any) => void
+}
 
-    const {
-      isOpen: isAccountReceivableModal,
-      onOpen: onAccountReceivableModalOpen,
-      onClose: onAccountReceivableModalClose,
-    } = useDisclosure()
+export const ReceivableTable: React.FC<ProjectProps> = ({ setTableInstance, recievableColumns }) => {
+  const { receivableData, isLoading } = usePCReveviable()
 
-    const onRowClick = useCallback(
-      (_, row) => {
-        onAccountReceivableModalOpen()
-      },
-      [onAccountReceivableModalOpen],
-    )
+  const {
+    isOpen: isAccountReceivableModal,
+    onOpen: onAccountReceivableModalOpen,
+    onClose: onAccountReceivableModalClose,
+  } = useDisclosure()
 
-    return (
-      <Box overflow="auto" width="100%">
-        <ReactTable
-          onRowClick={onRowClick}
-          columns={columns}
-          setTableInstance={props.setTableInstance}
-          data={data}
-          TableRow={receivableRow}
-          tableHeight="calc(100vh - 300px)"
-          name="alerts-table"
-        />
-        <AccountReceivableModal isOpen={isAccountReceivableModal} onClose={onAccountReceivableModalClose} />
-      </Box>
-    )
-  },
-)
+  const onRowClick = useCallback(
+    (_, row) => {
+      onAccountReceivableModalOpen()
+    },
+    [onAccountReceivableModalOpen],
+  )
+
+  return (
+    <Box overflow="auto" width="100%">
+      <ReactTable
+        onRowClick={onRowClick}
+        columns={recievableColumns}
+        setTableInstance={setTableInstance}
+        data={receivableData?.arList}
+        isLoading={isLoading}
+        TableRow={receivableRow}
+        tableHeight="calc(100vh - 300px)"
+        name="alerts-table"
+      />
+      <AccountReceivableModal isOpen={isAccountReceivableModal} onClose={onAccountReceivableModalClose} />
+    </Box>
+  )
+}

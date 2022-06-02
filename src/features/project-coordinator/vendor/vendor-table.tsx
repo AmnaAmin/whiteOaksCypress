@@ -13,7 +13,6 @@ export const VENDOR_COLUMNS = [
     accessor: 'statusLabel',
     Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
   },
-
   {
     Header: 'Name',
     accessor: 'companyName',
@@ -22,7 +21,6 @@ export const VENDOR_COLUMNS = [
     Header: 'Region',
     accessor: 'region',
   },
-
   {
     Header: 'State',
     accessor: 'state',
@@ -42,22 +40,6 @@ export const VENDOR_COLUMNS = [
   {
     Header: 'EIN/SSN',
     accessor: 'einNumber',
-  },
-  {
-    Header: 'Total Capacity',
-    accessor: 'capacity',
-  },
-  {
-    Header: 'Available Capacity',
-    accessor: 'availableCapacity',
-  },
-  {
-    Header: 'Construction Trade',
-    accessor: 'skills',
-  },
-  {
-    Header: 'Market',
-    accessor: 'market',
   },
 ]
 

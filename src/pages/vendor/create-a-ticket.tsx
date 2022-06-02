@@ -31,7 +31,6 @@ import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
-import { Card } from 'components/card/card'
 
 const CreateATicket = () => {
   const toast = useToast()
@@ -100,13 +99,14 @@ const CreateATicket = () => {
   }
 
   return (
-    <Card py="0">
+    <>
       <Box mt="40px" ml="20px">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box>
             <Text fontSize="18px" fontWeight={500} color="gray.600" mb="8">
               {t('createTicket')}
             </Text>
+
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
               {/* <FormControl>
                 <FormLabel htmlFor="createdBy" fontSize="16px">
@@ -241,7 +241,7 @@ const CreateATicket = () => {
 
           <FormControl mt="40px" w="290px" mb="40px" isInvalid={!!errors.attachment?.message}>
             <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" mb={1}>
-              {t('fileUpload')}
+              File Upload
             </FormLabel>
             <Controller
               name="attachment"
@@ -253,14 +253,16 @@ const CreateATicket = () => {
                     <Box>
                       <ChooseFileField
                         name={field.name}
-                        value={field.value ? field.value?.name : t('chooseFile')}
+                        value={field.value ? field.value?.name : 'Choose File'}
                         isError={!!fieldState.error?.message}
                         onChange={(file: any) => {
                           onFileChange(file)
                           field.onChange(file)
                         }}
                         onClear={() => setValue(field.name, null)}
-                      ></ChooseFileField>
+                      >
+                        {t('chooseFile')}
+                      </ChooseFileField>
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
@@ -272,6 +274,7 @@ const CreateATicket = () => {
               }}
             />
           </FormControl>
+
           <Flex
             flexDirection="row-reverse"
             w="100%"
@@ -282,12 +285,12 @@ const CreateATicket = () => {
             borderTop="2px solid #E2E8F0"
           >
             <Button type="submit" colorScheme="brand">
-              {t('save')}
+              Save
             </Button>
           </Flex>
         </form>
       </Box>
-    </Card>
+    </>
   )
 }
 

@@ -18,6 +18,16 @@ import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
 import { BiAddToQueue } from 'react-icons/bi'
 
+const projectTabStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  fontStyle: 'normal',
+  color: 'gray.600',
+  _hover: {
+    backgroundColor: 'gray.200',
+  },
+}
+
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
@@ -44,13 +54,19 @@ const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
+              <Tab aria-labelledby="transaction-tab" sx={projectTabStyle}>
+                {t('transaction')}
+              </Tab>
 
-              <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
+              <Tab whiteSpace="nowrap" sx={projectTabStyle}>
+                {t('vendorWorkOrders')}
+              </Tab>
 
-              <Tab aria-labelledby="documents-tab">{t('documents')}</Tab>
+              <Tab aria-labelledby="documents-tab" sx={projectTabStyle}>
+                {t('documents')}
+              </Tab>
 
-              <Tab>{t('alerts')}</Tab>
+              <Tab sx={projectTabStyle}>{t('alerts')}</Tab>
 
               <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (

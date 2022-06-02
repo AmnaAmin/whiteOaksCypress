@@ -13,7 +13,6 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { convertDateTimeFromServer, customFormat } from './date-time-utils'
-import { useTranslation } from 'react-i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -116,7 +115,7 @@ export const useMarkets = () => {
 export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: VendorProfile): VendorTradeFormValues => {
   return {
     trades: trades.map(trade => ({
-      trade,
+      ...trade,
       checked: !!vendorData?.vendorSkills?.find(skill => skill.id === trade.id),
     })),
   }
@@ -129,7 +128,6 @@ export const parseTradeFormValuesToAPIPayload = (
   return {
     ...vendorData,
     vendorSkills: formValues.trades
-      .map(trade => ({ ...trade.trade, checked: trade.checked }))
       .filter(trade => trade.checked)
       .map(trade => {
         const { checked, ...rest } = trade
@@ -145,7 +143,7 @@ export const parseMarketAPIDataToFormValues = (
 ): VendorMarketFormValues => {
   return {
     markets: markets.map(market => ({
-      market,
+      ...market,
       checked: !!vendorData?.markets?.find(skill => skill.id === market.id),
     })),
   }
@@ -158,7 +156,6 @@ export const parseMarketFormValuesToAPIPayload = (
   return {
     ...vendorData,
     markets: formValues.markets
-      .map(market => ({ ...market.market, checked: market.checked }))
       .filter(market => market.checked)
       .map(market => {
         const { checked, ...rest } = market
@@ -179,7 +176,6 @@ export const DOCUMENTS_TYPES = {
 export const useSaveVendorDetails = () => {
   const client = useClient()
   const toast = useToast()
-  const { t } = useTranslation()
 
   return useMutation(
     (licenses: any) => {
@@ -191,8 +187,8 @@ export const useSaveVendorDetails = () => {
     {
       onSuccess() {
         toast({
-          title: t('updateDetails'),
-          description: t('updateDetailsSuccess'),
+          title: 'Update Vendor Details',
+          description: 'Vendor Details have been updated successfully.',
           status: 'success',
           duration: 9000,
           isClosable: true,

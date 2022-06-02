@@ -5,7 +5,6 @@ import { TableColumnSetting, TableNames } from 'types/table-column.types'
 import { useColumnWidthResize } from './hooks/useColumnsWidthResize'
 import { useUserProfile } from './redux-common-selectors'
 import { Account } from 'types/account.types'
-import { useTranslation } from 'react-i18next'
 
 type generateSettingColumnProps = {
   field: string
@@ -51,7 +50,6 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
 export const useTableColumnSettings = (columns: Column[], tableName: TableNames) => {
   const client = useClient()
   const { email } = useUserProfile() as Account
-  const { t } = useTranslation()
 
   const { data: savedColumns, ...rest } = useQuery<TableColumnSetting[]>('GetGridColumn', async () => {
     const response = await client(`column/${tableName}`, {})
@@ -60,15 +58,7 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
   })
 
   const settingColumns = savedColumns?.length
-    ? savedColumns.map((col, index) => {
-        return generateSettingColumn({
-          field: t(col.colId),
-          contentKey: col.contentKey as string,
-          order: index,
-          userId: email,
-          type: tableName,
-        })
-      })
+    ? savedColumns.sort((a, b) => a.order - b.order)
     : columns.map((col, index) => {
         return generateSettingColumn({
           field: col.Header as string,

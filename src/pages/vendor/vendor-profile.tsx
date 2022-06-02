@@ -43,7 +43,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         <TabList>
           <Tab>{t('details')}</Tab>
           <Tab data-testid="documents">{t('documents')}</Tab>
-          <Tab data-testid="license">{t('license')}</Tab>
+          <Tab data-testid="license">{t('License')}</Tab>
           <Tab data-testid="tradetab">{t('trade')}</Tab>
           <Tab data-testid="markettab">{t('market')}</Tab>
           {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
