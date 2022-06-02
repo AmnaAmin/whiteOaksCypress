@@ -131,6 +131,8 @@ i18n.use(initReactI18next).init({
         downloadPDF: 'Download as PDF',
         markCompleted: 'Mark All Completed',
         productName: 'Product Name',
+        sku: 'SKU',
+        location: 'Location',
         quantity: 'Quantity',
         price: 'Price',
         images: 'Images',

@@ -54,7 +54,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
         colorScheme="none"
         iconColor="#2AB450"
         h="32px"
-        w="140px"
+        w="120px"
         bg="#F2F3F4"
         color="#A0AEC0"
         _checked={{ bg: '#E7F8EC', color: '#2AB450' }}
@@ -135,9 +135,9 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
           />
         </SimpleGrid>
         {assignedItems && assignedItems.length > 0 && (
-          <>
-            <Box pt={6}>
-              <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
+          <Box p={25}>
+            <Box>
+              <Flex justifyContent="space-between" pb={5} alignItems="center">
                 <Text fontSize="16px" fontWeight={500} color="gray.600">
                   {t('assignedLineItems')}
                 </Text>
@@ -169,16 +169,19 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                 </HStack>
               </Flex>
             </Box>
-            <Box h={340} overflow="auto" mb={9}>
+            <Box h={200} overflow="auto" mb={9}>
               <Table border="1px solid #E2E8F0" variant="simple" size="md">
                 <Thead>
                   <Tr>
-                    <Td>SKU</Td>
+                    <Td>{t('sku')}</Td>
                     <Td>{t('productName')}</Td>
+                    <Td>{t('location')}</Td>
                     <Td>{t('details')}</Td>
-                    <Td>{t('quantity')}</Td>
-                    <Td>{t('price')}</Td>
-                    <Td>{t('status')}</Td>
+                    <Td textAlign={'center'} w="100px">
+                      {t('quantity')}
+                    </Td>
+                    {workOrder.showPricing && <Td>{t('price')}</Td>}
+                    <Td textAlign={'center'}>{t('status')}</Td>
                     {/*<Td>Images</Td>*/}
                   </Tr>
                 </Thead>
@@ -188,10 +191,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                       <Tr>
                         <Td>{item.id}</Td>
                         <Td>{item.productName} </Td>
+                        <Td>{item.location} </Td>
                         <Td>{item.description}</Td>
-                        <Td>{item.quantity}</Td>
-                        <Td>{currencyFormatter(item.price)}</Td>
-                        <Td>
+                        <Td textAlign={'center'} w="100px">
+                          {item.quantity}
+                        </Td>
+                        {workOrder.showPricing && <Td>{currencyFormatter(item.price)}</Td>}
+                        <Td textAlign={'center'}>
                           <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
                         </Td>
                         {/*<Td>
@@ -202,7 +208,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                 </Tbody>
               </Table>
             </Box>
-          </>
+          </Box>
         )}
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
