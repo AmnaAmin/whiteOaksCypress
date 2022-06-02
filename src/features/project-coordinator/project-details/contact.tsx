@@ -33,7 +33,7 @@ const Contact: React.FC<{ id?: string }> = props => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} isDisabled />
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -91,7 +91,7 @@ const Contact: React.FC<{ id?: string }> = props => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} isDisabled />
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -213,7 +213,7 @@ const Contact: React.FC<{ id?: string }> = props => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} isDisabled />
+                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
