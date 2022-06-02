@@ -1,11 +1,23 @@
 import React from 'react'
-import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  VStack,
+} from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
-import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useProjectTypes } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
+import ChooseFileField from 'components/choose-file/choose-file'
+import { BiDownload } from 'react-icons/bi'
 
 type InfoProps = {
   setNextTab: () => void
@@ -37,6 +49,34 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const setProjectType = e => {
     setValue('projectType', e.value)
     setValue('projectTypeLabel', e.label)
+  }
+
+  const [fileBlob, setFileBlob] = React.useState<Blob>()
+
+  const readFile = (event: any) => {
+    setFileBlob(event.target?.result?.split(',')?.[1])
+  }
+
+  const onFileChange = (document: File) => {
+    if (!document) return
+
+    const reader = new FileReader()
+    reader.addEventListener('load', readFile)
+    reader.readAsDataURL(document)
+    setValue('documents', fileBlob as Blob)
+  }
+
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+        <Flex ml={1}>
+          <BiDownload fontSize="sm" />
+          <Box ml="5px" fontSize="12px" fontStyle="normal">
+            {text}
+          </Box>
+        </Flex>
+      </a>
+    )
   }
 
   return (
@@ -138,14 +178,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
             <FormLabel variant="strong-label" size="md">
               WOA Start Date
             </FormLabel>
-            <Input
-              type="date"
-              {...register('woaStartDate')}
-              name={`woaStartDate`}
-              placeholder={'mm/dd/yyyy'}
-              sx={inputStyle}
-              required
-            />
+            <Input type="date" {...register('woaStartDate')} name={`woaStartDate`} placeholder={'mm/dd/yyyy'} />
             <FormErrorMessage>{errors.woaStartDate && errors.woaStartDate?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -166,10 +199,37 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
         <GridItem>
           <FormControl>
-            <FormLabel variant="strong-label" size="md" marginBottom={0}>
+            <FormLabel variant="strong-label" size="md">
               Upload Project SOW
             </FormLabel>
-            <FormFileInput
+            <Controller
+              name="documents"
+              control={control}
+              rules={{ required: 'This is required field' }}
+              render={({ field, fieldState }) => {
+                return (
+                  <VStack alignItems="baseline">
+                    <Box>
+                      <ChooseFileField
+                        name={field.name}
+                        value={field.value ? field.value?.name : 'Choose File'}
+                        isError={!!fieldState.error?.message}
+                        onChange={(file: any) => {
+                          onFileChange(file)
+                          field.onChange(file)
+                        }}
+                        onClear={() => setValue(field.name, null)}
+                      ></ChooseFileField>
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </Box>
+                    {field.value && (
+                      <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )}
+                  </VStack>
+                )
+              }}
+            />
+            {/* <FormFileInput
               errorMessage={errors.documents && errors.documents?.message}
               label={''}
               name={`documents`}
@@ -178,8 +238,8 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
             >
               <Button bg="none" rounded="none" roundedLeft={5} fontSize={14} fontWeight={500} h="37px" color="#4A5568">
                 {'ChooseFile'}
-              </Button>
-            </FormFileInput>
+              </Button> 
+            </FormFileInput> */}
           </FormControl>
         </GridItem>
       </Grid>

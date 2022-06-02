@@ -94,9 +94,9 @@ export const AddPropertyInfo: React.FC<{
         setValue('property', property)
         setIsDuplicateAddress(true)
       }
-      return streetAddress
+      return property
     })
-    setIsDuplicateAddress(false)
+    //  setIsDuplicateAddress(false)
   }
 
   const setStates = e => {
@@ -110,6 +110,7 @@ export const AddPropertyInfo: React.FC<{
   // Parse XML to Verify Address
   useEffect(() => {
     if (addressData) {
+      console.log(addressData)
       const parser = new xml2js.Parser()
       parser
         .parseStringPromise(addressData.data)
@@ -342,7 +343,6 @@ export const AddPropertyInfo: React.FC<{
               refetch()
             }, 2000)
             onOpenAddressVerifyModalOpen()
-            // props.setNextTab()
           }}
         >
           {'Next'}

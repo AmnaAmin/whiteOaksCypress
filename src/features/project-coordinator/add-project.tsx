@@ -53,9 +53,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       clientSignoffDate: '',
       clientWalkthroughDate: '',
       woaStartDate: '',
-      sowOriginalContractAmount: '$0',
+      sowOriginalContractAmount: '',
       sowDocumentFile: '',
-      documents: '',
+      documents: [],
       streetAddress: '',
       city: '',
       state: '',
@@ -89,8 +89,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const onSubmit = useCallback(
     async values => {
       let fileContents: any = null
-      if (values.documents && values.documents[0]) {
-        fileContents = await readFileContent(values.documents[0])
+      const doc = values.documents
+      if (doc) {
+        fileContents = await readFileContent(doc)
       }
       const newProjectPayload = {
         name: values.name,
@@ -133,6 +134,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             duration: 9000,
             isClosable: true,
           })
+          onClose()
         },
         onError(error: any) {
           toast({
