@@ -2,6 +2,8 @@ import { useClient } from 'utils/auth-context'
 import { useMutation } from 'react-query'
 import { FileAttachment, SupportFormValues, SupportsPayload } from 'types/support.types'
 import { dateISOFormat, getFormattedDate } from './date-time-utils'
+import { useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 export const ISSUE_TYPE_OPTIONS = [
   {
@@ -79,8 +81,32 @@ export const parseSupportFormValuesToAPIPayload = (
 
 export const useCreateTicketMutation = () => {
   const client = useClient()
+  const toast = useToast()
+  const { t } = useTranslation()
 
-  return useMutation((payload: SupportsPayload) => {
-    return client('supports', { data: payload })
-  })
+  return useMutation(
+    (payload: SupportsPayload) => {
+      return client('supports', { data: payload })
+    },
+    {
+      onSuccess: () => {
+        toast({
+          title: t('createTicketTitle'),
+          description: t('createTicketSuccessMessage'),
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError: (error: Error) => {
+        toast({
+          title: t('createTicketTitle'),
+          description: error.message,
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
 }

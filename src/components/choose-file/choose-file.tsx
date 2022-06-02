@@ -51,6 +51,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
               isTruncated
               color={isError ? 'red' : '#4E87F8'}
               fontSize="14px"
+              fontStyle={'normal'}
               pt={2}
               marginLeft={3}
             >

@@ -205,8 +205,10 @@ export type Trade = {
   skill: string
 }
 
-type TradeFormValues = Trade & {
+type TradeFormValues = {
+  trade: Trade
   checked: boolean
+  id?: string
 }
 
 export type VendorTradeFormValues = {
@@ -224,8 +226,10 @@ export type Market = {
   stateName: string
 }
 
-type MarketFormValues = Market & {
+type MarketFormValues = {
+  market: Market
   checked: boolean
+  id?: string
 }
 
 export type VendorMarketFormValues = {
@@ -280,4 +284,8 @@ export type Vendors = {
   coiglExpirationDate: string
   coiWcExpirationDate: string
   einNumber: string
+  capacity: number
+  availableCapacity: number
+  skills: string
+  market: string
 }

@@ -29,7 +29,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText } from 'utils/lien-waiver'
+import { createForm, GetHelpText } from 'utils/lien-waiver'
 import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from 'features/projects/modals/signature-modal'
@@ -134,7 +134,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
       <VStack align="start" spacing="30px" h="560px" overflowY="auto">
         <Flex w="100%" alignContent="space-between" pos="relative" my="7">
           <Box flex="4">
-            <HelpText>{getHelpText()}</HelpText>
+            <HelpText>{GetHelpText()}</HelpText>
           </Box>
           <Flex pos="absolute" top={-2} right={0} flex="1">
             {recentLWFile && (

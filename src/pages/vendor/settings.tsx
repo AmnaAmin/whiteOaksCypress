@@ -19,6 +19,7 @@ import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
 import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
+import { Card } from 'components/card/card'
 
 const Settings = React.forwardRef((props, ref) => {
   const { mutate: saveSettings } = useSaveSettings()
@@ -103,80 +104,74 @@ const Settings = React.forwardRef((props, ref) => {
   )
 
   return (
-    <Box mt="40px" ml="20px" h="65vh">
+    <Card py="0">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
-          {t('settings')}
-        </Text>
-
-        <Stack mb="10">
-          <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
-            {t('profilePicture')}
+        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
+          <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
+            {t('settings')}
           </Text>
-          <HStack spacing={4}>
-            <PreviewImg preview={preview} onPreviewChange={setPreview} onImageFileChange={setImgFile} />
-            <Text fontSize="14px" fontWeight={400} color="gray.600">
-              {t('changePicture')}
+
+          <Stack mb="10">
+            <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
+              {t('profilePicture')}
             </Text>
-          </HStack>
-        </Stack>
-
-        <Stack spacing={0} mb="14">
-          <HStack alignItems="start">
-            <Icon boxSize={5} as={BiBriefcase} color="gray.500" mt="2px" />
-            <VStack align="start" spacing={0}>
-              <Text fontSize="14px" fontWeight={500} color="gray.600">
-                {t('email')}
+            <HStack spacing={4}>
+              <PreviewImg preview={preview} onPreviewChange={setPreview} onImageFileChange={setImgFile} />
+              <Text fontSize="14px" fontWeight={400} color="gray.600">
+                {t('changePicture')}
               </Text>
-              <Text fontSize="14px" fontWeight={400} color="gray.500">
-                {account?.login}
-              </Text>
-            </VStack>
+            </HStack>
+          </Stack>
+
+          <Stack spacing={0} mb="14">
+            <HStack alignItems="start">
+              <Icon boxSize={5} as={BiBriefcase} color="gray.500" mt="2px" />
+              <VStack align="start" spacing={0}>
+                <Text fontSize="14px" fontWeight={500} color="gray.600">
+                  {t('email')}
+                </Text>
+                <Text fontSize="14px" fontWeight={400} color="gray.500">
+                  {account?.login}
+                </Text>
+              </VStack>
+            </HStack>
+
+            <Divider w="280px" />
+          </Stack>
+
+          <HStack spacing={4}>
+            <FormInput
+              errorMessage={errors.firstName && errors.firstName?.message}
+              label={t('firstName')}
+              placeholder={t('firstName')}
+              register={register}
+              controlStyle={{ w: '215px' }}
+              elementStyle={{
+                bg: 'white',
+                borderLeft: '2px solid #4E87F8',
+              }}
+              rules={{ required: 'This is required field' }}
+              name={`firstName`}
+            />
+            <FormInput
+              errorMessage={errors.lastName && errors.lastName?.message}
+              label={t('lastName')}
+              placeholder={t('lastName')}
+              register={register}
+              controlStyle={{ w: '215px' }}
+              elementStyle={{ bg: 'white' }}
+              rules={{ required: 'This is required field' }}
+              name={`lastName`}
+            />
           </HStack>
-
-          <Divider w="280px" />
-        </Stack>
-
-        <HStack spacing={4}>
-          <FormInput
-            errorMessage={errors.firstName && errors.firstName?.message}
-            label={t('firstName')}
-            placeholder={t('firstName')}
-            register={register}
-            controlStyle={{ w: '215px' }}
-            elementStyle={{
-              bg: 'white',
-              borderLeft: '2px solid #4E87F8',
-            }}
-            rules={{ required: 'This is required field' }}
-            name={`firstName`}
-          />
-          <FormInput
-            errorMessage={errors.lastName && errors.lastName?.message}
-            label={t('lastName')}
-            placeholder={t('lastName')}
-            register={register}
-            controlStyle={{ w: '215px' }}
-            elementStyle={{ bg: 'white' }}
-            rules={{ required: 'This is required field' }}
-            name={`lastName`}
-          />
-        </HStack>
-        <Flex
-          id="footer"
-          w="100%"
-          h="100px"
-          mt="100px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
+        </Box>
+        <Flex id="footer" w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </Flex>
       </form>
-    </Box>
+    </Card>
   )
 })
 
