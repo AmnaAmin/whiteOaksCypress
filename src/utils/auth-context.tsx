@@ -29,7 +29,7 @@ export type LoginProps = { email: string; password: string }
 export interface AuthContextProps {
   login?: (user: LoginProps) => Promise<void>
   logout?: () => Promise<void>
-  account?: () => Promise<void>
+  updateAccount?: (user: Account) => void
   register?: (payload: any) => Promise<void>
   data?: { user: Account; token: string }
 }
@@ -67,11 +67,12 @@ function AuthProvider(props: AuthProviderProps) {
     [setData],
   )
 
-  const account = React.useCallback(() => {
-    return client('/api/account', { token }).then(response => {
-      setData({ user: response?.data, token })
-    })
-  }, [setData])
+  const updateAccount = React.useCallback(
+    user => {
+      setData({ user, token })
+    },
+    [setData],
+  )
 
   const register = React.useCallback(
     form => {
@@ -95,8 +96,8 @@ function AuthProvider(props: AuthProviderProps) {
   }, [setData, queryCache])
 
   const value = React.useMemo(
-    () => ({ data, login, logout, register, token, account }),
-    [login, logout, register, token, data],
+    () => ({ data, login, logout, register, token, updateAccount }),
+    [login, logout, register, token, data, updateAccount],
   )
 
   if (isLoading || isIdle) {

@@ -15,9 +15,9 @@ import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
 import { Card } from 'components/card/card'
 import { useAuth } from 'utils/auth-context'
 
-const Settings = React.forwardRef((props, ref) => {
+const Settings = React.forwardRef(() => {
   const { mutate: saveSettings, isSuccess } = useSaveSettings()
-  const { account: accountApi } = useAuth()
+  const { updateAccount } = useAuth()
 
   const { data: account, refetch } = useAccountDetails()
   const [preview, setPreview] = useState<string | null>(null)
@@ -42,11 +42,6 @@ const Settings = React.forwardRef((props, ref) => {
     element?.classList.add('form-file-input')
   }, [refetch])
 
-  useEffect(() => {
-    if (!isSuccess) return
-    accountApi?.()
-  }, [isSuccess])
-
   const {
     register,
     formState: { errors },
@@ -54,17 +49,35 @@ const Settings = React.forwardRef((props, ref) => {
     // control,
     watch,
     reset,
+    getValues,
   } = useForm<SettingsValues>()
+
+  useEffect(() => {
+    if (!isSuccess) return
+    const values = getValues()
+
+    updateAccount?.({
+      ...account,
+      email: values.email || '',
+      firstName: values.firstName || '',
+      lastName: values.lastName || '',
+      imageUrl: preview,
+    })
+  }, [isSuccess, getValues])
 
   useEffect(() => {
     if (account) {
       const defaultSettings = settingsDefaultValue(account)
       setPreview(account.imageUrl)
       if (account.imageUrl) {
-        convertImageUrltoDataURL(account.imageUrl).then(dataUrl => {
-          var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
-          setImgFile(fileData)
-        })
+        convertImageUrltoDataURL(account.imageUrl)
+          .then(dataUrl => {
+            var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
+            setImgFile(fileData)
+          })
+          .catch(err => {
+            console.log('error in convert Image Url to DataURL', err)
+          })
       }
       reset(defaultSettings)
     }
@@ -97,7 +110,7 @@ const Settings = React.forwardRef((props, ref) => {
 
       i18n.changeLanguage(values.language)
     },
-    [i18n, refetch, saveSettings, imgFile],
+    [i18n, saveSettings, imgFile],
   )
 
   return (
