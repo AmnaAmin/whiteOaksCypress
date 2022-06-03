@@ -5,23 +5,20 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
 import last from 'lodash/last'
-import {
-  readFileContent,
-  useSaveSettings,
-  //  languageOptions,
-  useAccountDetails,
-} from 'utils/vendor-details'
-// import { FormSelect } from 'components/react-hook-form-fields/select'
+import { readFileContent, useSaveSettings, useAccountDetails } from 'utils/vendor-details'
 import { FormInput } from 'components/react-hook-form-fields/input'
-// import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
 import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
+import { Card } from 'components/card/card'
+import { useAuth } from 'utils/auth-context'
 
-const Settings = React.forwardRef((props, ref) => {
-  const { mutate: saveSettings } = useSaveSettings()
+const Settings = React.forwardRef(() => {
+  const { mutate: saveSettings, isSuccess } = useSaveSettings()
+  const { updateAccount } = useAuth()
+
   const { data: account, refetch } = useAccountDetails()
   const [preview, setPreview] = useState<string | null>(null)
   const [imgFile, setImgFile] = useState<any>(null)
@@ -52,17 +49,35 @@ const Settings = React.forwardRef((props, ref) => {
     // control,
     watch,
     reset,
+    getValues,
   } = useForm<SettingsValues>()
+
+  useEffect(() => {
+    if (!isSuccess) return
+    const values = getValues()
+
+    updateAccount?.({
+      ...account,
+      email: values.email || '',
+      firstName: values.firstName || '',
+      lastName: values.lastName || '',
+      imageUrl: preview,
+    })
+  }, [isSuccess, getValues])
 
   useEffect(() => {
     if (account) {
       const defaultSettings = settingsDefaultValue(account)
       setPreview(account.imageUrl)
       if (account.imageUrl) {
-        convertImageUrltoDataURL(account.imageUrl).then(dataUrl => {
-          var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
-          setImgFile(fileData)
-        })
+        convertImageUrltoDataURL(account.imageUrl)
+          .then(dataUrl => {
+            var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
+            setImgFile(fileData)
+          })
+          .catch(err => {
+            console.log('error in convert Image Url to DataURL', err)
+          })
       }
       reset(defaultSettings)
     }
@@ -92,91 +107,81 @@ const Settings = React.forwardRef((props, ref) => {
         avatar: fileContents,
       }
       saveSettings(settingsPayload)
-      // setTimeout(() => {
-      //   refetch()
-      // }, 2000) // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
-      // setLanguage(values.language);
+
       i18n.changeLanguage(values.language)
-      console.log('preview', settingsPayload)
     },
-    [i18n, refetch, saveSettings, imgFile],
+    [i18n, saveSettings, imgFile],
   )
 
   return (
-    <Box mt="40px" ml="20px" h="65vh">
+    <Card py="0">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
-          {t('settings')}
-        </Text>
-
-        <Stack mb="10">
-          <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
-            {t('profilePicture')}
+        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
+          <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
+            {t('settings')}
           </Text>
-          <HStack spacing={4}>
-            <PreviewImg preview={preview} onPreviewChange={setPreview} onImageFileChange={setImgFile} />
-            <Text fontSize="14px" fontWeight={400} color="gray.600">
-              {t('changePicture')}
+
+          <Stack mb="10">
+            <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
+              {t('profilePicture')}
             </Text>
-          </HStack>
-        </Stack>
-
-        <Stack spacing={0} mb="14">
-          <HStack alignItems="start">
-            <Icon boxSize={5} as={BiBriefcase} color="gray.500" mt="2px" />
-            <VStack align="start" spacing={0}>
-              <Text fontSize="14px" fontWeight={500} color="gray.600">
-                {t('email')}
+            <HStack spacing={4}>
+              <PreviewImg preview={preview} onPreviewChange={setPreview} onImageFileChange={setImgFile} />
+              <Text fontSize="14px" fontWeight={400} color="gray.600">
+                {t('changePicture')}
               </Text>
-              <Text fontSize="14px" fontWeight={400} color="gray.500">
-                {account?.login}
-              </Text>
-            </VStack>
+            </HStack>
+          </Stack>
+
+          <Stack spacing={0} mb="14">
+            <HStack alignItems="start">
+              <Icon boxSize={5} as={BiBriefcase} color="gray.500" mt="2px" />
+              <VStack align="start" spacing={0}>
+                <Text fontSize="14px" fontWeight={500} color="gray.600">
+                  {t('email')}
+                </Text>
+                <Text fontSize="14px" fontWeight={400} color="gray.500">
+                  {account?.login}
+                </Text>
+              </VStack>
+            </HStack>
+
+            <Divider w="280px" />
+          </Stack>
+
+          <HStack spacing={4}>
+            <FormInput
+              errorMessage={errors.firstName && errors.firstName?.message}
+              label={t('firstName')}
+              placeholder={t('firstName')}
+              register={register}
+              controlStyle={{ w: '215px' }}
+              elementStyle={{
+                bg: 'white',
+                borderLeft: '2px solid #4E87F8',
+              }}
+              rules={{ required: 'This is required field' }}
+              name={`firstName`}
+            />
+            <FormInput
+              errorMessage={errors.lastName && errors.lastName?.message}
+              label={t('lastName')}
+              placeholder={t('lastName')}
+              register={register}
+              controlStyle={{ w: '215px' }}
+              elementStyle={{ bg: 'white' }}
+              rules={{ required: 'This is required field' }}
+              name={`lastName`}
+            />
           </HStack>
-
-          <Divider w="280px" />
-        </Stack>
-
-        <HStack spacing={4}>
-          <FormInput
-            errorMessage={errors.firstName && errors.firstName?.message}
-            label={t('firstName')}
-            placeholder={t('firstName')}
-            register={register}
-            controlStyle={{ w: '215px' }}
-            elementStyle={{
-              bg: 'white',
-              borderLeft: '2px solid #4E87F8',
-            }}
-            rules={{ required: 'This is required field' }}
-            name={`firstName`}
-          />
-          <FormInput
-            errorMessage={errors.lastName && errors.lastName?.message}
-            label={t('lastName')}
-            placeholder={t('lastName')}
-            register={register}
-            controlStyle={{ w: '215px' }}
-            elementStyle={{ bg: 'white' }}
-            rules={{ required: 'This is required field' }}
-            name={`lastName`}
-          />
-        </HStack>
-        <Flex
-          id="footer"
-          w="100%"
-          h="100px"
-          mt="100px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
+        </Box>
+        <Flex id="footer" w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </Flex>
       </form>
-    </Box>
+    </Card>
   )
 })
 

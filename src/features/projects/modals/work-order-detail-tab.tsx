@@ -1,4 +1,19 @@
-import { Box, HStack, Text, Flex, SimpleGrid, Checkbox, Table, Thead, Tr, Tbody, Td, FormLabel } from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  Text,
+  Flex,
+  SimpleGrid,
+  Checkbox,
+  Table,
+  Thead,
+  Tr,
+  Tbody,
+  Td,
+  FormLabel,
+  ModalFooter,
+  ModalBody,
+} from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
 
 import { BiCalendar, BiDownload } from 'react-icons/bi'
@@ -12,7 +27,7 @@ import { createInvoicePdf } from 'utils/work-order'
 
 const CalenderCard = props => {
   return (
-    <Flex>
+    <Flex justifyContent={'center'}>
       <Box pr={4}>
         <BiCalendar size={23} color="#718096" />
       </Box>
@@ -29,6 +44,7 @@ const CalenderCard = props => {
 }
 
 const CheckboxStructure = ({ checked, id, onChange }) => {
+  const { t } = useTranslation()
   return (
     <Box>
       <Checkbox
@@ -38,7 +54,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
         colorScheme="none"
         iconColor="#2AB450"
         h="32px"
-        w="140px"
+        w="120px"
         bg="#F2F3F4"
         color="#A0AEC0"
         _checked={{ bg: '#E7F8EC', color: '#2AB450' }}
@@ -49,7 +65,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
           onChange(e, id)
         }}
       >
-        {'Completed'}
+        {t('completed')}
       </Checkbox>
     </Box>
   )
@@ -76,40 +92,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
 
 const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const { t } = useTranslation()
-  const [assignedItems, setAssignedItems] = useState(
-    workOrder.assignedItems ?? [
-      {
-        id: '8383',
-        productName: 'Debrish Trash',
-        description: 'Replace Buttons',
-        quantity: '4',
-        price: '350',
-        workOrderId: '77',
-        isCompleted: true,
-        isVerified: true,
-      },
-      {
-        id: '33454',
-        productName: 'Remove Satellite dish',
-        description: 'Remove all cables',
-        quantity: '12',
-        price: '200',
-        workOrderId: '77',
-        isCompleted: true,
-        isVerified: false,
-      },
-      {
-        id: '74746',
-        productName: 'Install Blinders',
-        description: 'Replace Curtains',
-        quantity: '15',
-        price: '400',
-        workOrderId: '77',
-        isCompleted: false,
-        isVerified: false,
-      },
-    ],
-  )
+  const [assignedItems, setAssignedItems] = useState(workOrder.assignedItems ?? [])
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation()
 
   const onMarkCompleted = useCallback(
@@ -138,90 +121,106 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   }
   return (
     <Box>
-      <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title={t('WOIssued')} value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
-        <CalenderCard title={t('expectedStart')} value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
-        <CalenderCard
-          title={t('expectedCompletion')}
-          value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
-        />
-        <CalenderCard
-          title={t('completedByVendor')}
-          value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
-        />
-      </SimpleGrid>
-      {assignedItems && (
-        <>
-          <Box pt={6}>
-            <Flex justifyContent="space-between" pt={2} pb={2} alignItems="center">
-              <Text fontSize="16px" fontWeight={500} color="gray.600">
-                Assigned Line Items
-              </Text>
+      <ModalBody h="400px">
+        <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
+          <CalenderCard title={t('WOIssued')} value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
+          <CalenderCard title={t('expectedStart')} value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
+          <CalenderCard
+            title={t('expectedCompletion')}
+            value={convertDateTimeFromServer(workOrder.workOrderExpectedCompletionDate)}
+          />
+          <CalenderCard
+            title={t('completedByVendor')}
+            value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
+          />
+        </SimpleGrid>
+        {assignedItems && assignedItems.length > 0 && (
+          <Box p={25}>
+            <Box>
+              <Flex justifyContent="space-between" pb={5} alignItems="center">
+                <Text fontSize="16px" fontWeight={500} color="gray.600">
+                  {t('assignedLineItems')}
+                </Text>
 
-              <HStack>
-                <Button leftIcon={<BiDownload />} variant="outline" colorScheme="brand" size="md" onClick={downloadPdf}>
-                  Download as PDF
-                </Button>
-                <Checkbox
-                  size="md"
-                  colorScheme="brand"
-                  onChange={e => {
-                    onMarkCompleted(e.target.checked)
-                  }}
-                  isChecked={assignedItems.every(e => {
-                    return e.isCompleted
-                  })}
-                >
-                  <FormLabel variant="strong-label" size="md" mt="7px">
-                    Mark all Completed
-                  </FormLabel>
-                </Checkbox>
-              </HStack>
-            </Flex>
-          </Box>
-          <Box h={340} overflow="auto" mb={9}>
-            <Table border="1px solid #E2E8F0" variant="simple" size="md">
-              <Thead>
-                <Tr>
-                  <Td>SKU</Td>
-                  <Td>Product Name</Td>
-                  <Td>Details</Td>
-                  <Td>Quantity</Td>
-                  <Td>Price</Td>
-                  <Td>Status</Td>
-                  {/*<Td>Images</Td>*/}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {assignedItems &&
-                  assignedItems.map((item, i) => (
-                    <Tr>
-                      <Td>{item.id}</Td>
-                      <Td>{item.productName} </Td>
-                      <Td>{item.description}</Td>
-                      <Td>{item.quantity}</Td>
-                      <Td>{currencyFormatter(item.price)}</Td>
-                      <Td>
-                        <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
-                      </Td>
-                      {/*<Td>
+                <HStack>
+                  <Button
+                    leftIcon={<BiDownload />}
+                    variant="outline"
+                    colorScheme="brand"
+                    size="md"
+                    onClick={downloadPdf}
+                  >
+                    {t('downloadPDF')}
+                  </Button>
+                  <Checkbox
+                    size="md"
+                    colorScheme="brand"
+                    onChange={e => {
+                      onMarkCompleted(e.target.checked)
+                    }}
+                    isChecked={assignedItems.every(e => {
+                      return e.isCompleted
+                    })}
+                  >
+                    <FormLabel variant="strong-label" size="md" mt="7px">
+                      {t('markCompleted')}
+                    </FormLabel>
+                  </Checkbox>
+                </HStack>
+              </Flex>
+            </Box>
+            <Box h={200} overflow="auto" mb={9}>
+              <Table border="1px solid #E2E8F0" variant="simple" size="md">
+                <Thead>
+                  <Tr>
+                    <Td>{t('sku')}</Td>
+                    <Td>{t('productName')}</Td>
+                    <Td>{t('location')}</Td>
+                    <Td>{t('details')}</Td>
+                    <Td textAlign={'center'} w="100px">
+                      {t('quantity')}
+                    </Td>
+                    {workOrder.showPricing && <Td>{t('price')}</Td>}
+                    <Td textAlign={'center'}>{t('status')}</Td>
+                    {/*<Td>Images</Td>*/}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {assignedItems &&
+                    assignedItems.map((item, i) => (
+                      <Tr>
+                        <Td>{item.id}</Td>
+                        <Td>{item.productName} </Td>
+                        <Td>{item.location} </Td>
+                        <Td>{item.description}</Td>
+                        <Td textAlign={'center'} w="100px">
+                          {item.quantity}
+                        </Td>
+                        {workOrder.showPricing && <Td>{currencyFormatter(item.price)}</Td>}
+                        <Td textAlign={'center'}>
+                          <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
+                        </Td>
+                        {/*<Td>
                     <UploadImage Images={'Upload'} />
                   </Td>*/}
-                    </Tr>
-                  ))}
-              </Tbody>
-            </Table>
+                      </Tr>
+                    ))}
+                </Tbody>
+              </Table>
+            </Box>
           </Box>
-        </>
-      )}
-      <Flex h="80px" justifyContent="end" borderTop="1px solid #CBD5E0" pt={5}>
-        <Button variant="ghost" colorScheme="brand" onClick={onClose} mr={3} border="1px solid">
-          {t('cancel')}
-        </Button>
-        <Button colorScheme="brand" onClick={saveWorkOrderDetails}>
-          {t('save')}
-        </Button>
-      </Flex>
+        )}
+      </ModalBody>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+        <Flex w="100%" justifyContent="end">
+          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+            {t('cancel')}
+          </Button>
+          <Button colorScheme="brand" onClick={saveWorkOrderDetails}>
+            {t('save')}
+          </Button>
+        </Flex>
+      </ModalFooter>
     </Box>
   )
 }
