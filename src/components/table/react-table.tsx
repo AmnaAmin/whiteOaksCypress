@@ -192,7 +192,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   )
 
   return (
-    <Tbody {...getTableBodyProps()}>
+    <Tbody {...getTableBodyProps()} flex={1}>
       <AutoSizer>
         {({ width, height }) => {
           return <List height={height} rowCount={rows.length} rowHeight={60} rowRenderer={RenderRow} width={width} />
@@ -253,7 +253,16 @@ export function Table(props: Props & TableExtraProps): ReactElement {
   }, [tableInstance, setTableInstance])
 
   return (
-    <ChakraTable w="100%" bg="#FFFFFF" h={tableHeight} boxShadow="sm" rounded="md" {...tableInstance.getTableProps()}>
+    <ChakraTable
+      display="flex"
+      flexDirection="column"
+      w="100%"
+      bg="#FFFFFF"
+      h={tableHeight}
+      boxShadow="sm"
+      rounded="md"
+      {...tableInstance.getTableProps()}
+    >
       <TableHead {...tableInstance} />
       {isLoading ? (
         <TableLoadingState {...tableInstance} />
