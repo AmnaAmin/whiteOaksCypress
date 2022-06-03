@@ -23,7 +23,7 @@ export const ManageProject: React.FC<{
 
   const PCs = projectCoordinator
     ? projectCoordinator?.map(PC => ({
-        label: PC?.firstName,
+        label: PC?.firstName + ' ' + PC?.lastName,
         value: PC?.id,
       }))
     : null

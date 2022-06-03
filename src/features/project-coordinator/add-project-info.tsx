@@ -34,11 +34,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
       }))
     : null
 
-  const inputStyle = {
-    bg: 'white',
-    borderLeft: '1.5px solid #4E87F8',
-  }
-
   const {
     register,
     formState: { errors },
@@ -52,7 +47,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   }
 
   const [fileBlob, setFileBlob] = React.useState<Blob>()
-
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -77,6 +71,11 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </Flex>
       </a>
     )
+  }
+
+  const inputStyle = {
+    bg: 'white',
+    borderLeft: '1.5px solid #4E87F8',
   }
 
   return (
