@@ -16,8 +16,6 @@ import {
   Stack,
   Divider,
   HStack,
-  TagLabel,
-  Tag,
   Box,
   Flex,
 } from '@chakra-ui/react'
@@ -27,6 +25,7 @@ import { useTranslation } from 'react-i18next'
 import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment-tab-pc'
 import { InvoiceTabPC } from './invoice-tab-pc'
+import Status from 'features/projects/status'
 
 const TabStyle = {
   fontWeight: 500,
@@ -95,11 +94,12 @@ const WorkOrderDetails = ({
                 </Text>
               </HStack>
 
-              <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
+              {/* <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
                 <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
                   {workOrder?.statusLabel}
                 </TagLabel>
-              </Tag>
+              </Tag> */}
+              <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />
             </HStack>
           )}
         </ModalHeader>

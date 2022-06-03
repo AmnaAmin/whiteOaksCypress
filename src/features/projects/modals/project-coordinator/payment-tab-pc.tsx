@@ -109,7 +109,7 @@ const PaymentInfoTab = props => {
         <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Invoiced Submitted
               </FormLabel>
               <InputGroup>
@@ -120,7 +120,7 @@ const PaymentInfoTab = props => {
           </Box>
           <Box>
             <FormControl height="40px">
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Payemt Terms
               </FormLabel>
               <Select options={paymentsTerms} selectProps={{ isBorderLeft: true }} onChange={e => handlePTChange(e)} />
@@ -129,12 +129,23 @@ const PaymentInfoTab = props => {
 
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Payment Term Date
               </FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
                 <Input readOnly value={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
+              </InputGroup>
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                Expected Pay Date
+              </FormLabel>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
+                <Input readOnly value={expectedPaymentDate ? dateFormat(expectedPaymentDate) : 'mm/dd/yyyy'} />
               </InputGroup>
             </FormControl>
           </Box>
@@ -145,18 +156,7 @@ const PaymentInfoTab = props => {
         <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Expected Pay
-              </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={expectedPaymentDate ? dateFormat(expectedPaymentDate) : 'mm/dd/yyyy'} />
-              </InputGroup>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Payment Processed
               </FormLabel>
               <Input onChange={date => handlePPChange(date)} type="date" />
@@ -165,42 +165,39 @@ const PaymentInfoTab = props => {
 
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Paid
               </FormLabel>
               <Input onChange={date => handlePDChange(date)} type="date" readOnly={!paid ? true : false} />
             </FormControl>
           </Box>
-        </SimpleGrid>
-        <Box mt={10}>
-          <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-            <Box>
-              <FormControl>
-                <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                  WO Original amount
-                </FormLabel>
-                <Input readOnly={true} value={currencyFormatter(sowOriginalContractAmount)} />
-              </FormControl>
-            </Box>
-            <Box>
-              <FormControl>
-                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                  Client original amount
-                </FormLabel>
-                <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
-              </FormControl>
-            </Box>
 
-            <Box height="80px">
-              <FormControl>
-                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                  Client final approved amount
-                </FormLabel>
-                <Input value={currencyFormatter(clientOriginalApprovedAmount)} readOnly={true} />
-              </FormControl>
-            </Box>
-          </SimpleGrid>
-        </Box>
+          <Box>
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                WO Original Amount
+              </FormLabel>
+              <Input readOnly={true} value={currencyFormatter(sowOriginalContractAmount)} />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                Client Original Amount
+              </FormLabel>
+              <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
+            </FormControl>
+          </Box>
+
+          <Box height="80px">
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                Client Final Approved Amount
+              </FormLabel>
+              <Input value={currencyFormatter(clientOriginalApprovedAmount)} readOnly={true} />
+            </FormControl>
+          </Box>
+        </SimpleGrid>
       </Box>
 
       <Flex mt="40px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">

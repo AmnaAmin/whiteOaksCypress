@@ -156,7 +156,7 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
         <Button onClick={() => rejectInvocie(entity)} colorScheme="brand">
           {t('reject')}
         </Button>
-        <Button onClick={onClose} colorScheme="brand" variant="ghost">
+        <Button onClick={onClose} colorScheme="brand" variant="outline">
           {t('cancel')}
         </Button>
       </HStack>

@@ -1,4 +1,4 @@
-import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { Box, Text, Flex, Button, FormControl, FormLabel, Input, Grid, Divider } from '@chakra-ui/react'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +17,7 @@ const CalenderCard = props => {
           {props.title}
         </Text>
         <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props?.date}
+          {props?.date || 'dd/mm/yy'}
         </Text>
       </Box>
     </Flex>
@@ -31,7 +31,15 @@ const InformationCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          color="gray.500"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+          w="150px"
+          isTruncated
+          title={props.date}
+        >
           {props.date}
         </Text>
       </Box>
@@ -54,33 +62,40 @@ const WorkOrderDetailTab = props => {
 
   return (
     <Box>
-      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
+      <Grid
+        gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))"
+        gap="16px"
+        minH="110px"
+        alignItems={'center'}
+        mx="67px"
+        py="15px"
+      >
         <InformationCard title="Vendor Name" date={companyName} />
         <InformationCard title="Vendor Type" date={skillName} />
         <InformationCard title="Email" date={businessEmailAddress} />
         <InformationCard title=" Phone No" date={businessPhoneNumber} />
-      </SimpleGrid>
+      </Grid>
+      <Divider border="1px solid  #E2E8F0" />
 
-      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
+      <Grid
+        gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))"
+        gap="16px"
+        minH="110px"
+        alignItems={'center'}
+        mx="67px"
+        py="15px"
+      >
         <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
         <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
         <CalenderCard title="Permitted Pulled" date={dateFormat(datePermitsPulled)} />
         <CalenderCard title=" Completion Variance" date={durationCategory} />
-      </SimpleGrid>
-
+      </Grid>
+      <Divider border="1px solid  #E2E8F0" />
       <Box mt={10}>
-        <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-          <Box>
-            <FormControl height="40px">
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                Cancel Work Order
-              </FormLabel>
-              <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
-            </FormControl>
-          </Box>
+        <Grid gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))" gap="16px" mx="67px">
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Expected Start Date
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
@@ -88,7 +103,7 @@ const WorkOrderDetailTab = props => {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Expected Completion Date
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
@@ -96,16 +111,24 @@ const WorkOrderDetailTab = props => {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant={'strong-label'} size={'md'}>
                 Completed By Vendor
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
-        </SimpleGrid>
+          <Box>
+            <FormControl height="40px">
+              <FormLabel variant={'strong-label'} size={'md'}>
+                Cancel Work Order
+              </FormLabel>
+              <ReactSelect selectProps={{ isBorderLeft: true }} options={documentTypes} />
+            </FormControl>
+          </Box>
+        </Grid>
       </Box>
       <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button onClick={props.onClose} colorScheme="brand" variant="ghost">
+        <Button onClick={props.onClose} colorScheme="brand" variant="outline" mr={3}>
           {t('cancel')}
         </Button>
         <Button colorScheme="brand">{t('save')}</Button>
