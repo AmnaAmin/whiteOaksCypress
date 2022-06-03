@@ -15,6 +15,9 @@ import { Account } from 'types/account.types'
 import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import PcDetails from 'features/project-coordinator/vendor/details'
+import { AuditLogs, AUDIT_LOGS_COLUMNS } from 'features/vendor-details/audit-logs'
+import { useTableColumnSettings } from 'utils/table-column-settings'
+import { TableNames } from 'types/table-column.types'
 import { Card } from 'features/login-form-centered/Card'
 
 type Props = {
@@ -32,6 +35,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
+  const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.vendors)
 
   return (
     <Card p="18px" px="0">
@@ -39,7 +43,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         <TabList>
           <Tab>{t('details')}</Tab>
           <Tab data-testid="documents">{t('documents')}</Tab>
-          <Tab data-testid="license">{t('License')}</Tab>
+          <Tab data-testid="license">{t('license')}</Tab>
           <Tab data-testid="tradetab">{t('trade')}</Tab>
           <Tab data-testid="markettab">{t('market')}</Tab>
           {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
@@ -74,7 +78,16 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           <TabPanel p="0px">
             <MarketList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
           </TabPanel>
-          <TabPanel p="0px"></TabPanel>
+          <TabPanel p="0px">
+            <Box overflow="auto">
+              <AuditLogs
+                isLoading={isLoading}
+                onClose={props.onClose}
+                resizeElementRef={resizeElementRef}
+                projectColumns={tableColumns}
+              />
+            </Box>
+          </TabPanel>
           <TabPanel p="0px"></TabPanel>
         </TabPanels>
       </Tabs>

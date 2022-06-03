@@ -12,6 +12,7 @@ import { CheckboxButton } from 'components/form/checkbox-button'
 // import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
+import { DevTool } from '@hookform/devtools'
 
 // import 'components/translation/i18n';
 
@@ -36,8 +37,8 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
         toast({
-          title: 'Update Vendor Profile Trades',
-          description: 'Vendor profile trades has been saved successfully.',
+          title: t('updateTrades'),
+          description: t('updateTradesSuccess'),
           status: 'success',
           isClosable: true,
         })
@@ -59,18 +60,13 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
 export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tradesFormProps) => {
   // const { t } = useTranslation()
 
-  const {
-    handleSubmit,
-    control,
-    reset,
-    // formState: { errors }
-  } = useForm<VendorTradeFormValues>({
+  const { handleSubmit, control } = useForm<VendorTradeFormValues>({
     defaultValues: {
       trades: [],
     },
   })
 
-  const { fields: tradeCheckboxes } = useFieldArray({
+  const { fields: tradeCheckboxes, replace } = useFieldArray({
     control,
     name: 'trades',
   })
@@ -79,13 +75,13 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
     if (trades?.length) {
       const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
 
-      reset(tradeFormValues)
+      replace(tradeFormValues.trades)
     }
-  }, [trades, vendorProfileData, reset])
+  }, [trades, vendorProfileData, replace])
 
   return (
     <form onSubmit={handleSubmit(submitForm)} id="trade">
-      <Box h="65vh" mt={14}>
+      <Box h="450px" mt={14}>
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
@@ -99,13 +95,13 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
                       name={name}
                       key={name}
                       isChecked={value.checked}
-                      data-testid={`tradeChecks.${value.id}`}
+                      data-testid={`tradeChecks.${value.trade.id}`}
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
                     >
-                      {value.skill}
+                      {value.trade.skill}
                     </CheckboxButton>
                   )
                 }}
@@ -114,7 +110,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
           })}
         </Flex>
       </Box>
-      <Flex alignItems="center" w="100%" h="100px" justifyContent="end" borderTop="2px solid #E2E8F0">
+      <Flex alignItems="center" w="100%" h="60px" pt="12px" justifyContent="end" borderTop="2px solid #E2E8F0">
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
@@ -124,6 +120,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
           {t('save')}
         </Button>
       </Flex>
+      <DevTool control={control} />
     </form>
   )
 }

@@ -20,6 +20,7 @@ export enum STATUS {
   Dispute = 'dispute',
   Cancel = 'cancel',
   Expired = 'expired',
+  Declined = 'declined',
 }
 
 const STATUS_COLOR = {
@@ -30,6 +31,7 @@ const STATUS_COLOR = {
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
+  [STATUS.Declined]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Invoiced]: { color: '#48BB78', backgroundColor: '#E2EFDF' },
   [STATUS.Punch]: { color: '#F687B3', backgroundColor: '#FAE6E5' },
@@ -48,14 +50,7 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
 
   return (
     <Tag size="md" rounded="6px" variant="solid" backgroundColor={style?.backgroundColor} color={style?.color}>
-      <TagLabel
-        fontSize="14px"
-        fontStyle="normal"
-        fontWeight={400}
-        lineHeight="20px"
-        p="2px"
-        textTransform="capitalize"
-      >
+      <TagLabel fontSize="14px" fontStyle="normal" fontWeight={400} p="2px 10px 2px 10px" textTransform="capitalize">
         {value?.toLocaleLowerCase()}
       </TagLabel>
     </Tag>

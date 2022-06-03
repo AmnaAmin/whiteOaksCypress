@@ -23,6 +23,7 @@ import { useAuth } from 'utils/auth-context'
 import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
+import { useTranslation } from 'react-i18next'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -60,10 +61,14 @@ type HeaderProps = {
   toggleMenu?: () => void
 }
 
+const hoverEffect = {
+  _focus: { background: 'blue.50' },
+}
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
   // const [showNotification, setShowNotification] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
@@ -111,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-          <HStack spacing={4} _hover={{ bg: 'gray.100', rounded: '6px' }} pl="1">
+          <HStack spacing={4} _hover={{ bg: 'blue.50', rounded: '6px' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
@@ -123,21 +128,29 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <UserInfo />
               </MenuButton>
               <MenuList minWidth="279px">
-                <MenuItem>
-                  <RouterLink to="/settings">Settings</RouterLink>
+                <MenuItem sx={hoverEffect}>
+                  <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
-                <MenuItem>
-                  <RouterLink to="/password">Password</RouterLink>
+                <MenuItem sx={hoverEffect}>
+                  <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
-                <MenuItem>
-                  <Link target="_blank" href="https://13.212.88.107/" title="help">
-                    Help
+                <MenuItem sx={hoverEffect}>
+                  <Link
+                    color="gray.600"
+                    fontWeight={400}
+                    fontSize="14px"
+                    target="_blank"
+                    href="https://13.212.88.107/"
+                    title="help"
+                    _hover={{ textDecorationLine: 'none' }}
+                  >
+                    {t('help')}
                   </Link>
                 </MenuItem>
-                <MenuItem>
-                  <RouterLink to="/support">Support</RouterLink>
+                <MenuItem sx={hoverEffect}>
+                  <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem sx={hoverEffect}>
                   <Box
                     onClick={logout}
                     fontSize="14px"
@@ -147,7 +160,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                     color="#4A5568"
                     width="100%"
                   >
-                    Signout
+                    {t('signOut')}
                   </Box>
                 </MenuItem>
               </MenuList>

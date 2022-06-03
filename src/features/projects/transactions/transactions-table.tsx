@@ -16,7 +16,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     <Tr
       bg="white"
       _hover={{
-        background: 'gray.100',
+        background: 'gray.50',
       }}
       {...row.getRowProps({
         style,

@@ -275,7 +275,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           <Tbody>
             {transactionFields.map((transactionField, index) => {
               return (
-                <Tr key={`field${index}`}>
+                <Tr key={transactionField.id}>
                   {transactionFields?.length > 1 && (
                     <Td px="3">
                       <Controller
@@ -365,7 +365,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       </Box>
       <Flex p="3" flexDirection="row-reverse" borderWidth="0 1px 1px 1px" borderStyle="solid" borderColor="gray.100">
         <Text data-testid="total-amount" color="gray.600" fontSize="14px" fontWeight={500} fontStyle="normal">
-          Total: {totalAmount}
+          {t('total')}: {totalAmount}
         </Text>
       </Flex>
 
