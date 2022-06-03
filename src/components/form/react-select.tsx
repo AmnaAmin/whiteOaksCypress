@@ -42,7 +42,6 @@ export const chakraStyles = {
     bg: 'white',
   }),
   menuList: (provided: any, state: any) => {
-    console.log('state', state)
     const menuHeight = state.selectProps?.selectProps?.menuHeight || ''
 
     return { ...provided, height: menuHeight }

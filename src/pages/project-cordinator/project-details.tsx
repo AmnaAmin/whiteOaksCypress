@@ -12,8 +12,8 @@ import { ProjectType } from 'types/project.type'
 // import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
-import { BiAddToQueue } from 'react-icons/bi'
-import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
+import { BiAddToQueue, BiUpload } from 'react-icons/bi'
+
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
@@ -44,7 +44,6 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
@@ -88,13 +87,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button
-                    _hover={{ bg: 'gray.200' }}
-                    color="blue"
-                    fontSize={14}
-                    fontWeight={500}
-                    onClick={OnUploadMdal}
-                  >
+                  <Button colorScheme="brand" leftIcon={<BiUpload />}>
                     Upload
                   </Button>
                 )}
@@ -149,7 +142,6 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
-        <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
       </Stack>
     </>
   )
