@@ -99,7 +99,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 0 && (
-                  <HStack mb="10px" spacing="16px">
+                  <HStack spacing="16px">
                     <Box>
                       <FormControl display="flex" alignItems="center">
                         <FormLabel htmlFor="view-details" mb="0" variant="light-label" size="md">
@@ -129,7 +129,7 @@ export const ProjectDetails: React.FC = props => {
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" mt="3">
+              <TabPanel p="0px" mt="7px">
                 <Card rounded="16px" padding="0">
                   <ProjectDetailsTab />
                 </Card>
