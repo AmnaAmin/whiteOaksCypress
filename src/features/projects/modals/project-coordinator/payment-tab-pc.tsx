@@ -201,7 +201,7 @@ const PaymentInfoTab = props => {
       </Box>
 
       <Flex mt="40px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button variant="ghost" onClick={props.onClose} colorScheme="brand">
+        <Button variant="outline" onClick={props.onClose} colorScheme="brand" mr={3}>
           {t('close')}
         </Button>
         <Button onClick={() => saveChanges(entity)} colorScheme="brand">

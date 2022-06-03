@@ -153,12 +153,14 @@ export const InvoiceTabPC = ({ onClose, workOrder }) => {
             </Flex>
           </Flex>
         </HStack>
-        <Button onClick={() => rejectInvocie(entity)} colorScheme="brand">
-          {t('reject')}
-        </Button>
-        <Button onClick={onClose} colorScheme="brand" variant="outline">
-          {t('cancel')}
-        </Button>
+        <Flex>
+          <Button onClick={() => rejectInvocie(entity)} colorScheme="brand" mr={3}>
+            {t('reject')}
+          </Button>
+          <Button onClick={onClose} colorScheme="brand" variant="outline">
+            {t('cancel')}
+          </Button>
+        </Flex>
       </HStack>
     </Box>
   )

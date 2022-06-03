@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Button, FormControl, FormLabel, Input, Grid, Divider } from '@chakra-ui/react'
+import { Box, Text, Flex, Button, FormControl, FormLabel, Input, Grid, Divider, SimpleGrid } from '@chakra-ui/react'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -63,11 +63,10 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <Grid
-        gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))"
+        gridTemplateColumns="repeat(auto-fill,minmax(205px,1fr))"
         gap="16px"
         minH="110px"
         alignItems={'center'}
-        mx="67px"
         py="15px"
       >
         <InformationCard title="Vendor Name" date={companyName} />
@@ -78,11 +77,10 @@ const WorkOrderDetailTab = props => {
       <Divider border="1px solid  #E2E8F0" />
 
       <Grid
-        gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))"
+        gridTemplateColumns="repeat(auto-fill,minmax(200px,1fr))"
         gap="16px"
         minH="110px"
         alignItems={'center'}
-        mx="67px"
         py="15px"
       >
         <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
@@ -92,8 +90,8 @@ const WorkOrderDetailTab = props => {
       </Grid>
       <Divider border="1px solid  #E2E8F0" />
       <Box mt={10}>
-        <Grid gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))" gap="16px" mx="67px">
-          <Box>
+        <SimpleGrid gridTemplateColumns="repeat(auto-fill,minmax(200px,1fr))" gap="16px">
+          <Box w="215px">
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
                 Expected Start Date
@@ -125,7 +123,7 @@ const WorkOrderDetailTab = props => {
               <ReactSelect selectProps={{ isBorderLeft: true }} options={documentTypes} />
             </FormControl>
           </Box>
-        </Grid>
+        </SimpleGrid>
       </Box>
       <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
         <Button onClick={props.onClose} colorScheme="brand" variant="outline" mr={3}>
