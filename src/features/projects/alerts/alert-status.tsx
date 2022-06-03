@@ -134,7 +134,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
               {/* {alert.name} */}
               11 Joel CT
             </ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody>
               <Box
                 minH="31.6em"

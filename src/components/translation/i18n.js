@@ -7,6 +7,7 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Vendor Score',
+        outOf: 'out of',
         licenseExpiration: 'License Expiration',
         insuranceExpiration: 'Insurance Expiration',
         agreementSigned: 'Agreement Signed',
@@ -51,6 +52,12 @@ i18n.use(initReactI18next).init({
         region: 'Region',
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
+
+        //  Projects - Table Setting Columns
+        projectTypeLabel: 'Type',
+        vendorWOStatusValue: 'WO Status',
+        pastDueWorkorders: 'Past Due WO',
+        vendorWOExpectedPaymentDate: 'Expected Payment Date',
 
         // Projects-Transactions
         updateTransaction: 'Update Transaction',
@@ -124,6 +131,8 @@ i18n.use(initReactI18next).init({
         downloadPDF: 'Download as PDF',
         markCompleted: 'Mark All Completed',
         productName: 'Product Name',
+        sku: 'SKU',
+        location: 'Location',
         quantity: 'Quantity',
         price: 'Price',
         images: 'Images',
@@ -164,7 +173,7 @@ i18n.use(initReactI18next).init({
         fourthHeading: 'Exceptions',
         fifthHeading: 'Signature',
         noticeText:
-          'NOTICE: this document waives the claimants lien, stop payment notice, and payment bond rights effective on receipt of payment. a person should not rely on this document unless satisfied that the claimant will/has received payment.',
+          'NOTICE: This document waives the claimants lien, stop payment notice, and payment bond rights effective on receipt of payment. a person should not rely on this document unless satisfied that the claimant will/has received payment.',
         informationSection:
           'This document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant`s schedule to receive or receipt of payment from the financial institution on which the following check is drawn:',
         // Projects-Documents
@@ -188,6 +197,7 @@ i18n.use(initReactI18next).init({
         subTotal: 'Sub Total',
         totalAmountPaid: 'Total Amount Paid',
         balanceDue: 'Balance Due',
+        see: 'See',
         // Project - Payments
         LWDate: 'LW Date',
         permitDate: 'Permit Date',
@@ -212,7 +222,7 @@ i18n.use(initReactI18next).init({
         zip: 'Zip',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
-        businessPhoneName: 'Business Phone Name',
+        businessPhoneNo: 'Business Phone No.',
         ext: 'Ext',
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
@@ -238,11 +248,21 @@ i18n.use(initReactI18next).init({
         cancel: 'Cancel',
         insurances: 'Insurances',
         // Vendor-profile-license
+        license: 'License',
         addLicense: 'Add License',
         licenseType: 'License Type',
         licenseNumber: 'License Number',
         expiryDate: 'Expiry Date',
         fileInput: 'File Input',
+        //Vendor-profile-Success
+        updateDetails: 'Update Vendor Details',
+        updateDetailsSuccess: 'Vendor Details have been updated successfully.',
+        updateProfile: 'Update Vendor Profile Details',
+        updateProfileSuccess: 'Vendor Profile Details have been updated successfully.',
+        updateMarkets: 'Update Vendor Profile Markest',
+        updateMarketsSuccess: 'Vendor profile markets have been saved successfully.',
+        updateTrades: 'Update Vendor Profile Trades',
+        updateTradesSuccess: 'Vendor profile trades have been saved successfully.',
 
         // Settings Page
         settings: 'Settings',
@@ -265,8 +285,10 @@ i18n.use(initReactI18next).init({
         severity: 'Severity',
         title: 'Title',
         descriptions: 'Description (1000) Characters',
-        uploadFile: 'Upload File',
-
+        fileUpload: 'File Upload',
+        createTicketTitle: 'Create Ticket',
+        createTicketSuccessMessage: 'Ticket created successfully.',
+        createTicketErrorMessage: 'Create ticket api cause some error.',
         // Header
         help: 'Help',
         support: 'Support',
@@ -277,6 +299,7 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
+        outOf: 'fuera de',
         insuranceExpiration: 'Vencimiento del Seguro',
         licenseExpiration: 'Caducidad de la licencia',
         agreementSigned: 'Acuerdo firmado',
@@ -321,6 +344,13 @@ i18n.use(initReactI18next).init({
         region: 'Región',
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
+
+        //  Projects - Table Setting Columns
+        projectTypeLabel: 'Escribe',
+        vendorWOStatusValue: 'Estado WO',
+        pastDueWorkorders: 'Vencido WO',
+        vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
+
         // Project-Details
         status: 'Estado',
 
@@ -342,7 +372,7 @@ i18n.use(initReactI18next).init({
         WODueDate: 'Fecha de vencimiento de OT',
         DueDateWO: 'Fecha de vencimiento OT',
         trade: 'Comercio',
-        auditsLogs: 'registros de auditoría',
+        auditLogs: 'Registros de auditoría',
         totalAmount: 'Cantidad Total',
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
@@ -389,6 +419,8 @@ i18n.use(initReactI18next).init({
         downloadPDF: 'Descargar como PDF',
         markCompleted: 'Marcar todo completado',
         productName: 'Nombre del producto',
+        sku: 'SKU',
+        location: 'Ubicación',
         quantity: 'Cantidad',
         price: 'Precio',
         images: 'Imágenes',
@@ -422,13 +454,13 @@ i18n.use(initReactI18next).init({
         payDateVariance: 'Variación de la fecha de pago',
         finalInvoice: 'Factura Final',
         uploadInvoice: 'Cargar factura',
-        firstHeading: 'RENUNCIA CONDICIONAL Y LIBERACIÓN EN EL PAGO FINAL',
+        firstHeading: 'Renuncia condicional y liberación en el pago final',
         secondHeading: 'Información identificativa',
         thirdHeading: 'Renuncia y Liberación Condicional',
         fourthHeading: 'Excepciones',
         fifthHeading: 'Firma',
         noticeText:
-          'AVISO: ESTE DOCUMENTO RENUNCIA A LOS DERECHOS DE GRAVAMEN, AVISO DE SUSPENSIÓN DE PAGO Y FIANZA DE PAGO DEL DEMANDANTE EFECTIVOS AL RECIBIR EL PAGO. UNA PERSONA NO DEBE CONFIAR EN ESTE DOCUMENTO A MENOS QUE ESTÉ SATISFECHO DE QUE EL RECLAMANTE RECIBIRÁ/HAYA RECIBIDO EL PAGO.',
+          'AVISO: Este documento renuncia a los derechos de gravamen, aviso de suspensión de pago y fianza de pago del reclamante a partir de la recepción del pago. una persona no debe confiar en este documento a menos que esté convencido de que el reclamante recibirá/ha recibido el pago.',
         informationSection:
           'Este documento renuncia y libera el gravamen, el aviso de suspensión de pago y los derechos de fianza de pago que tiene el reclamante por la mano de obra y el servicio prestados, y el equipo y el material entregados al cliente en este trabajo hasta la fecha de finalización de este documento. Los derechos basados ​​en la mano de obra o el servicio proporcionado, o el equipo o el material entregado, de conformidad con una orden de cambio por escrito que haya sido completamente ejecutada por las partes antes de la fecha en que el reclamante firme este documento, se renuncian y se liberan mediante este documento, a menos que enumerados como una excepción a continuación. Este documento es efectivo solo en el cronograma del reclamante para recibir o recibir el pago de la institución financiera contra la cual se gira el siguiente cheque:',
         // Projects - Documents
@@ -452,6 +484,7 @@ i18n.use(initReactI18next).init({
         subTotal: 'Total parcial',
         totalAmountPaid: 'Cantidad total pagada',
         balanceDue: 'Saldo adeudado',
+        see: 'Ver',
         // Project - Payments
         LWDate: 'Fecha LW',
         permitDate: 'Fecha del permiso',
@@ -476,7 +509,7 @@ i18n.use(initReactI18next).init({
         zip: 'Cremallera',
         primaryContact: 'Contacto Primario',
         secondaryContact: 'Contacto Secundario',
-        businessPhoneName: 'Nombre de Teléfono de la Empresa',
+        businessPhoneNo: 'Número de teléfono laboral',
         ext: 'Ext.',
         secondaryNo: 'Número Secundario',
         primaryEmail: 'Correo Electrónico Principal',
@@ -503,11 +536,21 @@ i18n.use(initReactI18next).init({
         insurances: 'Seguros',
 
         // Vendor-profile-license
+        license: 'Licencia',
         addLicense: 'Agregar Licencia',
         licenseType: 'Tipo de Licencia',
         licenseNumber: 'Número de Licencia',
         expiryDate: 'Fecha de Caducidad',
         fileInput: 'Entrada de Archivo',
+        //Vendor-profile-Success
+        updateDetails: 'Actualizar detalles del proveedor',
+        updateDetailsSuccess: 'Los detalles del proveedor se han actualizado con éxito.',
+        updateProfile: 'Actualizar los detalles del perfil del proveedor',
+        updateProfileSuccess: 'Los detalles del perfil del proveedor se han actualizado correctamente.',
+        updateMarkets: 'Actualizar mercados de perfiles de proveedores',
+        updateMarketsSuccess: 'Los mercados de perfiles de proveedores se han guardado correctamente.',
+        updateTrades: 'Actualizar intercambios de perfiles de proveedores',
+        updateTradesSuccess: 'Las transacciones del perfil del proveedor se han guardado correctamente.',
         // Settings Page
         settings: 'Ajustes',
         firstName: 'Primer Nombre',
@@ -527,7 +570,10 @@ i18n.use(initReactI18next).init({
         severity: 'Gravedad',
         title: 'Título',
         descriptions: 'Descripción (1000) Caracteres',
-        uploadFile: 'Subir archivo',
+        fileUpload: 'Subir archivo',
+        createTicketTitle: 'Crear Ticket',
+        createTicketSuccessMessage: 'Ticket creado con éxito.',
+        createTicketErrorMessage: 'Crear ticket api causa algún error.',
         // Header
         help: 'Ayudar',
         support: 'Apoyo',

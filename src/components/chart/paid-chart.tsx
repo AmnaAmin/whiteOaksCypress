@@ -71,7 +71,7 @@ export const PaidChartGraph = ({ data, width, height }) => {
             return ` ${'$' + round(tick / 1000, 2) + 'k'} `
           }}
         />
-        <Tooltip contentStyle={{ borderRadius: '6px' }} />
+        <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />
 
         <Bar dataKey="count" fill="url(#colorUv)" radius={[5, 5, 0, 0]} />
       </BarChart>

@@ -1,6 +1,7 @@
 import { AddIcon } from '@chakra-ui/icons'
-import { HStack, Box, Icon, Button, Spacer, Flex, Stack, useDisclosure } from '@chakra-ui/react'
+import { HStack, Box, Icon, Button, Spacer, Flex, Stack, useDisclosure, Center, Divider } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import TableColumnSettings from 'components/table/table-column-settings'
 import { VendorFilters } from 'features/project-coordinator/vendor/vendor-filter'
 import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor/vendor-table'
 import NewVendorModal from 'features/projects/modals/project-coordinator/new-vendor-modal'
@@ -8,15 +9,25 @@ import { t } from 'i18next'
 import { useState } from 'react'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import { TableNames } from 'types/table-column.types'
-import { useTableColumnSettings } from 'utils/table-column-settings'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 
 const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [vendorTableInstance, setInstance] = useState<any>(null)
   const [selectedCard, setSelectedCard] = useState<string>('')
-  const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
+  const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
+    VENDOR_COLUMNS,
+    TableNames.vendors,
+  )
+
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
+  }
+
+  const onSave = columns => {
+    postGridColumn(columns)
   }
 
   return (
@@ -61,11 +72,8 @@ const Vendors = () => {
           ) : (
             <>
               <Button
-                variant="solid"
-                colorScheme="gray"
-                size="md"
-                roundedTopLeft="0"
-                roundedTopRight="0"
+                variant="ghost"
+                colorScheme="brand"
                 onClick={() => {
                   if (vendorTableInstance) {
                     vendorTableInstance?.exportData('xlsx', false)
@@ -77,6 +85,10 @@ const Vendors = () => {
                 </Box>
                 {t('export')}
               </Button>
+              <Center>
+                <Divider orientation="vertical" height="25px" border="1px solid" ml="1" />
+              </Center>
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </>
           )}
         </Flex>

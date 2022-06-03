@@ -21,7 +21,7 @@ export const Projects = () => {
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.pcproject,
@@ -36,7 +36,7 @@ export const Projects = () => {
   }
 
   const onSave = columns => {
-    postGridColumn(columns)
+    postProjectColumn(columns)
   }
 
   const clearAll = () => {
