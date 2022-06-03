@@ -80,7 +80,6 @@ const CreateATicket = () => {
           description: 'Support ticket has been created successfully.',
           status: 'success',
           isClosable: true,
-          position: 'top-left',
         })
       },
     })
