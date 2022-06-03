@@ -322,7 +322,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           )}
           <Button
             variant="outline"
-            disabled={[STATUS.Invoiced, STATUS.Denied].includes(workOrder?.statusLabel)}
+            disabled={
+              !(
+                workOrder?.statusLabel?.toLowerCase() === STATUS.Declined ||
+                (workOrder?.statusLabel?.toLowerCase() === STATUS.Invoiced && !recentInvoice)
+              )
+            }
             colorScheme="brand"
             size="md"
             leftIcon={<BiSpreadsheet />}

@@ -10,7 +10,7 @@ export enum STATUS {
   Pending = 'pending',
   Denied = 'denied',
   Cancelled = 'cancelled',
-  Invoiced = 'Invoiced',
+  Invoiced = 'invoiced',
   Punch = 'punch',
   New = 'new',
   Closed = 'closed',
@@ -19,6 +19,7 @@ export enum STATUS {
   Collection = 'collection',
   Dispute = 'dispute',
   Cancel = 'cancel',
+  Declined = 'declined',
 }
 
 const STATUS_COLOR = {
@@ -29,6 +30,7 @@ const STATUS_COLOR = {
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
+  [STATUS.Declined]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Invoiced]: { color: '#48BB78', backgroundColor: '#E2EFDF' },
   [STATUS.Punch]: { color: '#F687B3', backgroundColor: '#FAE6E5' },
