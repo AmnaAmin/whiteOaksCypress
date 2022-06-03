@@ -8,21 +8,28 @@ import Misc from './misc'
 import InvoiceAndPayments from './invoice-and-payments'
 import { BiSpreadsheet } from 'react-icons/bi'
 
-const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props => {
+type tabProps = {
+  onClose?: () => void
+  marginX?: { marginLeft: string; marginRight: string }
+  backGround?: { backgroundColor: string }
+  tabVariant?: string
+  height?: { height: string }
+}
+
+const ProjectDetailsTab = (props: tabProps) => {
+  const { marginX, onClose, backGround, tabVariant, height } = props
   const [tabIndex, setTabIndex] = useState<number>(0)
 
   return (
     <>
-      <Tabs
-        variant={props.id === 'Receivable' ? 'enclosed' : 'line'}
-        colorScheme="brand"
-        onChange={index => setTabIndex(index)}
-      >
+      <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={index => setTabIndex(index)}>
         <TabList
-          bg={props.id === 'Receivable' ? '' : '#F7FAFC'}
+          bg={backGround?.backgroundColor ? '' : '#F7FAFC'}
           rounded="6px 6px 0 0"
           pt="7"
-          mx={props.id === 'Receivable' ? '32px' : ''}
+          ml={marginX?.marginLeft || ''}
+          mr={marginX?.marginRight || ''}
+          {...marginX}
         >
           <Tab>Project Management</Tab>
           <Tab>Invoicing & payment</Tab>
@@ -33,22 +40,22 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
 
         <TabPanels mt="31px">
           <TabPanel p="0" ml="32px">
-            <ProjectManagement id={props.id} />
+            <ProjectManagement height={height} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px">
-            <InvoiceAndPayments id={props.id} />
+            <InvoiceAndPayments height={height} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px">
-            <Contact id={props.id} />
+            <Contact height={height} />
           </TabPanel>
           <TabPanel p="0" ml="32px">
-            <Location id={props.id} />
+            <Location height={height} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px">
-            <Misc id={props.id} />
+            <Misc height={height} />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>
@@ -67,16 +74,9 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
@@ -112,10 +112,10 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
                     <Button
-                      onClick={props.onClose}
+                      onClick={onClose}
                       mt="8px"
                       mr="5"
                       float={'right'}
@@ -156,16 +156,9 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
@@ -199,16 +192,9 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
@@ -231,19 +217,20 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 <Divider border="1px solid" />
               </Box>
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit" form="misc">
+                <Button
+                  mt="8px"
+                  mr="32px"
+                  float={'right'}
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  form="misc"
+                >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button

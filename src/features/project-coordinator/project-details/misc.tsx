@@ -15,7 +15,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
 
-const Misc: React.FC<{ id?: string }> = props => {
+const Misc: React.FC<{ height?: { height: string } }> = props => {
   const {
     register,
     handleSubmit,
@@ -30,7 +30,7 @@ const Misc: React.FC<{ id?: string }> = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="misc">
-        <Stack minH={props.id === 'Receivable' ? '395px' : '430px'}>
+        <Stack minH={props.height ? '395px' : '430px'}>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl>

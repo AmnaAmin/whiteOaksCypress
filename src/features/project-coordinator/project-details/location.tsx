@@ -2,7 +2,7 @@ import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, S
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
-const Location: React.FC<{ id?: string }> = props => {
+const Location: React.FC<{ height?: { height: string } }> = props => {
   const {
     register,
     handleSubmit,
@@ -18,7 +18,7 @@ const Location: React.FC<{ id?: string }> = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="location">
-        <Stack minH={props.id === 'Receivable' ? '290px' : '430px'}>
+        <Stack minH={props.height ? '290px' : '430px'}>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl isInvalid={errors.address} w="215px">
