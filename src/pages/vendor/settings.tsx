@@ -1,5 +1,18 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { Box, HStack, Avatar, Text, Stack, Divider, Icon, VStack, Input, Flex } from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  Avatar,
+  Text,
+  Stack,
+  Divider,
+  Icon,
+  VStack,
+  Input,
+  Flex,
+  InputGroup,
+  InputLeftElement,
+} from '@chakra-ui/react'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
@@ -15,7 +28,7 @@ import {
 import { FormInput } from 'components/react-hook-form-fields/input'
 // import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useTranslation } from 'react-i18next'
-import { BiBriefcase } from 'react-icons/bi'
+import { BiUser } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
 import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
@@ -106,10 +119,13 @@ const Settings = React.forwardRef((props, ref) => {
   return (
     <Card py="0">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box mt="40px" ml="20px" h="75vh" overflow="auto">
-          <Text fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal" mb={8}>
-            {t('settings')}
-          </Text>
+        <Box mt="40px" ml="20px" h="68vh" overflow="auto">
+          <Flex align="center" mb={12}>
+            <Text mr={2} fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal">
+              {t('settings')}
+            </Text>
+            <Divider border="1px solid #E2E8F0" />
+          </Flex>
 
           <Stack mb="10">
             <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
@@ -123,20 +139,21 @@ const Settings = React.forwardRef((props, ref) => {
             </HStack>
           </Stack>
 
-          <Stack spacing={0} mb="14">
-            <HStack alignItems="start">
-              <Icon boxSize={5} as={BiBriefcase} color="gray.500" mt="2px" />
-              <VStack align="start" spacing={0}>
-                <Text fontSize="14px" fontWeight={500} color="gray.600">
-                  {t('email')}
-                </Text>
-                <Text fontSize="14px" fontWeight={400} color="gray.500">
-                  {account?.login}
-                </Text>
-              </VStack>
-            </HStack>
+          <Stack w="215px" mb={9}>
+            <VStack alignItems="start">
+              <Text fontSize="14px" fontWeight={500} color="gray.600">
+                {t('email')}
+              </Text>
+              <InputGroup>
+                <Input disabled value={account?.login} type="text" />
 
-            <Divider w="280px" />
+                <InputLeftElement className="InputLeft" pointerEvents="none" zIndex={1}>
+                  <Box color="gray.400" fontSize="14px">
+                    <BiUser size={20} cursor="pointer" color="#A0AEC0" />
+                  </Box>
+                </InputLeftElement>
+              </InputGroup>
+            </VStack>
           </Stack>
 
           <HStack spacing={4}>
@@ -165,7 +182,7 @@ const Settings = React.forwardRef((props, ref) => {
             />
           </HStack>
         </Box>
-        <Flex id="footer" w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
+        <Flex id="footer" w="100%" h="90px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
