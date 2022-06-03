@@ -14,7 +14,7 @@ import {
   FormLabel,
 } from '@chakra-ui/react'
 
-import ReactSelect from '../../../../components/form/react-select'
+import ReactSelect from 'components/form/react-select'
 
 import React, { useState } from 'react'
 import { BiXCircle } from 'react-icons/bi'
@@ -51,7 +51,7 @@ export const UploadModal = ({ isOpen, onClose }) => {
                 <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                   Document Type
                 </FormLabel>
-                <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
+                <ReactSelect options={documentTypes} selectProps={{ isBorderLeft: true, menuHeight: '110px' }} />
               </Box>
               <Box pt={7}>
                 <Input
