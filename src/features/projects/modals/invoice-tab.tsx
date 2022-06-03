@@ -97,7 +97,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
-      let invoices = documentsData.filter(d => d.documentType === 48)
+      let invoices = documentsData.filter(d => d.documentType === 48 && d.workOrderId === workOrder.id)
       if (invoices.length > 0) {
         /* sorting invoices by created datetime to fetch latest */
         invoices = _.orderBy(
