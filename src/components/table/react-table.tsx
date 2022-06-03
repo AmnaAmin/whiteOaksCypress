@@ -104,7 +104,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} padding="15px">
-            <Text noOfLines={2} title={cell.value}>
+            <Text noOfLines={2} title={cell.value} pl={0}>
               {cell.render('Cell')}
             </Text>
           </Td>
@@ -125,7 +125,7 @@ export const TableHeader = ({ headerGroups }) => {
             return (
               // @ts-ignore
               <Th key={`th_td_${column.id}`} {...column.getHeaderProps(column.getSortByToggleProps())} p="0">
-                <Flex py="2" px="2" pl="7" alignItems="center">
+                <Flex py="2" px="2" pl="5" alignItems="center">
                   <Text
                     fontSize="14px"
                     color="gray.600"
