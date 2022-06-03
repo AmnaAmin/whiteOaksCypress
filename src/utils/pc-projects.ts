@@ -49,7 +49,6 @@ export const useAddressSettings = () => {
           title: 'Update Settings',
           description: 'Settings have been updated successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },

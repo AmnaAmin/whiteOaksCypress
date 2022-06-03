@@ -194,7 +194,6 @@ export const useSaveVendorDetails = () => {
           title: t('updateDetails'),
           description: t('updateDetailsSuccess'),
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -347,7 +346,6 @@ export const useSaveSettings = () => {
           title: 'Update Settings',
           description: 'Settings have been updated successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },

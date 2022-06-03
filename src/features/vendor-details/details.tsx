@@ -87,7 +87,6 @@ export const Details: React.FC<{
             description: t('updateProfileSuccess'),
             status: 'success',
             isClosable: true,
-            position: 'top-left',
           })
         },
       })
