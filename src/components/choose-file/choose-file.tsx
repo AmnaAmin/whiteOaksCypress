@@ -4,7 +4,7 @@ import { BiUpload } from 'react-icons/bi'
 
 type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   onClear?: () => void
-  isError: boolean
+  isError?: boolean
 }
 
 const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, isError, ...inputProps }) => {
