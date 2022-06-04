@@ -50,11 +50,13 @@ export const useFieldRequiredDecision = (control: Control<FormValues, any>, tran
 export const useFieldDisabledEnabledDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   // const { isAdmin } = useUserRolesSelector()
   const isUpdateForm = !!transaction
-  const isStatusApproved = transaction?.status === TransactionStatusValues.approved
+  const isStatusApproved =
+    transaction?.status === TransactionStatusValues.approved ||
+    transaction?.status === TransactionStatusValues.cancelled
 
   return {
     isUpdateForm,
-    isAproved: isStatusApproved,
+    isApproved: isStatusApproved,
     isPaidDateDisabled: !transaction || isStatusApproved,
     isStatusDisabled: isStatusApproved,
   }

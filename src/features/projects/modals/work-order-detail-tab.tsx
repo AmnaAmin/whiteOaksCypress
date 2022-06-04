@@ -212,14 +212,14 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
         )}
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-        <Flex w="100%" justifyContent="end">
+        <HStack spacing="16px" w="100%" justifyContent="end">
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
           <Button colorScheme="brand" onClick={saveWorkOrderDetails}>
             {t('save')}
           </Button>
-        </Flex>
+        </HStack>
       </ModalFooter>
     </Box>
   )
