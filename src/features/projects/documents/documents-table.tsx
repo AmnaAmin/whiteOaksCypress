@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Center, Image } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Divider, Center } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
@@ -14,70 +14,67 @@ import { Button } from 'components/button/button'
 import { FaAtom } from 'react-icons/fa'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
-  console.log(row)
   return (
-    <a
-      // @ts-ignore
-      href={row.original?.s3Url}
-      target="blank_"
+    <Tr
+      bg="white"
+      _hover={{
+        background: 'gray.100',
+      }}
+      cursor="pointer"
+      {...row.getRowProps({
+        style,
+      })}
     >
-      <Tr
-        bg="white"
-        _hover={{
-          background: 'gray.100',
-        }}
-        cursor="pointer"
-        {...row.getRowProps({
-          style,
-        })}
-        // onClick={() => {
-        //   // @ts-ignore
-        //   const s3Url = row.original?.s3Url
-        //   if (s3Url) {
-        //     downloadFile(s3Url)
-        //   }
-        // }}
-      >
-        {row.cells.map(cell => {
-          return (
-            <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
-              {/** @ts-ignore */}
-              <Image src={row.original?.s3Url} height="30px" w="30px" />
-              <Flex alignItems="center" h="60px">
-                <Text
-                  noOfLines={2}
-                  title={cell.value}
-                  padding="0 15px"
-                  fontWeight={400}
-                  fontStyle="normal"
-                  mt="10px"
-                  mb="10px"
-                  fontSize="14px"
-                  color="#4A5568"
-                >
-                  {cell.render('Cell')}
-                </Text>
-              </Flex>
-            </Td>
-          )
-        })}
-
-        <Center mr={3}>
-          <Icon
-            as={BiDownArrowCircle}
-            color="#4E87F8"
-            fontSize={24}
+      {row.cells.map(cell => {
+        return (
+          <Td
+            {...cell.getCellProps()}
+            key={`row_${cell.value}`}
+            p="0"
             onClick={() => {
               // @ts-ignore
               const s3Url = row.original?.s3Url
+              console.log('s3url', s3Url)
               if (s3Url) {
-                downloadFile(s3Url)
+                window.open(s3Url, '_blank')
               }
             }}
-          />
-        </Center>
-      </Tr>
-    </a>
+          >
+            {/** @ts-ignore */}
+            <Flex alignItems="center" h="60px">
+              <Text
+                noOfLines={2}
+                title={cell.value}
+                padding="0 15px"
+                fontWeight={400}
+                fontStyle="normal"
+                mt="10px"
+                mb="10px"
+                fontSize="14px"
+                color="#4A5568"
+              >
+                {cell.render('Cell')}
+              </Text>
+            </Flex>
+          </Td>
+        )
+      })}
+
+      <Center mr={3}>
+        <Icon
+          as={BiDownArrowCircle}
+          color="#4E87F8"
+          fontSize={24}
+          onClick={() => {
+            // @ts-ignore
+            const s3Url = row.original?.s3Url
+            if (s3Url) {
+              downloadFile(s3Url)
+            }
+          }}
+        />
+      </Center>
+    </Tr>
   )
 }
 
