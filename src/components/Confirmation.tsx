@@ -11,7 +11,6 @@ import {
   Button,
   Text,
   Flex,
-  HStack,
 } from '@chakra-ui/react'
 
 interface ConfirmationBoxProps {
@@ -45,7 +44,7 @@ export function ConfirmationBox({
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
+        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
           <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
@@ -54,24 +53,12 @@ export function ConfirmationBox({
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <HStack spacing="16px">
-              <Button variant="outline" colorScheme="brand" onClick={onClose}>
-                <Text fontSize="14px" fontWeight={400}>
-                  Cancel
-                </Text>
-              </Button>
-              <Button
-                size="md"
-                onClick={onConfirm}
-                isLoading={isLoading}
-                colorScheme="brand"
-                rounded="6px"
-                fontSize="14px"
-                fontWeight={500}
-              >
-                Delete
-              </Button>
-            </HStack>
+            <Button variant="unstyled" color="gray.600" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="solid" onClick={onConfirm} isLoading={isLoading} colorScheme="brand">
+              Delete
+            </Button>
           </ModalFooter>
         </Flex>
       </ModalContent>

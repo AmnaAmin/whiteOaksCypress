@@ -1,5 +1,17 @@
 import React from 'react'
-import { Box, Divider, Heading, HStack, InputProps, Stack, Text, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Heading,
+  HStack,
+  InputProps,
+  Stack,
+  Text,
+  FormControl,
+  FormLabel,
+  Input,
+  Icon,
+} from '@chakra-ui/react'
 
 interface InputViewProps {
   label: string
@@ -32,28 +44,38 @@ const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = 
   )
 }
 
-export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: string }> = ({
+export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: string; icon?: React.ElementType }> = ({
   label,
   name,
   testId,
+  icon,
   ...inputProps
 }) => {
+  console.log('INputProps', inputProps)
   return (
-    <FormControl>
-      <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
-        {label}
-      </FormLabel>
-      <Input
-        {...inputProps}
-        id={name}
-        name={name}
-        data-testid={testId}
-        variant="unstyled"
-        disabled
-        color="gray.500"
-        fontSize="14px"
-      />
-    </FormControl>
+    <HStack alignItems="start" spacing="15px">
+      <Icon as={icon} boxSize={6} color="gray.500" />
+      <Box>
+        <FormControl top="1px">
+          <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
+            {label}
+          </FormLabel>
+
+          <Input
+            {...inputProps}
+            id={name}
+            name={name}
+            data-testid={testId}
+            variant="unstyled"
+            disabled
+            color="gray.500"
+            fontSize="14px"
+            title={inputProps.value?.toString()}
+            isTruncated
+          />
+        </FormControl>
+      </Box>
+    </HStack>
   )
 }
 

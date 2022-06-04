@@ -55,6 +55,7 @@ import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
+import { BiCalendar, BiDetail } from 'react-icons/bi'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -74,7 +75,15 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
           name="dateCreated"
           control={control}
           render={({ field: { name, onChange, value } }) => {
-            return <ReadOnlyInput label={t('dateCreated')} name={name} onChange={onChange} value={value as string} />
+            return (
+              <ReadOnlyInput
+                label={t('dateCreated')}
+                name={name}
+                onChange={onChange}
+                value={value as string}
+                icon={BiCalendar}
+              />
+            )
           }}
         />
       </GridItem>
@@ -84,7 +93,15 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
           name="createdBy"
           control={control}
           render={({ field: { name, onChange, value } }) => {
-            return <ReadOnlyInput label={t('createdBy')} name={name} onChange={onChange} value={value as string} />
+            return (
+              <ReadOnlyInput
+                label={t('createdBy')}
+                name={name}
+                onChange={onChange}
+                value={value as string}
+                icon={BiDetail}
+              />
+            )
           }}
         />
       </GridItem>
