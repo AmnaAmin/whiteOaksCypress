@@ -96,7 +96,9 @@ export const Details: React.FC<{
 
   return (
     <>
-      <Flex h="565px" direction="column">
+
+      <Flex h="564px" direction="column">
+
         <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="20px" w="90%" mb="30px">
           <GridItem>
             <FieldInfoCard
@@ -242,7 +244,11 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
               <Box>
                 <Stack direction="row" spacing={4}>
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
-                    <FormLabel sx={textStyle}>{t('businessPhoneNo')}</FormLabel>
+
+                    <FormLabel isTruncated sx={textStyle}>
+                      {t('businessPhoneNo')}
+                    </FormLabel>
+
                     <Input
                       id="businessPhoneNumber"
                       type="text"
