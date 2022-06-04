@@ -60,8 +60,10 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
         )
       })}
 
-      <Center mr={3}>
+      <Center>
         <Icon
+          pos="absolute"
+          right="10px"
           as={BiDownArrowCircle}
           color="#4E87F8"
           fontSize={24}
