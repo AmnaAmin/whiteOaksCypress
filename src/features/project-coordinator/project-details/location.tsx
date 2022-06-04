@@ -2,7 +2,7 @@ import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, S
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
-const Location: React.FC<{ height?: { height: string } }> = props => {
+const Location: React.FC<{ height?: string }> = props => {
   const {
     register,
     handleSubmit,

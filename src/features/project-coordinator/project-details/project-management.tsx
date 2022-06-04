@@ -13,7 +13,7 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-const ProjectManagement: React.FC<{ height?: { height: string } }> = props => {
+const ProjectManagement: React.FC<{ height?: string }> = props => {
   const {
     register,
     formState: { errors },

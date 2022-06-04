@@ -10,26 +10,23 @@ import { BiSpreadsheet } from 'react-icons/bi'
 
 type tabProps = {
   onClose?: () => void
-  marginX?: { marginLeft: string; marginRight: string }
-  backGround?: { backgroundColor: string }
+  style?: { height: string; backgroundColor: string; marginLeft: string; marginRight: string }
   tabVariant?: string
-  height?: { height: string }
 }
 
 const ProjectDetailsTab = (props: tabProps) => {
-  const { marginX, onClose, backGround, tabVariant, height } = props
+  const { style, onClose, tabVariant } = props
   const [tabIndex, setTabIndex] = useState<number>(0)
 
   return (
     <>
       <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={index => setTabIndex(index)}>
         <TabList
-          bg={backGround?.backgroundColor ? '' : '#F7FAFC'}
+          bg={style?.backgroundColor ? '' : '#F7FAFC'}
           rounded="6px 6px 0 0"
           pt="7"
-          ml={marginX?.marginLeft || ''}
-          mr={marginX?.marginRight || ''}
-          {...marginX}
+          ml={style?.marginLeft || ''}
+          mr={style?.marginRight || ''}
         >
           <Tab>Project Management</Tab>
           <Tab>Invoicing & payment</Tab>
@@ -40,22 +37,22 @@ const ProjectDetailsTab = (props: tabProps) => {
 
         <TabPanels mt="31px">
           <TabPanel p="0" ml="32px">
-            <ProjectManagement height={height} />
+            <ProjectManagement height={style?.height} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px">
-            <InvoiceAndPayments height={height} />
+            <InvoiceAndPayments height={style?.height} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px">
-            <Contact height={height} />
+            <Contact height={style?.height} />
           </TabPanel>
           <TabPanel p="0" ml="32px">
-            <Location height={height} />
+            <Location height={style?.height} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px">
-            <Misc height={height} />
+            <Misc height={style?.height} />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>

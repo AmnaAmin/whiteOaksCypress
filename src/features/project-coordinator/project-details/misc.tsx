@@ -15,7 +15,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
 
-const Misc: React.FC<{ height?: { height: string } }> = props => {
+const Misc: React.FC<{ height?: string }> = props => {
   const {
     register,
     handleSubmit,

@@ -17,7 +17,7 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
 
-const InvoiceAndPayments: React.FC<{ height?: { height: string } }> = props => {
+const InvoiceAndPayments: React.FC<{ height?: string }> = props => {
   const {
     handleSubmit,
     register,
