@@ -22,7 +22,7 @@ const input = {
           },
         }
       },
-      'reguired-field': props => {
+      'required-field': props => {
         return {
           field: {
             ...chakraTheme.components.Input.variants.outline(props).field,

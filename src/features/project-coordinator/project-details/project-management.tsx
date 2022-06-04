@@ -1,14 +1,4 @@
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  InputGroup,
-  Stack,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -102,7 +92,7 @@ const ProjectManagement: React.FC<{ height?: string }> = props => {
                   Project Name
                 </FormLabel>
                 <Input
-                  variant="reguired-field"
+                  variant="required-field"
                   placeholder="PC project 1"
                   id="projectName"
                   {...register('projectName', {
@@ -134,9 +124,7 @@ const ProjectManagement: React.FC<{ height?: string }> = props => {
                 <FormLabel variant="strong-label" size="md">
                   Client Start
                 </FormLabel>
-                <InputGroup>
-                  <Input variant="reguired-field" type="date" />
-                </InputGroup>
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -144,7 +132,7 @@ const ProjectManagement: React.FC<{ height?: string }> = props => {
                 <FormLabel variant="strong-label" size="md">
                   Client Due
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>

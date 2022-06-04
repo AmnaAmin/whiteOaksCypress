@@ -26,7 +26,7 @@ const Location: React.FC<{ height?: string }> = props => {
                   Address
                 </FormLabel>
                 <Input
-                  variant="reguired-field"
+                  variant="required-field"
                   placeholder="2037 SW TRENTON LN"
                   isDisabled={true}
                   id="address"
@@ -43,7 +43,7 @@ const Location: React.FC<{ height?: string }> = props => {
                   City
                 </FormLabel>
                 <Input
-                  variant="reguired-field"
+                  variant="required-field"
                   placeholder="East Point"
                   isDisabled={true}
                   id="city"
@@ -60,7 +60,7 @@ const Location: React.FC<{ height?: string }> = props => {
                   State
                 </FormLabel>
                 <Input
-                  variant="reguired-field"
+                  variant="required-field"
                   placeholder="NC"
                   isDisabled={true}
                   id="state"
@@ -93,7 +93,7 @@ const Location: React.FC<{ height?: string }> = props => {
                   Market
                 </FormLabel>
                 <Input
-                  variant="reguired-field"
+                  variant="required-field"
                   placeholder="Atlanta"
                   isDisabled={true}
                   id="market"
