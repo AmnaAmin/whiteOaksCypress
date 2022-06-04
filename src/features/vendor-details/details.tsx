@@ -195,7 +195,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                       data-testid="primaryContact"
                       id="primaryContact"
                       type="text"
-                      variant="reguired-field"
+                      variant="required-field"
                       {...register('primaryContact', {
                         required: 'This is required',
                       })}
@@ -218,7 +218,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                   <FormControl isInvalid={!!errors.primaryEmail} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
-                      variant="reguired-field"
+                      variant="required-field"
                       {...register('primaryEmail', {
                         required: 'This is required',
                       })}
@@ -245,7 +245,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                       id="businessPhoneNumber"
                       type="text"
                       data-testid="businessPhoneNumber"
-                      variant="reguired-field"
+                      variant="required-field"
                       {...register('businessPhoneNumber', {
                         required: 'This is required',
                       })}
@@ -273,7 +273,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                           <Input
                             {...field}
                             id="SecondaryNo"
-                            variant="reguired-field"
+                            variant="required-field"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
                             type="text"

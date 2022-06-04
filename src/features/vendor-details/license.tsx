@@ -167,7 +167,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
-                  variant="reguired-field"
+                  variant="required-field"
                 />
 
                 <FormDatePicker

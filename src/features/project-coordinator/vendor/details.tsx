@@ -44,7 +44,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -97,7 +97,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -114,7 +114,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -154,7 +154,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -201,7 +201,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -218,7 +218,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -253,7 +253,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -270,7 +270,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -287,7 +287,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />
@@ -304,7 +304,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
                 placeholder="Input size medium"
               />

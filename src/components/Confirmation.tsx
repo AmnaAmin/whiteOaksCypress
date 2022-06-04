@@ -48,15 +48,13 @@ export function ConfirmationBox({
 
         <ModalBody>
           <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
-            Are you sure you want to {content}?
+            {content}
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <Button variant="unstyled" mr={5} onClick={onClose}>
-              <Text color="gray.600" fontSize="14px" fontWeight={400}>
-                Cancel
-              </Text>
+            <Button colorScheme="brand" variant="outline" mr={5} onClick={onClose}>
+              No
             </Button>
             <Button
               size="md"
@@ -67,7 +65,7 @@ export function ConfirmationBox({
               fontSize="14px"
               fontWeight={500}
             >
-              Delete
+              Yes
             </Button>
           </ModalFooter>
         </Flex>
