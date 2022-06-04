@@ -10,7 +10,7 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Icon,
+  Flex,
 } from '@chakra-ui/react'
 
 interface InputViewProps {
@@ -44,38 +44,36 @@ const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = 
   )
 }
 
-export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: string; icon?: React.ElementType }> = ({
+export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: string; Icon?: React.ElementType }> = ({
   label,
   name,
   testId,
-  icon,
+  Icon,
   ...inputProps
 }) => {
-  console.log('INputProps', inputProps)
   return (
-    <HStack alignItems="start" spacing="15px">
-      <Icon as={icon} boxSize={6} color="gray.500" />
-      <Box>
-        <FormControl top="1px">
-          <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
-            {label}
-          </FormLabel>
-
-          <Input
-            {...inputProps}
-            id={name}
-            name={name}
-            data-testid={testId}
-            variant="unstyled"
-            disabled
-            color="gray.500"
-            fontSize="14px"
-            title={inputProps.value?.toString()}
-            isTruncated
-          />
-        </FormControl>
+    <Flex>
+      <Box my="1" mr="19px">
+        {Icon && <Icon fontSize="18px" color="#718096" />}
       </Box>
-    </HStack>
+      <FormControl>
+        <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
+          {label}
+        </FormLabel>
+        <Input
+          {...inputProps}
+          isTruncated
+          id={name}
+          name={name}
+          data-testid={testId}
+          variant="unstyled"
+          disabled
+          color="gray.500"
+          fontSize="14px"
+          title={inputProps.value?.toString()}
+        />
+      </FormControl>
+    </Flex>
   )
 }
 

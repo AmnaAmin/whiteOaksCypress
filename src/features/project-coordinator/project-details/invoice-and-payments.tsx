@@ -105,7 +105,7 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   Invoice back date
                 </FormLabel>
-                <Input w="215px" variant="reguired-field" size="md" placeholder="mm/dd/yyyy" />
+                <Input w="215px" variant="required-field" size="md" placeholder="mm/dd/yyyy" />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -134,7 +134,7 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Expected Pay
                 </FormLabel>
-                <Input w="215px" variant="reguired-field" size="md" type="date" />
+                <Input w="215px" variant="required-field" size="md" type="date" />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -159,7 +159,7 @@ const InvoiceAndPayments = () => {
                   placeholder="$0.00"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
+                  variant="required-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
@@ -178,7 +178,7 @@ const InvoiceAndPayments = () => {
                   placeholder="$1200"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
+                  variant="required-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.remainingPayment && errors.remainingPayment.message}</FormErrorMessage>
@@ -197,7 +197,7 @@ const InvoiceAndPayments = () => {
                   placeholder="$0"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
+                  variant="required-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>

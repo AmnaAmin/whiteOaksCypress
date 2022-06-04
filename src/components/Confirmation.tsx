@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   Modal,
   ModalOverlay,
@@ -48,16 +46,24 @@ export function ConfirmationBox({
 
         <ModalBody>
           <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
-            Are you sure you want to {content}?
+            {content}
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <Button variant="unstyled" color="gray.600" onClick={onClose}>
-              Cancel
+            <Button colorScheme="brand" variant="outline" mr={5} onClick={onClose}>
+              No
             </Button>
-            <Button variant="solid" onClick={onConfirm} isLoading={isLoading} colorScheme="brand">
-              Delete
+            <Button
+              size="md"
+              onClick={onConfirm}
+              isLoading={isLoading}
+              colorScheme="CustomPrimaryColor"
+              rounded="6px"
+              fontSize="14px"
+              fontWeight={500}
+            >
+              Yes
             </Button>
           </ModalFooter>
         </Flex>

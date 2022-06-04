@@ -34,7 +34,9 @@ const ProjectDetails: React.FC = props => {
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
   const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
 
-  const preventNewTransaction = !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+  const isNewTransactionAllow = vendorWOStatusValue
+    ? !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+    : true
 
   return (
     <>
@@ -71,7 +73,7 @@ const ProjectDetails: React.FC = props => {
                     onClick={onTransactionModalOpen}
                     colorScheme="brand"
                     leftIcon={<BiAddToQueue />}
-                    isDisabled={preventNewTransaction}
+                    isDisabled={isNewTransactionAllow}
                   >
                     {t('newTransaction')}
                   </Button>
