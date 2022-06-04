@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   Modal,
   ModalOverlay,
@@ -44,7 +42,7 @@ export function ConfirmationBox({
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
+        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
           <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
