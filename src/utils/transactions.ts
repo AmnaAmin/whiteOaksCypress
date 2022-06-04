@@ -487,7 +487,6 @@ export const useChangeOrderMutation = (projectId?: string) => {
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -515,7 +514,6 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
-          duration: 5000,
           isClosable: true,
         })
       },

@@ -10,7 +10,7 @@ export enum STATUS {
   Pending = 'pending',
   Denied = 'denied',
   Cancelled = 'cancelled',
-  Invoiced = 'Invoiced',
+  Invoiced = 'invoiced',
   Punch = 'punch',
   New = 'new',
   Closed = 'closed',
@@ -19,6 +19,8 @@ export enum STATUS {
   Collection = 'collection',
   Dispute = 'dispute',
   Cancel = 'cancel',
+  Expired = 'expired',
+  Declined = 'declined',
 }
 
 const STATUS_COLOR = {
@@ -29,6 +31,7 @@ const STATUS_COLOR = {
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
+  [STATUS.Declined]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Invoiced]: { color: '#48BB78', backgroundColor: '#E2EFDF' },
   [STATUS.Punch]: { color: '#F687B3', backgroundColor: '#FAE6E5' },
@@ -39,6 +42,7 @@ const STATUS_COLOR = {
   [STATUS.Collection]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Dispute]: { color: '#F687B3', backgroundColor: '#FFF5F7' },
   [STATUS.Cancel]: { color: '#F56565', backgroundColor: '#FFF5F7' },
+  [STATUS.Expired]: { color: '#718096', backgroundColor: '#EDF2F7' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {

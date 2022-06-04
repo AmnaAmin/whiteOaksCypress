@@ -5,24 +5,20 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
 import last from 'lodash/last'
-import {
-  readFileContent,
-  useSaveSettings,
-  //  languageOptions,
-  useAccountDetails,
-} from 'utils/vendor-details'
-// import { FormSelect } from 'components/react-hook-form-fields/select'
+import { readFileContent, useSaveSettings, useAccountDetails } from 'utils/vendor-details'
 import { FormInput } from 'components/react-hook-form-fields/input'
-// import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { useTranslation } from 'react-i18next'
 import { BiBriefcase } from 'react-icons/bi'
 import { MdCameraAlt } from 'react-icons/md'
 import { Button } from 'components/button/button'
 import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
 import { Card } from 'components/card/card'
+import { useAuth } from 'utils/auth-context'
 
-const Settings = React.forwardRef((props, ref) => {
-  const { mutate: saveSettings } = useSaveSettings()
+const Settings = React.forwardRef(() => {
+  const { mutate: saveSettings, isSuccess } = useSaveSettings()
+  const { updateAccount } = useAuth()
+
   const { data: account, refetch } = useAccountDetails()
   const [preview, setPreview] = useState<string | null>(null)
   const [imgFile, setImgFile] = useState<any>(null)
@@ -53,17 +49,35 @@ const Settings = React.forwardRef((props, ref) => {
     // control,
     watch,
     reset,
+    getValues,
   } = useForm<SettingsValues>()
+
+  useEffect(() => {
+    if (!isSuccess) return
+    const values = getValues()
+
+    updateAccount?.({
+      ...account,
+      email: values.email || '',
+      firstName: values.firstName || '',
+      lastName: values.lastName || '',
+      imageUrl: preview,
+    })
+  }, [isSuccess, getValues])
 
   useEffect(() => {
     if (account) {
       const defaultSettings = settingsDefaultValue(account)
       setPreview(account.imageUrl)
       if (account.imageUrl) {
-        convertImageUrltoDataURL(account.imageUrl).then(dataUrl => {
-          var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
-          setImgFile(fileData)
-        })
+        convertImageUrltoDataURL(account.imageUrl)
+          .then(dataUrl => {
+            var fileData = dataURLtoFile(dataUrl, last(account.imageUrl.split('/')))
+            setImgFile(fileData)
+          })
+          .catch(err => {
+            console.log('error in convert Image Url to DataURL', err)
+          })
       }
       reset(defaultSettings)
     }
@@ -93,14 +107,10 @@ const Settings = React.forwardRef((props, ref) => {
         avatar: fileContents,
       }
       saveSettings(settingsPayload)
-      // setTimeout(() => {
-      //   refetch()
-      // }, 2000) // call for refetch because we are getting no response from current api. Needs to change when correct response is receieved
-      // setLanguage(values.language);
+
       i18n.changeLanguage(values.language)
-      console.log('preview', settingsPayload)
     },
-    [i18n, refetch, saveSettings, imgFile],
+    [i18n, saveSettings, imgFile],
   )
 
   return (

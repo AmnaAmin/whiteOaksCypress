@@ -95,7 +95,6 @@ export const useCreateTicketMutation = () => {
           description: t('createTicketSuccessMessage'),
           status: 'success',
           isClosable: true,
-          position: 'top-left',
         })
       },
       onError: (error: Error) => {
@@ -104,7 +103,6 @@ export const useCreateTicketMutation = () => {
           description: error.message,
           status: 'error',
           isClosable: true,
-          position: 'top-left',
         })
       },
     },

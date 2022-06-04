@@ -41,7 +41,6 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
           description: t('updateMarketsSuccess'),
           status: 'success',
           isClosable: true,
-          position: 'top-left',
         })
       },
     })

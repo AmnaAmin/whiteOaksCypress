@@ -614,7 +614,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
         <DevTool control={control} />
       </FormProvider>
 
-      <HStack alignItems="center" justifyContent="end" mt="4" spacing="16px">
+      <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
         {isShowLienWaiver ? (
           <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="brand">
             {t('back')}
