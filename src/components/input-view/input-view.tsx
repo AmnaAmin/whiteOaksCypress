@@ -51,6 +51,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
   icon,
   ...inputProps
 }) => {
+  console.log('INputProps', inputProps)
   return (
     <HStack alignItems="start" spacing="15px">
       <Icon as={icon} boxSize={6} color="gray.500" />
@@ -69,6 +70,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
             disabled
             color="gray.500"
             fontSize="14px"
+            title={inputProps.value?.toString()}
             isTruncated
           />
         </FormControl>
