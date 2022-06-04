@@ -41,7 +41,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.paymentTermDate ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -55,7 +55,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.workOrderPayDateVariance ? (
                   <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -69,7 +69,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.paymentTerm ? (
                   <Text>{invoiceAndPaymentData?.paymentTerm} </Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -84,7 +84,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePaid ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -101,7 +101,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -116,7 +116,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePermitsPulled ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -131,7 +131,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePaymentProcessed ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -146,7 +146,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.dateInvoiceSubmitted ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -163,7 +163,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.expectedPaymentDate ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -189,7 +189,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.clientOriginalApprovedAmount ? (
                   <Text>{currencyFormatter(invoiceAndPaymentData?.clientOriginalApprovedAmount)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -213,7 +213,7 @@ const InvoicingAndPaymentTab = ({
       </ModalBody>
       <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+          <Button colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
         </Flex>
