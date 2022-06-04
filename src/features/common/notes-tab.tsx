@@ -97,7 +97,7 @@ export const NotesTab = (props: NotesProps) => {
         </Flex>
       </Box>
       <HStack borderTop="1px solid #CBD5E0" p={5} bg="white">
-        <Flex w="100%" justifyContent="end">
+        <HStack spacing="16px" w="100%" justifyContent="end">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
@@ -106,7 +106,7 @@ export const NotesTab = (props: NotesProps) => {
           <Button type="submit" colorScheme="brand" isDisabled={!message}>
             {t('save')}
           </Button>
-        </Flex>
+        </HStack>
       </HStack>
     </form>
   )
