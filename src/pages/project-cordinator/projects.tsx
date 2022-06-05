@@ -48,6 +48,10 @@ export const Projects = () => {
     setIsClicked(true)
   }
 
+  const clearSelected = () => {
+    setIsClicked(false)
+  }
+
   return (
     <>
       <VStack w="100%" h="calc(100vh - 160px)">
@@ -72,7 +76,9 @@ export const Projects = () => {
           >
             All
           </Button>
-          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          <Box onClick={clearSelected}>
+            <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          </Box>
           <Button
             bg="none"
             color="#4E87F8"

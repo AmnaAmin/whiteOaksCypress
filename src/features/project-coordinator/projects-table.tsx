@@ -121,16 +121,21 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       ),
     )
 
-    // Due Project Filter
-    const dates = days?.find(day => {
-      if (selectedDay === day.dayName) {
-        return day?.dueDate
-      } else if (selectedDay === 'All') {
-        return day?.dueDate // need to work on this
+    // Due Project Weekly Filter
+    const getDates = days?.filter(day => {
+      if (selectedDay === 'All' || selectedDay === day.dayName) {
+        return true
       }
-    })?.dueDate
+      return false
+    })
+
+    const clientDate = getDates?.map(dates => {
+      var date = dates?.dueDate
+      return date.substr(0, 10)
+    })
+
     if (selectedDay) {
-      setFilterProjects(projects?.filter(project => project.clientDueDate === dates))
+      setFilterProjects(projects?.filter(project => clientDate.includes(project?.clientDueDate?.substr(0, 10))))
     }
   }, [selectedCard, selectedDay, projects])
 
