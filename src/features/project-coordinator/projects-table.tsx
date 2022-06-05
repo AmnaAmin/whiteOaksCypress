@@ -6,6 +6,7 @@ import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
 import { t } from 'i18next'
+import moment from 'moment'
 
 export const PROJECT_COLUMNS = [
   {
@@ -121,21 +122,21 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       ),
     )
 
-    // Due Project Weekly Filter
-    const getDates = days?.filter(day => {
-      if (selectedDay === 'All' || selectedDay === day.dayName) {
-        return true
-      }
-      return false
-    })
-
-    const clientDate = getDates?.map(dates => {
-      var date = dates?.dueDate
-      return date.substr(0, 10)
-    })
-
+    // Due Project Filter
     if (selectedDay) {
-      setFilterProjects(projects?.filter(project => clientDate.includes(project?.clientDueDate?.substr(0, 10))))
+      setFilterProjects(
+        projects?.filter(
+          project =>
+            project.clientDueDate ===
+            days?.forEach(day => {
+              if (selectedDay === day.dayName) {
+                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+              } else if (selectedDay === 'All') {
+                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
+              }
+            })?.dueDate,
+        ),
+      )
     }
   }, [selectedCard, selectedDay, projects])
 
