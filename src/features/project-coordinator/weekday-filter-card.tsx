@@ -25,6 +25,7 @@ export const WeekdayCard = (props: multitypes) => {
         alignContent="right"
         color={props.selectedDay === props.id ? 'white' : 'black'}
         onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
+        disabled={props.count ? false : true}
       >
         {props.dayName}
         <Flex

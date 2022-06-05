@@ -28,7 +28,6 @@ export const Projects = () => {
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-
   const [isClicked, setIsClicked] = useState(false)
 
   const setProjectTableInstance = tableInstance => {
@@ -40,13 +39,17 @@ export const Projects = () => {
   }
 
   const clearAll = () => {
-    setSelectedCard('')
+    setSelectedDay('')
     setIsClicked(false)
   }
 
   const allDays = () => {
-    setSelectedCard('All')
+    setSelectedDay('All')
     setIsClicked(true)
+  }
+
+  const clearSelected = () => {
+    setIsClicked(false)
   }
 
   return (
@@ -73,7 +76,9 @@ export const Projects = () => {
           >
             All
           </Button>
-          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          <Box onClick={clearSelected}>
+            <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          </Box>
           <Button
             bg="none"
             color="#4E87F8"
