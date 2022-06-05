@@ -65,8 +65,8 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 
   return (
     <Grid
-      templateColumns="repeat(4, fit-content(160px))"
-      gap={'1rem 30px'}
+      templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
+      gap={'1rem 20px'}
       borderBottom="2px solid"
       borderColor="gray.200"
       py="5"
@@ -94,11 +94,11 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
           />
         </GridItem>
       )}
-      {/* <GridItem>
+      <GridItem>
         <ReadOnlyInput
           label={t('dateModified')}
           name={'dateModified'}
-          value={formValues.modifiedDate as string}
+          value={(formValues.modifiedDate as string) || '----'}
           Icon={BiCalendar}
         />
       </GridItem>
@@ -106,10 +106,10 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
         <ReadOnlyInput
           label={t('modifiedBy')}
           name={'modifiedBy'}
-          value={formValues.modifiedBy as string}
+          value={(formValues.modifiedBy as string) || '----'}
           Icon={BiDetail}
         />
-      </GridItem> */}
+      </GridItem>
     </Grid>
   )
 }

@@ -126,8 +126,8 @@ export interface FormValues {
   against: SelectOption | null
   dateCreated: string | null
   createdBy: string | null
-  modifiedDate?: string | null
-  modifiedBy?: string | null
+  modifiedDate: string | null
+  modifiedBy: string | null
   workOrder: SelectOption | null
   changeOrder: SelectOption | null
   transaction: TransactionFormValues[]

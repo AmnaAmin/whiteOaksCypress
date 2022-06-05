@@ -53,11 +53,11 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
 }) => {
   return (
     <Flex>
-      <Box my="1" mr="19px">
+      <Box my="1" mr="4">
         {Icon && <Icon fontSize="18px" color="#718096" />}
       </Box>
       <FormControl>
-        <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
+        <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" isTruncated title={label}>
           {label}
         </FormLabel>
         <Input

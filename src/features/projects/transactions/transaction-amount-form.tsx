@@ -300,7 +300,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 fontSize="14px"
                 color="gray.600"
                 gap="2rem 4rem"
-                borderWidth={index === transactionFields.length - 1 ? '0' : '0 0 1px 0'}
+                borderWidth={'0 0 1px 0'}
                 borderStyle="solid"
                 borderColor="gray.200"
               >
@@ -347,7 +347,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   </FormControl>
                 </GridItem>
                 <GridItem pr="7">
-                  <FormControl isInvalid={!!errors.transaction?.[index].amount}>
+                  <FormControl isInvalid={!!errors.transaction?.[index]?.amount}>
                     <Controller
                       name={`transaction.${index}.amount` as const}
                       control={control}
