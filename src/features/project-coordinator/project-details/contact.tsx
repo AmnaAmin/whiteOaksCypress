@@ -20,7 +20,7 @@ const Contact = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="contact">
-        <Stack minH="42vh" spacing={14} mt="7">
+        <Stack spacing={14} mt="7">
           <HStack spacing="16px">
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectManager}>
@@ -49,6 +49,7 @@ const Contact = () => {
                 <Input
                   placeholder="098-987-2233"
                   id="fpmPhone"
+                  isDisabled={true}
                   {...register('fpmPhone', {
                     required: 'This is required',
                   })}
@@ -66,6 +67,7 @@ const Contact = () => {
                 </FormLabel>
                 <Input
                   id="ext"
+                  isDisabled={true}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -81,7 +83,7 @@ const Contact = () => {
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectCoordinator}>
                 <FormLabel variant="strong-label" size="md">
-                  Project Coordinator
+                  Field Project Manager
                 </FormLabel>
                 <Controller
                   control={control}
@@ -100,10 +102,11 @@ const Contact = () => {
             <Box h="40px">
               <FormControl isInvalid={errors.pcPhone}>
                 <FormLabel variant="strong-label" size="md" htmlFor="pcPhone">
-                  PC Phone
+                  FPM Phone
                 </FormLabel>
                 <Input
                   placeholder="098-987-2233"
+                  isDisabled={true}
                   id="pcPhone"
                   {...register('pcPhone', {
                     required: 'This is required',
@@ -122,6 +125,7 @@ const Contact = () => {
                 </FormLabel>
                 <Input
                   id="ext"
+                  isDisabled={true}
                   {...register('ext', {
                     required: 'This is required',
                   })}

@@ -32,7 +32,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
       onClick={() => inputRef?.current?.click()}
       bg="white"
       _hover={{
-        borderColor: 'gray.400',
+        borderColor: 'gray.300',
       }}
     >
       <input
@@ -42,7 +42,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
       />
-      <Box flex="1" position="relative" overflow="hidden" height="40px">
+      <Box flex="1" position="relative" overflow="hidden" height="38px">
         {value && (
           <Flex alignItems="center">
             <Text
@@ -67,7 +67,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
               bg="white"
               pt={2}
             >
-              <BiUpload />
+              <BiUpload color="#4E87F8" />
             </Button>
           </Flex>
         )}
