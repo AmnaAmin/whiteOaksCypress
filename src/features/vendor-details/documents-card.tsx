@@ -51,7 +51,7 @@ const downloadableDocument = (link, text, testid?) => {
 
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const { vendor = {}, setNextTab } = props
-  const { mutate: saveDocuments } = useSaveVendorDetails()
+  const { mutate: saveDocuments } = useSaveVendorDetails('Document')
 
   const onSubmit = useCallback(
     async values => {

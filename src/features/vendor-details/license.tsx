@@ -34,7 +34,7 @@ type licenseFormProps = {
 export const License = React.forwardRef((props: LicenseProps, ref) => {
   const { vendor = {}, setNextTab } = props
 
-  const { mutate: saveLicenses } = useSaveVendorDetails()
+  const { mutate: saveLicenses } = useSaveVendorDetails('License')
 
   const onSubmit = useCallback(
     async values => {
