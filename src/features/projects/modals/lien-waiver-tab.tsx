@@ -20,7 +20,7 @@ import { downloadFile } from 'utils/file-utils'
 import jsPdf from 'jspdf'
 import { orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, GetHelpText } from 'utils/lien-waiver'
@@ -45,8 +45,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     register,
     formState: { errors },
     handleSubmit,
-    getValues,
     setValue,
+    control,
   } = useForm({
     defaultValues: {
       claimantName: lienWaiverData.claimantName,
@@ -61,7 +61,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       dateOfSignature: lienWaiverData.dateOfSignature,
     },
   })
-  const value = getValues()
+  const formValues = useWatch({ control })
   const parseValuesToPayload = (formValues, documents) => {
     return {
       ...lienWaiverData,
@@ -104,7 +104,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         height: sigRef?.current?.height,
       }
       convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
-        form = createForm(form, getValues(), dimention, dataUrl)
+        form = createForm(form, formValues, dimention, dataUrl)
         const pdfUri = form.output('datauristring')
         const pdfBlob = form.output('bloburi')
         setRecentLWFile({
@@ -124,7 +124,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         onComplete(docs)
       })
     },
-    [getValues, claimantsSignature],
+    [formValues, claimantsSignature],
   )
 
   const generateTextToImage = value => {
@@ -242,17 +242,17 @@ export const LienWaiverTab: React.FC<any> = props => {
                         {claimantsSignature && <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />}
                       </HStack>
                     </Flex>
-                    {!claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
+                    {errors?.claimantsSignature?.message && <FormErrorMessage>This is required field</FormErrorMessage>}
                   </FormControl>
 
                   <FormInput
                     icon={<BiCalendar />}
-                    errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
+                    errorMessage={errors?.dateOfSignature?.message}
                     label={t('dateOfSignature')}
                     placeholder=""
                     register={register}
                     name={`dateOfSignature`}
-                    value={dateFormat(value.dateOfSignature)}
+                    value={dateFormat(formValues.dateOfSignature)}
                     controlStyle={{ w: '20em' }}
                     elementStyle={{
                       bg: 'white',
