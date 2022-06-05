@@ -189,8 +189,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                     InputElem={<Text>{lienWaiverData.propertyAddress}</Text>}
                   />
                 </HStack>
-                <HStack></HStack>
-                <HStack>
+
+                <HStack pt={'20px'}>
                   <InputView
                     controlStyle={{ w: '20em' }}
                     label={t('makerOfCheck')}
@@ -203,7 +203,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   />
                 </HStack>
 
-                <Stack pt="5" pb="5">
+                <HStack pt={'20px'} alignItems={'flex-start'} spacing="7">
                   <FormInput
                     errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
                     label={t('claimantsTitle')}
@@ -217,9 +217,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                     rules={{ required: 'This is required field' }}
                     name={`claimantTitle`}
                   />
-                </Stack>
-
-                <HStack alignItems={'flex-start'} spacing="7">
                   <FormControl isInvalid={!claimantsSignature} width={'20em'}>
                     <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
                       {t('claimantsSignature')}
