@@ -1,5 +1,5 @@
 import { Box, Center } from '@chakra-ui/react'
-import { BiFile, BiCalendar, BiDetail, BiMessage, BiDollar } from 'react-icons/bi'
+import { BiFile, BiCalendar, BiDetail, BiDollar, BiMessageSquareX } from 'react-icons/bi'
 import numeral from 'numeral'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -39,7 +39,7 @@ const useVendorCardJson = cards => {
       id: 'notInvoiced',
       title: t('completednotPaid'),
       number: cards?.find(c => c.label === 'declined')?.count,
-      IconElement: <IconElement Icon={BiMessage} bg="#FAE6E5" />,
+      IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
     },
     {
       id: 'pendingTransactionsProjectsCount',

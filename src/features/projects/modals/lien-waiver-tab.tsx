@@ -282,14 +282,14 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Button>
           )}
         </Flex>
-        <Flex justifyContent="end">
+        <HStack spacing="16px" justifyContent="end">
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
-        </Flex>
+        </HStack>
       </ModalFooter>
     </form>
   )

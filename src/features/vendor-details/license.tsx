@@ -123,7 +123,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" h="450px" spacing="15px" ml="8px" overflow="auto">
+        <VStack align="start" h="470px" spacing="15px" ml="8px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
               <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -167,7 +167,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
-                  variant="reguired-field"
+                  variant="required-field"
                 />
 
                 <FormDatePicker
@@ -206,16 +206,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             )
           })}
         </VStack>
-        <Flex
-          id="footer"
-          mt="20px"
-          w="100%"
-          pt="12px"
-          h="70px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
+        <Flex id="footer" w="100%" pt="12px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               Cancel
@@ -223,7 +214,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           )}
 
           <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveLicenses">
-            {t('next')}
+            {t('save')}
           </Button>
         </Flex>
       </form>

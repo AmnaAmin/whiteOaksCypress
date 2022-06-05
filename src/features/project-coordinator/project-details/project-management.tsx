@@ -106,7 +106,7 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Start
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -123,7 +123,7 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Start
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -131,7 +131,7 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Due
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
