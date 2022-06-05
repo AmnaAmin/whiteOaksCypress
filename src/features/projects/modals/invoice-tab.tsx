@@ -171,10 +171,10 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
-          <Box h="250px" overflow="auto">
+          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
             <form>
-              <Table border="1px solid #E2E8F0" variant="simple" size="md">
-                <Thead>
+              <Table variant="simple" size="md">
+                <Thead pos="sticky" top={0}>
                   <Tr>
                     <Td>{t('item')}</Td>
                     <Td>{t('description')}</Td>
