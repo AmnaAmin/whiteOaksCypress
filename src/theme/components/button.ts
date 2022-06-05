@@ -35,7 +35,7 @@ const ButtonVariants = {
       ghost: props => {
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
-          color: `${props.colorScheme}.400`,
+          color: `${props.colorScheme}.300`,
           _focus: {
             outline: 'none',
           },
