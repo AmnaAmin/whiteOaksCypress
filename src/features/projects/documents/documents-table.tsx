@@ -34,7 +34,6 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
             onClick={() => {
               // @ts-ignore
               const s3Url = row.original?.s3Url
-              console.log('s3url', s3Url)
               if (s3Url) {
                 window.open(s3Url, '_blank')
               }
