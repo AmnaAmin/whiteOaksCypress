@@ -146,7 +146,7 @@ export type License = {
   licenseType?: any
   licenseNumber?: string
   expiryDate?: null | string
-  expirationFile?: any
+  expirationFile?: File | null
   downloadableFile?: any
 }
 export type LicenseFormValues = {

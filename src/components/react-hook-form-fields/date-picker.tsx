@@ -31,6 +31,7 @@ type DatePickerProps = {
   placeholder?: string
   onChange?: (e) => void
   testId?: string
+  errorBoxheight?: any
 }
 const CalendarContainer = ({ children }) => {
   return <Portal>{children}</Portal>
