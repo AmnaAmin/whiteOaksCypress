@@ -144,7 +144,7 @@ i18n.use(initReactI18next).init({
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
         owner: 'Owner',
-        makerOfCheck: 'Maker Of Check',
+        makerOfCheck: 'Maker of check',
         amountOfCheck: 'Amount of Check $',
         checkPayableTo: 'Check Payable To',
         affectees: 'This document does not affect any of the following.',
