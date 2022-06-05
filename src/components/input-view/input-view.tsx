@@ -39,7 +39,7 @@ const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = 
           </Text>
         </Stack>
       </HStack>
-      {showDivider && <Divider orientation="horizontal" pt={5} />}
+      {showDivider && <Divider orientation="horizontal" pt={2} />}
     </Box>
   )
 }
