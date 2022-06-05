@@ -8,11 +8,9 @@ import {
   Image,
   Link,
   ModalFooter,
-  Stack,
   Text,
   VStack,
   ModalBody,
-  Icon,
   IconButton,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
@@ -23,7 +21,7 @@ import jsPdf from 'jspdf'
 import { head, orderBy } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-icons/bi'
+import { BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
