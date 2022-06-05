@@ -10,7 +10,7 @@ import { BiSpreadsheet } from 'react-icons/bi'
 
 type tabProps = {
   onClose?: () => void
-  style?: { height: string; backgroundColor: string; marginLeft: string; marginRight: string }
+  style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string }
   tabVariant?: string
 }
 
@@ -36,23 +36,23 @@ const ProjectDetailsTab = (props: tabProps) => {
         </TabList>
 
         <TabPanels mt="31px">
-          <TabPanel p="0" ml="32px">
-            <ProjectManagement height={style?.height} />
+          <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
+            <ProjectManagement />
           </TabPanel>
 
-          <TabPanel p="0" ml="32px">
-            <InvoiceAndPayments height={style?.height} />
+          <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
+            <InvoiceAndPayments />
           </TabPanel>
 
-          <TabPanel p="0" ml="32px">
-            <Contact height={style?.height} />
+          <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>
+            <Contact />
           </TabPanel>
-          <TabPanel p="0" ml="32px">
-            <Location height={style?.height} />
+          <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
+            <Location />
           </TabPanel>
 
-          <TabPanel p="0" ml="32px">
-            <Misc height={style?.height} />
+          <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
+            <Misc />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>

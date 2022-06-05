@@ -3,7 +3,7 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-const Contact: React.FC<{ height?: string }> = props => {
+const Contact = () => {
   const {
     register,
     control,
@@ -20,7 +20,7 @@ const Contact: React.FC<{ height?: string }> = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="contact">
-        <Stack minH={props.height ? '380px' : '430px'} spacing={14} mt="7">
+        <Stack spacing={14} mt="7">
           <HStack spacing="16px">
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectManager}>

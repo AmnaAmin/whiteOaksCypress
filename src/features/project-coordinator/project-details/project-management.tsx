@@ -3,7 +3,7 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-const ProjectManagement: React.FC<{ height?: string }> = props => {
+const ProjectManagement = () => {
   const {
     register,
     formState: { errors },
@@ -18,7 +18,7 @@ const ProjectManagement: React.FC<{ height?: string }> = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="project">
-        <Stack minH={props.height ? '290px' : '430px'}>
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.status}>

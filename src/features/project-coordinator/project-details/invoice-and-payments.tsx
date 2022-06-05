@@ -17,7 +17,7 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
 
-const InvoiceAndPayments: React.FC<{ height?: string }> = props => {
+const InvoiceAndPayments = () => {
   const {
     handleSubmit,
     register,
@@ -34,7 +34,7 @@ const InvoiceAndPayments: React.FC<{ height?: string }> = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="invoice">
-        <Stack minH={props.height ? '290px' : '430px'}>
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" w="908px" columnGap="16px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
