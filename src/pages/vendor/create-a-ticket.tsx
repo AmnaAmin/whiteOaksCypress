@@ -28,7 +28,7 @@ import {
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
-import { BiDownload } from 'react-icons/bi'
+// import { BiDownload } from 'react-icons/bi'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
@@ -85,18 +85,18 @@ const CreateATicket = () => {
     })
   }
 
-  const downloadDocument = (link, text) => {
-    return (
-      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-        <Flex ml={1}>
-          <BiDownload fontSize="sm" />
-          <Text ml="5px" fontSize="12px" fontStyle="normal">
-            {text}
-          </Text>
-        </Flex>
-      </a>
-    )
-  }
+  // const downloadDocument = (link, text) => {
+  //   return (
+  //     <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+  //       <Flex ml={1}>
+  //         <BiDownload fontSize="sm" />
+  //         <Text ml="5px" fontSize="12px" fontStyle="normal">
+  //           {text}
+  //         </Text>
+  //       </Flex>
+  //     </a>
+  //   )
+  // }
 
   return (
     <Card py="0">
@@ -107,36 +107,6 @@ const CreateATicket = () => {
               {t('createTicket')}
             </Text>
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
-              {/* <FormControl>
-                <FormLabel htmlFor="createdBy" fontSize="16px">
-                  Created By
-                </FormLabel>
-                <Input
-                  disabled
-                  h="40px"
-                  id="createdBy"
-                  type="text"
-                  borderLeft="2px solid #4E87F8"
-                  bg="white"
-                  _disabled={disabledInputStyle}
-                  {...register("createdBy")}
-                />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel htmlFor="createdDate" fontSize="16px">
-                  Created Date
-                </FormLabel>
-                <Input
-                  disabled
-                  h="40px"
-                  id="createdDate"
-                  type="text"
-                  bg="white"
-                  _disabled={disabledInputStyle}
-                  {...register("createdDate")}
-                />
-              </FormControl> */}
               <HStack spacing={3}>
                 <FormControl isInvalid={!!errors.issueType} w="215px">
                   <FormLabel htmlFor="issueType" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
@@ -193,23 +163,6 @@ const CreateATicket = () => {
                 />
                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
               </FormControl>
-
-              {/* <FormControl isInvalid={!!errors.status}>
-                <FormLabel htmlFor="status" fontSize="16px">
-                Status
-                </FormLabel>
-                <Controller
-                  control={control}
-                  name="status"
-                  rules={{ required: 'This is required field' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Select id="status" options={STATUS_OPTIONS} {...field} isDisabled />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )}
-                />
-              </FormControl> */}
             </Grid>
           </Box>
 
@@ -229,13 +182,6 @@ const CreateATicket = () => {
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>
-
-            {/* <FormControl mt="30px">
-              <FormLabel htmlFor="resolution" fontSize="16px">
-                Resolution(1000 Characters)
-              </FormLabel>
-              <Textarea size="lg" bg="gray.200" h="140px" id="resolution" {...register('resolution')} />
-            </FormControl> */}
           </Box>
 
           <FormControl mt="40px" w="290px" mb="40px" isInvalid={!!errors.attachment?.message}>
@@ -263,9 +209,9 @@ const CreateATicket = () => {
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    {field.value && (
+                    {/* {field.value && (
                       <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
-                    )}
+                    )} */}
                   </VStack>
                 )
               }}
