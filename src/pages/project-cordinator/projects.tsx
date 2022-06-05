@@ -1,5 +1,5 @@
 import { Box, Button, Center, Divider, Flex, Stack, useDisclosure, VStack } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -8,9 +8,9 @@ import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/pro
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import PlusIcon from 'icons/plus-icon'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
+import { BiBookAdd } from 'react-icons/bi'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -70,6 +70,9 @@ export const Projects = () => {
             alignContent="right"
             onClick={allDays}
             rounded={20}
+            paddingRight={0}
+            paddingLeft={0}
+            defaultChecked
           >
             All
           </Button>
@@ -88,20 +91,22 @@ export const Projects = () => {
             Clear All
           </Button>
           <Button
-            bg="none"
-            color="#4E87F8"
+            bg="#4E87F8"
+            color="white"
             _hover={{ bg: 'none' }}
             _focus={{ border: 'none' }}
-            fontSize="12px"
+            fontSize="14px"
             fontStyle="normal"
             fontWeight={500}
             alignContent="right"
             onClick={onNewProjectModalOpen}
             position="absolute"
             right={8}
+            w="158px"
+            pb={1}
           >
-            <Box pos="relative" fontWeight="bold" p="2px">
-              <PlusIcon />
+            <Box fontWeight="bold" paddingRight={2}>
+              <BiBookAdd />
             </Box>
             New Project
           </Button>
