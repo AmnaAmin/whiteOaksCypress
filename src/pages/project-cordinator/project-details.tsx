@@ -12,14 +12,15 @@ import { ProjectType } from 'types/project.type'
 // import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
-import { BiAddToQueue } from 'react-icons/bi'
-import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
+import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import { NotesTab } from '../../features/common/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
+import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
+import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
 
 export const ProjectDetails: React.FC = props => {
@@ -88,13 +89,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button
-                    _hover={{ bg: 'gray.200' }}
-                    color="blue"
-                    fontSize={14}
-                    fontWeight={500}
-                    onClick={OnUploadMdal}
-                  >
+                  <Button colorScheme="brand" onClick={OnUploadMdal} leftIcon={<BiUpload />}>
                     Upload
                   </Button>
                 )}
@@ -140,7 +135,10 @@ export const ProjectDetails: React.FC = props => {
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel p="0px" mt="3">
+                <VendorDocumentsTable ref={tabsContainerRef} />
+              </TabPanel>
               <TabPanel p="0px" h="0px"></TabPanel>
 
               <TabPanel px="0">
@@ -150,7 +148,7 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
-        <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
+        <UploadDocumentModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} projectId={projectId} />
       </Stack>
     </>
   )

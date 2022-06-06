@@ -43,7 +43,7 @@ const ProjectDetails: React.FC = props => {
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
-        <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+        <Stack spacing={5}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
               <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>

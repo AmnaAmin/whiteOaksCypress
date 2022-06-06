@@ -55,7 +55,7 @@ interface Props {
 }
 
 export function useCustomTable(props: Props) {
-  const { columns, data } = props
+  const { columns, data: tableData } = props
 
   const defaultColumn: any = React.useMemo(
     () => ({
@@ -65,12 +65,14 @@ export function useCustomTable(props: Props) {
     [],
   )
   const getExportFileBlob = ({ columns, data, fileType, fileName }) => {
-    getFileBlob({ columns, data, fileType, fileName })
+    getFileBlob({ columns, data: tableData, fileType, fileName })
   }
+
+  // console.log('tableData', tableData)
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data: tableData,
       defaultColumn,
       getExportFileBlob,
       initialState: {
