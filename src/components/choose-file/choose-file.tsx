@@ -68,7 +68,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
               onClick={onFileClear}
               bg="white"
             >
-              <BiUpload color="#4E87F8" />
+              <BiUpload />
             </Button>
           </Flex>
         )}
