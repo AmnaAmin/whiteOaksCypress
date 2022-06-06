@@ -133,7 +133,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         },
       ],
     })
-  }, [])
+  }, [items, workOrder, projectData])
 
   const DeleteItems = Id => {
     const deleteValue = items.filter((value, id) => id !== Id)
