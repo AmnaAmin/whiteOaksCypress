@@ -18,7 +18,7 @@ const ProjectManagement = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="project">
-        <Stack minH="32vh">
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.status}>
@@ -89,9 +89,10 @@ const ProjectManagement = () => {
             <GridItem>
               <FormControl isInvalid={!!errors.projectName} w="215px">
                 <FormLabel variant="strong-label" size="md" htmlFor="projectName">
-                  Project Number
+                  Project Name
                 </FormLabel>
                 <Input
+                  variant="required-field"
                   placeholder="PC project 1"
                   id="projectName"
                   {...register('projectName', {
@@ -106,7 +107,7 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Start
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -123,7 +124,7 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Start
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -131,13 +132,13 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Due
                 </FormLabel>
-                <Input variant="reguired-field" type="date" />
+                <Input variant="required-field" type="date" />
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
-                  Client Click Walk Through
+                  Client Walkthrough
                 </FormLabel>
                 <Input type="date" />
               </FormControl>

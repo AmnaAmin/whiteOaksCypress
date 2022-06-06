@@ -33,7 +33,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       onClick={() => inputRef?.current?.click()}
       bg="white"
       _hover={{
-        borderColor: 'gray.400',
+        borderColor: 'gray.300',
       }}
     >
       <input
@@ -68,7 +68,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
               onClick={onFileClear}
               bg="white"
             >
-              <BiUpload />
+              <BiUpload color="#4E87F8" />
             </Button>
           </Flex>
         )}

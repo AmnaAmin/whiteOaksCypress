@@ -43,7 +43,9 @@ type licenseFormProps = {
 }
 export const License = React.forwardRef((props: LicenseProps, ref) => {
   const { vendor = {}, setNextTab } = props
-  const { mutate: saveLicenses } = useSaveVendorDetails()
+
+  const { mutate: saveLicenses } = useSaveVendorDetails('License')
+
   const onSubmit = useCallback(
     async values => {
       console.log('submit the file......')
@@ -148,7 +150,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" h="500px" spacing="15px" ml="8px" overflow="auto">
+        <VStack align="start" h="470px" spacing="15px" ml="8px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
               <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -190,6 +192,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
+                  variant="required-field"
                 />
                 <FormDatePicker
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
@@ -257,7 +260,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             </Button>
           )}
           <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveLicenses">
-            {t('next')}
+            {t('save')}
           </Button>
         </Flex>
       </form>

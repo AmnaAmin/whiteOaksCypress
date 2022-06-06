@@ -81,7 +81,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
 
   return (
     <form onSubmit={handleSubmit(submitForm)} id="trade">
-      <Box h="450px" mt={14}>
+      <Box h="510px" overflow="auto">
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
@@ -110,7 +110,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
           })}
         </Flex>
       </Box>
-      <Flex alignItems="center" w="100%" h="60px" pt="12px" justifyContent="end" borderTop="2px solid #E2E8F0">
+      <Flex alignItems="center" w="100%" pt="12px" justifyContent="end" borderTop="2px solid #E2E8F0">
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel

@@ -176,7 +176,7 @@ export const DOCUMENTS_TYPES = {
   W9_DOCUMENT: { value: 'W9 DOCUMENT', id: 99 },
 }
 
-export const useSaveVendorDetails = () => {
+export const useSaveVendorDetails = (name: string) => {
   const client = useClient()
   const toast = useToast()
   const { t } = useTranslation()
@@ -191,8 +191,8 @@ export const useSaveVendorDetails = () => {
     {
       onSuccess() {
         toast({
-          title: t('updateDetails'),
-          description: t('updateDetailsSuccess'),
+          title: t(`update${name}Details`),
+          description: t(`update${name}DetailsSuccess`),
           status: 'success',
           isClosable: true,
         })
@@ -240,8 +240,8 @@ export const parseLicenseValues = async (values: any) => {
         licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
         licenseNumber: license.licenseNumber,
         licenseType: license.licenseType,
-        fileObjectContentType: license.expirationFile[0].type,
-        fileType: license.expirationFile[0].name,
+        fileObjectContentType: license.expirationFile.type,
+        fileType: license.expirationFile.name,
         fileObject: fileContents,
       }
       return doc

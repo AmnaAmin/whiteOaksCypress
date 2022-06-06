@@ -1,21 +1,8 @@
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  Icon,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar } from 'react-icons/bi'
 
-function Misc() {
+const Misc = () => {
   const {
     register,
     handleSubmit,
@@ -30,17 +17,16 @@ function Misc() {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="misc">
-        <Stack minH="43vh">
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   Created
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -49,10 +35,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Active
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -61,10 +46,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Punch
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -73,10 +57,8 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Closed
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -86,10 +68,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Client Paid
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -98,10 +79,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Collection
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -110,10 +90,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Disputed
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -123,10 +102,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   WOA Invoice
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -135,10 +113,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   WOA Paid
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <Input placeholder="mm/dd/yyyy" type="date" isDisabled={true} />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>

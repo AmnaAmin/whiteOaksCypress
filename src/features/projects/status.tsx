@@ -19,6 +19,7 @@ export enum STATUS {
   Collection = 'collection',
   Dispute = 'dispute',
   Cancel = 'cancel',
+  Expired = 'expired',
   Declined = 'declined',
 }
 
@@ -41,6 +42,7 @@ const STATUS_COLOR = {
   [STATUS.Collection]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Dispute]: { color: '#F687B3', backgroundColor: '#FFF5F7' },
   [STATUS.Cancel]: { color: '#F56565', backgroundColor: '#FFF5F7' },
+  [STATUS.Expired]: { color: '#718096', backgroundColor: '#EDF2F7' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {

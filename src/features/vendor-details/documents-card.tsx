@@ -40,7 +40,8 @@ type DocumentFormProps = {
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const { vendor = {}, setNextTab } = props
-  const { mutate: saveDocuments } = useSaveVendorDetails()
+  // const { mutate: saveDocuments } = useSaveVendorDetails()
+  const { mutate: saveDocuments } = useSaveVendorDetails('Document')
   const onSubmit = useCallback(
     async values => {
       const results = await parseDocumentCardsValues(values)
@@ -440,8 +441,10 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
       </Box>
+
       <Flex
         id="footer"
+        mt={2}
         w="100%"
         h="100px"
         minH="60px"
@@ -454,15 +457,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             Cancel
           </Button>
         )}
-        {VendorType === 'detail' ? (
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-            {t('save')}
-          </Button>
-        ) : (
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-            {t('next')}
-          </Button>
-        )}
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+          {t('save')}
+        </Button>
       </Flex>
     </form>
   )

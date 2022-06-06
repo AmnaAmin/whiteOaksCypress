@@ -96,7 +96,7 @@ const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<H
       ref={ref}
       data-testid={props.testId}
       disabled={props.disable}
-      variant={props.variant ? 'reguired-field' : 'outline'}
+      variant={props.variant ? 'required-field' : 'outline'}
     />
 
     <InputRightElement className="InputLeft" pointerEvents="none" zIndex={1}>
