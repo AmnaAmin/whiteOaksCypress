@@ -1,5 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -19,7 +19,7 @@ i18n.use(initReactI18next).init({
         zip: 'Zip',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
-        businessPhoneName: 'Business Phone Name',
+        businessPhoneNo: 'Business Phone No',
         ext: 'Ext',
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
@@ -55,6 +55,6 @@ i18n.use(initReactI18next).init({
   react: {
     useSuspense: false,
   },
-});
+})
 
-export default i18n;
+export default i18n

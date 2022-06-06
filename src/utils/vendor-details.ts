@@ -176,7 +176,7 @@ export const DOCUMENTS_TYPES = {
   W9_DOCUMENT: { value: 'W9 DOCUMENT', id: 99 },
 }
 
-export const useSaveVendorDetails = () => {
+export const useSaveVendorDetails = (name: string) => {
   const client = useClient()
   const toast = useToast()
   const { t } = useTranslation()
@@ -191,10 +191,9 @@ export const useSaveVendorDetails = () => {
     {
       onSuccess() {
         toast({
-          title: t('updateDetails'),
-          description: t('updateDetailsSuccess'),
+          title: t(`update${name}Details`),
+          description: t(`update${name}DetailsSuccess`),
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -347,7 +346,6 @@ export const useSaveSettings = () => {
           title: 'Update Settings',
           description: 'Settings have been updated successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },

@@ -18,7 +18,7 @@ const Location = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="location">
-        <Stack minH="32vh">
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl isInvalid={errors.address} w="215px">
@@ -26,8 +26,9 @@ const Location = () => {
                   Address
                 </FormLabel>
                 <Input
+                  variant="required-field"
                   placeholder="2037 SW TRENTON LN"
-                  bg="#EDF2F7"
+                  isDisabled={true}
                   id="address"
                   {...register('address', {
                     required: 'This is required',
@@ -42,8 +43,9 @@ const Location = () => {
                   City
                 </FormLabel>
                 <Input
+                  variant="required-field"
                   placeholder="East Point"
-                  bg="#EDF2F7"
+                  isDisabled={true}
                   id="city"
                   {...register('city', {
                     required: 'This is required',
@@ -58,8 +60,9 @@ const Location = () => {
                   State
                 </FormLabel>
                 <Input
+                  variant="required-field"
                   placeholder="NC"
-                  bg="#EDF2F7"
+                  isDisabled={true}
                   id="state"
                   {...register('state', {
                     required: 'This is required',
@@ -75,7 +78,7 @@ const Location = () => {
                 </FormLabel>
                 <Input
                   placeholder="28164"
-                  bg="#EDF2F7"
+                  isDisabled={true}
                   id="zip"
                   {...register('zip', {
                     required: 'This is required',
@@ -90,8 +93,9 @@ const Location = () => {
                   Market
                 </FormLabel>
                 <Input
+                  variant="required-field"
                   placeholder="Atlanta"
-                  bg="#EDF2F7"
+                  isDisabled={true}
                   id="market"
                   {...register('market', {
                     required: 'This is required',
