@@ -31,6 +31,7 @@ type DatePickerProps = {
   placeholder?: string
   onChange?: (e) => void
   testId?: string
+  errorBoxheight?: any
 }
 const CalendarContainer = ({ children }) => {
   return <Portal>{children}</Portal>
@@ -69,8 +70,10 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
               />
             }
           />
-          <Box minH="20px" mt="3px">
-            <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
+          <Box>
+            <FormErrorMessage position="absolute" m="0px">
+              {fieldState.error?.message}
+            </FormErrorMessage>
           </Box>
         </>
       )}

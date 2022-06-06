@@ -1,10 +1,20 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react'
-import { Box, Button, Divider, Flex, FormLabel, HStack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
-import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import {
   parseDocumentCardsValues,
@@ -14,13 +24,7 @@ import {
 } from 'utils/vendor-details'
 import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
-
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  fontStyle: 'normal',
-  color: 'gray.600',
-}
+import ChooseFileField from 'components/choose-file/choose-file'
 
 type DocumentsProps = {
   setNextTab: () => void
@@ -28,31 +32,16 @@ type DocumentsProps = {
   onClose?: () => void
   VendorType: string
 }
-
 type DocumentFormProps = {
   vendor: VendorProfile
   onSubmit: (values: any) => void
   onClose?: () => void
   VendorType?: string
 }
-
-const downloadableDocument = (link, text, testid?) => {
-  return (
-    <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-      <Flex>
-        <BiDownload fontSize="20px" />
-        <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
-          {text}
-        </Text>
-      </Flex>
-    </a>
-  )
-}
-
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const { vendor = {}, setNextTab } = props
+  // const { mutate: saveDocuments } = useSaveVendorDetails()
   const { mutate: saveDocuments } = useSaveVendorDetails('Document')
-
   const onSubmit = useCallback(
     async values => {
       const results = await parseDocumentCardsValues(values)
@@ -72,7 +61,6 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
     },
     [vendor, setNextTab, saveDocuments],
   )
-
   return (
     <Box w="100%">
       <DocumentsForm
@@ -84,14 +72,11 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
     </Box>
   )
 })
-
 export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
-
   const defaultValue = vendor => {
     return documentCardsDefaultValues(vendor)
   }
-
   const defaultValues: DocumentsCardFormValues = useMemo(() => {
     if (vendor) {
       return defaultValue(vendor)
@@ -99,22 +84,18 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     setChangeDateFields([])
     return {}
   }, [vendor])
-
   const {
-    register,
     formState: { errors },
     handleSubmit,
     control,
     watch,
-    getValues,
+
+    setValue,
     reset,
   } = useForm<DocumentsCardFormValues>({ defaultValues })
-
   useEffect(() => {
     reset(defaultValues)
   }, [defaultValues, vendor, reset])
-
-  const documents = getValues()
 
   /* debug purpose */
   const watchAllFields = watch()
@@ -124,65 +105,108 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
-
+  const [
+    ,
+    // fileBlob
+    setFileBlob,
+  ] = React.useState<Blob>()
+  const readFile = (event: any) => {
+    setFileBlob(event.target?.result?.split(',')?.[1])
+  }
+  const onFileChange = (document: File) => {
+    if (!document) return
+    const reader = new FileReader()
+    reader.addEventListener('load', readFile)
+    reader.readAsDataURL(document)
+  }
+  const downloadDocument = (link, text, testid?) => {
+    return (
+      <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+        <Flex ml={1}>
+          <BiDownload fontSize="sm" />
+          <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
+            {text}
+          </Text>
+        </Flex>
+      </a>
+    )
+  }
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-      <Box h="502px" overflow="auto">
-        <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
-
-        <HStack spacing={24}>
-          <Box>
-            <FormDatePicker
-              disabled={true}
-              errorMessage={errors.w9DocumentDate && errors.w9DocumentDate?.message}
-              label={''}
-              name={`w9DocumentDate`}
-              control={control}
-              placeholder="mm/dd/yyyy"
-              style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
-              testId="w9DocumentDate"
-              onChange={e => {
-                if (!changedDateFields.includes('w9DocumentDate')) {
-                  setChangeDateFields([...changedDateFields, 'w9DocumentDate'])
-                }
-              }}
-            />
-          </Box>
-
-          <Box h="75px">
-            <FormFileInput
-              errorMessage={errors.w9Document && errors.w9Document?.message}
-              label={''}
-              name={`w9Document`}
-              register={register}
-              testId="fileInputW9Document"
-              isRequired={documents.w9DocumentUrl ? false : true}
-            >
-              {t('chooseFile')}
-            </FormFileInput>
-            {documents.w9DocumentUrl && (
-              <Box>
-                {downloadableDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
-                {/* {documents.w9DocumentUrl && downloadableDocument(documents.w9DocumentUrl, 'W9 Document')} */}
-              </Box>
-            )}
-          </Box>
+      <Box w="95%" h="65vh">
+        <HStack spacing="16px" alignItems="center">
+          <Flex w="215px">
+            <Box>
+              <FormLabel variant="strong-label" size="md">
+                W9 Document
+              </FormLabel>
+              <FormDatePicker
+                disabled={true}
+                errorMessage={errors.w9DocumentDate && errors.w9DocumentDate?.message}
+                label={''}
+                name={`w9DocumentDate`}
+                control={control}
+                placeholder="mm/dd/yyyy"
+                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                testId="w9DocumentDate"
+                onChange={e => {
+                  if (!changedDateFields.includes('w9DocumentDate')) {
+                    setChangeDateFields([...changedDateFields, 'w9DocumentDate'])
+                  }
+                }}
+              />
+            </Box>
+          </Flex>
+          <Flex>
+            <FormControl w="290px" isInvalid={!!errors.w9Document?.message}>
+              <FormLabel variant="strong-label" size="md">
+                File Upload
+              </FormLabel>
+              <Controller
+                name="w9Document"
+                control={control}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box>
+                        <ChooseFileField
+                          name={field.name}
+                          value={field.value?.name ? field.value?.name : 'Choose File'}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            onFileChange(file)
+                            field.onChange(file)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></ChooseFileField>
+                        <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                      {field.value?.name && (
+                        <Box overflow="hidden" pos="absolute" top={16}>
+                          {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'w9DocumentLink')}
+                        </Box>
+                      )}
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
+          </Flex>
         </HStack>
-        {/* <Box w="940px">
-          <Divider border="1px solid " />
-        </Box> */}
-
-        <Box mt={5}>
-          <Text sx={labelStyle}>{t('agreementSignedDate')}</Text>
-          <HStack alignItems="baseline" spacing={24}>
-            <Box h="40px">
+        <Box mt="32px">
+          <HStack alignItems="center" spacing="16px">
+            <Box>
+              <FormLabel variant="strong-label" size="md">
+                {t('agreementSignedDate')}
+              </FormLabel>
               <FormDatePicker
                 errorMessage={errors.agreementSignedDate && errors.agreementSignedDate?.message}
                 label={''}
                 name={`agreementSignedDate`}
                 control={control}
                 placeholder="mm/dd/yyyy"
-                style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
                 testId="agreementSignedDate"
                 onChange={e => {
                   if (!changedDateFields.includes('agreementSignedDate')) {
@@ -191,46 +215,65 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 }}
               />
             </Box>
-            <Box>
-              <FormFileInput
-                errorMessage={errors.agreement && errors.agreement?.message}
-                label={''}
-                name={`agreement`}
-                register={register}
-                testId="fileInputAgreement"
-                isRequired={changedDateFields.includes('agreementSignedDate')}
-              >
-                {t('chooseFile')}
-              </FormFileInput>
-              {documents.agreementUrl && (
-                <Box>
-                  {downloadableDocument(documents.agreementUrl, 'Agreement', 'agreementLink')}
-                  {/* {documents.agreementUrl && downloadableDocument(documents.agreementUrl, 'Agreement1.Jpeg')} */}
-                </Box>
-              )}
-            </Box>
+            <Flex>
+              <FormControl w="290px" isInvalid={!!errors.agreement?.message}>
+                <FormLabel variant="strong-label" size="md">
+                  File Upload
+                </FormLabel>
+                <Controller
+                  name="agreement"
+                  control={control}
+                  // rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {field.value?.name && (
+                          <Box overflow="hidden" pos="absolute" top={16}>
+                            {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'agreementLink')}
+                          </Box>
+                        )}
+                      </VStack>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Flex>
           </HStack>
         </Box>
 
-        <Flex align="center">
+        <Flex align="center" mt="32px">
           <FormLabel mt={2} variant="strong-label" size="lg">
             {t('insurances')}
           </FormLabel>
 
           <Divider border="1px solid #E2E8F0" />
         </Flex>
-
-        <Box mt={6}>
-          <Text sx={labelStyle}>{t('autoInsuranceExpDate')}</Text>
-          <HStack alignItems="baseline" spacing={24}>
+        <Box mt="32px">
+          <HStack alignItems="center" spacing="16px">
             <Box>
+              <FormLabel variant="strong-label" size="md" w="200px" isTruncated title={t('autoInsuranceExpDate')}>
+                {t('autoInsuranceExpDate')}
+              </FormLabel>
               <FormDatePicker
                 errorMessage={errors.autoInsuranceExpDate && errors.autoInsuranceExpDate?.message}
                 label={''}
                 name={`autoInsuranceExpDate`}
                 control={control}
                 placeholder="mm/dd/yyyy"
-                style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
                 testId="autoInsuranceExpDate"
                 onChange={e => {
                   if (!changedDateFields.includes('autoInsuranceExpDate')) {
@@ -239,42 +282,61 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 }}
               />
             </Box>
-            <Box>
-              <FormFileInput
-                errorMessage={errors.insurance && errors.insurance?.message}
-                label={''}
-                name={`insurance`}
-                register={register}
-                testId="fileInputInsurance"
-                isRequired={changedDateFields.includes('autoInsuranceExpDate')}
-              >
-                {t('chooseFile')}
-              </FormFileInput>
-              {documents.insuranceUrl && (
-                <Box>
-                  {downloadableDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
-                  {/* {documents.insuranceUrl && downloadableDocument(documents.insuranceUrl, 'DocAuto1.jpeg')} */}
-                </Box>
-              )}
-            </Box>
+            <Flex>
+              <FormControl w="290px" isInvalid={!!errors.insurance?.message}>
+                <FormLabel variant="strong-label" size="md">
+                  File Upload
+                </FormLabel>
+                <Controller
+                  name="insurance"
+                  control={control}
+                  // rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {field.value?.name && (
+                          <Box overflow="hidden" pos="absolute" top={16}>
+                            {downloadDocument(
+                              document,
+                              field.value ? field.value?.name : 'doc.png',
+                              'autoInsuranceLink',
+                            )}
+                          </Box>
+                        )}
+                      </VStack>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Flex>
           </HStack>
         </Box>
-
-        {/* <Box w="940px">
-          <Divider border="1px solid " />
-        </Box> */}
-
-        <Box mt={5}>
-          <Text sx={labelStyle}>{t('COIGLExpDate')}</Text>
-          <HStack alignItems="baseline" spacing={24}>
+        <Box mt="32px">
+          <HStack alignItems="center" spacing="16px">
             <Box>
+              <FormLabel variant="strong-label" size="md">
+                {t('COIGLExpDate')}
+              </FormLabel>
               <FormDatePicker
                 errorMessage={errors.coiGlExpDate && errors.coiGlExpDate?.message}
                 label={''}
                 name={`coiGlExpDate`}
                 control={control}
                 placeholder="mm/dd/yyyy"
-                style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
                 testId="coiGlExpDate"
                 onChange={e => {
                   if (!changedDateFields.includes('COIGLExpDate')) {
@@ -283,43 +345,57 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 }}
               />
             </Box>
-
-            <Box>
-              <FormFileInput
-                errorMessage={errors.coiGlExpFile && errors.coiGlExpFile?.message}
-                label={''}
-                name={`coiGlExpFile`}
-                register={register}
-                testId="fileInputCoiGlExp"
-                isRequired={changedDateFields.includes('COIGLExpDate')}
-              >
-                {t('chooseFile')}
-              </FormFileInput>
-              {documents.coiGLExpUrl && (
-                <Box>
-                  {downloadableDocument(documents.insuranceUrl, 'General Liability', 'coiGlExpLink')}
-                  {/* {documents.coiGLExpUrl && downloadableDocument(documents.insuranceUrl, 'COI2.jpeg')} */}
-                </Box>
-              )}
-            </Box>
+            <Flex w="100%" pr="20px">
+              <FormControl w="290px" isInvalid={!!errors.coiGlExpFile?.message}>
+                <FormLabel variant="strong-label" size="md">
+                  File Upload
+                </FormLabel>
+                <Controller
+                  name="coiGlExpFile"
+                  control={control}
+                  // rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {field.value?.name && (
+                          <Box overflow="hidden" pos="absolute" top={16}>
+                            {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'coiGlExpLink')}
+                          </Box>
+                        )}
+                      </VStack>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Flex>
           </HStack>
         </Box>
-
-        {/* <Box w="940px">
-          <Divider border="1px solid " />
-        </Box> */}
-
-        <Box mt={8}>
-          <Text sx={labelStyle}>{t('COIWCExpDate')}</Text>
-          <HStack alignItems="baseline" spacing={24}>
+        <Box mt="32px">
+          <HStack alignItems="center" spacing="16px">
             <Box>
+              <FormLabel variant="strong-label" size="md">
+                {t('COIWCExpDate')}
+              </FormLabel>
               <FormDatePicker
                 errorMessage={errors.coiWcExpDate && errors.coiWcExpDate?.message}
                 label={''}
                 name={`coiWcExpDate`}
                 control={control}
                 placeholder="mm/dd/yyyy"
-                style={{ width: '250px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
+                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
                 testId="coiWcExpDate"
                 onChange={e => {
                   if (!changedDateFields.includes('coiWcExpDate')) {
@@ -328,26 +404,42 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 }}
               />
             </Box>
-
-            <Box>
-              <FormFileInput
-                errorMessage={errors.coiWcExpFile && errors.coiWcExpFile?.message}
-                label={''}
-                name={`coiWcExpFile`}
-                register={register}
-                testId="fileInputCoiWcExp"
-                isRequired={changedDateFields.includes('coiWcExpDate')}
-              >
-                {t('chooseFile')}
-              </FormFileInput>
-              {documents.coiWcExpUrl && (
-                <Box>
-                  {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
-
-                  {/* {documents.coiWcExpUrl && downloadableDocument(documents.coiWcExpUrl, 'COIwc3.Png')} */}
-                </Box>
-              )}
-            </Box>
+            <Flex w="100%" pr="20px">
+              <FormControl w="290px" isInvalid={!!errors.coiWcExpFile?.message}>
+                <FormLabel variant="strong-label" size="md">
+                  File Upload
+                </FormLabel>
+                <Controller
+                  name="coiWcExpFile"
+                  control={control}
+                  // rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {field.value?.name && (
+                          <Box overflow="hidden" pos="absolute" top={16}>
+                            {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'coiWcExpLink')}
+                          </Box>
+                        )}
+                      </VStack>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Flex>
           </HStack>
         </Box>
       </Box>
@@ -356,7 +448,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
         id="footer"
         mt={2}
         w="100%"
-        pt="12px"
+        h="100px"
+        minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"
