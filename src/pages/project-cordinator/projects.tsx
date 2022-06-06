@@ -1,5 +1,5 @@
 import { Box, Button, Center, Divider, Flex, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
