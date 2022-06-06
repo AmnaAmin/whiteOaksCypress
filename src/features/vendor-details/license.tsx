@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Box, Button, HStack, VStack, Center, Divider, Flex } from '@chakra-ui/react'
+import { Box, HStack, VStack, Center, Icon, Flex } from '@chakra-ui/react'
 import { MdAdd } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -18,37 +18,46 @@ import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
+import { Button } from 'components/button/button'
 
 type LicenseProps = {
   setNextTab: () => void
   vendor: VendorProfile
+  onClose?: () => void
+}
+type licenseFormProps = {
+  vendor: VendorProfile
+  onSubmit: (values: any) => void
+  onClose?: () => void
 }
 
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { mutate: saveLicenses } = useSaveVendorDetails()
+  const { vendor = {}, setNextTab } = props
+
+  const { mutate: saveLicenses } = useSaveVendorDetails('License')
 
   const onSubmit = useCallback(
     async values => {
       const results = await parseLicenseValues(values)
-      const vendorPayload = createVendorPayload({ licenseDocuments: results }, props.vendor)
+      const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
       saveLicenses(vendorPayload, {
         onSuccess() {
-          props.setNextTab()
+          setNextTab()
         },
       })
     },
-    [props, saveLicenses],
+    [vendor, setNextTab, saveLicenses],
   )
 
   return (
     <Box>
-      <LicenseForm vendor={props.vendor} onSubmit={onSubmit} />
+      <LicenseForm vendor={props.vendor} onSubmit={onSubmit} onClose={props.onClose} />
     </Box>
   )
 })
 
-export const LicenseForm = ({ vendor, onSubmit }) => {
-  const [startDate] = useState(new Date())
+export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => {
+  const [startDate] = useState(null)
   const { t } = useTranslation()
 
   const defaultValues: LicenseFormValues = useMemo(() => {
@@ -88,28 +97,23 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
   /* debug purpose */
   const watchAllFields = watch()
   React.useEffect(() => {
-    const subscription = watch(value => {
-      // console.log('Value Change', value)
-    })
+    const subscription = watch(value => {})
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
   return (
     <Box>
       <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
+          _hover={{ bg: '#EBF8FF' }}
           variant="outline"
           ml="13px"
-          color="#4E87F8"
-          fontSize="14px"
-          fontWeight={500}
-          size="lg"
-          _hover={{ bg: 'gray.200' }}
+          colorScheme="brand"
           data-testid="addLicense"
           onClick={() =>
             append({
               licenseType: '',
               licenseNumber: '',
-              expiryDate: startDate.toDateString(),
+              expiryDate: startDate,
               expirationFile: null,
             })
           }
@@ -119,13 +123,20 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
           </Box>
           {t('addLicense')}
         </Button>
-        <VStack align="start" minH="60vh" spacing="15px" ml="8px">
+        <VStack align="start" h="470px" spacing="15px" ml="8px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
-              <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows">
+              <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
                 <Box w="2em" color="barColor.100" fontSize="15px">
                   <Center>
-                    <MdOutlineCancel onClick={() => removeLicense(index)} data-testid={`removeLicense-` + index} />
+                    <Icon
+                      as={MdOutlineCancel}
+                      onClick={() => removeLicense(index)}
+                      data-testid={`removeLicense-` + index}
+                      cursor="pointer"
+                      boxSize={5}
+                      mt="6px"
+                    />
                   </Center>
                 </Box>
                 <FormSelect
@@ -135,10 +146,11 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
                   control={control}
                   options={licenseTypes}
                   rules={{ required: 'This is required field' }}
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ W: '215px' }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #4E87F8',
+                    w: '215px',
                   }}
                   testId={`licenseType-` + index}
                 />
@@ -147,87 +159,62 @@ export const LicenseForm = ({ vendor, onSubmit }) => {
                   label={t('licenseNumber')}
                   placeholder="License Number"
                   register={register}
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ maxW: '215px' }}
                   elementStyle={{
                     bg: 'white',
+                    w: '215px',
                   }}
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
+                  variant="required-field"
                 />
+
                 <FormDatePicker
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
                   label={t('expiryDate')}
                   name={`licenses.${index}.expiryDate`}
                   control={control}
                   rules={{ required: 'This is required field' }}
-                  style={{ w: '20em' }}
+                  style={{ w: '215px' }}
+                  elementStyle={{
+                    bg: 'white',
+                    w: '215px',
+                  }}
                   defaultValue={startDate}
+                  isRequired={true}
+                  placeholder="mm/dd/yy"
                   testId={`expiryDate-` + index}
                 />
                 <VStack>
-                  <FormFileInput
-                    errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
-                    // label={t('fileInput')}
-                    name={`licenses.${index}.expirationFile`}
-                    register={register}
-                    style={{ w: '20em', mt: '25px' }}
-                    isRequired={true}
-                    downloadableFile={licenseValues?.[index].downloadableFile}
-                    testId={`expirationFile-` + index}
-                  >
-                    <>
-                      <Flex
-                        justifyContent={'space-between'}
-                        // variant="outline"
-                        // size="lg"
-                        rounded={4}
-                        bg="gray.100"
-                        h="36px"
-                        w={120}
-                      >
-                        <Button
-                          rounded="none"
-                          roundedLeft={5}
-                          fontSize="14px"
-                          fontWeight={500}
-                          bg="gray.100"
-                          h="36px"
-                          w={120}
-                        >
-                          {t('chooseFile')}
-                        </Button>
-                        <Divider orientation="vertical" />
-                      </Flex>
-                    </>
-                  </FormFileInput>
+                  <Box h="100px">
+                    <FormFileInput
+                      errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
+                      // label={t('fileInput')}
+                      name={`licenses.${index}.expirationFile`}
+                      register={register}
+                      style={{ minW: '20em', mt: '25px' }}
+                      isRequired={true}
+                      downloadableFile={licenseValues?.[index].downloadableFile}
+                      testId={`expirationFile-` + index}
+                    >
+                      {t('chooseFile')}
+                    </FormFileInput>
+                  </Box>
                 </VStack>
               </HStack>
             )
           })}
         </VStack>
+        <Flex id="footer" w="100%" pt="12px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
+          {onClose && (
+            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+              Cancel
+            </Button>
+          )}
 
-        <Flex
-          id="footer"
-          mt="20px"
-          w="100%"
-          h="100px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
-          <Button
-            colorScheme="CustomPrimaryColor"
-            _focus={{ outline: 'none' }}
-            data-testid="saveLicenses"
-            type="submit"
-            fontSize="14px"
-            fontStyle="normal"
-            fontWeight={600}
-            h="48px"
-            w="130px"
-          >
-            {t('next')}
+          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveLicenses">
+            {t('save')}
           </Button>
         </Flex>
       </form>

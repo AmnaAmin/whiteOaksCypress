@@ -1,23 +1,21 @@
 import React from 'react'
 import {
   Box,
-  Button,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   Grid,
+  VStack,
   HStack,
-  Input,
   Text,
   Textarea,
   useToast,
+  FormLabel,
+  Divider,
+  Input,
 } from '@chakra-ui/react'
-import Select from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { Controller, useForm } from 'react-hook-form'
-// import { disabledInputStyle } from '../theme/common-style'
 import {
   getSupportFormDefaultValues,
   ISSUE_TYPE_OPTIONS,
@@ -30,9 +28,14 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { BiDownload } from 'react-icons/bi'
+import { Button } from 'components/button/button'
+import { useTranslation } from 'react-i18next'
+import { Card } from 'components/card/card'
+import ReactSelect from 'components/form/react-select'
 
 const CreateATicket = () => {
   const toast = useToast()
+  const { t } = useTranslation()
   const { mutate: createTicket } = useCreateTicketMutation()
   const { email } = useUserProfile() as Account
   const defaultValues = React.useMemo(() => {
@@ -77,7 +80,6 @@ const CreateATicket = () => {
           description: 'Support ticket has been created successfully.',
           status: 'success',
           isClosable: true,
-          position: 'top-left',
         })
       },
     })
@@ -86,9 +88,9 @@ const CreateATicket = () => {
   const downloadDocument = (link, text) => {
     return (
       <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-        <Flex>
+        <Flex ml={1}>
           <BiDownload fontSize="sm" />
-          <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
+          <Text ml="5px" fontSize="12px" fontStyle="normal">
             {text}
           </Text>
         </Flex>
@@ -97,49 +99,23 @@ const CreateATicket = () => {
   }
 
   return (
-    <>
+    <Card py="0">
       <Box mt="40px" ml="20px">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box>
-            <Text fontSize="18px" fontWeight={500} color="gray.600" mb="8">
-              Create A Ticket
-            </Text>
-
+            <FormLabel variant="strong-label" size="lg" color="gray.600" mb="8">
+              <HStack>
+                <Box fontSize="18px">{t('createTicket')}</Box>
+                <Box>
+                  <Divider position="absolute" width="70%"></Divider>
+                </Box>
+              </HStack>
+            </FormLabel>
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
-              {/* <FormControl>
-                <FormLabel htmlFor="createdBy" fontSize="16px">
-                  Created By
-                </FormLabel>
-                <Input
-                  disabled
-                  h="40px"
-                  id="createdBy"
-                  type="text"
-                  borderLeft="2px solid #4E87F8"
-                  bg="white"
-                  _disabled={disabledInputStyle}
-                  {...register("createdBy")}
-                />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel htmlFor="createdDate" fontSize="16px">
-                  Created Date
-                </FormLabel>
-                <Input
-                  disabled
-                  h="40px"
-                  id="createdDate"
-                  type="text"
-                  bg="white"
-                  _disabled={disabledInputStyle}
-                  {...register("createdDate")}
-                />
-              </FormControl> */}
               <HStack spacing={3}>
                 <FormControl isInvalid={!!errors.issueType} w="215px">
-                  <FormLabel htmlFor="issueType" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                    Issue Type
+                  <FormLabel htmlFor="issueType" variant="strong-label" color="gray.600">
+                    {t('issueType')}{' '}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -147,11 +123,11 @@ const CreateATicket = () => {
                     rules={{ required: 'This is required field' }}
                     render={({ field, fieldState }) => (
                       <>
-                        <Select
+                        <ReactSelect
                           id="issueType"
                           options={ISSUE_TYPE_OPTIONS}
                           {...field}
-                          style={{ borderLeft: '2px solid green' }}
+                          selectProps={{ isBorderLeft: true }}
                         />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </>
@@ -160,8 +136,8 @@ const CreateATicket = () => {
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.severity} w="215px">
-                  <FormLabel htmlFor="severity" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                    Severity
+                  <FormLabel htmlFor="severity" variant="strong-label" color="gray.600">
+                    {t('severity')}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -169,7 +145,12 @@ const CreateATicket = () => {
                     rules={{ required: 'This is required field' }}
                     render={({ field, fieldState }) => (
                       <>
-                        <Select id="severity" options={SEVERITY_OPTIONS} {...field} />
+                        <ReactSelect
+                          id="severity"
+                          options={SEVERITY_OPTIONS}
+                          {...field}
+                          selectProps={{ isBorderLeft: true }}
+                        />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </>
                     )}
@@ -177,9 +158,9 @@ const CreateATicket = () => {
                 </FormControl>
               </HStack>
 
-              <FormControl isInvalid={!!errors.title?.message} w="320px">
-                <FormLabel htmlFor="title" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                  Title
+              <FormControl isInvalid={!!errors.title?.message} w="215px">
+                <FormLabel htmlFor="title" variant="strong-label" color="gray.600">
+                  {t('title')}
                 </FormLabel>
                 <Input
                   h="40px"
@@ -192,30 +173,13 @@ const CreateATicket = () => {
                 />
                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
               </FormControl>
-
-              {/* <FormControl isInvalid={!!errors.status}>
-                <FormLabel htmlFor="status" fontSize="16px">
-                Status
-                </FormLabel>
-                <Controller
-                  control={control}
-                  name="status"
-                  rules={{ required: 'This is required field' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Select id="status" options={STATUS_OPTIONS} {...field} isDisabled />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )}
-                />
-              </FormControl> */}
             </Grid>
           </Box>
 
           <Box w="434px" mt="30px">
             <FormControl isInvalid={!!errors.description?.message}>
-              <FormLabel htmlFor="description" fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600">
-                Description (1000 Characters)
+              <FormLabel htmlFor="description" variant="strong-label" color="gray.600">
+                {t('descriptions')}{' '}
               </FormLabel>
               <Textarea
                 size="lg"
@@ -228,18 +192,11 @@ const CreateATicket = () => {
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>
-
-            {/* <FormControl mt="30px">
-              <FormLabel htmlFor="resolution" fontSize="16px">
-                Resolution(1000 Characters)
-              </FormLabel>
-              <Textarea size="lg" bg="gray.200" h="140px" id="resolution" {...register('resolution')} />
-            </FormControl> */}
           </Box>
 
-          <FormControl mt="40px" w="290px" mb="40px" isInvalid={!!errors.attachment?.message}>
-            <FormLabel fontSize="14px" fontWeight={500} fontStyle="normal" color="gray.600" padding={2}>
-              Upload File
+          <FormControl mt="30px" w="290px" mb="40px" isInvalid={!!errors.attachment?.message}>
+            <FormLabel variant="strong-label" color="gray.600" mb={1}>
+              {t('fileUpload')}
             </FormLabel>
             <Controller
               name="attachment"
@@ -247,34 +204,29 @@ const CreateATicket = () => {
               rules={{ required: 'This is required field' }}
               render={({ field, fieldState }) => {
                 return (
-                  <HStack spacing={5} alignItems="baseline">
+                  <VStack alignItems="baseline">
                     <Box>
                       <ChooseFileField
                         name={field.name}
-                        value={field.value?.name}
+                        value={field.value ? field.value?.name : t('chooseFile')}
                         isError={!!fieldState.error?.message}
                         onChange={(file: any) => {
                           onFileChange(file)
                           field.onChange(file)
                         }}
                         onClear={() => setValue(field.name, null)}
-                      >
-                        <Text color="#4E87F8" fontWeight={500} fontSize="14px" fontStyle="normal">
-                          Choose File
-                        </Text>
-                      </ChooseFileField>
+                      ></ChooseFileField>
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    <Box>{downloadDocument(document, 'doc3.Png')}</Box>
-                  </HStack>
+                    {field.value && (
+                      <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )}
+                  </VStack>
                 )
               }}
             />
-
-            <Divider />
           </FormControl>
-
           <Flex
             flexDirection="row-reverse"
             w="100%"
@@ -284,21 +236,13 @@ const CreateATicket = () => {
             justifyContent="end"
             borderTop="2px solid #E2E8F0"
           >
-            <Button
-              type="submit"
-              colorScheme="CustomPrimaryColor"
-              fontSize="14px"
-              fontWeight={600}
-              fontStyle="normal"
-              h="48px"
-              w="130px"
-            >
-              Save
+            <Button type="submit" colorScheme="brand">
+              {t('save')}
             </Button>
           </Flex>
         </form>
       </Box>
-    </>
+    </Card>
   )
 }
 

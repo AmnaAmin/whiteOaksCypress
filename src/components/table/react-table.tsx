@@ -27,8 +27,6 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 // Define a default UI for filtering
 
 function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
-  const count = preFilteredRows.length
-
   return (
     <Input
       bg="white"
@@ -38,14 +36,22 @@ function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter
       onChange={e => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
-      placeholder={`Search ${count} records...`}
-      css={{ borderRadius: '6px !important' }}
+      borderRadius="4px"
+      height="24px"
+      paddingX={2}
     />
   )
 }
+
+type SortBy = {
+  id?: string
+  desc?: boolean
+}
+
 interface Props {
   columns: Array<Column<object>>
   data: Array<object>
+  sortBy?: SortBy
 }
 
 export function useCustomTable(props: Props) {
@@ -71,7 +77,7 @@ export function useCustomTable(props: Props) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [{ id: 'type', desc: false }],
+        sortBy: [{ id: 'type', desc: false, ...props.sortBy }],
       },
     },
     useBlockLayout,
@@ -124,10 +130,10 @@ export const TableHeader = ({ headerGroups }) => {
                 <Flex py="2" px="2" pl="7" alignItems="center">
                   <Text
                     fontSize="14px"
-                    color="#4A5568"
+                    color="gray.600"
                     fontWeight={500}
                     fontStyle="normal"
-                    textTransform="capitalize"
+                    textTransform="none"
                     mr="2"
                     mt="20px"
                     mb="20px"
@@ -137,7 +143,7 @@ export const TableHeader = ({ headerGroups }) => {
                     display="inline-block"
                     title={title}
                   >
-                    {typeof title === 'string' ? title.toLowerCase() : title}
+                    {title}
                   </Text>
                   {column.isSorted ? (
                     column.isSortedDesc ? (
@@ -188,7 +194,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   )
 
   return (
-    <Tbody {...getTableBodyProps()}>
+    <Tbody {...getTableBodyProps()} flex={1}>
       <AutoSizer>
         {({ width, height }) => {
           return <List height={height} rowCount={rows.length} rowHeight={60} rowRenderer={RenderRow} width={width} />
@@ -249,7 +255,16 @@ export function Table(props: Props & TableExtraProps): ReactElement {
   }, [tableInstance, setTableInstance])
 
   return (
-    <ChakraTable w="100%" bg="#FFFFFF" h={tableHeight} boxShadow="sm" rounded="md" {...tableInstance.getTableProps()}>
+    <ChakraTable
+      display="flex"
+      flexDirection="column"
+      w="100%"
+      bg="#FFFFFF"
+      h={tableHeight}
+      boxShadow="sm"
+      rounded="md"
+      {...tableInstance.getTableProps()}
+    >
       <TableHead {...tableInstance} />
       {isLoading ? (
         <TableLoadingState {...tableInstance} />

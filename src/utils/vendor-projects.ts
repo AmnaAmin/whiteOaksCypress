@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import autoTable from 'jspdf-autotable'
 import { dateFormat } from 'utils/date-time-utils'
-import { truncateWithEllipsis } from 'utils/stringFormatters'
+import { currencyFormatter, truncateWithEllipsis } from 'utils/stringFormatters'
 import { ProjectType } from 'types/project.type'
 
 export const useUploadDocument = () => {
@@ -67,9 +67,33 @@ export const documentTypes = [
   { value: 58, label: 'Other' },
   { value: 19, label: 'Photos' },
   { value: 18, label: 'Reciept' },
+  { value: 17, label: 'Change Order' },
 ]
 
-export const createInvoice = (doc, workOrder, projectData: ProjectType, items) => {
+export const documentScore = [
+  { value: 24, label: '1' },
+  { value: 25, label: '2' },
+  { value: 56, label: '3' },
+  { value: 57, label: '4' },
+  { value: 39, label: '5' },
+]
+
+export const documentStatus = [
+  { value: 24, label: 'Active' },
+  { value: 25, label: 'Inactive' },
+  { value: 56, label: 'Expired' },
+  { value: 57, label: 'DoNotUse' },
+]
+
+export const documentTerm = [
+  { value: 24, label: '7' },
+  { value: 25, label: '10' },
+  { value: 56, label: '14' },
+  { value: 57, label: '20' },
+  { value: 39, label: '30' },
+]
+
+export const createInvoice = (doc, workOrder, projectData: ProjectType, items, summary) => {
   const baseFont = 'arial'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
@@ -101,7 +125,6 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
   doc.text('P.O. #', rightMarginX, 55)
   doc.text('Invoice Date', rightMarginX, 65)
   doc.text('Due Date', rightMarginX, 75)
-  doc.save('a4.pdf')
 
   doc.setFont(baseFont, 'normal')
   doc.text(workOrder?.invoiceNumber, rightMarginX + 35, 45)
@@ -125,23 +148,19 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
     body: [
       ...items.map(ai => {
         return {
-          item: ai.item,
-          description: ai.description,
-          unitPrice: ai.unitPrice,
-          quantity: ai.quantity,
-          amount: ai.amount,
+          item: ai.id,
+          description: ai.name,
+          amount: ai.changeOrderAmount,
         }
       }),
     ],
     columns: [
       { header: 'Item', dataKey: 'item' },
       { header: 'Description', dataKey: 'description' },
-      { header: 'Unit Price', dataKey: 'unitPrice' },
-      { header: 'Quantity', dataKey: 'quantity' },
-      { header: 'Amount', dataKey: 'amount' },
+      { header: 'Total', dataKey: 'amount' },
     ],
     theme: 'grid',
-    bodyStyles: { lineColor: '#B2F5EA', minCellHeight: 15 },
+    bodyStyles: { lineColor: '#edf2f7', minCellHeight: 15 },
   })
 
   // Summary
@@ -149,13 +168,11 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
   const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
   doc.setFont(baseFont, 'normal')
   doc.text('Subtotal:', summaryX, tableEndsY + 10)
-  doc.text('Total:', summaryX, tableEndsY + 20)
-  doc.text('Amount Paid:', summaryX, tableEndsY + 30)
-  doc.text('Balance Due:', summaryX, tableEndsY + 40)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 10)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 20)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 30)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 40)
+  doc.text('Amount Paid:', summaryX, tableEndsY + 20)
+  doc.text('Balance Due:', summaryX, tableEndsY + 30)
+  doc.text(currencyFormatter(summary.subTotal), summaryX + 40, tableEndsY + 10)
+  doc.text(currencyFormatter(Math.abs(summary.amountPaid)), summaryX + 40, tableEndsY + 20)
+  doc.text(currencyFormatter(summary.subTotal + summary.amountPaid), summaryX + 40, tableEndsY + 30)
   return doc
 }
 

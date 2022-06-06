@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button,
   Box,
   List,
   ListItem,
@@ -24,6 +23,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { t } from 'i18next'
 // import { useTranslation } from 'react-i18next';
 import 'components/translation/i18n'
+import { Button } from 'components/button/button'
 
 type ColumnType = {
   id?: number
@@ -91,10 +91,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
       <Button
         ml="1"
         variant="ghost"
-        color="#4E87F8"
-        fontSize="12px"
-        fontStyle="normal"
-        fontWeight={500}
+        colorScheme="brand"
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
@@ -118,9 +115,9 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             color="gray.600"
             mb="6"
           >
-            Column Settings
+            {t('columnSettings')}
           </ModalHeader>
-          <ModalCloseButton _focus={{ border: 'none' }} />
+          <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
           <ModalBody h="50vh" overflowY="scroll">
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
@@ -148,7 +145,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                 fontSize="1em"
                                 fontWeight={600}
                                 backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                                _hover={{ bg: 'gray.100' }}
+                                _hover={{ bg: 'blue.50' }}
                               >
                                 <HStack spacing="24px">
                                   <BiGridVertical
@@ -187,30 +184,14 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              color="gray.600"
-              mr={3}
-              fontStyle="normal"
-              fontSize="14px"
-              fontWeight={600}
-              h="48px"
-              w="130px"
-            >
-              Close
-            </Button>
-            <Button
-              colorScheme="CustomPrimaryColor"
-              onClick={saveModal}
-              fontStyle="normal"
-              fontSize="14px"
-              fontWeight={600}
-              h="48px"
-              w="130px"
-            >
-              Save
-            </Button>
+            <HStack spacing="16px">
+              <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+                {t('close')}
+              </Button>
+              <Button colorScheme="brand" onClick={saveModal}>
+                {t('save')}
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

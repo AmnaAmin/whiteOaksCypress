@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalBody,
-  Button,
   Box,
   Text,
   Table,
@@ -28,6 +27,7 @@ import { BiCalendar, BiUser } from 'react-icons/bi'
 import { dateFormat } from 'utils/date-time-utils'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
+import { Button } from 'components/button/button'
 
 type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
 type AddNewTransactionProps = CustomModalProps & {
@@ -76,7 +76,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="16px" fontWeight={500} color="gray.600">
           {transaction?.name}
         </ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody px="6" py="8">
           <VStack alignItems="left" mt="5">
@@ -141,15 +141,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
           </Box>
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button
-            onClick={onClose}
-            colorScheme="CustomPrimaryColor"
-            fontSize="14px"
-            fontWeight={600}
-            fontStyle="normal"
-            h="48px"
-            w="130px"
-          >
+          <Button onClick={onClose} colorScheme="brand">
             {t('close')}
           </Button>
         </ModalFooter>

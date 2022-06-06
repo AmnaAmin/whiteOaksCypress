@@ -19,11 +19,11 @@ export const InputSizes = () => {
 export const InputWithBorderLeft = () => {
   return (
     <VStack>
-      <Input w="215px" variant="reguired-field" size="sm" placeholder="Input size small" />
-      <Input w="215px" variant="reguired-field" size="sm" placeholder="Input size small" />
-      <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" />
-      <Input w="215px" variant="reguired-field" size="lg" placeholder="Input size large" />
-      <Input w="215px" variant="reguired-field" size="sm" placeholder="with border color" isInvalid />
+      <Input w="215px" variant="required-field" size="sm" placeholder="Input size small" />
+      <Input w="215px" variant="required-field" size="sm" placeholder="Input size small" />
+      <Input w="215px" variant="required-field" size="md" placeholder="Input size medium" />
+      <Input w="215px" variant="required-field" size="lg" placeholder="Input size large" />
+      <Input w="215px" variant="required-field" size="sm" placeholder="with border color" isInvalid />
     </VStack>
   )
 }
@@ -31,8 +31,16 @@ export const InputWithBorderLeft = () => {
 export const InputStates = () => {
   return (
     <VStack>
-      <Input w="215px" variant="reguired-field" size="md" placeholder="Input size medium" disabled />
-      <Input w="215px" variant="reguired-field" size="md" placeholder="with border color" isInvalid />
+      <Input w="215px" variant="required-field" size="md" placeholder="Input size medium" disabled />
+      <Input w="215px" variant="required-field" size="md" placeholder="with border color" isInvalid />
+    </VStack>
+  )
+}
+
+export const InputFile = () => {
+  return (
+    <VStack>
+      <Input w="215px" variant="required-field" type="file" />
     </VStack>
   )
 }

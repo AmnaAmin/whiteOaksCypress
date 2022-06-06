@@ -1,9 +1,10 @@
 import React, { useRef, ReactNode } from 'react'
-import { Box, Flex, FormErrorMessage, FormControl, FormLabel, InputGroup } from '@chakra-ui/react'
+import { Box, Flex, FormErrorMessage, FormControl, FormLabel, InputGroup, Text } from '@chakra-ui/react'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import { UseFormRegister, UseFormRegisterReturn } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
+import { Button } from 'components/button/button'
 
 type FileInputProps = {
   errorMessage: any
@@ -35,15 +36,15 @@ export const downloadableLink = (downloadableFile: any) => {
     <>
       {downloadableFile && downloadableFile.url && (
         <a href={downloadableFile.url} download style={{ color: '#4E87F8' }}>
-          <Flex pt="10px">
-            <BiDownload fontSize="16px" />
+          <Flex>
+            <BiDownload size="20px" />
             <Box
               ml="7px"
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="ellipsis"
-              fontSize="14px"
-              fontWeight={500}
+              fontSize="13px"
+              fontWeight={400}
             >
               {downloadableFile.name}
             </Box>
@@ -71,10 +72,23 @@ export const FormFileInput = React.forwardRef((props: FileInputProps, ref) => (
           : {},
       )}
     >
-      {props.children}
+      <Button
+        variant="choose-file"
+        rounded="none"
+        roundedLeft={5}
+        fontSize="14px"
+        fontWeight={500}
+        color="gray.600"
+        size="md"
+        ml={0}
+        colorScheme="gray"
+        w={120}
+      >
+        {props.children}
+      </Button>
     </FileUpload>
-    <Box h={7}>
-      {downloadableLink(props.downloadableFile)}
+    <Box mt="10px" w="290px">
+      <Text isTruncated>{downloadableLink(props.downloadableFile)}</Text>
       <FormErrorMessage m="0px">{props.errorMessage}</FormErrorMessage>
     </Box>
   </FormControl>
@@ -99,7 +113,7 @@ const FileUpload = (props: FileUploadProps) => {
   const handleClick = () => inputRef.current?.click()
 
   return (
-    <Box className="form-file-input" rounded={6} h="40px" w="293px" p={0} border="1px solid #CBD5E0">
+    <Box className="form-file-input" rounded={6} w="293px" p={0} border="1px solid #CBD5E0">
       <InputGroup onClick={handleClick}>
         <input
           type={'file'}
@@ -114,16 +128,15 @@ const FileUpload = (props: FileUploadProps) => {
           data-testid={props.testId}
         />
         {children}
-        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px">
+        <Flex overflow="hidden" bg="#FFFFFF" w={200} roundedRight="6px" alignItems="center">
           {inputRef.current && (
             <Box
               color="#4E87F8"
               fontWeight={500}
               fontStyle="normal"
-              fontSize="12px"
+              fontSize="14px"
               as="span"
               ml="20px"
-              mt="7px"
               mr={5}
               whiteSpace="nowrap"
               overflow="hidden"

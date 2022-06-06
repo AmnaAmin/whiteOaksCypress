@@ -1,4 +1,4 @@
-import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, Icon } from '@chakra-ui/react'
+import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -17,9 +17,11 @@ import ProjectDetailsTab from 'features/project-coordinator/project-details/proj
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
+import { NotesTab } from '../../features/common/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
+import { Card } from 'components/card/card'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -44,6 +46,9 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
   return (
     <>
@@ -79,76 +84,50 @@ export const ProjectDetails: React.FC = props => {
                       </Text>
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
-                    {/* <Client projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} /> */}
-                    {/* <Vendor projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose}/> */}
+
                     <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button variant="ghost" colorScheme="brand" onClick={OnUploadMdal}>
-                    <Icon as={BiUpload} fontSize="16px" mr={2} />
+                  <Button colorScheme="brand" onClick={OnUploadMdal} leftIcon={<BiUpload />}>
                     Upload
                   </Button>
                 )}
                 {tabIndex === 0 && (
-                  <>
-                    {/* <Button
-                      bg="#FFFFFF"
-                      color="#4E87F8"
-                      border="1px solid #4E87F8"
-                      marginRight={1}
-                      size="md"
-                      fontSize="12px"
-                      fontWeight={500}
-                      fontStyle="normal"
-                      _hover={{ bg: 'none' }}
-                      onClick={() => {
-                        if (projectTableInstance) {
-                          projectTableInstance?.exportData('xlsx', false)
-                        }
-                      }}
+                  <HStack spacing="16px">
+                    <Box>
+                      <FormControl display="flex" alignItems="center">
+                        <FormLabel htmlFor="view-details" mb="0" variant="light-label" size="md">
+                          View Details
+                        </FormLabel>
+                        <Switch size="sm" id="view-details" />
+                      </FormControl>
+                    </Box>
+
+                    <Button
+                      variant="solid"
+                      colorScheme="brand"
+                      onClick={onTransactionModalOpen}
+                      isDisabled={preventNewTransaction}
+                      leftIcon={<BiAddToQueue />}
                     >
-                      <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                        <BsBoxArrowUp />
-                      </Box>
-                      {t('export')}
-                    </Button> */}
-                    {/* <Button
-                      bg="#FFFFFF"
-                      color="#4E87F8"
-                      border="1px solid #4E87F8"
-                      _hover={{ bg: 'none' }}
-                      marginRight={1}
-                      size="md"
-                    >
-                      {settingColumns && (
-                        <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
-                      )}
-                    </Button> */}
-                    <Button variant="ghost" colorScheme="brand" onClick={onTransactionModalOpen}>
                       {t('newTransaction')}
                     </Button>
-                  </>
+                  </HStack>
                 )}
               </Box>
             </TabList>
 
             <TabPanels h="100%">
-              <TabPanel p="0px" h="100%" mt="31px">
-                <Box mb="5">
-                  <FormControl display="flex" alignItems="center">
-                    <FormLabel htmlFor="view-details" mb="0">
-                      View Details
-                    </FormLabel>
-                    <Switch id="view-details" />
-                  </FormControl>
-                </Box>
+              <TabPanel p="0px" h="100%" mt="7px">
                 <Box h="100%">
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" mt="3">
-                <ProjectDetailsTab />
+              <TabPanel p="0px" mt="7px">
+                <Card rounded="16px" padding="0">
+                  <ProjectDetailsTab />
+                </Card>
               </TabPanel>
 
               <TabPanel p="0px" h="0px">
@@ -159,6 +138,11 @@ export const ProjectDetails: React.FC = props => {
 
               <TabPanel p="0px" mt="3">
                 <VendorDocumentsTable ref={tabsContainerRef} />
+              </TabPanel>
+              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel px="0">
+                <NotesTab notes={[]} saveNote={() => {}} />
               </TabPanel>
             </TabPanels>
           </Tabs>

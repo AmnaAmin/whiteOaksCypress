@@ -13,6 +13,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { convertDateTimeFromServer, customFormat } from './date-time-utils'
+import { useTranslation } from 'react-i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -50,7 +51,7 @@ export const useAccountDetails = () => {
 export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
-  return useMutation((payload: VendorProfilePayload) => client(`vendors`, { data: payload, method: 'PUT' }), {
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }), {
     onSuccess(response) {
       console.log('response', response)
     },
@@ -115,7 +116,7 @@ export const useMarkets = () => {
 export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: VendorProfile): VendorTradeFormValues => {
   return {
     trades: trades.map(trade => ({
-      ...trade,
+      trade,
       checked: !!vendorData?.vendorSkills?.find(skill => skill.id === trade.id),
     })),
   }
@@ -123,11 +124,12 @@ export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: Vendo
 
 export const parseTradeFormValuesToAPIPayload = (
   formValues: VendorTradeFormValues,
-  vendorData: VendorProfile,
-): VendorProfilePayload => {
+  vendorData: VendorProfile | {},
+): Partial<VendorProfilePayload> => {
   return {
     ...vendorData,
     vendorSkills: formValues.trades
+      .map(trade => ({ ...trade.trade, checked: trade.checked }))
       .filter(trade => trade.checked)
       .map(trade => {
         const { checked, ...rest } = trade
@@ -143,7 +145,7 @@ export const parseMarketAPIDataToFormValues = (
 ): VendorMarketFormValues => {
   return {
     markets: markets.map(market => ({
-      ...market,
+      market,
       checked: !!vendorData?.markets?.find(skill => skill.id === market.id),
     })),
   }
@@ -151,11 +153,12 @@ export const parseMarketAPIDataToFormValues = (
 
 export const parseMarketFormValuesToAPIPayload = (
   formValues: VendorMarketFormValues,
-  vendorData: VendorProfile,
-): VendorProfilePayload => {
+  vendorData: VendorProfile | {},
+): Partial<VendorProfilePayload> => {
   return {
     ...vendorData,
     markets: formValues.markets
+      .map(market => ({ ...market.market, checked: market.checked }))
       .filter(market => market.checked)
       .map(market => {
         const { checked, ...rest } = market
@@ -173,9 +176,10 @@ export const DOCUMENTS_TYPES = {
   W9_DOCUMENT: { value: 'W9 DOCUMENT', id: 99 },
 }
 
-export const useSaveVendorDetails = () => {
+export const useSaveVendorDetails = (name: string) => {
   const client = useClient()
   const toast = useToast()
+  const { t } = useTranslation()
 
   return useMutation(
     (licenses: any) => {
@@ -187,10 +191,9 @@ export const useSaveVendorDetails = () => {
     {
       onSuccess() {
         toast({
-          title: 'Update Vendor Details',
-          description: 'Vendor Details have been updated successfully.',
+          title: t(`update${name}Details`),
+          description: t(`update${name}DetailsSuccess`),
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -343,7 +346,6 @@ export const useSaveSettings = () => {
           title: 'Update Settings',
           description: 'Settings have been updated successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },

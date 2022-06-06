@@ -22,8 +22,8 @@ const ButtonVariants = {
       outline: props => {
         return {
           ...chakraTheme.components.Button.variants.outline(props),
-          borderColor: `${props.colorScheme}.400`,
-          color: `${props.colorScheme}.400`,
+          borderColor: `${props.colorScheme}.300`,
+          color: `${props.colorScheme}.300`,
           _hover: {
             bg: `${props.colorScheme}.50`,
           },
@@ -35,7 +35,7 @@ const ButtonVariants = {
       ghost: props => {
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
-          color: `${props.colorScheme}.400`,
+          color: `${props.colorScheme}.300`,
           _focus: {
             outline: 'none',
           },
@@ -50,6 +50,18 @@ const ButtonVariants = {
           color: `${props.colorScheme}.300`,
           _hover: {
             color: `${props.colorScheme}.500`,
+          },
+        }
+      },
+      'choose-file': props => {
+        return {
+          ...chakraTheme.components.Button.variants.outline(props),
+          borderWidth: '0 1px 0 0',
+          color: `${props.colorScheme}.500`,
+          bg: `${props.colorScheme}.100`,
+          _hover: {
+            color: `${props.colorScheme}.600`,
+            bg: `${props.colorScheme}.200`,
           },
         }
       },

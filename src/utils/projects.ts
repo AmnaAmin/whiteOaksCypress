@@ -36,7 +36,7 @@ export const useProject = (projectId?: string) => {
 export const useProjectWorkOrders = projectId => {
   const client = useClient()
 
-  return useQuery<ProjectWorkOrderType[]>('GetProjectWorkOrders', async () => {
+  return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
     const response = await client(`project/${projectId}/workorders`, {})
 
     return response?.data
@@ -50,5 +50,15 @@ export const useProjectAlerts = (projectId, login) => {
     const response = await client(`alert-histories/project/${projectId}`, {})
 
     return response?.data.filter(alert => alert.login === login)
+  })
+}
+
+export const useWeekDayProjectsDue = () => {
+  const client = useClient()
+
+  return useQuery('weekDayFilters', async () => {
+    const response = await client(`projects-due-this-week`, {})
+
+    return response?.data
   })
 }

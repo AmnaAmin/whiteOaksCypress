@@ -6,7 +6,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalBody,
-  Button,
   FormControl,
   FormLabel,
   HStack,
@@ -27,6 +26,7 @@ import { Document } from 'types/vendor.types'
 
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
+import { Button } from 'components/button/button'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -119,7 +119,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('upload')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
@@ -171,7 +171,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                     variant="ghost"
                     colorScheme="brand"
                   >
-                    {t('chooseFile')}{' '}
+                    {t('chooseFile')}
                   </Button>
                 )}
               </HStack>
@@ -180,19 +180,21 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button
-            variant="outline"
-            onClick={() => {
-              resetUpload()
-              onClose()
-            }}
-            colorScheme="brand"
-          >
-            {t('close')}
-          </Button>
-          <Button onClick={uploadDocument} colorScheme="brand" type="submit">
-            {t('save')}
-          </Button>
+          <HStack spacing="16px">
+            <Button
+              variant="outline"
+              onClick={() => {
+                resetUpload()
+                onClose()
+              }}
+              colorScheme="brand"
+            >
+              {t('close')}
+            </Button>
+            <Button onClick={uploadDocument} colorScheme="brand" type="submit">
+              {t('save')}
+            </Button>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -116,3 +116,16 @@ export const convertImageToDataURL = (src, callback) => {
 export const convertDateTimeToServerISO = date => {
   return date ? moment(date, APP_LOCAL_DATE_FORMAT_Z).toISOString() : null
 }
+
+export const convertImageUrltoDataURL = url =>
+  fetch(url)
+    .then(response => response.blob())
+    .then(
+      blob =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.onerror = reject
+          reader.readAsDataURL(blob)
+        }),
+    )

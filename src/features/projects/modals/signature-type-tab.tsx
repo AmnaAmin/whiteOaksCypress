@@ -1,11 +1,12 @@
 import { Button, Divider, FormControl, HStack, ModalFooter, Stack, VStack } from '@chakra-ui/react'
-import { t } from 'i18next'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormInput } from 'components/react-hook-form-fields/input'
+import { useTranslation } from 'react-i18next'
 
 export const SignatureTab = props => {
   const { onClose, setSignature } = props
+  const { t } = useTranslation()
   const {
     register,
     formState: { errors },
@@ -30,7 +31,7 @@ export const SignatureTab = props => {
                 <FormInput
                   testId="signature-input"
                   errorMessage={errors.signature && errors.signature?.message}
-                  label="Type Your Name Here"
+                  label={t('typeName')}
                   labelStyle={{
                     fontSize: '16px',
                     fontWeight: 500,
@@ -61,32 +62,14 @@ export const SignatureTab = props => {
         </FormControl>
         <Divider />
         <ModalFooter mt={6}>
-          <Button
-            variant="ghost"
-            mr={3}
-            onClick={onClose}
-            w="130px"
-            h="48px"
-            color="gray.700"
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
-          >
-            {t('close')}
-          </Button>
-          <Button
-            data-testid="save-signature"
-            colorScheme="CustomPrimaryColor"
-            w="130px"
-            h="48px"
-            type="submit"
-            fontStyle="normal"
-            fontWeight={500}
-            fontSize="14px"
-            onClick={handleSubmit(onSubmit)}
-          >
-            {t('Apply')}
-          </Button>
+          <HStack spacing="16px">
+            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+              {t('close')}
+            </Button>
+            <Button data-testid="save-signature" colorScheme="brand" type="submit" onClick={handleSubmit(onSubmit)}>
+              {t('apply')}
+            </Button>
+          </HStack>
         </ModalFooter>
       </form>
     </Stack>

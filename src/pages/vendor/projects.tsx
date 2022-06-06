@@ -12,7 +12,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 const Projects = () => {
   const { t } = useTranslation()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.project,
@@ -23,7 +23,7 @@ const Projects = () => {
   }
 
   const onSave = columns => {
-    postProjectColumn(columns)
+    postGridColumn(columns)
   }
 
   return (
@@ -52,11 +52,7 @@ const Projects = () => {
                   <Button
                     mr="1"
                     variant="ghost"
-                    color="#4E87F8"
-                    _focus={{ border: 'none' }}
-                    fontSize="12px"
-                    fontStyle="normal"
-                    fontWeight={500}
+                    colorScheme="brand"
                     onClick={() => {
                       if (projectTableInstance) {
                         projectTableInstance?.exportData('xlsx', false)

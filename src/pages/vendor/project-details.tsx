@@ -1,4 +1,4 @@
-import { useDisclosure, Text, Icon } from '@chakra-ui/react'
+import { useDisclosure, Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -18,16 +18,6 @@ import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
-const projectTabStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  fontStyle: 'normal',
-  color: 'gray.600',
-  _hover: {
-    backgroundColor: 'gray.200',
-  },
-}
-
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
@@ -42,6 +32,12 @@ const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
+
+  const isNewTransactionAllow = vendorWOStatusValue
+    ? !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+    : true
+
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
@@ -50,31 +46,24 @@ const ProjectDetails: React.FC = props => {
         <Stack spacing={5}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab aria-labelledby="transaction-tab" sx={projectTabStyle}>
-                {t('transaction')}
-              </Tab>
+              <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
 
-              <Tab whiteSpace="nowrap" sx={projectTabStyle}>
-                {t('vendorWorkOrders')}
-              </Tab>
+              <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
 
-              <Tab aria-labelledby="documents-tab" sx={projectTabStyle}>
-                {t('documents')}
-              </Tab>
+              <Tab aria-labelledby="documents-tab">{t('documents')}</Tab>
 
-              <Tab sx={projectTabStyle}>{t('alerts')}</Tab>
+              <Tab>{t('alerts')}</Tab>
 
               <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
-                  <Button onClick={onDocumentModalOpen} variant="ghost" colorScheme="brand">
-                    <Icon as={BiUpload} fontSize="16px" mr={2} />
+                  <Button onClick={onDocumentModalOpen} colorScheme="brand" leftIcon={<BiUpload fontSize="16px" />}>
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button variant="ghost" colorScheme="brand" onClick={onAlertModalOpen}>
+                  <Button colorScheme="brand" onClick={onAlertModalOpen}>
                     <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
-                      {t('resolve')}
+                      {t('resolveAll')}
                     </Text>
                   </Button>
                 )}
@@ -82,9 +71,9 @@ const ProjectDetails: React.FC = props => {
                   <Button
                     data-testid="new-transaction-button"
                     onClick={onTransactionModalOpen}
-                    variant="ghost"
                     colorScheme="brand"
                     leftIcon={<BiAddToQueue />}
+                    isDisabled={isNewTransactionAllow}
                   >
                     {t('newTransaction')}
                   </Button>

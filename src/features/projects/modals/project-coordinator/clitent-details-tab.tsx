@@ -11,7 +11,7 @@ const DetailsTab = props => {
           <FormLabel variant="strong-label" size="md">
             Name
           </FormLabel>
-          <Input width="215px" variant="reguired-field" readOnly />
+          <Input width="215px" variant="required-field" readOnly />
         </FormControl>
       </Flex>
 
@@ -21,7 +21,7 @@ const DetailsTab = props => {
             <FormLabel variant="strong-label" size="md">
               Address
             </FormLabel>
-            <Input variant="reguired-field" readOnly />
+            <Input variant="required-field" readOnly />
           </FormControl>
         </Box>
         <Box>
@@ -29,7 +29,7 @@ const DetailsTab = props => {
             <FormLabel variant="strong-label" size="md">
               City
             </FormLabel>
-            <Input variant="reguired-field" readOnly />
+            <Input variant="required-field" readOnly />
           </FormControl>
         </Box>
         <Box>
@@ -45,7 +45,7 @@ const DetailsTab = props => {
             <FormLabel variant="strong-label" size="md">
               Zip Code
             </FormLabel>
-            <Input variant="reguired-field" readOnly />
+            <Input variant="required-field" readOnly />
           </FormControl>
         </Box>
       </SimpleGrid>
@@ -57,7 +57,7 @@ const DetailsTab = props => {
               <FormLabel variant="strong-label" size="md">
                 Contact
               </FormLabel>
-              <Input variant="reguired-field" readOnly />
+              <Input variant="required-field" readOnly />
             </FormControl>
           </Box>
           <Box>
@@ -82,7 +82,7 @@ const DetailsTab = props => {
               <FormLabel variant="strong-label" size="md">
                 Email
               </FormLabel>
-              <Input variant="reguired-field" readOnly />
+              <Input variant="required-field" readOnly />
             </FormControl>
           </Box>
           <Box w="215px">
@@ -107,7 +107,7 @@ const DetailsTab = props => {
               <FormLabel variant="strong-label" size="md">
                 Contact
               </FormLabel>
-              <Input variant="reguired-field" readOnly />
+              <Input variant="required-field" readOnly />
             </FormControl>
           </Box>
           <Box>
@@ -132,7 +132,7 @@ const DetailsTab = props => {
               <FormLabel variant="strong-label" size="md">
                 City
               </FormLabel>
-              <Input variant="reguired-field" readOnly />
+              <Input variant="required-field" readOnly />
             </FormControl>
           </Box>
           <Box w="215px">
@@ -140,12 +140,12 @@ const DetailsTab = props => {
               <FormLabel variant="strong-label" size="md">
                 Comments
               </FormLabel>
-              <Input variant="reguired-field" readOnly />
+              <Input variant="required-field" readOnly />
             </FormControl>
           </Box>
         </Flex>
 
-        <Flex h="89px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
+        <Flex h="90px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
           <Button colorScheme="brand" variant="outline" size="lg" mr={3} onClick={props.onClose}>
             Close
           </Button>
