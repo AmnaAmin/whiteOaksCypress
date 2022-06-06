@@ -7,7 +7,6 @@ import {
   Grid,
   VStack,
   HStack,
-  Text,
   Textarea,
   useToast,
   FormLabel,
