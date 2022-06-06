@@ -1,4 +1,4 @@
-import { Box, Button, Center, Divider, Flex, Stack, useDisclosure, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, Divider, Flex, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
@@ -8,9 +8,9 @@ import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/pro
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import PlusIcon from 'icons/plus-icon'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
+import { BiBookAdd } from 'react-icons/bi'
 
 export const Projects = () => {
   const { t } = useTranslation()
@@ -70,6 +70,9 @@ export const Projects = () => {
             alignContent="right"
             onClick={allDays}
             rounded={20}
+            paddingRight={0}
+            paddingLeft={0}
+            defaultChecked
           >
             All
           </Button>
@@ -88,21 +91,14 @@ export const Projects = () => {
             Clear All
           </Button>
           <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="12px"
-            fontStyle="normal"
-            fontWeight={500}
             alignContent="right"
             onClick={onNewProjectModalOpen}
             position="absolute"
             right={8}
+            colorScheme="brand"
+            pb={1}
           >
-            <Box pos="relative" fontWeight="bold" p="2px">
-              <PlusIcon />
-            </Box>
+            <Icon as={BiBookAdd} fontSize="18px" mr={2} />
             New Project
           </Button>
         </Stack>

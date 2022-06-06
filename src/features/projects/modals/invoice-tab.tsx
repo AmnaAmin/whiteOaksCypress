@@ -33,6 +33,8 @@ import { useTranslation } from 'react-i18next'
 import { STATUS } from '../status'
 import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
 
+import * as _ from 'lodash'
+
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
     <Flex justifyContent="start">
@@ -95,9 +97,21 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
-      const invoice = documentsData.find(d => d.documentType === 48)
-      if (invoice) {
-        setRecentInvoice({ s3Url: invoice.s3Url, fileType: invoice.fileType })
+      let invoices = documentsData.filter(d => d.documentType === 48 && d.workOrderId === workOrder.id)
+      if (invoices.length > 0) {
+        /* sorting invoices by created datetime to fetch latest */
+        invoices = _.orderBy(
+          invoices,
+          [
+            item => {
+              const createdDate = new Date(item.createdDate)
+              return createdDate
+            },
+          ],
+          ['desc'],
+        )
+        const recentInvoice = invoices[0]
+        setRecentInvoice({ s3Url: recentInvoice.s3Url, fileType: recentInvoice.fileType })
       }
     }
   }, [documentsData])
@@ -119,7 +133,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         },
       ],
     })
-  }, [])
+  }, [items, workOrder, projectData])
 
   const DeleteItems = Id => {
     const deleteValue = items.filter((value, id) => id !== Id)
@@ -157,10 +171,10 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
-          <Box h="250px" overflow="auto">
+          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
             <form>
-              <Table border="1px solid #E2E8F0" variant="simple" size="md">
-                <Thead>
+              <Table variant="simple" size="md">
+                <Thead pos="sticky" top={0}>
                   <Tr>
                     <Td>{t('item')}</Td>
                     <Td>{t('description')}</Td>
@@ -308,7 +322,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           )}
           <Button
             variant="outline"
-            disabled={workOrder?.statusLabel !== STATUS.Cancel}
+            disabled={
+              !(
+                workOrder?.statusLabel?.toLowerCase() === STATUS.Declined ||
+                (workOrder?.statusLabel?.toLowerCase() === STATUS.Invoiced && !recentInvoice)
+              )
+            }
             colorScheme="brand"
             size="md"
             leftIcon={<BiSpreadsheet />}

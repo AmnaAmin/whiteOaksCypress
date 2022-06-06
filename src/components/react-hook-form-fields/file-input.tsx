@@ -37,15 +37,14 @@ export const downloadableLink = (downloadableFile: any) => {
       {downloadableFile && downloadableFile.url && (
         <a href={downloadableFile.url} download style={{ color: '#4E87F8' }}>
           <Flex>
-            <BiDownload size="30px" fontSize="16px" />
+            <BiDownload size="20px" />
             <Box
-              mt="5px"
               ml="7px"
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="ellipsis"
               fontSize="13px"
-              fontWeight={500}
+              fontWeight={400}
             >
               {downloadableFile.name}
             </Box>

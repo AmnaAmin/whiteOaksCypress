@@ -27,7 +27,7 @@ const identifyingInformation = {
 }
 
 const checkInformation = {
-  makerOfCheck: 'Maker of Check',
+  makerOfCheck: 'Maker of check',
   amountOfCheck: 'Amount of Check',
   checkPayableTo: 'Check Payable To',
 }

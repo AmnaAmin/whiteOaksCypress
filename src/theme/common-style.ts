@@ -1,5 +1,6 @@
 import { InputProps } from '@chakra-ui/input'
 import { css } from '@emotion/react'
+import calendarPNG from 'assets/calendar-icon.png'
 
 export const disabledInputStyle = {
   bg: 'gray.200',
@@ -38,8 +39,10 @@ export const countInCircle = {
 
 export const calendarIcon = css`
   ::-webkit-calendar-picker-indicator {
-    background: url('https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png')
-      center/80% no-repeat;
+    background: url(${calendarPNG}) no-repeat;
+    background-size: contain;
+    width: 12px;
+    height: 12px;
     color: '#ddd';
   }
 `

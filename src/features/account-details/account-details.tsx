@@ -13,7 +13,7 @@ type payableReceivable = {
   ID: number | string
 }
 
-export const PayableReceivable = (props: payableReceivable) => {
+export const AccountDetails = (props: payableReceivable) => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
   const [isClicked, setIsClicked] = useState(false)
