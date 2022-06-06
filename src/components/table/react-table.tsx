@@ -254,8 +254,8 @@ export function Table(props: Props & TableExtraProps): ReactElement {
 
   return (
     <ChakraTable
-      display="flex"
-      flexDirection="column"
+      // display="flex"
+      // flexDirection="column"
       w="100%"
       bg="#FFFFFF"
       h={tableHeight}
