@@ -18,14 +18,15 @@ const TransactionForm = () => {
   return <TransactionAmountForm formReturn={form} />
 }
 
-const FIELD_CHECKBOX_SELECTOR = 'td input[type=checkbox]'
-const ALL_CHECKBOX_SLELECTOR = 'th input[type=checkbox]'
+const FIELD_CHECKBOX_SELECTOR = '#amounts-list input[type=checkbox]'
+const ALL_CHECKBOX_SLELECTOR = '#all-checkbox input[type=checkbox]'
+const ROW_ITEM_SELECTOR = '#amounts-list .amount-input-row'
 
 describe('Transaction amount adding/removing interactions test cases', () => {
   test('On "Add New Row" button click should append row to amounts table', async () => {
     const { container } = render(<TransactionForm />)
 
-    expect(screen.getAllByRole('row').length).toEqual(2)
+    expect(container.querySelectorAll(ROW_ITEM_SELECTOR).length).toEqual(1)
 
     const addNewRowButton = screen.getByTestId('add-new-row-button')
     const deleteRowButton = screen.getByTestId('delete-row-button')
@@ -35,7 +36,7 @@ describe('Transaction amount adding/removing interactions test cases', () => {
     // Add new row for adding additional amount
     await userEvent.click(addNewRowButton)
 
-    expect(screen.getAllByRole('row').length).toEqual(3)
+    expect(container.querySelectorAll(ROW_ITEM_SELECTOR).length).toEqual(2)
     const allCheckbox = container.querySelector(ALL_CHECKBOX_SLELECTOR) as HTMLInputElement
     expect(allCheckbox).toBeInTheDocument()
     expect(allCheckbox.checked).toBeFalsy()
@@ -56,7 +57,7 @@ describe('Transaction amount adding/removing interactions test cases', () => {
   })
 
   test('Check one of checkbox should change AllCheckbox state to indeterminate', async () => {
-    const allCheckboxIndeterminateSelector = 'th input[type=checkbox]+span[data-indeterminate]'
+    const allCheckboxIndeterminateSelector = '#all-checkbox input[type=checkbox]+span[data-indeterminate]'
 
     const { container } = render(<TransactionForm />)
 
@@ -92,9 +93,9 @@ describe('Transaction amount adding/removing interactions test cases', () => {
 
     await userEvent.click(screen.getByTestId('delete-row-button'))
 
-    expect(screen.getByText('Delete Transaction Row', { selector: 'header' }))
+    expect(screen.getByText('Are You Sure?', { selector: 'header' }))
 
-    userEvent.click(screen.getByText('Delete', { selector: 'button' }))
+    userEvent.click(screen.getByText('Yes', { selector: 'button' }))
 
     expect(container.querySelectorAll(FIELD_CHECKBOX_SELECTOR).length).toEqual(0)
     expect(container.querySelector(ALL_CHECKBOX_SLELECTOR)).not.toBeInTheDocument()
@@ -118,9 +119,9 @@ describe('Transaction amount adding/removing interactions test cases', () => {
 
     await userEvent.click(screen.getByTestId('delete-row-button'))
 
-    expect(screen.getByText('Delete Transaction Row', { selector: 'header' }))
+    expect(screen.getByText('Are You Sure?', { selector: 'header' }))
 
-    await userEvent.click(screen.getByText('Delete', { selector: 'button' }))
+    await userEvent.click(screen.getByText('Yes', { selector: 'button' }))
 
     expect(screen.getByTestId('transaction-description-0')).toBeInTheDocument()
   })

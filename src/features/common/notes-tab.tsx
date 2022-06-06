@@ -1,15 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Textarea,
-  WrapItem,
-  Center,
-  FormLabel,
-  Text,
-  ModalBody,
-  ModalFooter,
-} from '@chakra-ui/react'
+import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text, HStack } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -78,39 +67,37 @@ export const NotesTab = (props: NotesProps) => {
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
-      <ModalBody>
-        <Box {...pageLayoutStyle} bg="white" rounded={16}>
-          <Box h={chatListStyle.height || '300px'} {...chatListStyle} overflow="auto">
-            {notes && notes.length > 0 && (
-              <Box>
-                {notes.map(note => {
-                  return note.createdBy === account.login ? (
-                    <MessagesTypes userNote={note} />
-                  ) : (
-                    <MessagesTypes otherNote={note} />
-                  )
-                })}
-                <div ref={messagesEndRef} />
-              </Box>
-            )}
-          </Box>
-          <Flex mt="10px">
-            <Box w="100%">
-              <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-                {t('enterNewNote')}
-              </FormLabel>
-              <Textarea
-                flexWrap="wrap"
-                h={messageBoxStyle.height || '200px'}
-                {...messageBoxStyle}
-                {...register('message')}
-              />
+      <Box {...pageLayoutStyle} bg="white" rounded={16}>
+        <Box h={chatListStyle?.height || '300px'} {...chatListStyle} overflow="auto">
+          {notes && notes.length > 0 && (
+            <Box>
+              {notes.map(note => {
+                return note.createdBy === account.login ? (
+                  <MessagesTypes userNote={note} />
+                ) : (
+                  <MessagesTypes otherNote={note} />
+                )
+              })}
+              <div ref={messagesEndRef} />
             </Box>
-          </Flex>
+          )}
         </Box>
-      </ModalBody>
-      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-        <Flex justifyContent="end">
+        <Flex mt="10px">
+          <Box w="100%">
+            <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
+              {t('enterNewNote')}
+            </FormLabel>
+            <Textarea
+              flexWrap="wrap"
+              h={messageBoxStyle?.height || '200px'}
+              {...messageBoxStyle}
+              {...register('message')}
+            />
+          </Box>
+        </Flex>
+      </Box>
+      <HStack borderTop="1px solid #CBD5E0" p={5} bg="white">
+        <HStack spacing="16px" w="100%" justifyContent="end">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
@@ -119,8 +106,8 @@ export const NotesTab = (props: NotesProps) => {
           <Button type="submit" colorScheme="brand" isDisabled={!message}>
             {t('save')}
           </Button>
-        </Flex>
-      </ModalFooter>
+        </HStack>
+      </HStack>
     </form>
   )
 }

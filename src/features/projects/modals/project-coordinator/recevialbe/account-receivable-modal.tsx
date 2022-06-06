@@ -29,8 +29,12 @@ const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void }>
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pl="3" pr="3">
-          <ProjectDetailsTab id="Receivable" onClose={props.onClose} />
+        <ModalBody p="1.7px">
+          <ProjectDetailsTab
+            style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '430px' }}
+            tabVariant="enclosed"
+            onClose={props.onClose}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>

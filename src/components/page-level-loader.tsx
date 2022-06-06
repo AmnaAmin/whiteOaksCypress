@@ -14,7 +14,7 @@ export const ViewLoader: React.FC<BoxProps> = props => {
       justifyContent="center"
       alignItems="center"
       aria-label="loading"
-      zIndex="1"
+      zIndex="2"
     >
       <Box w="100%" h="100%" top="0" left="0" right="0" bottom="0" pos="absolute" bg="gray.200" opacity="0.4" />
       <Spinner thickness="4px" speed="0.65s" size="xl" zIndex="2" position="absolute" />

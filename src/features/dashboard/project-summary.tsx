@@ -67,7 +67,7 @@ export const ProjectSummary = () => {
           isLoading={isLoading}
           UpdownIcon={BsArrowDownShort}
           BigIcon={BiMessageSquareX}
-          number={cards?.find(c => c.label === 'notInvoiced')?.count}
+          number={cards?.find(c => c.label === 'declined')?.count}
           name={t('completednotPaid')}
           Iconbgcolor={'#FAE6E5'}
           updownIconColor={'#E53E3E'}

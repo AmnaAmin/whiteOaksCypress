@@ -40,7 +40,7 @@ const downloadableDocument = (link, text, testid?) => {
   return (
     <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
       <Flex>
-        <BiDownload fontSize="sm" />
+        <BiDownload fontSize="20px" />
         <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
           {text}
         </Text>
@@ -51,7 +51,7 @@ const downloadableDocument = (link, text, testid?) => {
 
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const { vendor = {}, setNextTab } = props
-  const { mutate: saveDocuments } = useSaveVendorDetails()
+  const { mutate: saveDocuments } = useSaveVendorDetails('Document')
 
   const onSubmit = useCallback(
     async values => {
@@ -127,7 +127,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
 
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-      <Box w="940px">
+      <Box h="502px" overflow="auto">
         <Text sx={labelStyle}>{t('W9DocumentDate')}</Text>
 
         <HStack spacing={24}>
@@ -212,16 +212,12 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        {/* <Box w="940px">
-          <Divider border="1px solid " />
-        </Box> */}
-
         <Flex align="center">
           <FormLabel mt={2} variant="strong-label" size="lg">
             {t('insurances')}
           </FormLabel>
 
-          <Divider border="2px solid" />
+          <Divider border="1px solid #E2E8F0" />
         </Flex>
 
         <Box mt={6}>
@@ -355,13 +351,12 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
       </Box>
+
       <Flex
         id="footer"
+        mt={2}
         w="100%"
-        pt="14px"
-        h="50px"
-        mt="40px"
-        minH="60px"
+        pt="12px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"
@@ -371,15 +366,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             Cancel
           </Button>
         )}
-        {VendorType === 'detail' ? (
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-            {t('save')}
-          </Button>
-        ) : (
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-            {t('next')}
-          </Button>
-        )}
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+          {t('save')}
+        </Button>
       </Flex>
     </form>
   )

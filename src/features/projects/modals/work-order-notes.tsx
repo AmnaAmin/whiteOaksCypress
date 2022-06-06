@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { ModalBody } from '@chakra-ui/react'
 import { useNotes, useNoteMutation } from 'utils/work-order'
 import { NotesTab } from '../../common/notes-tab'
 import { useAccountDetails } from 'utils/vendor-details'
