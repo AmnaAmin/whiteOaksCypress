@@ -21,13 +21,11 @@ import {
   ISSUE_TYPE_OPTIONS,
   parseSupportFormValuesToAPIPayload,
   SEVERITY_OPTIONS,
-  // STATUS_OPTIONS,
   useCreateTicketMutation,
 } from 'utils/support'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
-import { BiDownload } from 'react-icons/bi'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
@@ -83,19 +81,6 @@ const CreateATicket = () => {
         })
       },
     })
-  }
-
-  const downloadDocument = (link, text) => {
-    return (
-      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-        <Flex ml={1}>
-          <BiDownload fontSize="sm" />
-          <Text ml="5px" fontSize="12px" fontStyle="normal">
-            {text}
-          </Text>
-        </Flex>
-      </a>
-    )
   }
 
   return (
@@ -219,9 +204,6 @@ const CreateATicket = () => {
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    {field.value && (
-                      <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
-                    )}
                   </VStack>
                 )
               }}
