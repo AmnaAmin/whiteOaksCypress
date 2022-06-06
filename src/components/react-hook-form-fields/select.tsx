@@ -15,6 +15,7 @@ type SelectProps = {
   controlStyle?: any
   elementStyle?: any
   testId?: string
+  disable?: boolean
 }
 
 export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
@@ -36,6 +37,7 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
               data-testid={props.testId}
               fontSize={props.size || 'sm'}
               color="#718096"
+              disabled={props.disable}
             >
               <option value={''}>Select..</option>
               {props.options.map((option, index) => {

@@ -71,7 +71,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
             }
           />
           <Box>
-            <FormErrorMessage position="absolute" m="0px">
+            <FormErrorMessage position="absolute" mt="3px">
               {fieldState.error?.message}
             </FormErrorMessage>
           </Box>

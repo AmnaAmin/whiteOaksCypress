@@ -66,7 +66,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
   )
 })
 export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => {
-  const [startDate] = useState(new Date())
+  const [startDate] = useState()
   const { t } = useTranslation()
   const defaultValues: LicenseFormValues = useMemo(() => {
     if (vendor) {
@@ -140,7 +140,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             append({
               licenseType: '',
               licenseNumber: '',
-              expiryDate: startDate.toDateString(),
+              expiryDate: startDate,
               expirationFile: null,
             })
           }
@@ -166,7 +166,9 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                     />
                   </Center>
                 </Box>
+
                 <FormSelect
+                  disable={license?.expirationFile ? true : false}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
@@ -195,6 +197,8 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   variant="required-field"
                 />
                 <FormDatePicker
+                  isRequired={true}
+                  placeholder="mm/dd/yy"
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
                   label={t('expiryDate')}
                   name={`licenses.${index}.expiryDate`}
@@ -228,7 +232,9 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                                 }}
                                 onClear={() => setValue(field.name, null)}
                               ></ChooseFileField>
-                              <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                              <FormErrorMessage bottom="5px" pos="absolute">
+                                {fieldState.error?.message}
+                              </FormErrorMessage>
                             </Box>
                             {field.value?.name && (
                               <Box overflow="hidden" pos="absolute" top={16}>
@@ -245,15 +251,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             )
           })}
         </VStack>
-        <Flex
-          id="footer"
-          mt="20px"
-          w="100%"
-          h="100px"
-          alignItems="center"
-          justifyContent="end"
-          borderTop="2px solid #E2E8F0"
-        >
+        <Flex id="footer" w="100%" pt="12px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               Cancel

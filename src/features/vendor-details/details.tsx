@@ -278,7 +278,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                           <Input
                             {...field}
                             id="SecondaryNo"
-                            variant="required-field"
+                            // variant="required-field"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
                             type="text"
