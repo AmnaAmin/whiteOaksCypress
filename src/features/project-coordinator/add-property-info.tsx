@@ -21,7 +21,6 @@ import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useProjects } from 'utils/projects'
-// import Creatable from 'react-select/creatable' //check for input on select
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -37,6 +36,7 @@ export const AddPropertyInfo: React.FC<{
   const [verificationInProgress, setVerificationInProgress] = useState(false)
   const [check, setCheck] = useState(false)
   const [tabIndex, setTabIndex] = useState(0)
+  const [existProperty, setExistProperty] = useState([{ id: 0, status: '' }])
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -86,7 +86,6 @@ export const AddPropertyInfo: React.FC<{
   } = useFormContext<ProjectFormValues>()
 
   // On Street Address change, set values of City, State and Zip
-  const existProperty = [{ id: 0, status: '' }]
   const setAddressValues = e => {
     setIsDuplicateAddress(false)
     properties.map(property => {
@@ -105,8 +104,9 @@ export const AddPropertyInfo: React.FC<{
         // Check for duplicate address
         projects?.map(p => {
           if (p.propertyId === property.id) {
+            setExistProperty(existProperty)
             existProperty?.push({ id: p.id, status: p.projectStatus })
-            console.log('existProperty', existProperty)
+            delete existProperty[0]
             if (existProperty) {
               setIsDuplicateAddress(true)
             } else {
@@ -141,20 +141,6 @@ export const AddPropertyInfo: React.FC<{
               setVerificationInProgress(true)
             } else {
               setAddressVerificationStatus('success')
-              // const address = {
-              //   streetAddress: record.Address2[0],
-              //   city: record.City[0],
-              //   state: record.State[0],
-              //   zipCode: record.Zip5[0],
-              // }
-              // record.streetAddress = address.streetAddress
-              // record.city = address.city
-              // record.state = address.state
-              // record.zipCode = address.zipCode
-              // setStreetAddress(address.streetAddress)
-              // setCity(address.city)
-              // setState(address.state)
-              // setZipCode(address.zipCode)
               setVerificationInProgress(true)
             }
           })
@@ -176,12 +162,14 @@ export const AddPropertyInfo: React.FC<{
       {isDuplicateAddress && (
         <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
           <AlertIcon />
-          <Box color="red">
-            {existProperty &&
-              existProperty.map(
-                p => 'Project ID ' + p.id + ' using this address already exist & is in ' + p.status + ' state.',
-              )}
-          </Box>
+          <AlertDescription>
+            <Box color="red">
+              {existProperty &&
+                existProperty?.map(
+                  p => 'Project ID ' + p.id + ' using this address already exist & is in ' + p.status + ' state. ',
+                )}
+            </Box>
+          </AlertDescription>
           <Divider orientation="vertical" h={6} marginLeft={6} />
           <Checkbox
             name={`acknowledgeCheck`}
