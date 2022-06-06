@@ -25,6 +25,8 @@ import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment-tab-pc'
 import { InvoiceTabPC } from './invoice-tab-pc'
 import Status from 'features/projects/status'
+import WorkOrderNotes from '../work-order-notes'
+import { countInCircle } from 'theme/common-style'
 
 const WorkOrderDetails = ({
   projectData,
@@ -38,6 +40,7 @@ const WorkOrderDetails = ({
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -105,7 +108,12 @@ const WorkOrderDetails = ({
                 <Tab>{t('lienWaiver')}</Tab>
                 <Tab>{t('invoice')}</Tab>
                 <Tab>{t('payments')}</Tab>
-                <Tab>{t('notes')}</Tab>
+                <Tab>
+                  {t('notes')}
+                  <Box ml="5px" style={countInCircle}>
+                    {notesCount}
+                  </Box>
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -120,6 +128,10 @@ const WorkOrderDetails = ({
                 </TabPanel>
                 <TabPanel>
                   <PaymentInfoTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                </TabPanel>
+
+                <TabPanel>
+                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
