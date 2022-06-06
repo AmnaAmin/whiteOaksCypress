@@ -1,4 +1,4 @@
-import { Box, Button, Center, Divider, Flex, Stack, useDisclosure, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, Divider, Flex, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
@@ -91,23 +91,14 @@ export const Projects = () => {
             Clear All
           </Button>
           <Button
-            bg="#4E87F8"
-            color="white"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="14px"
-            fontStyle="normal"
-            fontWeight={500}
             alignContent="right"
             onClick={onNewProjectModalOpen}
             position="absolute"
             right={8}
-            w="158px"
+            colorScheme="brand"
             pb={1}
           >
-            <Box fontWeight="bold" paddingRight={2}>
-              <BiBookAdd />
-            </Box>
+            <Icon as={BiBookAdd} fontSize="18px" mr={2} />
             New Project
           </Button>
         </Stack>
