@@ -66,14 +66,14 @@ const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="none">
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
 
-      <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
-        <ModalHeader h="64px" py={4} display="flex" alignItems="center">
+      <ModalContent rounded={3} borderTop="2px solid #4E87F8">
+        <ModalHeader>
           {tabIndex === 4 && (
             <Box>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
+              <HStack fontSize="16px" fontWeight={500}>
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
                   Invoice # 432022
                 </Text>
@@ -86,7 +86,7 @@ const WorkOrderDetails = ({
 
           {tabIndex !== 4 && (
             <HStack spacing={4}>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
+              <HStack fontSize="16px" fontWeight={500}>
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
                   WO {workOrder?.id}
                 </Text>
@@ -104,14 +104,14 @@ const WorkOrderDetails = ({
           )}
         </ModalHeader>
 
-        <ModalCloseButton m={3} _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
-        <Divider mb={3} />
+        <Divider borderColor="#CBD5E0" />
         <ModalBody>
-          <Stack spacing={5}>
+          <Stack mt="16px">
             <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-              <TabList height="50px" alignItems={'end'}>
-                <Flex h="40px">
+              <TabList alignItems={'end'}>
+                <Flex>
                   <Tab
                     _focus={{ border: 'none' }}
                     minW={180}

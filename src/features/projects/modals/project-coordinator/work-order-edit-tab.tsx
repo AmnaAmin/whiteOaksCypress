@@ -1,10 +1,35 @@
-import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import {
+  Box,
+  Text,
+  Flex,
+  SimpleGrid,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  HStack,
+  Stack,
+  Divider,
+  Icon,
+  Checkbox,
+  Thead,
+  TableContainer,
+  Table,
+  Tr,
+  Th,
+  Td,
+  Tbody,
+  Tag,
+  FormErrorMessage,
+} from '@chakra-ui/react'
 import React from 'react'
-import { BiCalendar } from 'react-icons/bi'
+import { BiCalendar, BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import { documentTypes } from 'utils/vendor-projects'
 import { dateFormat } from 'utils/date-time-utils'
+import { AddIcon } from '@chakra-ui/icons'
+import { useForm, useFieldArray } from 'react-hook-form'
 
 const CalenderCard = props => {
   return (
@@ -17,7 +42,7 @@ const CalenderCard = props => {
           {props.title}
         </Text>
         <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props?.date}
+          {props?.date || 'mm/dd/yyyy'}
         </Text>
       </Box>
     </Flex>
@@ -31,7 +56,15 @@ const InformationCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          color="gray.500"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+          isTruncated={true}
+          maxW="150px"
+          title={props.date}
+        >
           {props.date}
         </Text>
       </Box>
@@ -40,6 +73,17 @@ const InformationCard = props => {
 }
 
 const WorkOrderDetailTab = props => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm()
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tab',
+  })
   const { t } = useTranslation()
   const {
     skillName,
@@ -52,24 +96,35 @@ const WorkOrderDetailTab = props => {
     durationCategory,
   } = props.workOrder
 
+  const onSubmit = values => {
+    console.log('Data', values)
+  }
+
   return (
-    <Box>
-      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <InformationCard title="Vendor Name" date={companyName} />
-        <InformationCard title="Vendor Type" date={skillName} />
-        <InformationCard title="Email" date={businessEmailAddress} />
-        <InformationCard title=" Phone No" date={businessPhoneNumber} />
-      </SimpleGrid>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack mt="32px" spacing="32px">
+        <SimpleGrid columns={5} columnGap="147px">
+          <InformationCard title="Vendor Name" date={companyName} />
+          <InformationCard title="Vendor Type" date={skillName} />
+          <InformationCard title="Email" date={businessEmailAddress} />
+          <InformationCard title=" Phone No" date={businessPhoneNumber} />
+        </SimpleGrid>
+        <Box>
+          <Divider borderColor="#CBD5E0" />
+        </Box>
 
-      <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
-        <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
-        <CalenderCard title="Permitted Pulled" date={dateFormat(datePermitsPulled)} />
-        <CalenderCard title=" Completion Variance" date={durationCategory} />
-      </SimpleGrid>
-
-      <Box mt={10}>
-        <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+        <SimpleGrid columns={5} columnGap="147px">
+          <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
+          <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
+          <CalenderCard title="Permitted Pulled" date={dateFormat(datePermitsPulled)} />
+          <CalenderCard title=" Completion Variance" date={durationCategory} />
+        </SimpleGrid>
+        <Box>
+          <Divider borderColor="#CBD5E0" />
+        </Box>
+      </Stack>
+      <Box mt="32px">
+        <SimpleGrid columns={4} spacingX={6} spacingY={12}>
           <Box>
             <FormControl height="40px">
               <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
@@ -80,38 +135,214 @@ const WorkOrderDetailTab = props => {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                 Expected Start Date
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input type="date" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel
+                //  whiteSpace="nowrap"
+                fontSize="14px"
+                fontWeight={500}
+                color="gray.600"
+              >
                 Expected Completion Date
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input type="date" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel
+                //  whiteSpace="nowrap"
+                fontSize="14px"
+                fontWeight={500}
+                color="gray.600"
+              >
                 Completed By Vendor
               </FormLabel>
-              <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
+              <Input type="date" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
           </Box>
         </SimpleGrid>
       </Box>
-      <Flex mt="75px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button onClick={props.onClose} colorScheme="brand" variant="ghost">
-          {t('cancel')}
-        </Button>
-        <Button colorScheme="brand">{t('save')}</Button>
-      </Flex>
-    </Box>
+
+      <Stack direction="row" mt="32px" justifyContent="space-between">
+        <HStack>
+          <Text>Assigned Items</Text>
+          <Box pl="2" pr="1">
+            <Divider orientation="vertical" h="20px" />
+          </Box>
+          <Button
+            type="button"
+            variant="ghost"
+            colorScheme="brand"
+            leftIcon={<Icon as={AddIcon} boxSize={3} />}
+            onClick={() =>
+              console.log(
+                append({
+                  now: '',
+                  productName: '',
+                  details: '',
+                  quantity: '',
+                  price: '',
+                }),
+              )
+            }
+          >
+            Add New Item
+          </Button>
+        </HStack>
+        <HStack>
+          <Checkbox size="md">Show Prices to vendor</Checkbox>
+          <Checkbox size="md">Mark all verified</Checkbox>
+        </HStack>
+        <HStack>
+          <Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
+            Download as PDF
+          </Button>
+          <Button variant="outline" colorScheme="brand">
+            Remaining Items
+          </Button>
+        </HStack>
+      </Stack>
+      <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md">
+        <TableContainer>
+          <Table>
+            <Thead h="72px">
+              <Tr whiteSpace="nowrap">
+                <Th>SKU</Th>
+                <Th>Product Name</Th>
+                <Th>Details</Th>
+                <Th>Quantity</Th>
+                <Th>Price</Th>
+                <Th>Status</Th>
+                <Th>Images</Th>
+                <Th>Verification</Th>
+              </Tr>
+            </Thead>
+
+            <Tbody>
+              {fields.map((items, index) => (
+                <Tr key={items.id}>
+                  <Td>
+                    <HStack>
+                      <Icon
+                        as={BiXCircle}
+                        boxSize={5}
+                        color="#4E87F8"
+                        onClick={() => remove(index)}
+                        cursor="pointer"
+                        mt="2"
+                      />
+                      <FormControl isInvalid={errors.now}>
+                        <FormLabel></FormLabel>
+                        <Input size="sm" id="now" {...register(`tab.${index}.now`, { required: 'This is required' })} />
+                        <FormErrorMessage> {errors.now && errors.now.message} </FormErrorMessage>
+                      </FormControl>
+                    </HStack>
+                  </Td>
+                  <Td>
+                    <FormControl>
+                      <FormLabel></FormLabel>
+                      <Input
+                        size="sm"
+                        id="productName"
+                        {...register(`tab.${index}.productName`, { required: 'This is required' })}
+                      />
+                      <FormErrorMessage>{/* {errors.productName && errors.productName.message} */}</FormErrorMessage>
+                    </FormControl>
+                  </Td>
+                  <Td>
+                    <Box>
+                      <FormControl>
+                        <FormLabel></FormLabel>
+                        <Input
+                          size="sm"
+                          id="details"
+                          {...register(`tab.${index}.details`, { required: 'This is required' })}
+                        />
+                        <FormErrorMessage>{/* {errors.details && errors.details.message} */}</FormErrorMessage>
+                      </FormControl>
+                    </Box>
+                  </Td>
+                  <Td>
+                    <FormControl>
+                      <FormLabel></FormLabel>
+                      <Input
+                        size="sm"
+                        id="quantity"
+                        {...register(`tab.${index}.quantity`, { required: 'This is required' })}
+                      />
+                      <FormErrorMessage>{/* {errors.quantity && errors.quantity.message} */}</FormErrorMessage>
+                    </FormControl>
+                  </Td>
+                  <Td>
+                    <FormControl>
+                      <FormLabel></FormLabel>
+                      <Input
+                        size="sm"
+                        id="price"
+                        {...register(`tab.${index}.price`, { required: 'This is required' })}
+                      />
+                      <FormErrorMessage>{/* {errors.price && errors.price.message} */}</FormErrorMessage>
+                    </FormControl>
+                  </Td>
+                  <Td>
+                    <Box>
+                      <Tag size="lg" variant="solid" colorScheme="blue" css>
+                        <Checkbox colorScheme="blue" defaultChecked>
+                          Checkbox
+                        </Checkbox>
+                      </Tag>
+                    </Box>
+                  </Td>
+                  <Td>
+                    <Box>
+                      <Button
+                        variant="outline"
+                        colorScheme="brand"
+                        rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
+                        size="sm"
+                      >
+                        Upload
+                      </Button>
+                    </Box>
+                  </Td>
+                  <Td>
+                    <Box>
+                      <Tag size="lg" variant="solid" colorScheme="blue" css>
+                        <Checkbox colorScheme="blue" defaultChecked>
+                          Verified
+                        </Checkbox>
+                      </Tag>
+                    </Box>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Box>
+
+      <Box mt="16px">
+        <Divider borderColor="#CBD5E0" />
+        <HStack alignItems="center" justifyContent="end" spacing="16px" mt="16px" mb="8px">
+          <Button onClick={props.onClose} colorScheme="brand" variant="outline">
+            {t('cancel')}
+          </Button>
+          <Button colorScheme="brand" type="submit">
+            {t('save')}
+          </Button>
+        </HStack>
+      </Box>
+    </form>
   )
 }
 
 export default WorkOrderDetailTab
+
+// borderTop="1px solid #CBD5E0"
