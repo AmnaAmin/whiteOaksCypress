@@ -12,6 +12,7 @@ type tabProps = {
   onClose?: () => void
   style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string }
   tabVariant?: string
+  selectedData?: any
 }
 
 const ProjectDetailsTab = (props: tabProps) => {
@@ -45,7 +46,7 @@ const ProjectDetailsTab = (props: tabProps) => {
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>
-            <Contact />
+            <Contact dataContact={props.selectedData} />
           </TabPanel>
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
             <Location />
