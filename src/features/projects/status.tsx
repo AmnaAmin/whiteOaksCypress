@@ -24,10 +24,10 @@ export enum STATUS {
 }
 
 const STATUS_COLOR = {
-  [STATUS.Paid]: { color: '#6B46C1', backgroundColor: '#E9D8FD' },
+  [STATUS.Paid]: { color: '#C05621', backgroundColor: '#FEEBCB ' },
   [STATUS.Active]: { color: '#63B3ED', backgroundColor: '#EBF8FF' },
   [STATUS.Approved]: { color: '#2AB450', backgroundColor: '#E7F8EC' },
-  [STATUS.Completed]: { color: '#2B6CB0', backgroundColor: '#BEE3F8' },
+  [STATUS.Completed]: { color: '#ED8936 ', backgroundColor: '#FEEBCB' },
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
