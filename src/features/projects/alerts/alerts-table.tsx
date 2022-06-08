@@ -1,18 +1,18 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { dateFormat } from 'utils/date-time-utils'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import { useProjectAlerts } from 'utils/projects'
-import { useParams } from 'react-router-dom'
-import { useAuth } from 'utils/auth-context'
+// import { useProjectAlerts } from 'utils/projects'
+// import { useParams } from 'react-router-dom'
+// import { useAuth } from 'utils/auth-context'
 import { useTranslation } from 'react-i18next'
+import moc from './alerts-data.json'
 
-enum PROJECT_CATEGORY {
-  WARNING = 1,
-  INFO = 2,
-  ERROR = 3,
-}
+// enum PROJECT_CATEGORY {
+//   WARNING = 1,
+//   INFO = 2,
+//   ERROR = 3,
+// }
 
 const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -46,23 +46,27 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const AlertsTable = React.forwardRef((props: any, ref) => {
-  const { data } = useAuth()
-  const account = data?.user
-  const { projectId } = useParams<'projectId'>()
-  const { data: alerts } = useProjectAlerts(projectId, account?.login)
+  // const { data } = useAuth()
+  // const account = data?.user
+  // const { projectId } = useParams<'projectId'>()
+  // const { data: alerts } = useProjectAlerts(projectId, account?.login)
   const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: <input type="checkbox"></input>,
-        accessor: 'checkbox',
+        Header: () => {
+          return (
+            <Flex alignItems="center">
+              <input type="checkbox"></input>
+              <Text ml={3}>{t('name') as string}</Text>
+            </Flex>
+          )
+        },
         Cell: () => <input type="checkbox"></input>,
+        accessor: 'checkbox',
       },
-      {
-        Header: t('name') as string,
-        accessor: 'subject',
-      },
+
       {
         Header: t('type') as string,
         accessor: 'triggeredType',
@@ -74,23 +78,24 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
       {
         Header: t('category') as string,
         accessor: 'category',
-        Cell: ({ value }) => PROJECT_CATEGORY[value],
+        // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
         Header: t('dateTriggered') as string,
         accessor: 'dateCreated',
-        Cell: ({ value }) => dateFormat(value),
+        // Cell: ({ value }) => dateFormat(value),
       },
     ],
     ref,
   )
+  console.log('json data', moc)
 
   return (
     <Box ref={resizeElementRef}>
       <ReactTable
         onRowClick={props.onRowClick}
         columns={columns}
-        data={alerts || []}
+        data={moc}
         TableRow={alertsRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"

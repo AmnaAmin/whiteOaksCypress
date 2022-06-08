@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,10 +14,14 @@ import {
   Center,
   VStack,
   HStack,
+  Spacer,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { BiListMinus, BiMapPin, BiWorld, BiUser, BiCalendar } from 'react-icons/bi'
 import { Button } from 'components/button/button'
+import { AlertsDetails } from '../modals/alerts-details-modal'
+import { Card } from 'components/card/card'
 
 type AlertStatusProps = {
   isOpen: boolean
@@ -64,7 +68,7 @@ const alertStatusInfo = [
   },
 ]
 
-const AlertCard = () => {
+const AlertCard = (props: any) => {
   return (
     <Box borderRadius="8px" boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)">
       <Flex>
@@ -79,16 +83,11 @@ const AlertCard = () => {
             Project Project manager Changed from NateFeleciano to Jonathan Kelly.
           </Box>
         </VStack>
-        <Center
-          flexGrow={1}
-          color="#4E87F8"
-          cursor="pointer"
-          borderLeft="1px solid #E2E8F0"
-          fontSize="14px"
-          fontWeight={500}
-          fontStyle="normal"
-        >
-          Resolve
+
+        <Center borderLeft="1px solid #E2E8F0">
+          <Button variant="link" colorScheme="brand" onClick={() => props.SetResolve(!props.Resolved)}>
+            Resolve
+          </Button>
         </Center>
       </Flex>
     </Box>
@@ -112,6 +111,7 @@ const AlertInfo = () => {
                 <Box fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600">
                   {al.title}
                 </Box>
+
                 <Box fontSize="14px" fontStyle="normal" color="gray.500" fontWeight={400}>
                   {al.value}
                 </Box>
@@ -124,6 +124,8 @@ const AlertInfo = () => {
   )
 }
 export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, alert }) => {
+  const [alertResolved, setAlertResolved] = useState(false)
+  const { isOpen: isOpenAlertDetails, onClose: onAlertDetailsClose, onOpen: onAlertDetailsOpen } = useDisclosure()
   return (
     <>
       {alert && (
@@ -136,19 +138,23 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody>
-              <Box
-                minH="31.6em"
-                borderRadius="8px"
-                boxShadow="0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)"
-              >
-                <Grid templateColumns="repeat(2, 1fr)" gap={6} margin="20px" mb="10" pr="28">
-                  {<AlertInfo />}
-                </Grid>
-                <Box>{<AlertCard />}</Box>
-              </Box>
+              <Card>
+                <Box>
+                  <Grid templateColumns="repeat(2, 1fr)" gap={6} margin="20px" mb="10" pr="28">
+                    {<AlertInfo />}
+                  </Grid>
+                  <Box pb={10}>
+                    {alertResolved ? '' : <AlertCard SetResolve={setAlertResolved} Resolved={alertResolved} />}
+                  </Box>
+                </Box>
+              </Card>
             </ModalBody>
             <ModalFooter>
-              <HStack spacing="16px">
+              <HStack spacing="16px" w="100%">
+                <Button variant="outline" colorScheme="brand" m="0" onClick={onAlertDetailsOpen}>
+                  See Project Details
+                </Button>
+                <Spacer />
                 <Button variant="outline" onClick={onClose} colorScheme="brand">
                   Close
                 </Button>
@@ -160,6 +166,8 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
           </ModalContent>
         </Modal>
       )}
+
+      <AlertsDetails isOpen={isOpenAlertDetails} onClose={onAlertDetailsClose} />
     </>
   )
 }
