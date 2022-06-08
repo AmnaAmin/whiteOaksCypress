@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
-import { usePCReveviable } from 'utils/account-receivable'
+import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -108,11 +108,14 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
 
     const onRowClick = useCallback(
       (_, row) => {
+        rowData(row.values.projectId)
         onAccountReceivableModalOpen()
       },
       [onAccountReceivableModalOpen],
     )
     const { receivableData, isLoading } = usePCReveviable()
+    const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
+    const rowSelectedData = receivableDataa?.data
 
     return (
       <Box overflow="auto" width="100%">
@@ -126,7 +129,11 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
           tableHeight="calc(100vh - 300px)"
           name="alerts-table"
         />
-        <AccountReceivableModal isOpen={isAccountReceivableModal} onClose={onAccountReceivableModalClose} />
+        <AccountReceivableModal
+          rowData={rowSelectedData}
+          isOpen={isAccountReceivableModal}
+          onClose={onAccountReceivableModalClose}
+        />
       </Box>
     )
   },
