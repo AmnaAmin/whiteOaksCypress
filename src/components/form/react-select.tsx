@@ -29,8 +29,8 @@ export const chakraStyles = {
   },
   singleValue: (provider: any) => ({
     ...provider,
-    color: '#718096',
-    fontWeight: '300',
+    color: '#2D3748',
+    fontWeight: '400',
   }),
   menu: (provided: any) => ({
     ...provided,
@@ -41,13 +41,19 @@ export const chakraStyles = {
     borderRadius: 'md',
     bg: 'white',
   }),
+  menuList: (provided: any, state: any) => {
+    const menuHeight = state.selectProps?.selectProps?.menuHeight || ''
+
+    return { ...provided, height: menuHeight }
+  },
   option: (provider: any, state: any) => ({
     ...provider,
     fontSize: getFontSize(state),
-    bg: state.isSelected ? 'brand.300' : 'white',
+    bg: state.isSelected ? 'gray.50' : 'white',
     _hover: {
-      bg: state.isSelected ? 'brand.400' : 'gray.100',
+      bg: state.isSelected ? 'gray.50' : 'blue.50',
     },
+    color: state.isSelected ? 'gray.800' : '',
   }),
   valueContainer(provided: any, { selectProps: { size } }: any) {
     const px = {
@@ -100,6 +106,7 @@ export const chakraStyles = {
 type SelectProps = any & {
   selectProps: {
     isBorderLeft: boolean
+    now: string
   }
 }
 
@@ -107,10 +114,10 @@ const Select = forwardRef((props: SelectProps, ref: any) => (
   <ReactSelect
     ref={ref}
     chakraStyles={chakraStyles}
-    {...props}
     components={{
       IndicatorSeparator: false,
     }}
+    {...props}
   />
 ))
 

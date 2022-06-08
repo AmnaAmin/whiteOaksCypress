@@ -13,6 +13,7 @@ import { ProjectType } from 'types/project.type'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
+
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
@@ -43,9 +44,9 @@ export const ProjectDetails: React.FC = props => {
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
+  const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
@@ -89,7 +90,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button colorScheme="brand" onClick={OnUploadMdal} leftIcon={<BiUpload />}>
+                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
                     Upload
                   </Button>
                 )}
@@ -148,7 +149,7 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
-        <UploadDocumentModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} projectId={projectId} />
+        <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
     </>
   )
