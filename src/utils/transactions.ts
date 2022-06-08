@@ -538,7 +538,7 @@ export const useTransaction = (transactionId?: number) => {
   const { data: changeOrder, ...rest } = useQuery<ChangeOrderType>(
     ['transaction', transactionId],
     async () => {
-      const response = await client(`change-orders/${transactionId}`, {})
+      const response = await client(`change-orders/${transactionId}?isLatestDoc=true`, {})
 
       return response?.data
     },
