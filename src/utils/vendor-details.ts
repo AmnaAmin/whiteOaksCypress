@@ -51,11 +51,7 @@ export const useAccountDetails = () => {
 export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }), {
-    onSuccess(response) {
-      console.log('response', response)
-    },
-  })
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {

@@ -11,6 +11,7 @@ import {
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
+import { useQueryClient } from 'react-query'
 // import 'components/translation/i18n';
 
 type marketFormProps = {
@@ -27,6 +28,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
   const toast = useToast()
   const { markets, isLoading } = useMarkets()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
+  const queryClient = useQueryClient()
 
   const onSubmit = (formValues: VendorMarketFormValues) => {
     const vendorProfilePayload: Partial<VendorProfilePayload> = parseMarketFormValuesToAPIPayload(
@@ -36,6 +38,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
+        queryClient.invalidateQueries('vendorProfile')
         toast({
           title: t('updateMarkets'),
           description: t('updateMarketsSuccess'),

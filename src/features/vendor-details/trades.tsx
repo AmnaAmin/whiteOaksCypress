@@ -13,6 +13,9 @@ import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
 import { DevTool } from '@hookform/devtools'
+import { useQueryClient } from 'react-query'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
 
 // import 'components/translation/i18n';
 
@@ -30,12 +33,13 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
   const toast = useToast()
   const { data: trades, isLoading } = useTrades()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
+  const queryClient = useQueryClient()
 
   const onSubmit = (formValues: VendorTradeFormValues) => {
     const vendorProfilePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData)
-
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
+        queryClient.invalidateQueries('vendorProfile')
         toast({
           title: t('updateTrades'),
           description: t('updateTradesSuccess'),
