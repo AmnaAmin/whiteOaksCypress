@@ -89,9 +89,9 @@ const WorkOrderDetails = ({
         <ModalCloseButton m={3} _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <Divider mb={3} />
-        <Stack m="0, 20px" spacing={5}>
+        <Stack spacing={5}>
           <Tabs variant="enclosed" colorScheme="brand" size="md">
-            <TabList mr="30px" ml="30px" color="gray.500" pl="20px">
+            <TabList mr="30px" ml="30px" color="gray.500">
               <Tab>{t('workOrderDetails')}</Tab>
               <Tab>{t('lienWaiver')}</Tab>
               <Tab>{t('invoice')}</Tab>
