@@ -234,6 +234,7 @@ type TableExtraProps = {
   setTableInstance?: (i) => void
   onRowClick?: (e, row) => void
   isLoading?: boolean
+  defaultFlexStyle?: boolean
 }
 
 const emptyRows = [{}, {}, {}]
@@ -246,6 +247,7 @@ export function Table(props: Props & TableExtraProps): ReactElement {
     onRowClick,
     setTableInstance,
     isLoading,
+    defaultFlexStyle = true,
     ...restProps
   } = props
   const tableInstance = useCustomTable({ ...restProps, data: isLoading ? emptyRows : restProps.data })
@@ -253,11 +255,16 @@ export function Table(props: Props & TableExtraProps): ReactElement {
   useEffect(() => {
     setTableInstance?.(tableInstance)
   }, [tableInstance, setTableInstance])
-
+  const defaultStyles = () => {
+    if (defaultFlexStyle)
+      return {
+        display: 'flex',
+        flexFlow: 'column',
+      }
+  }
   return (
     <ChakraTable
-      // display="flex"
-      // flexDirection="column"
+      {...defaultStyles()}
       w="100%"
       bg="#FFFFFF"
       h={tableHeight}
