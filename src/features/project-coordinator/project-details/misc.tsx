@@ -5,8 +5,6 @@ import { useForm } from 'react-hook-form'
 import { dateFormatter } from 'utils/date-time-utils'
 
 const Misc = (dataMisc: any) => {
-  console.log(dataMisc?.dataMisc)
-
   const {
     register,
     handleSubmit,
