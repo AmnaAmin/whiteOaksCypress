@@ -168,7 +168,8 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={license?.expirationFile ? true : false}
+                  disable={license?.expirationFile ? 'none' : ''}
+                  bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
