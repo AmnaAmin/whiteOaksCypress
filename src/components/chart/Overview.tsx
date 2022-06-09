@@ -38,7 +38,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const vendorData = months.map(key => ({
     name: monthsShort[key],
     Active: vendorEntity?.[key]?.Active || 0,
-    Closed: vendorEntity?.[key]?.Completed || 0,
+    Completed: vendorEntity?.[key]?.Completed || 0,
     Paid: vendorEntity?.[key]?.Paid || 0,
     Canceled: vendorEntity?.[key]?.Cancelled || 0,
   }))
@@ -92,7 +92,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
 
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Closed" fill="#FB8832" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
           <Legend
