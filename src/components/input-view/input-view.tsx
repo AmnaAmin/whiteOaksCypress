@@ -57,12 +57,20 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
         {Icon && <Icon fontSize="18px" color="#718096" />}
       </Box>
       <FormControl>
-        <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" isTruncated title={label}>
+        <FormLabel
+          htmlFor={name}
+          color="gray.600"
+          fontSize="14px"
+          marginBottom="0.5"
+          whiteSpace="nowrap"
+          //  isTruncated title={label}
+        >
           {label}
         </FormLabel>
         <Input
           {...inputProps}
-          isTruncated
+          // isTruncated
+          whiteSpace="nowrap"
           id={name}
           name={name}
           data-testid={testId}
@@ -70,7 +78,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
           disabled
           color="gray.500"
           fontSize="14px"
-          title={inputProps.value?.toString()}
+          // title={inputProps.value?.toString()}
         />
       </FormControl>
     </Flex>
