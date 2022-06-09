@@ -81,7 +81,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
   </FormControl>
 ))
 
-const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<HTMLInputElement>) => (
+export const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<HTMLInputElement>) => (
   <InputGroup>
     <Input
       {...props.style}

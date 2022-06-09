@@ -53,7 +53,7 @@ const ProjectDetailsTab = (props: tabProps) => {
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
-            <Misc />
+            <Misc dataMisc={props.selectedData} />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>
