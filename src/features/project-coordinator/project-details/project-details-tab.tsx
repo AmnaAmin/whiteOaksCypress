@@ -49,7 +49,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             <Contact dataContact={props.selectedData} />
           </TabPanel>
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
-            <Location />
+            <Location dataLocation={props.selectedData} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
