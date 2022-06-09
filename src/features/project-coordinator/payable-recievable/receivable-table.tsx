@@ -128,6 +128,7 @@ export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) 
           TableRow={receivableRow}
           tableHeight="calc(100vh - 300px)"
           name="alerts-table"
+          defaultFlexStyle={false}
         />
         <AccountReceivableModal
           rowData={rowSelectedData}
