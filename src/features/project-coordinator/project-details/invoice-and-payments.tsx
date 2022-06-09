@@ -7,17 +7,21 @@ import {
   Grid,
   GridItem,
   Input,
+  Link,
   Stack,
   VStack,
 } from '@chakra-ui/react'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
+import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { t } from 'i18next'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
+import { dateFormatter } from 'utils/date-time-utils'
+import { currencyFormatter } from 'utils/stringFormatters'
 
-const InvoiceAndPayments = () => {
+const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
   const {
     handleSubmit,
     register,
@@ -31,6 +35,8 @@ const InvoiceAndPayments = () => {
     reset()
   }
 
+  const link = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="invoice">
@@ -43,6 +49,7 @@ const InvoiceAndPayments = () => {
                 </FormLabel>
                 <Input
                   id="originSowAmount"
+                  value={currencyFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount)}
                   {...register('originSowAmount', {
                     required: 'This is required',
                   })}
@@ -59,6 +66,7 @@ const InvoiceAndPayments = () => {
                 </FormLabel>
                 <Input
                   id="finalSowAmount"
+                  value={currencyFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount)}
                   {...register('finalSowAmount', {
                     required: 'This is required',
                   })}
@@ -122,7 +130,8 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   Invoice Back Date
                 </FormLabel>
-                <Input w="215px" size="md" placeholder="mm/dd/yyyy" />
+
+                <Input w="215px" size="md" type="date" />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -138,7 +147,7 @@ const InvoiceAndPayments = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} />
+                      <ReactSelect {...field} placeholder={dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -151,16 +160,26 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Expected Pay
                 </FormLabel>
-                <Input w="215px" size="md" type="date" />
+
+                <DatePickerInput
+                  value={
+                    dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate !== null
+                      ? dateFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate)
+                      : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem display="grid" alignItems="end" h="67.3px">
               <Box mt="1">
-                <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
-                  Download Original SOW
-                </Button>
+                <Link href={link}>
+                  <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
+                    Download Original SOW
+                  </Button>
+                </Link>
               </Box>
             </GridItem>
             <GridItem>
@@ -188,6 +207,7 @@ const InvoiceAndPayments = () => {
                 </FormLabel>
                 <Input
                   id="remainingPayment"
+                  value={currencyFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.accountRecievable)}
                   {...register('remainingPayment', {
                     required: 'This is required',
                   })}
@@ -210,7 +230,6 @@ const InvoiceAndPayments = () => {
                     required: 'This is required',
                   })}
                   placeholder="$0"
-                  isDisabled={true}
                   w="215px"
                   size="md"
                 />
