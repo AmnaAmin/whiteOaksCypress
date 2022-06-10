@@ -197,7 +197,16 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
     <Tbody {...getTableBodyProps()} flex={1}>
       <AutoSizer>
         {({ width, height }) => {
-          return <List height={height} rowCount={rows.length} rowHeight={60} rowRenderer={RenderRow} width={width} />
+          return (
+            <List
+              style={{ overflowY: 'overlay' }}
+              height={height}
+              rowCount={rows.length}
+              rowHeight={60}
+              rowRenderer={RenderRow}
+              width={width}
+            />
+          )
         }}
       </AutoSizer>
     </Tbody>
