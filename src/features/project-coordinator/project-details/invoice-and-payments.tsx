@@ -133,6 +133,18 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
 
                 <Input w="215px" size="md" type="date" />
 
+                {/* To discuss about datepicker matching figma */}
+                {/* <Input
+                  type="date"
+                  css={css`
+                    ::-webkit-calendar-picker-indicator {
+                      background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png)
+                        center/80% no-repeat;
+                      color: black;
+                    }
+                  `}
+                /> */}
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
