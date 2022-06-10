@@ -45,13 +45,13 @@ export function ConfirmationBox({
         <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
-          <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
+          <Text color="gray.500" fontSize="16px" fontWeight={400} fontStyle="normal" mb="2">
             {content}
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <Button colorScheme="brand" variant="outline" mr={5} onClick={onClose}>
+            <Button colorScheme="brand" variant="outline" mr={3} onClick={onClose}>
               No
             </Button>
             <Button
