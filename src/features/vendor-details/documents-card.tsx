@@ -89,8 +89,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     handleSubmit,
     control,
     watch,
-
     setValue,
+    getValues,
     reset,
   } = useForm<DocumentsCardFormValues>({ defaultValues })
   useEffect(() => {
@@ -100,9 +100,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
   /* debug purpose */
   const watchAllFields = watch()
   React.useEffect(() => {
-    const subscription = watch(value => {
-      // console.log('Value Change', value)
-    })
+    const subscription = watch(value => {})
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
   const [
@@ -131,14 +129,15 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       </a>
     )
   }
+  const documents = getValues()
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
       <Box h="502px" overflow="auto">
-        <HStack spacing="16px" alignItems="center">
+        <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
               <FormLabel variant="strong-label" size="md">
-                W9 Document
+                {t('W9DocumentDate')}
               </FormLabel>
               <FormDatePicker
                 disabled={true}
@@ -160,12 +159,12 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           <Flex>
             <FormControl w="290px" isInvalid={!!errors.w9Document?.message}>
               <FormLabel variant="strong-label" size="md">
-                File Upload
+                {t('fileUpload')}
               </FormLabel>
               <Controller
                 name="w9Document"
                 control={control}
-                rules={{ required: 'This is required field' }}
+                rules={{ required: documents.w9DocumentUrl ? '' : 'This is required field' }}
                 render={({ field, fieldState }) => {
                   return (
                     <VStack alignItems="baseline">
@@ -180,11 +179,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                           }}
                           onClear={() => setValue(field.name, null)}
                         ></ChooseFileField>
-                        <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      {field.value?.name && (
-                        <Box overflow="hidden" pos="absolute" top={16}>
-                          {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'w9DocumentLink')}
+                      {documents.w9DocumentUrl && (
+                        <Box overflow="hidden" top={16}>
+                          {downloadDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
                         </Box>
                       )}
                     </VStack>
@@ -194,8 +193,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </FormControl>
           </Flex>
         </HStack>
-        <Box mt="32px">
-          <HStack alignItems="center" spacing="16px">
+        <Box mt="20px">
+          <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md">
                 {t('agreementSignedDate')}
@@ -218,12 +217,14 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             <Flex>
               <FormControl w="290px" isInvalid={!!errors.agreement?.message}>
                 <FormLabel variant="strong-label" size="md">
-                  File Upload
+                  {t('fileUpload')}
                 </FormLabel>
                 <Controller
                   name="agreement"
                   control={control}
-                  // rules={{ required: 'This is required field' }}
+                  rules={{
+                    required: changedDateFields.includes('agreementSignedDate') ? 'This is required field' : '',
+                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -238,11 +239,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {field.value?.name && (
-                          <Box overflow="hidden" pos="absolute" top={16}>
-                            {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'agreementLink')}
+                        {documents.agreementUrl && (
+                          <Box overflow="hidden" top={16}>
+                            {downloadDocument(documents.agreementUrl, 'Agreement Sign', 'agreementLink')}
                           </Box>
                         )}
                       </VStack>
@@ -254,15 +255,15 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        <Flex align="center" mt="32px">
+        <Flex align="center" mt="20px">
           <FormLabel mt={2} variant="strong-label" size="lg">
             {t('insurances')}
           </FormLabel>
 
           <Divider border="1px solid #E2E8F0" />
         </Flex>
-        <Box mt="32px">
-          <HStack alignItems="center" spacing="16px">
+        <Box mt="20px">
+          <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md" w="200px" isTruncated title={t('autoInsuranceExpDate')}>
                 {t('autoInsuranceExpDate')}
@@ -285,12 +286,14 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             <Flex>
               <FormControl w="290px" isInvalid={!!errors.insurance?.message}>
                 <FormLabel variant="strong-label" size="md">
-                  File Upload
+                  {t('fileUpload')}
                 </FormLabel>
                 <Controller
                   name="insurance"
                   control={control}
-                  // rules={{ required: 'This is required field' }}
+                  rules={{
+                    required: changedDateFields.includes('autoInsuranceExpDate') ? 'This is required field' : '',
+                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -305,15 +308,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {field.value?.name && (
-                          <Box overflow="hidden" pos="absolute" top={16}>
-                            {downloadDocument(
-                              document,
-                              field.value ? field.value?.name : 'doc.png',
-                              'autoInsuranceLink',
-                            )}
+                        {documents.insuranceUrl && (
+                          <Box overflow="hidden" top={16}>
+                            {downloadDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
                           </Box>
                         )}
                       </VStack>
@@ -324,8 +323,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </Flex>
           </HStack>
         </Box>
-        <Box mt="32px">
-          <HStack alignItems="center" spacing="16px">
+        <Box mt="20px">
+          <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md">
                 {t('COIGLExpDate')}
@@ -348,12 +347,12 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             <Flex w="100%" pr="20px">
               <FormControl w="290px" isInvalid={!!errors.coiGlExpFile?.message}>
                 <FormLabel variant="strong-label" size="md">
-                  File Upload
+                  {t('fileUpload')}
                 </FormLabel>
                 <Controller
                   name="coiGlExpFile"
                   control={control}
-                  // rules={{ required: 'This is required field' }}
+                  rules={{ required: changedDateFields.includes('COIGLExpDate') ? 'This is required field' : '' }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -368,11 +367,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {field.value?.name && (
-                          <Box overflow="hidden" pos="absolute" top={16}>
-                            {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'coiGlExpLink')}
+                        {documents.coiGLExpUrl && (
+                          <Box overflow="hidden" top={16}>
+                            {downloadDocument(documents.coiGLExpUrl, 'General Liability', 'coiGlExpLink')}
                           </Box>
                         )}
                       </VStack>
@@ -383,8 +382,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </Flex>
           </HStack>
         </Box>
-        <Box mt="32px">
-          <HStack alignItems="center" spacing="16px">
+        <Box mt="20px">
+          <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md">
                 {t('COIWCExpDate')}
@@ -407,12 +406,12 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             <Flex w="100%" pr="20px">
               <FormControl w="290px" isInvalid={!!errors.coiWcExpFile?.message}>
                 <FormLabel variant="strong-label" size="md">
-                  File Upload
+                  {t('fileUpload')}
                 </FormLabel>
                 <Controller
                   name="coiWcExpFile"
                   control={control}
-                  // rules={{ required: 'This is required field' }}
+                  rules={{ required: changedDateFields.includes('coiWcExpDate') ? 'This is required field' : '' }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -427,11 +426,11 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {field.value?.name && (
-                          <Box overflow="hidden" pos="absolute" top={16}>
-                            {downloadDocument(document, field.value ? field.value?.name : 'doc.png', 'coiWcExpLink')}
+                        {documents.coiWcExpUrl && (
+                          <Box overflow="hidden" top={16}>
+                            {downloadDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
                           </Box>
                         )}
                       </VStack>
