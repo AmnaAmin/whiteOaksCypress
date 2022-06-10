@@ -13,13 +13,13 @@ type generateSettingColumnProps = {
   type: string
   userId: string
   order: number
+  hide: boolean
 }
 const generateSettingColumn = (options: generateSettingColumnProps): TableColumnSetting => {
   return {
     ...options,
     id: options.order,
     flex: null,
-    hide: false,
     sort: null,
     sortIndex: null,
     colId: options.contentKey,
@@ -67,6 +67,7 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
           order: index,
           userId: email,
           type: tableName,
+          hide: col.hide,
         })
       })
     : columns.map((col, index) => {
@@ -76,11 +77,14 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
           order: index,
           userId: email,
           type: tableName,
+          hide: true,
         })
       })
 
   const filteredColumns = columns.filter(col => {
     return !settingColumns?.find(pCol => {
+      // console.log('column', pCol)
+
       return pCol.colId === col.accessor
     })?.hide
   })
