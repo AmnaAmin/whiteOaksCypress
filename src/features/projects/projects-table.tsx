@@ -81,7 +81,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
         {row.cells.map((cell, index) => {
           return (
             <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-              <Flex alignItems="center" h="72px" pl="5px">
+              <Flex alignItems="center" h="72px" pl="10px">
                 <Text
                   noOfLines={2}
                   title={cell.value}

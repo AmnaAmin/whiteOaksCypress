@@ -127,7 +127,7 @@ export const TableHeader = ({ headerGroups }) => {
             return (
               // @ts-ignore
               <Th key={`th_td_${column.id}`} {...column.getHeaderProps(column.getSortByToggleProps())} p="0">
-                <Flex py="2" px="2" pl="5" alignItems="center">
+                <Flex py="2" px="2" pl="4" alignItems="center">
                   <Text
                     fontSize="14px"
                     color="gray.600"
@@ -164,7 +164,7 @@ export const TableHeader = ({ headerGroups }) => {
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => (
-            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4} pl="5">
+            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
               {column.canFilter ? column.render('Filter') : null}
             </Th>
           ))}
