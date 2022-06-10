@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
@@ -19,18 +18,13 @@ import {
   GridItem,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { convertImageToDataURL, trimCanvas } from 'components/table/util'
+import { trimCanvas } from 'components/table/util'
 import { dateFormat } from 'utils/date-time-utils'
-import { downloadFile } from 'utils/file-utils'
-import jsPdf from 'jspdf'
-import { orderBy } from 'lodash'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
-import { useParams } from 'react-router-dom'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { createForm, getHelpText } from 'utils/lien-waiver'
-import { useDocuments } from 'utils/vendor-projects'
+import { getHelpText } from 'utils/lien-waiver'
 
 import SignatureModal from 'features/projects/modals/signature-modal'
 import { useTranslation } from 'react-i18next'
@@ -53,11 +47,6 @@ export const LienWaiverAlert = () => {
 
 export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const { t } = useTranslation()
-  const { projectId } = useParams<'projectId'>()
-  const { documents: documentsData = [] } = useDocuments({
-    projectId,
-  })
-  const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sigRef = useRef<HTMLImageElement>(null)
@@ -65,39 +54,11 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const {
     register,
     formState: { errors },
-    getValues,
     setValue,
     control,
   } = useFormContext()
 
   const formValues = useWatch({ name: 'lienWaiver', control })
-
-  useEffect(() => {
-    if (!documentsData?.length) return
-    const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
-    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    setRecentLWFile(recentLW)
-    setValue('lienWaiver.claimantsSignature', signatureDoc?.s3Url)
-  }, [documentsData, setValue])
-
-  const generatePdf = useCallback(() => {
-    let form = new jsPdf()
-    const value = getValues()
-    const dimention = {
-      width: sigRef?.current?.width,
-      height: sigRef?.current?.height,
-    }
-    convertImageToDataURL(value.claimantsSignature, (dataUrl: string) => {
-      form = createForm(form, getValues(), dimention, dataUrl)
-      //   const pdfUri = form.output('datauristring')
-      const pdfBlob = form.output('bloburi')
-      setRecentLWFile({
-        s3Url: pdfBlob,
-        fileType: 'Lien-Waiver-Form.pdf',
-      })
-    })
-  }, [getValues])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
@@ -113,6 +74,8 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     const uri = trimContext?.toDataURL('image/png')
 
     setValue('lienWaiver.claimantsSignature', uri)
+    setValue('lienWaiver.signatureWidth', sigRef.current?.width)
+    setValue('lienWaiver.signatureHeight', sigRef.current?.height)
   }
 
   const onSignatureChange = value => {
@@ -137,7 +100,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
             <HelpText>{getHelpText()}</HelpText>
           </Box>
           <Flex pos="absolute" top={-2} right={0} flex="1">
-            {recentLWFile && (
+            {/* {recentLWFile && (
               <Flex alignItems={'center'} mr="2">
                 <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
                   {'recentLW'}:
@@ -155,9 +118,9 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                   {recentLWFile?.fileType}
                 </Button>
               </Flex>
-            )}
+            )} */}
 
-            <Button
+            {/* <Button
               colorScheme="brand"
               disabled={!formValues.claimantsSignature || recentLWFile}
               float="right"
@@ -166,7 +129,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
             >
               <Box pos="relative" right="6px"></Box>
               {'generateLW'}
-            </Button>
+            </Button> */}
           </Flex>
         </Flex>
 

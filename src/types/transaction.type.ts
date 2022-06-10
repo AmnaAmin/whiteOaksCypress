@@ -1,3 +1,5 @@
+import { Document } from './vendor.types'
+
 export type ProjectWorkOrder = {
   businessEmailAddress: string
   businessPhoneNumber: string
@@ -119,6 +121,8 @@ export interface LienWaiverFormValues {
   claimantsSignature: string | null | undefined
   claimantTitle: string
   dateOfSignature: string | Date | null
+  signatureWidth?: number
+  signatureHeight?: number
 }
 
 export interface FormValues {
@@ -133,6 +137,7 @@ export interface FormValues {
   expectedCompletionDate: string
   newExpectedCompletionDate: string
   attachment: any
+  lienWaiverDocument: any
   invoicedDate: string | null
   paymentTerm: SelectOption | null
   paidDate: string | null
@@ -168,7 +173,7 @@ export type ChangeOrderPayload = {
   documents?: Array<any>
 }
 
-export type ChangeOrderUpdatePayload = {
+export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   id: number
   name: string
   transactionTypeLabel: string
@@ -178,21 +183,10 @@ export type ChangeOrderUpdatePayload = {
   status: string
   createdDate: string | null
   approvedBy: string | null
-  transactionType: number
-  parentWorkOrderId: number | null
   paymentTerm: string | null
-  createdDate1: string | null
-  createdBy: string
   modifiedDate1: string | null
   modifiedBy: string
-  expectedCompletionDate: string | null
-  newExpectedCompletionDate: string | null
-  clientApprovedDate: string | null
-  paidDate: string | null
-  projectId: number
   vendorId: number | null
-  lineItems: Array<ChangeTransaction & { id: string | number }>
-  documents?: Array<any>
 }
 
 type LineItem = {
@@ -232,5 +226,5 @@ export type ChangeOrderType = {
   paidDate: string | null
   lineItems: Array<LineItem> | null
   paymentReceived: null
-  documents: any[]
+  documents: Document[]
 }

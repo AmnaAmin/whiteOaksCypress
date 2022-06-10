@@ -16,6 +16,7 @@ import {
   useDisclosure,
   Text,
   HStack,
+  Divider,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlineFileText, AiOutlinePlus } from 'react-icons/ai'
@@ -197,28 +198,43 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               }}
             />
           )}
-          {values.attachment && values.attachment.s3Url && (
-            <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
-              <Flex>
-                <Box mt="3px">
-                  <BiDownload fontSize="sm" />
-                </Box>
-                <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal">
-                  {values?.attachment?.fileType}
-                </Text>
-              </Flex>
-            </a>
+          {values?.lienWaiverDocument?.s3Url && (
+            <>
+              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: '#4E87F8' }}>
+                <Flex>
+                  <Box mt="3px">
+                    <BiDownload fontSize="sm" />
+                  </Box>
+                  <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal" maxW="110px" isTruncated>
+                    {values?.lienWaiverDocument?.fileType}
+                  </Text>
+                </Flex>
+              </a>
+
+              <Divider orientation="vertical" />
+            </>
           )}
+
+          {values.attachment && values.attachment.s3Url && (
+            <>
+              <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
+                <Flex>
+                  <Box mt="3px">
+                    <BiDownload fontSize="sm" />
+                  </Box>
+                  <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal" maxW="110px" isTruncated>
+                    {values?.attachment?.fileType}
+                  </Text>
+                </Flex>
+              </a>
+              <Divider orientation="vertical" />
+            </>
+          )}
+
           {document ? (
-            <Box
-              color="barColor.100"
-              border="1px solid #e2e8f0"
-              // a
-              borderRadius="4px"
-              fontSize="16px"
-            >
+            <Box color="barColor.100" border="1px solid #e2e8f0" borderRadius="4px" fontSize="14px">
               <HStack spacing="5px" h="31px" padding="10px" align="center">
-                <Box as="span" maxWidth="500px" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+                <Box as="span" maxW="120px" isTruncated>
                   {document?.name || document.fileType}
                 </Box>
                 <MdOutlineCancel
