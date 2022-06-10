@@ -106,7 +106,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} padding="15px">
-            <Text noOfLines={2} title={cell.value}>
+            <Text noOfLines={2} title={cell.value} pl={0}>
               {cell.render('Cell')}
             </Text>
           </Td>
@@ -127,7 +127,7 @@ export const TableHeader = ({ headerGroups }) => {
             return (
               // @ts-ignore
               <Th key={`th_td_${column.id}`} {...column.getHeaderProps(column.getSortByToggleProps())} p="0">
-                <Flex py="2" px="2" pl="7" alignItems="center">
+                <Flex py="2" px="2" pl="4" alignItems="center">
                   <Text
                     fontSize="14px"
                     color="gray.600"
@@ -164,7 +164,7 @@ export const TableHeader = ({ headerGroups }) => {
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => (
-            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4} pl="5">
+            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
               {column.canFilter ? column.render('Filter') : null}
             </Th>
           ))}
@@ -197,7 +197,16 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
     <Tbody {...getTableBodyProps()} flex={1}>
       <AutoSizer>
         {({ width, height }) => {
-          return <List height={height} rowCount={rows.length} rowHeight={60} rowRenderer={RenderRow} width={width} />
+          return (
+            <List
+              style={{ overflowY: 'overlay' }}
+              height={height}
+              rowCount={rows.length}
+              rowHeight={60}
+              rowRenderer={RenderRow}
+              width={width}
+            />
+          )
         }}
       </AutoSizer>
     </Tbody>
