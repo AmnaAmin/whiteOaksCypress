@@ -63,29 +63,24 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
       {
         Header: t('name') as string,
         accessor: 'subject',
-        width: 275,
       },
       {
         Header: t('type') as string,
         accessor: 'triggeredType',
-        width: 275,
       },
       {
         Header: t('value') as string,
         accessor: 'attribute',
-        width: 275,
       },
       {
         Header: t('category') as string,
         accessor: 'category',
         Cell: ({ value }) => PROJECT_CATEGORY[value],
-        width: 275,
       },
       {
         Header: t('dateTriggered') as string,
         accessor: 'dateCreated',
         Cell: ({ value }) => dateFormat(value),
-        width: 275,
       },
     ],
     ref,

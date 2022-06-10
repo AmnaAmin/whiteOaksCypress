@@ -1,17 +1,21 @@
 import { Box, Button, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { ManagedAlertsTable } from 'features/project-coordinator/alerts/managed-alerts'
 import { TriggeredAlertsTable } from 'features/project-coordinator/alerts/triggered-alerts'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const Alerts = () => {
   const [tabIndex, setTabIndex] = useState(0)
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
 
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }}>
         <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
           <TabList>
-            <Tab minW={180}>Triggered Alerts</Tab>
-            <Tab minW={180}>Managed Alerts</Tab>
+            <Tab minW={200}>{t('triggeredAlerts')}</Tab>
+            <Tab minW={200}>{t('managedAlerts')}</Tab>
             <Box w="100%" display="flex" justifyContent="end" position="relative">
               {tabIndex === 0 && (
                 <Button
@@ -20,7 +24,7 @@ const Alerts = () => {
                   // onClick={resolveTriggered}
                   mb={2}
                 >
-                  {'Resolve All'}
+                  {t('resolveAll')}
                 </Button>
               )}
               {tabIndex === 1 && (
@@ -32,7 +36,7 @@ const Alerts = () => {
                   _hover={{ bg: '#2A61CE' }}
                   mb={2}
                 >
-                  {'Resolve All'}
+                  {t('resolveAll')}
                 </Button>
               )}
             </Box>
@@ -41,11 +45,13 @@ const Alerts = () => {
           <TabPanels h="100%">
             <TabPanel p="0px" h="100%" mt="7px">
               <Box h="100%">
-                <TriggeredAlertsTable />
+                <TriggeredAlertsTable ref={tabsContainerRef} />
               </Box>
             </TabPanel>
             <TabPanel p="0px" h="100%" mt="7px">
-              <Box h="100%">{/* <ManagedAlertsTable /> */}</Box>
+              <Box h="100%">
+                <ManagedAlertsTable ref={tabsContainerRef} />
+              </Box>
             </TabPanel>
           </TabPanels>
         </Tabs>
