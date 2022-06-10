@@ -115,7 +115,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             color="gray.600"
             mb="6"
           >
-            Column Settings
+            {t('columnSettings')}
           </ModalHeader>
           <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
           <ModalBody h="50vh" overflowY="scroll">
@@ -184,12 +184,14 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid" mr={3}>
-              Close
-            </Button>
-            <Button colorScheme="brand" onClick={saveModal}>
-              Save
-            </Button>
+            <HStack spacing="16px">
+              <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+                {t('close')}
+              </Button>
+              <Button colorScheme="brand" onClick={saveModal}>
+                {t('save')}
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

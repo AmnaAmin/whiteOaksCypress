@@ -1,9 +1,10 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-const Contact = () => {
+const Contact = (dataContact: any) => {
   const {
     register,
     control,
@@ -20,7 +21,7 @@ const Contact = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="contact">
-        <Stack minH="42vh" spacing={14} mt="7">
+        <Stack spacing={14} mt="7">
           <HStack spacing="16px">
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectManager}>
@@ -33,7 +34,11 @@ const Contact = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        placeholder={dataContact?.dataContact?.projectManager}
+                      />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -49,6 +54,8 @@ const Contact = () => {
                 <Input
                   placeholder="098-987-2233"
                   id="fpmPhone"
+                  value={dataContact?.dataContact?.projectManagerPhoneNumber}
+                  isDisabled={true}
                   {...register('fpmPhone', {
                     required: 'This is required',
                   })}
@@ -66,6 +73,7 @@ const Contact = () => {
                 </FormLabel>
                 <Input
                   id="ext"
+                  isDisabled={true}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -81,7 +89,7 @@ const Contact = () => {
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectCoordinator}>
                 <FormLabel variant="strong-label" size="md">
-                  Project Coordinator
+                  Field Project Manager
                 </FormLabel>
                 <Controller
                   control={control}
@@ -89,7 +97,11 @@ const Contact = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        placeholder={dataContact?.dataContact?.projectManager}
+                      />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -100,10 +112,12 @@ const Contact = () => {
             <Box h="40px">
               <FormControl isInvalid={errors.pcPhone}>
                 <FormLabel variant="strong-label" size="md" htmlFor="pcPhone">
-                  PC Phone
+                  FPM Phone
                 </FormLabel>
                 <Input
                   placeholder="098-987-2233"
+                  value={dataContact?.dataContact?.projectManagerPhoneNumber}
+                  isDisabled={true}
                   id="pcPhone"
                   {...register('pcPhone', {
                     required: 'This is required',
@@ -122,6 +136,7 @@ const Contact = () => {
                 </FormLabel>
                 <Input
                   id="ext"
+                  isDisabled={true}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -209,7 +224,11 @@ const Contact = () => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                    <ReactSelect
+                      {...field}
+                      selectProps={{ isBorderLeft: true }}
+                      placeholder={dataContact?.dataContact?.clientName}
+                    />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
