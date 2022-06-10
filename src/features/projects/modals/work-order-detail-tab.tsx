@@ -13,11 +13,10 @@ import {
   FormLabel,
   ModalFooter,
   ModalBody,
-  VStack,
 } from '@chakra-ui/react'
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useState } from 'react'
 
-import { BiCalendar, BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
+import { BiCalendar, BiDownload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
@@ -25,7 +24,6 @@ import jsPDF from 'jspdf'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { createInvoicePdf } from 'utils/work-order'
-import { readFileContent } from 'utils/vendor-details'
 
 const CalenderCard = props => {
   return (
@@ -73,48 +71,24 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
   )
 }
 
-const UploadImage: React.FC<{ title; item; setImage }> = ({ title, item, setImage }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const onFileChange = useCallback(
-    async e => {
-      const files = e.target.files
-      if (files[0]) {
-        const fileCOntent = await readFileContent(files[0])
-        const documents = [
-          {
-            documentType: 58,
-            fileObject: fileCOntent,
-            fileObjectContentType: files[0].type,
-            fileType: files[0].name,
-          },
-        ]
-        setImage(item.id, documents)
-      }
-    },
-    [setImage],
-  )
-
+/* commenting till functionality is complete
+  const UploadImage: React.FC<{ Images }> = ({ Images }) => {
   return (
-    <VStack>
-      <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+    <Box>
       <Button
-        leftIcon={<BiUpload />}
-        variant="outline"
-        colorScheme="brand"
-        size="sm"
-        onClick={e => {
-          if (inputRef.current) {
-            inputRef.current.click()
-          }
-        }}
+        minW={'auto'}
+        _focus={{ outline: 'none' }}
+        variant="unstyled"
+        leftIcon={<BiUpload color="#4E87F8" />}
+        display="flex"
       >
-        <Text fontWeight={600} fontSize="14px" color="#4E87F8">
-          {title}
+        <Text fontWeight={400} fontSize="14px" color="#4E87F8">
+          {Images}
         </Text>
       </Button>
-    </VStack>
+    </Box>
   )
-}
+} */
 
 const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const { t } = useTranslation()
@@ -131,14 +105,6 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const onStatusChange = useCallback(
     (e, id) => {
       const items = assignedItems.map(x => (x.id === id ? { ...x, isCompleted: !x.isCompleted } : x))
-      setAssignedItems([...items])
-    },
-    [assignedItems, setAssignedItems],
-  )
-
-  const setImage = useCallback(
-    (id, image) => {
-      const items = assignedItems.map(x => (x.id === id ? { ...x, documents: image } : x))
       setAssignedItems([...items])
     },
     [assignedItems, setAssignedItems],
@@ -216,7 +182,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                     </Td>
                     {workOrder.showPricing && <Td>{t('price')}</Td>}
                     <Td textAlign={'center'}>{t('status')}</Td>
-                    <Td textAlign={'center'}>{t('images')}</Td>
+                    {/*<Td>Images</Td>*/}
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -234,48 +200,9 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                         <Td textAlign={'center'}>
                           <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
                         </Td>
-                        <Td textAlign={'center'}>
-                          <VStack>
-                            {item?.documents?.length > 0 && item.documents[0].fileType ? (
-                              <Button
-                                rightIcon={
-                                  <BiXCircle
-                                    onClick={e => {
-                                      setImage(item.id, null)
-                                    }}
-                                  />
-                                }
-                                variant="outline"
-                                colorScheme="brand"
-                                size="sm"
-                              >
-                                <Text
-                                  fontWeight={600}
-                                  fontSize="14px"
-                                  color="#4E87F8"
-                                  maxW={150}
-                                  whiteSpace="nowrap"
-                                  overflow={'hidden'}
-                                  textOverflow="ellipsis"
-                                >
-                                  {item.documents[0].fileType}
-                                </Text>
-                              </Button>
-                            ) : (
-                              <UploadImage title={'Upload'} item={item} setImage={setImage} />
-                            )}
-                            {item.s3Url && (
-                              <a href={item.s3Url} download>
-                                <Flex fontWeight={400} fontSize="12px" color="#4E87F8">
-                                  <BiDownload style={{ marginTop: '4px', marginRight: '5px' }} />
-                                  <Text maxW="150px" whiteSpace={'nowrap'} overflow="hidden" textOverflow={'ellipsis'}>
-                                    {item.fileType}
-                                  </Text>
-                                </Flex>
-                              </a>
-                            )}
-                          </VStack>
-                        </Td>
+                        {/*<Td>
+                    <UploadImage Images={'Upload'} />
+                  </Td>*/}
                       </Tr>
                     ))}
                 </Tbody>
@@ -285,14 +212,14 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
         )}
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-        <Flex w="100%" justifyContent="end">
+        <HStack spacing="16px" w="100%" justifyContent="end">
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
           <Button colorScheme="brand" onClick={saveWorkOrderDetails}>
             {t('save')}
           </Button>
-        </Flex>
+        </HStack>
       </ModalFooter>
     </Box>
   )
