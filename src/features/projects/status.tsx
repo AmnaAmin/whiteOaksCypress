@@ -21,6 +21,8 @@ export enum STATUS {
   Cancel = 'cancel',
   Expired = 'expired',
   Declined = 'declined',
+  Inactive = 'inactive',
+  DoNotUse = 'do not use',
 }
 
 const STATUS_COLOR = {
@@ -32,7 +34,7 @@ const STATUS_COLOR = {
   [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Declined]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
-  [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
+  [STATUS.Cancelled]: { color: '#F56565', backgroundColor: '#FFF5F7' },
   [STATUS.Invoiced]: { color: '#48BB78', backgroundColor: '#E2EFDF' },
   [STATUS.Punch]: { color: '#F687B3', backgroundColor: '#FAE6E5' },
   [STATUS.New]: { color: '#ED8936', backgroundColor: '#FEEBCB' },
@@ -43,6 +45,8 @@ const STATUS_COLOR = {
   [STATUS.Dispute]: { color: '#F687B3', backgroundColor: '#FFF5F7' },
   [STATUS.Cancel]: { color: '#F56565', backgroundColor: '#FFF5F7' },
   [STATUS.Expired]: { color: '#718096', backgroundColor: '#EDF2F7' },
+  [STATUS.Inactive]: { color: '#ED64A6', backgroundColor: '#FFF5F7' },
+  [STATUS.DoNotUse]: { color: '#F56565', backgroundColor: '#EBF8FF' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {

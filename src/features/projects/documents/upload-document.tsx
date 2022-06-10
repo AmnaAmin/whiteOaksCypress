@@ -147,9 +147,9 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                 {document ? (
                   <Box
                     color="barColor.100"
-                    border="1px solid #e2e8f0"
+                    border="1px solid #4E87F8"
                     // a
-                    borderRadius="3px"
+                    borderRadius="6px"
                     fontSize="14px"
                   >
                     <HStack spacing="5px" h="37px" padding="10px" align="center">
@@ -173,7 +173,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         inputRef.current.click()
                       }
                     }}
-                    variant="ghost"
+                    variant="outline"
                     colorScheme="brand"
                   >
                     {t('chooseFile')}
