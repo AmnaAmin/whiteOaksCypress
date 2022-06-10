@@ -4,10 +4,11 @@ import { BiUpload } from 'react-icons/bi'
 
 type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   onClear?: () => void
-  isError: boolean
+  isError?: boolean
+  testId?: string
 }
 
-const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, isError, ...inputProps }) => {
+const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, onClear, isError, ...inputProps }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const onFileChange = event => {
     const file = event.currentTarget.files?.[0]
@@ -19,10 +20,9 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
 
     onClear?.()
   }
-
   return (
     <Box
-      as="button"
+      cursor="pointer"
       w="100%"
       minW="215px"
       borderWidth="1px"
@@ -32,7 +32,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
       onClick={() => inputRef?.current?.click()}
       bg="white"
       _hover={{
-        borderColor: 'gray.400',
+        borderColor: 'gray.300',
       }}
     >
       <input
@@ -41,28 +41,30 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
         type="file"
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
+        data-testid={testId}
       />
-      <Box flex="1" position="relative" overflow="hidden" height="40px">
+      <Box flex="1" position="relative" overflow="hidden">
         {value && (
-          <Flex alignItems="center">
+          <Flex alignItems="center" height="40px">
             <Text
               whiteSpace="nowrap"
               title={value as string}
-              isTruncated
               color={isError ? 'red' : '#4E87F8'}
               fontSize="14px"
-              p={2}
-              marginLeft={2}
+              fontStyle={'normal'}
+              marginLeft={3}
+              isTruncated
+              w="170px"
+              textAlign="start"
             >
               {value}
             </Text>
             <Button
+              type="button"
               variant="link"
               size="xl"
-              colorScheme={isError ? 'red' : 'blue'}
+              colorScheme={isError ? 'red' : 'brand'}
               onClick={onFileClear}
-              position="absolute"
-              right="5"
               bg="white"
             >
               <BiUpload />

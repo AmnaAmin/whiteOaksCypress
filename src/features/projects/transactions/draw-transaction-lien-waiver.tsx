@@ -24,7 +24,7 @@ import React, { useRef, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { getHelpText } from 'utils/lien-waiver'
+import { GetHelpText } from 'utils/lien-waiver'
 
 import SignatureModal from 'features/projects/modals/signature-modal'
 import { useTranslation } from 'react-i18next'
@@ -92,91 +92,29 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
     <Stack>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
 
-      {/* <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}> */}
-
       <VStack align="start" spacing="30px" h="560px" overflowY="auto">
         <Flex w="100%" alignContent="space-between" pos="relative" my="7">
           <Box flex="4">
-            <HelpText>{getHelpText()}</HelpText>
+            <HelpText>{GetHelpText()}</HelpText>
           </Box>
-          <Flex pos="absolute" top={-2} right={0} flex="1">
-            {/* {recentLWFile && (
-              <Flex alignItems={'center'} mr="2">
-                <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                  {'recentLW'}:
-                </FormLabel>
-
-                <Button
-                  colorScheme="brand"
-                  variant="link"
-                  float="right"
-                  size="sm"
-                  mx={2}
-                  onClick={() => downloadFile(recentLWFile?.s3Url)}
-                >
-                  <Box pos="relative" right="6px"></Box>
-                  {recentLWFile?.fileType}
-                </Button>
-              </Flex>
-            )} */}
-
-            {/* <Button
-              colorScheme="brand"
-              disabled={!formValues.claimantsSignature || recentLWFile}
-              float="right"
-              size="md"
-              onClick={generatePdf}
-            >
-              <Box pos="relative" right="6px"></Box>
-              {'generateLW'}
-            </Button> */}
-          </Flex>
         </Flex>
 
         <Grid templateColumns="215px 215px" gap="40px 80px" w="100%">
           <GridItem>
-            <InputView label={t('nameofClaimant')} InputElem={<Text>{formValues.claimantName}</Text>} />
+            <InputView label={t('nameofClaimant')} InputElem={<Text>{formValues?.claimantName}</Text>} />
           </GridItem>
 
           <GridItem>
-            <InputView label={t('jobLocation')} InputElem={<Text>{formValues.propertyAddress}</Text>} />
+            <InputView label={t('jobLocation')} InputElem={<Text>{formValues?.propertyAddress}</Text>} />
           </GridItem>
 
           <GridItem>
-            <InputView label={t('makerOfCheck')} InputElem={<Text>{formValues.makerOfCheck}</Text>} />
+            <InputView label={t('makerOfCheck')} InputElem={<Text>{formValues?.makerOfCheck}</Text>} />
           </GridItem>
           <GridItem>
-            <InputView label={t('amountOfCheck')} InputElem={<Text>{formValues.amountOfCheck}</Text>} />
+            <InputView label={t('amountOfCheck')} InputElem={<Text>{formValues?.amountOfCheck}</Text>} />
           </GridItem>
 
-          <GridItem>
-            <FormControl isInvalid={!formValues.claimantsSignature}>
-              <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
-                {t('claimantsSignature')}
-              </FormLabel>
-              <Flex pos="relative" bg="gray.50" height={'37px'} alignItems={'center'} px={4}>
-                <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
-                <Image
-                  data-testid="signature-img"
-                  hidden={!formValues.claimantsSignature}
-                  maxW={'100%'}
-                  src={formValues.claimantsSignature as string}
-                  {...register('lienWaiver.claimantsSignature', {
-                    required: 'This is required field',
-                  })}
-                  ref={sigRef}
-                />
-
-                <Flex pos={'absolute'} right="10px" top="11px">
-                  {formValues.claimantsSignature && (
-                    <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
-                  )}
-                  <BiBookAdd data-testid="add-signature" onClick={() => setOpenSignature(true)} color="#A0AEC0" />
-                </Flex>
-              </Flex>
-              {!formValues.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
-            </FormControl>
-          </GridItem>
           <GridItem>
             <FormInput
               testId="claimants-title"
@@ -191,6 +129,45 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               rules={{ required: 'This is required field' }}
               name={`lienWaiver.claimantTitle`}
             />
+          </GridItem>
+
+          <GridItem>
+            <FormControl isInvalid={!formValues?.claimantsSignature}>
+              <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
+                {t('claimantsSignature')}
+              </FormLabel>
+              <Flex
+                pos="relative"
+                height={'39px'}
+                borderRadius="6px"
+                alignItems={'center'}
+                px={4}
+                borderWidth="1px 1px 1px 2px"
+                borderStyle="solid"
+                borderColor="gray.200"
+                borderLeftColor="brand.300"
+              >
+                <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
+                <Image
+                  data-testid="signature-img"
+                  hidden={!formValues?.claimantsSignature}
+                  maxW={'100%'}
+                  src={formValues?.claimantsSignature as string}
+                  {...register('lienWaiver.claimantsSignature', {
+                    required: 'This is required field',
+                  })}
+                  ref={sigRef}
+                />
+
+                <Flex pos={'absolute'} right="10px" top="11px">
+                  {formValues?.claimantsSignature && (
+                    <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
+                  )}
+                  <BiBookAdd data-testid="add-signature" onClick={() => setOpenSignature(true)} color="#A0AEC0" />
+                </Flex>
+              </Flex>
+              {!formValues?.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
+            </FormControl>
           </GridItem>
 
           <GridItem>

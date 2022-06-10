@@ -16,17 +16,7 @@ import { TransactionInfoCard } from 'features/projects/transactions/transaction-
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
-import { BiAddToQueue } from 'react-icons/bi'
-
-const projectTabStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  fontStyle: 'normal',
-  color: 'gray.600',
-  _hover: {
-    backgroundColor: 'gray.200',
-  },
-}
+import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -44,40 +34,36 @@ const ProjectDetails: React.FC = props => {
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
   const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
 
-  const preventNewTransaction = !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+  const isNewTransactionAllow = vendorWOStatusValue
+    ? !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+    : true
 
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
-        <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+        <Stack spacing={5}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab aria-labelledby="transaction-tab" sx={projectTabStyle}>
-                {t('transaction')}
-              </Tab>
+              <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
 
-              <Tab whiteSpace="nowrap" sx={projectTabStyle}>
-                {t('vendorWorkOrders')}
-              </Tab>
+              <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
 
-              <Tab aria-labelledby="documents-tab" sx={projectTabStyle}>
-                {t('documents')}
-              </Tab>
+              <Tab aria-labelledby="documents-tab">{t('documents')}</Tab>
 
-              <Tab sx={projectTabStyle}>{t('alerts')}</Tab>
+              <Tab>{t('alerts')}</Tab>
 
               <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
-                  <Button onClick={onDocumentModalOpen} variant="ghost" colorScheme="brand">
+                  <Button onClick={onDocumentModalOpen} colorScheme="brand" leftIcon={<BiUpload fontSize="16px" />}>
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button variant="ghost" colorScheme="brand" onClick={onAlertModalOpen}>
+                  <Button colorScheme="brand" onClick={onAlertModalOpen}>
                     <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
-                      {t('resolve')}
+                      {t('resolveAll')}
                     </Text>
                   </Button>
                 )}
@@ -85,10 +71,9 @@ const ProjectDetails: React.FC = props => {
                   <Button
                     data-testid="new-transaction-button"
                     onClick={onTransactionModalOpen}
-                    variant="ghost"
                     colorScheme="brand"
                     leftIcon={<BiAddToQueue />}
-                    isDisabled={preventNewTransaction}
+                    isDisabled={isNewTransactionAllow}
                   >
                     {t('newTransaction')}
                   </Button>

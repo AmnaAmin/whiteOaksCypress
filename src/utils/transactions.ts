@@ -213,6 +213,7 @@ const CHANGE_ORDER_DEFAULT_OPTION = {
 
 export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   const client = useClient()
+  const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
 
   const { data: changeOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
     ['changeOrders', workOrderId],
@@ -222,7 +223,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
       return response?.data
     },
     {
-      enabled: !!workOrderId,
+      enabled,
     },
   )
 
@@ -243,8 +244,10 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-const getFileContents = async (document: File, documentType: number) => {
+const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
+
+  if (document?.s3Url) return Promise.resolve()
 
   return new Promise(async (res, _) => {
     const fileContents = await readFileContent(document as File)
@@ -316,6 +319,16 @@ export const parseChangeOrderAPIPayload = async (
           parentWorkOrderId: isAgainstProjectSOWSelected ? null : `${formValues.against?.value}`,
         }
 
+  const lineItems = formValues.transaction
+    .filter(transaction => transaction.amount !== '')
+    .map(transaction => ({
+      description: transaction.description,
+      whiteoaksCost: transaction.amount,
+      quantity: '0',
+      unitCost: '0',
+      vendorCost: '0',
+    }))
+
   return {
     transactionType: formValues.transactionType?.value,
     createdDate1: formValues.dateCreated,
@@ -326,13 +339,7 @@ export const parseChangeOrderAPIPayload = async (
     paidDate: dateISOFormat(formValues.paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
     payDateVariance: formValues.payDateVariance || '',
-    lineItems: formValues.transaction.map(transaction => ({
-      description: transaction.description,
-      whiteoaksCost: transaction.amount,
-      quantity: '0',
-      unitCost: '0',
-      vendorCost: '0',
-    })),
+    lineItems,
     documents,
     projectId: projectId ?? '',
     ...againstProjectSOWPayload,
@@ -389,6 +396,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     status: null,
     dateCreated: dateFormat(new Date()),
     createdBy,
+    modifiedBy: null,
+    modifiedDate: null,
     transaction: [TRANSACTION_FEILD_DEFAULT],
     attachment: null,
     lienWaiverDocument: null,
@@ -433,6 +442,21 @@ const getLatestDocument = (documents: Document[]) => {
   return latestDocument
 }
 
+export const parseLienWaiverFormValues = (selectedWorkOrder: ProjectWorkOrder | undefined, totalAmount: string) => {
+  return {
+    claimantName: selectedWorkOrder?.claimantName || '',
+    customerName: selectedWorkOrder?.customerName || '',
+    propertyAddress: selectedWorkOrder?.propertyAddress || '',
+    owner: selectedWorkOrder?.owner || '',
+    makerOfCheck: selectedWorkOrder?.makerOfCheck || '',
+    amountOfCheck: totalAmount,
+    checkPayableTo: selectedWorkOrder?.claimantName || '',
+    claimantsSignature: '',
+    claimantTitle: '',
+    dateOfSignature: '',
+  }
+}
+
 export const parseTransactionToFormValues = (
   transaction: ChangeOrderType,
   againstOptions: SelectOption[],
@@ -448,7 +472,7 @@ export const parseTransactionToFormValues = (
     transaction.paymentTerm,
   )
 
-  const lienWaiverDocument = transaction.documents.find(doc => doc.fileType === 'lienWaiver.pdf')
+  const lienWaiverDocument = getLatestDocument(transaction.documents.filter(doc => doc.fileType === 'lienWaiver.pdf'))
   const attachment = getLatestDocument(transaction.documents.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
 
   return {
@@ -472,6 +496,8 @@ export const parseTransactionToFormValues = (
     dateCreated: dateFormat(transaction.createdDate as string),
     attachment,
     lienWaiverDocument,
+    modifiedBy: transaction.modifiedBy,
+    modifiedDate: dateFormat(transaction.modifiedDate as string),
     invoicedDate: datePickerFormat(transaction.clientApprovedDate as string),
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
@@ -482,7 +508,7 @@ export const parseTransactionToFormValues = (
       transaction?.lineItems?.map(item => ({
         id: item.id,
         description: item.description,
-        amount: `${item.whiteoaksCost}`,
+        amount: `${item.whiteoaksCost + item.vendorCost}`,
         checked: false,
       })) ?? [],
   }
@@ -507,7 +533,6 @@ export const useChangeOrderMutation = (projectId?: string) => {
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -535,7 +560,6 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
-          duration: 5000,
           isClosable: true,
         })
       },

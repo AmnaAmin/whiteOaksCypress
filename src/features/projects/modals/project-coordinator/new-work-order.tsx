@@ -19,7 +19,7 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
-import { dateFormatter } from 'utils/new-work-order'
+import { dateFormatter } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { documentTypes } from 'utils/vendor-projects'
 
@@ -69,7 +69,7 @@ const NewWorkOrder: React.FC<{
           <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
             New Work Order
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>

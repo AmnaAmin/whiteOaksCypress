@@ -119,7 +119,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('upload')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
@@ -129,7 +129,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               </FormLabel>
               <HStack spacing="20px" w="100%">
                 <Box w={215}>
-                  <ReactSelect options={documentTypes} value={documentType} onChange={onDocumentTypeChange} />
+                  <ReactSelect
+                    options={documentTypes}
+                    selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                    value={documentType}
+                    onChange={onDocumentTypeChange}
+                  />
                 </Box>
 
                 <input
@@ -142,9 +147,9 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                 {document ? (
                   <Box
                     color="barColor.100"
-                    border="1px solid #e2e8f0"
+                    border="1px solid #4E87F8"
                     // a
-                    borderRadius="3px"
+                    borderRadius="6px"
                     fontSize="14px"
                   >
                     <HStack spacing="5px" h="37px" padding="10px" align="center">
@@ -168,7 +173,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         inputRef.current.click()
                       }
                     }}
-                    variant="ghost"
+                    variant="outline"
                     colorScheme="brand"
                   >
                     {t('chooseFile')}
@@ -180,19 +185,21 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button
-            variant="outline"
-            onClick={() => {
-              resetUpload()
-              onClose()
-            }}
-            colorScheme="brand"
-          >
-            {t('close')}
-          </Button>
-          <Button onClick={uploadDocument} colorScheme="brand" type="submit">
-            {t('save')}
-          </Button>
+          <HStack spacing="16px">
+            <Button
+              variant="outline"
+              onClick={() => {
+                resetUpload()
+                onClose()
+              }}
+              colorScheme="brand"
+            >
+              {t('close')}
+            </Button>
+            <Button onClick={uploadDocument} colorScheme="brand" type="submit">
+              {t('save')}
+            </Button>
+          </HStack>
         </ModalFooter>
       </ModalContent>
     </Modal>

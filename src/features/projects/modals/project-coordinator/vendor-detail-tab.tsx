@@ -13,7 +13,7 @@ const VendorDetails = props => {
             <FormLabel variant="strong-label" size="md">
               Business Name
             </FormLabel>
-            <Input variant="reguired-field" isRequired />
+            <Input variant="required-field" isRequired />
           </FormControl>
         </Box>
         <Box w="215px">
@@ -40,7 +40,7 @@ const VendorDetails = props => {
             <FormLabel variant="strong-label" size="md">
               Primary Contact
             </FormLabel>
-            <Input variant="reguired-field" />
+            <Input variant="required-field" />
           </FormControl>
         </Box>
         <Box>
@@ -60,7 +60,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 Buisness Phone No
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
 
@@ -96,7 +96,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 Primary Email
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
           <Box>
@@ -115,7 +115,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 Street Address
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
           <Box>
@@ -123,7 +123,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 City
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
 
@@ -140,7 +140,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 Zipcode
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
         </Flex>
@@ -151,7 +151,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 Capacity
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
           <Box>
@@ -159,7 +159,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 EIN/SSN
               </FormLabel>
-              <Input variant="reguired-field" />
+              <Input variant="required-field" />
             </FormControl>
           </Box>
         </Flex>

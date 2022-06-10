@@ -14,6 +14,8 @@ import {
   InputGroup,
   useToast,
   Flex,
+  Icon,
+  Divider,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 // import { InputGroup } from 'react-bootstrap';
@@ -28,6 +30,7 @@ import { PasswordFormValidationSchema } from 'utils/form-validation'
 import { usePasswordUpdateMutation } from 'utils/user-account'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
+import { Card } from 'components/card/card'
 
 const textStyle = {
   color: '#4A5568',
@@ -44,9 +47,9 @@ const inputFieldStyle = {
 
 const VendorProfilePassword = () => {
   const { mutate: updatePassword } = usePasswordUpdateMutation()
-  const [show, setShow] = useState(false)
-  const [showSecondField, setShowSecondField] = useState(false)
-  const [showThirdField, setShowThirdField] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState(false)
+  const [newPassword, setNewPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState(false)
   const toast = useToast()
   const { t } = useTranslation()
 
@@ -75,11 +78,11 @@ const VendorProfilePassword = () => {
     }
   }, [strength])
 
-  const handleClick = () => setShow(!show)
+  const handleClick = () => setCurrentPassword(!currentPassword)
 
-  const handleClickSecond = () => setShowSecondField(!showSecondField)
+  const handleClickSecond = () => setNewPassword(!newPassword)
 
-  const handleClickThird = () => setShowThirdField(!showThirdField)
+  const handleClickThird = () => setConfirmPassword(!confirmPassword)
 
   const {
     register,
@@ -103,171 +106,147 @@ const VendorProfilePassword = () => {
   }
 
   return (
-    <Stack mt="40px" ml="20px" boxSizing="border-box">
-      <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
-        {/* Password for [vendor@devtek.ai] */}
-        {t('password')}
-      </Text>
-
+    <Card py="0">
       <form onSubmit={handleSubmit(onsubmit)}>
-        <VStack spacing={7} h="35vh" align="start">
-          <FormControl isInvalid={!!errors.currentPassword} w="215px">
-            <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
-            <InputGroup size="lg">
-              <Input
-                type={show ? 'text' : 'password'}
-                sx={inputFieldStyle}
-                id="currentPassword"
-                {...register('currentPassword')}
-                rounded="6px"
-                borderLeft="2px solid #4E87F8"
-              />
-              <InputRightElement>
-                <Button
-                  onClick={handleClick}
-                  h="1.30rem"
-                  size="sm"
-                  bg="#FFFFFF"
-                  color="gray.600"
-                  _hover={{
-                    bg: 'gray.100',
-                    color: 'gray.600',
-                  }}
-                  minW="10px"
-                  _focus={{ border: 'none' }}
-                  mb="1.5"
-                >
-                  {show ? <BsEye /> : <BsEyeSlash />}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-
-            <FormErrorMessage>{errors.currentPassword && errors.currentPassword.message}</FormErrorMessage>
-          </FormControl>
-
-          <HStack pb="8">
-            <FormControl isInvalid={!!errors.newPassword} w="215px" h="60px">
-              <FormLabel sx={textStyle}>{t('newPassword')}</FormLabel>
+        <Stack mt="40px" ml="20px" boxSizing="border-box" h="68vh" overflow="auto">
+          <Flex align="center" mb={14}>
+            <Text mr={2} fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal">
+              {t('password')}
+            </Text>
+            <Divider border="1px solid #E2E8F0" />
+          </Flex>
+          <VStack spacing={7} h="35vh" align="start">
+            <FormControl isInvalid={!!errors.currentPassword} w="215px">
+              <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
               <InputGroup size="lg">
                 <Input
-                  type={showSecondField ? 'text' : 'password'}
+                  type={currentPassword ? 'text' : 'password'}
                   sx={inputFieldStyle}
-                  id="newPassword"
-                  {...register('newPassword')}
-                  rounded="6px"
-                  onInput={event => {
-                    const value = event.currentTarget.value
-                    let score = zxcvbn(value).score
-
-                    if (score === 0 && value !== '') {
-                      score = 1
-                    }
-
-                    setStrength(score)
-                  }}
-                />
-                <InputRightElement>
-                  <Button
-                    onClick={handleClickSecond}
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
-                    color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showSecondField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <Box>
-                <FormErrorMessage>{errors.newPassword && errors.newPassword.message}</FormErrorMessage>
-              </Box>
-            </FormControl>
-
-            <FormControl isInvalid={!!errors.confirmPassword} w="215px" h="60px">
-              <FormLabel sx={textStyle}>{t('newPasswordConfirmation')}</FormLabel>
-
-              <InputGroup size="lg">
-                <Input
-                  type={showThirdField ? 'text' : 'password'}
-                  sx={inputFieldStyle}
-                  id="confirmPassword"
-                  {...register('confirmPassword')}
+                  id="currentPassword"
+                  {...register('currentPassword')}
                   rounded="6px"
                   borderLeft="2px solid #4E87F8"
                 />
-                <InputRightElement>
-                  <Button
-                    h="1.30rem"
-                    size="sm"
-                    bg="#FFFFFF"
+                <InputRightElement h="40px">
+                  <Icon
+                    as={currentPassword ? BsEyeSlash : BsEye}
+                    onClick={handleClick}
+                    fontSize="13px"
                     color="gray.600"
-                    _hover={{
-                      bg: 'gray.100',
-                      color: 'gray.600',
-                    }}
-                    minW="10px"
-                    onClick={handleClickThird}
-                    _focus={{ border: 'none' }}
-                    mb="1.5"
-                  >
-                    {showThirdField ? <BsEye /> : <BsEyeSlash />}
-                  </Button>
+                    _hover={{ color: 'black' }}
+                  />
                 </InputRightElement>
               </InputGroup>
-              <Box>
-                <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
-              </Box>
+
+              <FormErrorMessage>{errors.currentPassword && errors.currentPassword.message}</FormErrorMessage>
             </FormControl>
-          </HStack>
 
-          <FormControl height={29}>
-            <FormLabel fontStyle="normal" fontSize="10px" fontWeight={400} lineHeight="15px" color="#374151">
-              {t('passwordStrength')}
-            </FormLabel>
+            <HStack pb="8" spacing={4}>
+              <FormControl isInvalid={!!errors.newPassword} w="215px" h="60px">
+                <FormLabel sx={textStyle}>{t('newPassword')}</FormLabel>
+                <InputGroup size="lg">
+                  <Input
+                    type={newPassword ? 'text' : 'password'}
+                    sx={inputFieldStyle}
+                    id="newPassword"
+                    {...register('newPassword')}
+                    rounded="6px"
+                    onInput={event => {
+                      const value = event.currentTarget.value
+                      let score = zxcvbn(value).score
 
-            <SimpleGrid columns={3} row={1} gap={5} w="215px">
-              <Progress
-                colorScheme={colorScheme}
-                w="71px"
-                h="4px"
-                bg="#E2E8F0"
-                rounded="4px"
-                value={type === 'empty' ? 0 : 100}
-              />
-              <Progress
-                colorScheme={colorScheme}
-                w="71px"
-                h="4px"
-                bg="#E2E8F0"
-                rounded="4px"
-                value={type === 'weak' || type === 'empty' ? 0 : 100}
-              />
-              <Progress
-                colorScheme={colorScheme}
-                w="71px"
-                h="4px"
-                bg="#E2E8F0"
-                rounded="4px"
-                value={type === 'empty' || type === 'weak' || type === 'average' ? 0 : 100}
-              />
-            </SimpleGrid>
-          </FormControl>
-        </VStack>
+                      if (score === 0 && value !== '') {
+                        score = 1
+                      }
 
-        <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0" mt="100px">
+                      setStrength(score)
+                    }}
+                  />
+                  <InputRightElement h="40px">
+                    <Icon
+                      as={newPassword ? BsEyeSlash : BsEye}
+                      onClick={handleClickSecond}
+                      fontSize="13px"
+                      color="gray.600"
+                      _hover={{ color: 'black' }}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                <Box>
+                  <FormErrorMessage>{errors.newPassword && errors.newPassword.message}</FormErrorMessage>
+                </Box>
+              </FormControl>
+
+              <FormControl isInvalid={!!errors.confirmPassword} w="215px" h="60px">
+                <FormLabel sx={textStyle}>{t('newPasswordConfirmation')}</FormLabel>
+
+                <InputGroup size="lg">
+                  <Input
+                    type={confirmPassword ? 'text' : 'password'}
+                    sx={inputFieldStyle}
+                    id="confirmPassword"
+                    {...register('confirmPassword')}
+                    rounded="6px"
+                    borderLeft="2px solid #4E87F8"
+                  />
+                  <InputRightElement h="40px">
+                    <Icon
+                      as={confirmPassword ? BsEyeSlash : BsEye}
+                      onClick={handleClickThird}
+                      fontSize="13px"
+                      color="gray.600"
+                      _hover={{ color: 'black' }}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                <Box>
+                  <FormErrorMessage>{errors.confirmPassword && errors.confirmPassword.message}</FormErrorMessage>
+                </Box>
+              </FormControl>
+            </HStack>
+
+            <FormControl height={29}>
+              <FormLabel fontStyle="normal" fontSize="10px" fontWeight={400} lineHeight="15px" color="#374151">
+                {t('passwordStrength')}
+              </FormLabel>
+
+              <SimpleGrid columns={3} row={1} gap={5} w="215px">
+                <Progress
+                  colorScheme={colorScheme}
+                  w="71px"
+                  h="4px"
+                  bg="#E2E8F0"
+                  rounded="4px"
+                  value={type === 'empty' ? 0 : 100}
+                />
+                <Progress
+                  colorScheme={colorScheme}
+                  w="71px"
+                  h="4px"
+                  bg="#E2E8F0"
+                  rounded="4px"
+                  value={type === 'weak' || type === 'empty' ? 0 : 100}
+                />
+                <Progress
+                  colorScheme={colorScheme}
+                  w="71px"
+                  h="4px"
+                  bg="#E2E8F0"
+                  rounded="4px"
+                  value={type === 'empty' || type === 'weak' || type === 'average' ? 0 : 100}
+                />
+              </SimpleGrid>
+            </FormControl>
+          </VStack>
+        </Stack>
+
+        <Flex w="100%" h="90px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
         </Flex>
       </form>
-    </Stack>
+    </Card>
   )
 }
 

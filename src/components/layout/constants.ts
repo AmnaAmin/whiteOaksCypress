@@ -1,5 +1,5 @@
-import { BiCreditCard, BiDollarCircle, BiError, BiGroup, BiUserPin } from 'react-icons/bi'
-import { FaAlignCenter, FaHome, FaUser } from 'react-icons/fa'
+import { BiCreditCard, BiDollarCircle, BiError, BiGroup, BiUser, BiUserPin } from 'react-icons/bi'
+import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
 
@@ -7,6 +7,7 @@ type Menu = {
   pathTo: string
   title: string
   Icon: React.ElementType
+  color: string
 }
 
 type Menus = {
@@ -19,16 +20,19 @@ export const MENU_ROLE_BASED: Menus = {
       pathTo: '/vendorDashboard',
       title: 'Dashboard',
       Icon: FaHome,
+      color: '#ED8936',
     },
     {
       pathTo: '/projects',
       title: 'Projects',
       Icon: FaAlignCenter,
+      color: '#4E87F8',
     },
     {
       pathTo: '/vendors',
       title: 'Profile',
-      Icon: FaUser,
+      Icon: BiUser,
+      color: '#68D391',
     },
   ],
   [UserTypes.pc]: [
@@ -36,36 +40,43 @@ export const MENU_ROLE_BASED: Menus = {
       pathTo: '/pcDashboard',
       title: 'Dashboard',
       Icon: FaHome,
+      color: '#ED8936',
     },
     {
       pathTo: '/projects',
       title: 'Projects',
       Icon: FaAlignCenter,
+      color: '#4E87F8',
     },
     {
       pathTo: '/payable',
       title: 'Payable',
       Icon: BiCreditCard,
+      color: '#68D391',
     },
     {
       pathTo: '/receivable',
       title: 'Receivable',
       Icon: BiDollarCircle,
+      color: '#4299E1',
     },
     {
       pathTo: '/vendors',
       title: 'Vendors',
       Icon: BiUserPin,
+      color: '#9F7AEA',
     },
     {
       pathTo: '/alerts',
       title: 'Alerts',
       Icon: BiError,
+      color: '#ED64A6',
     },
     {
       pathTo: '/clients',
       title: 'Clients',
       Icon: BiGroup,
+      color: '#0BC5EA',
     },
   ],
 }

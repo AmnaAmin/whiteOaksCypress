@@ -11,6 +11,7 @@ import {
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
+import { useQueryClient } from 'react-query'
 // import 'components/translation/i18n';
 
 type marketFormProps = {
@@ -27,6 +28,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
   const toast = useToast()
   const { markets, isLoading } = useMarkets()
   const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
+  const queryClient = useQueryClient()
 
   const onSubmit = (formValues: VendorMarketFormValues) => {
     const vendorProfilePayload: Partial<VendorProfilePayload> = parseMarketFormValuesToAPIPayload(
@@ -36,12 +38,12 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
+        queryClient.invalidateQueries('vendorProfile')
         toast({
-          title: 'Update Vendor Profile Markets',
-          description: 'Vendor profile markets has been saved successfully.',
+          title: t('updateMarkets'),
+          description: t('updateMarketsSuccess'),
           status: 'success',
           isClosable: true,
-          position: 'top-left',
         })
       },
     })
@@ -85,7 +87,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
 
   return (
     <form onSubmit={handleSubmit(submitForm)} id="market">
-      <Box h="65vh" mt={14}>
+      <Box h="502px" overflow="auto">
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {tradeCheckboxes.map((checkbox, index) => {
             return (
@@ -99,13 +101,13 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
                       name={name}
                       key={name}
                       isChecked={value.checked}
-                      data-testid={`marketChecks.${value.id}`}
+                      data-testid={`marketChecks.${value.market.id}`}
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
                     >
-                      {value.metropolitanServiceArea}
+                      {value.market.metropolitanServiceArea}
                     </CheckboxButton>
                   )
                 }}
@@ -114,7 +116,7 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
           })}
         </Flex>
       </Box>
-      <Flex borderTop="2px solid #E2E8F0" alignItems="center" w="100%" h="100px" justifyContent="end">
+      <Flex mt={2} borderTop="2px solid #E2E8F0" alignItems="center" pt="12px" w="100%" justifyContent="end">
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel

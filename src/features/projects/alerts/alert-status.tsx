@@ -134,7 +134,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
               {/* {alert.name} */}
               11 Joel CT
             </ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody>
               <Box
                 minH="31.6em"
@@ -148,12 +148,14 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
               </Box>
             </ModalBody>
             <ModalFooter>
-              <Button variant="outline" onClick={onClose} colorScheme="brand">
-                Close
-              </Button>
-              <Button type="submit" form="newTransactionForm" colorScheme="brand">
-                Save
-              </Button>
+              <HStack spacing="16px">
+                <Button variant="outline" onClick={onClose} colorScheme="brand">
+                  Close
+                </Button>
+                <Button type="submit" form="newTransactionForm" colorScheme="brand">
+                  Save
+                </Button>
+              </HStack>
             </ModalFooter>
           </ModalContent>
         </Modal>
