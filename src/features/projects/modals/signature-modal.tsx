@@ -46,16 +46,16 @@ const SignatureModal = ({
   }, [open, onOpen, onCloseDisclosure])
 
   return (
-    <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="6xl">
+    <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
-      <ModalContent h="480px">
+      <ModalContent h="400px" mt="200px">
         <ModalHeader color="gray.700" fontWeight={500} fontSize="16px" fontStyle="normal">
           {t('addSignature')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         <Divider mb={3} />
         <ModalBody h="50vh">
-          <Stack w={{ base: '900px', xl: '100%' }} spacing={5}>
+          <Stack w={{ base: '800px', xl: '100%' }} spacing={5}>
             <Tabs variant="enclosed">
               <TabList>
                 <Tab
