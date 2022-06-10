@@ -57,8 +57,8 @@ export const ProjectSummary = () => {
           isLoading={isLoading}
           UpdownIcon={BsArrowDownShort}
           BigIcon={BiDetail}
-          number={cards?.find(c => c.label === 'completedAndInvoiced')?.count}
-          name={t('completedInvoiced')}
+          number={cards?.find(c => c.label === 'invoiced')?.count}
+          name={t('invoicedWO')}
           Iconbgcolor={'#E8F0FF'}
           updownIconColor={'#E53E3E'}
           testId="summary-completedAndInvoiced"
