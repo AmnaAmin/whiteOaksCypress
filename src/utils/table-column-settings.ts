@@ -77,7 +77,7 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
           order: index,
           userId: email,
           type: tableName,
-          hide: true,
+          hide: false,
         })
       })
 
