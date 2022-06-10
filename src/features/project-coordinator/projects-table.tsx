@@ -17,20 +17,20 @@ export const PROJECT_COLUMNS = [
     accessor: 'projectManager',
   },
   {
-    Header: 'General Labor',
+    Header: t('generalLabor'),
     accessor: 'generalLabourName',
   },
   {
-    Header: 'Status',
+    Header: t('status'),
     accessor: 'projectStatus',
     Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
   },
   {
-    Header: 'Address',
+    Header: t('address'),
     accessor: 'streetAddress',
   },
   {
-    Header: 'City',
+    Header: t('City'),
     accessor: 'city',
   },
   {

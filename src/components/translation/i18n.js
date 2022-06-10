@@ -52,6 +52,7 @@ i18n.use(initReactI18next).init({
         region: 'Region',
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
+        generalLabor: 'General Labor',
 
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Type',
@@ -346,7 +347,7 @@ i18n.use(initReactI18next).init({
         region: 'Región',
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
-
+        generalLabor: 'Trabajo general',
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',

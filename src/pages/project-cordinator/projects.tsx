@@ -70,7 +70,7 @@ export const Projects = () => {
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
           <Box mt={4}>
             <FormLabel variant="strong-label" fontSize="18px">
-              Due Projects
+              {t('Due Projects')}
             </FormLabel>
           </Box>{' '}
         </Stack>
@@ -89,7 +89,7 @@ export const Projects = () => {
             p={0}
             mt={1}
           >
-            All
+            {t('All')}
           </Button>
           <Box onClick={clearSelected}>
             <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
@@ -107,7 +107,7 @@ export const Projects = () => {
             pt={2}
             pl={1}
           >
-            Clear Filter
+            {t('Clear Filter')}
           </Button>
           <Button
             alignContent="right"
@@ -118,7 +118,7 @@ export const Projects = () => {
             fontSize="14px"
           >
             <Icon as={BiBookAdd} fontSize="18px" mr={2} />
-            New Project
+            {t('New Project')}
           </Button>
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}></Stack>
