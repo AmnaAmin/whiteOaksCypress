@@ -9,15 +9,10 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { CheckboxButton } from 'components/form/checkbox-button'
-// import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
 import { DevTool } from '@hookform/devtools'
 import { useQueryClient } from 'react-query'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { Account } from 'types/account.types'
-
-// import 'components/translation/i18n';
 
 type tradesFormProps = {
   submitForm: (values: any) => void
