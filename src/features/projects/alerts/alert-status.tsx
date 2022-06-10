@@ -68,7 +68,9 @@ const alertStatusInfo = [
   },
 ]
 
-const AlertCard = (props: any) => {
+const AlertCard = () => {
+  const [alertResolved, setAlertResolved] = useState(false)
+
   return (
     <Box borderRadius="8px" boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)">
       <Flex>
@@ -84,9 +86,16 @@ const AlertCard = (props: any) => {
           </Box>
         </VStack>
 
-        <Center borderLeft="1px solid #E2E8F0">
-          <Button variant="link" colorScheme="brand" onClick={() => props.SetResolve(!props.Resolved)}>
-            Resolve
+        <Center
+          flexGrow={1}
+          color="#4E87F8"
+          borderLeft="1px solid #E2E8F0"
+          fontSize="14px"
+          fontWeight={500}
+          fontStyle="normal"
+        >
+          <Button variant="unstyled" onClick={() => setAlertResolved(!alertResolved)}>
+            {alertResolved ? 'Resolved' : 'Resolve'}
           </Button>
         </Center>
       </Flex>
@@ -124,7 +133,6 @@ const AlertInfo = () => {
   )
 }
 export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, alert }) => {
-  const [alertResolved, setAlertResolved] = useState(false)
   const { isOpen: isOpenAlertDetails, onClose: onAlertDetailsClose, onOpen: onAlertDetailsOpen } = useDisclosure()
   return (
     <>
@@ -138,18 +146,18 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody>
-              <Card>
+              <Card minH="31.6em">
                 <Box>
                   <Grid templateColumns="repeat(2, 1fr)" gap={6} margin="20px" mb="10" pr="28">
                     {<AlertInfo />}
                   </Grid>
-                  <Box pb={10}>
-                    {alertResolved ? '' : <AlertCard SetResolve={setAlertResolved} Resolved={alertResolved} />}
+                  <Box>
+                    <AlertCard />
                   </Box>
                 </Box>
               </Card>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter bg="white">
               <HStack spacing="16px" w="100%">
                 <Button variant="outline" colorScheme="brand" m="0" onClick={onAlertDetailsOpen}>
                   See Project Details

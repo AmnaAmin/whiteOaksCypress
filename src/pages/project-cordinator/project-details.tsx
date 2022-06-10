@@ -31,10 +31,8 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const [
-    alertRow,
-    // selectedAlertRow
-  ] = useState(true)
+
+  const [alertRow, selectedAlertRow] = useState(true)
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -53,6 +51,7 @@ export const ProjectDetails: React.FC = props => {
 
   const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
@@ -154,7 +153,12 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
 
               <TabPanel px="0">
-                <AlertsTable />
+                <AlertsTable
+                  onRowClick={(e, row) => {
+                    selectedAlertRow(row.values)
+                    onAlertModalOpen()
+                  }}
+                />
               </TabPanel>
 
               <TabPanel px="0">
