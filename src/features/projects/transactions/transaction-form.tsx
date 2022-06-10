@@ -299,7 +299,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
-                      {t('transactionType')}
+                      {t('paymentType')}
                     </FormLabel>
                     <Controller
                       rules={{ required: 'This is required field' }}

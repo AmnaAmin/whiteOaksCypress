@@ -86,7 +86,6 @@ export const chakraStyles = {
       ...provider,
       ...borderLeftStyle,
       borderRadius: '6px',
-      bg: 'gray.50',
       fontSize: getFontSize(state),
       _focus: inputFocusStateStyle,
       _disabled: {
