@@ -13,6 +13,7 @@ const tabsVariants = {
             _hover: {
               bg: `${props.colorScheme}.50`,
             },
+            color: 'gray.500',
             _selected: {
               borderBottomColor: `${props.colorScheme}.300`,
               bg: `${props.colorScheme}.300`,
@@ -36,6 +37,7 @@ const tabsVariants = {
             _hover: {
               bg: `${props.colorScheme}.50`,
             },
+            color: 'gray.500',
             _selected: {
               borderBottomColor: `${props.colorScheme}.300`,
               _hover: {

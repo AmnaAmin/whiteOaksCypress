@@ -55,7 +55,7 @@ interface Props {
 }
 
 export function useCustomTable(props: Props) {
-  const { columns, data } = props
+  const { columns, data: tableData } = props
 
   const defaultColumn: any = React.useMemo(
     () => ({
@@ -65,12 +65,14 @@ export function useCustomTable(props: Props) {
     [],
   )
   const getExportFileBlob = ({ columns, data, fileType, fileName }) => {
-    getFileBlob({ columns, data, fileType, fileName })
+    getFileBlob({ columns, data: tableData, fileType, fileName })
   }
+
+  // console.log('tableData', tableData)
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data: tableData,
       defaultColumn,
       getExportFileBlob,
       initialState: {
@@ -232,6 +234,7 @@ type TableExtraProps = {
   setTableInstance?: (i) => void
   onRowClick?: (e, row) => void
   isLoading?: boolean
+  defaultFlexStyle?: boolean
 }
 
 const emptyRows = [{}, {}, {}]
@@ -244,6 +247,7 @@ export function Table(props: Props & TableExtraProps): ReactElement {
     onRowClick,
     setTableInstance,
     isLoading,
+    defaultFlexStyle = true,
     ...restProps
   } = props
   const tableInstance = useCustomTable({ ...restProps, data: isLoading ? emptyRows : restProps.data })
@@ -251,11 +255,16 @@ export function Table(props: Props & TableExtraProps): ReactElement {
   useEffect(() => {
     setTableInstance?.(tableInstance)
   }, [tableInstance, setTableInstance])
-
+  const defaultStyles = () => {
+    if (defaultFlexStyle)
+      return {
+        display: 'flex',
+        flexFlow: 'column',
+      }
+  }
   return (
     <ChakraTable
-      display="flex"
-      flexDirection="column"
+      {...defaultStyles()}
       w="100%"
       bg="#FFFFFF"
       h={tableHeight}

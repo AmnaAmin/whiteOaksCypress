@@ -22,8 +22,8 @@ const ButtonVariants = {
       outline: props => {
         return {
           ...chakraTheme.components.Button.variants.outline(props),
-          borderColor: `${props.colorScheme}.400`,
-          color: `${props.colorScheme}.400`,
+          borderColor: `${props.colorScheme}.300`,
+          color: `${props.colorScheme}.300`,
           _hover: {
             bg: `${props.colorScheme}.50`,
           },
@@ -35,7 +35,7 @@ const ButtonVariants = {
       ghost: props => {
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
-          color: `${props.colorScheme}.400`,
+          color: `${props.colorScheme}.300`,
           _focus: {
             outline: 'none',
           },

@@ -8,17 +8,27 @@ import Misc from './misc'
 import InvoiceAndPayments from './invoice-and-payments'
 import { BiSpreadsheet } from 'react-icons/bi'
 
-const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props => {
+type tabProps = {
+  onClose?: () => void
+  style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string }
+  tabVariant?: string
+  selectedData?: any
+}
+
+const ProjectDetailsTab = (props: tabProps) => {
+  const { style, onClose, tabVariant } = props
   const [tabIndex, setTabIndex] = useState<number>(0)
 
   return (
     <>
-      <Tabs
-        variant={props.id === 'Receivable' ? 'enclosed' : 'line'}
-        colorScheme="brand"
-        onChange={index => setTabIndex(index)}
-      >
-        <TabList bg={props.id === 'Receivable' ? '' : '#F7FAFC'} rounded="6px 6px 0 0" pt="7">
+      <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={index => setTabIndex(index)}>
+        <TabList
+          bg={style?.backgroundColor ? '' : '#F7FAFC'}
+          rounded="6px 6px 0 0"
+          pt="7"
+          ml={style?.marginLeft || ''}
+          mr={style?.marginRight || ''}
+        >
           <Tab>Project Management</Tab>
           <Tab>Invoicing & payment</Tab>
           <Tab>Contacts</Tab>
@@ -27,22 +37,22 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
         </TabList>
 
         <TabPanels mt="31px">
-          <TabPanel p="0" ml="2">
+          <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
             <ProjectManagement />
           </TabPanel>
 
-          <TabPanel p="0" ml="2">
+          <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
             <InvoiceAndPayments />
           </TabPanel>
 
-          <TabPanel p="0" ml="2">
-            <Contact />
+          <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>
+            <Contact dataContact={props.selectedData} />
           </TabPanel>
-          <TabPanel p="0" ml="2">
+          <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
             <Location />
           </TabPanel>
 
-          <TabPanel p="0" ml="2">
+          <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
             <Misc />
           </TabPanel>
           {tabIndex === 0 && (
@@ -53,7 +63,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -62,20 +72,14 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -96,7 +100,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -106,10 +110,10 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
                     <Button
-                      onClick={props.onClose}
+                      onClick={onClose}
                       mt="8px"
                       mr="5"
                       float={'right'}
@@ -121,6 +125,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -140,7 +145,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -149,20 +154,14 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -182,7 +181,7 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
               <Box w="100%" pb="3">
                 <Button
                   mt="8px"
-                  mr="7"
+                  mr="32px"
                   float={'right'}
                   variant="solid"
                   colorScheme="brand"
@@ -191,20 +190,14 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -222,23 +215,25 @@ const ProjectDetailsTab: React.FC<{ id?: string; onClose?: () => void }> = props
                 <Divider border="1px solid" />
               </Box>
               <Box w="100%" pb="3">
-                <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" type="submit" form="misc">
+                <Button
+                  mt="8px"
+                  mr="32px"
+                  float={'right'}
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  form="misc"
+                >
                   Save
                 </Button>
-                {props.onClose && (
+                {onClose && (
                   <>
-                    <Button
-                      onClick={props.onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
+                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
                       Cancel
                     </Button>
                     <Button
                       mt="8px"
+                      ml="32px"
                       variant="outline"
                       colorScheme="brand"
                       leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
