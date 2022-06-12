@@ -23,15 +23,16 @@ export enum STATUS {
   Declined = 'declined',
   Inactive = 'inactive',
   DoNotUse = 'do not use',
+  Decline = 'decline',
 }
 
 const STATUS_COLOR = {
   [STATUS.Paid]: { color: '#C05621', backgroundColor: '#FEEBCB ' },
   [STATUS.Active]: { color: '#63B3ED', backgroundColor: '#EBF8FF' },
-  [STATUS.Approved]: { color: '#2AB450', backgroundColor: '#E7F8EC' },
+  [STATUS.Approved]: { color: '#4E87F8', backgroundColor: '#EBF8FF' },
   [STATUS.Completed]: { color: '#ED8936 ', backgroundColor: '#FEEBCB' },
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
-  [STATUS.Pending]: { color: '#C05621', backgroundColor: '#FEEBCB' },
+  [STATUS.Pending]: { color: '#B7791F', backgroundColor: '#FEFCBF' },
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Declined]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Cancelled]: { color: '#F56565', backgroundColor: '#FFF5F7' },
@@ -47,6 +48,7 @@ const STATUS_COLOR = {
   [STATUS.Expired]: { color: '#718096', backgroundColor: '#EDF2F7' },
   [STATUS.Inactive]: { color: '#ED64A6', backgroundColor: '#FFF5F7' },
   [STATUS.DoNotUse]: { color: '#F56565', backgroundColor: '#EBF8FF' },
+  [STATUS.Decline]: { color: '#9F7AEA', backgroundColor: '#FFF5F7' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
