@@ -89,9 +89,9 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="LW Date" date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
-        <CalenderCard title="Permit Date " date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-        <InformationCard title="Pay date variance" date={durationCategory} />
+        <CalenderCard title={t('lwDate')} date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
+        <CalenderCard title={t('permitDate')} date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
+        <InformationCard title={t('payDateVariance')} date={durationCategory} />
       </SimpleGrid>
 
       <Box mt={10}>
@@ -99,7 +99,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Invoiced Submitted
+                {t('invoicedSubmitted')}
               </FormLabel>
 
               <Input
@@ -112,7 +112,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl height="40px">
               <FormLabel variant={'strong-label'} size={'md'}>
-                Payemt Terms
+                {t('payemtTerms')}
               </FormLabel>
               <Select options={paymentsTerms} selectProps={{ isBorderLeft: true }} onChange={e => handlePTChange(e)} />
             </FormControl>
@@ -121,7 +121,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Payment Term Date
+                {t('paymentTermDate')}
               </FormLabel>
 
               <Input disabled value={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} type="date" />
@@ -130,7 +130,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Expected Pay Date
+                {t('expectedPayDate')}
               </FormLabel>
 
               <Input
@@ -148,7 +148,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Payment Processed
+                {t('paymentProcessed')}
               </FormLabel>
               <Input onChange={date => handlePPChange(date)} type="date" />
             </FormControl>
@@ -157,7 +157,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Paid
+                {t('paid')}
               </FormLabel>
               <Input onChange={date => handlePDChange(date)} type="date" readOnly={!paid ? true : false} disabled />
             </FormControl>
@@ -166,7 +166,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                WO Original Amount
+                {t('woOriginalAmount')}
               </FormLabel>
               <Input readOnly value={currencyFormatter(sowOriginalContractAmount)} />
             </FormControl>
@@ -174,7 +174,7 @@ const PaymentInfoTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Client Original Amount
+                {t('clientOriginalAmount')}
               </FormLabel>
               <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
             </FormControl>
@@ -183,7 +183,7 @@ const PaymentInfoTab = props => {
           <Box height="80px">
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Client Final Approved Amount
+                {t('clientFinalApprovedAmount')}
               </FormLabel>
               <Input readOnly={true} value={currencyFormatter(clientOriginalApprovedAmount)} />
             </FormControl>

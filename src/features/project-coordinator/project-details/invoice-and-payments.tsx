@@ -28,7 +28,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
                 <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
-                  Original SOW Amount
+                  {t('originalSowAmount')}
                 </FormLabel>
                 <Input
                   id="originSowAmount"
@@ -44,7 +44,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.finalSowAmount}>
                 <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
-                  Final SOW Amount
+                  {t('finalSowAmount')}
                 </FormLabel>
                 <Input
                   id="finalSowAmount"
@@ -60,7 +60,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.invoiceNo}>
                 <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
-                  Invoice no
+                  {t('invoiceNo')}
                 </FormLabel>
                 <Input
                   id="invoiceNo"
@@ -74,7 +74,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl>
                 <FormLabel mb="0" variant="strong-label" size="md">
-                  Upload Invoice
+                  {t('uploadInvoice')}
                 </FormLabel>
                 <FormFileInput
                   errorMessage={errors.agreement && errors.agreement?.message}
@@ -103,7 +103,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  Invoice back date
+                  {t('invoiceBackDate')}
                 </FormLabel>
                 <Input w="215px" variant="reguired-field" size="md" placeholder="mm/dd/yyyy" />
 
@@ -113,7 +113,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.paymentsTerms}>
                 <FormLabel variant="strong-label" size="md">
-                  Payments terms
+                  {t('paymentsTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
@@ -132,7 +132,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  WOA Expected Pay
+                  {t('woaExpectedPay')}
                 </FormLabel>
                 <Input w="215px" variant="reguired-field" size="md" type="date" />
 
@@ -142,14 +142,14 @@ const InvoiceAndPayments = () => {
             <GridItem display="grid" alignItems="end" h="67.3px">
               <Box mt="1">
                 <Button variant="outline" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
-                  Download Original SOW
+                  {t('downloadOriginalSow')}
                 </Button>
               </Box>
             </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.overPayment}>
                 <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
-                  Overpayment
+                  {t('overpayment')}
                 </FormLabel>
                 <Input
                   id="overPayment"
@@ -168,7 +168,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl isInvalid={errors.remainingPayment}>
                 <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
-                  Remaining Payment
+                  {t('remainingPayment')}
                 </FormLabel>
                 <Input
                   id="remainingPayment"
@@ -187,7 +187,7 @@ const InvoiceAndPayments = () => {
             <GridItem>
               <FormControl isInvalid={errors.payment}>
                 <FormLabel htmlFor="payment" variant="strong-label" size="md">
-                  Payment
+                  {t('payment')}
                 </FormLabel>
                 <Input
                   id="payment"

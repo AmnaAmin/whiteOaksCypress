@@ -17,7 +17,7 @@ const CalenderCard = props => {
           {props.title}
         </Text>
         <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props?.date || 'dd/mm/yy'}
+          {props?.date || 'mm/dd/yy'}
         </Text>
       </Box>
     </Flex>
@@ -69,10 +69,10 @@ const WorkOrderDetailTab = props => {
         alignItems={'center'}
         py="15px"
       >
-        <InformationCard title="Vendor Name" date={companyName} />
-        <InformationCard title="Vendor Type" date={skillName} />
-        <InformationCard title="Email" date={businessEmailAddress} />
-        <InformationCard title=" Phone No" date={businessPhoneNumber} />
+        <InformationCard title={t('vendorName')} date={companyName} />
+        <InformationCard title={t('vendorType')} date={skillName} />
+        <InformationCard title={t('email')} date={businessEmailAddress} />
+        <InformationCard title={t('phoneNo')} date={businessPhoneNumber} />
       </Grid>
       <Divider border="1px solid  #E2E8F0" />
 
@@ -83,10 +83,10 @@ const WorkOrderDetailTab = props => {
         alignItems={'center'}
         py="15px"
       >
-        <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
-        <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
-        <CalenderCard title="Permitted Pulled" date={dateFormat(datePermitsPulled)} />
-        <CalenderCard title=" Completion Variance" date={durationCategory} />
+        <CalenderCard title={t('woIssued')} date={dateFormat(workOrderIssueDate)} />
+        <CalenderCard title={t('lwSubmitted')} date={dateFormat(dateLeanWaiverSubmitted)} />
+        <CalenderCard title={t('permittedPulled')} date={dateFormat(datePermitsPulled)} />
+        <CalenderCard title={t('completionVariance')} date={durationCategory} />
       </Grid>
       <Divider border="1px solid  #E2E8F0" />
       <Box mt={10}>
@@ -94,7 +94,7 @@ const WorkOrderDetailTab = props => {
           <Box w="215px">
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Expected Start Date
+                {t('expectedStartDate')}
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
@@ -102,7 +102,7 @@ const WorkOrderDetailTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Expected Completion Date
+                {t('expectedCompletionDate')}
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
@@ -110,7 +110,7 @@ const WorkOrderDetailTab = props => {
           <Box>
             <FormControl>
               <FormLabel variant={'strong-label'} size={'md'}>
-                Completed By Vendor
+                {t('completedByVendor')}
               </FormLabel>
               <Input type="date" height="40px" borderLeft="2px solid #4E87F8" focusBorderColor="none" />
             </FormControl>
@@ -118,7 +118,7 @@ const WorkOrderDetailTab = props => {
           <Box>
             <FormControl height="40px">
               <FormLabel variant={'strong-label'} size={'md'}>
-                Cancel Work Order
+                {t('cancelWorkOrder')}
               </FormLabel>
               <ReactSelect selectProps={{ isBorderLeft: true }} options={documentTypes} />
             </FormControl>

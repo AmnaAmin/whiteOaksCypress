@@ -291,10 +291,65 @@ i18n.use(initReactI18next).init({
         help: 'Help',
         support: 'Support',
         signOut: 'Sign Out',
+        // Project details
+        originalSowAmount: 'Original SOW Amount',
+        finalSowAmount: ' Final SOW Amount',
+
+        paymentsTerms: 'Payments terms',
+        woaExpectedPay: 'WOA Expected Pay',
+        downloadOriginalSow: 'Download Original SOW',
+        overpayment: 'Overpayment',
+        remainingPayment: 'Remaining Payment',
+        payment: 'Payment',
+        invoiceBackDate: 'Invoice back bate',
+
+        // work order details
+        cancelWorkOrder: 'cancel Work Order',
+        vendorName: 'Vendor Name',
+        vendorType: 'Vendor Type',
+        phoneNo: 'Phone No',
+        woIssued: 'WO Issued',
+        lwSubmitted: 'LW Submitted',
+        permittedPulled: 'Permitted Pulled',
+        completionVariance: 'Completion Variance',
+        // Payments tab pc
+        lwDate: 'LW Date',
+        invoicedSubmitted: 'Invoiced Submitted',
+        payemtTerms: 'Payemt Terms',
+        woOriginalAmount: 'WO Original Amount',
+        clientOriginalAmount: 'Client Original Amount',
+        clientFinalApprovedAmount: 'Client Final Approved Amount',
       },
     },
     es: {
       translation: {
+        // Payments tab pc
+        lwDate: 'Fecha LW',
+        invoicedSubmitted: 'Facturada enviada',
+        payemtTerms: 'Términos de pago',
+        woOriginalAmount: 'Importe original de la OT',
+        clientOriginalAmount: 'Importe original del cliente',
+        clientFinalApprovedAmount: 'Cantidad final aprobada por el cliente',
+
+        // work order details
+        vendorName: 'nombre del vendedor',
+        vendorType: 'tipo de vendedor',
+        phoneNo: 'telefono no',
+        woIssued: 'wo emitido',
+        lwSubmitted: 'LW Submitted',
+        permittedPulled: 'permitido tirado',
+        completionVariance: 'Variación de finalización',
+        cancelWorkOrder: 'cancelar orden de trabajo',
+        // Project details
+        originalSowAmount: 'Importe de la SOW original',
+        finalSowAmount: 'Importe de la SOW final',
+        paymentsTerms: 'Condiciones de pago',
+        woaExpectedPay: 'Pago esperado de WOA',
+        downloadOriginalSow: 'Descargar SOW original',
+        overpayment: 'sobrepago',
+        remainingPayment: 'pago restante',
+        payment: 'Pago',
+        invoiceBackDate: 'Reembolso de factura',
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
         outOf: 'fuera de',
