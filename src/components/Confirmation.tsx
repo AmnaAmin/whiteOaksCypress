@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   Modal,
   ModalOverlay,
@@ -44,19 +42,17 @@ export function ConfirmationBox({
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
+        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
-          <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
-            Are you sure you want to {content}?
+          <Text color="gray.500" fontSize="16px" fontWeight={400} fontStyle="normal" mb="2">
+            {content}
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <Button variant="unstyled" mr={5} onClick={onClose}>
-              <Text color="gray.600" fontSize="14px" fontWeight={400}>
-                Cancel
-              </Text>
+            <Button colorScheme="brand" variant="outline" mr={3} onClick={onClose}>
+              No
             </Button>
             <Button
               size="md"
@@ -67,7 +63,7 @@ export function ConfirmationBox({
               fontSize="14px"
               fontWeight={500}
             >
-              Delete
+              Yes
             </Button>
           </ModalFooter>
         </Flex>

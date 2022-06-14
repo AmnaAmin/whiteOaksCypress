@@ -1,5 +1,5 @@
-import { PayableReceivable } from 'components/payable-receivable/payable-receivable'
+import { AccountDetails } from 'features/account-details/account-details'
 
 export const Payable: React.FC = () => {
-  return <PayableReceivable topTitle={'Account Payable'} ID={'payable'} />
+  return <AccountDetails topTitle={'Account Payable'} ID={'payable'} />
 }

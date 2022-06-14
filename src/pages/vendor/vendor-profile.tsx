@@ -23,6 +23,7 @@ import { Card } from 'features/login-form-centered/Card'
 type Props = {
   vendorPropfileData?: VendorProfile
   onClose?: () => void
+  refetch?: () => void
   vendorModalType?: string
 }
 
@@ -34,6 +35,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
+    props.refetch?.()
   }
   const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.vendors)
 
@@ -98,14 +100,14 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 const VendorProfilePage: React.FC<Props> = props => {
   // const [buttonIndex,setButtonIndex] = useState(0)
   const { vendorId } = useUserProfile() as Account
-  const { data: vendorProfileData, isLoading } = useVendorProfile(vendorId)
+  const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   return (
     <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (
-        <VendorProfileTabs vendorPropfileData={vendorProfileData} onClose={props.onClose} />
+        <VendorProfileTabs vendorPropfileData={vendorProfileData} onClose={props.onClose} refetch={refetch} />
       )}
     </Stack>
   )

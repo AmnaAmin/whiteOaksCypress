@@ -1,18 +1,18 @@
-import { useCallback } from "react";
-import * as yup from "yup";
+import { useCallback } from 'react'
+import * as yup from 'yup'
 
-export const useYupValidationResolver = (validationSchema) =>
+export const useYupValidationResolver = validationSchema =>
   useCallback(
-    async (data) => {
+    async data => {
       try {
         const values = await validationSchema.validate(data, {
           abortEarly: false,
-        });
+        })
 
         return {
           values,
           errors: {},
-        };
+        }
       } catch (errors: any) {
         return {
           values: {},
@@ -20,27 +20,27 @@ export const useYupValidationResolver = (validationSchema) =>
             (allErrors, currentError) => ({
               ...allErrors,
               [currentError.path]: {
-                type: currentError.type ?? "validation",
+                type: currentError.type ?? 'validation',
                 message: currentError.message,
               },
             }),
-            {}
+            {},
           ),
-        };
+        }
       }
     },
-    [validationSchema]
-  );
+    [validationSchema],
+  )
 
 export const PasswordFormValidationSchema = yup.object({
-  currentPassword: yup.string().required("This is required field"),
-  newPassword: yup.string().required("This is required field").min(4),
+  currentPassword: yup.string().required('This is required field'),
+  newPassword: yup.string().required('This is required field').min(4, 'New password must be at least 4 characters'),
   confirmPassword: yup
     .string()
-    .required("This is required field")
-    .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
-});
+    .required('This is required field')
+    .oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
+})
 
 export const usePasswordFormValidationResolver = () => {
-  return useYupValidationResolver(PasswordFormValidationSchema);
-};
+  return useYupValidationResolver(PasswordFormValidationSchema)
+}

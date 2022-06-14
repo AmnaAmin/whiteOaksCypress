@@ -55,7 +55,7 @@ interface Props {
 }
 
 export function useCustomTable(props: Props) {
-  const { columns, data } = props
+  const { columns, data: tableData } = props
 
   const defaultColumn: any = React.useMemo(
     () => ({
@@ -65,12 +65,14 @@ export function useCustomTable(props: Props) {
     [],
   )
   const getExportFileBlob = ({ columns, data, fileType, fileName }) => {
-    getFileBlob({ columns, data, fileType, fileName })
+    getFileBlob({ columns, data: tableData, fileType, fileName })
   }
+
+  // console.log('tableData', tableData)
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data: tableData,
       defaultColumn,
       getExportFileBlob,
       initialState: {
@@ -104,7 +106,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} padding="15px">
-            <Text noOfLines={2} title={cell.value}>
+            <Text noOfLines={2} title={cell.value} pl={0}>
               {cell.render('Cell')}
             </Text>
           </Td>
@@ -125,7 +127,7 @@ export const TableHeader = ({ headerGroups }) => {
             return (
               // @ts-ignore
               <Th key={`th_td_${column.id}`} {...column.getHeaderProps(column.getSortByToggleProps())} p="0">
-                <Flex py="2" px="2" pl="7" alignItems="center">
+                <Flex py="2" px="2" pl="4" alignItems="center">
                   <Text
                     fontSize="14px"
                     color="gray.600"
@@ -162,7 +164,7 @@ export const TableHeader = ({ headerGroups }) => {
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => (
-            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4} pl="5">
+            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
               {column.canFilter ? column.render('Filter') : null}
             </Th>
           ))}
@@ -192,10 +194,19 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   )
 
   return (
-    <Tbody {...getTableBodyProps()}>
+    <Tbody {...getTableBodyProps()} flex={1}>
       <AutoSizer>
         {({ width, height }) => {
-          return <List height={height} rowCount={rows.length} rowHeight={60} rowRenderer={RenderRow} width={width} />
+          return (
+            <List
+              style={{ overflowY: 'overlay' }}
+              height={height}
+              rowCount={rows.length}
+              rowHeight={60}
+              rowRenderer={RenderRow}
+              width={width}
+            />
+          )
         }}
       </AutoSizer>
     </Tbody>
@@ -232,6 +243,7 @@ type TableExtraProps = {
   setTableInstance?: (i) => void
   onRowClick?: (e, row) => void
   isLoading?: boolean
+  defaultFlexStyle?: boolean
 }
 
 const emptyRows = [{}, {}, {}]
@@ -244,6 +256,7 @@ export function Table(props: Props & TableExtraProps): ReactElement {
     onRowClick,
     setTableInstance,
     isLoading,
+    defaultFlexStyle = true,
     ...restProps
   } = props
   const tableInstance = useCustomTable({ ...restProps, data: isLoading ? emptyRows : restProps.data })
@@ -251,9 +264,23 @@ export function Table(props: Props & TableExtraProps): ReactElement {
   useEffect(() => {
     setTableInstance?.(tableInstance)
   }, [tableInstance, setTableInstance])
-
+  const defaultStyles = () => {
+    if (defaultFlexStyle)
+      return {
+        display: 'flex',
+        flexFlow: 'column',
+      }
+  }
   return (
-    <ChakraTable w="100%" bg="#FFFFFF" h={tableHeight} boxShadow="sm" rounded="md" {...tableInstance.getTableProps()}>
+    <ChakraTable
+      {...defaultStyles()}
+      w="100%"
+      bg="#FFFFFF"
+      h={tableHeight}
+      boxShadow="sm"
+      rounded="md"
+      {...tableInstance.getTableProps()}
+    >
       <TableHead {...tableInstance} />
       {isLoading ? (
         <TableLoadingState {...tableInstance} />

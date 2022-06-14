@@ -146,7 +146,7 @@ export type License = {
   licenseType?: any
   licenseNumber?: string
   expiryDate?: null | string
-  expirationFile?: any
+  expirationFile?: File | null
   downloadableFile?: any
 }
 export type LicenseFormValues = {
@@ -239,17 +239,17 @@ export type VendorMarketFormValues = {
 export type DocumentsCardFormValues = {
   agreementSignedDate?: string | Date
   agreementUrl?: string
-  agreement?: File
+  agreement?: File | null
   w9DocumentDate?: string | Date
-  w9Document?: File
+  w9Document?: File | null
   autoInsuranceExpDate?: string | Date
   insuranceUrl?: string
-  insurance?: File
+  insurance?: File | null
   coiGlExpDate?: string | Date
-  coiGlExpFile?: File
+  coiGlExpFile?: File | null
   coiGLExpUrl?: string
   coiWcExpDate?: string | Date
-  coiWcExpFile?: File
+  coiWcExpFile?: File | null
   coiWcExpUrl?: string
   w9DocumentUrl?: string
 }
@@ -284,4 +284,8 @@ export type Vendors = {
   coiglExpirationDate: string
   coiWcExpirationDate: string
   einNumber: string
+  capacity: number
+  availableCapacity: number
+  skills: string
+  market: string
 }
