@@ -42,18 +42,18 @@ const ProjectDetailsTab = (props: tabProps) => {
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
-            <InvoiceAndPayments />
+            <InvoiceAndPayments dataInvoiceandpayment={props.selectedData} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>
             <Contact dataContact={props.selectedData} />
           </TabPanel>
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
-            <Location />
+            <Location dataLocation={props.selectedData} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
-            <Misc />
+            <Misc dataMisc={props.selectedData} />
           </TabPanel>
           {tabIndex === 0 && (
             <Stack>
