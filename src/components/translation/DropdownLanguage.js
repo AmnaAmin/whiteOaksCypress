@@ -17,7 +17,6 @@ const DropdownLanguage = () => {
   const { i18n } = useTranslation()
   const { data: account, refetch } = useAccountDetails()
   const { mutate: saveLanguage } = useSaveLanguage()
-  // const [language, setLanguage] = useState(account?.langKey);
 
   useEffect(() => {
     refetch()
@@ -26,14 +25,12 @@ const DropdownLanguage = () => {
   useEffect(() => {
     if (account) {
       const lastSelected = account?.langKey
-      // setLanguage(lastSelected);
       i18n.changeLanguage(lastSelected)
     }
   }, [account, i18n])
 
   const handleLangChange = evt => {
     const lang = evt.target.value
-    // setLanguage(lang);
     i18n.changeLanguage(lang)
     const languagePayload = {
       firstName: account.firstName,
@@ -54,12 +51,11 @@ const DropdownLanguage = () => {
         _hover={{ bg: 'blue.50', rounded: '6px' }}
         onChange={handleLangChange}
         variant="text"
-        // colorScheme="blue"
         bgSize="auto"
         w={{ base: '50px', md: 'auto' }}
       >
         <Stack direction="row" alignItems="center" spacing={-1}>
-          {account?.langKey === 'en' ? (
+          {account?.langKey === 'en' || account?.langKey === null || account?.langKey === undefined ? (
             <Box sx={languageStyle} display="inline-flex">
               <Flags.US
                 title="United States of America"
