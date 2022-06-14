@@ -15,6 +15,14 @@ const Location = (dataLocation: any) => {
     reset()
   }
 
+  const streetAddress = dataLocation?.dataLocation?.streetAddress
+  const city = dataLocation?.dataLocation?.city
+  const state = dataLocation?.dataLocation?.state
+  const lockBoxCode = dataLocation?.dataLocation?.lockBoxCode
+  const gateCode = dataLocation?.dataLocation?.gateCode
+  const market = dataLocation?.dataLocation?.market
+  const zipCode = dataLocation?.dataLocation?.zipCode
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="location">
@@ -26,7 +34,7 @@ const Location = (dataLocation: any) => {
                   Address
                 </FormLabel>
                 <Input
-                  value={dataLocation?.dataLocation?.streetAddress}
+                  value={streetAddress}
                   isDisabled={true}
                   id="address"
                   {...register('address', {
@@ -42,7 +50,7 @@ const Location = (dataLocation: any) => {
                   City
                 </FormLabel>
                 <Input
-                  value={dataLocation?.dataLocation?.city}
+                  value={city}
                   isDisabled={true}
                   id="city"
                   {...register('city', {
@@ -58,7 +66,7 @@ const Location = (dataLocation: any) => {
                   State
                 </FormLabel>
                 <Input
-                  value={dataLocation?.dataLocation?.state}
+                  value={state}
                   isDisabled={true}
                   id="state"
                   {...register('state', {
@@ -74,7 +82,7 @@ const Location = (dataLocation: any) => {
                   Zip
                 </FormLabel>
                 <Input
-                  value={dataLocation?.dataLocation?.zipCode}
+                  value={zipCode}
                   isDisabled={true}
                   id="zip"
                   {...register('zip', {
@@ -90,7 +98,7 @@ const Location = (dataLocation: any) => {
                   Market
                 </FormLabel>
                 <Input
-                  value={dataLocation?.dataLocation?.market}
+                  value={market}
                   isDisabled={true}
                   id="market"
                   {...register('market', {
@@ -108,7 +116,7 @@ const Location = (dataLocation: any) => {
                 <Input
                   border=" 1px solid #E2E8F0"
                   disabled
-                  value={dataLocation?.dataLocation?.gateCode}
+                  value={gateCode}
                   id="gateCode"
                   {...register('gateCode', {
                     required: 'This is required',
@@ -124,7 +132,7 @@ const Location = (dataLocation: any) => {
                 </FormLabel>
                 <Input
                   border=" 1px solid #E2E8F0"
-                  value={dataLocation?.dataLocation?.lockBoxCode}
+                  value={lockBoxCode}
                   disabled
                   id="lockBoxCode"
                   {...register('lockBoxCode', {

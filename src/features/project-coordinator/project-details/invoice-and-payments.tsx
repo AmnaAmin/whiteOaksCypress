@@ -35,7 +35,12 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
     reset()
   }
 
-  const link = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
+  const sowLink = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
+  const sowOriginalContractAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount
+  const sowNewAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount
+  const paymentTerm = dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm
+  const expectedPaymentDate = dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate
+  const accountRecievable = dataInvoiceandpayment?.dataInvoiceandpayment?.accountRecievable
 
   return (
     <Box>
@@ -49,7 +54,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                 </FormLabel>
                 <Input
                   id="originSowAmount"
-                  value={currencyFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount)}
+                  value={currencyFormatter(sowOriginalContractAmount)}
                   {...register('originSowAmount', {
                     required: 'This is required',
                   })}
@@ -66,7 +71,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                 </FormLabel>
                 <Input
                   id="finalSowAmount"
-                  value={currencyFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount)}
+                  value={currencyFormatter(sowNewAmount)}
                   {...register('finalSowAmount', {
                     required: 'This is required',
                   })}
@@ -159,7 +164,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} placeholder={dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm} />
+                      <ReactSelect {...field} placeholder={paymentTerm} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -174,11 +179,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate !== null
-                      ? dateFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={expectedPaymentDate !== null ? dateFormatter(expectedPaymentDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -187,7 +188,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             </GridItem>
             <GridItem display="grid" alignItems="end" h="67.3px">
               <Box mt="1">
-                <Link href={link}>
+                <Link href={sowLink}>
                   <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
                     Download Original SOW
                   </Button>
@@ -219,7 +220,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                 </FormLabel>
                 <Input
                   id="remainingPayment"
-                  value={currencyFormatter(dataInvoiceandpayment?.dataInvoiceandpayment?.accountRecievable)}
+                  value={currencyFormatter(accountRecievable)}
                   {...register('remainingPayment', {
                     required: 'This is required',
                   })}

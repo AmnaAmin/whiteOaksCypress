@@ -16,6 +16,19 @@ const Misc = (dataMisc: any) => {
     console.log('FormValues', formValues)
     reset()
   }
+  const createdDate = dataMisc?.dataMisc?.createdDate
+  const woaStartDate = dataMisc?.dataMisc?.woaStartDate
+  const clientSignoffDate = dataMisc?.dataMisc?.clientSignoffDate
+  const projectClosedDate = dataMisc?.dataMisc?.projectClosedDate
+  const clientPaidDate = dataMisc?.dataMisc?.clientPaidDate
+  const woaCompletionDate = dataMisc?.dataMisc?.woaCompletionDate
+  const woaBackdatedInvoiceDate = dataMisc?.dataMisc?.woaBackdatedInvoiceDate
+  const woaInvoiceDate = dataMisc?.dataMisc?.woaInvoiceDate
+  const woaPaidDate = dataMisc?.dataMisc?.woaPaidDate
+  const dueDateVariance = dataMisc?.dataMisc?.dueDateVariance
+  const signoffDateVariance = dataMisc?.dataMisc?.signoffDateVariance
+  const woaPayVariance = dataMisc?.dataMisc?.woaPayVariance
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="misc">
@@ -27,14 +40,7 @@ const Misc = (dataMisc: any) => {
                   Created
                 </FormLabel>
 
-                <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.createdDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.createdDate)
-                      : 'mm/dd/yyyy'
-                  }
-                  disable
-                />
+                <DatePickerInput value={createdDate !== null ? dateFormatter(createdDate) : 'mm/dd/yyyy'} disable />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -45,14 +51,7 @@ const Misc = (dataMisc: any) => {
                   Active
                 </FormLabel>
 
-                <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.woaStartDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.woaStartDate)
-                      : 'mm/dd/yyyy'
-                  }
-                  disable
-                />
+                <DatePickerInput value={woaStartDate !== null ? dateFormatter(woaStartDate) : 'mm/dd/yyyy'} disable />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -64,11 +63,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.clientSignoffDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.clientSignoffDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={clientSignoffDate !== null ? dateFormatter(clientSignoffDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -82,11 +77,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.projectClosedDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.projectClosedDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={projectClosedDate !== null ? dateFormatter(projectClosedDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -100,11 +91,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.clientPaidDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.clientPaidDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={clientPaidDate !== null ? dateFormatter(clientPaidDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -118,11 +105,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.woaCompletionDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.woaCompletionDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={woaCompletionDate !== null ? dateFormatter(woaCompletionDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -136,11 +119,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.woaBackdatedInvoiceDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.woaBackdatedInvoiceDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={woaBackdatedInvoiceDate !== null ? dateFormatter(woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -155,11 +134,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.woaInvoiceDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.woaInvoiceDate)
-                      : 'mm/dd/yyyy'
-                  }
+                  value={woaInvoiceDate !== null ? dateFormatter(woaInvoiceDate) : 'mm/dd/yyyy'}
                   disable
                 />
 
@@ -172,14 +147,7 @@ const Misc = (dataMisc: any) => {
                   WOA Paid
                 </FormLabel>
 
-                <DatePickerInput
-                  value={
-                    dataMisc?.dataMisc?.woaPaidDate !== null
-                      ? dateFormatter(dataMisc?.dataMisc?.woaPaidDate)
-                      : 'mm/dd/yyyy'
-                  }
-                  disable
-                />
+                <DatePickerInput value={woaPaidDate !== null ? dateFormatter(woaPaidDate) : 'mm/dd/yyyy'} disable />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -191,12 +159,7 @@ const Misc = (dataMisc: any) => {
                 <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input
-                  value={dataMisc?.dataMisc?.dueDateVariance}
-                  isDisabled={true}
-                  id="dueDate"
-                  {...register('dueDateVariance')}
-                />
+                <Input value={dueDateVariance} isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -207,7 +170,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <Input
-                  value={dataMisc?.dataMisc?.signoffDateVariance}
+                  value={signoffDateVariance}
                   isDisabled={true}
                   id="finalDate"
                   {...register('finalDateVariance')}
@@ -220,12 +183,7 @@ const Misc = (dataMisc: any) => {
                 <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input
-                  value={dataMisc?.dataMisc?.woaPayVariance}
-                  isDisabled={true}
-                  id="payVariance"
-                  {...register('payVariance')}
-                />
+                <Input value={woaPayVariance} isDisabled={true} id="payVariance" {...register('payVariance')} />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>

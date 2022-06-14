@@ -18,6 +18,10 @@ const Contact = (dataContact: any) => {
     reset()
   }
 
+  const projectManager = dataContact?.dataContact?.projectManager
+  const projectManagerPhoneNumber = dataContact?.dataContact?.projectManagerPhoneNumber
+  const clientName = dataContact?.dataContact?.clientName
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="contact">
@@ -34,11 +38,7 @@ const Contact = (dataContact: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect
-                        {...field}
-                        selectProps={{ isBorderLeft: true }}
-                        placeholder={dataContact?.dataContact?.projectManager}
-                      />
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} placeholder={projectManager} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -54,7 +54,7 @@ const Contact = (dataContact: any) => {
                 <Input
                   placeholder="098-987-2233"
                   id="fpmPhone"
-                  value={dataContact?.dataContact?.projectManagerPhoneNumber}
+                  value={projectManagerPhoneNumber}
                   isDisabled={true}
                   {...register('fpmPhone', {
                     required: 'This is required',
@@ -97,11 +97,7 @@ const Contact = (dataContact: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect
-                        {...field}
-                        selectProps={{ isBorderLeft: true }}
-                        placeholder={dataContact?.dataContact?.projectManager}
-                      />
+                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} placeholder={projectManager} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -116,7 +112,7 @@ const Contact = (dataContact: any) => {
                 </FormLabel>
                 <Input
                   placeholder="098-987-2233"
-                  value={dataContact?.dataContact?.projectManagerPhoneNumber}
+                  value={projectManagerPhoneNumber}
                   isDisabled={true}
                   id="pcPhone"
                   {...register('pcPhone', {
@@ -224,11 +220,7 @@ const Contact = (dataContact: any) => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
-                      {...field}
-                      selectProps={{ isBorderLeft: true }}
-                      placeholder={dataContact?.dataContact?.clientName}
-                    />
+                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} placeholder={clientName} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
