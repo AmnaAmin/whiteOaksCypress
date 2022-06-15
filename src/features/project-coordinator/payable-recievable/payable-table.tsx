@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Checkbox, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 
@@ -39,7 +39,6 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 
 export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
   (props, ref) => {
-    const { data: PayableData } = useAccountPayable()
     const { columns } = useColumnWidthResize(
       [
         {
@@ -70,7 +69,6 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
           Header: 'Final Invoice',
           accessor: 'finalInvoiceAmount',
         },
-
         {
           Header: 'Markets',
           accessor: 'marketName',
@@ -89,21 +87,29 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         },
         {
           Header: 'Checkbox',
-          accessor: 'checkbox',
+          accessor: () => {
+            return (
+              <Flex justifyContent="end">
+                <Spacer w="50px" />
+                <Checkbox />
+              </Flex>
+            )
+          },
         },
       ],
       ref,
     )
-
+    const { data: PayableData, isLoading } = useAccountPayable()
     return (
       <Box overflow="auto" width="100%">
         <ReactTable
           columns={columns}
           setTableInstance={props.setTableInstance}
-          data={PayableData || []}
+          data={PayableData?.workOrders}
+          isLoading={isLoading}
           TableRow={payableRow}
           tableHeight="calc(100vh - 300px)"
-          name="alerts-table"
+          name="payable-table"
         />
       </Box>
     )
