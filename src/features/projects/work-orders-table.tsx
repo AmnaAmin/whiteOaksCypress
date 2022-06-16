@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
@@ -63,6 +63,15 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
   const { t } = useTranslation()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
+
+  useEffect(() => {
+    if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
+      const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+      if (updatedWorkOrder) {
+        setSelectedWorkOrder({ ...updatedWorkOrder })
+      }
+    }
+  }, [workOrders])
 
   const { columns } = useColumnWidthResize(
     [
