@@ -297,6 +297,12 @@ i18n.use(initReactI18next).init({
         help: 'Help',
         support: 'Support',
         signOut: 'Sign Out',
+
+        // -- PROJECT COORDINATOR -- //
+
+        // Alerts
+        triggeredAlerts: 'Triggered Alerts',
+        managedAlerts: 'Managed Alerts',
       },
     },
     es: {
@@ -585,6 +591,12 @@ i18n.use(initReactI18next).init({
         help: 'Ayudar',
         support: 'Apoyo',
         signOut: 'Desconectar',
+
+        // -- PROJECT COORDINATOR -- //
+
+        // Alerts
+        triggeredAlerts: 'Alertas activadas',
+        managedAlerts: 'Alertas administradas',
       },
     },
   },
