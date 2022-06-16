@@ -23,7 +23,7 @@ const Misc = (dataMisc: any) => {
   const clientPaidDate = dataMisc?.dataMisc?.clientPaidDate
   const woaCompletionDate = dataMisc?.dataMisc?.woaCompletionDate
   const woaBackdatedInvoiceDate = dataMisc?.dataMisc?.woaBackdatedInvoiceDate
-  const woaInvoiceDate = dataMisc?.dataMisc?.woaInvoiceDate
+  // const woaInvoiceDate = dataMisc?.dataMisc?.woaInvoiceDate
   const woaPaidDate = dataMisc?.dataMisc?.woaPaidDate
   const dueDateVariance = dataMisc?.dataMisc?.dueDateVariance
   const signoffDateVariance = dataMisc?.dataMisc?.signoffDateVariance
@@ -126,8 +126,9 @@ const Misc = (dataMisc: any) => {
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
-            <GridItem>
+            {/* Figma change? */}
+
+            {/* <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   WOA Invoice
@@ -140,7 +141,7 @@ const Misc = (dataMisc: any) => {
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
-            </GridItem>
+            </GridItem> */}
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
@@ -152,8 +153,6 @@ const Misc = (dataMisc: any) => {
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
-            <GridItem></GridItem>
             <GridItem>
               <FormControl isInvalid={errors.dueDateVariance} w="215px">
                 <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">

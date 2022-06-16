@@ -1,23 +1,10 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  Link,
-  Stack,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack, VStack } from '@chakra-ui/react'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
 import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { t } from 'i18next'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { BiDownload } from 'react-icons/bi'
 import { dateFormatter } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
 
@@ -35,7 +22,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
     reset()
   }
 
-  const sowLink = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
+  // const sowLink = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
   const sowOriginalContractAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount
   const sowNewAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount
   const paymentTerm = dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm
@@ -164,7 +151,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} placeholder={paymentTerm} />
+                      <ReactSelect isDisabled {...field} placeholder={paymentTerm} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -187,13 +174,14 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
               </FormControl>
             </GridItem>
             <GridItem display="grid" alignItems="end" h="67.3px">
-              <Box mt="1">
+              {/* 16/06 it is changed on figma */}
+              {/* <Box mt="1">
                 <Link href={sowLink}>
                   <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
                     Download Original SOW
                   </Button>
                 </Link>
-              </Box>
+              </Box> */}
             </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.overPayment}>
