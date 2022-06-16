@@ -1,9 +1,5 @@
-import { Box, Text } from '@chakra-ui/layout'
+import { AccountDetails } from 'features/account-details/account-details'
 
 export const Payable: React.FC = () => {
-  return (
-    <Box>
-      <Text>Payable Page...</Text>
-    </Box>
-  )
+  return <AccountDetails topTitle={'Account Payable'} ID={'payable'} />
 }

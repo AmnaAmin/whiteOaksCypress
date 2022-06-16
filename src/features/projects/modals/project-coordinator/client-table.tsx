@@ -44,7 +44,7 @@ const Client: React.FC<{
               </HStack>
             </HStack>
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Stack spacing={5}>
               <Tabs variant="enclosed" whiteSpace="nowrap">

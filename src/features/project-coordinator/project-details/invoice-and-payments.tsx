@@ -1,38 +1,18 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  Stack,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack, VStack } from '@chakra-ui/react'
+import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
-import { FormFileInput } from 'components/react-hook-form-fields/file-input'
+import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { t } from 'i18next'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { BiDownload } from 'react-icons/bi'
+import { Controller, useForm } from 'react-hook-form'
+import { dateFormatter } from 'utils/date-time-utils'
+import { currencyFormatter } from 'utils/stringFormatters'
 
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'gray.600',
-}
-
-const inputTextStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'blackAlpha.500',
-}
-
-const InvoiceAndPayments = () => {
+const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
   const {
     handleSubmit,
     register,
+    control,
     reset,
     formState: { errors },
   } = useForm()
@@ -42,52 +22,58 @@ const InvoiceAndPayments = () => {
     reset()
   }
 
+  // const sowLink = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
+  const sowOriginalContractAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount
+  const sowNewAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount
+  const paymentTerm = dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm
+  const expectedPaymentDate = dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate
+  const accountRecievable = dataInvoiceandpayment?.dataInvoiceandpayment?.accountRecievable
+
   return (
     <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack minH="39vh" spacing={14}>
-          <Grid templateColumns="repeat(4,1fr)" rowGap={10} w="908px" columnGap={4}>
+      <form onSubmit={handleSubmit(onSubmit)} id="invoice">
+        <Stack>
+          <Grid templateColumns="repeat(4,1fr)" rowGap="32px" w="908px" columnGap="16px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
-                <FormLabel htmlFor="originSowAmount" sx={labelStyle}>
+                <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
                   Original SOW Amount
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="originSowAmount"
+                  value={currencyFormatter(sowOriginalContractAmount)}
                   {...register('originSowAmount', {
                     required: 'This is required',
                   })}
                   placeholder="$3000.00"
-                  bg="gray.100"
+                  isDisabled={true}
                 />
                 <FormErrorMessage>{errors.originSowAmount && errors.originSowAmount.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl w="215px" isInvalid={errors.finalSowAmount}>
-                <FormLabel sx={labelStyle} htmlFor="finalSowAmount">
+                <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
                   Final SOW Amount
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="finalSowAmount"
+                  value={currencyFormatter(sowNewAmount)}
                   {...register('finalSowAmount', {
                     required: 'This is required',
                   })}
                   placeholder="$3000.00"
-                  bg="gray.100"
+                  isDisabled={true}
                 />
                 <FormErrorMessage>{errors.finalSowAmount && errors.finalSowAmount.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl w="215px" isInvalid={errors.invoiceNo}>
-                <FormLabel htmlFor="invoiceNo" sx={labelStyle}>
-                  Invoice no
+                <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
+                  Invoice Number
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="invoiceNo"
                   {...register('invoiceNo', {
                     required: 'This is required',
@@ -97,131 +83,162 @@ const InvoiceAndPayments = () => {
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl sx={inputTextStyle}>
-                <FormLabel mb="0" sx={labelStyle}>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
                   Upload Invoice
                 </FormLabel>
-                <FormFileInput
-                  errorMessage={errors.agreement && errors.agreement?.message}
-                  label={''}
-                  name={`uploadInvoice`}
-                  register={register}
-                  testId="fileInputAgreement"
-                  style={{ w: '215px', h: '40px' }}
-                >
-                  <Button
-                    _focus={{ outline: 'none' }}
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="38px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
+                <Controller
+                  name="attachment"
+                  control={control}
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value ? field.value?.name : t('chooseFile')}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              // onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            // onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {/* {field.value && (
+                      // <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )} */}
+                      </VStack>
+                    )
+                  }}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  Invoice Back Date
+                </FormLabel>
+
+                <Input w="215px" size="md" type="date" />
+
+                {/* To discuss about datepicker matching figma */}
+                {/* <Input
+                  type="date"
+                  css={css`
+                    ::-webkit-calendar-picker-indicator {
+                      background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png)
+                        center/80% no-repeat;
+                      color: black;
+                    }
+                  `}
+                /> */}
+
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <FormControl w="215px" isInvalid={errors.paymentsTerms}>
+                <FormLabel variant="strong-label" size="md">
+                  Payments Terms
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="paymentsTerms"
+                  rules={{ required: 'This is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect isDisabled {...field} placeholder={paymentTerm} />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  WOA Expected Pay
+                </FormLabel>
+
+                <DatePickerInput
+                  value={expectedPaymentDate !== null ? dateFormatter(expectedPaymentDate) : 'mm/dd/yyyy'}
+                  disable
+                />
+
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </GridItem>
+            <GridItem display="grid" alignItems="end" h="67.3px">
+              {/* 16/06 it is changed on figma */}
+              {/* <Box mt="1">
+                <Link href={sowLink}>
+                  <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
+                    Download Original SOW
                   </Button>
-                </FormFileInput>
-              </FormControl>
+                </Link>
+              </Box> */}
             </GridItem>
             <GridItem>
-              <FormControl sx={inputTextStyle}>
-                <FormLabel sx={labelStyle}>Invoice back date</FormLabel>
-                <Input borderLeft="2px solid #4E87F8" placeholder="mm/dd/yyyy" />
-
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem>
-              <FormControl w="215px" sx={inputTextStyle}>
-                <FormLabel sx={labelStyle}>Payments terms</FormLabel>
-                <ReactSelect selectProps={{ isBorderLeft: true }} />
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem>
-              <FormControl sx={inputTextStyle}>
-                <FormLabel sx={labelStyle}>WOA Expected Pay</FormLabel>
-                <Input borderLeft="2px solid #4E87F8" placeholder="mm/dd/yyyy" />
-
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem display="grid" alignItems="end">
-              <Box mt="1">
-                <Button variant="outline" colorScheme="brand" leftIcon={<BiDownload />}>
-                  Original SOW
-                </Button>
-              </Box>
-            </GridItem>
-            <GridItem>
-              <FormControl w="215px" isInvalid={errors.overPayment}>
-                <FormLabel htmlFor="overPayment" sx={labelStyle}>
+              <FormControl isInvalid={errors.overPayment}>
+                <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
                   Overpayment
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="overPayment"
                   {...register('overPayment', {
                     required: 'This is required',
                   })}
                   placeholder="$0.00"
-                  bg="gray.100"
-                  borderLeft="2px solid #4E87F8"
+                  isDisabled={true}
+                  w="215px"
+                  size="md"
                 />
                 <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" isInvalid={errors.remainingPayment}>
-                <FormLabel htmlFor="remainingPayment" sx={labelStyle}>
+              <FormControl isInvalid={errors.remainingPayment}>
+                <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
                   Remaining Payment
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="remainingPayment"
+                  value={currencyFormatter(accountRecievable)}
                   {...register('remainingPayment', {
                     required: 'This is required',
                   })}
                   placeholder="$1200"
-                  bg="gray.100"
-                  borderLeft="2px solid #4E87F8"
+                  isDisabled={true}
+                  w="215px"
+                  size="md"
                 />
                 <FormErrorMessage>{errors.remainingPayment && errors.remainingPayment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl w="215px" isInvalid={errors.payment}>
-                <FormLabel htmlFor="payment" sx={labelStyle}>
+              <FormControl isInvalid={errors.payment}>
+                <FormLabel htmlFor="payment" variant="strong-label" size="md">
                   Payment
                 </FormLabel>
                 <Input
-                  sx={inputTextStyle}
                   id="payment"
                   {...register('payment', {
                     required: 'This is required',
                   })}
                   placeholder="$0"
-                  bg="gray.100"
-                  borderLeft="2px solid #4E87F8"
+                  w="215px"
+                  size="md"
                 />
                 <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
           </Grid>
-
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
       </form>
     </Box>

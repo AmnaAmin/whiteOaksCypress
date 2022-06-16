@@ -1,8 +1,6 @@
-import { Heading } from '@chakra-ui/react'
+import { AccountDetails } from 'features/account-details/account-details'
 import React from 'react'
 
-const Receivable = () => {
-  return <Heading>Receivable Page...</Heading>
+export const Receivable: React.FC = () => {
+  return <AccountDetails topTitle={'Account Receivable'} ID={'receivable'} />
 }
-
-export default Receivable

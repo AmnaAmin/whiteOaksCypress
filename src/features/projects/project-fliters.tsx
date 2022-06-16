@@ -1,11 +1,5 @@
 import { Box, Center } from '@chakra-ui/react'
-import SummaryIconFirst, {
-  SummaryIconFifth,
-  SummaryIconForth,
-  SummaryIconSecond,
-  SummaryIconThird,
-} from 'icons/project-icons'
-import numeral from 'numeral'
+import { BiFile, BiCalendar, BiDetail, BiMessageSquareX, BiCheckCircle } from 'react-icons/bi'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVendorCards } from 'utils/vendor-dashboard'
@@ -14,7 +8,7 @@ import { ProjectCard } from './project-card'
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
     <Center bg={bg} rounded="50%" w={{ base: '40px', md: '48px' }} h={{ base: '40px', md: '48px' }}>
-      <Icon />
+      <Icon fill="#4A5568" style={{ width: '20px', height: '20px' }} />
     </Center>
   )
 }
@@ -26,32 +20,31 @@ const useVendorCardJson = cards => {
       id: 'active',
       title: t('activeWO'),
       number: cards?.find(c => c.label === 'active')?.count,
-      IconElement: <IconElement Icon={SummaryIconFirst} bg="#F9F1DA" />,
+      IconElement: <IconElement Icon={BiFile} bg="orange.100" />,
     },
     {
       id: 'pastDue',
       title: t('pastDue'),
       number: cards?.find(c => c.label === 'pastDue')?.count,
-      IconElement: <IconElement Icon={SummaryIconSecond} bg="#E5ECF9" />,
+      IconElement: <IconElement Icon={BiCalendar} bg="#E8F0FF" />,
+    },
+    {
+      id: 'completed',
+      title: t('completed'),
+      number: cards?.find(c => c.label === 'completed')?.count, // HK|WOA-1736
+      IconElement: <IconElement Icon={BiCheckCircle} bg="#E7F8EC" />,
     },
     {
       id: 'invoiced',
       title: t('completedInvoiced'),
       number: cards?.find(c => c.label === 'invoiced')?.count,
-      IconElement: <IconElement Icon={SummaryIconThird} bg="#FCE8D8" />,
+      IconElement: <IconElement Icon={BiDetail} bg="#E2EFDF" />,
     },
     {
-      id: 'notInvoiced',
+      id: 'declined',
       title: t('completednotPaid'),
       number: cards?.find(c => c.label === 'declined')?.count,
-      IconElement: <IconElement Icon={SummaryIconForth} bg="#E2EFDF" />,
-    },
-    {
-      id: 'pendingTransactionsProjectsCount',
-      title: t('upcomingPayments'),
-      number: numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0.00a)'), // HK|WOA-1736
-      IconElement: <IconElement Icon={SummaryIconFifth} bg="#FAE6E5" />,
-      disabled: true,
+      IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
     },
   ]
 }
