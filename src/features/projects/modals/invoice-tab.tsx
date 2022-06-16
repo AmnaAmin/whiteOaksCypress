@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { currencyFormatter } from 'utils/stringFormatters'
-import { dateFormat } from 'utils/date-time-utils'
+import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 import { useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiDollarCircle, BiFile, BiXCircle, BiDownload, BiSpreadsheet } from 'react-icons/bi'
@@ -31,8 +31,8 @@ import { createInvoice } from 'utils/vendor-projects'
 import { downloadFile } from 'utils/file-utils'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useTranslation } from 'react-i18next'
-import { STATUS } from '../status'
-import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
+import { STATUS as WOstatus } from '../status'
+import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
 
 import * as _ from 'lodash'
@@ -73,16 +73,24 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   useEffect(() => {
     if (transactions && transactions.length > 0) {
-      const transactionItems = transactions.filter(co => co.parentWorkOrderId === workOrder.id)
+      // only show approved or paid transactions.
+      const transactionItems = transactions.filter(
+        co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
+      )
       setItems(transactionItems)
 
       // Draw Transaction Type = 30
       const changeOrders = transactionItems.filter(it => it.transactionType !== TransactionTypeValues.draw)
       const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
 
-      // Sum of all transactions (Change Orders)
+      // Sum of all approved (:not paid) transactions (Change Orders)
       if (changeOrders && changeOrders.length > 0) {
-        setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
+        setSubTotal(
+          changeOrders
+            .filter(co => co.transactionType !== TransactionTypeValues.woPaid)
+            .map(t => parseFloat(t.changeOrderAmount))
+            .reduce((sum, x) => sum + x),
+        )
       }
       // Sum of all Draws
       if (drawTransactions && drawTransactions.length > 0) {
@@ -128,12 +136,19 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   const generatePdf = useCallback(async () => {
     setPdfGenerated(true)
     let form = new jsPDF()
-    form = await createInvoice(form, workOrder, projectData, items, { subTotal, amountPaid })
+    const invoiceSubmittedDate = new Date()
+    const updatedWorkOrder = {
+      ...workOrder,
+      dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
+      expectedPaymentDate: convertDateTimeToServer(
+        new Date(invoiceSubmittedDate.setDate(invoiceSubmittedDate.getDate() + (workOrder.paymentTerm || 20))),
+      ),
+    }
+    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
-
     updateInvoice(
       {
-        ...workOrder,
+        ...updatedWorkOrder,
         documents: [
           ...documentsData,
           {
@@ -327,8 +342,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
-          {[STATUS.Invoiced, STATUS.Paid, STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
-          recentInvoice ? (
+          {[WOstatus.Invoiced, WOstatus.Paid, WOstatus.Completed].includes(
+            workOrder?.statusLabel?.toLocaleLowerCase(),
+          ) && recentInvoice ? (
             <Button
               variant="outline"
               colorScheme="brand"
@@ -343,8 +359,8 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               variant="outline"
               disabled={
                 !(
-                  workOrder?.statusLabel?.toLowerCase() === STATUS.Declined ||
-                  workOrder?.statusLabel?.toLowerCase() === STATUS.Completed
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
                 )
               }
               colorScheme="brand"

@@ -89,6 +89,7 @@ export enum TransactionTypeValues {
   draw = 30,
   material = 31,
   payment = 49,
+  woPaid = 62,
 }
 
 export enum TransactionStatusValues {
