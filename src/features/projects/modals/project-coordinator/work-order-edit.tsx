@@ -24,19 +24,10 @@ import {
 import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'
 import { useTranslation } from 'react-i18next'
-import WorkOrderDetailTab from './work-order-edit-tab'
+// import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment-tab-pc'
 import { InvoiceTabPC } from './invoice-tab-pc'
-
-const TabStyle = {
-  fontWeight: 500,
-  fontSize: '14px',
-  fontStyle: 'normal',
-  color: 'gray.600',
-  _hover: {
-    backgroundColor: 'gray.200',
-  },
-}
+import WorkOrderDetailTab from './work-order-edit-tab'
 
 const WorkOrderDetails = ({
   projectData,
@@ -109,72 +100,14 @@ const WorkOrderDetails = ({
         <Divider borderColor="#CBD5E0" />
         <ModalBody>
           <Stack mt="16px">
-            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
+            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap" colorScheme="brand">
               <TabList alignItems={'end'}>
                 <Flex>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    minW={180}
-                    sx={TabStyle}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                  >
-                    {t('workOrderDetails')}
-                  </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('lienWaiver')}
-                  </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      id: 'checkId',
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('invoice')}
-                  </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('payments')}
-                  </Tab>
-                  <Tab
-                    _focus={{ border: 'none' }}
-                    _selected={{
-                      color: 'white',
-                      bg: '#4E87F8',
-                      fontWeight: 600,
-                      id: 'checkId',
-                      _hover: { backgroundColor: '#4E87F8' },
-                    }}
-                    sx={TabStyle}
-                  >
-                    {t('notes')}
-                  </Tab>
+                  <Tab>{t('workOrderDetails')}</Tab>
+                  <Tab>{t('lienWaiver')}</Tab>
+                  <Tab>{t('invoice')}</Tab>
+                  <Tab>{t('payments')}</Tab>
+                  <Tab>{t('notes')}</Tab>
                 </Flex>
               </TabList>
 
