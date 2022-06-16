@@ -26,6 +26,7 @@ import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateM
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { useQueryClient } from 'react-query'
 
 const textStyle = {
   color: '#4A5568',
@@ -75,13 +76,14 @@ export const Details: React.FC<{
   const { t } = useTranslation()
   const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
   // const { data: payments, isLoading } = usePaymentMethods()
+  const queryClient = useQueryClient()
 
   const submitForm = useCallback(
     (formData: VendorProfileDetailsFormData) => {
       const payload = parseFormDataToAPIData(vendorProfileData, formData)
-
       updateVendorProfileDetails(payload, {
         onSuccess() {
+          queryClient.invalidateQueries('vendorProfile')
           toast({
             title: t('updateProfile'),
             description: t('updateProfileSuccess'),
@@ -278,7 +280,7 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                           <Input
                             {...field}
                             id="SecondaryNo"
-                            variant="required-field"
+                            // variant="required-field"
                             placeholder="(___)-___-____"
                             autoComplete="cc-number"
                             type="text"

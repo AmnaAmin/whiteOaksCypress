@@ -18,6 +18,7 @@ import {
   VStack,
   ModalFooter,
   ModalBody,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { currencyFormatter } from 'utils/stringFormatters'
@@ -32,6 +33,7 @@ import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useTranslation } from 'react-i18next'
 import { STATUS } from '../status'
 import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
+import { ConfirmationBox } from 'components/Confirmation'
 
 import * as _ from 'lodash'
 
@@ -61,6 +63,13 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)
   const [amountPaid, setAmountPaid] = useState(0)
+  const [isPdfGenerated, setPdfGenerated] = useState(false)
+
+  const {
+    isOpen: isGenerateInvoiceOpen,
+    onClose: onGenerateInvoiceClose,
+    onOpen: onGenerateInvoiceOpen,
+  } = useDisclosure()
 
   useEffect(() => {
     if (transactions && transactions.length > 0) {
@@ -117,22 +126,31 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   }, [documentsData])
 
   const generatePdf = useCallback(async () => {
+    setPdfGenerated(true)
     let form = new jsPDF()
     form = await createInvoice(form, workOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
 
-    updateInvoice({
-      ...workOrder,
-      documents: [
-        ...documentsData,
-        {
-          documentType: 48,
-          fileObject: pdfUri.split(',')[1],
-          fileObjectContentType: 'application/pdf',
-          fileType: 'Invoice.pdf',
+    updateInvoice(
+      {
+        ...workOrder,
+        documents: [
+          ...documentsData,
+          {
+            documentType: 48,
+            fileObject: pdfUri.split(',')[1],
+            fileObjectContentType: 'application/pdf',
+            fileType: 'Invoice.pdf',
+          },
+        ],
+      },
+      {
+        onSuccess() {
+          setPdfGenerated(false)
+          onGenerateInvoiceClose()
         },
-      ],
-    })
+      },
+    )
   }, [items, workOrder, projectData])
 
   const DeleteItems = Id => {
@@ -171,10 +189,10 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
-          <Box h="250px" overflow="auto">
+          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
             <form>
-              <Table border="1px solid #E2E8F0" variant="simple" size="md">
-                <Thead>
+              <Table variant="simple" size="md">
+                <Thead pos="sticky" top={0}>
                   <Tr>
                     <Td>{t('item')}</Td>
                     <Td>{t('description')}</Td>
@@ -309,32 +327,34 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
-          {workOrder?.statusLabel !== STATUS.Cancel && recentInvoice && (
+          {[STATUS.Invoiced, STATUS.Paid, STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
+          recentInvoice ? (
             <Button
               variant="outline"
               colorScheme="brand"
               size="md"
-              onClick={() => downloadFile(recentInvoice.s3Url)}
+              onClick={() => downloadFile(recentInvoice?.s3Url)}
               leftIcon={<BiDownload />}
             >
               {t('see')} {'invoice.pdf'}
             </Button>
+          ) : (
+            <Button
+              variant="outline"
+              disabled={
+                !(
+                  workOrder?.statusLabel?.toLowerCase() === STATUS.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === STATUS.Completed
+                )
+              }
+              colorScheme="brand"
+              size="md"
+              leftIcon={<BiSpreadsheet />}
+              onClick={onGenerateInvoiceOpen}
+            >
+              {t('generateINV')}
+            </Button>
           )}
-          <Button
-            variant="outline"
-            disabled={
-              !(
-                workOrder?.statusLabel?.toLowerCase() === STATUS.Declined ||
-                (workOrder?.statusLabel?.toLowerCase() === STATUS.Invoiced && !recentInvoice)
-              )
-            }
-            colorScheme="brand"
-            size="md"
-            leftIcon={<BiSpreadsheet />}
-            onClick={generatePdf}
-          >
-            {t('generateINV')}
-          </Button>
         </HStack>
         <HStack justifyContent="end">
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
@@ -342,6 +362,14 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           </Button>
         </HStack>
       </ModalFooter>
+      <ConfirmationBox
+        title="Invoice"
+        content="Are you sure you want to generate invoice"
+        isOpen={isGenerateInvoiceOpen}
+        onClose={onGenerateInvoiceClose}
+        onConfirm={generatePdf}
+        isLoading={isPdfGenerated}
+      />
     </Box>
   )
 }

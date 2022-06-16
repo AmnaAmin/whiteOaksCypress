@@ -51,11 +51,7 @@ export const useAccountDetails = () => {
 export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }), {
-    onSuccess(response) {
-      console.log('response', response)
-    },
-  })
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
@@ -202,6 +198,8 @@ export const useSaveVendorDetails = (name: string) => {
 }
 
 export const readFileContent = async (file: File) => {
+  if (!file) return Promise.resolve(null)
+
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
@@ -221,7 +219,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
         licenseType: license.licenseType,
         licenseNumber: license.licenseNumber,
         expiryDate: convertDateTimeFromServer(license.licenseExpirationDate),
-        expirationFile: [new File([license.fileObject], license.fileType)],
+        expirationFile: new File([license.fileObject], license.fileType),
         downloadableFile: { url: license.s3Url, name: license.fileType },
       }
       licenses.push(licenseObject)
@@ -238,8 +236,8 @@ export const parseLicenseValues = async (values: any) => {
         licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
         licenseNumber: license.licenseNumber,
         licenseType: license.licenseType,
-        fileObjectContentType: license.expirationFile[0].type,
-        fileType: license.expirationFile[0].name,
+        fileObjectContentType: license.expirationFile.type,
+        fileType: license.expirationFile.name,
         fileObject: fileContents,
       }
       return doc
@@ -312,11 +310,11 @@ export const parseDocumentCardsValues = async (values: any) => {
 
   const results = await Promise.all(
     documentsList.map(async (doc, index) => {
-      const fileContents = await readFileContent(doc.file[0])
+      const fileContents = await readFileContent(doc.file)
       const document = {
         documentType: doc.type,
-        fileObjectContentType: doc.file[0].type,
-        fileType: doc.file[0].name,
+        fileObjectContentType: doc.file.type,
+        fileType: doc.file.name,
         fileObject: fileContents,
       }
       return document

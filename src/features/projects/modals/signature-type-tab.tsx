@@ -42,10 +42,10 @@ export const SignatureTab = props => {
                   }}
                   placeholder=""
                   register={register}
-                  controlStyle={{ w: '938px' }}
+                  controlStyle={{ w: '600px' }}
                   elementStyle={{
-                    bg: 'gray.100',
-                    h: '150px',
+                    // bg: 'gray.100',
+                    h: '80px',
                     fontSize: '20px',
                     fontWeight: 700,
                     color: 'gray.800',

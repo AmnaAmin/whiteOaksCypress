@@ -221,25 +221,41 @@ export const PreviewImg = ({ preview, onPreviewChange, onImageFileChange }) => {
   }
 
   return (
-    <Box>
-      <Box pos="relative" display="flex" justifyContent="center" alignContent="center">
-        <Avatar size="lg" src={preview || defaultImage} zIndex={1}></Avatar>
-        <Button
-          ml={0}
-          onClick={handleInputClick}
-          bg="transparent"
-          variant="unstyled"
-          pos="absolute"
-          zIndex={2}
-          top="17px"
-          _focus={{ outline: 'none' }}
-        >
-          <Icon as={MdCameraAlt} boxSize={5} color="#FFFFFF" />
-        </Button>
+    <>
+      <Box>
+        <Box pos="relative" display="flex" justifyContent="center" alignContent="center">
+          <Avatar
+            _before={{
+              content: `""`,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'black',
+              opacity: 0.2,
+              borderRadius: '50%',
+            }}
+            size="lg"
+            src={preview || defaultImage}
+            zIndex={1}
+          ></Avatar>
+          <Button
+            ml={0}
+            onClick={handleInputClick}
+            bg="transparent"
+            variant="unstyled"
+            pos="absolute"
+            zIndex={2}
+            top="17px"
+            _focus={{ outline: 'none' }}
+          >
+            <Icon as={MdCameraAlt} boxSize={5} color="#FFFFFF" />
+          </Button>
+        </Box>
+        <Input hidden type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} />
       </Box>
-
-      <Input hidden type="file" ref={fileInputRef} accept="image/*" onChange={handleImageChange} />
-    </Box>
+    </>
   )
 }
 

@@ -1,6 +1,5 @@
 import { Box, Center } from '@chakra-ui/react'
-import { BiFile, BiCalendar, BiDetail, BiDollar, BiMessageSquareX } from 'react-icons/bi'
-import numeral from 'numeral'
+import { BiFile, BiCalendar, BiDetail, BiMessageSquareX, BiCheckCircle } from 'react-icons/bi'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVendorCards } from 'utils/vendor-dashboard'
@@ -30,23 +29,22 @@ const useVendorCardJson = cards => {
       IconElement: <IconElement Icon={BiCalendar} bg="#E8F0FF" />,
     },
     {
+      id: 'completed',
+      title: t('completed'),
+      number: cards?.find(c => c.label === 'completed')?.count, // HK|WOA-1736
+      IconElement: <IconElement Icon={BiCheckCircle} bg="#E7F8EC" />,
+    },
+    {
       id: 'invoiced',
       title: t('completedInvoiced'),
       number: cards?.find(c => c.label === 'invoiced')?.count,
       IconElement: <IconElement Icon={BiDetail} bg="#E2EFDF" />,
     },
     {
-      id: 'notInvoiced',
+      id: 'declined',
       title: t('completednotPaid'),
       number: cards?.find(c => c.label === 'declined')?.count,
       IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
-    },
-    {
-      id: 'pendingTransactionsProjectsCount',
-      title: t('upcomingPayments'),
-      number: numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0.00a)'), // HK|WOA-1736
-      IconElement: <IconElement Icon={BiDollar} bg="#ECF2FE" />,
-      disabled: true,
     },
   ]
 }

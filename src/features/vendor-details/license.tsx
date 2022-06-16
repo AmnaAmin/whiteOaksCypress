@@ -1,9 +1,20 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import { Box, HStack, VStack, Center, Icon, Flex } from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  VStack,
+  Center,
+  Icon,
+  Flex,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Text,
+} from '@chakra-ui/react'
 import { MdAdd } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import {
   licenseTypes,
   useSaveVendorDetails,
@@ -14,12 +25,12 @@ import {
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
-import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { Button } from 'components/button/button'
-
+import ChooseFileField from 'components/choose-file/choose-file'
+import { BiDownload } from 'react-icons/bi'
 type LicenseProps = {
   setNextTab: () => void
   vendor: VendorProfile
@@ -30,7 +41,6 @@ type licenseFormProps = {
   onSubmit: (values: any) => void
   onClose?: () => void
 }
-
 export const License = React.forwardRef((props: LicenseProps, ref) => {
   const { vendor = {}, setNextTab } = props
 
@@ -38,6 +48,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 
   const onSubmit = useCallback(
     async values => {
+      console.log('submit the file......')
       const results = await parseLicenseValues(values)
       const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
       saveLicenses(vendorPayload, {
@@ -48,42 +59,35 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
     },
     [vendor, setNextTab, saveLicenses],
   )
-
   return (
     <Box>
       <LicenseForm vendor={props.vendor} onSubmit={onSubmit} onClose={props.onClose} />
     </Box>
   )
 })
-
 export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => {
-  const [startDate] = useState(null)
+  const [startDate] = useState()
   const { t } = useTranslation()
-
   const defaultValues: LicenseFormValues = useMemo(() => {
     if (vendor) {
       return { licenses: licenseDefaultFormValues(vendor) }
     }
-
     return { licenses: [] }
   }, [vendor])
-
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
     watch,
-    getValues,
+    setValue,
     reset,
   } = useForm<LicenseFormValues>({
     defaultValues,
   })
-
   useEffect(() => {
     reset(defaultValues)
   }, [defaultValues, vendor, reset])
-
   const {
     fields: licenseFields,
     append,
@@ -92,19 +96,42 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
     control,
     name: 'licenses',
   })
-  const licenseValues = getValues()?.licenses
-
   /* debug purpose */
   const watchAllFields = watch()
   React.useEffect(() => {
     const subscription = watch(value => {})
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
+  const [
+    ,
+    // fileBlob
+    setFileBlob,
+  ] = React.useState<Blob>()
+  const readFile = (event: any) => {
+    setFileBlob(event.target?.result?.split(',')?.[1])
+  }
+  const onFileChange = (document: File) => {
+    if (!document) return
+    const reader = new FileReader()
+    reader.addEventListener('load', readFile)
+    reader.readAsDataURL(document)
+  }
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+        <Flex ml={1}>
+          <BiDownload fontSize="sm" />
+          <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
+            {text}
+          </Text>
+        </Flex>
+      </a>
+    )
+  }
   return (
     <Box>
       <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
-          _hover={{ bg: '#EBF8FF' }}
           variant="outline"
           ml="13px"
           colorScheme="brand"
@@ -139,18 +166,20 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                     />
                   </Center>
                 </Box>
+
                 <FormSelect
+                  disable={license?.expirationFile ? 'none' : ''}
+                  bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
                   options={licenseTypes}
                   rules={{ required: 'This is required field' }}
-                  controlStyle={{ W: '215px' }}
+                  controlStyle={{ maxW: '215px' }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #4E87F8',
-                    w: '215px',
                   }}
                   testId={`licenseType-` + index}
                 />
@@ -162,45 +191,62 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{
                     bg: 'white',
-                    w: '215px',
                   }}
                   rules={{ required: 'This is required field' }}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
                   variant="required-field"
                 />
-
                 <FormDatePicker
+                  isRequired={true}
+                  placeholder="mm/dd/yy"
                   errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
                   label={t('expiryDate')}
                   name={`licenses.${index}.expiryDate`}
                   control={control}
                   rules={{ required: 'This is required field' }}
-                  style={{ w: '215px' }}
-                  elementStyle={{
-                    bg: 'white',
-                    w: '215px',
-                  }}
+                  style={{ maxW: '215px', h: '92px' }}
                   defaultValue={startDate}
-                  isRequired={true}
-                  placeholder="mm/dd/yy"
                   testId={`expiryDate-` + index}
                 />
                 <VStack>
-                  <Box h="100px">
-                    <FormFileInput
-                      errorMessage={errors.licenses && errors.licenses[index]?.expirationFile?.message}
-                      // label={t('fileInput')}
+                  <FormControl w="290px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
+                    <FormLabel variant="strong-label" size="md">
+                      File Upload
+                    </FormLabel>
+                    <Controller
                       name={`licenses.${index}.expirationFile`}
-                      register={register}
-                      style={{ minW: '20em', mt: '25px' }}
-                      isRequired={true}
-                      downloadableFile={licenseValues?.[index].downloadableFile}
-                      testId={`expirationFile-` + index}
-                    >
-                      {t('chooseFile')}
-                    </FormFileInput>
-                  </Box>
+                      control={control}
+                      rules={{ required: 'This is required field' }}
+                      render={({ field, fieldState }) => {
+                        return (
+                          <VStack alignItems="baseline">
+                            <Box>
+                              <ChooseFileField
+                                testId={`expirationFile-` + index}
+                                name={field.name}
+                                value={field.value?.name ? field.value?.name : 'Choose File'}
+                                isError={!!fieldState.error?.message}
+                                onChange={(file: any) => {
+                                  onFileChange(file)
+                                  field.onChange(file)
+                                }}
+                                onClear={() => setValue(field.name, null)}
+                              ></ChooseFileField>
+                              <FormErrorMessage bottom="5px" pos="absolute">
+                                {fieldState.error?.message}
+                              </FormErrorMessage>
+                            </Box>
+                            {field.value?.name && (
+                              <Box overflow="hidden" pos="absolute" top={16}>
+                                {downloadDocument(document, field.value ? field.value?.name : 'doc.png')}
+                              </Box>
+                            )}
+                          </VStack>
+                        )
+                      }}
+                    />
+                  </FormControl>
                 </VStack>
               </HStack>
             )
@@ -212,7 +258,6 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
               Cancel
             </Button>
           )}
-
           <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveLicenses">
             {t('save')}
           </Button>

@@ -9,11 +9,11 @@ import {
   Portal,
   InputRightElement,
 } from '@chakra-ui/react'
-import { AiOutlineCalendar } from 'react-icons/ai'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, Control } from 'react-hook-form'
 import { getFormattedDate } from 'utils/date-time-utils'
+import { BiCalendar } from 'react-icons/bi'
 
 type DatePickerProps = {
   disabled?: boolean
@@ -31,6 +31,7 @@ type DatePickerProps = {
   placeholder?: string
   onChange?: (e) => void
   testId?: string
+  errorBoxheight?: any
 }
 const CalendarContainer = ({ children }) => {
   return <Portal>{children}</Portal>
@@ -69,8 +70,10 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
               />
             }
           />
-          <Box minH="20px" mt="3px">
-            <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
+          <Box>
+            <FormErrorMessage position="absolute" mt="3px">
+              {fieldState.error?.message}
+            </FormErrorMessage>
           </Box>
         </>
       )}
@@ -78,7 +81,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
   </FormControl>
 ))
 
-const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<HTMLInputElement>) => (
+export const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<HTMLInputElement>) => (
   <InputGroup>
     <Input
       {...props.style}
@@ -98,7 +101,7 @@ const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<H
 
     <InputRightElement className="InputLeft" pointerEvents="none" zIndex={1}>
       <Box color="gray.400" fontSize="14px">
-        <AiOutlineCalendar size={20} cursor="pointer" color="#A0AEC0" />
+        <BiCalendar size={20} cursor="pointer" color="#A0AEC0" />
       </Box>
     </InputRightElement>
   </InputGroup>
