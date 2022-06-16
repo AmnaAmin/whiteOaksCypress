@@ -220,7 +220,7 @@ const Contact = (dataContact: any) => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} placeholder={clientName} />
+                    <ReactSelect isDisabled {...field} selectProps={{ isBorderLeft: true }} placeholder={clientName} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
