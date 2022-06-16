@@ -63,7 +63,7 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'Client Start Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <FormLabel variant="light-label" size="md" width="100px">
+              <FormLabel variant="light-label" size="md" width="90px">
                 {dateFormat(projectData?.clientStartDate as string)}
               </FormLabel>
             </Box>
@@ -73,7 +73,7 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'Client End Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <FormLabel variant="light-label" size="md" width="100px">
+              <FormLabel variant="light-label" size="md" width="90px" ml={1}>
                 {dateFormat(projectData?.clientDueDate as string)}
               </FormLabel>
             </Box>
@@ -95,7 +95,7 @@ export const TransactionInfoCardDetails: React.FC<{
               <InfoStructureCard title={'WOA End Date'} isLoading={isLoading} />
             </Box>
             <Box>
-              <FormLabel variant="light-label" size="md" width="100px">
+              <FormLabel variant="light-label" size="md" width="100px" ml={1}>
                 {dateFormat(projectData?.woaCompletionDate as string)}
               </FormLabel>
             </Box>
@@ -104,11 +104,11 @@ export const TransactionInfoCardDetails: React.FC<{
         <VStack flex={2}>
           <HStack>
             <Tooltip label="Project Coordinator Name" color="black" placement="top">
-              <Box marginRight={3}>
+              <Box marginLeft={-7}>
                 <InfoStructureCard title={'PC Name'} isLoading={isLoading} />
               </Box>
             </Tooltip>
-            <Box>
+            <Box paddingLeft={3}>
               <FormLabel variant="light-label" size="md">
                 {projectData?.projectCoordinator}
               </FormLabel>
