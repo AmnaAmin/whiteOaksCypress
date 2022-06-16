@@ -55,7 +55,7 @@ const DropdownLanguage = () => {
         w={{ base: '50px', md: 'auto' }}
       >
         <Stack direction="row" alignItems="center" spacing={-1}>
-          {account?.langKey === 'en' || account?.langKey === null || account?.langKey === undefined ? (
+          {!account?.langKey || account?.langKey === 'en' ? (
             <Box sx={languageStyle} display="inline-flex">
               <Flags.US
                 title="United States of America"
