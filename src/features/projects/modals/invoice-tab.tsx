@@ -141,7 +141,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     const updatedWorkOrder = {
       ...workOrder,
       dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
-      expectedPaymentDate: convertDateTimeToServer(addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)),
+      paymentTermDate: convertDateTimeToServer(addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)),
     }
     form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
@@ -195,7 +195,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
+            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
         </Grid>
