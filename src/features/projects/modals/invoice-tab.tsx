@@ -195,7 +195,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
+            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
         </Grid>
