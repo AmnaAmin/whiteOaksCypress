@@ -7,6 +7,8 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Vendor Score',
+        vendorStatus: 'Vendor Status',
+        upcomingPayment: 'Upcoming Payment',
         outOf: 'out of',
         licenseExpiration: 'License Expiration',
         insuranceExpiration: 'Insurance Expiration',
@@ -309,6 +311,8 @@ i18n.use(initReactI18next).init({
       translation: {
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
+        vendorStatus: 'Estado del proveedor',
+        upcomingPayment: 'Próximo pago',
         outOf: 'fuera de',
         insuranceExpiration: 'Vencimiento del Seguro',
         licenseExpiration: 'Caducidad de la licencia',
