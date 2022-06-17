@@ -650,15 +650,17 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
             {t('next')}
           </Button>
         ) : (
-          <Button
-            type="submit"
-            form="newTransactionForm"
-            data-testid="save-transaction"
-            colorScheme="brand"
-            variant="solid"
-          >
-            {t('save')}
-          </Button>
+          !isApproved && (
+            <Button
+              type="submit"
+              form="newTransactionForm"
+              data-testid="save-transaction"
+              colorScheme="brand"
+              variant="solid"
+            >
+              {t('save')}
+            </Button>
+          )
         )}
       </HStack>
     </Flex>
