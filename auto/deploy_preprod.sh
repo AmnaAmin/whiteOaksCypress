@@ -4,9 +4,9 @@ set -eux
 
 PARENT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 
-echo "🚀 Deploying project to Prod..."
+echo "🚀 Deploying project to Pre-Prod..."
 
 cd output
 
 echo "🚀 deploying to s3"
-aws s3 sync . s3://whiteoaks-manual-next-gen-ui --delete
+aws s3 sync . s3://woa-preprod-ui --delete

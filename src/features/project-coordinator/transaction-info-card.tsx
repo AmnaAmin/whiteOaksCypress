@@ -64,7 +64,7 @@ export const TransactionInfoCard: React.FC<{
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'Project Due'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md">
+          <FormLabel variant="light-label" size="md" noOfLines={1}>
             {dateFormat(projectData?.clientDueDate as string)}
           </FormLabel>
         </InfoStructureCard>
@@ -74,7 +74,7 @@ export const TransactionInfoCard: React.FC<{
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'FPM Contact'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md">
+          <FormLabel variant="light-label" size="md" noOfLines={1}>
             {projectData?.projectManagerPhoneNumber}
           </FormLabel>
         </InfoStructureCard>
