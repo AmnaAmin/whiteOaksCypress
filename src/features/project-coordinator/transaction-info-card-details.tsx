@@ -104,12 +104,12 @@ export const TransactionInfoCardDetails: React.FC<{
         <VStack flex={2}>
           <HStack>
             <Tooltip label="Project Coordinator Name" color="black" placement="top">
-              <Box marginLeft={-7}>
+              <Box>
                 <InfoStructureCard title={'PC Name'} isLoading={isLoading} />
               </Box>
             </Tooltip>
             <Box paddingLeft={3}>
-              <FormLabel variant="light-label" size="md">
+              <FormLabel variant="light-label" size="md" width="100px">
                 {projectData?.projectCoordinator}
               </FormLabel>
             </Box>
@@ -121,7 +121,7 @@ export const TransactionInfoCardDetails: React.FC<{
               </Box>
             </Tooltip>
             <Box>
-              <FormLabel variant="light-label" size="md">
+              <FormLabel variant="light-label" size="md" width="100px">
                 {account?.telephoneNumber}
               </FormLabel>
             </Box>
