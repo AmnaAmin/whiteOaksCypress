@@ -150,7 +150,7 @@ const WorkOrderDetailTab = props => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack mt="32px" spacing="32px">
+        <Stack mt="32px" spacing="32px" mx="32px">
           <SimpleGrid columns={5}>
             <InformationCard title="Vendor Name" date={companyName} />
             <InformationCard title="Vendor Type" date={skillName} />
@@ -171,7 +171,7 @@ const WorkOrderDetailTab = props => {
             <Divider borderColor="#CBD5E0" />
           </Box>
         </Stack>
-        <Box mt="32px">
+        <Box mt="32px" mx="32px">
           <HStack spacing="16px">
             <Box w="215px">
               <FormControl zIndex="2">
@@ -200,7 +200,7 @@ const WorkOrderDetailTab = props => {
           </HStack>
         </Box>
 
-        <Stack direction="row" mt="32px" justifyContent="space-between">
+        <Stack direction="row" mt="32px" justifyContent="space-between" mx="32px">
           <HStack>
             <Text>Assigned Items</Text>
             <Box pl="2" pr="1">
@@ -238,7 +238,7 @@ const WorkOrderDetailTab = props => {
             </Button>
           </HStack>
         </Stack>
-        <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md">
+        <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md" mx="32px">
           <TableContainer>
             <Box overflow="auto" h="300px">
               <Table>
@@ -353,7 +353,7 @@ const WorkOrderDetailTab = props => {
 
         <Box mt="16px">
           <Divider borderColor="#CBD5E0" />
-          <HStack alignItems="center" justifyContent="end" spacing="16px" mt="16px" mb="8px">
+          <HStack alignItems="center" justifyContent="end" spacing="16px" my="16px" mx="32px">
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>

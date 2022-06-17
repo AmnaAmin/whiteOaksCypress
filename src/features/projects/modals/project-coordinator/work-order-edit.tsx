@@ -19,7 +19,6 @@ import {
   TagLabel,
   Tag,
   Box,
-  Flex,
 } from '@chakra-ui/react'
 import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'
@@ -98,17 +97,15 @@ const WorkOrderDetails = ({
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <Divider borderColor="#CBD5E0" />
-        <ModalBody>
+        <ModalBody p="0">
           <Stack mt="16px">
             <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap" colorScheme="brand">
-              <TabList alignItems={'end'}>
-                <Flex>
-                  <Tab>{t('workOrderDetails')}</Tab>
-                  <Tab>{t('lienWaiver')}</Tab>
-                  <Tab>{t('invoice')}</Tab>
-                  <Tab>{t('payments')}</Tab>
-                  <Tab>{t('notes')}</Tab>
-                </Flex>
+              <TabList mx="32px">
+                <Tab>{t('workOrderDetails')}</Tab>
+                <Tab>{t('lienWaiver')}</Tab>
+                <Tab>{t('invoice')}</Tab>
+                <Tab>{t('payments')}</Tab>
+                <Tab>{t('notes')}</Tab>
               </TabList>
 
               <TabPanels>
