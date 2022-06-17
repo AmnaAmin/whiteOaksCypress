@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { STATUS as WOstatus } from '../status'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
+import { addDays } from 'date-fns'
 
 import * as _ from 'lodash'
 
@@ -140,9 +141,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     const updatedWorkOrder = {
       ...workOrder,
       dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
-      expectedPaymentDate: convertDateTimeToServer(
-        new Date(invoiceSubmittedDate.setDate(invoiceSubmittedDate.getDate() + (workOrder.paymentTerm || 20))),
-      ),
+      paymentTermDate: convertDateTimeToServer(addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)),
     }
     form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
@@ -196,7 +195,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
+            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
         </Grid>
