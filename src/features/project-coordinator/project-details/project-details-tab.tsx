@@ -243,7 +243,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
-              <Box h="70px" w="100%" pb="3">
+              <Box h="69px" w="100%" pb="3">
                 <Button
                   mt="8px"
                   mr="32px"
