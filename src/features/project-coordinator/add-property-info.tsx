@@ -113,6 +113,7 @@ export const AddPropertyInfo: React.FC<{
               setIsDuplicateAddress(false)
             }
           }
+          return property
         })
       }
       return property
