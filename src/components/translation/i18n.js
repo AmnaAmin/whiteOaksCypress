@@ -295,10 +295,36 @@ i18n.use(initReactI18next).init({
         help: 'Help',
         support: 'Support',
         signOut: 'Sign Out',
+
+        // Alerts
+        triggeredAlert: 'Triggered Alert',
+        managedAlert: 'Managed Alert',
+        resloveAll: 'Reslove All',
+        projectId: 'Project Id',
+        stateZipcode: 'State/Zipcode',
+        workOrderStart: 'Work Order Start',
+        woCompletionDate: 'Wo Completion Date',
+        resolved: 'Resolved',
+        resolve: 'Resolve',
+        seeProjectDetails: 'See Project Details',
+        notify: 'Notify',
       },
     },
     es: {
       translation: {
+        // Alerts
+        triggeredAlert: 'Alerta activada',
+        managedAlert: 'Alerta gestionada',
+        resloveAll: 'Solucionelo todo',
+        projectId: 'Projecto ID',
+        stateZipcode: 'Estado/Código postal',
+        workOrderStart: 'Inicio de orden de trabajo',
+        woCompletionDate: 'Fecha de finalización de Wo',
+        resolve: 'Resolver',
+        resolved: 'Resuelta',
+        seeProjectDetails: 'Ver detalles del proyecto',
+        notify: 'Notificar',
+
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
         outOf: 'fuera de',
