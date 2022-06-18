@@ -2,7 +2,7 @@ import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, S
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
-const Location = () => {
+const Location = (dataLocation: any) => {
   const {
     register,
     handleSubmit,
@@ -15,10 +15,18 @@ const Location = () => {
     reset()
   }
 
+  const streetAddress = dataLocation?.dataLocation?.streetAddress
+  const city = dataLocation?.dataLocation?.city
+  const state = dataLocation?.dataLocation?.state
+  const lockBoxCode = dataLocation?.dataLocation?.lockBoxCode
+  const gateCode = dataLocation?.dataLocation?.gateCode
+  const market = dataLocation?.dataLocation?.market
+  const zipCode = dataLocation?.dataLocation?.zipCode
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="location">
-        <Stack minH="32vh">
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl isInvalid={errors.address} w="215px">
@@ -26,8 +34,8 @@ const Location = () => {
                   Address
                 </FormLabel>
                 <Input
-                  placeholder="2037 SW TRENTON LN"
-                  bg="#EDF2F7"
+                  value={streetAddress}
+                  isDisabled={true}
                   id="address"
                   {...register('address', {
                     required: 'This is required',
@@ -42,8 +50,8 @@ const Location = () => {
                   City
                 </FormLabel>
                 <Input
-                  placeholder="East Point"
-                  bg="#EDF2F7"
+                  value={city}
+                  isDisabled={true}
                   id="city"
                   {...register('city', {
                     required: 'This is required',
@@ -58,8 +66,8 @@ const Location = () => {
                   State
                 </FormLabel>
                 <Input
-                  placeholder="NC"
-                  bg="#EDF2F7"
+                  value={state}
+                  isDisabled={true}
                   id="state"
                   {...register('state', {
                     required: 'This is required',
@@ -74,8 +82,8 @@ const Location = () => {
                   Zip
                 </FormLabel>
                 <Input
-                  placeholder="28164"
-                  bg="#EDF2F7"
+                  value={zipCode}
+                  isDisabled={true}
                   id="zip"
                   {...register('zip', {
                     required: 'This is required',
@@ -90,8 +98,8 @@ const Location = () => {
                   Market
                 </FormLabel>
                 <Input
-                  placeholder="Atlanta"
-                  bg="#EDF2F7"
+                  value={market}
+                  isDisabled={true}
                   id="market"
                   {...register('market', {
                     required: 'This is required',
@@ -107,7 +115,8 @@ const Location = () => {
                 </FormLabel>
                 <Input
                   border=" 1px solid #E2E8F0"
-                  placeholder="2334"
+                  disabled
+                  value={gateCode}
                   id="gateCode"
                   {...register('gateCode', {
                     required: 'This is required',
@@ -123,7 +132,8 @@ const Location = () => {
                 </FormLabel>
                 <Input
                   border=" 1px solid #E2E8F0"
-                  placeholder="5678"
+                  value={lockBoxCode}
+                  disabled
                   id="lockBoxCode"
                   {...register('lockBoxCode', {
                     required: 'This is required',

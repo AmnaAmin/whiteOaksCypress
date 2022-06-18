@@ -21,12 +21,13 @@ import {
 import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'
 import { useTranslation } from 'react-i18next'
-import WorkOrderDetailTab from './work-order-edit-tab'
+// import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment-tab-pc'
 import { InvoiceTabPC } from './invoice-tab-pc'
 import Status from 'features/projects/status'
 import WorkOrderNotes from '../work-order-notes'
 import { countInCircle } from 'theme/common-style'
+import WorkOrderDetailTab from './work-order-edit-tab'
 
 const WorkOrderDetails = ({
   projectData,
@@ -57,14 +58,14 @@ const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="none">
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
 
-      <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
-        <ModalHeader h="64px" py={4} display="flex" alignItems="center">
+      <ModalContent rounded={3} borderTop="2px solid #4E87F8">
+        <ModalHeader>
           {tabIndex === 4 && (
             <Box>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
+              <HStack fontSize="16px" fontWeight={500}>
                 <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
                   Invoice # 432022
                 </Text>
@@ -77,7 +78,7 @@ const WorkOrderDetails = ({
 
           {tabIndex !== 4 && (
             <HStack spacing={4}>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
+              <HStack fontSize="16px" fontWeight={500}>
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
                   WO {workOrder?.id}
                 </Text>
@@ -91,7 +92,7 @@ const WorkOrderDetails = ({
           )}
         </ModalHeader>
 
-        <ModalCloseButton m={3} _focus={{ outline: 'none' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <Divider mb={3} />
         <ModalBody>

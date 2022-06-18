@@ -18,10 +18,11 @@ import {
   VStack,
   ModalFooter,
   ModalBody,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { currencyFormatter } from 'utils/stringFormatters'
-import { dateFormat } from 'utils/date-time-utils'
+import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 import { useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCalendar, BiDollarCircle, BiFile, BiXCircle, BiDownload, BiSpreadsheet } from 'react-icons/bi'
@@ -30,8 +31,12 @@ import { createInvoice } from 'utils/vendor-projects'
 import { downloadFile } from 'utils/file-utils'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { useTranslation } from 'react-i18next'
-import { STATUS } from '../status'
-import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
+import { STATUS as WOstatus } from '../status'
+import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
+import { ConfirmationBox } from 'components/Confirmation'
+import { addDays } from 'date-fns'
+
+import * as _ from 'lodash'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -59,19 +64,34 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)
   const [amountPaid, setAmountPaid] = useState(0)
+  const [isPdfGenerated, setPdfGenerated] = useState(false)
+
+  const {
+    isOpen: isGenerateInvoiceOpen,
+    onClose: onGenerateInvoiceClose,
+    onOpen: onGenerateInvoiceOpen,
+  } = useDisclosure()
 
   useEffect(() => {
     if (transactions && transactions.length > 0) {
-      const transactionItems = transactions.filter(co => co.parentWorkOrderId === workOrder.id)
+      // only show approved or paid transactions.
+      const transactionItems = transactions.filter(
+        co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
+      )
       setItems(transactionItems)
 
       // Draw Transaction Type = 30
       const changeOrders = transactionItems.filter(it => it.transactionType !== TransactionTypeValues.draw)
       const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
 
-      // Sum of all transactions (Change Orders)
+      // Sum of all approved (:not paid) transactions (Change Orders)
       if (changeOrders && changeOrders.length > 0) {
-        setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
+        setSubTotal(
+          changeOrders
+            .filter(co => co.transactionType !== TransactionTypeValues.woPaid)
+            .map(t => parseFloat(t.changeOrderAmount))
+            .reduce((sum, x) => sum + x),
+        )
       }
       // Sum of all Draws
       if (drawTransactions && drawTransactions.length > 0) {
@@ -95,31 +115,57 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
-      const invoice = documentsData.find(d => d.documentType === 48)
-      if (invoice) {
-        setRecentInvoice({ s3Url: invoice.s3Url, fileType: invoice.fileType })
+      let invoices = documentsData.filter(d => d.documentType === 48 && d.workOrderId === workOrder.id)
+      if (invoices.length > 0) {
+        /* sorting invoices by created datetime to fetch latest */
+        invoices = _.orderBy(
+          invoices,
+          [
+            item => {
+              const createdDate = new Date(item.createdDate)
+              return createdDate
+            },
+          ],
+          ['desc'],
+        )
+        const recentInvoice = invoices[0]
+        setRecentInvoice({ s3Url: recentInvoice.s3Url, fileType: recentInvoice.fileType })
       }
     }
   }, [documentsData])
 
   const generatePdf = useCallback(async () => {
+    setPdfGenerated(true)
     let form = new jsPDF()
-    form = await createInvoice(form, workOrder, projectData, items, { subTotal, amountPaid })
-    const pdfUri = form.output('datauristring')
-
-    updateInvoice({
+    const invoiceSubmittedDate = new Date()
+    const updatedWorkOrder = {
       ...workOrder,
-      documents: [
-        ...documentsData,
-        {
-          documentType: 48,
-          fileObject: pdfUri.split(',')[1],
-          fileObjectContentType: 'application/pdf',
-          fileType: 'Invoice.pdf',
+      dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
+      paymentTermDate: convertDateTimeToServer(addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)),
+    }
+    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
+    const pdfUri = form.output('datauristring')
+    updateInvoice(
+      {
+        ...updatedWorkOrder,
+        documents: [
+          ...documentsData,
+          {
+            documentType: 48,
+            fileObject: pdfUri.split(',')[1],
+            fileObjectContentType: 'application/pdf',
+            fileType: 'Invoice.pdf',
+          },
+        ],
+      },
+      {
+        onSuccess() {
+          setPdfGenerated(false)
+          onGenerateInvoiceClose()
         },
-      ],
-    })
-  }, [])
+      },
+    )
+  }, [items, workOrder, projectData])
 
   const DeleteItems = Id => {
     const deleteValue = items.filter((value, id) => id !== Id)
@@ -149,7 +195,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
+            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
         </Grid>
@@ -157,10 +203,10 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
         <Box>
-          <Box h="250px" overflow="auto">
+          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
             <form>
-              <Table border="1px solid #E2E8F0" variant="simple" size="md">
-                <Thead>
+              <Table variant="simple" size="md">
+                <Thead pos="sticky" top={0}>
                   <Tr>
                     <Td>{t('item')}</Td>
                     <Td>{t('description')}</Td>
@@ -295,27 +341,35 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
-          {workOrder?.statusLabel !== STATUS.Cancel && recentInvoice && (
+          {[WOstatus.Invoiced, WOstatus.Paid, WOstatus.Completed].includes(
+            workOrder?.statusLabel?.toLocaleLowerCase(),
+          ) && recentInvoice ? (
             <Button
               variant="outline"
               colorScheme="brand"
               size="md"
-              onClick={() => downloadFile(recentInvoice.s3Url)}
+              onClick={() => downloadFile(recentInvoice?.s3Url)}
               leftIcon={<BiDownload />}
             >
               {t('see')} {'invoice.pdf'}
             </Button>
+          ) : (
+            <Button
+              variant="outline"
+              disabled={
+                !(
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
+                )
+              }
+              colorScheme="brand"
+              size="md"
+              leftIcon={<BiSpreadsheet />}
+              onClick={onGenerateInvoiceOpen}
+            >
+              {t('generateINV')}
+            </Button>
           )}
-          <Button
-            variant="outline"
-            disabled={workOrder?.statusLabel !== STATUS.Cancel}
-            colorScheme="brand"
-            size="md"
-            leftIcon={<BiSpreadsheet />}
-            onClick={generatePdf}
-          >
-            {t('generateINV')}
-          </Button>
         </HStack>
         <HStack justifyContent="end">
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
@@ -323,6 +377,14 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           </Button>
         </HStack>
       </ModalFooter>
+      <ConfirmationBox
+        title="Invoice"
+        content="Are you sure you want to generate invoice"
+        isOpen={isGenerateInvoiceOpen}
+        onClose={onGenerateInvoiceClose}
+        onConfirm={generatePdf}
+        isLoading={isPdfGenerated}
+      />
     </Box>
   )
 }

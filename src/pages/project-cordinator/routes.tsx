@@ -7,10 +7,10 @@ import { Projects } from 'pages/project-cordinator/projects'
 import { ProjectCoordinatorDashboard } from 'pages/project-cordinator/dashboard'
 import { ProjectDetails } from 'pages/project-cordinator/project-details'
 import { Payable } from './payable'
-import Receivable from './receivable'
 import Vendors from './vendors'
 import Clients from './clients'
 import Alerts from './alerts'
+import { Receivable } from './receivable'
 
 export default function ProjectCordinatorRoutes() {
   return (

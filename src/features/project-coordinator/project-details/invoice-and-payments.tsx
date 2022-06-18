@@ -1,12 +1,14 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack, VStack } from '@chakra-ui/react'
+import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
-import { FormFileInput } from 'components/react-hook-form-fields/file-input'
+import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { t } from 'i18next'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { BiDownload } from 'react-icons/bi'
+import { dateFormatter } from 'utils/date-time-utils'
+import { currencyFormatter } from 'utils/stringFormatters'
 
-const InvoiceAndPayments = () => {
+const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
   const {
     handleSubmit,
     register,
@@ -20,10 +22,17 @@ const InvoiceAndPayments = () => {
     reset()
   }
 
+  // const sowLink = dataInvoiceandpayment?.dataInvoiceandpayment?.sowLink
+  const sowOriginalContractAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount
+  const sowNewAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount
+  const paymentTerm = dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm
+  const expectedPaymentDate = dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate
+  const accountRecievable = dataInvoiceandpayment?.dataInvoiceandpayment?.accountRecievable
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="invoice">
-        <Stack minH="32vh">
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" w="908px" columnGap="16px">
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
@@ -32,6 +41,7 @@ const InvoiceAndPayments = () => {
                 </FormLabel>
                 <Input
                   id="originSowAmount"
+                  value={currencyFormatter(sowOriginalContractAmount)}
                   {...register('originSowAmount', {
                     required: 'This is required',
                   })}
@@ -48,6 +58,7 @@ const InvoiceAndPayments = () => {
                 </FormLabel>
                 <Input
                   id="finalSowAmount"
+                  value={currencyFormatter(sowNewAmount)}
                   {...register('finalSowAmount', {
                     required: 'This is required',
                   })}
@@ -76,28 +87,34 @@ const InvoiceAndPayments = () => {
                 <FormLabel mb="0" variant="strong-label" size="md">
                   {t('uploadInvoice')}
                 </FormLabel>
-                <FormFileInput
-                  errorMessage={errors.agreement && errors.agreement?.message}
-                  label={''}
-                  name={`uploadInvoice`}
-                  register={register}
-                  testId="fileInputAgreement"
-                  style={{ w: '215px', h: '40px' }}
-                >
-                  <Button
-                    _focus={{ outline: 'none' }}
-                    rounded="none"
-                    roundedLeft={5}
-                    fontSize="14px"
-                    fontWeight={500}
-                    color="gray.600"
-                    bg="gray.100"
-                    h="38px"
-                    w={120}
-                  >
-                    {t('chooseFile')}
-                  </Button>
-                </FormFileInput>
+                <Controller
+                  name="attachment"
+                  control={control}
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack alignItems="baseline">
+                        <Box>
+                          <ChooseFileField
+                            name={field.name}
+                            value={field.value ? field.value?.name : t('chooseFile')}
+                            isError={!!fieldState.error?.message}
+                            onChange={(file: any) => {
+                              // onFileChange(file)
+                              field.onChange(file)
+                            }}
+                            // onClear={() => setValue(field.name, null)}
+                          ></ChooseFileField>
+
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </Box>
+                        {/* {field.value && (
+                      // <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
+                    )} */}
+                      </VStack>
+                    )
+                  }}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -105,7 +122,20 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   {t('invoiceBackDate')}
                 </FormLabel>
-                <Input w="215px" variant="reguired-field" size="md" placeholder="mm/dd/yyyy" />
+
+                <Input w="215px" size="md" type="date" />
+
+                {/* To discuss about datepicker matching figma */}
+                {/* <Input
+                  type="date"
+                  css={css`
+                    ::-webkit-calendar-picker-indicator {
+                      background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png)
+                        center/80% no-repeat;
+                      color: black;
+                    }
+                  `}
+                /> */}
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -121,7 +151,7 @@ const InvoiceAndPayments = () => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect isDisabled {...field} placeholder={paymentTerm} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -134,18 +164,16 @@ const InvoiceAndPayments = () => {
                 <FormLabel variant="strong-label" size="md">
                   {t('woaExpectedPay')}
                 </FormLabel>
-                <Input w="215px" variant="reguired-field" size="md" type="date" />
+
+                <DatePickerInput
+                  value={expectedPaymentDate !== null ? dateFormatter(expectedPaymentDate) : 'mm/dd/yyyy'}
+                  disable
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem display="grid" alignItems="end" h="67.3px">
-              <Box mt="1">
-                <Button variant="outline" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
-                  {t('downloadOriginalSow')}
-                </Button>
-              </Box>
-            </GridItem>
+
             <GridItem>
               <FormControl isInvalid={errors.overPayment}>
                 <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
@@ -159,7 +187,6 @@ const InvoiceAndPayments = () => {
                   placeholder="$0.00"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
@@ -172,13 +199,13 @@ const InvoiceAndPayments = () => {
                 </FormLabel>
                 <Input
                   id="remainingPayment"
+                  value={currencyFormatter(accountRecievable)}
                   {...register('remainingPayment', {
                     required: 'This is required',
                   })}
                   placeholder="$1200"
                   isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.remainingPayment && errors.remainingPayment.message}</FormErrorMessage>
@@ -195,9 +222,7 @@ const InvoiceAndPayments = () => {
                     required: 'This is required',
                   })}
                   placeholder="$0"
-                  isDisabled={true}
                   w="215px"
-                  variant="reguired-field"
                   size="md"
                 />
                 <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>

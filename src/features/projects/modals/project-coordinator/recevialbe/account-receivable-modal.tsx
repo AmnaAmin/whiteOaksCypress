@@ -13,7 +13,9 @@ import {
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import React from 'react'
 
-const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void }> = props => {
+const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void; rowData: any }> = props => {
+  const data = props?.rowData
+
   return (
     <Modal onClose={props.onClose} size="5xl" isOpen={props.isOpen} variant="custom">
       <ModalOverlay />
@@ -29,8 +31,13 @@ const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void }>
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pl="3" pr="3">
-          <ProjectDetailsTab id="Receivable" onClose={props.onClose} />
+        <ModalBody p="1.7px">
+          <ProjectDetailsTab
+            style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '430px' }}
+            tabVariant="enclosed"
+            onClose={props.onClose}
+            selectedData={data}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>

@@ -1,7 +1,6 @@
 import { Box, HStack, Text, ModalFooter, Divider, ModalBody, Flex } from '@chakra-ui/react'
-import { BiDollarCircle, BiFile, BiCalendar } from 'react-icons/bi'
+import { BiFile, BiCalendar } from 'react-icons/bi'
 import InputView from 'components/input-view/input-view'
-import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
@@ -31,8 +30,8 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody h="400px">
-        <HStack pt="30px" spacing="10px" justifyContent={'center'}>
+      <ModalBody ml={30} w="95%" h="400px">
+        <HStack mr={100} pt="35px" spacing="60px" justifyContent={'center'}>
           <Box w="20%">
             <InputView
               showDivider={false}
@@ -42,7 +41,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.paymentTermDate ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -56,7 +55,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.workOrderPayDateVariance ? (
                   <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -64,13 +63,13 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={<BiFile />}
               label={t('paymentTerm')}
               InputElem={
                 invoiceAndPaymentData?.paymentTerm ? (
                   <Text>{invoiceAndPaymentData?.paymentTerm} </Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>20</Text>
                 )
               }
             />
@@ -85,14 +84,14 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePaid ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
           </Box>
         </HStack>
-        <Divider borderBottomWidth={2} orientation="horizontal" pt={5} />
-        <HStack pt={30} spacing="10px" justifyContent={'center'}>
+        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" pt={8} />
+        <HStack mr={100} pt={30} spacing="60px" justifyContent={'center'}>
           <Box w="20%">
             <InputView
               showDivider={false}
@@ -102,7 +101,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -117,7 +116,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePermitsPulled ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -132,7 +131,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePaymentProcessed ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -147,15 +146,15 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.dateInvoiceSubmitted ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
           </Box>
         </HStack>
-        <Divider borderBottomWidth={2} orientation="horizontal" pt={5} />
-        <HStack py={30} justifyContent="center">
-          <Box w="20%">
+        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" pt={8} />
+        <HStack py={30} spacing="44px" justifyContent="center">
+          <Box w="50%">
             <InputView
               showDivider={false}
               Icon={<BiCalendar />}
@@ -164,7 +163,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.expectedPaymentDate ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
@@ -178,7 +177,10 @@ const InvoicingAndPaymentTab = ({
             InputElem={<Text>{currencyFormatter(invoiceAndPaymentData?.finalInvoiceAmount)} </Text>}
           />
         </Box> */}
-          <Box w="20%">
+
+          {/* Is it required?! */}
+
+          {/* <Box w="20%">
             <InputView
               showDivider={false}
               label={t('WOOriginalAmount')}
@@ -187,11 +189,11 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.clientOriginalApprovedAmount ? (
                   <Text>{currencyFormatter(invoiceAndPaymentData?.clientOriginalApprovedAmount)}</Text>
                 ) : (
-                  <Text>MM/DD/YY</Text>
+                  <Text>dd/mm/yy</Text>
                 )
               }
             />
-          </Box>
+          </Box> */}
           <Box w="20%"></Box>
           <Box w="20%"></Box>
 
@@ -209,9 +211,9 @@ const InvoicingAndPaymentTab = ({
         </Box> */}
         </HStack>
       </ModalBody>
-      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+      <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+          <Button colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
         </Flex>

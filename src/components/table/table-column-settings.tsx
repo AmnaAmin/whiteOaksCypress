@@ -184,12 +184,14 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid" mr={3}>
-              {t('close')}
-            </Button>
-            <Button colorScheme="brand" onClick={saveModal}>
-              {t('save')}
-            </Button>
+            <HStack spacing="16px">
+              <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+                {t('close')}
+              </Button>
+              <Button colorScheme="brand" onClick={saveModal}>
+                {t('save')}
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -48,7 +48,8 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
 
   const { data: documents, ...rest } = useQuery<Array<Document>>(['documents', projectId], async () => {
     const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
-    return response?.data
+
+    return response?.data ? response?.data : []
   })
 
   return {
@@ -133,11 +134,7 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items, s
     rightMarginX + 35,
     65,
   )
-  doc.text(
-    workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy',
-    rightMarginX + 35,
-    75,
-  )
+  doc.text(workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 35, 75)
 
   // Table
   autoTable(doc, {

@@ -1,21 +1,10 @@
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  Icon,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar } from 'react-icons/bi'
+import { dateFormatter } from 'utils/date-time-utils'
 
-function Misc() {
+const Misc = (dataMisc: any) => {
   const {
     register,
     handleSubmit,
@@ -27,20 +16,32 @@ function Misc() {
     console.log('FormValues', formValues)
     reset()
   }
+  const createdDate = dataMisc?.dataMisc?.createdDate
+  const woaStartDate = dataMisc?.dataMisc?.woaStartDate
+  const clientSignoffDate = dataMisc?.dataMisc?.clientSignoffDate
+  const projectClosedDate = dataMisc?.dataMisc?.projectClosedDate
+  const clientPaidDate = dataMisc?.dataMisc?.clientPaidDate
+  const woaCompletionDate = dataMisc?.dataMisc?.woaCompletionDate
+  const woaBackdatedInvoiceDate = dataMisc?.dataMisc?.woaBackdatedInvoiceDate
+  // const woaInvoiceDate = dataMisc?.dataMisc?.woaInvoiceDate
+  const woaPaidDate = dataMisc?.dataMisc?.woaPaidDate
+  const dueDateVariance = dataMisc?.dataMisc?.dueDateVariance
+  const signoffDateVariance = dataMisc?.dataMisc?.signoffDateVariance
+  const woaPayVariance = dataMisc?.dataMisc?.woaPayVariance
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="misc">
-        <Stack minH="43vh">
+        <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   Created
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput value={createdDate !== null ? dateFormatter(createdDate) : 'mm/dd/yyyy'} disable />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -49,10 +50,9 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Active
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput value={woaStartDate !== null ? dateFormatter(woaStartDate) : 'mm/dd/yyyy'} disable />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -61,10 +61,12 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Punch
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput
+                  value={clientSignoffDate !== null ? dateFormatter(clientSignoffDate) : 'mm/dd/yyyy'}
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -73,10 +75,11 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Closed
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput
+                  value={projectClosedDate !== null ? dateFormatter(projectClosedDate) : 'mm/dd/yyyy'}
+                  disable
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -86,10 +89,12 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Client Paid
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput
+                  value={clientPaidDate !== null ? dateFormatter(clientPaidDate) : 'mm/dd/yyyy'}
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -98,10 +103,12 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Collection
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput
+                  value={woaCompletionDate !== null ? dateFormatter(woaCompletionDate) : 'mm/dd/yyyy'}
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -110,46 +117,48 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md">
                   Disputed
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput
+                  value={woaBackdatedInvoiceDate !== null ? dateFormatter(woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
-            <GridItem>
+            {/* Figma change? */}
+
+            {/* <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   WOA Invoice
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput
+                  value={woaInvoiceDate !== null ? dateFormatter(woaInvoiceDate) : 'mm/dd/yyyy'}
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
-            </GridItem>
+            </GridItem> */}
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   WOA Paid
                 </FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+
+                <DatePickerInput value={woaPaidDate !== null ? dateFormatter(woaPaidDate) : 'mm/dd/yyyy'} disable />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
-            <GridItem></GridItem>
             <GridItem>
               <FormControl isInvalid={errors.dueDateVariance} w="215px">
                 <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
+                <Input value={dueDateVariance} isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -159,7 +168,12 @@ function Misc() {
                   Final Date Variance
                 </FormLabel>
 
-                <Input isDisabled={true} id="finalDate" {...register('finalDateVariance')} />
+                <Input
+                  value={signoffDateVariance}
+                  isDisabled={true}
+                  id="finalDate"
+                  {...register('finalDateVariance')}
+                />
                 <FormErrorMessage>{errors.finalDateVariance && errors.finalDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -168,7 +182,7 @@ function Misc() {
                 <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input isDisabled={true} id="payVariance" {...register('payVariance')} />
+                <Input value={woaPayVariance} isDisabled={true} id="payVariance" {...register('payVariance')} />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>

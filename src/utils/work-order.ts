@@ -26,7 +26,6 @@ export const useUpdateWorkOrderMutation = () => {
           title: 'Work Order',
           description: 'Work Order has been saved successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -35,7 +34,6 @@ export const useUpdateWorkOrderMutation = () => {
           title: 'Work Order',
           description: (error.title as string) ?? 'Unable to save workorder.',
           status: 'error',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -60,7 +58,6 @@ export const useNoteMutation = projectId => {
           title: 'Note',
           description: 'Note has been saved successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -69,7 +66,6 @@ export const useNoteMutation = projectId => {
           title: 'Note',
           description: (error.title as string) ?? 'Unable to save note.',
           status: 'error',
-          duration: 9000,
           isClosable: true,
         })
       },

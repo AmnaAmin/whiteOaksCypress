@@ -29,6 +29,7 @@ export type LoginProps = { email: string; password: string }
 export interface AuthContextProps {
   login?: (user: LoginProps) => Promise<void>
   logout?: () => Promise<void>
+  updateAccount?: (user: Account) => void
   register?: (payload: any) => Promise<void>
   data?: { user: Account; token: string }
 }
@@ -66,6 +67,13 @@ function AuthProvider(props: AuthProviderProps) {
     [setData],
   )
 
+  const updateAccount = React.useCallback(
+    user => {
+      setData({ user, token })
+    },
+    [setData],
+  )
+
   const register = React.useCallback(
     form => {
       return auth
@@ -87,7 +95,10 @@ function AuthProvider(props: AuthProviderProps) {
     return auth.logout()
   }, [setData, queryCache])
 
-  const value = React.useMemo(() => ({ data, login, logout, register, token }), [login, logout, register, token, data])
+  const value = React.useMemo(
+    () => ({ data, login, logout, register, token, updateAccount }),
+    [login, logout, register, token, data, updateAccount],
+  )
 
   if (isLoading || isIdle) {
     return (

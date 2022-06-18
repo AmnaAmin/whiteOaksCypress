@@ -15,6 +15,7 @@ import {
   useToast,
   Flex,
   Icon,
+  Divider,
 } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 // import { InputGroup } from 'react-bootstrap';
@@ -107,11 +108,13 @@ const VendorProfilePassword = () => {
   return (
     <Card py="0">
       <form onSubmit={handleSubmit(onsubmit)}>
-        <Stack mt="40px" ml="20px" boxSizing="border-box" h="75vh" overflow="auto">
-          <Text fontSize="18px" lineHeight="28px" fontWeight={500} fontStyle="normal" mb="20px" color="gray.600">
-            {/* Password for [vendor@devtek.ai] */}
-            {t('password')}
-          </Text>
+        <Stack mt="40px" ml="20px" boxSizing="border-box" h="68vh" overflow="auto">
+          <Flex align="center" mb={14}>
+            <Text mr={2} fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal">
+              {t('password')}
+            </Text>
+            <Divider border="1px solid #E2E8F0" />
+          </Flex>
           <VStack spacing={7} h="35vh" align="start">
             <FormControl isInvalid={!!errors.currentPassword} w="215px">
               <FormLabel sx={textStyle}>{t('currentPassword')}</FormLabel>
@@ -138,7 +141,7 @@ const VendorProfilePassword = () => {
               <FormErrorMessage>{errors.currentPassword && errors.currentPassword.message}</FormErrorMessage>
             </FormControl>
 
-            <HStack pb="8">
+            <HStack pb="8" spacing={4}>
               <FormControl isInvalid={!!errors.newPassword} w="215px" h="60px">
                 <FormLabel sx={textStyle}>{t('newPassword')}</FormLabel>
                 <InputGroup size="lg">
@@ -237,7 +240,7 @@ const VendorProfilePassword = () => {
           </VStack>
         </Stack>
 
-        <Flex w="100%" h="100px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
+        <Flex w="100%" h="90px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           <Button colorScheme="brand" type="submit">
             {t('save')}
           </Button>
