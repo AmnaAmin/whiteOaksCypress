@@ -1,7 +1,7 @@
 import { Box, Button, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
-import { NewAlerts } from 'features/projects/alerts/new-alerts'
+import { ManagedAlertTable } from 'features/projects/alerts/managed -alert-table'
 import { NewAlertsModal } from 'features/projects/alerts/new-alerts-modal'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -45,7 +45,7 @@ const Alerts = () => {
             />
           </TabPanel>
           <TabPanel px={0}>
-            <NewAlerts
+            <ManagedAlertTable
               onRowClick={(e, row) => {
                 selectedAlertRow(row.values)
                 onNewAlertModalOpen()

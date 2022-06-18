@@ -36,7 +36,7 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const NewAlerts = React.forwardRef((props: any, ref) => {
+export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
   const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
