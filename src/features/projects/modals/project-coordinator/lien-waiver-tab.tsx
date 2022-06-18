@@ -220,8 +220,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Box>
             <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
               <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
-                {/* See LW{`${lienWaiverData.id}`} */}
-                See Lien Waiver
+                See LW{`${lienWaiverData.id}`}
               </Button>
             </Link>
           </Box>
