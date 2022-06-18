@@ -30,7 +30,7 @@ export const NewAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, aler
         <Modal isOpen={isOpen} onClose={onClose} size="5xl">
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>
+            <ModalHeader borderBottom="1px solid #eee">
               <FormLabel variant="strong-label" size="lg">
                 New Alert
               </FormLabel>
