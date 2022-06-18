@@ -69,7 +69,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
         Header: 'WO Status',
         accessor: 'statusLabel',
         // @ts-ignore
-        Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
+        Cell: ({ value, row }) => <Status value={value} id={row.original?.statusLabel} />,
       },
       {
         Header: t('trade') as string,
