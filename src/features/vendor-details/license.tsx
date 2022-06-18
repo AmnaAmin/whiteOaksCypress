@@ -168,7 +168,8 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={license?.expirationFile ? true : false}
+                  disable={license?.expirationFile ? 'none' : ''}
+                  bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
@@ -236,9 +237,12 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                                 {fieldState.error?.message}
                               </FormErrorMessage>
                             </Box>
-                            {field.value?.name && (
+                            {vendor?.licenseDocuments[index] && (
                               <Box overflow="hidden" pos="absolute" top={16}>
-                                {downloadDocument(document, field.value ? field.value?.name : 'doc.png')}
+                                {downloadDocument(
+                                  vendor?.licenseDocuments[index]?.s3Url,
+                                  field.value ? field.value?.name : 'doc.png',
+                                )}
                               </Box>
                             )}
                           </VStack>

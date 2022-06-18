@@ -6,7 +6,7 @@ import {
   TransactionStatusValues,
   TransactionTypeValues,
 } from 'types/transaction.type'
-import { AGAINST_DEFAULT_VALUE, calculatePayDateVariance } from 'utils/transactions'
+import { AGAINST_DEFAULT_VALUE, calculatePayDateVariance, parseLienWaiverFormValues } from 'utils/transactions'
 import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
@@ -75,12 +75,20 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
   return { formattedAmount: numeral(totalAmount).format('$0,0[.]00'), amount: totalAmount }
 }
 
-export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction) => {
+export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
+  const { amount: formTotalAmount } = useTotalAmount(control)
   const against = useWatch({ name: 'against', control })
+  const savedTransactionAmount = transaction?.lineItems?.reduce((result, transaction) => {
+    if (transaction.whiteoaksCost) {
+      return result + Number(transaction.whiteoaksCost)
+    } else {
+      return result
+    }
+  }, 0)
 
   return (
-    !transaction &&
+    savedTransactionAmount !== formTotalAmount &&
     transactionType?.value === TransactionTypeValues.draw &&
     against &&
     against.value !== AGAINST_DEFAULT_VALUE
@@ -104,18 +112,7 @@ export const useLienWaiverFormValues = (
   const { formattedAmount: totalAmount } = useTotalAmount(control)
 
   useEffect(() => {
-    const lienWaiver = {
-      claimantName: selectedWorkOrder?.claimantName || '',
-      customerName: selectedWorkOrder?.customerName || '',
-      propertyAddress: selectedWorkOrder?.propertyAddress || '',
-      owner: selectedWorkOrder?.owner || '',
-      makerOfCheck: selectedWorkOrder?.makerOfCheck || '',
-      amountOfCheck: totalAmount,
-      checkPayableTo: selectedWorkOrder?.claimantName || '',
-      claimantsSignature: '',
-      claimantTitle: '',
-      dateOfSignature: '',
-    }
+    const lienWaiver = parseLienWaiverFormValues(selectedWorkOrder, totalAmount)
 
     setValue('lienWaiver', lienWaiver)
   }, [totalAmount, selectedWorkOrder, setValue])

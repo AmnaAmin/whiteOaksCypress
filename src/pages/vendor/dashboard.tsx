@@ -1,19 +1,18 @@
 import React, { useState } from 'react'
 import { Box, Flex, Spacer, VStack, Text } from '@chakra-ui/react'
-
-import { ProjectSummary } from 'features/dashboard/project-summary'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
 import PaidChart from 'components/chart/paid-chart'
 // import { usePaidWOAmountByYearAndMonthTotal } from 'utils/vendor-dashboard'
 import Dropdown from 'components/dropdown-menu/Dropdown'
-
 import { MonthOption, monthOptions } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
+import { ProjectFilters } from 'features/projects/project-fliters'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -23,6 +22,11 @@ const Dashboard: React.FC = () => {
   const [paidOption, setPaidOption] = useState<MonthOption>(monthOptions[0])
   // const { data: paidTotal = '' } = usePaidWOAmountByYearAndMonthTotal(paidOption?.year ?? '', paidOption?.month ?? '')
   const { t } = useTranslation()
+  const [selectedCard] = useState<string>('')
+  const navigate = useNavigate()
+  const onCardClick = params => {
+    navigate('/projects', { state: params })
+  }
 
   return (
     <VStack w="100%" zIndex={2}>
@@ -31,7 +35,9 @@ const Dashboard: React.FC = () => {
       </Box>
 
       <Box w="100%">
-        <ProjectSummary />
+        <Box mb={2} w="100%">
+          <ProjectFilters onSelectCard={onCardClick} selectedCard={selectedCard} />
+        </Box>
       </Box>
       <Flex
         direction={{

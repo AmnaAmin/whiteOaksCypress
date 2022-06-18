@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useClient } from './auth-context'
 
 export const usePCReveviable = () => {
@@ -14,4 +14,14 @@ export const usePCReveviable = () => {
     receivableData,
     ...rest,
   }
+}
+
+export const useReveviableRowData = () => {
+  const client = useClient()
+
+  return useMutation(id => {
+    return client(`projects/${id}`, {
+      method: 'GET',
+    })
+  })
 }

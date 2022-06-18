@@ -12,6 +12,7 @@ type tabProps = {
   onClose?: () => void
   style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string }
   tabVariant?: string
+  selectedData?: any
 }
 
 const ProjectDetailsTab = (props: tabProps) => {
@@ -45,10 +46,10 @@ const ProjectDetailsTab = (props: tabProps) => {
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>
-            <Contact />
+            <Contact dataContact={props.selectedData} />
           </TabPanel>
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
-            <Location />
+            <Location dataLocation={props.selectedData} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
@@ -59,7 +60,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
-              <Box w="100%" pb="3">
+              <Box h="70px" w="100%" pb="3">
                 <Button
                   mt="8px"
                   mr="32px"
@@ -68,12 +69,21 @@ const ProjectDetailsTab = (props: tabProps) => {
                   colorScheme="brand"
                   type="submit"
                   form="project"
+                  fontSize="16px"
                 >
                   Save
                 </Button>
                 {onClose && (
                   <>
-                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
+                    <Button
+                      fontSize="16px"
+                      onClick={onClose}
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                    >
                       Cancel
                     </Button>
                     <Button
@@ -96,7 +106,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                 <Divider border="1px solid" />
               </Box>
 
-              <Box w="100%" pb="3">
+              <Box h="70px" w="100%" pb="3">
                 <Button
                   mt="8px"
                   mr="32px"
@@ -106,6 +116,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   type="submit"
                   size="md"
                   form="invoice"
+                  fontSize="16px"
                 >
                   Save
                 </Button>
@@ -119,6 +130,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                       variant="outline"
                       colorScheme="brand"
                       size="md"
+                      fontSize="16px"
                     >
                       Cancel
                     </Button>
@@ -141,7 +153,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
-              <Box w="100%" pb="3">
+              <Box h="70px" w="100%" pb="3">
                 <Button
                   mt="8px"
                   mr="32px"
@@ -150,12 +162,21 @@ const ProjectDetailsTab = (props: tabProps) => {
                   colorScheme="brand"
                   type="submit"
                   form="contact"
+                  fontSize="16px"
                 >
                   Save
                 </Button>
                 {onClose && (
                   <>
-                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
+                    <Button
+                      fontSize="16px"
+                      onClick={onClose}
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                    >
                       Cancel
                     </Button>
                     <Button
@@ -177,7 +198,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
-              <Box w="100%" pb="3">
+              <Box h="70px" w="100%" pb="3">
                 <Button
                   mt="8px"
                   mr="32px"
@@ -186,12 +207,21 @@ const ProjectDetailsTab = (props: tabProps) => {
                   colorScheme="brand"
                   type="submit"
                   form="location"
+                  fontSize="16px"
                 >
                   Save
                 </Button>
                 {onClose && (
                   <>
-                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
+                    <Button
+                      fontSize="16px"
+                      onClick={onClose}
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                    >
                       Cancel
                     </Button>
                     <Button
@@ -213,7 +243,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <Box mt="3">
                 <Divider border="1px solid" />
               </Box>
-              <Box w="100%" pb="3">
+              <Box h="69px" w="100%" pb="3">
                 <Button
                   mt="8px"
                   mr="32px"
@@ -222,12 +252,21 @@ const ProjectDetailsTab = (props: tabProps) => {
                   colorScheme="brand"
                   type="submit"
                   form="misc"
+                  fontSize="16px"
                 >
                   Save
                 </Button>
                 {onClose && (
                   <>
-                    <Button onClick={onClose} mt="8px" mr="5" float={'right'} variant="outline" colorScheme="brand">
+                    <Button
+                      fontSize="16px"
+                      onClick={onClose}
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                    >
                       Cancel
                     </Button>
                     <Button

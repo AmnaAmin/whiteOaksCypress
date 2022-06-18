@@ -51,11 +51,7 @@ export const useAccountDetails = () => {
 export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }), {
-    onSuccess(response) {
-      console.log('response', response)
-    },
-  })
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
@@ -235,7 +231,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
 export const parseLicenseValues = async (values: any) => {
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
-      const fileContents = await readFileContent(license.expirationFile[0])
+      const fileContents = await readFileContent(license.expirationFile)
       const doc = {
         licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
         licenseNumber: license.licenseNumber,

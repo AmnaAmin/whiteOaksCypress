@@ -16,7 +16,7 @@ type payableReceivable = {
 export const AccountDetails = (props: payableReceivable) => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
-  const [isClicked, setIsClicked] = useState(false)
+  const [isClicked, setIsClicked] = useState(true)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
   // const [cardSelected, setCardSelected] = useState(false)

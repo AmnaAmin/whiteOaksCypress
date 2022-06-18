@@ -3,7 +3,7 @@ import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
 import { NewAlerts } from 'features/projects/alerts/new-alerts'
 import { NewAlertsModal } from 'features/projects/alerts/new-alerts-modal'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiOutlinePlus } from 'react-icons/ai'
 
@@ -13,6 +13,7 @@ const Alerts = () => {
   const { isOpen: isOpenNewAlertModal, onClose: onNewAlertModalClose, onOpen: onNewAlertModalOpen } = useDisclosure()
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [alertRow, selectedAlertRow] = useState(true)
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
   return (
     <Box>
       <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
@@ -40,6 +41,7 @@ const Alerts = () => {
                 selectedAlertRow(row.values)
                 onAlertModalOpen()
               }}
+              ref={tabsContainerRef}
             />
           </TabPanel>
           <TabPanel px={0}>
@@ -48,6 +50,7 @@ const Alerts = () => {
                 selectedAlertRow(row.values)
                 onNewAlertModalOpen()
               }}
+              ref={tabsContainerRef}
             />
           </TabPanel>
         </TabPanels>

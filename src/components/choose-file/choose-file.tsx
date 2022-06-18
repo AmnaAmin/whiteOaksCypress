@@ -20,10 +20,9 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
 
     onClear?.()
   }
-
   return (
     <Box
-      as="button"
+      cursor="pointer"
       w="100%"
       minW="215px"
       borderWidth="1px"

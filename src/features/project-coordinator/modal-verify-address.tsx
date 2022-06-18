@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import {
   Modal,
   ModalOverlay,
@@ -13,20 +14,28 @@ import {
   Checkbox,
   Box,
 } from '@chakra-ui/react'
-import FailedIcon from '../icons/failed-icon'
-import SuccessIcon from '../icons/success-icon'
-import VerifyingIcon from '../icons/verifying-icon'
+import FailedIcon from 'icons/failed-icon'
+import SuccessIcon from 'icons/success-icon'
+import VerifyingIcon from 'icons/verifying-icon'
 interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
   onClose: () => void
   title: string
-  content: string
-  props: string
   addressVerificationStatus: string
+  setNextTab: () => void
+  props: any
 }
 
-export function ModalVerifyAddress({ isOpen, onClose, title, addressVerificationStatus }: VerifyAddressBoxProps) {
+export function ModalVerifyAddress({
+  isOpen,
+  isLoading = false,
+  onClose,
+  // onConfirm,
+  title,
+  addressVerificationStatus,
+  props,
+}: VerifyAddressBoxProps) {
   const [continueUnverified, setContinueUnverified] = useState(false)
 
   return (
@@ -95,6 +104,10 @@ export function ModalVerifyAddress({ isOpen, onClose, title, addressVerification
                       position="absolute"
                       top="30"
                       right="55"
+                      onClick={() => {
+                        onClose()
+                        props.setNextTab()
+                      }}
                     >
                       Continue
                     </Button>
@@ -119,6 +132,10 @@ export function ModalVerifyAddress({ isOpen, onClose, title, addressVerification
                       width={78}
                       height={30}
                       border="1px solid #4E87F8"
+                      onClick={() => {
+                        onClose()
+                        props.setNextTab()
+                      }}
                     >
                       Save
                     </Button>
