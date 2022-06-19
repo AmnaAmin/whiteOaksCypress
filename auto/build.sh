@@ -10,6 +10,7 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
 
 if [ "dev2" = $ENV ]; then
+  npm run webpack:build
   ls build
   mkdir output2
   cp -r build/* output2
