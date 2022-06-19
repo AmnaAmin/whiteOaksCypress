@@ -15,7 +15,7 @@ if [ "dev2" = $ENV ]; then
   cp -r build/* output2
   zip -r output2.zip output2
   buildkite-agent artifact upload output2.zip
-if [ "preprod" = $ENV ]; then
+elif [ "preprod" = $ENV ]; then
   npm run build:prod
 elif [ "prod" = $ENV ]; then
   npm run build:prod
