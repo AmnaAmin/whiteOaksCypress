@@ -15,7 +15,7 @@ const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, selectedTran
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader>{t('updateTransaction')}</ModalHeader>
+        <ModalHeader data-testid="update-transaction">{t('updateTransaction')}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
         <ModalBody>
           <TransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} />
