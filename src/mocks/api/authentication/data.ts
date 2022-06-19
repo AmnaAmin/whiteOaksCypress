@@ -1,4 +1,4 @@
-export const ACCOUNT = {
+export const ACCOUNT_VENDOR = {
   id: 57,
   login: 'vendor@devtek.ai',
   firstName: 'Vendor',
@@ -38,6 +38,57 @@ export const ACCOUNT = {
   features: ['Alerting'],
   hfeWage: null,
   deleted: false,
+}
+
+export const ACCOUNT_PC = {
+  id: 112,
+  login: 'pc@woa.com',
+  firstName: 'PC',
+  lastName: 'DevTek',
+  email: 'pc@woa.com',
+  imageUrl: null,
+  activated: true,
+  langKey: null,
+  createdBy: 'admin@devtek.ai',
+  createdDate: '2022-05-10T10:40:39Z',
+  lastModifiedBy: 'pc@woa.com',
+  lastModifiedDate: '2022-06-17T16:56:44Z',
+  authorities: ['ROLE_USER'],
+  streetAddress: 'abc 23',
+  city: '',
+  stateId: null,
+  zipCode: '',
+  telephoneNumber: '(333)-333-3333',
+  status: null,
+  userType: 112,
+  userTypeLabel: 'Project Coordinator',
+  employeeId: '',
+  vendorId: null,
+  newPassword: null,
+  firebaseToken: null,
+  fieldProjectManagerRoleId: null,
+  parentFieldProjectManagerId: null,
+  telephoneNumberExtension: '',
+  reportingFieldManagers: null,
+  markets: null,
+  newTarget: null,
+  newBonus: null,
+  ignoreQuota: null,
+  removeCards: null,
+  avatar: null,
+  avatarName: null,
+  features: ['Alerting'],
+  hfeWage: null,
+}
+
+export function getUserData(token: string) {
+  if (token === 'Bearer vendor') {
+    return ACCOUNT_VENDOR
+  }
+
+  if (token === 'Bearer pc') {
+    return ACCOUNT_PC
+  }
 }
 
 export function makeToken(length) {

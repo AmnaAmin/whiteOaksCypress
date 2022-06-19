@@ -91,7 +91,7 @@ i18n.use(initReactI18next).init({
         changeOrder: 'Change Order',
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
-        newExpectedCompletionDate: 'New Expected Completion Date',
+        newExpectedCompletionDate: 'New Expected Completion',
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
         addNewRow: 'Add New Row',

@@ -429,7 +429,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                       </FormLabel>
                       <InputGroup>
                         <Input
-                          data-testid="-expected-completion-date"
+                          data-testid="expected-completion-date"
                           id="expectedCompletionDate"
                           size="md"
                           isDisabled={true}
