@@ -77,7 +77,11 @@ export const AccountDetails = (props: payableReceivable) => {
       <Divider border="2px solid #E2E8F0" />
       <Box mt={2}>
         {props.ID === 'receivable' ? (
-          <ReceivableTable setTableInstance={setProjectTableInstance} />
+          <ReceivableTable
+            selectedCard={selectedCard as string}
+            selectedDay={selectedDay as string}
+            setTableInstance={setProjectTableInstance}
+          />
         ) : (
           <PayableTable setTableInstance={setProjectTableInstance} />
         )}
