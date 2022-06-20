@@ -34,7 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { STATUS as WOstatus } from '../status'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
-import { addDays } from 'date-fns'
+import { addDays, nextFriday } from 'date-fns'
 
 import * as _ from 'lodash'
 
@@ -138,10 +138,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     setPdfGenerated(true)
     let form = new jsPDF()
     const invoiceSubmittedDate = new Date()
+    const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
     const updatedWorkOrder = {
       ...workOrder,
       dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
-      paymentTermDate: convertDateTimeToServer(addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)),
+      expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
+      paymentTermDate: convertDateTimeToServer(paymentTermDate),
     }
     form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
@@ -159,6 +161,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         ],
       },
       {
+        onError() {
+          setPdfGenerated(false)
+        },
         onSuccess() {
           setPdfGenerated(false)
           onGenerateInvoiceClose()
