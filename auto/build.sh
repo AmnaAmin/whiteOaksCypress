@@ -8,21 +8,14 @@ echo "🛠 Building project..."
 
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
-
-if [ "dev2" = $ENV ]; then
-  npm run webpack:build
-  ls build
-  mkdir output2
-  cp -r build/* output2
-  zip -r output2.zip output2
-  buildkite-agent artifact upload output2.zip
-elif [ "preprod" = $ENV ]; then
-  npm run build:prod
-elif [ "prod" = $ENV ]; then
-  npm run build:prod
-else
-  npm run webpack:build
-fi
+  
+  if [ "preprod" = $ENV ]; then
+    npm run build:prod
+  elif [ "prod" = $ENV ]; then
+    npm run build:prod
+  else
+    npm run webpack:build
+  fi
 
   ls build
   mkdir output

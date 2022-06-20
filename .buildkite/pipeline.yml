@@ -5,21 +5,6 @@ steps:
     label: ":package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: dev
     agents:
-      queue: "wo:nonprod"
-    retry:
-      automatic:
-        - exit_status: -1
-          limit: 1
-    env:
-      BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
-      ENV: "dev"
-
-  - command:
-      - auto/build.sh
-      - auto/deploy_dev.sh
-    label: ":package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
-    branches: dev
-    agents:
       queue: "wo:dev"
     retry:
       automatic:
