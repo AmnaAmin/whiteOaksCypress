@@ -12,7 +12,7 @@ steps:
           limit: 1
     env:
       BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
-      ENV: "dev2"
+      ENV: "dev"
 
   - command:
       - auto/build.sh
