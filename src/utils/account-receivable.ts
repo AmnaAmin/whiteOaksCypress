@@ -25,3 +25,30 @@ export const useReveviableRowData = () => {
     })
   })
 }
+
+export const useBatchProcessing = () => {
+  const client = useClient()
+
+  return useMutation(id => {
+    console.log('checking in muatiaon', id)
+
+    return client(`batches/run`, {
+      method: 'POST',
+      data: id,
+    })
+  })
+}
+
+export const useCheckBatch = () => {
+  const client = useClient()
+
+  const { isLoading } = useQuery('batchCheck', async () => {
+    const response = await client(`batches/progress/2`, {})
+
+    return response?.data
+  })
+
+  return {
+    isLoading,
+  }
+}
