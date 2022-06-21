@@ -45,7 +45,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       />
       <Box flex="1" position="relative" overflow="hidden">
         {value && (
-          <Flex rounded="8px" borderLeft="2px solid #4E87F8" alignItems="center" height="40px">
+          <Flex rounded="6px" borderLeft="2.5px solid #4E87F8" alignItems="center" height="40px">
             <Text
               whiteSpace="nowrap"
               title={value as string}

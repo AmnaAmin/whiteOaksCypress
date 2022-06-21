@@ -219,7 +219,7 @@ export const AddPropertyInfo: React.FC<{
               label={'City'}
               placeholder=""
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`city`}
             />
@@ -256,7 +256,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Zip'}
               placeholder=""
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`zipCode`}
             />

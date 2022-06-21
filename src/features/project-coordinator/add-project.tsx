@@ -210,32 +210,17 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
           <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
-                <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="7">
+                <Tabs
+                  colorScheme="brand"
+                  variant="enclosed"
+                  index={tabIndex}
+                  onChange={index => setTabIndex(index)}
+                  mt="7"
+                >
                   <TabList color="#4A5568">
-                    <Tab
-                      fontSize="14px"
-                      minW={180}
-                      _hover={{ color: 'gray.500', bg: 'blue.50', fontWeight: '500', fontSize: '14px' }}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    >
-                      {'Project Information'}
-                    </Tab>
-                    <Tab
-                      fontSize="14px"
-                      minW={200}
-                      _hover={{ color: 'gray.500', bg: 'blue.50', fontWeight: '500', fontSize: '14px' }}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    >
-                      {'Property Information'}
-                    </Tab>
-                    <Tab
-                      fontSize="14px"
-                      minW={180}
-                      _hover={{ color: 'gray.500', bg: 'blue.50', fontWeight: '500', fontSize: '14px' }}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    >
-                      {'Managing Project'}
-                    </Tab>
+                    <Tab>{'Project Information'}</Tab>
+                    <Tab>{'Property Information'}</Tab>
+                    <Tab>{'Managing Project'}</Tab>
                   </TabList>
                   <TabPanels mt="31px" h="100%">
                     <TabPanel p="0px" h="100%">

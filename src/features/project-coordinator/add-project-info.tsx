@@ -27,7 +27,6 @@ type InfoProps = {
 
 export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const { data: projectTypes } = useProjectTypes()
-  console.log(props.buttonCondition)
 
   const types = projectTypes
     ? projectTypes?.map(type => ({
@@ -77,7 +76,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   const inputStyle = {
     bg: 'white',
-    borderLeft: '1.5px solid #4E87F8',
+    borderLeft: '2.5px solid #4E87F8',
   }
 
   return (
@@ -192,7 +191,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               label={'Original SOW Amount'}
               placeholder="$0"
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`sowOriginalContractAmount`}
             />
@@ -249,7 +248,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           {'Cancel'}
         </Button>
         <Button
-          disabled={props.buttonCondition ? false : true}
+          disabled={!props.buttonCondition}
           colorScheme="CustomPrimaryColor"
           size="md"
           ml="3"

@@ -186,7 +186,7 @@ export const ManageProject: React.FC<{
         </Button>
         <Button
           type="submit"
-          disabled={props.buttonCondition ? false : true}
+          disabled={!props.buttonCondition}
           form="newProjectForm"
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
