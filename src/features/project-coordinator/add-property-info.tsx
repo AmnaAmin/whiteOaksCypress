@@ -26,6 +26,7 @@ export const AddPropertyInfo: React.FC<{
   isLoading: boolean
   setNextTab: () => void
   onClose: () => void
+  buttonCondition: boolean
 }> = props => {
   const [streetAddress, setStreetAddress] = useState('')
   const [city, setCity] = useState('')
@@ -356,7 +357,7 @@ export const AddPropertyInfo: React.FC<{
           _hover={{ bg: 'blue' }}
           ml="3"
           size="md"
-          disabled={!check && isDuplicateAddress && !verificationInProgress}
+          disabled={(!check && isDuplicateAddress && !verificationInProgress) || !props.buttonCondition}
           onClick={() => {
             setTimeout(() => {
               refetch()

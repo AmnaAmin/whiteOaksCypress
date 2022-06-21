@@ -22,10 +22,12 @@ import { BiDownload } from 'react-icons/bi'
 type InfoProps = {
   setNextTab: () => void
   onClose: () => void
+  buttonCondition: boolean
 }
 
 export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const { data: projectTypes } = useProjectTypes()
+  console.log(props.buttonCondition)
 
   const types = projectTypes
     ? projectTypes?.map(type => ({
@@ -246,7 +248,13 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         <Button variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8" onClick={props.onClose}>
           {'Cancel'}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" size="md" ml="3" onClick={props.setNextTab}>
+        <Button
+          disabled={props.buttonCondition ? false : true}
+          colorScheme="CustomPrimaryColor"
+          size="md"
+          ml="3"
+          onClick={props.setNextTab}
+        >
           {'Next'}
         </Button>
       </Grid>

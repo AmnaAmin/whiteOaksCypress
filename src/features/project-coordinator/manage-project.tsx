@@ -8,6 +8,7 @@ import ReactSelect from 'components/form/react-select'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
+  buttonCondition: boolean
   onClose: () => void
 }> = props => {
   const { data: fieldProjectManager } = useFPM()
@@ -185,6 +186,7 @@ export const ManageProject: React.FC<{
         </Button>
         <Button
           type="submit"
+          disabled={props.buttonCondition ? false : true}
           form="newProjectForm"
           colorScheme="CustomPrimaryColor"
           _focus={{ outline: 'none' }}
@@ -192,7 +194,7 @@ export const ManageProject: React.FC<{
           ml="3"
           size="md"
         >
-          {'Next'}
+          {'Save'}
         </Button>
       </Grid>
     </>

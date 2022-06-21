@@ -36,6 +36,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const toast = useToast()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
   const [tabIndex, setTabIndex] = useState(0)
+  const [projectinfoBtn, setProjectinfoBtn] = useState(false)
+  const [propertyinfoBtn, setpropertyinfoBtn] = useState(false)
+  const [manageProjBtn, setmanageProjBtn] = useState(false)
+
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
@@ -124,7 +128,6 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         propertyId: values.propertyId,
       }
 
-      console.log('new payload', newProjectPayload)
       saveProjectDetails(newProjectPayload, {
         onSuccess() {
           toast({
@@ -154,7 +157,41 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const watchAllFields = watch()
   React.useEffect(() => {
     const subscription = watch(value => {
-      console.log('Value Change', value)
+      if (
+        value?.projectTypeLabel &&
+        value?.clientStartDate &&
+        value?.clientDueDate &&
+        value?.sowOriginalContractAmount &&
+        value?.documents
+      ) {
+        setProjectinfoBtn(true)
+      } else {
+        setProjectinfoBtn(false)
+      }
+
+      if (value?.streetAddress && value?.city && value?.zipCode && value?.newMarketId) {
+        setpropertyinfoBtn(true)
+      } else {
+        setpropertyinfoBtn(false)
+      }
+      if (
+        value?.projectCoordinator &&
+        value?.projectManagerId &&
+        value?.clientName &&
+        value?.streetAddress &&
+        value?.city &&
+        value?.zipCode &&
+        value?.newMarketId &&
+        value?.projectTypeLabel &&
+        value?.clientStartDate &&
+        value?.clientDueDate &&
+        value?.sowOriginalContractAmount &&
+        value?.documents
+      ) {
+        setmanageProjBtn(true)
+      } else {
+        setmanageProjBtn(false)
+      }
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
@@ -176,37 +213,44 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                 <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="7">
                   <TabList color="#4A5568">
                     <Tab
+                      fontSize="14px"
                       minW={180}
+                      _hover={{ color: 'gray.500', bg: 'blue.50', fontWeight: '500', fontSize: '14px' }}
                       _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
                     >
                       {'Project Information'}
                     </Tab>
                     <Tab
+                      fontSize="14px"
                       minW={200}
+                      _hover={{ color: 'gray.500', bg: 'blue.50', fontWeight: '500', fontSize: '14px' }}
                       _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
                     >
                       {'Property Information'}
                     </Tab>
                     <Tab
+                      fontSize="14px"
                       minW={180}
+                      _hover={{ color: 'gray.500', bg: 'blue.50', fontWeight: '500', fontSize: '14px' }}
                       _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
                     >
                       {'Managing Project'}
                     </Tab>
-                    <Tab
-                      minW={180}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    ></Tab>
                   </TabList>
                   <TabPanels mt="31px" h="100%">
                     <TabPanel p="0px" h="100%">
-                      <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
+                      <AddProjectInfo buttonCondition={projectinfoBtn} setNextTab={setNextTab} onClose={onClose} />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <AddPropertyInfo isLoading={false} setNextTab={setNextTab} onClose={onClose} />
+                      <AddPropertyInfo
+                        buttonCondition={propertyinfoBtn}
+                        isLoading={false}
+                        setNextTab={setNextTab}
+                        onClose={onClose}
+                      />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <ManageProject isLoading={false} onClose={onClose} />
+                      <ManageProject buttonCondition={manageProjBtn} isLoading={false} onClose={onClose} />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
