@@ -118,7 +118,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
   }
   const downloadDocument = (link, text) => {
     return (
-      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+      <a href={link} download style={{ minWidth: '19em', marginTop: '5px', color: '#4E87F8' }}>
         <Flex ml={1}>
           <BiDownload fontSize="sm" />
           <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
