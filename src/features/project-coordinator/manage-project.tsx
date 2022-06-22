@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, FormControl, FormErrorMessage, FormLabel, Grid, GridItem } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
-import { useClients, useFPM, usePC } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
 
@@ -10,27 +9,30 @@ export const ManageProject: React.FC<{
   isLoading: boolean
   buttonCondition: boolean
   onClose: () => void
+  fieldProjectManager: any
+  projectCoordinator: any
+  client: any
 }> = props => {
-  const { data: fieldProjectManager } = useFPM()
-  const { data: projectCoordinator } = usePC()
-  const { data: client } = useClients()
+  // const { data: fieldProjectManager } = useFPM()
+  // const { data: projectCoordinator } = usePC()
+  // const { data: client } = useClients()
 
-  const FPMs = fieldProjectManager
-    ? fieldProjectManager?.map(FPM => ({
+  const FPMs = props?.fieldProjectManager
+    ? props?.fieldProjectManager?.map(FPM => ({
         label: FPM?.firstName + ' ' + FPM?.lastName,
         value: FPM?.id,
       }))
     : null
 
-  const PCs = projectCoordinator
-    ? projectCoordinator?.map(PC => ({
+  const PCs = props?.projectCoordinator
+    ? props?.projectCoordinator?.map(PC => ({
         label: PC?.firstName + ' ' + PC?.lastName,
         value: PC?.id,
       }))
     : null
 
-  const clients = client
-    ? client?.map(client => ({
+  const clients = props?.client
+    ? props?.client?.map(client => ({
         label: client?.companyName,
         value: client?.id,
       }))

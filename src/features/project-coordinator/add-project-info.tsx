@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
-import { useProjectTypes } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
@@ -23,13 +22,14 @@ type InfoProps = {
   setNextTab: () => void
   onClose: () => void
   buttonCondition: boolean
+  projectTypes?: any
 }
 
 export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
-  const { data: projectTypes } = useProjectTypes()
+  // const { data: projectTypes } = useProjectTypes()
 
-  const types = projectTypes
-    ? projectTypes?.map(type => ({
+  const types = props?.projectTypes
+    ? props?.projectTypes?.map(type => ({
         label: type?.value,
         value: type?.id,
       }))

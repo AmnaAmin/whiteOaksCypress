@@ -30,9 +30,25 @@ import { dateISOFormat } from 'utils/date-time-utils'
 
 type AddProjectFormProps = {
   onClose: () => void
+  projectTypes?: any
+  properties?: any
+  markets?: any
+  fieldProjectManager?: any
+  statesData?: any
+  projectCoordinator?: any
+  client?: any
 }
 
-const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
+const AddProjectForm: React.FC<AddProjectFormProps> = ({
+  onClose,
+  projectTypes,
+  properties,
+  markets,
+  fieldProjectManager,
+  statesData,
+  projectCoordinator,
+  client,
+}) => {
   const toast = useToast()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
   const [tabIndex, setTabIndex] = useState(0)
@@ -224,10 +240,18 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                   </TabList>
                   <TabPanels mt="31px" h="100%">
                     <TabPanel p="0px" h="100%">
-                      <AddProjectInfo buttonCondition={projectinfoBtn} setNextTab={setNextTab} onClose={onClose} />
+                      <AddProjectInfo
+                        projectTypes={projectTypes}
+                        buttonCondition={projectinfoBtn}
+                        setNextTab={setNextTab}
+                        onClose={onClose}
+                      />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
                       <AddPropertyInfo
+                        properties={properties}
+                        markets={markets}
+                        statesData={statesData}
                         buttonCondition={propertyinfoBtn}
                         isLoading={false}
                         setNextTab={setNextTab}
@@ -235,7 +259,14 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                       />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <ManageProject buttonCondition={manageProjBtn} isLoading={false} onClose={onClose} />
+                      <ManageProject
+                        fieldProjectManager={fieldProjectManager}
+                        projectCoordinator={projectCoordinator}
+                        client={client}
+                        buttonCondition={manageProjBtn}
+                        isLoading={false}
+                        onClose={onClose}
+                      />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
@@ -249,12 +280,29 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 }
 
 type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
-type AddNewProjectProps = CustomModalProps
+// type AddNewProjectProps = CustomModalProps
 type UpdateProjectProps = CustomModalProps & {
-  selectedProjectId: number
+  selectedProjectId?: number
+  projectTypes: any
+  properties: any
+  markets: any
+  fieldProjectManager: any
+  projectCoordinator: any
+  client: any
+  statesData: any
 }
 
-export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClose }) => {
+export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({
+  isOpen,
+  onClose,
+  projectTypes,
+  statesData,
+  properties,
+  markets,
+  fieldProjectManager,
+  client,
+  projectCoordinator,
+}) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="5xl" closeOnEsc={true} closeOnOverlayClick={true}>
       <ModalOverlay>
@@ -262,7 +310,16 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
           <ModalHeader borderBottom="1px solid #eee">{'New Project'}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
           <ModalBody px="6">
-            <AddProjectForm onClose={onClose} />
+            <AddProjectForm
+              fieldProjectManager={fieldProjectManager}
+              statesData={statesData}
+              projectCoordinator={projectCoordinator}
+              client={client}
+              markets={markets}
+              properties={properties}
+              projectTypes={projectTypes}
+              onClose={onClose}
+            />
           </ModalBody>
         </ModalContent>
       </ModalOverlay>

@@ -173,7 +173,17 @@ export const Projects = () => {
           </Stack>
         </Box>
       </VStack>
-      <AddNewProjectModal isOpen={isOpenNewProjectModal} onClose={onNewProjectModalClose} />
+      <AddNewProjectModal
+        markets={markets}
+        properties={properties}
+        projectTypes={projectTypes}
+        statesData={statesData}
+        fieldProjectManager={fieldProjectManager}
+        projectCoordinator={projectCoordinator}
+        client={client}
+        isOpen={isOpenNewProjectModal}
+        onClose={onNewProjectModalClose}
+      />
     </>
   )
 }
