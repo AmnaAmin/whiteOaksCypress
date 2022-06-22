@@ -1,11 +1,10 @@
-import { Box, Button, Flex, FormControl, FormLabel, HStack, Link, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, HStack, Link, Stack, Text, VStack } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
-import { downloadFile } from 'utils/file-utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
+import { BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
@@ -24,7 +23,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { documents: documentsData = [] } = useDocuments({
     projectId,
   })
-  const [recentLWFile, setRecentLWFile] = useState<any>(null)
+  // const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -64,8 +63,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     if (!documentsData?.length) return
     const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
     const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    setRecentLWFile(recentLW)
+    // const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
+    // setRecentLWFile(recentLW)
     setValue('claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
 
@@ -126,7 +125,7 @@ export const LienWaiverTab: React.FC<any> = props => {
               <Box flex="4" minW="59em">
                 <HelpText>{GetHelpText()}</HelpText>
               </Box>
-              <Flex pos="absolute" top={0} right={0} flex="1">
+              {/* <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (
                   <Flex alignItems={'center'}>
                     <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
@@ -148,7 +147,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     </Button>
                   </Flex>
                 )}
-              </Flex>
+              </Flex> */}
             </Flex>
             <Box>
               <VStack alignItems="start">
@@ -181,7 +180,6 @@ export const LienWaiverTab: React.FC<any> = props => {
 
                 <HStack>
                   <InputView
-                    Icon={<BiCalendar />}
                     controlStyle={{ w: '20em' }}
                     label="Date of signature"
                     InputElem={<Text>{dateFormatter(lienWaiverData.dateOfSignature)}</Text>}
@@ -202,15 +200,18 @@ export const LienWaiverTab: React.FC<any> = props => {
           </VStack>
         </FormControl>
 
-        <Flex mt="70px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
+        <Flex mt="24px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
           <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Flex fontSize="14px" fontWeight={500} mr={1}>
-                <Link href={leanwieverLink} target={'_blank'}>
-                  <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
-                    <Text mr={1}>
-                      <BiDownload size={14} />
-                    </Text>
+                <Link href={leanwieverLink} target={'_blank'} _hover={{ textDecorationLine: 'none' }}>
+                  <Button
+                    colorScheme="brand"
+                    variant="outline"
+                    color="#4E87F8"
+                    mr={2}
+                    leftIcon={<BiDownload size={14} />}
+                  >
                     See LW{`${lienWaiverData.id}`}
                   </Button>
                 </Link>
@@ -221,7 +222,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button colorScheme="brand" onClick={() => SetClicked(true)}>
             <InformationCard clicked={clicked} />
           </Button>
-          <Button ml={3} onClick={onClose} colorScheme="brand" variant="ghost">
+          <Button ml={3} onClick={onClose} colorScheme="brand" variant="outline">
             {t('cancel')}
           </Button>
         </Flex>
@@ -250,7 +251,7 @@ const HelpText = ({ children }) => {
         </Link>
       ) : (
         <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4A5568' }}>
+          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4E87F8' }}>
             <Box>{t('readLess')}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />
