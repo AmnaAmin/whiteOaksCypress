@@ -348,16 +348,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
             </Box>
           </Stack>
         </Box>
-        <Flex
-          mt="30px"
-          id="footer"
-          w="100%"
-          h="100px"
-          minH="60px"
-          borderTop="2px solid #E2E8F0"
-          alignItems="center"
-          justifyContent="end"
-        >
+        <Flex mt="30px" id="footer" w="100%" borderTop="2px solid #E2E8F0" justifyContent="end" pt="12px">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
               Cancel
