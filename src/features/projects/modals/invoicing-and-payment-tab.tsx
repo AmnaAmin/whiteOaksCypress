@@ -69,7 +69,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.paymentTerm ? (
                   <Text>{invoiceAndPaymentData?.paymentTerm} </Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>20</Text>
                 )
               }
             />

@@ -1,8 +1,10 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Checkbox, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
-import data from './moc-data.json'
+
+// import { usePcClients } from 'utils/clients-table-api'
+import { useAccountPayable } from 'utils/account-payable'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -45,7 +47,7 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         },
         {
           Header: 'Vendor Name',
-          accessor: 'vendorName',
+          accessor: 'claimantName',
         },
         {
           Header: 'Property Address',
@@ -57,50 +59,57 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         },
         {
           Header: 'Payment Terms',
-          accessor: 'paymentTerms',
+          accessor: 'paymentTerm',
         },
         {
           Header: 'Expected pay date',
-          accessor: 'expectedPayDate',
+          accessor: 'expectedPaymentDate',
         },
         {
           Header: 'Final Invoice',
-          accessor: 'finalInvoice',
+          accessor: 'finalInvoiceAmount',
         },
-
         {
           Header: 'Markets',
-          accessor: 'markets',
+          accessor: 'marketName',
         },
         {
           Header: 'WO Start Date',
-          accessor: 'woStarteDate',
+          accessor: 'workOrderStartDate',
         },
         {
           Header: 'WO Completed Date',
-          accessor: 'woCompleteDate',
+          accessor: 'workOrderDateCompleted',
         },
         {
           Header: 'WO Issue Date',
-          accessor: 'woIssueDate',
+          accessor: 'workOrderIssueDate',
         },
         {
           Header: 'Checkbox',
-          accessor: 'checkbox',
+          accessor: () => {
+            return (
+              <Flex justifyContent="end">
+                <Spacer w="50px" />
+                <Checkbox />
+              </Flex>
+            )
+          },
         },
       ],
       ref,
     )
-
+    const { data: PayableData, isLoading } = useAccountPayable()
     return (
       <Box overflow="auto" width="100%">
         <ReactTable
           columns={columns}
           setTableInstance={props.setTableInstance}
-          data={data}
+          data={PayableData?.workOrders}
+          isLoading={isLoading}
           TableRow={payableRow}
           tableHeight="calc(100vh - 300px)"
-          name="alerts-table"
+          name="payable-table"
         />
       </Box>
     )
