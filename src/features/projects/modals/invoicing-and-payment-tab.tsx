@@ -41,7 +41,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.paymentTermDate ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -55,7 +55,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.workOrderPayDateVariance ? (
                   <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -84,7 +84,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePaid ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -101,7 +101,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -116,7 +116,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePermitsPulled ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -131,7 +131,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData?.datePaymentProcessed ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -146,7 +146,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.dateInvoiceSubmitted ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />
@@ -163,7 +163,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.expectedPaymentDate ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
-                  <Text>dd/mm/yy</Text>
+                  <Text>mm/dd/yy</Text>
                 )
               }
             />

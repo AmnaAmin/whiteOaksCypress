@@ -1,7 +1,5 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, GridItem, Grid, Box, Divider } from '@chakra-ui/react'
 import FailedIcon from 'icons/failed-icon'
-// import SuccessIcon from 'icons/success-icon'
-// import VerifyingIcon from 'icons/verifying-icon'
 interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
@@ -15,18 +13,10 @@ interface VerifyAddressBoxProps {
 
 export function ModalDuplicateAddress({
   isOpen,
-  isLoading = false,
-  onClose,
-  // onConfirm,
-  title,
-  content,
-  props,
-  isDuplicateAddress,
-}: VerifyAddressBoxProps) {
-  // const [closeModal, setCloseModal] = useState(isOpen)
-  // const [continueUnverified, setContinueUnverified] = useState(false)
-  // const toggleSubModal = () => props
 
+  onClose,
+  title,
+}: VerifyAddressBoxProps) {
   return (
     <Modal
       isOpen={isOpen}
@@ -91,7 +81,6 @@ export function ModalDuplicateAddress({
                 </Box>
               </GridItem>
             </>
-            {/* </ModalFooter> */}
           </GridItem>
         </Grid>
       </ModalContent>

@@ -16,8 +16,6 @@ import {
   Stack,
   Divider,
   HStack,
-  TagLabel,
-  Tag,
   Box,
 } from '@chakra-ui/react'
 import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
@@ -26,6 +24,9 @@ import { useTranslation } from 'react-i18next'
 // import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment-tab-pc'
 import { InvoiceTabPC } from './invoice-tab-pc'
+import Status from 'features/projects/status'
+import WorkOrderNotes from '../work-order-notes'
+import { countInCircle } from 'theme/common-style'
 import WorkOrderDetailTab from './work-order-edit-tab'
 
 const WorkOrderDetails = ({
@@ -40,6 +41,7 @@ const WorkOrderDetails = ({
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -85,27 +87,34 @@ const WorkOrderDetails = ({
                 </Text>
               </HStack>
 
-              <Tag size="lg" rounded="6px" variant="solid" color="#2AB450" bg="#E7F8EC">
-                <TagLabel fontSize="16px" fontStyle="normal" fontWeight={500} lineHeight="24px">
-                  {workOrder?.statusLabel}
-                </TagLabel>
-              </Tag>
+              <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />
             </HStack>
           )}
         </ModalHeader>
 
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
-        <Divider borderColor="#CBD5E0" />
-        <ModalBody p="0">
-          <Stack mt="16px">
-            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} whiteSpace="nowrap" colorScheme="brand">
-              <TabList mx="32px">
+        <Divider mb={3} />
+        <ModalBody>
+          <Stack spacing={5}>
+            <Tabs
+              variant="enclosed"
+              colorScheme="brand"
+              size="md"
+              onChange={index => setTabIndex(index)}
+              whiteSpace="nowrap"
+            >
+              <TabList color="gray.600">
                 <Tab>{t('workOrderDetails')}</Tab>
                 <Tab>{t('lienWaiver')}</Tab>
                 <Tab>{t('invoice')}</Tab>
                 <Tab>{t('payments')}</Tab>
-                <Tab>{t('notes')}</Tab>
+                <Tab>
+                  {t('notes')}
+                  <Box ml="5px" style={countInCircle}>
+                    {notesCount}
+                  </Box>
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -120,6 +129,10 @@ const WorkOrderDetails = ({
                 </TabPanel>
                 <TabPanel>
                   <PaymentInfoTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                </TabPanel>
+
+                <TabPanel>
+                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

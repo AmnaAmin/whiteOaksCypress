@@ -8,14 +8,14 @@ echo "🛠 Building project..."
 
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
-
-if [ "preprod" = $ENV ]; then
-  npm run build:prod
-elif [ "prod" = $ENV ]; then
-  npm run build:prod
-else
-  npm run webpack:build
-fi
+  
+  if [ "preprod" = $ENV ]; then
+    npm run build:prod
+  elif [ "prod" = $ENV ]; then
+    npm run build:prod
+  else
+    npm run webpack:build
+  fi
 
   ls build
   mkdir output

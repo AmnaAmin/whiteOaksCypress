@@ -95,7 +95,7 @@ export const AuditLogs: React.FC<ProjectProps> = ({
         tableHeight="calc(100vh - 350px)"
         setTableInstance={setTableInstance}
       />
-      <Flex borderTop="2px solid #E2E8F0" alignItems="center" w="100%" h="100px" justifyContent="end">
+      <Flex borderTop="2px solid #E2E8F0" w="100%" justifyContent="end" pt="12px">
         <Button colorScheme="brand" onClick={onClose} mr="3">
           Close
         </Button>

@@ -1,4 +1,5 @@
 import {
+  Box,
   HStack,
   Modal,
   ModalBody,
@@ -48,7 +49,9 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
-            <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
+            <Box mt="18px">
+              <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -88,7 +88,6 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
     ],
     ref,
   )
-  console.log('Alerts data', alerts)
 
   return (
     <Box ref={resizeElementRef}>
