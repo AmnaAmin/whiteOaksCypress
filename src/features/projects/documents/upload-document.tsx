@@ -196,7 +196,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             >
               {t('close')}
             </Button>
-            <Button onClick={uploadDocument} colorScheme="brand" type="submit">
+            <Button isDisabled={isLoading} onClick={uploadDocument} colorScheme="brand" type="submit">
               {t('save')}
             </Button>
           </HStack>
