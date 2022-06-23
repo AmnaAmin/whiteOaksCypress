@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from './auth-context'
 
 export const usePCReveviable = () => {
@@ -28,15 +28,22 @@ export const useReveviableRowData = () => {
 
 export const useBatchProcessing = () => {
   const client = useClient()
+  const queryClient = useQueryClient()
+  return useMutation(
+    id => {
+      console.log('checking in muatiaon', id)
 
-  return useMutation(id => {
-    console.log('checking in muatiaon', id)
-
-    return client(`batches/run`, {
-      method: 'POST',
-      data: id,
-    })
-  })
+      return client(`batches/run`, {
+        method: 'POST',
+        data: id,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('receivable')
+      },
+    },
+  )
 }
 
 export const useCheckBatch = () => {
