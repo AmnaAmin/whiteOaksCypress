@@ -3,8 +3,10 @@ import ReactSelect from 'components/form/react-select'
 
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { ProjectType } from 'types/project.type'
 
-const Contact = (dataContact: any) => {
+const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props => {
+  const { projectData, dataContact } = props
   const {
     register,
     control,
@@ -17,6 +19,22 @@ const Contact = (dataContact: any) => {
     console.log('formValues', FormValues)
     reset()
   }
+
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const contactStatus = projectStatus
+    ? !!(
+        projectStatus === 'new' ||
+        projectStatus === 'active' ||
+        projectStatus === 'punch' ||
+        projectStatus === 'invoiced' ||
+        projectStatus === 'overpayment' ||
+        projectStatus === 'pastdue' ||
+        projectStatus === 'cancelled'
+      )
+    : true
+
+  const statusClosed_Paid = projectStatus ? projectStatus === 'closed' || projectStatus === 'paid' : true
 
   const projectManager = dataContact?.dataContact?.projectManager
   const projectManagerPhoneNumber = dataContact?.dataContact?.projectManagerPhoneNumber
@@ -38,7 +56,12 @@ const Contact = (dataContact: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} placeholder={projectManager} />
+                      <ReactSelect
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        placeholder={projectManager}
+                        isDisabled={statusClosed_Paid}
+                      />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -55,7 +78,7 @@ const Contact = (dataContact: any) => {
                   placeholder="098-987-2233"
                   id="fpmPhone"
                   value={projectManagerPhoneNumber}
-                  isDisabled={true}
+                  isDisabled={contactStatus || statusClosed_Paid}
                   {...register('fpmPhone', {
                     required: 'This is required',
                   })}
@@ -73,7 +96,7 @@ const Contact = (dataContact: any) => {
                 </FormLabel>
                 <Input
                   id="ext"
-                  isDisabled={true}
+                  isDisabled={contactStatus || statusClosed_Paid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -97,7 +120,12 @@ const Contact = (dataContact: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} placeholder={projectManager} />
+                      <ReactSelect
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        placeholder={projectManager}
+                        isDisabled={statusClosed_Paid}
+                      />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -113,7 +141,7 @@ const Contact = (dataContact: any) => {
                 <Input
                   placeholder="098-987-2233"
                   value={projectManagerPhoneNumber}
-                  isDisabled={true}
+                  isDisabled={contactStatus || statusClosed_Paid}
                   id="pcPhone"
                   {...register('pcPhone', {
                     required: 'This is required',
@@ -132,7 +160,7 @@ const Contact = (dataContact: any) => {
                 </FormLabel>
                 <Input
                   id="ext"
-                  isDisabled={true}
+                  isDisabled={contactStatus || statusClosed_Paid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -220,7 +248,12 @@ const Contact = (dataContact: any) => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect isDisabled {...field} selectProps={{ isBorderLeft: true }} placeholder={clientName} />
+                    <ReactSelect
+                      {...field}
+                      selectProps={{ isBorderLeft: true }}
+                      placeholder={clientName}
+                      isDisabled={contactStatus || statusClosed_Paid}
+                    />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
