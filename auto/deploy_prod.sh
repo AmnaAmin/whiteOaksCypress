@@ -9,4 +9,4 @@ echo "🚀 Deploying project to Prod..."
 cd output
 
 echo "🚀 deploying to s3"
-aws s3 sync . s3://whiteoaks-manual-next-gen-ui --delete
+aws s3 sync . s3://whiteoaks-ui/vendorportal/ --delete

@@ -9,4 +9,4 @@ echo "🚀 Deploying project to Pre-Prod..."
 cd output
 
 echo "🚀 deploying to s3"
-aws s3 sync . s3://woa-preprod-ui --delete
+aws s3 sync . s3://woa-preprod-ui/vendorportal/ --delete
