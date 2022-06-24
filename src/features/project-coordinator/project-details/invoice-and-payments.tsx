@@ -37,7 +37,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.originSowAmount}>
                 <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
-                  Original SOW Amount
+                  {t('originalSowAmount')}
                 </FormLabel>
                 <Input
                   id="originSowAmount"
@@ -54,7 +54,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.finalSowAmount}>
                 <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
-                  Final SOW Amount
+                  {t('finalSowAmount')}
                 </FormLabel>
                 <Input
                   id="finalSowAmount"
@@ -71,7 +71,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.invoiceNo}>
                 <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
-                  Invoice Number
+                  {t('invoiceNo')}
                 </FormLabel>
                 <Input
                   id="invoiceNo"
@@ -84,8 +84,8 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  Upload Invoice
+                <FormLabel mb="0" variant="strong-label" size="md">
+                  {t('uploadInvoice')}
                 </FormLabel>
                 <Controller
                   name="attachment"
@@ -120,7 +120,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  Invoice Back Date
+                  {t('invoiceBackDate')}
                 </FormLabel>
 
                 <Input w="215px" size="md" type="date" />
@@ -143,7 +143,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.paymentsTerms}>
                 <FormLabel variant="strong-label" size="md">
-                  Payments Terms
+                  {t('paymentsTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
@@ -162,7 +162,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  WOA Expected Pay
+                  {t('woaExpectedPay')}
                 </FormLabel>
 
                 <DatePickerInput
@@ -173,20 +173,11 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem display="grid" alignItems="end" h="67.3px">
-              {/* 16/06 it is changed on figma */}
-              {/* <Box mt="1">
-                <Link href={sowLink}>
-                  <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
-                    Download Original SOW
-                  </Button>
-                </Link>
-              </Box> */}
-            </GridItem>
+
             <GridItem>
               <FormControl isInvalid={errors.overPayment}>
                 <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
-                  Overpayment
+                  {t('overpayment')}
                 </FormLabel>
                 <Input
                   id="overPayment"
@@ -204,7 +195,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl isInvalid={errors.remainingPayment}>
                 <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
-                  Remaining Payment
+                  {t('remainingPayment')}
                 </FormLabel>
                 <Input
                   id="remainingPayment"
@@ -223,7 +214,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl isInvalid={errors.payment}>
                 <FormLabel htmlFor="payment" variant="strong-label" size="md">
-                  Payment
+                  {t('payment')}
                 </FormLabel>
                 <Input
                   id="payment"

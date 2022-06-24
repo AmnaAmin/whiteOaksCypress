@@ -21,15 +21,10 @@ interface InputViewProps {
   controlStyle?: any
 }
 
-const InputView = ({ label, Icon, InputElem, showDivider = true, controlStyle = {} }: InputViewProps) => {
+const InputView = ({ label, InputElem, showDivider = true, controlStyle = {} }: InputViewProps) => {
   return (
-    <Box {...controlStyle} whiteSpace="nowrap">
+    <Box {...controlStyle} whiteSpace="nowrap" pt={6}>
       <HStack align="flex-start" spacing={5}>
-        {Icon && (
-          <Box fontSize="1.5rem" color="#718096" bottom="5px">
-            {Icon}
-          </Box>
-        )}
         <Stack>
           <Heading color="gray.600" fontSize="14px" fontWeight={500}>
             {label}

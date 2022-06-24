@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Link, Spacer } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Divider, Link, Spacer, HStack } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
@@ -28,8 +28,6 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
         // @ts-ignore
         const s3Url = row.original?.s3Url
         // @ts-ignore
-        console.log(row.original?.s3Url)
-
         if (s3Url) {
           window.open(s3Url, '_self')
         }
@@ -41,7 +39,6 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
             {/** @ts-ignore */}
             <Flex alignItems="center" h="60px">
               <Text
-                noOfLines={2}
                 title={cell.value}
                 padding="0 15px"
                 fontWeight={400}
@@ -50,6 +47,7 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
                 mb="10px"
                 fontSize="14px"
                 color="#4A5568"
+                isTruncated
               >
                 {cell.render('Cell')}
               </Text>
@@ -134,15 +132,17 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
       />
       {isProjectCoordinator && (
         <Flex justifyContent="end">
-          <Button variant="ghost" colorScheme="brand">
-            <Icon as={BiExport} fontSize="18px" mr={1} />
-            Export
-          </Button>
-          <Divider orientation="vertical" border="2px solid" h="35px" />
-          <Button variant="ghost" colorScheme="brand" m={0}>
-            <Icon as={FaAtom} fontSize="18px" mr={1} />
-            Export
-          </Button>
+          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+            <Button variant="ghost" colorScheme="brand" m={0}>
+              <Icon as={BiExport} fontSize="18px" mr={1} />
+              {t('export')}
+            </Button>
+            <Divider orientation="vertical" border="1px solid" h="20px" />
+            <Button variant="ghost" colorScheme="brand" m={0}>
+              <Icon as={FaAtom} fontSize="18px" mr={1} />
+              {t('settings')}
+            </Button>
+          </HStack>
         </Flex>
       )}
     </Box>

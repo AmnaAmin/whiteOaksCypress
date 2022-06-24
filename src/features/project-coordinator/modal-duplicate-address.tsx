@@ -1,27 +1,5 @@
-import React, { useState } from 'react'
-
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  Text,
-  Flex,
-  Input,
-  GridItem,
-  Grid,
-  Checkbox,
-  Icon,
-  Box,
-  Divider,
-} from '@chakra-ui/react'
+import { Modal, ModalContent, ModalHeader, ModalBody, Button, GridItem, Grid, Box, Divider } from '@chakra-ui/react'
 import FailedIcon from 'icons/failed-icon'
-import SuccessIcon from 'icons/success-icon'
-import VerifyingIcon from 'icons/verifying-icon'
 interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
@@ -43,9 +21,9 @@ export function ModalDuplicateAddress({
   props,
   isDuplicateAddress,
 }: VerifyAddressBoxProps) {
-  const [closeModal, setCloseModal] = useState(isOpen)
-  const [continueUnverified, setContinueUnverified] = useState(false)
-  const toggleSubModal = () => props
+  // const [closeModal, setCloseModal] = useState(isOpen)
+  // const [continueUnverified, setContinueUnverified] = useState(false)
+  // const toggleSubModal = () => props
 
   return (
     <Modal
