@@ -2,8 +2,10 @@ import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, S
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { ProjectType } from 'types/project.type'
 
-const ProjectManagement = () => {
+const ProjectManagement: React.FC<{ projectData: ProjectType }> = props => {
+  const { projectData } = props
   const {
     register,
     formState: { errors },
@@ -11,6 +13,14 @@ const ProjectManagement = () => {
     control,
   } = useForm()
 
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const statusNew_Active = projectStatus ? projectStatus === 'new' || projectStatus === 'active' : true
+  const statusClosed = projectStatus ? projectStatus === 'closed' : true
+  const statusInvoiced = projectStatus ? projectStatus === 'invoiced' : true
+  const statusClientPaid = projectStatus ? projectStatus === 'client paid' : true
+  const statusPaid = projectStatus ? projectStatus === 'paid' : true
+  const statusOverPayment = projectStatus ? projectStatus === 'overpayment' : true
   const onSubmit = FormValues => {
     console.log('FormValues', FormValues)
   }
@@ -107,7 +117,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Start
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusClosed || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -115,7 +128,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Completion
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusNew_Active || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
@@ -124,7 +140,11 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Start
                 </FormLabel>
-                <Input variant="required-field" type="date" />
+                <Input
+                  variant="required-field"
+                  type="date"
+                  isDisabled={statusClosed || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -132,7 +152,11 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Due
                 </FormLabel>
-                <Input variant="required-field" type="date" />
+                <Input
+                  variant="required-field"
+                  type="date"
+                  isDisabled={statusClosed || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -140,7 +164,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                   Client Walkthrough
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusNew_Active || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -148,7 +175,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Sign Off
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusNew_Active || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
           </Grid>
