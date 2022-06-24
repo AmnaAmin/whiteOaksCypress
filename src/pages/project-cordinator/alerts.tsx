@@ -1,7 +1,7 @@
 import { Box, Button, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
-import { ManagedAlertTable } from 'features/projects/alerts/managed -alert-table'
+import { ManagedAlertTable } from 'features/projects/alerts/managed-alert-table'
 import { NewAlertsModal } from 'features/projects/alerts/managed-alerts-modal'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
