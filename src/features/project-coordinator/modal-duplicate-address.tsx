@@ -13,18 +13,10 @@ interface VerifyAddressBoxProps {
 
 export function ModalDuplicateAddress({
   isOpen,
-  isLoading = false,
-  onClose,
-  // onConfirm,
-  title,
-  content,
-  props,
-  isDuplicateAddress,
-}: VerifyAddressBoxProps) {
-  // const [closeModal, setCloseModal] = useState(isOpen)
-  // const [continueUnverified, setContinueUnverified] = useState(false)
-  // const toggleSubModal = () => props
 
+  onClose,
+  title,
+}: VerifyAddressBoxProps) {
   return (
     <Modal
       isOpen={isOpen}
@@ -89,7 +81,6 @@ export function ModalDuplicateAddress({
                 </Box>
               </GridItem>
             </>
-            {/* </ModalFooter> */}
           </GridItem>
         </Grid>
       </ModalContent>

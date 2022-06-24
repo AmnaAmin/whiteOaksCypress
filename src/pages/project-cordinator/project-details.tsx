@@ -23,6 +23,8 @@ import AddNewTransactionModal from 'features/projects/transactions/add-transacti
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
+import { AlertsTable } from 'features/projects/alerts/alerts-table'
+import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -30,6 +32,8 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
+
+  const [alertRow, selectedAlertRow] = useState(true)
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -46,6 +50,8 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
 
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
@@ -94,6 +100,12 @@ export const ProjectDetails: React.FC = props => {
                     Upload
                   </Button>
                 )}
+
+                {tabIndex === 4 && (
+                  <Button colorScheme="brand" onClick={onAlertModalOpen}>
+                    Resolve All
+                  </Button>
+                )}
                 {tabIndex === 0 && (
                   <HStack spacing="16px">
                     <Box>
@@ -140,7 +152,16 @@ export const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" mt="3">
                 <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel px="0">
+                <AlertsTable
+                  onRowClick={(e, row) => {
+                    selectedAlertRow(row.values)
+                    onAlertModalOpen()
+                  }}
+                  ref={tabsContainerRef}
+                />
+              </TabPanel>
 
               <TabPanel px="0">
                 <NotesTab notes={[]} saveNote={() => {}} />
@@ -148,7 +169,9 @@ export const ProjectDetails: React.FC = props => {
             </TabPanels>
           </Tabs>
         </Stack>
+
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+        <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
     </>
