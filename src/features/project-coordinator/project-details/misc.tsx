@@ -2,9 +2,11 @@ import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, S
 import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { ProjectType } from 'types/project.type'
 import { dateFormatter } from 'utils/date-time-utils'
 
-const Misc = (dataMisc: any) => {
+const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
+  const { projectData, dataMisc } = props
   const {
     register,
     handleSubmit,
@@ -29,6 +31,10 @@ const Misc = (dataMisc: any) => {
   const signoffDateVariance = dataMisc?.dataMisc?.signoffDateVariance
   const woaPayVariance = dataMisc?.dataMisc?.woaPayVariance
 
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+
+  const miscStatus = projectStatus ? !!projectStatus : true
+
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} id="misc">
@@ -40,7 +46,10 @@ const Misc = (dataMisc: any) => {
                   Created
                 </FormLabel>
 
-                <DatePickerInput value={createdDate !== null ? dateFormatter(createdDate) : 'mm/dd/yyyy'} disable />
+                <DatePickerInput
+                  value={createdDate !== null ? dateFormatter(createdDate) : 'mm/dd/yyyy'}
+                  disable={miscStatus}
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -51,7 +60,10 @@ const Misc = (dataMisc: any) => {
                   Active
                 </FormLabel>
 
-                <DatePickerInput value={woaStartDate !== null ? dateFormatter(woaStartDate) : 'mm/dd/yyyy'} disable />
+                <DatePickerInput
+                  value={woaStartDate !== null ? dateFormatter(woaStartDate) : 'mm/dd/yyyy'}
+                  disable={miscStatus}
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -64,7 +76,7 @@ const Misc = (dataMisc: any) => {
 
                 <DatePickerInput
                   value={clientSignoffDate !== null ? dateFormatter(clientSignoffDate) : 'mm/dd/yyyy'}
-                  disable
+                  disable={miscStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -78,7 +90,7 @@ const Misc = (dataMisc: any) => {
 
                 <DatePickerInput
                   value={projectClosedDate !== null ? dateFormatter(projectClosedDate) : 'mm/dd/yyyy'}
-                  disable
+                  disable={miscStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -92,7 +104,7 @@ const Misc = (dataMisc: any) => {
 
                 <DatePickerInput
                   value={clientPaidDate !== null ? dateFormatter(clientPaidDate) : 'mm/dd/yyyy'}
-                  disable
+                  disable={miscStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -106,7 +118,7 @@ const Misc = (dataMisc: any) => {
 
                 <DatePickerInput
                   value={woaCompletionDate !== null ? dateFormatter(woaCompletionDate) : 'mm/dd/yyyy'}
-                  disable
+                  disable={miscStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -120,7 +132,7 @@ const Misc = (dataMisc: any) => {
 
                 <DatePickerInput
                   value={woaBackdatedInvoiceDate !== null ? dateFormatter(woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
-                  disable
+                  disable={miscStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -135,8 +147,7 @@ const Misc = (dataMisc: any) => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={woaInvoiceDate !== null ? dateFormatter(woaInvoiceDate) : 'mm/dd/yyyy'}
-                  disable
+                  value={woaInvoiceDate !== null ? dateFormatter(woaInvoiceDate) : 'mm/dd/yyyy'}            
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -148,7 +159,10 @@ const Misc = (dataMisc: any) => {
                   WOA Paid
                 </FormLabel>
 
-                <DatePickerInput value={woaPaidDate !== null ? dateFormatter(woaPaidDate) : 'mm/dd/yyyy'} disable />
+                <DatePickerInput
+                  value={woaPaidDate !== null ? dateFormatter(woaPaidDate) : 'mm/dd/yyyy'}
+                  disable={miscStatus}
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
@@ -158,7 +172,7 @@ const Misc = (dataMisc: any) => {
                 <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input value={dueDateVariance} isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
+                <Input value={dueDateVariance} isDisabled={miscStatus} id="dueDate" {...register('dueDateVariance')} />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -170,7 +184,7 @@ const Misc = (dataMisc: any) => {
 
                 <Input
                   value={signoffDateVariance}
-                  isDisabled={true}
+                  isDisabled={miscStatus}
                   id="finalDate"
                   {...register('finalDateVariance')}
                 />
@@ -182,7 +196,7 @@ const Misc = (dataMisc: any) => {
                 <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input value={woaPayVariance} isDisabled={true} id="payVariance" {...register('payVariance')} />
+                <Input value={woaPayVariance} isDisabled={miscStatus} id="payVariance" {...register('payVariance')} />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
