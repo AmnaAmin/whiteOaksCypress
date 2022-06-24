@@ -1,14 +1,18 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { ProjectType } from 'types/project.type'
 
-const Location = (dataLocation: any) => {
+const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = props => {
+  const { dataLocation } = props
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm()
+
+  // const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const onSubmit = formValues => {
     console.log('FormValues', formValues)
