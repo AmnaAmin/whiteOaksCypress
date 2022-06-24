@@ -27,14 +27,15 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
         projectStatus === 'new' ||
         projectStatus === 'active' ||
         projectStatus === 'punch' ||
-        projectStatus === 'invoiced' ||
         projectStatus === 'overpayment' ||
         projectStatus === 'pastdue' ||
-        projectStatus === 'cancelled'
+        projectStatus === 'cancelled' ||
+        projectStatus === 'closed' ||
+        projectStatus === 'client paid'
       )
     : true
 
-  const statusClosed_Paid = projectStatus ? projectStatus === 'closed' || projectStatus === 'paid' : true
+  const statusClosed_Paid = projectStatus ? projectStatus === 'invoiced' || projectStatus === 'paid' : true
 
   const projectManager = dataContact?.dataContact?.projectManager
   const projectManagerPhoneNumber = dataContact?.dataContact?.projectManagerPhoneNumber
