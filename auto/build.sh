@@ -6,18 +6,16 @@ PARENT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 
 echo "🛠 Building project..."
 
-export NODE_OPTIONS=--max_old_space_size=6144
-
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
-
-if [ "preprod" = $ENV ]; then
-  npm run build:prod
-elif [ "prod" = $ENV ]; then
-  npm run build:prod
-else
-  npm run webpack:build
-fi
+  
+  if [ "preprod" = $ENV ]; then
+    npm run build:prod
+  elif [ "prod" = $ENV ]; then
+    npm run build:prod
+  else
+    npm run webpack:build
+  fi
 
   ls build
   mkdir output

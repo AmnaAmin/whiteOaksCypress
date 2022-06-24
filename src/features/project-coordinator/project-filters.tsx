@@ -11,7 +11,6 @@ import SummaryIconFirst, {
   SummaryIconTenth,
 } from 'icons/pc-project-icons'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { useProjectCards } from 'utils/pc-projects'
 import { ProjectCard } from '../projects/project-card'
 
@@ -24,7 +23,6 @@ const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, 
 }
 
 const useProjectCardJson = cards => {
-  const { t } = useTranslation()
   return [
     {
       id: 'new',
@@ -65,13 +63,13 @@ const useProjectCardJson = cards => {
     },
     {
       id: 'overpayment',
-      title: 'Overpayment',
+      title: 'Over Payment',
       number: cards?.find(c => c.status === 109)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSeventh} bg="#E2EFDF" />,
     },
     {
       id: 'pastDue',
-      title: t('pastDue'),
+      title: 'Past Due',
       number: cards?.find(c => c.status === 62)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
     },

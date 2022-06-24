@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { STATUS as WOstatus } from '../status'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
+import { addDays, nextFriday } from 'date-fns'
 
 import * as _ from 'lodash'
 
@@ -137,12 +138,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     setPdfGenerated(true)
     let form = new jsPDF()
     const invoiceSubmittedDate = new Date()
+    const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
     const updatedWorkOrder = {
       ...workOrder,
       dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
-      expectedPaymentDate: convertDateTimeToServer(
-        new Date(invoiceSubmittedDate.setDate(invoiceSubmittedDate.getDate() + (workOrder.paymentTerm || 20))),
-      ),
+      expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
+      paymentTermDate: convertDateTimeToServer(paymentTermDate),
     }
     form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
@@ -160,6 +161,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         ],
       },
       {
+        onError() {
+          setPdfGenerated(false)
+        },
         onSuccess() {
           setPdfGenerated(false)
           onGenerateInvoiceClose()
@@ -196,7 +200,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
+            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
         </Grid>

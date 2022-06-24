@@ -1,21 +1,7 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  FormControl,
-  FormLabel,
-  HStack,
-  Link,
-  Spacer,
-  Stack,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormControl, HStack, Link, Spacer, Stack, Text, VStack } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
-import { downloadFile } from 'utils/file-utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
@@ -37,7 +23,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { documents: documentsData = [] } = useDocuments({
     projectId,
   })
-  const [recentLWFile, setRecentLWFile] = useState<any>(null)
+  // const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -77,8 +63,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     if (!documentsData?.length) return
     const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
     const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    setRecentLWFile(recentLW)
+    // const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
+    // setRecentLWFile(recentLW)
     setValue('claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
 
@@ -139,7 +125,7 @@ export const LienWaiverTab: React.FC<any> = props => {
               <Box flex="4" minW="59em">
                 <HelpText>{GetHelpText()}</HelpText>
               </Box>
-              <Flex pos="absolute" top={0} right={0} flex="1">
+              {/* <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (
                   <Flex alignItems={'center'}>
                     <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
@@ -161,7 +147,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     </Button>
                   </Flex>
                 )}
-              </Flex>
+              </Flex> */}
             </Flex>
 
             <VStack alignItems="start" spacing="32px">
@@ -259,7 +245,7 @@ const HelpText = ({ children }) => {
         </Link>
       ) : (
         <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4A5568' }}>
+          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4E87F8' }}>
             <Box>{t('readLess')}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />
