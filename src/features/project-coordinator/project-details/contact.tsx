@@ -1,5 +1,6 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+import { STATUS } from 'features/projects/status'
 
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -20,22 +21,22 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
     reset()
   }
 
-  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+  const statusArray = [
+    STATUS.New.valueOf(),
+    STATUS.Active.valueOf(),
+    STATUS.Punch.valueOf(),
+    STATUS.Overpayment.valueOf(),
+    STATUS.PastDue.valueOf(),
+    STATUS.Cancelled.valueOf(),
+    STATUS.Closed.valueOf(),
+    STATUS.ClientPaid.valueOf(),
+  ]
 
-  const contactStatus = projectStatus
-    ? !!(
-        projectStatus === 'new' ||
-        projectStatus === 'active' ||
-        projectStatus === 'punch' ||
-        projectStatus === 'overpayment' ||
-        projectStatus === 'pastdue' ||
-        projectStatus === 'cancelled' ||
-        projectStatus === 'closed' ||
-        projectStatus === 'client paid'
-      )
-    : true
+  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
 
-  const statusClosed_Paid = projectStatus ? projectStatus === 'invoiced' || projectStatus === 'paid' : true
+  const statusInvoice_Paid = [STATUS.Invoiced.valueOf(), STATUS.Paid.valueOf()].includes(
+    projectData?.projectStatus.toLowerCase(),
+  )
 
   const projectManager = dataContact?.dataContact?.projectManager
   const projectManagerPhoneNumber = dataContact?.dataContact?.projectManagerPhoneNumber
@@ -61,7 +62,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                         placeholder={projectManager}
-                        isDisabled={statusClosed_Paid}
+                        isDisabled={statusInvoice_Paid}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -79,7 +80,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                   placeholder="098-987-2233"
                   id="fpmPhone"
                   value={projectManagerPhoneNumber}
-                  isDisabled={contactStatus || statusClosed_Paid}
+                  isDisabled={projectStatus || statusInvoice_Paid}
                   {...register('fpmPhone', {
                     required: 'This is required',
                   })}
@@ -97,7 +98,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                 </FormLabel>
                 <Input
                   id="ext"
-                  isDisabled={contactStatus || statusClosed_Paid}
+                  isDisabled={projectStatus || statusInvoice_Paid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -125,7 +126,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                         placeholder={projectManager}
-                        isDisabled={statusClosed_Paid}
+                        isDisabled={statusInvoice_Paid}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -142,7 +143,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                 <Input
                   placeholder="098-987-2233"
                   value={projectManagerPhoneNumber}
-                  isDisabled={contactStatus || statusClosed_Paid}
+                  isDisabled={projectStatus || statusInvoice_Paid}
                   id="pcPhone"
                   {...register('pcPhone', {
                     required: 'This is required',
@@ -161,7 +162,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                 </FormLabel>
                 <Input
                   id="ext"
-                  isDisabled={contactStatus || statusClosed_Paid}
+                  isDisabled={projectStatus || statusInvoice_Paid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -253,7 +254,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                       {...field}
                       selectProps={{ isBorderLeft: true }}
                       placeholder={clientName}
-                      isDisabled={contactStatus || statusClosed_Paid}
+                      isDisabled={projectStatus || statusInvoice_Paid}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
