@@ -1,10 +1,11 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { STATUS } from 'features/projects/status'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { ProjectType } from 'types/project.type'
 
 const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = props => {
-  const { dataLocation } = props
+  const { dataLocation, projectData } = props
   const {
     register,
     handleSubmit,
@@ -12,7 +13,22 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
     formState: { errors },
   } = useForm()
 
-  // const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+  const statusArray = [
+    STATUS.New.valueOf(),
+    STATUS.Active.valueOf(),
+    STATUS.Punch.valueOf(),
+    STATUS.ClientPaid.valueOf(),
+    STATUS.Paid.valueOf(),
+    STATUS.Overpayment.valueOf(),
+    STATUS.PastDue.valueOf(),
+    STATUS.Cancelled.valueOf(),
+  ]
+
+  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusClosed_Invoice = [STATUS.Closed.valueOf(), STATUS.Invoiced.valueOf()].includes(
+    (projectData?.projectStatus || '').toLowerCase(),
+  )
 
   const onSubmit = formValues => {
     console.log('FormValues', formValues)
@@ -39,7 +55,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={streetAddress}
-                  isDisabled={true}
+                  isDisabled={projectStatus || statusClosed_Invoice}
                   id="address"
                   {...register('address', {
                     required: 'This is required',
@@ -55,7 +71,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={city}
-                  isDisabled={true}
+                  isDisabled={projectStatus || statusClosed_Invoice}
                   id="city"
                   {...register('city', {
                     required: 'This is required',
@@ -71,7 +87,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={state}
-                  isDisabled={true}
+                  isDisabled={projectStatus || statusClosed_Invoice}
                   id="state"
                   {...register('state', {
                     required: 'This is required',
@@ -87,7 +103,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={zipCode}
-                  isDisabled={true}
+                  isDisabled={projectStatus || statusClosed_Invoice}
                   id="zip"
                   {...register('zip', {
                     required: 'This is required',
@@ -103,7 +119,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={market}
-                  isDisabled={true}
+                  isDisabled={projectStatus || statusClosed_Invoice}
                   id="market"
                   {...register('market', {
                     required: 'This is required',
@@ -119,7 +135,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   border=" 1px solid #E2E8F0"
-                  disabled
+                  disabled={statusClosed_Invoice}
                   value={gateCode}
                   id="gateCode"
                   {...register('gateCode', {
@@ -137,7 +153,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 <Input
                   border=" 1px solid #E2E8F0"
                   value={lockBoxCode}
-                  disabled
+                  disabled={statusClosed_Invoice}
                   id="lockBoxCode"
                   {...register('lockBoxCode', {
                     required: 'This is required',
