@@ -28,9 +28,7 @@ const ProjectManagement: React.FC<{ projectData: ProjectType }> = props => {
 
   const statusOverPayment = [STATUS.Overpayment.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
 
-  const onSubmit = FormValues => {
-    console.log('FormValues', FormValues)
-  }
+  const onSubmit = FormValues => {}
 
   return (
     <Box>
