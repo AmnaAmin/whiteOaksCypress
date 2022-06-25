@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
-import { useCheckBatch, usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
+import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
 import { useWeekDayProjectsDue } from 'utils/projects'
 import moment from 'moment'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
@@ -111,7 +111,14 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
       },
       {
         Header: ' Checkbox',
-        Cell: ({ value, row }) => <input type="checkbox" value={(row.original as any).projectId} {...register('id')} />,
+        Cell: ({ value, row }) => (
+          <input
+            onClick={e => e.stopPropagation()}
+            type="checkbox"
+            value={(row.original as any).projectId}
+            {...register('id', { required: true })}
+          />
+        ),
       },
     ],
     ref,
@@ -122,7 +129,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     onOpen: onAccountReceivableModalOpen,
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
-  const { isLoading: batchLoading } = useCheckBatch()
+
   const onRowClick = useCallback(
     (_, row) => {
       rowData(row.values.projectId)
@@ -178,7 +185,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         columns={columns}
         setTableInstance={setTableInstance}
         data={filterProjects || []}
-        isLoading={isLoading || batchLoading}
+        isLoading={isLoading}
         TableRow={receivableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"

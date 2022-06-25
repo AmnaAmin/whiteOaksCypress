@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
-import { useBatchProcessing } from 'utils/account-receivable'
+import { useBatchProcessing, useCheckBatch } from 'utils/account-receivable'
 
 type payableReceivable = {
   topTitle: string
@@ -19,6 +19,8 @@ export const AccountDetails = (props: payableReceivable) => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
   const [isClicked, setIsClicked] = useState(false)
+  const [loading, setLoading] = useState(false)
+
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
   // const [cardSelected, setCardSelected] = useState(false)
@@ -41,16 +43,16 @@ export const AccountDetails = (props: payableReceivable) => {
   const { mutate: batchCall } = useBatchProcessing()
 
   const Submit = e => {
-    const pre = parseInt(e.id[0])
-
-    // { typeCode: 'AR', entities: [{ id: 3485, type: 'Remaining Payments' }] }
-    const obg = {
+    setLoading(true)
+    const payloadData = e.id.map(n => ({ id: parseInt(n), type: 'Remaining Payments' }))
+    const obj = {
       typeCode: 'AR',
-      entities: [{ id: pre }],
+      entities: payloadData,
     }
-    //@ts-ignore
-    batchCall(obg)
+    // @ts-ignore
+    batchCall(obj)
   }
+  useCheckBatch(setLoading)
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
@@ -91,7 +93,7 @@ export const AccountDetails = (props: payableReceivable) => {
             type="submit"
           >
             <Icon as={BiSync} fontSize="18px" mr={2} />
-            Batch Process
+            {!loading ? 'Batch Process' : 'Processing...'}
           </Button>
         </Stack>
         <Divider border="2px solid #E2E8F0" />
