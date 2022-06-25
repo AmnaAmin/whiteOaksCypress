@@ -1,5 +1,6 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+import { STATUS } from 'features/projects/status'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { ProjectType } from 'types/project.type'
@@ -13,14 +14,20 @@ const ProjectManagement: React.FC<{ projectData: ProjectType }> = props => {
     control,
   } = useForm()
 
-  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+  const statusNew_Active = [STATUS.New.valueOf(), STATUS.Active.valueOf()].includes(
+    (projectData?.projectStatus || '').toLowerCase(),
+  )
 
-  const statusNew_Active = projectStatus ? projectStatus === 'new' || projectStatus === 'active' : true
-  const statusClosed = projectStatus ? projectStatus === 'closed' : true
-  const statusInvoiced = projectStatus ? projectStatus === 'invoiced' : true
-  const statusClientPaid = projectStatus ? projectStatus === 'client paid' : true
-  const statusPaid = projectStatus ? projectStatus === 'paid' : true
-  const statusOverPayment = projectStatus ? projectStatus === 'overpayment' : true
+  const statusClosed = [STATUS.Closed.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusInvoiced = [STATUS.Invoiced.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusClientPaid = [STATUS.ClientPaid.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusPaid = [STATUS.Paid.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusOverPayment = [STATUS.Overpayment.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
   const onSubmit = FormValues => {
     console.log('FormValues', FormValues)
   }
