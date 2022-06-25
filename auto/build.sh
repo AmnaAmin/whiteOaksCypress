@@ -11,17 +11,30 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
 
 if [ "preprod" = $ENV ]; then
   npm run build:prod
+
+  ls build
+  mkdir output-preprod
+  cp -r build/* output-preprod
+  zip -r output-preprod.zip output-preprod
+  buildkite-agent artifact upload output-preprod.zip
+
 elif [ "prod" = $ENV ]; then
   npm run build:prod
+
+  ls build
+  mkdir output-prod
+  cp -r build/* output-prod
+  zip -r output-prod.zip output-prod
+  buildkite-agent artifact upload output-prod.zip
 else
   npm run webpack:build
-fi
 
   ls build
   mkdir output
   cp -r build/* output
   zip -r output.zip output
   buildkite-agent artifact upload output.zip
+fi
 
 else
   echo "Must provide environment BUILD_NUMBER"
