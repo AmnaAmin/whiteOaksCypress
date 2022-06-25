@@ -55,6 +55,7 @@ i18n.use(initReactI18next).init({
         region: 'Region',
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
+        generalLabor: 'General Labor',
 
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Type',
@@ -74,6 +75,7 @@ i18n.use(initReactI18next).init({
         documents: 'Documents',
         alerts: 'Alerts',
         upload: 'Upload',
+        uploadDocument: 'Upload Document',
         resolveAll: 'Resolve All',
         contactName: 'Contact Name:',
         projectID: 'Project ID',
@@ -90,7 +92,7 @@ i18n.use(initReactI18next).init({
         changeOrder: 'Change Order',
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
-        newExpectedCompletionDate: 'New Expected Completion Date',
+        newExpectedCompletionDate: 'New Expected Completion',
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
         addNewRow: 'Add New Row',
@@ -298,10 +300,91 @@ i18n.use(initReactI18next).init({
         help: 'Help',
         support: 'Support',
         signOut: 'Sign Out',
+        // Project details
+        originalSowAmount: 'Original SOW Amount',
+        finalSowAmount: ' Final SOW Amount',
+
+        paymentsTerms: 'Payments terms',
+        woaExpectedPay: 'WOA Expected Pay',
+        downloadOriginalSow: 'Download Original SOW',
+        overpayment: 'Overpayment',
+        remainingPayment: 'Remaining Payment',
+        payment: 'Payment',
+        invoiceBackDate: 'Invoice back bate',
+
+        // work order details
+        cancelWorkOrder: 'cancel Work Order',
+        vendorName: 'Vendor Name',
+        vendorType: 'Vendor Type',
+        phoneNo: 'Phone No',
+        woIssued: 'WO Issued',
+        lwSubmitted: 'LW Submitted',
+        permittedPulled: 'Permitted Pulled',
+        completionVariance: 'Completion Variance',
+        // Payments tab pc
+        lwDate: 'LW Date',
+        invoicedSubmitted: 'Invoiced Submitted',
+        payemtTerms: 'Payemt Terms',
+        woOriginalAmount: 'WO Original Amount',
+        clientOriginalAmount: 'Client Original Amount',
+        clientFinalApprovedAmount: 'Client Final Approved Amount',
+
+        // Alerts
+        triggeredAlert: 'Triggered Alert',
+        managedAlert: 'Managed Alert',
+        resloveAll: 'Reslove All',
+        projectId: 'Project Id',
+        stateZipcode: 'State/Zipcode',
+        workOrderStart: 'Work Order Start',
+        woCompletionDate: 'Wo Completion Date',
+        resolved: 'Resolved',
+        resolve: 'Resolve',
+        seeProjectDetails: 'See Project Details',
+        notify: 'Notify',
       },
     },
     es: {
       translation: {
+        // Alerts
+        triggeredAlert: 'Alerta activada',
+        managedAlert: 'Alerta gestionada',
+        resloveAll: 'Solucionelo todo',
+        projectId: 'Projecto ID',
+        stateZipcode: 'Estado/Código postal',
+        workOrderStart: 'Inicio de orden de trabajo',
+        woCompletionDate: 'Fecha de finalización de Wo',
+        resolve: 'Resolver',
+        resolved: 'Resuelta',
+        seeProjectDetails: 'Ver detalles del proyecto',
+        notify: 'Notificar',
+
+        // Payments tab pc
+        lwDate: 'Fecha LW',
+        invoicedSubmitted: 'Facturada enviada',
+        payemtTerms: 'Términos de pago',
+        woOriginalAmount: 'Importe original de la OT',
+        clientOriginalAmount: 'Importe original del cliente',
+        clientFinalApprovedAmount: 'Cantidad final aprobada por el cliente',
+
+        // work order details
+        vendorName: 'nombre del vendedor',
+        vendorType: 'tipo de vendedor',
+        phoneNo: 'telefono no',
+        woIssued: 'wo emitido',
+        lwSubmitted: 'LW Submitted',
+        permittedPulled: 'permitido tirado',
+        completionVariance: 'Variación de finalización',
+        cancelWorkOrder: 'cancelar orden de trabajo',
+        // Project details
+        originalSowAmount: 'Importe de la SOW original',
+        finalSowAmount: 'Importe de la SOW final',
+        paymentsTerms: 'Condiciones de pago',
+        woaExpectedPay: 'Pago esperado de WOA',
+        downloadOriginalSow: 'Descargar SOW original',
+        overpayment: 'sobrepago',
+        remainingPayment: 'pago restante',
+        payment: 'Pago',
+        invoiceBackDate: 'Reembolso de factura',
         // DASHBOARD
         vendorScore: 'Puntaje de Proveedor',
         vendorStatus: 'Estado del proveedor',
@@ -352,7 +435,7 @@ i18n.use(initReactI18next).init({
         region: 'Región',
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
-
+        generalLabor: 'Trabajo general',
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
@@ -373,6 +456,7 @@ i18n.use(initReactI18next).init({
         documents: 'Documentos',
         alerts: 'Alertas',
         upload: 'Subir',
+        uploadDocument: 'Subir documento',
         resolveAll: 'Solucionelo todo',
         contactName: 'Nombre de Contacto',
         projectID: 'Projecto ID',
@@ -588,6 +672,12 @@ i18n.use(initReactI18next).init({
         help: 'Ayudar',
         support: 'Apoyo',
         signOut: 'Desconectar',
+
+        // -- PROJECT COORDINATOR -- //
+
+        // Alerts
+        triggeredAlerts: 'Alertas activadas',
+        managedAlerts: 'Alertas administradas',
       },
     },
   },

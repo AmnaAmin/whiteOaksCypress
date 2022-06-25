@@ -118,7 +118,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     >
       <ModalOverlay />
       <ModalContent minH="317px">
-        <ModalHeader>{t('upload')}</ModalHeader>
+        <ModalHeader>{t('uploadDocument')}</ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
@@ -196,7 +196,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             >
               {t('close')}
             </Button>
-            <Button onClick={uploadDocument} colorScheme="brand" type="submit">
+            <Button isDisabled={isLoading} onClick={uploadDocument} colorScheme="brand" type="submit">
               {t('save')}
             </Button>
           </HStack>

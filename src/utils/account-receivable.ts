@@ -31,8 +31,6 @@ export const useBatchProcessing = () => {
   const queryClient = useQueryClient()
   return useMutation(
     id => {
-      console.log('checking in muatiaon', id)
-
       return client(`batches/run`, {
         method: 'POST',
         data: id,

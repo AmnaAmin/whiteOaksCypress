@@ -3,16 +3,7 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useTranslation } from 'react-i18next'
-import { useProjectAlerts } from 'utils/projects'
-import { useParams } from 'react-router-dom'
-import { useAuth } from 'utils/auth-context'
-import { dateFormat } from 'utils/date-time-utils'
-
-enum PROJECT_CATEGORY {
-  WARNING = 1,
-  INFO = 2,
-  ERROR = 3,
-}
+import Data from './alerts-data.json'
 
 const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -45,25 +36,13 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const AlertsTable = React.forwardRef((props: any, ref) => {
-  const { data } = useAuth()
-  const account = data?.user
-  const { projectId } = useParams<'projectId'>()
-  const { data: alerts } = useProjectAlerts(projectId, account?.login)
+export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
   const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: () => {
-          return (
-            <Flex alignItems="center">
-              <input type="checkbox"></input>
-              <Text ml={3}>{t('name') as string}</Text>
-            </Flex>
-          )
-        },
-        Cell: () => <input type="checkbox"></input>,
+        Header: t('name'),
         accessor: 'checkbox',
       },
 
@@ -78,12 +57,12 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
       {
         Header: t('category') as string,
         accessor: 'category',
-        Cell: ({ value }) => PROJECT_CATEGORY[value],
+        // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
         Header: t('dateTriggered') as string,
         accessor: 'dateCreated',
-        Cell: ({ value }) => dateFormat(value),
+        // Cell: ({ value }) => dateFormat(value),
       },
     ],
     ref,
@@ -94,7 +73,7 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
       <ReactTable
         onRowClick={props.onRowClick}
         columns={columns}
-        data={alerts || []}
+        data={Data}
         TableRow={alertsRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"

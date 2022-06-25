@@ -424,7 +424,9 @@ export const calculatePayDateVariance = (invoicedDate: DateType, paidDate: DateT
 }
 
 const getLatestDocument = (documents: Document[]) => {
-  let latestDocument = documents[0]
+  if (!documents) return null
+
+  let latestDocument = documents?.[0]
 
   for (let i = 1; i < documents.length; i++) {
     const currentDocument = documents[i]
@@ -472,8 +474,8 @@ export const parseTransactionToFormValues = (
     transaction.paymentTerm,
   )
 
-  const lienWaiverDocument = getLatestDocument(transaction.documents.filter(doc => doc.fileType === 'lienWaiver.pdf'))
-  const attachment = getLatestDocument(transaction.documents.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
+  const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
+  const attachment = getLatestDocument(transaction.documents?.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
 
   return {
     transactionType: {

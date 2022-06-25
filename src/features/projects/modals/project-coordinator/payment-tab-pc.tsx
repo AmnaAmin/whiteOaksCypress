@@ -1,15 +1,4 @@
-import {
-  Box,
-  Text,
-  Flex,
-  SimpleGrid,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  InputLeftElement,
-  InputGroup,
-} from '@chakra-ui/react'
+import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -100,28 +89,30 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="LW Date" date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
-        <CalenderCard title="Permit Date " date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-        <InformationCard title="Pay date variance" date={durationCategory} />
+        <CalenderCard title={t('lwDate')} date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
+        <CalenderCard title={t('permitDate')} date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
+        <InformationCard title={t('payDateVariance')} date={durationCategory} />
       </SimpleGrid>
 
       <Box mt={10}>
         <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Invoiced Submitted
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('invoicedSubmitted')}
               </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={dateInvoiceSubmitted ? dateFormat(dateInvoiceSubmitted) : 'mm/dd/yyyy'} />
-              </InputGroup>
+
+              <Input
+                disabled
+                value={dateInvoiceSubmitted ? dateFormat(dateInvoiceSubmitted) : 'mm/dd/yyyy'}
+                type="date"
+              />
             </FormControl>
           </Box>
           <Box>
             <FormControl height="40px">
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                Payemt Terms
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('payemtTerms')}
               </FormLabel>
               <Select options={paymentsTerms} selectProps={{ isBorderLeft: true }} onChange={e => handlePTChange(e)} />
             </FormControl>
@@ -129,13 +120,24 @@ const PaymentInfoTab = props => {
 
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Payment Term Date
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('paymentTermDate')}
               </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-              </InputGroup>
+
+              <Input disabled value={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} type="date" />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('expectedPayDate')}
+              </FormLabel>
+
+              <Input
+                disabled
+                value={expectedPaymentDate ? dateFormat(expectedPaymentDate) : 'mm/dd/yyyy'}
+                type="date"
+              />
             </FormControl>
           </Box>
         </SimpleGrid>
@@ -145,19 +147,8 @@ const PaymentInfoTab = props => {
         <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Expected Pay
-              </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={expectedPaymentDate ? dateFormat(expectedPaymentDate) : 'mm/dd/yyyy'} />
-              </InputGroup>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Payment Processed
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('paymentProcessed')}
               </FormLabel>
               <Input onChange={date => handlePPChange(date)} type="date" />
             </FormControl>
@@ -165,46 +156,43 @@ const PaymentInfoTab = props => {
 
           <Box>
             <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Paid
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('paid')}
               </FormLabel>
-              <Input onChange={date => handlePDChange(date)} type="date" readOnly={!paid ? true : false} />
+              <Input onChange={date => handlePDChange(date)} type="date" readOnly={!paid ? true : false} disabled />
+            </FormControl>
+          </Box>
+
+          <Box>
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('woOriginalAmount')}
+              </FormLabel>
+              <Input readOnly value={currencyFormatter(sowOriginalContractAmount)} />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('clientOriginalAmount')}
+              </FormLabel>
+              <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
+            </FormControl>
+          </Box>
+
+          <Box height="80px">
+            <FormControl>
+              <FormLabel variant={'strong-label'} size={'md'}>
+                {t('clientFinalApprovedAmount')}
+              </FormLabel>
+              <Input readOnly={true} value={currencyFormatter(clientOriginalApprovedAmount)} />
             </FormControl>
           </Box>
         </SimpleGrid>
-        <Box mt={10}>
-          <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-            <Box>
-              <FormControl>
-                <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                  WO Original amount
-                </FormLabel>
-                <Input readOnly={true} value={currencyFormatter(sowOriginalContractAmount)} />
-              </FormControl>
-            </Box>
-            <Box>
-              <FormControl>
-                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                  Client original amount
-                </FormLabel>
-                <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
-              </FormControl>
-            </Box>
-
-            <Box height="80px">
-              <FormControl>
-                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                  Client final approved amount
-                </FormLabel>
-                <Input value={currencyFormatter(clientOriginalApprovedAmount)} readOnly={true} />
-              </FormControl>
-            </Box>
-          </SimpleGrid>
-        </Box>
       </Box>
 
       <Flex mt="40px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button variant="ghost" onClick={props.onClose} colorScheme="brand">
+        <Button variant="outline" onClick={props.onClose} colorScheme="brand" mr={3}>
           {t('close')}
         </Button>
         <Button onClick={() => saveChanges(entity)} colorScheme="brand">

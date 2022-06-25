@@ -32,7 +32,7 @@ export const ProjectCard = (props: multitypes) => {
       >
         <Flex height="100%">
           <Text marginLeft={'20px'}> {props.IconElement}</Text>
-          <Box marginRight={{ base: '5px', md: '24px', xl: '24px' }}>
+          <Box>
             <Text fontSize="16px" fontWeight="400" marginTop="4px" paddingLeft={'20px'} color="gray.600">
               {props.title}
             </Text>

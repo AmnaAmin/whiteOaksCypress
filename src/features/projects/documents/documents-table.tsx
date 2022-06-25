@@ -1,11 +1,10 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Center } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Divider, Link, Spacer, HStack } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
-import { downloadFile } from 'utils/file-utils'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
@@ -24,25 +23,22 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
       {...row.getRowProps({
         style,
       })}
+      onClick={e => {
+        e.preventDefault()
+        // @ts-ignore
+        const s3Url = row.original?.s3Url
+        // @ts-ignore
+        if (s3Url) {
+          window.open(s3Url, '_self')
+        }
+      }}
     >
       {row.cells.map(cell => {
         return (
-          <Td
-            {...cell.getCellProps()}
-            key={`row_${cell.value}`}
-            p="0"
-            onClick={() => {
-              // @ts-ignore
-              const s3Url = row.original?.s3Url
-              if (s3Url) {
-                window.open(s3Url, '_blank')
-              }
-            }}
-          >
+          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             {/** @ts-ignore */}
             <Flex alignItems="center" h="60px">
               <Text
-                noOfLines={2}
                 title={cell.value}
                 padding="0 15px"
                 fontWeight={400}
@@ -51,6 +47,7 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
                 mb="10px"
                 fontSize="14px"
                 color="#4A5568"
+                isTruncated
               >
                 {cell.render('Cell')}
               </Text>
@@ -58,23 +55,6 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
           </Td>
         )
       })}
-
-      <Center>
-        <Icon
-          pos="absolute"
-          right="10px"
-          as={BiDownArrowCircle}
-          color="#4E87F8"
-          fontSize={24}
-          onClick={() => {
-            // @ts-ignore
-            const s3Url = row.original?.s3Url
-            if (s3Url) {
-              downloadFile(s3Url)
-            }
-          }}
-        />
-      </Center>
     </Tr>
   )
 }
@@ -123,8 +103,18 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         Header: t('createdDate') || '',
         accessor: 'createdDate',
         id: 'createdDate',
-        Cell({ value }) {
-          return <Box mr={2}>{dateFormat(value)}</Box>
+        Cell({ value, row }) {
+          // @ts-ignore
+          const s3Url = row.original?.s3Url
+          return (
+            <Flex>
+              <Box mr={2}>{dateFormat(value)}</Box>
+              <Spacer w="90px" />
+              <Link href={s3Url} onClick={e => e.stopPropagation()}>
+                <Icon as={BiDownArrowCircle} color="#4E87F8" fontSize={24} />
+              </Link>
+            </Flex>
+          )
         },
       },
     ],
@@ -142,15 +132,17 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
       />
       {isProjectCoordinator && (
         <Flex justifyContent="end">
-          <Button variant="ghost" colorScheme="brand">
-            <Icon as={BiExport} fontSize="18px" mr={1} />
-            Export
-          </Button>
-          <Divider orientation="vertical" border="2px solid" h="35px" />
-          <Button variant="ghost" colorScheme="brand" m={0}>
-            <Icon as={FaAtom} fontSize="18px" mr={1} />
-            Export
-          </Button>
+          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+            <Button variant="ghost" colorScheme="brand" m={0}>
+              <Icon as={BiExport} fontSize="18px" mr={1} />
+              {t('export')}
+            </Button>
+            <Divider orientation="vertical" border="1px solid" h="20px" />
+            <Button variant="ghost" colorScheme="brand" m={0}>
+              <Icon as={FaAtom} fontSize="18px" mr={1} />
+              {t('settings')}
+            </Button>
+          </HStack>
         </Flex>
       )}
     </Box>
