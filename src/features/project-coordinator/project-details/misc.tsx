@@ -1,5 +1,6 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
+import { STATUS } from 'features/projects/status'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { ProjectType } from 'types/project.type'
@@ -31,9 +32,20 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
   const signoffDateVariance = dataMisc?.dataMisc?.signoffDateVariance
   const woaPayVariance = dataMisc?.dataMisc?.woaPayVariance
 
-  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+  const statusArray = [
+    STATUS.New.valueOf(),
+    STATUS.Active.valueOf(),
+    STATUS.Punch.valueOf(),
+    STATUS.Closed.valueOf(),
+    STATUS.Invoiced.valueOf(),
+    STATUS.ClientPaid.valueOf(),
+    STATUS.Paid.valueOf(),
+    STATUS.Overpayment.valueOf(),
+    STATUS.PastDue.valueOf(),
+    STATUS.Cancelled.valueOf(),
+  ]
 
-  const miscStatus = projectStatus ? !!projectStatus : true
+  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
 
   return (
     <Box>
@@ -48,7 +60,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={createdDate !== null ? dateFormatter(createdDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -62,7 +74,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={woaStartDate !== null ? dateFormatter(woaStartDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -76,7 +88,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={clientSignoffDate !== null ? dateFormatter(clientSignoffDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -90,7 +102,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={projectClosedDate !== null ? dateFormatter(projectClosedDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -104,7 +116,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={clientPaidDate !== null ? dateFormatter(clientPaidDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -118,7 +130,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={woaCompletionDate !== null ? dateFormatter(woaCompletionDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -132,7 +144,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={woaBackdatedInvoiceDate !== null ? dateFormatter(woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -161,7 +173,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={woaPaidDate !== null ? dateFormatter(woaPaidDate) : 'mm/dd/yyyy'}
-                  disable={miscStatus}
+                  disable={projectStatus}
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -172,7 +184,12 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input value={dueDateVariance} isDisabled={miscStatus} id="dueDate" {...register('dueDateVariance')} />
+                <Input
+                  value={dueDateVariance}
+                  isDisabled={projectStatus}
+                  id="dueDate"
+                  {...register('dueDateVariance')}
+                />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -184,7 +201,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <Input
                   value={signoffDateVariance}
-                  isDisabled={miscStatus}
+                  isDisabled={projectStatus}
                   id="finalDate"
                   {...register('finalDateVariance')}
                 />
@@ -196,7 +213,12 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input value={woaPayVariance} isDisabled={miscStatus} id="payVariance" {...register('payVariance')} />
+                <Input
+                  value={woaPayVariance}
+                  isDisabled={projectStatus}
+                  id="payVariance"
+                  {...register('payVariance')}
+                />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
