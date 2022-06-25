@@ -14,7 +14,7 @@ import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useEffect, useState } from 'react'
-import { useMarkets, useProperties, useStates, useVerifyAddressApi } from 'utils/pc-projects'
+import { useVerifyAddressApi } from 'utils/pc-projects'
 import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
@@ -26,6 +26,10 @@ export const AddPropertyInfo: React.FC<{
   isLoading: boolean
   setNextTab: () => void
   onClose: () => void
+  buttonCondition: boolean
+  properties: any
+  markets?: any
+  statesData?: any
 }> = props => {
   const [streetAddress, setStreetAddress] = useState('')
   const [city, setCity] = useState('')
@@ -44,28 +48,28 @@ export const AddPropertyInfo: React.FC<{
 
   // API calls
   const { projects } = useProjects()
-  const { data: properties } = useProperties()
+  // const { data: properties } = useProperties()
   const { data: addressData, refetch } = useVerifyAddressApi(streetAddress, city, state, zipCode)
-  const { data: statesData } = useStates()
-  const { data: markets } = useMarkets()
+  // const { data: statesData } = useStates()
+  // const { data: markets } = useMarkets()
 
   // Fill Dropdowns
-  const states = statesData
-    ? statesData?.map(state => ({
+  const states = props?.statesData
+    ? props?.statesData?.map(state => ({
         label: state?.name,
         value: state?.code,
       }))
     : null
 
-  const market = markets
-    ? markets?.map(market => ({
+  const market = props?.markets
+    ? props?.markets?.map(market => ({
         label: market?.metropolitanServiceArea,
         value: market?.id,
       }))
     : null
 
-  const addressOptions = properties
-    ? properties?.map(property => ({
+  const addressOptions = props?.properties
+    ? props?.properties?.map(property => ({
         label: property?.streetAddress,
         value: property?.id,
       }))
@@ -88,7 +92,7 @@ export const AddPropertyInfo: React.FC<{
   // On Street Address change, set values of City, State and Zip
   const setAddressValues = e => {
     setIsDuplicateAddress(false)
-    properties.map(property => {
+    props?.properties.map(property => {
       if (e.label === property?.streetAddress) {
         setValue('streetAddress', property.streetAddress)
         setValue('city', property.city)
@@ -218,7 +222,7 @@ export const AddPropertyInfo: React.FC<{
               label={'City'}
               placeholder=""
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`city`}
             />
@@ -255,7 +259,7 @@ export const AddPropertyInfo: React.FC<{
               label={'Zip'}
               placeholder=""
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`zipCode`}
             />
@@ -356,7 +360,7 @@ export const AddPropertyInfo: React.FC<{
           _hover={{ bg: 'blue' }}
           ml="3"
           size="md"
-          disabled={!check && isDuplicateAddress && !verificationInProgress}
+          disabled={(!check && isDuplicateAddress && !verificationInProgress) || !props.buttonCondition}
           onClick={() => {
             setTimeout(() => {
               refetch()

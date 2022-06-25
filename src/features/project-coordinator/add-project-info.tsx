@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
-import { useProjectTypes } from 'utils/pc-projects'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
@@ -22,13 +21,15 @@ import { BiDownload } from 'react-icons/bi'
 type InfoProps = {
   setNextTab: () => void
   onClose: () => void
+  buttonCondition: boolean
+  projectTypes?: any
 }
 
 export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
-  const { data: projectTypes } = useProjectTypes()
+  // const { data: projectTypes } = useProjectTypes()
 
-  const types = projectTypes
-    ? projectTypes?.map(type => ({
+  const types = props?.projectTypes
+    ? props?.projectTypes?.map(type => ({
         label: type?.value,
         value: type?.id,
       }))
@@ -75,7 +76,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   const inputStyle = {
     bg: 'white',
-    borderLeft: '1.5px solid #4E87F8',
+    borderLeft: '2.5px solid #4E87F8',
   }
 
   return (
@@ -190,7 +191,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               label={'Original SOW Amount'}
               placeholder="$0"
               register={register}
-              elementStyle={{ bg: 'white', borderLeft: '1.5px solid #4E87F8' }}
+              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
               rules={{ required: 'This is required field' }}
               name={`sowOriginalContractAmount`}
             />
@@ -246,7 +247,13 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         <Button variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8" onClick={props.onClose}>
           {'Cancel'}
         </Button>
-        <Button colorScheme="CustomPrimaryColor" size="md" ml="3" onClick={props.setNextTab}>
+        <Button
+          disabled={!props.buttonCondition}
+          colorScheme="CustomPrimaryColor"
+          size="md"
+          ml="3"
+          onClick={props.setNextTab}
+        >
           {'Next'}
         </Button>
       </Grid>
