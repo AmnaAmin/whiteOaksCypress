@@ -95,7 +95,7 @@ const WorkOrderDetails = ({
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <Divider mb={3} />
-        <ModalBody>
+        <ModalBody p="0">
           <Stack spacing={5}>
             <Tabs
               variant="enclosed"
@@ -104,7 +104,7 @@ const WorkOrderDetails = ({
               onChange={index => setTabIndex(index)}
               whiteSpace="nowrap"
             >
-              <TabList color="gray.600">
+              <TabList color="gray.600" mx="32px">
                 <Tab>{t('workOrderDetails')}</Tab>
                 <Tab>{t('lienWaiver')}</Tab>
                 <Tab>{t('invoice')}</Tab>
@@ -118,10 +118,10 @@ const WorkOrderDetails = ({
               </TabList>
 
               <TabPanels>
-                <TabPanel p="0px">
+                <TabPanel p="0">
                   <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel p="1.4px">
                   <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel>
