@@ -7,16 +7,18 @@ import ProjectManagement from './project-management'
 import Misc from './misc'
 import InvoiceAndPayments from './invoice-and-payments'
 import { BiSpreadsheet } from 'react-icons/bi'
+import { ProjectType } from 'types/project.type'
 
 type tabProps = {
   onClose?: () => void
   style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string }
   tabVariant?: string
   selectedData?: any
+  projectData?: ProjectType
 }
 
 const ProjectDetailsTab = (props: tabProps) => {
-  const { style, onClose, tabVariant } = props
+  const { style, onClose, tabVariant, projectData } = props
   const [tabIndex, setTabIndex] = useState<number>(0)
 
   return (
@@ -42,7 +44,7 @@ const ProjectDetailsTab = (props: tabProps) => {
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
-            <InvoiceAndPayments />
+            <InvoiceAndPayments projectData={projectData as ProjectType} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>

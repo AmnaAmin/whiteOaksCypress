@@ -139,7 +139,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" mt="7px">
                 <Card rounded="16px" padding="0">
-                  <ProjectDetailsTab />
+                  <ProjectDetailsTab projectData={projectData as ProjectType} />
                 </Card>
               </TabPanel>
 
