@@ -5,6 +5,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { theme } from 'theme/theme'
 import { Global } from '@emotion/react'
 import { GlobalStyles } from 'theme/global-css'
+import { I18nextProvider } from 'react-i18next'
+import i18n from 'components/translation/i18n'
 
 let queryConfig = {}
 
@@ -39,14 +41,16 @@ export const Providers: React.FC = ({ children }) => {
   const queryClient = new QueryClient(queryConfig)
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <Global styles={GlobalStyles} />
-        {/* @ts-ignore */}
-        <AuthProvider>{children}</AuthProvider>
-      </ChakraProvider>
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <Global styles={GlobalStyles} />
+          {/* @ts-ignore */}
+          <AuthProvider>{children}</AuthProvider>
+        </ChakraProvider>
 
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </I18nextProvider>
   )
 }

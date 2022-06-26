@@ -158,6 +158,7 @@
     "@types/zxcvbn": "^4.4.1",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
+    "canvas": "^2.9.3",
     "eslint": "^8.16.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",

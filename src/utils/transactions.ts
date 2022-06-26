@@ -108,6 +108,10 @@ const WORK_ORDER_DEFAULT_OPTION = {
   value: WORK_ORDER_DEFAULT_VALUE,
 }
 
+export const createWorkOrderLabel = (skillName: string, companyName: string) => {
+  return `${skillName} (${companyName})`
+}
+
 export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
   let workOrderSelectOptions: SelectOption[] = []
   const client = useClient()
@@ -123,7 +127,7 @@ export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
   )
 
   const changeOrderOptions = changeOrders?.map(changeOrder => ({
-    label: `${changeOrder.skillName} (${changeOrder.companyName})`,
+    label: createWorkOrderLabel(changeOrder.skillName, changeOrder.companyName),
     value: `${changeOrder.id}`,
   }))
 
@@ -147,6 +151,10 @@ const AGAINST_DEFAULT_OPTION = {
   value: AGAINST_DEFAULT_VALUE,
 }
 
+export const createAgainstOptionLabel = (companyName: string, skillName: string) => {
+  return `${companyName} - ${skillName}`
+}
+
 export const useProjectWorkOrders = (projectId?: string) => {
   const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const client = useClient()
@@ -168,7 +176,7 @@ export const useProjectWorkOrders = (projectId?: string) => {
           return !(status === 'paid' || status === 'cancelled')
         })
         .map(workOrder => ({
-          label: `${workOrder.companyName} (${workOrder.skillName})`,
+          label: createAgainstOptionLabel(workOrder.companyName, workOrder.skillName),
           value: `${workOrder.id}`,
         })),
     [workOrders],
@@ -211,6 +219,10 @@ const CHANGE_ORDER_DEFAULT_OPTION = {
   value: CHANGE_ORDER_DEFAULT_VALUE,
 }
 
+export const createChangeOrderLabel = (changeOrderAmount: number, workOrderName: string) => {
+  return `$${changeOrderAmount} (${workOrderName})`
+}
+
 export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   const client = useClient()
   const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
@@ -230,7 +242,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   const changeOrderOptions = useMemo(
     () =>
       changeOrders?.map(workOrder => ({
-        label: `$${workOrder.changeOrderAmount} (${workOrder.name})`,
+        label: createChangeOrderLabel(workOrder.changeOrderAmount, workOrder.name),
         value: workOrder.id,
       })),
     [changeOrders?.length],

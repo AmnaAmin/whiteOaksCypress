@@ -13,8 +13,6 @@ export const authenticationHandlers = [
   rest.get('/api/account', (req, res, ctx) => {
     const token = req.headers.get('authorization')
 
-    console.log(req.headers)
-    console.log('Token', token)
     return res(
       // Respond with a 200 status code
       ctx.status(200),
