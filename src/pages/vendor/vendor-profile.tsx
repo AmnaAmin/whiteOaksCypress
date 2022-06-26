@@ -10,7 +10,7 @@ import { License } from 'features/vendor-details/license'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
-// import 'components/translation/i18n'
+import 'components/translation/i18n'
 import { Account } from 'types/account.types'
 import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'

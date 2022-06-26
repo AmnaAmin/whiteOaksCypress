@@ -37,7 +37,7 @@ describe('Porject Details: Document tab test cases', () => {
 
     const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
     userEvent.click(uploadDocumentButton)
-    expect(screen.getByText('Upload Document', { selector: 'header' })).toBeInTheDocument()
+    expect(screen.getByText('Upload', { selector: 'header' })).toBeInTheDocument()
   })
 
   test('Upload document happy flow', async () => {
