@@ -57,6 +57,19 @@ i18n.use(initReactI18next).init({
         expectedPaymentDate: 'Expected Payment Date',
         generalLabor: 'General Labor',
 
+        // Receivable
+        dueProjects: 'Due Projects',
+        client: 'Client',
+        terms: 'Terms',
+        paymentTypes: 'Payment Types',
+        balance: 'Balance',
+        markets: 'Markets',
+        woInvoiceDate: 'WO Invoice Date',
+        poNo: 'PO No',
+        woNo: 'WO Po',
+        checkbox: 'Checkbox',
+        clearFilter: 'Clear Filter',
+
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
@@ -436,6 +449,20 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
         generalLabor: 'Trabajo general',
+
+        // receivable
+        dueProjects: 'Proyectos Vencidos',
+        client: 'Cliente',
+        terms: 'Términos',
+        paymentTypes: 'Formas De Pago',
+        balance: 'Balance',
+        markets: 'Mercados',
+        woInvoiceDate: 'Fecha de factura de OT',
+        poNo: 'Número de orden de compra',
+        woNo: 'OT No',
+        checkbox: 'Caja',
+        clearFilter: 'Filtro claro',
+
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
