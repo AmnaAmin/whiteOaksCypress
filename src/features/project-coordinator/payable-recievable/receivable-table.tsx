@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
+import React, { useCallback } from 'react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
 import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
-import { useWeekDayProjectsDue } from 'utils/projects'
-import moment from 'moment'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
+import { t } from 'i18next'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -46,78 +45,74 @@ type ReceivableProps = {
   ref?: any
   setTableInstance: (tableInstance: any) => void
   register: UseFormRegister<FieldValues>
+  loading?: boolean
 }
 
-export const ReceivableTable: React.FC<ReceivableProps> = ({
-  setTableInstance,
-  selectedCard,
-  selectedDay,
-  register,
-  ref,
-}) => {
+export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, loading, register, ref }) => {
   const { columns } = useColumnWidthResize(
     [
       {
-        Header: 'Id',
+        Header: t('id') as string,
         accessor: 'projectId',
       },
       {
-        Header: 'Client',
+        Header: t('client') as string,
         accessor: 'clientName',
       },
       {
-        Header: 'Address',
+        Header: t('address') as string,
         accessor: 'propertyAddress',
       },
       {
-        Header: 'Terms',
+        Header: t('terms') as string,
         accessor: 'paymentTerm',
       },
       {
-        Header: 'Payment Types',
+        Header: t('paymentTypes') as string,
         accessor: 'transactionType',
       },
       {
-        Header: 'Expected pay date',
+        Header: t('vendorWOExpectedPaymentDate') as string,
         accessor: 'expectedPaymentDate',
       },
       {
-        Header: 'Balance',
+        Header: t('balance') as string,
         accessor: 'amount',
       },
       {
-        Header: 'final invoice',
+        Header: t('finalInvoice') as string,
         accessor: 'famount',
       },
       {
-        Header: 'Markets',
+        Header: t('markets') as string,
         accessor: 'marketName',
       },
       {
-        Header: 'WO Invoice Date',
+        Header: t('woInvoiceDate') as string,
         accessor: 'woaInvoiceDate',
       },
       {
-        Header: 'PO No',
+        Header: t('poNo') as string,
         accessor: 'poNumber',
       },
       {
-        Header: 'WO No',
+        Header: t('woNo') as string,
         accessor: 'woNumber',
       },
       {
-        Header: 'Invoice No',
+        Header: t('invoiceNo') as string,
         accessor: 'invoiceNumber',
       },
       {
-        Header: ' Checkbox',
+        Header: t('checkbox') as string,
         Cell: ({ value, row }) => (
-          <input
-            onClick={e => e.stopPropagation()}
-            type="checkbox"
-            value={(row.original as any).projectId}
-            {...register('id', { required: true })}
-          />
+          <Box onClick={e => e.stopPropagation()}>
+            <Checkbox
+              isDisabled={loading}
+              value={(row.original as any).projectId}
+              {...register('id', { required: true })}
+            />
+          </Box>
         ),
       },
     ],
@@ -141,50 +136,13 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
   const rowSelectedData = receivableDataa?.data
 
-  const [filterProjects, setFilterProjects] = useState(receivableData?.arList)
-
-  const { data: days } = useWeekDayProjectsDue()
-
-  useEffect(() => {
-    // To get pastDue Ids
-    const pastDueIds = receivableData?.arList?.filter(project => project?.pastDue)
-    const idPastDue = pastDueIds?.map(project => project?.id)
-
-    if (!selectedCard && !selectedDay) setFilterProjects(receivableData?.arList)
-    setFilterProjects(
-      receivableData?.arList?.filter(
-        project =>
-          !selectedCard ||
-          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
-          (selectedCard === 'pastDue' && idPastDue?.includes(project?.id)),
-      ),
-    )
-
-    // Due Project Filter
-    if (selectedDay) {
-      setFilterProjects(
-        receivableData?.arList?.filter(
-          project =>
-            project.clientDueDate ===
-            days?.forEach(day => {
-              if (selectedDay === day.dayName) {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              } else if (selectedDay === 'All') {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              }
-            })?.dueDate,
-        ),
-      )
-    }
-  }, [selectedCard, selectedDay, receivableData])
-
   return (
     <Box overflow="auto" width="100%">
       <ReactTable
         onRowClick={onRowClick}
         columns={columns}
         setTableInstance={setTableInstance}
-        data={filterProjects || []}
+        data={receivableData?.arList || []}
         isLoading={isLoading}
         TableRow={receivableRow}
         tableHeight="calc(100vh - 300px)"

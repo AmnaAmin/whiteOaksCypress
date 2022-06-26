@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from './auth-context'
 
+declare global {
+  interface Window {
+    batchTimer?: any
+  }
+}
+
 export const usePCReveviable = () => {
   const client = useClient()
 
@@ -58,8 +64,11 @@ export const useCheckBatch = setLoading => {
       onSuccess(e) {
         setLoading(e)
         if (e) {
-          queryClient.invalidateQueries('batchCheck')
+          window.batchTimer = setTimeout(() => {
+            queryClient.invalidateQueries('batchCheck')
+          }, 60000)
         } else {
+          clearTimeout(window.batchTimer)
           queryClient.invalidateQueries('receivable')
         }
       },

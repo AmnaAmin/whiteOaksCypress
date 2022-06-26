@@ -1,9 +1,11 @@
 import { Box, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
+import { ConfirmationBox } from 'components/Confirmation'
 import { PayableFiltter } from 'features/project-coordinator/payable-recievable/filtter'
 import { PayableTable } from 'features/project-coordinator/payable-recievable/payable-table'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
+import { t } from 'i18next'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
@@ -20,7 +22,7 @@ export const AccountDetails = (props: payableReceivable) => {
 
   const [isClicked, setIsClicked] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
   // const [cardSelected, setCardSelected] = useState(false)
@@ -44,6 +46,7 @@ export const AccountDetails = (props: payableReceivable) => {
 
   const Submit = e => {
     setLoading(true)
+    setIsBatchClick(true)
     const payloadData = e.id.map(n => ({ id: parseInt(n), type: 'Remaining Payments' }))
     const obj = {
       typeCode: 'AR',
@@ -51,8 +54,13 @@ export const AccountDetails = (props: payableReceivable) => {
     }
     // @ts-ignore
     batchCall(obj)
+    // batchCall?.(obj) not working
   }
   useCheckBatch(setLoading)
+
+  const onNotificationClose = () => {
+    setIsBatchClick(false)
+  }
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
@@ -65,7 +73,7 @@ export const AccountDetails = (props: payableReceivable) => {
         </Box>
         <Box mt={6}>
           <FormLabel variant="strong-label" size="lg">
-            Due Projects
+            {t('dueProjects')}
           </FormLabel>
         </Box>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
@@ -82,7 +90,7 @@ export const AccountDetails = (props: payableReceivable) => {
           </Button>
           <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
           <Button variant="ghost" colorScheme="brand" alignContent="right" onClick={clearAll}>
-            Clear Filter
+            {t('clearFilter')}
           </Button>
           <Button
             alignContent="right"
@@ -100,6 +108,7 @@ export const AccountDetails = (props: payableReceivable) => {
         <Box mt={2}>
           {props.ID === 'receivable' ? (
             <ReceivableTable
+              loading={loading}
               register={register}
               selectedCard={selectedCard as string}
               selectedDay={selectedDay as string}
@@ -121,15 +130,24 @@ export const AccountDetails = (props: payableReceivable) => {
             }}
           >
             <Icon as={BiExport} fontSize="18px" mr={2} />
-            Export
+            {t('export')}
           </Button>
           <Divider orientation="vertical" height="30px" border="2px solid" />
           <Button colorScheme="brand" variant="ghost" m={0}>
             <Icon as={FaAtom} fontSize="18px" mr={2} />
-            Settings
+            {t('setting')}
           </Button>
         </Flex>
       </Box>
+      <ConfirmationBox
+        title="Batch processing"
+        content="Batch Process has been completed successfully."
+        isOpen={!loading && isBatchClick}
+        onClose={onNotificationClose}
+        onConfirm={onNotificationClose}
+        yesButtonText="Cancel"
+        showNoButton={false}
+      />
     </form>
   )
 }
