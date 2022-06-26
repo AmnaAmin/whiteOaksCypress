@@ -341,6 +341,10 @@ i18n.use(initReactI18next).init({
         resolve: 'Resolve',
         seeProjectDetails: 'See Project Details',
         notify: 'Notify',
+        alertingRules: 'Alerting Rules',
+        attribute: 'Attribute',
+        behaviour: 'Behaviour',
+        customValue: 'Custom Value',
       },
     },
     es: {
@@ -357,6 +361,10 @@ i18n.use(initReactI18next).init({
         resolved: 'Resuelta',
         seeProjectDetails: 'Ver detalles del proyecto',
         notify: 'Notificar',
+        alertingRules: 'Reglas de alerta',
+        attribute: 'Atributo',
+        behaviour: 'Comportamiento',
+        customValue: 'Valor personalizado',
 
         // Payments tab pc
         lwDate: 'Fecha LW',

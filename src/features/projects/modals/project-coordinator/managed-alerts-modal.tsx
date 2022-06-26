@@ -31,7 +31,7 @@ export const ManagedAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, 
           <ModalContent>
             <ModalHeader borderBottom="1px solid #eee">
               <FormLabel variant="strong-label" size="lg">
-                New Alert
+                {t('newAlert')}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />

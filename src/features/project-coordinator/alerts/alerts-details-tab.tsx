@@ -34,13 +34,13 @@ export const AlertsDetailsTab = () => {
       <Box>
         <HStack spacing="16px" mt="30px">
           <FormControl isInvalid={errors.Name} w={215}>
-            <FormLabel variant="strong-label">Name</FormLabel>
+            <FormLabel variant="strong-label">{t('name')}</FormLabel>
             <Input type="text" borderLeft="2.5px solid blue" {...register('Name', { required: 'This is required' })} />
             <FormErrorMessage pos="absolute">{errors.Name && errors.Name.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.Category} w={215}>
-            <FormLabel variant="strong-label">Category</FormLabel>
+            <FormLabel variant="strong-label">{t('category')}</FormLabel>
             <Controller
               name="Category"
               control={control}
@@ -55,7 +55,7 @@ export const AlertsDetailsTab = () => {
           </FormControl>
 
           <Box w={215}>
-            <FormLabel variant="strong-label">Status</FormLabel>
+            <FormLabel variant="strong-label">{t('status')}</FormLabel>
             <Controller
               name="Status"
               control={control}
@@ -68,19 +68,19 @@ export const AlertsDetailsTab = () => {
 
         <HStack mt="30px">
           <Text whiteSpace="nowrap" fontSize="16px" fontWeight={500} color="#4A5568">
-            Alerting Rules
+            {t('alertingRules')}
           </Text>
           <Divider borderWidth="1px" />
         </HStack>
 
         <Box w={215} mt="30px">
-          <FormLabel variant="strong-label">Status</FormLabel>
+          <FormLabel variant="strong-label">{t('status')}</FormLabel>
           <Input type="text" {...register('Status')} disabled value="If" />
         </Box>
 
         <HStack spacing="16px" mt="30px">
           <Box w={215}>
-            <FormLabel variant="strong-label">Type</FormLabel>
+            <FormLabel variant="strong-label">{t('type')}</FormLabel>
             <Controller
               name="Type"
               control={control}
@@ -91,7 +91,7 @@ export const AlertsDetailsTab = () => {
           </Box>
 
           <Box w={215}>
-            <FormLabel variant="strong-label">Attribute</FormLabel>
+            <FormLabel variant="strong-label">{t('attribute')}</FormLabel>
             <Controller
               name="Attribute"
               control={control}
@@ -102,7 +102,7 @@ export const AlertsDetailsTab = () => {
           </Box>
 
           <Box w={215}>
-            <FormLabel variant="strong-label">Behaviour</FormLabel>
+            <FormLabel variant="strong-label">{t('behaviour')}</FormLabel>
             <Controller
               name="Behaviour"
               control={control}
@@ -113,7 +113,7 @@ export const AlertsDetailsTab = () => {
           </Box>
 
           <Box w={215}>
-            <FormLabel variant="strong-label">Custom Value</FormLabel>
+            <FormLabel variant="strong-label">{t('customValue')}</FormLabel>
             <Controller
               name="Custom Value"
               control={control}
