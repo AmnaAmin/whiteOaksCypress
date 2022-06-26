@@ -63,6 +63,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
 
+    // console.log('context', context)
     if (!context) return
 
     context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
@@ -152,7 +153,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                   data-testid="signature-img"
                   hidden={!formValues?.claimantsSignature}
                   maxW={'100%'}
-                  src={formValues?.claimantsSignature as string}
+                  src={(formValues?.claimantsSignature as string) || ''}
                   {...register('lienWaiver.claimantsSignature', {
                     required: 'This is required field',
                   })}

@@ -5,6 +5,9 @@ export const projectHandlers = [
   rest.get('/api/projects/:projectId/vendor', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(PROJECT_VENDOR))
   }),
+  rest.get('/api/projects/:projectId', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(PROJECT_VENDOR))
+  }),
   rest.get('/api/projects', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(PROJECTS))
   }),
