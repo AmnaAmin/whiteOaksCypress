@@ -107,12 +107,12 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
   )
 }
 
-export type TransactionFormProps = {
+type AddUpdateTransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId }) => {
+export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClose, selectedTransactionId }) => {
   const { t } = useTranslation()
   const { isVendor, isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
@@ -360,7 +360,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
 
                 {isShowWorkOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.workOrder} data-testid="work-order-select">
+                    <FormControl isInvalid={!!errors.workOrder}>
                       <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
                         {t('workOrder')}
                       </FormLabel>
@@ -390,7 +390,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 )}
                 {isShowChangeOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
+                    <FormControl isInvalid={!!errors.changeOrder}>
                       <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
                         {t('changeOrder')}
                       </FormLabel>

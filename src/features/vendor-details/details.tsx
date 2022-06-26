@@ -24,7 +24,7 @@ import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateMutation } from 'utils/vendor-details'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
-// import 'components/translation/i18n'
+import 'components/translation/i18n'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useQueryClient } from 'react-query'
 
