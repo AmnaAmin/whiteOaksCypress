@@ -40,7 +40,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
         <TabPanels mt="31px">
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
-            <ProjectManagement />
+            <ProjectManagement projectData={projectData as ProjectType} />
           </TabPanel>
 
           <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
