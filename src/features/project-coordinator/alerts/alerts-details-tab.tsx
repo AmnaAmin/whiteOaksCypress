@@ -1,18 +1,15 @@
-import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input, Text } from '@chakra-ui/react'
+import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 const SelectOpion = [
-  { value: '1', label: 'Saqib' },
-  { value: '2', label: 'Maroof Ali' },
-  { value: '3', label: 'Jabir Hussain' },
-  { value: '4', label: 'Ansar Ali' },
-  { value: '5', label: 'Wili Hassan ' },
-  { value: '6', label: 'Nasir Hussain' },
-  { value: '7', label: 'Talat Hussain' },
-  { value: '8', label: 'Manal Hassan' },
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2' },
+  { value: '3', label: 'Option 3' },
+  { value: '4', label: 'Option 4' },
+  { value: '5', label: 'Option 5 ' },
 ]
 
 export const AlertsDetailsTab = () => {
@@ -67,9 +64,9 @@ export const AlertsDetailsTab = () => {
         </HStack>
 
         <HStack mt="30px">
-          <Text whiteSpace="nowrap" fontSize="16px" fontWeight={500} color="#4A5568">
+          <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
             {t('alertingRules')}
-          </Text>
+          </FormLabel>
           <Divider borderWidth="1px" />
         </HStack>
 
