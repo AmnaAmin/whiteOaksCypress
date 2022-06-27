@@ -105,11 +105,12 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         <ReactTable
           columns={columns}
           setTableInstance={props.setTableInstance}
-          data={PayableData?.workOrders}
+          data={PayableData?.workOrders || []}
           isLoading={isLoading}
           TableRow={payableRow}
           tableHeight="calc(100vh - 300px)"
           name="payable-table"
+          defaultFlexStyle={false}
         />
       </Box>
     )

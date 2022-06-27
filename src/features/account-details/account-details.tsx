@@ -12,12 +12,14 @@ import { BiExport, BiSync } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
 import { useBatchProcessing, useCheckBatch } from 'utils/account-receivable'
 
-type payableReceivable = {
+type accountDetailsTypes = {
   topTitle: string
   ID: number | string
+  payloadType: string
+  typeCode: string
 }
 
-export const AccountDetails = (props: payableReceivable) => {
+export const AccountDetails = (props: accountDetailsTypes) => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
   const [isClicked, setIsClicked] = useState(false)
@@ -47,9 +49,9 @@ export const AccountDetails = (props: payableReceivable) => {
   const Submit = e => {
     setLoading(true)
     setIsBatchClick(true)
-    const payloadData = e.id.map(n => ({ id: parseInt(n), type: 'Remaining Payments' }))
+    const payloadData = e.id.map(n => ({ id: parseInt(n), type: props.payloadType }))
     const obj = {
-      typeCode: 'AR',
+      typeCode: props.typeCode,
       entities: payloadData,
     }
     // @ts-ignore
