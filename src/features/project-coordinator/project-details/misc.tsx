@@ -165,7 +165,7 @@ const Misc = (dataMisc: any) => {
             <GridItem>
               <FormControl isInvalid={errors.finalDateVariance} w="215px">
                 <FormLabel variant="strong-label" size="md" htmlFor="finalDateVariance">
-                  Final Date Variance
+                  Pay Date Variance
                 </FormLabel>
 
                 <Input
