@@ -38,20 +38,15 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
   }>({
     defaultValues: { userTypes: userTypes },
   })
-  const onSubmit = data => {
-    console.log('data', data)
-  }
+  const onSubmit = data => {}
 
   const fields = watch()
 
   const isEnabled = useMemo(() => {
-    console.log(fields)
     const { userTypes, recepient, bodyFirst, recepientPhoneNo } = fields
     const isOneOfUserTypesSelected = userTypes.map(userType => userType.checked).some(Boolean)
     return !!(recepient || bodyFirst || recepientPhoneNo || isOneOfUserTypesSelected)
   }, [fields])
-
-  console.log(isEnabled)
 
   const { fields: userTypeFields } = useFieldArray({ control, name: 'userTypes' })
 
