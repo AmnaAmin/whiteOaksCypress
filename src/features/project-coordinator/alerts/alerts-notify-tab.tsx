@@ -53,7 +53,7 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box>
-        <TextDivider title="User Types" />
+        <TextDivider title={t('userTypes')} />
 
         <HStack mt="30px" spacing="12px">
           {userTypeFields.map((item, index) => {
@@ -83,39 +83,41 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
           })}
         </HStack>
 
-        <TextDivider title="Email User" />
+        <TextDivider title={t('emailUser')} />
 
         <HStack mt="30px">
           <Box>
-            <FormLabel variant="strong-label">Recipient</FormLabel>
+            <FormLabel variant="strong-label">{t('recipient')}</FormLabel>
             <Input type="email" {...register('recepient')} />
           </Box>
 
           <Box>
-            <FormLabel variant="strong-label">Subject</FormLabel>
+            <FormLabel variant="strong-label">{t('subject')}</FormLabel>
             <Input disabled value="When Project Project ne..." {...register('subject')} />
           </Box>
         </HStack>
 
         <Box mt="30px" w="445px">
           <FormLabel variant="strong-label" size="lg">
-            Body
+            {t('body')}
           </FormLabel>
           <Textarea placeholder="Write here..." {...register('bodyFirst')} />
         </Box>
 
-        <TextDivider title="Text User" />
+        <TextDivider title={t('textUser')} />
 
         <Box mt="30px" w="215px">
           <Box>
-            <FormLabel variant="strong-label">Recipient Phone No</FormLabel>
+            <FormLabel variant="strong-label" whiteSpace="nowrap">
+              {t('recipientPhoneNo')}
+            </FormLabel>
             <Input type="number" {...register('recepientPhoneNo')} />
           </Box>
         </Box>
 
         <Box mt="30px" w="445px">
           <FormLabel variant="strong-label" size="lg">
-            Body
+            {t('body')}
           </FormLabel>
           <Textarea isDisabled bg="gray.200" value="When Project Project new" w="445px" {...register('bodySecond')} />
         </Box>
