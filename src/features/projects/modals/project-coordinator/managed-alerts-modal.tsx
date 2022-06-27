@@ -1,11 +1,9 @@
 import {
-  Button,
   FormLabel,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Tab,
@@ -14,6 +12,7 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react'
+import { AlertsDetailsTab } from 'features/project-coordinator/alerts/alerts-details-tab'
 import { useTranslation } from 'react-i18next'
 
 type NewAlertsTypes = {
@@ -22,7 +21,7 @@ type NewAlertsTypes = {
   alert: any
 }
 
-export const NewAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, alert }) => {
+export const ManagedAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, alert }) => {
   const { t } = useTranslation()
   return (
     <>
@@ -32,7 +31,7 @@ export const NewAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, aler
           <ModalContent>
             <ModalHeader borderBottom="1px solid #eee">
               <FormLabel variant="strong-label" size="lg">
-                New Alert
+                {t('newAlert')}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -43,8 +42,8 @@ export const NewAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, aler
                   <Tab>{t('notify')}</Tab>
                 </TabList>
                 <TabPanels>
-                  <TabPanel>
-                    <p>Details!</p>
+                  <TabPanel p={0}>
+                    <AlertsDetailsTab />
                   </TabPanel>
                   <TabPanel>
                     <p>Notify!</p>
@@ -52,13 +51,6 @@ export const NewAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, aler
                 </TabPanels>
               </Tabs>
             </ModalBody>
-
-            <ModalFooter>
-              <Button variant="outline" colorScheme="brand" mr={3}>
-                {t('save')}
-              </Button>
-              <Button colorScheme="brand">{t('next')}</Button>
-            </ModalFooter>
           </ModalContent>
         </Modal>
       )}
