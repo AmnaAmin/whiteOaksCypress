@@ -319,6 +319,8 @@ i18n.use(initReactI18next).init({
 
         paymentsTerms: 'Payments terms',
         woaExpectedPay: 'WOA Expected Pay',
+        woaInvoiceDate: 'WOA Invoice Date',
+
         downloadOriginalSow: 'Download Original SOW',
         overpayment: 'Overpayment',
         remainingPayment: 'Remaining Payment',
@@ -567,6 +569,7 @@ i18n.use(initReactI18next).init({
         claimantsTitle: 'Título del reclamante',
         dateOfSignature: 'Fecha de la Firma',
         apply: 'Aplicar',
+        woaInvoiceDate: 'woa Factura Fecha',
         // Project - Lean-Weiver
         readMore: 'Lee mas',
         readLess: 'Leer menos',
