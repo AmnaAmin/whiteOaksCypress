@@ -76,7 +76,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('status') as string,
+        Header: t('transactionStatus') as string,
         accessor: 'status',
         //@ts-ignore
         Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,

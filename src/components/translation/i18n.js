@@ -50,6 +50,7 @@ i18n.use(initReactI18next).init({
         id: 'ID',
         type: 'Type',
         status: 'Status',
+        transactionStatus: 'Transaction Status',
         WOstatus: 'WO Status',
         address: 'Address',
         region: 'Region',
@@ -481,6 +482,7 @@ i18n.use(initReactI18next).init({
 
         // Project-Details
         status: 'Estado',
+        transactionStatus: 'Estado de la Transacción',
 
         // Project - Transactions
         updateTransaction: 'Actualizar transacción',
