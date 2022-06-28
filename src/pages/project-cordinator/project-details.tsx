@@ -66,7 +66,7 @@ export const ProjectDetails: React.FC = props => {
         {tabIndex === 1}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
               <Tab>{t('Transactions')}</Tab>
               <Tab>{t('projectDetails')}</Tab>
@@ -110,7 +110,7 @@ export const ProjectDetails: React.FC = props => {
                   <HStack spacing="16px">
                     <Box>
                       <FormControl display="flex" alignItems="center">
-                        <FormLabel htmlFor="view-details" mb="0" variant="light-label" size="md">
+                        <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
                           View Details
                         </FormLabel>
                         <Switch size="sm" id="view-details" />
