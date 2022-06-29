@@ -1,5 +1,5 @@
 import { AccountDetails } from 'features/account-details/account-details'
 
 export const Payable: React.FC = () => {
-  return <AccountDetails topTitle={'Account Payable'} ID={'payable'} payloadType={''} typeCode={'AP'} />
+  return <AccountDetails topTitle={'Account Payable'} ID={'payable'} payloadType={''} typeCode={'AP'} apiNumber="1" />
 }

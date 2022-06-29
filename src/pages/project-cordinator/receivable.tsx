@@ -8,6 +8,7 @@ export const Receivable: React.FC = () => {
       ID={'receivable'}
       payloadType={'Remaining Payments'}
       typeCode={'AR'}
+      apiNumber={'2'}
     />
   )
 }

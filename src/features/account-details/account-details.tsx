@@ -17,6 +17,7 @@ type accountDetailsTypes = {
   ID: number | string
   payloadType: string
   typeCode: string
+  apiNumber: string
 }
 
 export const AccountDetails = (props: accountDetailsTypes) => {
@@ -42,7 +43,8 @@ export const AccountDetails = (props: accountDetailsTypes) => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register } = useForm()
+  const { handleSubmit, register, getValues } = useForm()
+  console.log('getValues', getValues())
 
   const { mutate: batchCall } = useBatchProcessing()
 
@@ -54,11 +56,10 @@ export const AccountDetails = (props: accountDetailsTypes) => {
       typeCode: props.typeCode,
       entities: payloadData,
     }
-    // @ts-ignore
-    batchCall(obj)
+    batchCall(obj as any)
     // batchCall?.(obj) not working
   }
-  useCheckBatch(setLoading)
+  useCheckBatch(setLoading, props.apiNumber)
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
@@ -117,7 +118,7 @@ export const AccountDetails = (props: accountDetailsTypes) => {
               setTableInstance={setProjectTableInstance}
             />
           ) : (
-            <PayableTable setTableInstance={setProjectTableInstance} />
+            <PayableTable setTableInstance={setProjectTableInstance} register={register} loading={loading} />
           )}
         </Box>
 
