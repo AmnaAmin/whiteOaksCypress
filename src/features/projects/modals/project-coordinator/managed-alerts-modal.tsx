@@ -13,6 +13,7 @@ import {
   Tabs,
 } from '@chakra-ui/react'
 import { AlertsDetailsTab } from 'features/project-coordinator/alerts/alerts-details-tab'
+import { AlertsNotifyTab } from 'features/project-coordinator/alerts/alerts-notify-tab'
 import { useTranslation } from 'react-i18next'
 
 type NewAlertsTypes = {
@@ -45,8 +46,8 @@ export const ManagedAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, 
                   <TabPanel p={0}>
                     <AlertsDetailsTab />
                   </TabPanel>
-                  <TabPanel>
-                    <p>Notify!</p>
+                  <TabPanel p={0}>
+                    <AlertsNotifyTab onClose={onClose} />
                   </TabPanel>
                 </TabPanels>
               </Tabs>

@@ -361,6 +361,13 @@ i18n.use(initReactI18next).init({
         attribute: 'Attribute',
         behaviour: 'Behaviour',
         customValue: 'Custom Value',
+        userTypes: 'User Types',
+        emailUser: 'Email User',
+        recipient: 'Recipient',
+        subject: 'Subject',
+        body: 'Body',
+        textUser: 'Text User',
+        recipientPhoneNo: 'Recipient Phone No',
       },
     },
     es: {
@@ -381,6 +388,13 @@ i18n.use(initReactI18next).init({
         attribute: 'Atributo',
         behaviour: 'Comportamiento',
         customValue: 'Valor personalizado',
+        userTypes: 'Tipos de usuarios',
+        emailUser: 'Usuario de correo electrónico',
+        recipient: 'Destinataria',
+        subject: 'Sujeta',
+        body: 'Cuerpo',
+        textUser: 'Usuario de texto',
+        recipientPhoneNo: 'Número de teléfono del destinatario',
 
         // Payments tab pc
         lwDate: 'Fecha LW',
