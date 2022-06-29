@@ -30,12 +30,32 @@ import { dateISOFormat } from 'utils/date-time-utils'
 
 type AddProjectFormProps = {
   onClose: () => void
+  projectTypes?: any
+  properties?: any
+  markets?: any
+  fieldProjectManager?: any
+  statesData?: any
+  projectCoordinator?: any
+  client?: any
 }
 
-const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
+const AddProjectForm: React.FC<AddProjectFormProps> = ({
+  onClose,
+  projectTypes,
+  properties,
+  markets,
+  fieldProjectManager,
+  statesData,
+  projectCoordinator,
+  client,
+}) => {
   const toast = useToast()
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
   const [tabIndex, setTabIndex] = useState(0)
+  const [projectinfoBtn, setProjectinfoBtn] = useState(false)
+  const [propertyinfoBtn, setpropertyinfoBtn] = useState(false)
+  const [manageProjBtn, setmanageProjBtn] = useState(false)
+
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
@@ -124,7 +144,6 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         propertyId: values.propertyId,
       }
 
-      console.log('new payload', newProjectPayload)
       saveProjectDetails(newProjectPayload, {
         onSuccess() {
           toast({
@@ -154,7 +173,41 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const watchAllFields = watch()
   React.useEffect(() => {
     const subscription = watch(value => {
-      console.log('Value Change', value)
+      if (
+        value?.projectTypeLabel &&
+        value?.clientStartDate &&
+        value?.clientDueDate &&
+        value?.sowOriginalContractAmount &&
+        value?.documents
+      ) {
+        setProjectinfoBtn(true)
+      } else {
+        setProjectinfoBtn(false)
+      }
+
+      if (value?.streetAddress && value?.city && value?.zipCode && value?.newMarketId) {
+        setpropertyinfoBtn(true)
+      } else {
+        setpropertyinfoBtn(false)
+      }
+      if (
+        value?.projectCoordinator &&
+        value?.projectManagerId &&
+        value?.clientName &&
+        value?.streetAddress &&
+        value?.city &&
+        value?.zipCode &&
+        value?.newMarketId &&
+        value?.projectTypeLabel &&
+        value?.clientStartDate &&
+        value?.clientDueDate &&
+        value?.sowOriginalContractAmount &&
+        value?.documents
+      ) {
+        setmanageProjBtn(true)
+      } else {
+        setmanageProjBtn(false)
+      }
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
@@ -173,40 +226,47 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
           <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
-                <Tabs variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="7">
+                <Tabs
+                  colorScheme="brand"
+                  variant="enclosed"
+                  index={tabIndex}
+                  onChange={index => setTabIndex(index)}
+                  mt="7"
+                >
                   <TabList color="#4A5568">
-                    <Tab
-                      minW={180}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    >
-                      {'Project Information'}
-                    </Tab>
-                    <Tab
-                      minW={200}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    >
-                      {'Property Information'}
-                    </Tab>
-                    <Tab
-                      minW={180}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    >
-                      {'Managing Project'}
-                    </Tab>
-                    <Tab
-                      minW={180}
-                      _selected={{ color: 'white', bg: 'button.300', fontWeight: '600', fontSize: '14px' }}
-                    ></Tab>
+                    <Tab>{'Project Information'}</Tab>
+                    <Tab>{'Property Information'}</Tab>
+                    <Tab>{'Managing Project'}</Tab>
                   </TabList>
                   <TabPanels mt="31px" h="100%">
                     <TabPanel p="0px" h="100%">
-                      <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
+                      <AddProjectInfo
+                        projectTypes={projectTypes}
+                        buttonCondition={projectinfoBtn}
+                        setNextTab={setNextTab}
+                        onClose={onClose}
+                      />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <AddPropertyInfo isLoading={false} setNextTab={setNextTab} onClose={onClose} />
+                      <AddPropertyInfo
+                        properties={properties}
+                        markets={markets}
+                        statesData={statesData}
+                        buttonCondition={propertyinfoBtn}
+                        isLoading={false}
+                        setNextTab={setNextTab}
+                        onClose={onClose}
+                      />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <ManageProject isLoading={false} onClose={onClose} />
+                      <ManageProject
+                        fieldProjectManager={fieldProjectManager}
+                        projectCoordinator={projectCoordinator}
+                        client={client}
+                        buttonCondition={manageProjBtn}
+                        isLoading={false}
+                        onClose={onClose}
+                      />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
@@ -220,12 +280,29 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 }
 
 type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
-type AddNewProjectProps = CustomModalProps
+// type AddNewProjectProps = CustomModalProps
 type UpdateProjectProps = CustomModalProps & {
-  selectedProjectId: number
+  selectedProjectId?: number
+  projectTypes: any
+  properties: any
+  markets: any
+  fieldProjectManager: any
+  projectCoordinator: any
+  client: any
+  statesData: any
 }
 
-export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClose }) => {
+export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({
+  isOpen,
+  onClose,
+  projectTypes,
+  statesData,
+  properties,
+  markets,
+  fieldProjectManager,
+  client,
+  projectCoordinator,
+}) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="5xl" closeOnEsc={true} closeOnOverlayClick={true}>
       <ModalOverlay>
@@ -233,7 +310,16 @@ export const AddNewProjectModal: React.FC<AddNewProjectProps> = ({ isOpen, onClo
           <ModalHeader borderBottom="1px solid #eee">{'New Project'}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
           <ModalBody px="6">
-            <AddProjectForm onClose={onClose} />
+            <AddProjectForm
+              fieldProjectManager={fieldProjectManager}
+              statesData={statesData}
+              projectCoordinator={projectCoordinator}
+              client={client}
+              markets={markets}
+              properties={properties}
+              projectTypes={projectTypes}
+              onClose={onClose}
+            />
           </ModalBody>
         </ModalContent>
       </ModalOverlay>

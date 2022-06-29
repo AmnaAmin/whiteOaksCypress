@@ -1,14 +1,28 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Icon,
+  Input,
+  Stack,
+  VStack,
+} from '@chakra-ui/react'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
-import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
+import { STATUS } from 'features/projects/status'
 import { t } from 'i18next'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { dateFormatter } from 'utils/date-time-utils'
+import { BiDownload } from 'react-icons/bi'
+import { ProjectType } from 'types/project.type'
 import { currencyFormatter } from 'utils/stringFormatters'
 
-const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
+const InvoiceAndPayments: React.FC<{ projectData: ProjectType; dataInvoiceandpayment?: any }> = props => {
+  const { projectData, dataInvoiceandpayment } = props
   const {
     handleSubmit,
     register,
@@ -16,6 +30,25 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
     reset,
     formState: { errors },
   } = useForm()
+
+  const statusArray = [
+    STATUS.New.valueOf(),
+    STATUS.Active.valueOf(),
+    STATUS.Punch.valueOf(),
+    STATUS.Closed.valueOf(),
+    STATUS.Paid.valueOf(),
+    STATUS.Overpayment.valueOf(),
+    STATUS.PastDue.valueOf(),
+    STATUS.Cancelled.valueOf(),
+  ]
+
+  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLocaleLowerCase())
+
+  const statusInvoice = [STATUS.Invoiced.valueOf()].includes((projectData?.projectStatus || '').toLocaleLowerCase())
+
+  const statusClientPaid = [STATUS.ClientPaid.valueOf()].includes(
+    (projectData?.projectStatus || '').toLocaleLowerCase(),
+  )
 
   const onSubmit = formValues => {
     console.log('FormValues', formValues)
@@ -26,7 +59,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
   const sowOriginalContractAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowOriginalContractAmount
   const sowNewAmount = dataInvoiceandpayment?.dataInvoiceandpayment?.sowNewAmount
   const paymentTerm = dataInvoiceandpayment?.dataInvoiceandpayment?.paymentTerm
-  const expectedPaymentDate = dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate
+  // const expectedPaymentDate = dataInvoiceandpayment?.dataInvoiceandpayment?.expectedPaymentDate
   const accountRecievable = dataInvoiceandpayment?.dataInvoiceandpayment?.accountRecievable
 
   return (
@@ -35,35 +68,47 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
         <Stack>
           <Grid templateColumns="repeat(4,1fr)" rowGap="32px" w="908px" columnGap="16px">
             <GridItem>
-              <FormControl w="215px" isInvalid={errors.originSowAmount}>
-                <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
-                  Original SOW Amount
-                </FormLabel>
-                <Input
-                  id="originSowAmount"
-                  value={currencyFormatter(sowOriginalContractAmount)}
-                  {...register('originSowAmount', {
-                    required: 'This is required',
-                  })}
-                  placeholder="$3000.00"
-                  isDisabled={true}
-                />
-                <FormErrorMessage>{errors.originSowAmount && errors.originSowAmount.message}</FormErrorMessage>
-              </FormControl>
+              <VStack alignItems="end" spacing="0px" position="relative">
+                <FormControl w="215px" isInvalid={errors.originSowAmount}>
+                  <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
+                    {t('originalSowAmount')}
+                  </FormLabel>
+                  <Input
+                    isDisabled={projectStatus || statusInvoice || statusClientPaid}
+                    id="originSowAmount"
+                    value={currencyFormatter(sowOriginalContractAmount)}
+                    {...register('originSowAmount', {
+                      required: 'This is required',
+                    })}
+                    placeholder="$3000.00"
+                  />
+                  <FormErrorMessage>{errors.originSowAmount && errors.originSowAmount.message}</FormErrorMessage>
+                </FormControl>
+                <Button
+                  variant="unstyled"
+                  color="#4E87F8"
+                  leftIcon={<Icon as={BiDownload} />}
+                  position="absolute"
+                  top="64px"
+                  left="103px"
+                >
+                  Original SOW
+                </Button>
+              </VStack>
             </GridItem>
             <GridItem>
               <FormControl w="215px" isInvalid={errors.finalSowAmount}>
                 <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
-                  Final SOW Amount
+                  {t('finalSowAmount')}
                 </FormLabel>
                 <Input
+                  isDisabled={projectStatus || statusInvoice || statusClientPaid}
                   id="finalSowAmount"
                   value={currencyFormatter(sowNewAmount)}
                   {...register('finalSowAmount', {
                     required: 'This is required',
                   })}
                   placeholder="$3000.00"
-                  isDisabled={true}
                 />
                 <FormErrorMessage>{errors.finalSowAmount && errors.finalSowAmount.message}</FormErrorMessage>
               </FormControl>
@@ -71,7 +116,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.invoiceNo}>
                 <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
-                  Invoice Number
+                  {t('invoiceNo')}
                 </FormLabel>
                 <Input
                   id="invoiceNo"
@@ -85,7 +130,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  Upload Invoice
+                  {t('uploadInvoice')}
                 </FormLabel>
                 <Controller
                   name="attachment"
@@ -94,7 +139,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
-                        <Box>
+                        <Box h="0px">
                           <ChooseFileField
                             name={field.name}
                             value={field.value ? field.value?.name : t('chooseFile')}
@@ -120,10 +165,10 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  Invoice Back Date
+                  {t('invoiceBackDate')}
                 </FormLabel>
 
-                <Input w="215px" size="md" type="date" />
+                <Input w="215px" size="md" type="date" id="invoiceBackDate" {...register('invoiceBackDate')} />
 
                 {/* To discuss about datepicker matching figma */}
                 {/* <Input
@@ -143,7 +188,7 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl w="215px" isInvalid={errors.paymentsTerms}>
                 <FormLabel variant="strong-label" size="md">
-                  Payments Terms
+                  {t('paymentsTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
@@ -151,7 +196,11 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect isDisabled {...field} placeholder={paymentTerm} />
+                      <ReactSelect
+                        {...field}
+                        placeholder={paymentTerm}
+                        isDisabled={projectStatus || statusClientPaid}
+                      />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -160,41 +209,51 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
               </FormControl>
             </GridItem>
             <GridItem>
+              <FormControl isInvalid={errors.overPayment}>
+                <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
+                  {t('woaInvoiceDate')}
+                </FormLabel>
+                <Input
+                  isDisabled={projectStatus || statusInvoice || statusClientPaid}
+                  id="overPayment"
+                  {...register('overPayment', {
+                    required: 'This is required',
+                  })}
+                  type="date"
+                  w="215px"
+                  size="md"
+                />
+                <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
+              </FormControl>
+            </GridItem>
+            <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  WOA Expected Pay
+                  {t('woaExpectedPay')}
                 </FormLabel>
 
-                <DatePickerInput
-                  value={expectedPaymentDate !== null ? dateFormatter(expectedPaymentDate) : 'mm/dd/yyyy'}
-                  disable
+                <Input
+                  isDisabled={projectStatus || statusInvoice || statusClientPaid}
+                  id="woaExpectedPay"
+                  {...register('woaExpectedPay')}
+                  type="date"
                 />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem display="grid" alignItems="end" h="67.3px">
-              {/* 16/06 it is changed on figma */}
-              {/* <Box mt="1">
-                <Link href={sowLink}>
-                  <Button variant="ghost" colorScheme="brand" leftIcon={<BiDownload />} w="215px">
-                    Download Original SOW
-                  </Button>
-                </Link>
-              </Box> */}
-            </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.overPayment}>
                 <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
-                  Overpayment
+                  {t('overpayment')}
                 </FormLabel>
                 <Input
+                  isDisabled={projectStatus || statusInvoice || statusClientPaid}
                   id="overPayment"
                   {...register('overPayment', {
                     required: 'This is required',
                   })}
-                  placeholder="$0.00"
-                  isDisabled={true}
+                  type="date"
                   w="215px"
                   size="md"
                 />
@@ -204,16 +263,16 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl isInvalid={errors.remainingPayment}>
                 <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
-                  Remaining Payment
+                  {t('remainingPayment')}
                 </FormLabel>
                 <Input
+                  isDisabled={projectStatus || statusInvoice || statusClientPaid}
                   id="remainingPayment"
                   value={currencyFormatter(accountRecievable)}
                   {...register('remainingPayment', {
                     required: 'This is required',
                   })}
                   placeholder="$1200"
-                  isDisabled={true}
                   w="215px"
                   size="md"
                 />
@@ -223,9 +282,10 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
             <GridItem>
               <FormControl isInvalid={errors.payment}>
                 <FormLabel htmlFor="payment" variant="strong-label" size="md">
-                  Payment
+                  {t('payment')}
                 </FormLabel>
                 <Input
+                  isDisabled={projectStatus}
                   id="payment"
                   {...register('payment', {
                     required: 'This is required',
@@ -237,7 +297,6 @@ const InvoiceAndPayments = (dataInvoiceandpayment: any) => {
                 <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
           </Grid>
         </Stack>
       </form>
