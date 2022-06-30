@@ -60,6 +60,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
     setTabIndex(tabIndex + 1)
   }
 
+  console.log('test-setup')
+  
   const methods = useForm<ProjectFormValues>({
     defaultValues: {
       acknowledgeCheck: false,
