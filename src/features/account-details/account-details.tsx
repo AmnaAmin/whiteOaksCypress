@@ -43,8 +43,7 @@ export const AccountDetails = (props: accountDetailsTypes) => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register, getValues } = useForm()
-  console.log('getValues', getValues())
+  const { handleSubmit, register } = useForm()
 
   const { mutate: batchCall } = useBatchProcessing()
 
