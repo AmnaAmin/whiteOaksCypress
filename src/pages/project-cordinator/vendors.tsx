@@ -36,7 +36,7 @@ const Vendors = () => {
 
       <HStack mt="1" mb="1">
         <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
-          Clear Filter
+          {t('clearFilter')}
         </Button>
         <Spacer />
         <Box pt="4">
@@ -49,7 +49,7 @@ const Vendors = () => {
             fontSize="14px"
             fontWeight={600}
           >
-            New Vendor
+            {t('newVendor')}
           </Button>
         </Box>
       </HStack>

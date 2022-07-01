@@ -14,10 +14,12 @@ import {
 interface ConfirmationBoxProps {
   isOpen: boolean
   isLoading?: boolean
-  onClose: () => void
-  onConfirm: () => void
+  onClose: any
+  onConfirm?: () => void
   title: string
   content: string
+  yesButtonText?: string
+  showNoButton?: boolean
 }
 
 export function ConfirmationBox({
@@ -27,6 +29,8 @@ export function ConfirmationBox({
   onConfirm,
   title,
   content,
+  yesButtonText = 'Yes',
+  showNoButton = true,
 }: ConfirmationBoxProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
@@ -51,9 +55,11 @@ export function ConfirmationBox({
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <Button colorScheme="brand" variant="outline" mr={3} onClick={onClose}>
-              No
-            </Button>
+            {showNoButton && (
+              <Button colorScheme="brand" variant="outline" mr={3} onClick={onClose}>
+                No
+              </Button>
+            )}
             <Button
               size="md"
               onClick={onConfirm}
@@ -63,7 +69,7 @@ export function ConfirmationBox({
               fontSize="14px"
               fontWeight={500}
             >
-              Yes
+              {yesButtonText}
             </Button>
           </ModalFooter>
         </Flex>

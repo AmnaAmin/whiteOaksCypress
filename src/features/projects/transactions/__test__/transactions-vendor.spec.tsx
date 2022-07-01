@@ -1,33 +1,39 @@
 import { dateFormat } from 'utils/date-time-utils'
-import { act, getByText, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
-import { render } from '@testing-library/react'
+import { act, getByText, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
+import App from 'App'
 import userEvent from '@testing-library/user-event'
-import { TransactionForm, TransactionFormProps } from '../transaction-form'
-import { Providers } from 'providers'
-import ProjectDetails from 'pages/vendor/project-details'
 
-// beforeAll(() => {
-//   setToken('pc')
-// })
 jest.setTimeout(150000)
-
-const renderTransactionForm = async (props: TransactionFormProps) => {
-  render(<TransactionForm {...props} />, { wrapper: Providers })
-
-  await waitForLoadingToFinish()
-}
 
 describe('Given create new transaction', () => {
   describe('When user open new transaction modal', () => {
     test('Then User should create new transaction of payment type Change Order', async () => {
-      const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await render(<App />, { route: '/project-details/2951' })
 
+      expect(window.location.pathname).toEqual('/project-details/2951')
+      expect(screen.getByRole('tab', { selected: true }).textContent).toEqual('Transactions')
+
+      // userEvent.click(screen.getByText('Transaction', { selector: 'button' }))
+
+      const newTransactionButton = screen.getByTestId('new-transaction-button')
+      expect(newTransactionButton).toBeInTheDocument()
+      expect(screen.getByText(/WO-ADT Renovations Inc-11\/13\/2021/i)).toBeInTheDocument()
+      expect(screen.getAllByRole('row').length).toEqual(4)
+
+      // Open new Transaction Modal
+      userEvent.click(newTransactionButton)
+
+      await waitForLoadingToFinish()
+
+      // Check Modal opened properly
+      const modalHeader = screen.getByText('New Transaction', { selector: 'header' })
+      expect(modalHeader).toBeInTheDocument()
       expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
 
+      // screen.debug(undefined, 100000)
       /**
        * Check the following fields changed properly,
        * 1- Transaction Type selected with 'Change Order'
@@ -60,14 +66,19 @@ describe('Given create new transaction', () => {
 
       await waitForLoadingToFinish()
 
-      expect(onClose).toHaveBeenCalled()
+      expect(await screen.findByText(`CO-ADT Renovations Inc-${dateFormat(new Date())}`)).toBeInTheDocument()
+      expect(screen.getByText('$3,000')).toBeInTheDocument()
     })
 
     // We should resume this test case After Draw flow Lien Waiver support added
     test('Then user should create transaction of Payment Type Draw', async () => {
-      const onClose = jest.fn()
+      await render(<App />, { route: '/project-details/2951' })
 
-      await renderTransactionForm({ onClose })
+      const newTransactionButton = screen.getByTestId('new-transaction-button')
+
+      // Open new Transaction Modal
+      userEvent.click(newTransactionButton)
+      await waitForLoadingToFinish()
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Draw')
@@ -106,21 +117,19 @@ describe('Given create new transaction', () => {
       })
 
       expect(screen.getByText('Type Your Name Here')).toBeInTheDocument()
+      // const signatureImageBefore = screen.getByTestId('signature-img') as HTMLImageElement
 
-      // Fill the lien waiver signature modal
+      // expect(signatureImageBefore.src).not.toBeTruthy()
+
       userEvent.type(screen.getByTestId('signature-input'), 'Ahmed')
       expect((screen.getByTestId('signature-input') as HTMLInputElement).value).toEqual('Ahmed')
 
-      // Click on save button
       await act(async () => await userEvent.click(screen.getByTestId('save-signature')))
 
-      // Check lien waiver form rendered properly
       expect((screen.getByTestId('signature-date') as HTMLInputElement).value).toEqual(dateFormat(new Date()))
       // const signatureImageAfter = screen.getByTestId('signature-img') as HTMLImageElement
 
-      // screen.debug(undefined, 100000)
-      // // console.log(signatureImageAfter)
-      // // expect(signatureImageAfter.src).toBeTruthy()
+      // expect(signatureImageAfter.src).toBeTruthy()
 
       // await act(async () => {
       //   await userEvent.click(screen.getByTestId('save-transaction'))
@@ -133,8 +142,13 @@ describe('Given create new transaction', () => {
     })
 
     test('Then New transaction form validation should work properly', async () => {
-      const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await render(<App />, { route: '/project-details/2951' })
+
+      const newTransactionButton = screen.getByText('New Transaction')
+
+      // Open new Transaction Modal
+      userEvent.click(newTransactionButton)
+      await waitForLoadingToFinish()
 
       await act(async () => {
         await userEvent.click(screen.getByTestId('save-transaction'))
@@ -148,38 +162,46 @@ describe('Given create new transaction', () => {
 describe('Given update transaction', () => {
   describe('When user click on transaction row', () => {
     test('Then transaction of change order with status pending should open Update Transaction modal, update and save successfully', async () => {
-      render(<ProjectDetails />, { wrapper: Providers })
-
-      await waitForLoadingToFinish()
+      await render(<App />, { route: '/project-details/2951' })
 
       const pendingTransaction = screen.getByText(/pending/i)
       expect(pendingTransaction).toBeInTheDocument()
+
       // Click on sending transaction row which will open the update transaction modal
       userEvent.click(pendingTransaction)
+
       // Waiting for modal loading state
       await waitForLoadingToFinish()
+
       // Check Modal opened with data loaded from API.
       expect(screen.getByTestId('update-transaction')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('transaction-type'), /Change Order/i)).toBeInTheDocument()
       expect(screen.getByText('360 Management Services (General Labor)')).toBeInTheDocument()
+
       const totalAmount = screen.getByTestId('total-amount')
       expect(totalAmount.textContent).toEqual('Total: $1,980')
+
       // Add new row for adding additional amount
       await userEvent.click(screen.getByTestId('add-new-row-button'))
+
       const descriptionSecondField = screen.getByTestId('transaction-description-1') as HTMLInputElement
       const amountSecondField = screen.getByTestId('transaction-amount-1') as HTMLInputElement
+
       await userEvent.type(descriptionSecondField, 'Include painting')
       await userEvent.type(amountSecondField, '1000')
       expect(descriptionSecondField.value).toEqual('Include painting')
       expect(amountSecondField.value).toEqual('1000')
       expect(totalAmount.textContent).toEqual('Total: $2,980')
+
       // Submit the Form
       await act(async () => {
         await userEvent.click(screen.getByTestId('save-transaction'))
       })
       await waitForLoadingToFinish()
+
       // Chakra UI toast message rendered twice in DOM, that's why we are going to assert like this.
       expect((await screen.findAllByText('Transaction has been updated successfully.')).length).toBeGreaterThan(0)
+
       expect(await screen.findByText('$2,980')).toBeInTheDocument()
     })
   })

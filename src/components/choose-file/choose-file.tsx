@@ -25,6 +25,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       cursor="pointer"
       w="100%"
       minW="215px"
+      h="40px"
       borderWidth="1px"
       borderStyle="solid"
       borderColor={isError ? 'red' : '#ddd'}

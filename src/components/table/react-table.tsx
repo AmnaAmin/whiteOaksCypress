@@ -125,8 +125,7 @@ export const TableHeader = ({ headerGroups }) => {
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => {
-            // console.log(column.Header)
-            const title = column?.Header ? column.render('Header') : ''
+            const title = column.render('Header')
 
             return (
               // @ts-ignore

@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
 import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
+import { FieldValues, UseFormRegister } from 'react-hook-form'
+import { t } from 'i18next'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -36,106 +38,122 @@ const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const ReceivableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
-  (props, ref) => {
-    const { columns } = useColumnWidthResize(
-      [
-        {
-          Header: 'Id',
-          accessor: 'projectId',
-        },
-        {
-          Header: 'Client',
-          accessor: 'clientName',
-        },
-        {
-          Header: 'Address',
-          accessor: 'propertyAddress',
-        },
-        {
-          Header: 'Terms',
-          accessor: 'paymentTerm',
-        },
-        {
-          Header: 'Payment Types',
-          accessor: 'transactionType',
-        },
-        {
-          Header: 'Expected pay date',
-          accessor: 'expectedPaymentDate',
-        },
-        {
-          Header: 'Balance',
-          accessor: 'amount',
-        },
-        {
-          Header: 'final invoice',
-          accessor: 'famount',
-        },
-        {
-          Header: 'Markets',
-          accessor: 'marketName',
-        },
-        {
-          Header: 'WO Invoice Date',
-          accessor: 'woaInvoiceDate',
-        },
-        {
-          Header: 'PO No',
-          accessor: 'poNumber',
-        },
-        {
-          Header: 'WO No',
-          accessor: 'woNumber',
-        },
-        {
-          Header: 'Invoice No',
-          accessor: 'invoiceNumber',
-        },
-        {
-          Header: ' Checkbox',
-          accessor: ' Checkbox',
-        },
-      ],
-      ref,
-    )
+type ReceivableProps = {
+  selectedCard: string
+  selectedDay: string
+  resizeElementRef?: any
+  ref?: any
+  setTableInstance: (tableInstance: any) => void
+  register: UseFormRegister<FieldValues>
+  loading?: boolean
+}
 
-    const {
-      isOpen: isAccountReceivableModal,
-      onOpen: onAccountReceivableModalOpen,
-      onClose: onAccountReceivableModalClose,
-    } = useDisclosure()
-
-    const onRowClick = useCallback(
-      (_, row) => {
-        rowData(row.values.projectId)
-        onAccountReceivableModalOpen()
+export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, loading, register, ref }) => {
+  const { columns } = useColumnWidthResize(
+    [
+      {
+        Header: t('id') as string,
+        accessor: 'projectId',
       },
-      [onAccountReceivableModalOpen],
-    )
-    const { receivableData, isLoading } = usePCReveviable()
-    const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
-    const rowSelectedData = receivableDataa?.data
+      {
+        Header: t('client') as string,
+        accessor: 'clientName',
+      },
+      {
+        Header: t('address') as string,
+        accessor: 'propertyAddress',
+      },
+      {
+        Header: t('terms') as string,
+        accessor: 'paymentTerm',
+      },
+      {
+        Header: t('paymentTypes') as string,
+        accessor: 'transactionType',
+      },
+      {
+        Header: t('vendorWOExpectedPaymentDate') as string,
+        accessor: 'expectedPaymentDate',
+      },
+      {
+        Header: t('balance') as string,
+        accessor: 'amount',
+      },
+      {
+        Header: t('finalInvoice') as string,
+        accessor: 'famount',
+      },
+      {
+        Header: t('markets') as string,
+        accessor: 'marketName',
+      },
+      {
+        Header: t('woInvoiceDate') as string,
+        accessor: 'woaInvoiceDate',
+      },
+      {
+        Header: t('poNo') as string,
+        accessor: 'poNumber',
+      },
+      {
+        Header: t('woNo') as string,
+        accessor: 'woNumber',
+      },
+      {
+        Header: t('invoiceNo') as string,
+        accessor: 'invoiceNumber',
+      },
+      {
+        Header: t('checkbox') as string,
+        Cell: ({ value, row }) => (
+          <Box onClick={e => e.stopPropagation()}>
+            <Checkbox
+              isDisabled={loading}
+              value={(row.original as any).projectId}
+              {...register('id', { required: true })}
+            />
+          </Box>
+        ),
+      },
+    ],
+    ref,
+  )
 
-    return (
-      <Box overflow="auto" width="100%">
-        <ReactTable
-          onRowClick={onRowClick}
-          columns={columns}
-          setTableInstance={props.setTableInstance}
-          data={receivableData?.arList}
-          isLoading={isLoading}
-          TableRow={receivableRow}
-          tableHeight="calc(100vh - 300px)"
-          name="alerts-table"
-          defaultFlexStyle={false}
-        />
-        <AccountReceivableModal
-          rowData={rowSelectedData}
-          isOpen={isAccountReceivableModal}
-          onClose={onAccountReceivableModalClose}
-        />
-      </Box>
-    )
-  },
-)
+  const {
+    isOpen: isAccountReceivableModal,
+    onOpen: onAccountReceivableModalOpen,
+    onClose: onAccountReceivableModalClose,
+  } = useDisclosure()
+
+  const onRowClick = useCallback(
+    (_, row) => {
+      rowData(row.values.projectId)
+      onAccountReceivableModalOpen()
+    },
+    [onAccountReceivableModalOpen],
+  )
+  const { receivableData, isLoading } = usePCReveviable()
+  const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
+  const rowSelectedData = receivableDataa?.data
+
+  return (
+    <Box overflow="auto" width="100%">
+      <ReactTable
+        onRowClick={onRowClick}
+        columns={columns}
+        setTableInstance={setTableInstance}
+        data={receivableData?.arList || []}
+        isLoading={isLoading}
+        TableRow={receivableRow}
+        tableHeight="calc(100vh - 300px)"
+        name="alerts-table"
+        defaultFlexStyle={false}
+      />
+      <AccountReceivableModal
+        rowData={rowSelectedData}
+        isOpen={isAccountReceivableModal}
+        onClose={onAccountReceivableModalClose}
+      />
+    </Box>
+  )
+}

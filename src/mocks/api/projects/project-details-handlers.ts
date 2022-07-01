@@ -31,6 +31,7 @@ export const projectDetailHandlers = [
     return res(ctx.status(200), ctx.json(getData('/documents')))
   }),
   rest.post('/api/documents', (req: RestRequest, res, ctx) => {
+    console.log(req?.body)
     appendData('/documents', { ...NEW_DOCUMENT, ...(req?.body as Object) })
     return res(ctx.status(201), ctx.json(NEW_DOCUMENT))
   }),

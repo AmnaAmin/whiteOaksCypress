@@ -13,6 +13,7 @@ import {
   Button,
   Flex,
   FormErrorMessage,
+  Spacer,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { t } from 'i18next'
@@ -33,121 +34,105 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
   return (
     <Stack spacing={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid templateColumns="repeat(3,215px)" rowGap="6" columnGap="4">
-          <GridItem>
-            <FormControl isInvalid={errors.businessName}>
-              <FormLabel variant="strong-label" size="md">
-                Business Name
-              </FormLabel>
-              <Input
-                {...register('businessName', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="required-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.businessName && errors.businessName.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.score}>
-              <FormLabel variant="strong-label" size="md">
-                Score
-              </FormLabel>
-              <Controller
-                control={control}
-                name="score"
-                rules={{ required: 'This is required' }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
-                )}
-              />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.status}>
-              <FormLabel variant="strong-label" size="md">
-                Status
-              </FormLabel>
-              <Controller
-                control={control}
-                name="status"
-                rules={{ required: 'This is required' }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
-                )}
-              />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.primaryContact}>
-              <FormLabel variant="strong-label" size="md">
-                Primary Contact
-              </FormLabel>
-              <Input
-                {...register('primaryContact', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="required-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.primaryEmail}>
-              <FormLabel variant="strong-label" size="md">
-                Primary Email
-              </FormLabel>
-              <Input
-                {...register('primaryEmail', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="required-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
+        <HStack spacing="16px">
+          <FormControl w="215px" isInvalid={errors.businessName}>
+            <FormLabel variant="strong-label" size="md">
+              {t('businessName')}
+            </FormLabel>
+            <Input
+              {...register('businessName', {
+                required: 'This is required',
+              })}
+              variant="required-field"
+              size="md"
+              placeholder="Input size medium"
+            />
+            <FormErrorMessage>{errors.businessName && errors.businessName.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl w="215px" isInvalid={errors.score}>
+            <FormLabel variant="strong-label" size="md">
+              {t('score')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="score"
+              rules={{ required: 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+          <FormControl w="215px" isInvalid={errors.status}>
+            <FormLabel variant="strong-label" size="md">
+              {t('status')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="status"
+              rules={{ required: 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+        </HStack>
+        <HStack spacing="16px" mt="30px">
+          <FormControl w="215px" isInvalid={errors.primaryContact}>
+            <FormLabel variant="strong-label" size="md">
+              {t('primaryEmail')}
+            </FormLabel>
+            <Input
+              {...register('primaryContact', {
+                required: 'This is required',
+              })}
+              variant="required-field"
+              size="md"
+              placeholder="Input size medium"
+            />
+            <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl w="215px" isInvalid={errors.primaryEmail}>
+            <FormLabel variant="strong-label" size="md">
+              {t('primaryEmail')}
+            </FormLabel>
+            <Input
+              {...register('primaryEmail', {
+                required: 'This is required',
+              })}
+              variant="required-field"
+              size="md"
+              placeholder="Input size medium"
+            />
+            <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t('secondaryContact')}
+            </FormLabel>
+
+            <Input variant="outline" size="md" placeholder="Input size medium" />
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t('secondaryEmail')}
+            </FormLabel>
+
+            <Input variant="outline" size="md" placeholder="Input size medium" />
+          </FormControl>
           <GridItem></GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                Secondary Contact
-              </FormLabel>
+        </HStack>
 
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                Secondary Email
-              </FormLabel>
-
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
-            </FormControl>
-          </GridItem>
-          <GridItem></GridItem>
-        </Grid>
-
-        <HStack spacing="4" pb="2" pt="2">
+        <HStack spacing="4" my="30px">
           <Box w="215px">
             <FormControl isInvalid={errors.businessPhoneNo}>
               <FormLabel variant="strong-label" size="md">
-                Business Phone No
+                {t('businessPhoneNo')}
               </FormLabel>
               <Input
                 {...register('businessPhoneNo', {
@@ -161,19 +146,20 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               <FormErrorMessage>{errors.businessPhoneNo && errors.businessPhoneNo.message}</FormErrorMessage>
             </FormControl>
           </Box>
-          <Box>
+          <Flex>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Exit
+                {t('ext')}
               </FormLabel>
 
               <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
             </FormControl>
-          </Box>
+            <Spacer w="108px" />
+          </Flex>
           <Box w="215px">
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                State
+                {t('state')}
               </FormLabel>
 
               <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
@@ -182,7 +168,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <Box w="109px">
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Exit
+                {t('ext')}
               </FormLabel>
 
               <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
@@ -190,11 +176,11 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           </Box>
         </HStack>
 
-        <Grid templateColumns="repeat(4,215px)" rowGap="6" columnGap="4">
+        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
             <FormControl isInvalid={errors.streetAdress}>
               <FormLabel variant="strong-label" size="md">
-                Street Adress
+                {t('streetAddress')}
               </FormLabel>
               <Input
                 {...register('streetAdress', {
@@ -211,7 +197,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <GridItem>
             <FormControl isInvalid={errors.city}>
               <FormLabel variant="strong-label" size="md">
-                City
+                {t('city')}
               </FormLabel>
               <Input
                 {...register('city', {
@@ -228,7 +214,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <GridItem>
             <FormControl isInvalid={errors.state}>
               <FormLabel variant="strong-label" size="md">
-                State
+                {t('state')}
               </FormLabel>
               <Controller
                 control={control}
@@ -246,7 +232,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <GridItem>
             <FormControl isInvalid={errors.zipCode}>
               <FormLabel variant="strong-label" size="md">
-                Zip Code
+                {t('zip')}
               </FormLabel>
               <Input
                 {...register('zipCode', {
@@ -263,7 +249,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <GridItem>
             <FormControl isInvalid={errors.capacity}>
               <FormLabel variant="strong-label" size="md">
-                Capacity
+                {t('capacity')}
               </FormLabel>
               <Input
                 {...register('capacity', {
@@ -315,23 +301,11 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <GridItem></GridItem>
         </Grid>
         <Box>
-          <Stack alignItems="center" direction="row">
-            <VStack alignItems="start">
-              <Text fontSize="14px" fontWeight={500} color="gray.600">
-                Payment Method
-              </Text>
-              <HStack>
-                <Checkbox colorScheme="brand">Credit Card</Checkbox>
-                <Checkbox isChecked colorScheme="brand">
-                  Check
-                </Checkbox>
-                <Checkbox colorScheme="brand">ACH</Checkbox>
-              </HStack>
-            </VStack>
+          <Stack alignItems="center" direction="row" spacing="16px">
             <Box w="215px">
               <FormControl isInvalid={errors.paymentTerms}>
                 <FormLabel variant="strong-label" size="md">
-                  Payment Terms
+                  {t('paymentTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
@@ -346,12 +320,24 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 />
               </FormControl>
             </Box>
+            <VStack alignItems="start">
+              <Text fontSize="14px" fontWeight={500} color="gray.600">
+                {t('paymentMethods')}
+              </Text>
+              <HStack spacing="16px">
+                <Checkbox colorScheme="brand">Credit Card</Checkbox>
+                <Checkbox isChecked colorScheme="brand">
+                  {t('check')}
+                </Checkbox>
+                <Checkbox colorScheme="brand">ACH</Checkbox>
+              </HStack>
+            </VStack>
           </Stack>
         </Box>
-        <Flex mt="30px" id="footer" w="100%" borderTop="2px solid #E2E8F0" justifyContent="end" pt="12px">
+        <HStack height="80px" mt="30px" id="footer" borderTop="2px solid #E2E8F0" justifyContent="end" spacing="16px">
           {onClose && (
-            <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
-              Cancel
+            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+              {t('cancel')}
             </Button>
           )}
           {VendorType === 'detail' ? (
@@ -363,7 +349,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               {t('next')}
             </Button>
           )}
-        </Flex>
+        </HStack>
       </form>
     </Stack>
   )

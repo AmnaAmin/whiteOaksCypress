@@ -4,7 +4,7 @@ import { useVendorCards } from 'utils/vendor-dashboard'
 // import { formatCurrencyNumberCompact } from '../../../shared/util/string-utils';
 
 import { useTranslation } from 'react-i18next'
-// import 'components/translation/i18n'
+import 'components/translation/i18n'
 import numeral from 'numeral'
 import { BsArrowDownShort } from 'react-icons/bs'
 import { BiCalendarExclamation, BiDetail, BiDollar, BiFile, BiMessageSquareX } from 'react-icons/bi'
