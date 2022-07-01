@@ -10,9 +10,16 @@ import {
   WORK_ORDERS_WITH_CHANGE_ORDERS,
 } from './data'
 import { pushData, getData, appendData } from '../../local-db'
+import { PROJECT_FILTER_CARDS } from './data.pc'
 
 pushData('/documents', DOCUMENTS)
 pushData('/transactions', CHANGE_ORDERS)
+
+const projectPCProjectDetailHandlers = [
+  rest.get('/api/projectCards', (req: RestRequest, res, ctx) => {
+    return res(ctx.status(200), ctx.json(PROJECT_FILTER_CARDS))
+  }),
+]
 
 export const projectDetailHandlers = [
   rest.get('/alert/api/alert-histories/project/:projectId', (req, res, ctx) => {
@@ -53,4 +60,6 @@ export const projectDetailHandlers = [
   rest.get('/api/project/:projectId/workorders', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(WORK_ORDERS))
   }),
+
+  ...projectPCProjectDetailHandlers,
 ]

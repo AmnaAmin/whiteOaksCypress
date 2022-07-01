@@ -16,7 +16,7 @@ describe('Dashboard Test Cases', () => {
     expect(screen.getByTestId('coi-wc-expiration-date')).toBeInTheDocument()
     expect(screen.getByTestId('coi-wc-expiration-date').textContent).toEqual('06/19/2021')
 
-    screen.debug(undefined, 100000)
+    // screen.debug(undefined, 100000)
     expect(screen.getByTestId('Electrical')).toBeInTheDocument()
     expect(screen.getByTestId('Electrical').textContent).toEqual('01/10/2022')
 
