@@ -5,7 +5,7 @@ import { setToken } from 'utils/storage.utils'
 import { TransactionForm, TransactionFormProps } from '../transaction-form'
 import { Providers } from 'providers'
 import { WORK_ORDERS, CHANGE_ORDERS } from 'mocks/api/projects/data'
-import { createAgainstOptionLabel, createChangeOrderLabel, createWorkOrderLabel } from 'utils/transactions'
+import { createAgainstLabel, createChangeOrderLabel, createWorkOrderLabel } from 'utils/transactions'
 import { dateFormat } from 'utils/date-time-utils'
 
 beforeAll(() => {
@@ -38,7 +38,7 @@ describe('Given Project Coordinator create new transaction', () => {
       // User first select Against, one of ['Project SOW', 'Vendor']
       await selectOption(
         screen.getByTestId('against-select-field'),
-        createAgainstOptionLabel(workOrder.companyName, workOrder.skillName),
+        createAgainstLabel(workOrder.companyName, workOrder.skillName),
       )
 
       /**
@@ -145,7 +145,7 @@ describe('Given Project Coordinator create new transaction', () => {
       // User first select Against, one of ['SOW', 'Vendor']
       await selectOption(
         screen.getByTestId('against-select-field'),
-        createAgainstOptionLabel(workOrder.companyName, workOrder.skillName),
+        createAgainstLabel(workOrder.companyName, workOrder.skillName),
       )
 
       /**
@@ -280,7 +280,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(
         getByText(
           screen.getByTestId('against-select-field'),
-          createAgainstOptionLabel(workOrder.companyName, workOrder.skillName),
+          createAgainstLabel(workOrder.companyName, workOrder.skillName),
         ),
       ).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
@@ -324,7 +324,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(
         getByText(
           screen.getByTestId('against-select-field'),
-          createAgainstOptionLabel(workOrder.companyName, workOrder.skillName),
+          createAgainstLabel(workOrder.companyName, workOrder.skillName),
         ),
       ).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')

@@ -108,6 +108,7 @@ const WORK_ORDER_DEFAULT_OPTION = {
   value: WORK_ORDER_DEFAULT_VALUE,
 }
 
+// create work order label for options title
 export const createWorkOrderLabel = (skillName: string, companyName: string) => {
   return `${skillName} (${companyName})`
 }
@@ -151,7 +152,7 @@ const AGAINST_DEFAULT_OPTION = {
   value: AGAINST_DEFAULT_VALUE,
 }
 
-export const createAgainstOptionLabel = (companyName: string, skillName: string) => {
+export const createAgainstLabel = (companyName: string, skillName: string) => {
   return `${companyName} (${skillName})`
 }
 
@@ -176,7 +177,7 @@ export const useProjectWorkOrders = (projectId?: string) => {
           return !(status === 'paid' || status === 'cancelled')
         })
         .map(workOrder => ({
-          label: createAgainstOptionLabel(workOrder.companyName, workOrder.skillName),
+          label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
           value: `${workOrder.id}`,
         })),
     [workOrders],
@@ -219,6 +220,7 @@ const CHANGE_ORDER_DEFAULT_OPTION = {
   value: CHANGE_ORDER_DEFAULT_VALUE,
 }
 
+// Create label for change order
 export const createChangeOrderLabel = (changeOrderAmount: number, workOrderName: string) => {
   return `$${changeOrderAmount} (${workOrderName})`
 }
