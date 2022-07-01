@@ -474,7 +474,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 {isTransactionTypeDrawAgainstProjectSOWSelected && (
                   <>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paymentTerm} data-testid="paymentTerm-select-field">
+                      <FormControl isInvalid={!!errors.paymentTerm} data-testid="payment-term-select">
                         <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.600" fontWeight={500}>
                           {t('paymentTerm')}
                         </FormLabel>
@@ -513,7 +513,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           {t('invoicedDate')}
                         </FormLabel>
                         <Input
-                          data-testid="new-expected-completion-date"
+                          data-testid="invoice-date"
                           id="invoicedDate"
                           type="date"
                           variant={isInvoicedDateRequired ? 'required-field' : 'outline'}
@@ -540,7 +540,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           {t('paidDate')}
                         </FormLabel>
                         <Input
-                          data-testid="new-expected-completion-date"
+                          data-testid="paid-date"
                           id="paidDate"
                           type="date"
                           variant={isPaidDateRequired ? 'required-field' : 'outline'}
@@ -565,7 +565,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           {t('payDateVariance')}
                         </FormLabel>
                         <Input
-                          data-testid="new-expected-completion-date"
+                          data-testid="pay-date-variance"
                           id="payDateVariance"
                           type="text"
                           size="md"

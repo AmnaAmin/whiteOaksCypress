@@ -88,15 +88,30 @@ const useProjectCardJson = cards => {
   ]
 }
 
-export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
-  const { data: values } = useProjectCards()
+export type ProjectCardProps = {
+  onSelectCard: (string) => void
+  selectedCard: string
+}
+
+export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selectedCard }) => {
+  const { data: values, isLoading } = useProjectCards()
   const cards = useProjectCardJson(values)
+
+  console.log('cards', values)
 
   return (
     <>
       <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">
         {cards.map(card => {
-          return <ProjectCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
+          return (
+            <ProjectCard
+              key={card.id}
+              {...card}
+              onSelectCard={onSelectCard}
+              selectedCard={selectedCard}
+              isLoading={isLoading}
+            />
+          )
         })}
       </Box>
     </>

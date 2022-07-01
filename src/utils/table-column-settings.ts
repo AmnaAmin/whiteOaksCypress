@@ -92,6 +92,8 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
   const { columns: rezizedColumns, resizeElementRef } = useColumnWidthResize(filteredColumns)
   const tableColumns = sortTableColumnsBasedOnSettingColumnsOrder(settingColumns, rezizedColumns)
 
+  console.log('settingColumns', settingColumns)
+  console.log('tableColumns', tableColumns)
   return {
     tableColumns,
     settingColumns,

@@ -152,7 +152,7 @@ const AGAINST_DEFAULT_OPTION = {
 }
 
 export const createAgainstOptionLabel = (companyName: string, skillName: string) => {
-  return `${companyName} - ${skillName}`
+  return `${companyName} (${skillName})`
 }
 
 export const useProjectWorkOrders = (projectId?: string) => {

@@ -20,7 +20,7 @@ export const Projects = () => {
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.pcproject)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.pcproject,
