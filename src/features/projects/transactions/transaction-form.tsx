@@ -127,7 +127,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
     isLoading: isAgainstLoading,
-  } = useProjectWorkOrders(projectId)
+  } = useProjectWorkOrders(projectId, !!selectedTransactionId)
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
@@ -376,7 +376,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                               selectProps={{ isBorderLeft: true }}
                               options={workOrderSelectOptions}
                               onChange={option => {
-                                console.log('option', option)
                                 field.onChange(option)
                                 setSelectedWorkOrderId(option.value)
                               }}
@@ -422,7 +421,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         fontStyle="normal"
                         fontWeight={500}
                         color="gray.600"
-                        htmlFor="newExpectedCompletionDate"
+                        htmlFor="expectedCompletionDate"
                         whiteSpace="nowrap"
                       >
                         {t('expectedCompletion')}
@@ -443,7 +442,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                     </FormControl>
                   </GridItem>
                 )}
-                {isShowNewExpectedCompletionDateField && (
+                {isShowNewExpectedCompletionDateField && !isApproved && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
                       <FormLabel
@@ -628,7 +627,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onModalClose} variant="outline" colorScheme="brand">
+          <Button onClick={onModalClose} variant="outline" colorScheme="brand" data-testid="close-transaction-form">
             {t('close')}
           </Button>
         )}

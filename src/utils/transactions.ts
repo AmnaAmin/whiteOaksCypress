@@ -156,7 +156,7 @@ export const createAgainstLabel = (companyName: string, skillName: string) => {
   return `${companyName} (${skillName})`
 }
 
-export const useProjectWorkOrders = (projectId?: string) => {
+export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
   const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const client = useClient()
 
@@ -174,7 +174,7 @@ export const useProjectWorkOrders = (projectId?: string) => {
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled')
+          return !(status === 'paid' || status === 'cancelled') || isUpdating
         })
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
@@ -480,7 +480,7 @@ export const parseTransactionToFormValues = (
   changeOrderOptions: SelectOption[],
 ): FormValues => {
   const findOption = (value, options): SelectOption | null => {
-    return options.find(option => option.value === value) ?? null
+    return options.find(option => option.value?.toString() === value) ?? null
   }
   const payDateVariance = calculatePayDateVariance(
     transaction.clientApprovedDate,
@@ -491,20 +491,24 @@ export const parseTransactionToFormValues = (
   const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
   const attachment = getLatestDocument(transaction.documents?.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
 
+  const againstOption =
+    transaction.parentWorkOrderId === null
+      ? againstOptions[0]
+      : findOption(transaction.parentWorkOrderId?.toString(), againstOptions)
+
+  const changeOrderOption =
+    transaction.sowRelatedChangeOrderId === null
+      ? changeOrderOptions[0]
+      : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions)
+
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
       value: transaction.transactionType,
     },
-    against:
-      transaction.parentWorkOrderId === null
-        ? againstOptions[0]
-        : findOption(transaction.parentWorkOrderId?.toString(), againstOptions),
+    against: againstOption,
     workOrder: findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions),
-    changeOrder:
-      transaction.sowRelatedChangeOrderId === null
-        ? changeOrderOptions[0]
-        : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions),
+    changeOrder: changeOrderOption,
     status: findOption(transaction.status, TRANSACTION_STATUS_OPTIONS),
     expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string),
     newExpectedCompletionDate: '',

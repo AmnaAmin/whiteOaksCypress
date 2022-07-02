@@ -18,7 +18,7 @@ describe('Given create new transaction', () => {
       const newTransactionButton = screen.getByTestId('new-transaction-button')
       expect(newTransactionButton).toBeInTheDocument()
       expect(screen.getByText(/WO-ADT Renovations Inc-11\/13\/2021/i)).toBeInTheDocument()
-      expect(screen.getAllByRole('row').length).toEqual(4)
+      expect(screen.getAllByRole('row').length).toEqual(5)
 
       // Open new Transaction Modal
       userEvent.click(newTransactionButton)
@@ -164,7 +164,7 @@ describe('Given update transaction', () => {
     test('Then transaction of change order with status pending should open Update Transaction modal, update and save successfully', async () => {
       await render(<App />, { route: '/project-details/2951' })
 
-      const pendingTransaction = screen.getByText(/pending/i)
+      const pendingTransaction = screen.getAllByText(/pending/i)?.[0]
       expect(pendingTransaction).toBeInTheDocument()
 
       // Click on sending transaction row which will open the update transaction modal
@@ -179,7 +179,7 @@ describe('Given update transaction', () => {
       expect(screen.getByText('360 Management Services (General Labor)')).toBeInTheDocument()
 
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: $1,980')
+      expect(totalAmount.textContent).toEqual('Total: $4,925.50')
 
       // Add new row for adding additional amount
       await userEvent.click(screen.getByTestId('add-new-row-button'))
@@ -189,9 +189,10 @@ describe('Given update transaction', () => {
 
       await userEvent.type(descriptionSecondField, 'Include painting')
       await userEvent.type(amountSecondField, '1000')
+
       expect(descriptionSecondField.value).toEqual('Include painting')
       expect(amountSecondField.value).toEqual('1000')
-      expect(totalAmount.textContent).toEqual('Total: $2,980')
+      expect(totalAmount.textContent).toEqual('Total: $5,925.50')
 
       // Submit the Form
       await act(async () => {
@@ -202,7 +203,7 @@ describe('Given update transaction', () => {
       // Chakra UI toast message rendered twice in DOM, that's why we are going to assert like this.
       expect((await screen.findAllByText('Transaction has been updated successfully.')).length).toBeGreaterThan(0)
 
-      expect(await screen.findByText('$2,980')).toBeInTheDocument()
+      expect(await screen.findByText('$5,925.50')).toBeInTheDocument()
     })
   })
 })
