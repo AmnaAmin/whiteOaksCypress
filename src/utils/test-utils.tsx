@@ -38,8 +38,8 @@ const keyDownEvent = {
   key: 'ArrowDown',
 }
 
-export async function selectOption(container: HTMLElement, optionText: string) {
-  const placeholder = getByText(container, 'Select...')
+export async function selectOption(container: HTMLElement, optionText: string, selectedText = 'Select...') {
+  const placeholder = getByText(container, selectedText)
   fireEvent.keyDown(placeholder, keyDownEvent)
   await findByText(container, optionText)
   fireEvent.click(getByText(container, optionText))

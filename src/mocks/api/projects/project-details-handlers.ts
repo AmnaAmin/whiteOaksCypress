@@ -3,9 +3,9 @@ import {
   ALERT_HISTORIES,
   CHANGE_ORDERS,
   DOCUMENTS,
+  getTransactionById,
   makeChangeOrderObject,
   NEW_DOCUMENT,
-  UPDATE_TRANSACTION,
   WORK_ORDERS,
   WORK_ORDERS_WITH_CHANGE_ORDERS,
 } from './data'
@@ -31,7 +31,6 @@ export const projectDetailHandlers = [
     return res(ctx.status(200), ctx.json(getData('/documents')))
   }),
   rest.post('/api/documents', (req: RestRequest, res, ctx) => {
-    console.log(req?.body)
     appendData('/documents', { ...NEW_DOCUMENT, ...(req?.body as Object) })
     return res(ctx.status(201), ctx.json(NEW_DOCUMENT))
   }),
@@ -41,7 +40,7 @@ export const projectDetailHandlers = [
     return res(ctx.status(200), ctx.json(getData('/transactions')))
   }),
   rest.get('/api/change-orders/:transactionId', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(UPDATE_TRANSACTION))
+    return res(ctx.status(200), ctx.json(getTransactionById(Number(req.params.transactionId))))
   }),
   rest.put('/api/change-orders', (req, res, ctx) => {
     const newChangeOrder = makeChangeOrderObject(CHANGE_ORDERS[1], req.body)
