@@ -8,7 +8,7 @@ echo "🛠 Building project..."
 
 if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
-
+  
 if [ "preprod" = $ENV ]; then
   npm run build:prod
 

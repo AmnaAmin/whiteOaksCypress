@@ -7,7 +7,7 @@ steps:
     label: ":package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: dev
     agents:
-      queue: "wo:nonprod"
+      queue: "wo:dev"
     retry:
       automatic:
         - exit_status: -1
@@ -15,7 +15,7 @@ steps:
     env:
       BUILD_VERSION: "${BUILDKITE_BUILD_NUMBER}"
       ENV: "dev"
-          
+
   - command:
       - chmod 755 auto/build.sh
       - auto/build.sh

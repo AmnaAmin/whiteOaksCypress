@@ -1,4 +1,5 @@
 import {
+  Box,
   HStack,
   Modal,
   ModalBody,
@@ -9,6 +10,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
+import { t } from 'i18next'
 
 import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
 import React, { useCallback, useEffect } from 'react'
@@ -38,7 +40,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
-                  Vendor Details
+                  {t('vendorDetail')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
                   A Chimney Sweep
@@ -48,7 +50,9 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
-            <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
+            <Box mt="18px">
+              <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>

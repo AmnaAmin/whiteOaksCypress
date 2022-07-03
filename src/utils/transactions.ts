@@ -108,6 +108,11 @@ const WORK_ORDER_DEFAULT_OPTION = {
   value: WORK_ORDER_DEFAULT_VALUE,
 }
 
+// create work order label for options title
+export const createWorkOrderLabel = (skillName: string, companyName: string) => {
+  return `${skillName} (${companyName})`
+}
+
 export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
   let workOrderSelectOptions: SelectOption[] = []
   const client = useClient()
@@ -123,7 +128,7 @@ export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
   )
 
   const changeOrderOptions = changeOrders?.map(changeOrder => ({
-    label: `${changeOrder.skillName} (${changeOrder.companyName})`,
+    label: createWorkOrderLabel(changeOrder.skillName, changeOrder.companyName),
     value: `${changeOrder.id}`,
   }))
 
@@ -147,7 +152,11 @@ const AGAINST_DEFAULT_OPTION = {
   value: AGAINST_DEFAULT_VALUE,
 }
 
-export const useProjectWorkOrders = (projectId?: string) => {
+export const createAgainstLabel = (companyName: string, skillName: string) => {
+  return `${companyName} (${skillName})`
+}
+
+export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
   const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const client = useClient()
 
@@ -165,10 +174,10 @@ export const useProjectWorkOrders = (projectId?: string) => {
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled')
+          return !(status === 'paid' || status === 'cancelled') || isUpdating
         })
         .map(workOrder => ({
-          label: `${workOrder.companyName} (${workOrder.skillName})`,
+          label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
           value: `${workOrder.id}`,
         })),
     [workOrders],
@@ -211,6 +220,11 @@ const CHANGE_ORDER_DEFAULT_OPTION = {
   value: CHANGE_ORDER_DEFAULT_VALUE,
 }
 
+// Create label for change order
+export const createChangeOrderLabel = (changeOrderAmount: number, workOrderName: string) => {
+  return `$${changeOrderAmount} (${workOrderName})`
+}
+
 export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   const client = useClient()
   const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
@@ -230,7 +244,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   const changeOrderOptions = useMemo(
     () =>
       changeOrders?.map(workOrder => ({
-        label: `$${workOrder.changeOrderAmount} (${workOrder.name})`,
+        label: createChangeOrderLabel(workOrder.changeOrderAmount, workOrder.name),
         value: workOrder.id,
       })),
     [changeOrders?.length],
@@ -265,6 +279,7 @@ const generateLienWaiverPDF = async (lienWaiver: FormValues['lienWaiver'] | unde
 
   return new Promise((res, _) => {
     let form = new jsPdf()
+
     const dimention = {
       width: lienWaiver?.signatureWidth || 20,
       height: lienWaiver?.signatureHeight || 10,
@@ -289,7 +304,7 @@ export const parseChangeOrderAPIPayload = async (
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
-  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
+  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate as string)
 
   const documents: any = []
 
@@ -424,7 +439,9 @@ export const calculatePayDateVariance = (invoicedDate: DateType, paidDate: DateT
 }
 
 const getLatestDocument = (documents: Document[]) => {
-  let latestDocument = documents[0]
+  if (!documents) return null
+
+  let latestDocument = documents?.[0]
 
   for (let i = 1; i < documents.length; i++) {
     const currentDocument = documents[i]
@@ -464,7 +481,7 @@ export const parseTransactionToFormValues = (
   changeOrderOptions: SelectOption[],
 ): FormValues => {
   const findOption = (value, options): SelectOption | null => {
-    return options.find(option => option.value === value) ?? null
+    return options.find(option => option.value?.toString() === value) ?? null
   }
   const payDateVariance = calculatePayDateVariance(
     transaction.clientApprovedDate,
@@ -472,26 +489,35 @@ export const parseTransactionToFormValues = (
     transaction.paymentTerm,
   )
 
-  const lienWaiverDocument = getLatestDocument(transaction.documents.filter(doc => doc.fileType === 'lienWaiver.pdf'))
-  const attachment = getLatestDocument(transaction.documents.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
+  const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
+  const attachment = getLatestDocument(transaction.documents?.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
+
+  const againstOption =
+    transaction.parentWorkOrderId === null
+      ? againstOptions[0]
+      : findOption(transaction.parentWorkOrderId?.toString(), againstOptions)
+
+  const changeOrderOption =
+    transaction.sowRelatedChangeOrderId === null
+      ? changeOrderOptions[0]
+      : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions)
+
+  const workOrderOption =
+    transaction.sowRelatedWorkOrderId === null
+      ? workOrderOptions[0]
+      : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
 
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
       value: transaction.transactionType,
     },
-    against:
-      transaction.parentWorkOrderId === null
-        ? againstOptions[0]
-        : findOption(transaction.parentWorkOrderId?.toString(), againstOptions),
-    workOrder: findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions),
-    changeOrder:
-      transaction.sowRelatedChangeOrderId === null
-        ? changeOrderOptions[0]
-        : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions),
+    against: againstOption,
+    workOrder: workOrderOption,
+    changeOrder: changeOrderOption,
     status: findOption(transaction.status, TRANSACTION_STATUS_OPTIONS),
     expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string),
-    newExpectedCompletionDate: '',
+    newExpectedCompletionDate: datePickerFormat(transaction.newExpectedCompletionDate as string),
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
     attachment,

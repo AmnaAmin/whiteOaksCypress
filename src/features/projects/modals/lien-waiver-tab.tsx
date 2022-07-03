@@ -67,6 +67,7 @@ export const LienWaiverTab: React.FC<any> = props => {
     return {
       ...lienWaiverData,
       ...formValues,
+      lienWaiverAccepted: true,
       documents,
     }
   }

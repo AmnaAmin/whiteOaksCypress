@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Button, Icon, Divider } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useTransactions } from 'utils/transactions'
@@ -10,6 +10,8 @@ import { TransactionDetailsModal } from './transaction-details-modal'
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from '../status'
+import { BiExport } from 'react-icons/bi'
+import { FaAtom } from 'react-icons/fa'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -76,7 +78,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('status') as string,
+        Header: t('transactionStatus') as string,
         accessor: 'status',
         //@ts-ignore
         Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
@@ -136,6 +138,19 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         onClose={onTransactionDetailsModalClose}
         selectedTransactionId={selectedTransactionId as number}
       />
+      <Flex justifyContent="end">
+        <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+          <Button variant="ghost" colorScheme="brand" m={0}>
+            <Icon as={BiExport} fontSize="18px" mr={1} />
+            {t('export')}
+          </Button>
+          <Divider orientation="vertical" border="1px solid" h="20px" />
+          <Button variant="ghost" colorScheme="brand" m={0}>
+            <Icon as={FaAtom} fontSize="18px" mr={1} />
+            {t('settings')}
+          </Button>
+        </HStack>
+      </Flex>
     </Box>
   )
 })

@@ -11,7 +11,6 @@ import SummaryIconFirst, {
   SummaryIconTenth,
 } from 'icons/pc-project-icons'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { useProjectCards } from 'utils/pc-projects'
 import { ProjectCard } from '../projects/project-card'
 
@@ -24,7 +23,6 @@ const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, 
 }
 
 const useProjectCardJson = cards => {
-  const { t } = useTranslation()
   return [
     {
       id: 'new',
@@ -65,13 +63,13 @@ const useProjectCardJson = cards => {
     },
     {
       id: 'overpayment',
-      title: 'Overpayment',
+      title: 'Over Payment',
       number: cards?.find(c => c.status === 109)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSeventh} bg="#E2EFDF" />,
     },
     {
       id: 'pastDue',
-      title: t('pastDue'),
+      title: 'Past Due',
       number: cards?.find(c => c.status === 62)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
     },
@@ -90,15 +88,30 @@ const useProjectCardJson = cards => {
   ]
 }
 
-export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
-  const { data: values } = useProjectCards()
+export type ProjectCardProps = {
+  onSelectCard: (string) => void
+  selectedCard: string
+}
+
+export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selectedCard }) => {
+  const { data: values, isLoading } = useProjectCards()
   const cards = useProjectCardJson(values)
+
+  console.log('cards', values)
 
   return (
     <>
       <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">
         {cards.map(card => {
-          return <ProjectCard key={card.id} {...card} onSelectCard={onSelectCard} selectedCard={selectedCard} />
+          return (
+            <ProjectCard
+              key={card.id}
+              {...card}
+              onSelectCard={onSelectCard}
+              selectedCard={selectedCard}
+              isLoading={isLoading}
+            />
+          )
         })}
       </Box>
     </>

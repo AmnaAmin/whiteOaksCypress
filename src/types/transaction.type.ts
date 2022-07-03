@@ -138,7 +138,7 @@ export interface FormValues {
   transaction: TransactionFormValues[]
   status: SelectOption | null
   expectedCompletionDate: string
-  newExpectedCompletionDate: string
+  newExpectedCompletionDate: string | null
   attachment: any
   lienWaiverDocument: any
   invoicedDate: string | null

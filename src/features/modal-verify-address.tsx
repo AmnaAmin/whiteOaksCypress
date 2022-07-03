@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import {
   Modal,
   ModalOverlay,
@@ -14,9 +13,9 @@ import {
   Checkbox,
   Box,
 } from '@chakra-ui/react'
-import FailedIcon from 'icons/failed-icon'
-import SuccessIcon from 'icons/success-icon'
-import VerifyingIcon from 'icons/verifying-icon'
+import FailedIcon from '../icons/failed-icon'
+import SuccessIcon from '../icons/success-icon'
+import VerifyingIcon from '../icons/verifying-icon'
 interface VerifyAddressBoxProps {
   isOpen: boolean
   isLoading?: boolean
@@ -27,14 +26,7 @@ interface VerifyAddressBoxProps {
   addressVerificationStatus: string
 }
 
-export function ModalVerifyAddress({
-  isOpen,
-  onClose,
-  // onConfirm,
-  title,
-  props,
-  addressVerificationStatus,
-}: VerifyAddressBoxProps) {
+export function ModalVerifyAddress({ isOpen, onClose, title, addressVerificationStatus }: VerifyAddressBoxProps) {
   const [continueUnverified, setContinueUnverified] = useState(false)
 
   return (

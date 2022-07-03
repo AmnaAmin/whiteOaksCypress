@@ -84,7 +84,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t('createdBy')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput label={t('contact')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
       </GridItem>
 
       <GridItem>
@@ -107,12 +107,12 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
   )
 }
 
-type AddUpdateTransactionFormProps = {
+export type TransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
 }
 
-export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClose, selectedTransactionId }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId }) => {
   const { t } = useTranslation()
   const { isVendor, isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
@@ -127,7 +127,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
     isLoading: isAgainstLoading,
-  } = useProjectWorkOrders(projectId)
+  } = useProjectWorkOrders(projectId, !!selectedTransactionId)
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
@@ -360,7 +360,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
 
                 {isShowWorkOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.workOrder}>
+                    <FormControl isInvalid={!!errors.workOrder} data-testid="work-order-select">
                       <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
                         {t('workOrder')}
                       </FormLabel>
@@ -376,7 +376,6 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                               selectProps={{ isBorderLeft: true }}
                               options={workOrderSelectOptions}
                               onChange={option => {
-                                console.log('option', option)
                                 field.onChange(option)
                                 setSelectedWorkOrderId(option.value)
                               }}
@@ -390,7 +389,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                 )}
                 {isShowChangeOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.changeOrder}>
+                    <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
                       <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
                         {t('changeOrder')}
                       </FormLabel>
@@ -422,14 +421,14 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                         fontStyle="normal"
                         fontWeight={500}
                         color="gray.600"
-                        htmlFor="newExpectedCompletionDate"
+                        htmlFor="expectedCompletionDate"
                         whiteSpace="nowrap"
                       >
                         {t('expectedCompletion')}
                       </FormLabel>
                       <InputGroup>
                         <Input
-                          data-testid="-expected-completion-date"
+                          data-testid="expected-completion-date"
                           id="expectedCompletionDate"
                           size="md"
                           isDisabled={true}
@@ -463,6 +462,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                         type="date"
                         size="md"
                         css={calendarIcon}
+                        isDisabled={isApproved}
                         {...register('newExpectedCompletionDate')}
                       />
 
@@ -474,7 +474,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                 {isTransactionTypeDrawAgainstProjectSOWSelected && (
                   <>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paymentTerm} data-testid="paymentTerm-select-field">
+                      <FormControl isInvalid={!!errors.paymentTerm} data-testid="payment-term-select">
                         <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.600" fontWeight={500}>
                           {t('paymentTerm')}
                         </FormLabel>
@@ -513,7 +513,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                           {t('invoicedDate')}
                         </FormLabel>
                         <Input
-                          data-testid="new-expected-completion-date"
+                          data-testid="invoice-date"
                           id="invoicedDate"
                           type="date"
                           variant={isInvoicedDateRequired ? 'required-field' : 'outline'}
@@ -540,7 +540,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                           {t('paidDate')}
                         </FormLabel>
                         <Input
-                          data-testid="new-expected-completion-date"
+                          data-testid="paid-date"
                           id="paidDate"
                           type="date"
                           variant={isPaidDateRequired ? 'required-field' : 'outline'}
@@ -565,7 +565,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
                           {t('payDateVariance')}
                         </FormLabel>
                         <Input
-                          data-testid="new-expected-completion-date"
+                          data-testid="pay-date-variance"
                           id="payDateVariance"
                           type="text"
                           size="md"
@@ -628,7 +628,7 @@ export const TransactionForm: React.FC<AddUpdateTransactionFormProps> = ({ onClo
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onModalClose} variant="outline" colorScheme="brand">
+          <Button onClick={onModalClose} variant="outline" colorScheme="brand" data-testid="close-transaction-form">
             {t('close')}
           </Button>
         )}

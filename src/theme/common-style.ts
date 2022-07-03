@@ -18,7 +18,7 @@ export const inputFocusStateStyle = {
 }
 
 export const inputBorderLeftStyle: InputProps = {
-  borderLeftWidth: '2px',
+  borderLeftWidth: '2.5px',
   borderLeftStyle: 'solid',
   borderLeftColor: 'brand.300',
   _hover: {
