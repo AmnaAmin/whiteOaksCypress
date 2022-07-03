@@ -50,7 +50,7 @@ describe('Given create new transaction', () => {
       expect(expectedCompletionDate).toBeDisabled()
       expect(expectedCompletionDate.value).toEqual('11/30/2021')
       expect(newExpectedCompletionDate).not.toBeDisabled()
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -58,7 +58,7 @@ describe('Given create new transaction', () => {
       await userEvent.type(descriptionField, 'Added painting')
       await userEvent.type(amountField, '3000')
 
-      expect(totalAmount.textContent).toEqual('Total: $3,000')
+      expect(totalAmount.textContent).toEqual('Total: $3,000.00')
 
       await act(async () => {
         await userEvent.click(screen.getByTestId('save-transaction'))
@@ -90,21 +90,21 @@ describe('Given create new transaction', () => {
       expect(screen.getByText('Draw')).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
 
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       expect(screen.getByTestId('next-to-lien-waiver-form')).toBeDisabled()
 
       await userEvent.type(screen.getByTestId('transaction-description-0'), 'Exclude painting')
       await userEvent.type(screen.getByTestId('transaction-amount-0'), '400')
 
-      expect(totalAmount.textContent).toEqual('Total: -$400')
+      expect(totalAmount.textContent).toEqual('Total: -$400.00')
       expect(screen.getByTestId('next-to-lien-waiver-form')).not.toBeDisabled()
 
       // Add lien waiver to transaction.
       await act(async () => await userEvent.click(screen.getByTestId('next-to-lien-waiver-form')))
 
       // Check lien waiver form rendered properly
-      expect(screen.getByText('-$400')).toBeInTheDocument()
+      expect(screen.getByText('-$400.00')).toBeInTheDocument()
       expect(screen.getByTestId('claimants-title')).toBeInTheDocument()
 
       // Fill the lien waiver form

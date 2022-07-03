@@ -68,7 +68,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(expectedCompletionDate).toBeDisabled()
       expect(expectedCompletionDate.value).toEqual('11/30/2021')
       expect(newExpectedCompletionDate).not.toBeDisabled()
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -76,7 +76,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await userEvent.type(descriptionField, 'Added painting')
       await userEvent.type(amountField, '3000')
 
-      expect(totalAmount.textContent).toEqual('Total: $3,000')
+      expect(totalAmount.textContent).toEqual('Total: $3,000.00')
 
       await act(async () => {
         await userEvent.click(screen.getByTestId('save-transaction'))
@@ -118,7 +118,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
 
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       // Fill the description and amount fields
       const descriptionField = screen.getByTestId('transaction-description-0')
@@ -128,7 +128,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await userEvent.type(amountField, '3000')
 
       // Check the total amount is correct
-      expect(totalAmount.textContent).toEqual('Total: $3,000')
+      expect(totalAmount.textContent).toEqual('Total: $3,000.00')
 
       // User submit the transaction
       await act(async () => {
@@ -166,7 +166,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
 
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -177,7 +177,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 
-      expect(totalAmount.textContent).toEqual('Total: -$400')
+      expect(totalAmount.textContent).toEqual('Total: -$400.00')
 
       // show lien waiver form
       await act(async () => {
@@ -185,7 +185,7 @@ describe('Given Project Coordinator create new transaction', () => {
       })
 
       // Check lien waiver form rendered properly
-      expect(screen.getByText('-$400')).toBeInTheDocument()
+      expect(screen.getByText('-$400.00')).toBeInTheDocument()
       expect(screen.getByTestId('claimants-title')).toBeInTheDocument()
 
       // Fill the lien waiver form
@@ -249,7 +249,7 @@ describe('Given Project Coordinator create new transaction', () => {
 
       const totalAmount = screen.getByTestId('total-amount')
 
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -294,7 +294,7 @@ describe('Given Project Coordinator create new transaction', () => {
       ).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
 
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -302,7 +302,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 
-      expect(totalAmount.textContent).toEqual('Total: -$400')
+      expect(totalAmount.textContent).toEqual('Total: -$400.00')
 
       // User submit the transaction
       await act(async () => {
@@ -338,7 +338,7 @@ describe('Given Project Coordinator create new transaction', () => {
       ).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
 
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -347,7 +347,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 
-      expect(totalAmount.textContent).toEqual('Total: $400')
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
 
       // User submit the transaction
       await act(async () => {
@@ -381,7 +381,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
 
-      expect(totalAmount.textContent).toEqual('Total: $0')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
@@ -417,7 +417,7 @@ describe('Given update transaction', () => {
       expect(getByText(screen.getByTestId('against-select-field'), AGAINST_SELECTED_OPTION)).toBeInTheDocument()
 
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: $1,980')
+      expect(totalAmount.textContent).toEqual('Total: $1,980.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0') as HTMLInputElement
       const amountField = screen.getByTestId('transaction-amount-0') as HTMLInputElement
@@ -435,7 +435,7 @@ describe('Given update transaction', () => {
       await userEvent.type(amountField, '400')
 
       // Check the total amount is updated
-      expect(totalAmount.textContent).toEqual('Total: $400')
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
 
       // User submit the transaction
       await act(async () => {
@@ -479,7 +479,7 @@ describe('Given update transaction', () => {
       await userEvent.type(amountField, '400')
 
       // Check the total amount is updated
-      expect(totalAmount.textContent).toEqual('Total: $400')
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
 
       // User submit the transaction
       await act(async () => {
@@ -507,7 +507,7 @@ describe('Given update transaction', () => {
       expect(getByText(screen.getByTestId('against-select-field'), AGAINST_SELECTED_OPTION)).toBeInTheDocument()
 
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: -$4,000')
+      expect(totalAmount.textContent).toEqual('Total: -$4,000.00')
 
       const descriptionField = screen.getByTestId('transaction-description-0') as HTMLInputElement
       const amountField = screen.getByTestId('transaction-amount-0') as HTMLInputElement
@@ -525,7 +525,7 @@ describe('Given update transaction', () => {
       await userEvent.type(amountField, '5000')
 
       // Check the total amount is updated
-      expect(totalAmount.textContent).toEqual('Total: -$5,000')
+      expect(totalAmount.textContent).toEqual('Total: -$5,000.00')
 
       // User submit the transaction
       await act(async () => {
@@ -533,7 +533,7 @@ describe('Given update transaction', () => {
       })
 
       // Check lien waiver form rendered properly
-      expect(screen.getByText('-$5,000')).toBeInTheDocument()
+      expect(screen.getByText('-$5,000.00')).toBeInTheDocument()
       expect(screen.getByTestId('claimants-title')).toBeInTheDocument()
 
       // Fill the lien waiver form
@@ -583,7 +583,7 @@ describe('Given update transaction', () => {
 
       // Check total amount is rendered properly
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: -$300')
+      expect(totalAmount.textContent).toEqual('Total: -$300.00')
 
       // Add paid date
       await fireEvent.change(screen.getByTestId('paid-date'), { target: { value: '2022-07-20' } })
@@ -603,7 +603,7 @@ describe('Given update transaction', () => {
       await userEvent.type(amountField, '4000')
 
       // Check the total amount is updated
-      expect(totalAmount.textContent).toEqual('Total: -$4,000')
+      expect(totalAmount.textContent).toEqual('Total: -$4,000.00')
 
       // User submit the transaction
       await act(async () => {
@@ -639,7 +639,7 @@ describe('Given update transaction', () => {
 
       // Check total amount is rendered properly
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: -$233')
+      expect(totalAmount.textContent).toEqual('Total: -$233.00')
 
       // check the status is prepopulated with 'Pending'
       expect(getByText(screen.getByTestId('status-select-field'), 'Pending')).toBeInTheDocument()
@@ -652,7 +652,7 @@ describe('Given update transaction', () => {
       // expect(refundMaterialCheckbox.checked).toBe(true)
 
       // check total amount is updated
-      expect(totalAmount.textContent).toEqual('Total: $233')
+      expect(totalAmount.textContent).toEqual('Total: $233.00')
 
       // User submit the transaction
       await act(async () => {
@@ -688,7 +688,7 @@ describe('Given update transaction', () => {
 
       // Check total amount is rendered properly
       const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: $400')
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
 
       // check the status is prepopulated with 'Pending'
       expect(getByText(screen.getByTestId('status-select-field'), 'Pending')).toBeInTheDocument()

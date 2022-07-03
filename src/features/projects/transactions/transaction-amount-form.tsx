@@ -15,7 +15,7 @@ import {
   Grid,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { AiOutlineFileText, AiOutlinePlus } from 'react-icons/ai'
+import { AiOutlinePlus } from 'react-icons/ai'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
 import { useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
@@ -24,7 +24,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'utils/transactions'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { BiDownload } from 'react-icons/bi'
+import { BiDownload, BiFile } from 'react-icons/bi'
 import numeral from 'numeral'
 
 type TransactionAmountFormProps = {
@@ -142,33 +142,34 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   return (
     <>
       <Flex justifyContent="space-between" w="100%" mt="30px" mb="15px">
-        <Box flex="1">
-          <Button
-            data-testid="add-new-row-button"
-            variant="outline"
-            size="sm"
-            borderColor="#4E87F8"
-            color="#4E87F8"
-            onClick={addRow}
-            isDisabled={isApproved}
-            leftIcon={<AiOutlinePlus color="#4E87F8" />}
-          >
-            {t('addNewRow')}
-          </Button>
-          <Button
-            data-testid="delete-row-button"
-            variant="outline"
-            size="sm"
-            ml="10px"
-            borderColor="#4E87F8"
-            color="#4E87F8"
-            leftIcon={<RiDeleteBinLine color="#4E87F8" />}
-            onClick={onDeleteConfirmationModalOpen}
-            isDisabled={!someChecked || isApproved}
-          >
-            {t('deleteRow')}
-          </Button>
-        </Box>
+        {!isApproved && (
+          <Box flex="1">
+            <Button
+              data-testid="add-new-row-button"
+              variant="outline"
+              size="sm"
+              borderColor="#4E87F8"
+              color="#4E87F8"
+              onClick={addRow}
+              leftIcon={<AiOutlinePlus color="#4E87F8" />}
+            >
+              {t('addNewRow')}
+            </Button>
+            <Button
+              data-testid="delete-row-button"
+              variant="outline"
+              size="sm"
+              ml="10px"
+              borderColor="#4E87F8"
+              color="#4E87F8"
+              leftIcon={<RiDeleteBinLine color="#4E87F8" />}
+              onClick={onDeleteConfirmationModalOpen}
+              isDisabled={!someChecked}
+            >
+              {t('deleteRow')}
+            </Button>
+          </Box>
+        )}
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
         <HStack>
@@ -238,37 +239,38 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             </>
           )}
 
-          {document ? (
-            <Box color="barColor.100" border="1px solid #e2e8f0" borderRadius="4px" fontSize="14px">
-              <HStack spacing="5px" h="31px" padding="10px" align="center">
-                <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
-                  {document?.name || document.fileType}
-                </Text>
-                <MdOutlineCancel
-                  cursor="pointer"
-                  onClick={() => {
-                    setValue('attachment', null)
-                    if (inputRef.current) inputRef.current.value = ''
-                  }}
-                />
-              </HStack>
-            </Box>
-          ) : (
-            <Button
-              onClick={e => {
-                if (inputRef.current) {
-                  inputRef.current.click()
-                }
-              }}
-              leftIcon={<AiOutlineFileText />}
-              variant="outline"
-              size="sm"
-              colorScheme="brand"
-              isDisabled={isApproved}
-            >
-              {t('attachment')}
-            </Button>
-          )}
+          {!isApproved &&
+            (document ? (
+              <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                <HStack spacing="5px" h="31px" padding="10px" align="center">
+                  <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
+                    {document?.name || document.fileType}
+                  </Text>
+                  <MdOutlineCancel
+                    cursor="pointer"
+                    onClick={() => {
+                      setValue('attachment', null)
+                      if (inputRef.current) inputRef.current.value = ''
+                    }}
+                  />
+                </HStack>
+              </Box>
+            ) : (
+              <Button
+                onClick={e => {
+                  if (inputRef.current) {
+                    inputRef.current.click()
+                  }
+                }}
+                leftIcon={<BiFile />}
+                variant="outline"
+                size="sm"
+                colorScheme="brand"
+                isDisabled={isApproved}
+              >
+                {t('attachment')}
+              </Button>
+            ))}
         </HStack>
       </Flex>
 
