@@ -1,6 +1,8 @@
 steps:
   - command:
+      - chmod 755 auto/build.sh
       - auto/build.sh
+      - chmod 755 auto/deploy_dev.sh
       - auto/deploy_dev.sh
     label: ":package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: dev
@@ -15,7 +17,9 @@ steps:
       ENV: "dev"
 
   - command:
+      - chmod 755 auto/build.sh
       - auto/build.sh
+      - chmod 755 auto/deploy_qa.sh
       - auto/deploy_qa.sh
     label: ":package: & :rocket: Build & Deploy QA: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: release/*
@@ -36,7 +40,9 @@ steps:
     branches: "master"
 
   - command:
+      - chmod 755 auto/build.sh
       - auto/build.sh
+      - chmod 755 auto/deploy_preprod.sh
       - auto/deploy_preprod.sh
     label: ":package: & :rocket: Build & Deploy PRE-PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: master
@@ -57,7 +63,9 @@ steps:
     branches: "master"
 
   - command:
+      - chmod 755 auto/build.sh
       - auto/build.sh
+      - chmod 755 auto/deploy_prod.sh
       - auto/deploy_prod.sh
     label: ":package: & :rocket: Build & Deploy PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}"
     branches: master

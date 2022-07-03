@@ -73,7 +73,7 @@
     "webpack:build": "react-scripts build ",
     "webpack:build:main": "react-scripts build",
     "webpack:prod:main": "react-scripts build",
-    "webpack:prod": "react-scripts build",
+    "build:prod": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "typescript": "tsc --project tsconfig.json --noEmit",
