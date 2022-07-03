@@ -304,7 +304,7 @@ export const parseChangeOrderAPIPayload = async (
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
-  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate)
+  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate as string)
 
   const documents: any = []
 
@@ -503,7 +503,7 @@ export const parseTransactionToFormValues = (
       : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions)
 
   const workOrderOption =
-    transaction.parentWorkOrderId === null
+    transaction.sowRelatedWorkOrderId === null
       ? workOrderOptions[0]
       : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
 
@@ -517,7 +517,7 @@ export const parseTransactionToFormValues = (
     changeOrder: changeOrderOption,
     status: findOption(transaction.status, TRANSACTION_STATUS_OPTIONS),
     expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string),
-    newExpectedCompletionDate: '',
+    newExpectedCompletionDate: datePickerFormat(transaction.newExpectedCompletionDate as string),
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
     attachment,

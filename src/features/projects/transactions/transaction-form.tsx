@@ -442,7 +442,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                     </FormControl>
                   </GridItem>
                 )}
-                {isShowNewExpectedCompletionDateField && !isApproved && (
+                {isShowNewExpectedCompletionDateField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
                       <FormLabel
@@ -462,6 +462,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         type="date"
                         size="md"
                         css={calendarIcon}
+                        isDisabled={isApproved}
                         {...register('newExpectedCompletionDate')}
                       />
 
