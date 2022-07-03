@@ -502,13 +502,18 @@ export const parseTransactionToFormValues = (
       ? changeOrderOptions[0]
       : findOption(transaction.sowRelatedChangeOrderId?.toString(), changeOrderOptions)
 
+  const workOrderOption =
+    transaction.parentWorkOrderId === null
+      ? workOrderOptions[0]
+      : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
+
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
       value: transaction.transactionType,
     },
     against: againstOption,
-    workOrder: findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions),
+    workOrder: workOrderOption,
     changeOrder: changeOrderOption,
     status: findOption(transaction.status, TRANSACTION_STATUS_OPTIONS),
     expectedCompletionDate: dateFormat(transaction.parentWorkOrderExpectedCompletionDate as string),
