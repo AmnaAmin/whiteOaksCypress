@@ -15,6 +15,7 @@ import {
   PAYMENT_TRANSACTION_ID,
   APPROVED_TRANSACTION_ID,
   AGAINST_SELECTED_OPTION,
+  TRANSACTION_OF_CHANGE_ORDER_AGAINST_PROJECT_SOW_NOT_APPLICABLE_WORK_ORDER_ID,
 } from 'mocks/api/projects/data'
 import { createAgainstLabel, createChangeOrderLabel, createWorkOrderLabel } from 'utils/transactions'
 import { dateFormat } from 'utils/date-time-utils'
@@ -88,7 +89,7 @@ describe('Given Project Coordinator create new transaction', () => {
     })
 
     // We should resume this test case After Draw flow Lien Waiver support added
-    test('Then User should create Change Order transaction against SOW successfully', async () => {
+    test('Then User should create Change Order transaction against Project SOW of Vendor WorkOrder successfully', async () => {
       const onClose = jest.fn()
 
       await renderTransactionForm({ onClose })
@@ -114,6 +115,58 @@ describe('Given Project Coordinator create new transaction', () => {
 
       // User first select Change Order, one of ['Change Order-1', 'Change Order-2']
       const changeOrderOptionLabel = createChangeOrderLabel(changeOrder.changeOrderAmount, changeOrder.name)
+      await selectOption(screen.getByTestId('change-order-select'), changeOrderOptionLabel)
+      expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
+
+      const totalAmount = screen.getByTestId('total-amount')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      // Fill the description and amount fields
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.type(descriptionField, 'Added painting')
+      await userEvent.type(amountField, '3000')
+
+      // Check the total amount is correct
+      expect(totalAmount.textContent).toEqual('Total: $3,000.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+
+    test('Then user should create Change Order transaction against Project SOW of work order ignore (not applicable)', async () => {
+      const onClose = jest.fn()
+
+      await renderTransactionForm({ onClose })
+
+      // User first select Payment type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
+
+      // User first select Against, one of ['Project SOW', 'Vendor']
+      await selectOption(screen.getByTestId('against-select-field'), 'Project SOW')
+      /**
+       * Check the following fields changed properly,
+       * 1- Transaction Type selected with 'Change Order'
+       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+       * 3- New Expected Completion Date field visible
+       */
+      expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // User first select Work Order, one of ['SOW-1', 'SOW-2']
+      const workOrderOptionLabel = 'ignore (Not applicable)'
+      await selectOption(screen.getByTestId('work-order-select'), workOrderOptionLabel)
+      expect(getByText(screen.getByTestId('work-order-select'), workOrderOptionLabel)).toBeInTheDocument()
+
+      // User first select Change Order, one of ['Change Order-1', 'Change Order-2']
+      const changeOrderOptionLabel = '$0.00'
       await selectOption(screen.getByTestId('change-order-select'), changeOrderOptionLabel)
       expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
 
@@ -489,6 +542,57 @@ describe('Given update transaction', () => {
       await waitForLoadingToFinish()
 
       expect(onClose).toHaveBeenCalled()
+    })
+
+    test('Then open transaction against Project SOW of not applicable work order and update successfully', async () => {
+      const onClose = jest.fn()
+
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: TRANSACTION_OF_CHANGE_ORDER_AGAINST_PROJECT_SOW_NOT_APPLICABLE_WORK_ORDER_ID,
+      })
+
+      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
+
+      // Check Against select field is prepopulated with Vendor and disabled
+      expect(getByRole(screen.getByTestId('against-select-field'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // Check work order select field is prepopulated with 'Ignore (Not Applicable)' and disabled
+      expect(getByRole(screen.getByTestId('work-order-select'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('work-order-select'), 'ignore (Not applicable)')).toBeInTheDocument()
+
+      // Check change order select field is prepopulated with '$0.00' and disabled
+      expect(getByRole(screen.getByTestId('change-order-select'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('change-order-select'), '$0.00')).toBeInTheDocument()
+
+      const totalAmount = screen.getByTestId('total-amount')
+      expect(totalAmount.textContent).toEqual('Total: $500.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0') as HTMLInputElement
+      const amountField = screen.getByTestId('transaction-amount-0') as HTMLInputElement
+
+      // Check the description and amount field are prepopulated with the values of the transaction
+      expect(descriptionField.value).toEqual('test')
+      expect(amountField.value).toEqual('500')
+
+      // Clear the description and amount field
+      await userEvent.clear(descriptionField)
+      await userEvent.clear(amountField)
+
+      // update the description and amount field
+      await userEvent.type(descriptionField, 'Updated')
+      await userEvent.type(amountField, '400')
+
+      // Check the total amount is updated
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
     })
   })
 
