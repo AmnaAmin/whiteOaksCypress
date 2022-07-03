@@ -72,7 +72,10 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
     }
   }, 0)
 
-  return { formattedAmount: numeral(totalAmount).format('$0,0[.]00'), amount: totalAmount }
+  return {
+    formattedAmount: numeral(totalAmount).format('$0,0.00'),
+    amount: totalAmount,
+  }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
