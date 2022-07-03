@@ -84,7 +84,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t('createdBy')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput label={t('contact')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
       </GridItem>
 
       <GridItem>

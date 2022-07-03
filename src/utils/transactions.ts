@@ -279,6 +279,7 @@ const generateLienWaiverPDF = async (lienWaiver: FormValues['lienWaiver'] | unde
 
   return new Promise((res, _) => {
     let form = new jsPdf()
+
     const dimention = {
       width: lienWaiver?.signatureWidth || 20,
       height: lienWaiver?.signatureHeight || 10,
