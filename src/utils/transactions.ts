@@ -275,7 +275,6 @@ const getFileContents = async (document: any, documentType: number) => {
 }
 
 const generateLienWaiverPDF = async (lienWaiver: FormValues['lienWaiver'] | undefined) => {
-  console.log('generateLienWaiverPDF', lienWaiver)
   if (!lienWaiver?.claimantsSignature) return Promise.resolve(null)
 
   return new Promise((res, _) => {
