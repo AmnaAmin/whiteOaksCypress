@@ -84,7 +84,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t('createdBy')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput label={t('contact')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
       </GridItem>
 
       <GridItem>
@@ -208,6 +208,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
         const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
         updateChangeOrder({ ...payload, id: transaction.id }, queryOptions)
       } else {
+        console.log('create transaction with lien waiver')
         const payload = await parseChangeOrderAPIPayload(values, projectId)
         createChangeOrder(payload, queryOptions)
       }

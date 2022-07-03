@@ -275,10 +275,12 @@ const getFileContents = async (document: any, documentType: number) => {
 }
 
 const generateLienWaiverPDF = async (lienWaiver: FormValues['lienWaiver'] | undefined) => {
+  console.log('generateLienWaiverPDF', lienWaiver)
   if (!lienWaiver?.claimantsSignature) return Promise.resolve(null)
 
   return new Promise((res, _) => {
     let form = new jsPdf()
+
     const dimention = {
       width: lienWaiver?.signatureWidth || 20,
       height: lienWaiver?.signatureHeight || 10,
