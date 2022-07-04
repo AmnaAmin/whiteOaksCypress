@@ -34,7 +34,7 @@ import { STATUS } from '../status'
 import { ConfirmationBox } from 'components/Confirmation'
 import { Alert, AlertDescription, AlertIcon } from '@chakra-ui/alert'
 import { CloseButton } from '@chakra-ui/react'
-import * as _ from 'lodash'
+import { orderBy } from 'lodash'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -121,7 +121,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   useEffect(() => {
     if (!documentsData?.length) return
     setDocuments(documentsData)
-    const orderDocs = _.orderBy(
+    const orderDocs = orderBy(
       documentsData,
       [
         item => {
@@ -364,7 +364,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
-          {![STATUS.Cancelled && STATUS.Paid].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) &&
+          {![STATUS.Cancelled, STATUS.Paid].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) &&
             !lienWaiverData.lienWaiverAccepted && (
               <Button colorScheme="brand" type="submit">
                 {t('save')}
