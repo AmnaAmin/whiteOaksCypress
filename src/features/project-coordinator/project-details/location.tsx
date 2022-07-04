@@ -35,13 +35,13 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
     reset()
   }
 
-  const streetAddress = dataLocation?.dataLocation?.streetAddress
-  const city = dataLocation?.dataLocation?.city
-  const state = dataLocation?.dataLocation?.state
-  const lockBoxCode = dataLocation?.dataLocation?.lockBoxCode
-  const gateCode = dataLocation?.dataLocation?.gateCode
-  const market = dataLocation?.dataLocation?.market
-  const zipCode = dataLocation?.dataLocation?.zipCode
+  const streetAddress = dataLocation?.streetAddress
+  const city = dataLocation?.city
+  const state = dataLocation?.state
+  const lockBoxCode = dataLocation?.lockBoxCode
+  const gateCode = dataLocation?.gateCode
+  const market = dataLocation?.market
+  const zipCode = dataLocation?.zipCode
 
   return (
     <Box>
