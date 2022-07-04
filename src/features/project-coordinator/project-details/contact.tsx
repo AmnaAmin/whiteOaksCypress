@@ -38,9 +38,9 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
     projectData?.projectStatus.toLowerCase(),
   )
 
-  const projectManager = dataContact?.dataContact?.projectManager
-  const projectManagerPhoneNumber = dataContact?.dataContact?.projectManagerPhoneNumber
-  const clientName = dataContact?.dataContact?.clientName
+  const projectManager = dataContact?.projectManager
+  const projectManagerPhoneNumber = dataContact?.projectManagerPhoneNumber
+  const clientName = dataContact?.clientName
 
   return (
     <Box>
