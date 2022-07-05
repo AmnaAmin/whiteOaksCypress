@@ -64,9 +64,9 @@ export const LienWaiverTab: React.FC<any> = props => {
       makerOfCheck: lienWaiverData.makerOfCheck,
       amountOfCheck: lienWaiverData.amountOfCheck,
       checkPayableTo: lienWaiverData.claimantName,
-      claimantsSignature: lienWaiverData.claimantsSignature,
-      claimantTitle: lienWaiverData.claimantTitle,
-      dateOfSignature: lienWaiverData.dateOfSignature,
+      claimantsSignature: lienWaiverData.lienWaiverAccepted ? lienWaiverData.claimantsSignature : null,
+      claimantTitle: lienWaiverData.lienWaiverAccepted ? lienWaiverData.claimantTitle : '',
+      dateOfSignature: lienWaiverData.lienWaiverAccepted ? lienWaiverData.dateOfSignature : '',
     },
   })
   const formValues = useWatch({ control })
@@ -121,22 +121,24 @@ export const LienWaiverTab: React.FC<any> = props => {
   useEffect(() => {
     if (!documentsData?.length) return
     setDocuments(documentsData)
-    const orderDocs = orderBy(
-      documentsData,
-      [
-        item => {
-          const createdDate = new Date(item.createdDate)
-          return createdDate
-        },
-      ],
-      ['desc'],
-    )
-    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    setRecentLWFile(recentLW)
-    setValue('claimantsSignature', signatureDoc?.s3Url)
-    setClaimantsSignature(signatureDoc?.s3Url ?? '')
-  }, [documentsData, setValue])
+    if (lienWaiverData.lienWaiverAccepted) {
+      const orderDocs = orderBy(
+        documentsData,
+        [
+          item => {
+            const createdDate = new Date(item.createdDate)
+            return createdDate
+          },
+        ],
+        ['desc'],
+      )
+      const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
+      const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
+      setRecentLWFile(recentLW)
+      setValue('claimantsSignature', signatureDoc?.s3Url)
+      setClaimantsSignature(signatureDoc?.s3Url ?? '')
+    }
+  }, [documentsData, setValue, lienWaiverData])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
