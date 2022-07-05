@@ -216,6 +216,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
   vendor.licenseDocuments &&
     vendor.licenseDocuments.forEach(license => {
       const licenseObject = {
+        id: license.id,
         licenseType: license.licenseType,
         licenseNumber: license.licenseNumber,
         expiryDate: convertDateTimeFromServer(license.licenseExpirationDate),
@@ -233,6 +234,7 @@ export const parseLicenseValues = async (values: any) => {
     values.licenses.map(async (license: any, index: number) => {
       const fileContents = await readFileContent(license.expirationFile)
       const doc = {
+        id: license.id,
         licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
         licenseNumber: license.licenseNumber,
         licenseType: license.licenseType,
