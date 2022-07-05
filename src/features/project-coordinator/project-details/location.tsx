@@ -30,6 +30,8 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
     (projectData?.projectStatus || '').toLowerCase(),
   )
 
+  const fieldDisable = dataLocation ? true : false
+
   const onSubmit = formValues => {
     console.log('FormValues', formValues)
     reset()
@@ -42,6 +44,9 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
   const gateCode = dataLocation?.gateCode
   const market = dataLocation?.market
   const zipCode = dataLocation?.zipCode
+  const hoaEmailAddress = dataLocation?.hoaEmailAddress
+  const hoaPhone = dataLocation?.hoaPhone
+  const hoaPhoneNumberExtension = dataLocation?.hoaPhoneNumberExtension
 
   return (
     <Box>
@@ -55,7 +60,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={streetAddress}
-                  isDisabled={projectStatus || statusClosed_Invoice}
+                  isDisabled={projectStatus || statusClosed_Invoice || fieldDisable}
                   id="address"
                   {...register('address', {
                     required: 'This is required',
@@ -71,7 +76,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={city}
-                  isDisabled={projectStatus || statusClosed_Invoice}
+                  isDisabled={projectStatus || statusClosed_Invoice || fieldDisable}
                   id="city"
                   {...register('city', {
                     required: 'This is required',
@@ -87,7 +92,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={state}
-                  isDisabled={projectStatus || statusClosed_Invoice}
+                  isDisabled={projectStatus || statusClosed_Invoice || fieldDisable}
                   id="state"
                   {...register('state', {
                     required: 'This is required',
@@ -103,7 +108,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={zipCode}
-                  isDisabled={projectStatus || statusClosed_Invoice}
+                  isDisabled={projectStatus || statusClosed_Invoice || fieldDisable}
                   id="zip"
                   {...register('zip', {
                     required: 'This is required',
@@ -119,7 +124,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   value={market}
-                  isDisabled={projectStatus || statusClosed_Invoice}
+                  isDisabled={projectStatus || statusClosed_Invoice || fieldDisable}
                   id="market"
                   {...register('market', {
                     required: 'This is required',
@@ -135,7 +140,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 </FormLabel>
                 <Input
                   border=" 1px solid #E2E8F0"
-                  disabled={statusClosed_Invoice}
+                  disabled={statusClosed_Invoice || fieldDisable}
                   value={gateCode}
                   id="gateCode"
                   {...register('gateCode', {
@@ -153,7 +158,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                 <Input
                   border=" 1px solid #E2E8F0"
                   value={lockBoxCode}
-                  disabled={statusClosed_Invoice}
+                  disabled={statusClosed_Invoice || fieldDisable}
                   id="lockBoxCode"
                   {...register('lockBoxCode', {
                     required: 'This is required',
@@ -169,6 +174,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                   HOA Contact Phone
                 </FormLabel>
                 <Input
+                  value={hoaPhone}
                   border=" 1px solid #E2E8F0"
                   id="hoaContactPhone"
                   {...register('hoaContactPhone', {
@@ -184,6 +190,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                   Ext
                 </FormLabel>
                 <Input
+                  value={hoaPhoneNumberExtension}
                   border=" 1px solid #E2E8F0"
                   id="ext"
                   {...register('ext', {
@@ -199,6 +206,7 @@ const Location: React.FC<{ dataLocation: any; projectData: ProjectType }> = prop
                   HOA Contact Email
                 </FormLabel>
                 <Input
+                  value={hoaEmailAddress}
                   border=" 1px solid #E2E8F0"
                   id="hoaContactEmail"
                   {...register('hoaContactEmail', {
