@@ -17,6 +17,8 @@ import {
   Divider,
   HStack,
   Box,
+  Checkbox,
+  Center,
 } from '@chakra-ui/react'
 import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver-tab'
@@ -42,6 +44,7 @@ const WorkOrderDetails = ({
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
   const [notesCount, setNotesCount] = useState(0)
+  const [rejectChecked, setRejectChecked] = useState(false)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -54,6 +57,7 @@ const WorkOrderDetails = ({
     } else {
       onCloseDisclosure()
       setTabIndex(0)
+      setRejectChecked(false)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 
@@ -115,6 +119,20 @@ const WorkOrderDetails = ({
                     {notesCount}
                   </Box>
                 </Tab>
+                {tabIndex === 1 && (
+                  <Center w="100%" justifyContent="end">
+                    {workOrder?.claimantTitle && (
+                      <Checkbox
+                        onChange={() => setRejectChecked(!rejectChecked)}
+                        color="#4A5568"
+                        fontSize="14px"
+                        fontWeight={500}
+                      >
+                        Reject Lien Waiver
+                      </Checkbox>
+                    )}
+                  </Center>
+                )}
               </TabList>
 
               <TabPanels>
@@ -122,7 +140,7 @@ const WorkOrderDetails = ({
                   <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p="1.4px">
-                  <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} />
+                  <LienWaiverTab lienWaiverData={workOrder} onClose={onClose} rejectChecked={!rejectChecked} />
                 </TabPanel>
                 <TabPanel>
                   <InvoiceTabPC workOrder={workOrder} onClose={onClose} />
