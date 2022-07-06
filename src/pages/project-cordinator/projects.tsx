@@ -1,6 +1,5 @@
-import { Box, Button, Center, Divider, Flex, FormLabel, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Box, Button, Center, Divider, Flex, FormLabel, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ProjectFilters } from 'features/project-coordinator/project-filters'
@@ -9,41 +8,45 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
+import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, useStates } from 'utils/pc-projects'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { BiBookAdd } from 'react-icons/bi'
+import { useTranslation } from 'react-i18next'
 
 export const Projects = () => {
-  const { t } = useTranslation()
-
   const {
     isOpen: isOpenNewProjectModal,
     onClose: onNewProjectModalClose,
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.pcproject)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-
   const [isClicked, setIsClicked] = useState(false)
+  const { t } = useTranslation()
 
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-
   const onSave = columns => {
     postProjectColumn(columns)
   }
 
-  useEffect(() => {
-    setSelectedDay('All')
-    setSelectedCard('')
-    setIsClicked(true)
-  }, [])
+  // Calling all APIs
+  const { data: properties } = useProperties()
+  const { data: projectTypes } = useProjectTypes()
+  const { data: statesData } = useStates()
+  const { data: fieldProjectManager } = useFPM()
+  const { data: projectCoordinator } = usePC()
+  const { data: client } = useClients()
+  const { data: markets } = useMarkets()
+
+  useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
   const clearAll = () => {
     setSelectedDay('')
@@ -156,7 +159,7 @@ export const Projects = () => {
                     <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
                       <BsBoxArrowUp />
                     </Box>
-                    {t('export')}
+                    {'Export'}
                   </Button>
                   <Center>
                     <Divider orientation="vertical" height="25px" border="1px solid" />
@@ -170,7 +173,17 @@ export const Projects = () => {
           </Stack>
         </Box>
       </VStack>
-      <AddNewProjectModal isOpen={isOpenNewProjectModal} onClose={onNewProjectModalClose} />
+      <AddNewProjectModal
+        markets={markets}
+        properties={properties}
+        projectTypes={projectTypes}
+        statesData={statesData}
+        fieldProjectManager={fieldProjectManager}
+        projectCoordinator={projectCoordinator}
+        client={client}
+        isOpen={isOpenNewProjectModal}
+        onClose={onNewProjectModalClose}
+      />
     </>
   )
 }

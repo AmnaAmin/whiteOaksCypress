@@ -16,11 +16,12 @@ import {
   CloseButton,
   Grid,
   GridItem,
+  Button,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { trimCanvas } from 'components/table/util'
+import trimCanvas from 'trim-canvas'
 import { dateFormat } from 'utils/date-time-utils'
-import React, { useRef, useState } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
@@ -60,22 +61,29 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
 
   const formValues = useWatch({ name: 'lienWaiver', control })
 
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      setValue('lienWaiver.signatureWidth', sigRef.current?.width)
+      setValue('lienWaiver.signatureHeight', sigRef.current?.height)
+    }, 100)
+  }, [formValues?.claimantsSignature])
+
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
 
-    if (!context) return
+    if (!context || !canvasRef.current) return
+    canvasRef.current.width = 1000
+    canvasRef.current.height = 64
 
     context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
-    context.font = 'italic 500 12px Inter'
+    context.font = 'italic 500 14px Arial'
     context.textAlign = 'start'
-    context.fillText(value, 5, 10)
+    context.fillText(value, 10, 50)
     const trimContext = trimCanvas(canvasRef.current)
 
     const uri = trimContext?.toDataURL('image/png')
 
     setValue('lienWaiver.claimantsSignature', uri)
-    setValue('lienWaiver.signatureWidth', sigRef.current?.width)
-    setValue('lienWaiver.signatureHeight', sigRef.current?.height)
   }
 
   const onSignatureChange = value => {
@@ -136,16 +144,28 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
                 {t('claimantsSignature')}
               </FormLabel>
-              <Flex
+              <Button
                 pos="relative"
-                height={'39px'}
-                borderRadius="6px"
-                alignItems={'center'}
-                px={4}
-                borderWidth="1px 1px 1px 2px"
-                borderStyle="solid"
+                border={'1px solid'}
                 borderColor="gray.200"
-                borderLeftColor="brand.300"
+                borderRadius="6px"
+                bg="white"
+                height={'40px'}
+                borderLeftWidth={'2px'}
+                borderLeftColor="CustomPrimaryColor.50"
+                alignItems="center"
+                px={4}
+                ml={0}
+                justifyContent="left"
+                variant="ghost"
+                w="100%"
+                _hover={{ bg: 'white' }}
+                _active={{ bg: 'white' }}
+                _disabled={{
+                  bg: 'gray.100',
+                  _hover: { bg: 'gray.100' },
+                  _active: { bg: 'gray.100' },
+                }}
               >
                 <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                 <Image
@@ -165,8 +185,10 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                   )}
                   <BiBookAdd data-testid="add-signature" onClick={() => setOpenSignature(true)} color="#A0AEC0" />
                 </Flex>
-              </Flex>
-              {!formValues?.claimantsSignature && <FormErrorMessage>This is required field</FormErrorMessage>}
+              </Button>
+              {errors?.lienWaiver?.claimantsSignature?.message && (
+                <FormErrorMessage>This is required field</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
 

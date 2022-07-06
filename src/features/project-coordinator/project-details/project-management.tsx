@@ -1,9 +1,12 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+import { STATUS } from 'features/projects/status'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { ProjectType } from 'types/project.type'
 
-const ProjectManagement = () => {
+const ProjectManagement: React.FC<{ projectData: ProjectType }> = props => {
+  const { projectData } = props
   const {
     register,
     formState: { errors },
@@ -11,9 +14,21 @@ const ProjectManagement = () => {
     control,
   } = useForm()
 
-  const onSubmit = FormValues => {
-    console.log('FormValues', FormValues)
-  }
+  const statusNew_Active = [STATUS.New.valueOf(), STATUS.Active.valueOf()].includes(
+    (projectData?.projectStatus || '').toLowerCase(),
+  )
+
+  const statusClosed = [STATUS.Closed.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusInvoiced = [STATUS.Invoiced.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusClientPaid = [STATUS.ClientPaid.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusPaid = [STATUS.Paid.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const statusOverPayment = [STATUS.Overpayment.valueOf()].includes((projectData?.projectStatus || '').toLowerCase())
+
+  const onSubmit = FormValues => {}
 
   return (
     <Box>
@@ -107,7 +122,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Start
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusClosed || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -115,7 +133,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   WOA Completion
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusNew_Active || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
@@ -124,7 +145,11 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Start
                 </FormLabel>
-                <Input variant="required-field" type="date" />
+                <Input
+                  variant="required-field"
+                  type="date"
+                  isDisabled={statusClosed || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -132,7 +157,11 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Due
                 </FormLabel>
-                <Input variant="required-field" type="date" />
+                <Input
+                  variant="required-field"
+                  type="date"
+                  isDisabled={statusClosed || statusInvoiced || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -140,7 +169,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                   Client Walkthrough
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusNew_Active || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
             <GridItem>
@@ -148,7 +180,10 @@ const ProjectManagement = () => {
                 <FormLabel variant="strong-label" size="md">
                   Client Sign Off
                 </FormLabel>
-                <Input type="date" />
+                <Input
+                  type="date"
+                  isDisabled={statusNew_Active || statusClientPaid || statusPaid || statusOverPayment}
+                />
               </FormControl>
             </GridItem>
           </Grid>

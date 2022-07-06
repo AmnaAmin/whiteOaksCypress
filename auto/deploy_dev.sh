@@ -11,4 +11,4 @@ unzip -o output.zip
 cd output
 
 echo "🚀 deploying to s3"
-aws s3 sync . s3://woa-dev-v2-ui/vendorportal/ --delete
+aws s3 sync . s3://woa-dev-ui/vendorportal/ --delete

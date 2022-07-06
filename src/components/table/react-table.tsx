@@ -16,6 +16,7 @@ import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { useTranslation } from 'react-i18next'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -117,6 +118,8 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
 }
 
 export const TableHeader = ({ headerGroups }) => {
+  const { t } = useTranslation()
+
   return (
     <Thead bg="#F7FAFC" rounded="md">
       {headerGroups.map(headerGroup => (
@@ -143,7 +146,7 @@ export const TableHeader = ({ headerGroups }) => {
                     display="inline-block"
                     title={title}
                   >
-                    {title}
+                    {t(title)}
                   </Text>
                   {column.isSorted ? (
                     column.isSortedDesc ? (

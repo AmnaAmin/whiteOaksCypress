@@ -216,10 +216,11 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
   vendor.licenseDocuments &&
     vendor.licenseDocuments.forEach(license => {
       const licenseObject = {
+        id: license.id,
         licenseType: license.licenseType,
         licenseNumber: license.licenseNumber,
         expiryDate: convertDateTimeFromServer(license.licenseExpirationDate),
-        expirationFile: new File([license.fileObject], license.fileType),
+        expirationFile: null,
         downloadableFile: { url: license.s3Url, name: license.fileType },
       }
       licenses.push(licenseObject)
@@ -228,17 +229,38 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
   return licenses
 }
 
-export const parseLicenseValues = async (values: any) => {
+export const parseLicenseValues = async (values: any, licensesDocuments: any) => {
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
-      const fileContents = await readFileContent(license.expirationFile)
-      const doc = {
-        licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
-        licenseNumber: license.licenseNumber,
-        licenseType: license.licenseType,
-        fileObjectContentType: license.expirationFile.type,
-        fileType: license.expirationFile.name,
-        fileObject: fileContents,
+      let existingLicense = licensesDocuments.find(l => l.id === license.id)
+      let doc = {}
+      let fileContents
+      if (existingLicense) {
+        if (license.expirationFile) {
+          fileContents = await readFileContent(license.expirationFile)
+          doc = {
+            fileObjectContentType: license.expirationFile?.type,
+            fileType: license.expirationFile?.name,
+            fileObject: fileContents,
+          }
+        }
+        doc = {
+          ...existingLicense,
+          ...doc,
+          licenseNumber: license.licenseNumber,
+          licenseType: license.licenseType,
+          licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
+        }
+      } else {
+        fileContents = await readFileContent(license.expirationFile)
+        doc = {
+          licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
+          licenseNumber: license.licenseNumber,
+          licenseType: license.licenseType,
+          fileObjectContentType: license?.expirationFile?.type,
+          fileType: license.expirationFile.name,
+          fileObject: fileContents,
+        }
       }
       return doc
     }),

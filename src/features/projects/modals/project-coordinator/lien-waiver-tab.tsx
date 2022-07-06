@@ -1,11 +1,10 @@
-import { Box, Button, Flex, FormControl, FormLabel, HStack, Link, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormControl, HStack, Link, Spacer, Stack, Text, VStack } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
-import { downloadFile } from 'utils/file-utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar, BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
+import { BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
@@ -24,7 +23,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { documents: documentsData = [] } = useDocuments({
     projectId,
   })
-  const [recentLWFile, setRecentLWFile] = useState<any>(null)
+  // const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -64,8 +63,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     if (!documentsData?.length) return
     const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
     const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    setRecentLWFile(recentLW)
+    // const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
+    // setRecentLWFile(recentLW)
     setValue('claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
 
@@ -121,12 +120,12 @@ export const LienWaiverTab: React.FC<any> = props => {
 
       <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
-          <VStack align="start" spacing="30px">
+          <VStack align="start" spacing="30px" m="32px">
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Box flex="4" minW="59em">
                 <HelpText>{GetHelpText()}</HelpText>
               </Box>
-              <Flex pos="absolute" top={0} right={0} flex="1">
+              {/* <Flex pos="absolute" top={0} right={0} flex="1">
                 {recentLWFile && (
                   <Flex alignItems={'center'}>
                     <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
@@ -148,82 +147,78 @@ export const LienWaiverTab: React.FC<any> = props => {
                     </Button>
                   </Flex>
                 )}
-              </Flex>
+              </Flex> */}
             </Flex>
-            <Box>
-              <VStack alignItems="start">
-                <HStack>
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('nameofClaimant')}
-                    InputElem={<Text>{lienWaiverData.claimantName}</Text>}
-                  />
 
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('jobLocation')}
-                    InputElem={<Text>{lienWaiverData.propertyAddress}</Text>}
-                  />
-                </HStack>
-                <HStack></HStack>
-                <HStack>
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('makerOfCheck')}
-                    InputElem={<Text>{lienWaiverData.makerOfCheck}</Text>}
-                  />
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label={t('amountOfCheck')}
-                    InputElem={<Text>${lienWaiverData.amountOfCheck}</Text>}
-                  />
-                </HStack>
+            <VStack alignItems="start" spacing="32px">
+              <HStack spacing="16px">
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('nameofClaimant')}
+                  InputElem={<Text>{lienWaiverData.claimantName}</Text>}
+                />
 
-                <HStack>
-                  <InputView
-                    Icon={<BiCalendar />}
-                    controlStyle={{ w: '20em' }}
-                    label="Date of signature"
-                    InputElem={<Text>{dateFormatter(lienWaiverData.dateOfSignature)}</Text>}
-                  />
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('jobLocation')}
+                  InputElem={<Text>{lienWaiverData.propertyAddress}</Text>}
+                />
+              </HStack>
 
-                  <InputView
-                    controlStyle={{ w: '20em' }}
-                    label="Claimant Signature"
-                    InputElem={
-                      <Text fontWeight="600" fontStyle="italic">
-                        {lienWaiverData.claimantTitle}
-                      </Text>
-                    }
-                  />
-                </HStack>
-              </VStack>
-            </Box>
+              <HStack spacing="16px">
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('makerOfCheck')}
+                  InputElem={<Text>{lienWaiverData.makerOfCheck}</Text>}
+                />
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label={t('amountOfCheck')}
+                  InputElem={<Text>${lienWaiverData.amountOfCheck}</Text>}
+                />
+              </HStack>
+
+              <HStack spacing="16px">
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label="Date of signature"
+                  InputElem={<Text>{dateFormatter(lienWaiverData.dateOfSignature)}</Text>}
+                />
+
+                <InputView
+                  controlStyle={{ w: '20em' }}
+                  label="Claimant Signature"
+                  InputElem={
+                    <Text fontWeight="400" fontSize="14px" color="gray.500">
+                      {lienWaiverData.claimantTitle || 'Null'}
+                    </Text>
+                  }
+                />
+              </HStack>
+            </VStack>
           </VStack>
         </FormControl>
 
-        <Flex mt="70px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-          <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
-            <Flex w="100%" alignContent="space-between" pos="relative">
-              <Flex fontSize="14px" fontWeight={500} mr={1}>
-                <Link href={leanwieverLink} target={'_blank'}>
-                  <Button colorScheme="#4E87F8" variant="outline" color="#4E87F8" mr={2}>
-                    <Text mr={1}>
-                      <BiDownload size={14} />
-                    </Text>
-                    See LW{`${lienWaiverData.id}`}
-                  </Button>
-                </Link>
-              </Flex>
-            </Flex>
+        <Box>
+          <Divider borderColor=" #E2E8F0" borderWidth="1px" />
+        </Box>
+        <Flex justifyContent="end" my="16px" mx="32px">
+          <Box>
+            <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
+              <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
+                See LW{`${lienWaiverData.id}`}
+              </Button>
+            </Link>
+          </Box>
+          <Spacer />
+          <HStack spacing="16px">
+            <Button colorScheme="brand" onClick={() => SetClicked(true)}>
+              <InformationCard clicked={clicked} />
+            </Button>
+            <Button onClick={onClose} colorScheme="brand" variant="outline">
+              {t('cancel')}
+            </Button>
           </HStack>
-
-          <Button colorScheme="brand" onClick={() => SetClicked(true)}>
-            <InformationCard clicked={clicked} />
-          </Button>
-          <Button ml={3} onClick={onClose} colorScheme="brand" variant="ghost">
-            {t('cancel')}
-          </Button>
         </Flex>
       </form>
     </Stack>
@@ -250,7 +245,7 @@ const HelpText = ({ children }) => {
         </Link>
       ) : (
         <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4A5568' }}>
+          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4E87F8' }}>
             <Box>{t('readLess')}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />

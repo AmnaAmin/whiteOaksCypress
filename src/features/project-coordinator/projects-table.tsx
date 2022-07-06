@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
-import { t } from 'i18next'
 
 export const PROJECT_COLUMNS = [
   {
@@ -17,28 +16,28 @@ export const PROJECT_COLUMNS = [
     accessor: 'projectManager',
   },
   {
-    Header: t('generalLabor'),
+    Header: 'generalLabor',
     accessor: 'generalLabourName',
   },
   {
-    Header: t('status'),
+    Header: 'status',
     accessor: 'projectStatus',
     Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
   },
   {
-    Header: t('address'),
+    Header: 'address',
     accessor: 'streetAddress',
   },
   {
-    Header: t('City'),
+    Header: 'City',
     accessor: 'city',
   },
   {
-    Header: t('Client Start Date'),
+    Header: 'Client Start Date',
     accessor: 'clientStartDate',
   },
   {
-    Header: t('Client Due Date'),
+    Header: 'Client Due Date',
     accessor: 'clientDueDate',
   },
 ]

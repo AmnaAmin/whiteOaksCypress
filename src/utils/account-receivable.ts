@@ -1,5 +1,11 @@
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from './auth-context'
+
+declare global {
+  interface Window {
+    batchTimer?: any
+  }
+}
 
 export const usePCReveviable = () => {
   const client = useClient()
@@ -24,4 +30,52 @@ export const useReveviableRowData = () => {
       method: 'GET',
     })
   })
+}
+
+export const useBatchProcessing = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  return useMutation(
+    id => {
+      return client(`batches/run`, {
+        method: 'POST',
+        data: id,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('batchCheck')
+      },
+    },
+  )
+}
+
+export const useCheckBatch = setLoading => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+
+  const { isLoading } = useQuery(
+    'batchCheck',
+    async () => {
+      const response = await client(`batches/progress/2`, {})
+      return response?.data
+    },
+    {
+      onSuccess(e) {
+        setLoading(e)
+        if (e) {
+          window.batchTimer = setTimeout(() => {
+            queryClient.invalidateQueries('batchCheck')
+          }, 60000)
+        } else {
+          clearTimeout(window.batchTimer)
+          queryClient.invalidateQueries('receivable')
+        }
+      },
+    },
+  )
+
+  return {
+    isLoading,
+  }
 }
