@@ -19,19 +19,9 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
       _hover={{
         background: 'gray.50',
       }}
-      cursor="pointer"
       {...row.getRowProps({
         style,
       })}
-      onClick={e => {
-        e.preventDefault()
-        // @ts-ignore
-        const s3Url = row.original?.s3Url
-        // @ts-ignore
-        if (s3Url) {
-          window.open(s3Url, '_self')
-        }
-      }}
     >
       {row.cells.map(cell => {
         return (
@@ -110,7 +100,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
             <Flex>
               <Box mr={2}>{dateFormat(value)}</Box>
               <Spacer w="90px" />
-              <Link href={s3Url} onClick={e => e.stopPropagation()}>
+              <Link href={s3Url} target="_blank" onClick={e => e.stopPropagation()}>
                 <Icon as={BiDownArrowCircle} color="#4E87F8" fontSize={24} />
               </Link>
             </Flex>
