@@ -12,13 +12,14 @@ import {
   VStack,
   ModalBody,
   IconButton,
+  useDisclosure,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { convertImageToDataURL } from 'components/table/util'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 import jsPdf from 'jspdf'
-import { head, orderBy } from 'lodash'
+import { head } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-icons/bi'
@@ -30,18 +31,24 @@ import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { STATUS } from '../status'
+import { ConfirmationBox } from 'components/Confirmation'
+import { Alert, AlertDescription, AlertIcon } from '@chakra-ui/alert'
+import { CloseButton } from '@chakra-ui/react'
+import { orderBy } from 'lodash'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose, onProjectTabChange, documentsData } = props
   const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
-
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sigRef = useRef<HTMLImageElement>(null)
   const [claimantsSignature, setClaimantsSignature] = useState('')
+  const { isOpen: isGenerateLWOpen, onClose: onGenerateLWClose, onOpen: onGenerateLWOpen } = useDisclosure()
+  const [isPdfGenerated, setPdfGenerated] = useState(false)
+
   const {
     register,
     formState: { errors },
@@ -53,16 +60,17 @@ export const LienWaiverTab: React.FC<any> = props => {
       claimantName: lienWaiverData.claimantName,
       customerName: lienWaiverData.customerName,
       propertyAddress: lienWaiverData.propertyAddress,
-      owner: lienWaiverData.owner,
+      owner: 'White Oaks Aligned, LLC',
       makerOfCheck: lienWaiverData.makerOfCheck,
       amountOfCheck: lienWaiverData.amountOfCheck,
       checkPayableTo: lienWaiverData.claimantName,
-      claimantsSignature: lienWaiverData.claimantsSignature,
-      claimantTitle: lienWaiverData.claimantTitle,
-      dateOfSignature: lienWaiverData.dateOfSignature,
+      claimantsSignature: lienWaiverData.lienWaiverAccepted ? lienWaiverData.claimantsSignature : null,
+      claimantTitle: lienWaiverData.lienWaiverAccepted ? lienWaiverData.claimantTitle : '',
+      dateOfSignature: lienWaiverData.lienWaiverAccepted ? lienWaiverData.dateOfSignature : '',
     },
   })
   const formValues = useWatch({ control })
+
   const parseValuesToPayload = (formValues, documents) => {
     return {
       ...lienWaiverData,
@@ -71,17 +79,39 @@ export const LienWaiverTab: React.FC<any> = props => {
       documents,
     }
   }
-  const onSubmit = formValues => {
-    const submitForm = documents => {
-      const lienWaiverData = parseValuesToPayload(formValues, documents)
-      updateLienWaiver(lienWaiverData)
+  const onGenerateLW = useCallback(() => {
+    setPdfGenerated(true)
+    let form = new jsPdf()
+    const dimention = {
+      width: sigRef?.current?.width,
+      height: sigRef?.current?.height,
     }
-    if (recentLWFile) {
-      submitForm(documents)
-      return
-    }
-    generatePdf(submitForm)
-  }
+    const [first, last] = lienWaiverData?.companyName?.split(' ') || []
+    convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
+      form = createForm(form, formValues, dimention, dataUrl)
+      const pdfUri = form.output('datauristring')
+      const docs = [
+        ...documents,
+        {
+          documentType: 26,
+          fileObject: pdfUri.split(',')[1],
+          fileObjectContentType: 'application/pdf',
+          fileType: `LW${lienWaiverData?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.pdf`,
+        },
+      ]
+      const payload = parseValuesToPayload(formValues, docs)
+      updateLienWaiver(payload, {
+        onError() {
+          setPdfGenerated(false)
+        },
+        onSuccess() {
+          setPdfGenerated(false)
+          onGenerateLWClose()
+        },
+      })
+    })
+  }, [claimantsSignature, lienWaiverData, formValues, documents])
+
   useEffect(() => {
     if (isSuccess) {
       onProjectTabChange?.(2)
@@ -90,45 +120,25 @@ export const LienWaiverTab: React.FC<any> = props => {
 
   useEffect(() => {
     if (!documentsData?.length) return
-    const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
-    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    setRecentLWFile(recentLW)
-    setValue('claimantsSignature', signatureDoc?.s3Url)
-    setClaimantsSignature(signatureDoc?.s3Url ?? '')
-  }, [documentsData, setValue])
-
-  const generatePdf = useCallback(
-    onComplete => {
-      let form = new jsPdf()
-      const dimention = {
-        width: sigRef?.current?.width,
-        height: sigRef?.current?.height,
-      }
-      const [first, last] = lienWaiverData?.companyName?.split(' ') || []
-      convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
-        form = createForm(form, formValues, dimention, dataUrl)
-        const pdfUri = form.output('datauristring')
-        const pdfBlob = form.output('bloburi')
-        setRecentLWFile({
-          s3Url: pdfBlob,
-          fileType: `LW${lienWaiverData?.id ?? ''}${head(first) ?? ''}${head(last) ?? ''}.pdf`,
-        })
-        const docs = [
-          ...documents,
-          {
-            documentType: 26,
-            fileObject: pdfUri.split(',')[1],
-            fileObjectContentType: 'application/pdf',
-            fileType: `LW${lienWaiverData?.id ?? ''}${head(first) ?? ''}${head(last) ?? ''}.pdf`,
+    setDocuments(documentsData)
+    if (lienWaiverData.lienWaiverAccepted) {
+      const orderDocs = orderBy(
+        documentsData,
+        [
+          item => {
+            const createdDate = new Date(item.createdDate)
+            return createdDate
           },
-        ]
-        setDocuments(docs)
-        onComplete(docs)
-      })
-    },
-    [formValues, claimantsSignature],
-  )
+        ],
+        ['desc'],
+      )
+      const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
+      const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
+      setRecentLWFile(recentLW)
+      setValue('claimantsSignature', signatureDoc?.s3Url)
+      setClaimantsSignature(signatureDoc?.s3Url ?? '')
+    }
+  }, [documentsData, setValue, lienWaiverData])
 
   const generateTextToImage = value => {
     const context = canvasRef?.current?.getContext('2d')
@@ -167,11 +177,18 @@ export const LienWaiverTab: React.FC<any> = props => {
     setValue('dateOfSignature', null)
   }
   return (
-    <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
+    <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onGenerateLWOpen)}>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
       <ModalBody h="400px" p="25px" overflow={'auto'}>
         <FormControl>
           <VStack align="start" spacing="30px">
+            {lienWaiverData?.leanWaiverSubmitted && !lienWaiverData?.lienWaiverAccepted && (
+              <Alert status="info" variant="custom" size="sm">
+                <AlertIcon />
+                <AlertDescription>{t('lienWaiverRejectInfo')}</AlertDescription>
+                <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+              </Alert>
+            )}
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Box flex="4" minW="59em">
                 <HelpText>{GetHelpText()}</HelpText>
@@ -213,7 +230,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                     placeholder=""
                     register={register}
                     controlStyle={{ w: '16em' }}
-                    disabled={lienWaiverData?.statusLabel === STATUS.Cancel}
+                    disabled={
+                      [STATUS.Paid, STATUS.Cancelled].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) ||
+                      lienWaiverData?.lienWaiverAccepted
+                    }
                     elementStyle={{
                       bg: 'white',
                       borderLeft: '2px solid #4E87F8',
@@ -247,7 +267,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                         _hover: { bg: 'gray.100' },
                         _active: { bg: 'gray.100' },
                       }}
-                      disabled={lienWaiverData?.statusLabel === STATUS.Cancel}
+                      disabled={
+                        [STATUS.Paid, STATUS.Cancelled].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) ||
+                        lienWaiverData?.lienWaiverAccepted
+                      }
                     >
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                       <Image
@@ -267,7 +290,11 @@ export const LienWaiverTab: React.FC<any> = props => {
                           minW="auto"
                           height="auto"
                           _hover={{ bg: 'inherit' }}
-                          disabled={lienWaiverData?.statusLabel === STATUS.Cancel}
+                          disabled={
+                            [STATUS.Paid, STATUS.Cancelled].includes(
+                              lienWaiverData?.statusLabel?.toLocaleLowerCase(),
+                            ) || lienWaiverData?.lienWaiverAccepted
+                          }
                           onClick={() => setOpenSignature(true)}
                         >
                           <BiEditAlt color="#A0AEC0" />
@@ -279,7 +306,11 @@ export const LienWaiverTab: React.FC<any> = props => {
                             minW="auto"
                             height="auto"
                             _hover={{ bg: 'inherit' }}
-                            disabled={lienWaiverData?.statusLabel === STATUS.Cancel}
+                            disabled={
+                              [STATUS.Paid, STATUS.Cancelled].includes(
+                                lienWaiverData?.statusLabel?.toLocaleLowerCase(),
+                              ) || lienWaiverData?.lienWaiverAccepted
+                            }
                             onClick={onRemoveSignature}
                           >
                             <BiTrash className="mr-1" color="#A0AEC0" />
@@ -293,7 +324,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <FormInput
                     errorMessage={errors?.dateOfSignature?.message}
                     label={t('dateOfSignature')}
-                    placeholder=""
+                    placeholder="mm/dd/yy"
                     register={register}
                     name={`dateOfSignature`}
                     value={dateFormat(formValues.dateOfSignature)}
@@ -316,13 +347,13 @@ export const LienWaiverTab: React.FC<any> = props => {
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <Flex justifyContent="start" w="100%">
-          {recentLWFile && (
+          {lienWaiverData?.lienWaiverAccepted && recentLWFile && (
             <Button
               variant="outline"
               colorScheme="brand"
               size="md"
               mr={3}
-              disabled={lienWaiverData?.statusLabel === STATUS.Cancel}
+              disabled={lienWaiverData?.statusLabel === STATUS.Cancelled}
               onClick={() => downloadFile(recentLWFile.s3Url)}
               leftIcon={<BiDownload />}
             >
@@ -335,13 +366,22 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
-          {lienWaiverData?.statusLabel !== STATUS.Cancel && (
-            <Button colorScheme="brand" type="submit">
-              {t('save')}
-            </Button>
-          )}
+          {![STATUS.Cancelled, STATUS.Paid].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) &&
+            !lienWaiverData.lienWaiverAccepted && (
+              <Button colorScheme="brand" type="submit">
+                {t('save')}
+              </Button>
+            )}
         </HStack>
       </ModalFooter>
+      <ConfirmationBox
+        title="Lien Waiver"
+        content="Are you sure you want to generate Lien Waiver?"
+        isOpen={isGenerateLWOpen}
+        onClose={onGenerateLWClose}
+        onConfirm={onGenerateLW}
+        isLoading={isPdfGenerated}
+      />
     </form>
   )
 }

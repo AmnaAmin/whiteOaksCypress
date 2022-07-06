@@ -48,8 +48,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 
   const onSubmit = useCallback(
     async values => {
-      console.log('submit the file......')
-      const results = await parseLicenseValues(values)
+      const results = await parseLicenseValues(values, props?.vendor?.licenseDocuments)
       const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
       saveLicenses(vendorPayload, {
         onSuccess() {
@@ -217,7 +216,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                     <Controller
                       name={`licenses.${index}.expirationFile`}
                       control={control}
-                      rules={{ required: 'This is required field' }}
+                      rules={vendor?.licenseDocuments[index]?.s3Url ? {} : { required: 'This is required field' }}
                       render={({ field, fieldState }) => {
                         return (
                           <VStack alignItems="baseline">
@@ -241,7 +240,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
                               <Box overflow="hidden" pos="absolute" top={16}>
                                 {downloadDocument(
                                   vendor?.licenseDocuments[index]?.s3Url,
-                                  field.value ? field.value?.name : 'doc.png',
+                                  vendor?.licenseDocuments[index]?.fileType ?? 'doc.png',
                                 )}
                               </Box>
                             )}
