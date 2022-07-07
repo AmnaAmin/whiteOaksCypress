@@ -50,14 +50,14 @@ export const useBatchProcessing = () => {
   )
 }
 
-export const useCheckBatch = setLoading => {
+export const useCheckBatch = (setLoading, apiNumber) => {
   const client = useClient()
   const queryClient = useQueryClient()
 
   const { isLoading } = useQuery(
     'batchCheck',
     async () => {
-      const response = await client(`batches/progress/2`, {})
+      const response = await client(`batches/progress/${apiNumber}`, {})
       return response?.data
     },
     {
@@ -70,6 +70,7 @@ export const useCheckBatch = setLoading => {
         } else {
           clearTimeout(window.batchTimer)
           queryClient.invalidateQueries('receivable')
+          queryClient.invalidateQueries('accountPayable')
         }
       },
     },

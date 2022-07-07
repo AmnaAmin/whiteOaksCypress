@@ -1,6 +1,12 @@
 import { useQuery } from 'react-query'
 import { useClient } from './auth-context'
 
+declare global {
+  interface Window {
+    batchTimer?: any
+  }
+}
+
 export const useAccountPayable = () => {
   const client = useClient()
 
