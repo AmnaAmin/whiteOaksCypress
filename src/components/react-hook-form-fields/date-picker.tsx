@@ -1,14 +1,5 @@
 import React, { LegacyRef } from 'react'
-import {
-  Input,
-  FormErrorMessage,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  Box,
-  Portal,
-  InputRightElement,
-} from '@chakra-ui/react'
+import { Input, FormErrorMessage, FormControl, FormLabel, InputGroup, Box, InputRightElement } from '@chakra-ui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, Control } from 'react-hook-form'
@@ -33,9 +24,9 @@ type DatePickerProps = {
   testId?: string
   errorBoxheight?: any
 }
-const CalendarContainer = ({ children }) => {
-  return <Portal>{children}</Portal>
-}
+// const CalendarContainer = ({ children }) => {
+//   return <Portal>{children}</Portal>
+// }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
   <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
@@ -50,7 +41,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
         <>
           <DatePicker
             style={props.style}
-            popperContainer={CalendarContainer}
+            // popperContainer={CalendarContainer}
             selected={value ? new Date(value) : new Date()}
             value={value || ''}
             onBlur={onBlur}
@@ -82,7 +73,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
 ))
 
 export const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<HTMLInputElement>) => (
-  <InputGroup>
+  <InputGroup zIndex={0}>
     <Input
       {...props.style}
       bg="white"
@@ -99,7 +90,7 @@ export const DatePickerInput = React.forwardRef((props: any | boolean, ref: Lega
       variant={props.variant ? 'required-field' : 'outline'}
     />
 
-    <InputRightElement className="InputLeft" pointerEvents="none" zIndex={1}>
+    <InputRightElement className="InputLeft" pointerEvents="none">
       <Box color="gray.400" fontSize="14px">
         <BiCalendar size={20} cursor="pointer" color="#A0AEC0" />
       </Box>
