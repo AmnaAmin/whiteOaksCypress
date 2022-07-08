@@ -132,6 +132,7 @@ export type ProjectWorkOrderType = {
   invoiceAmount: number
   finalInvoiceAmount: number
   leanWaiverSubmitted?: string
+  claimantTitle: string
   dateInvoiceSubmitted: string
   dateLeanWaiverSubmitted?: string
   datePaymentProcessed?: string
