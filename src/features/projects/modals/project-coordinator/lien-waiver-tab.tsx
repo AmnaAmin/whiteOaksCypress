@@ -1,10 +1,10 @@
-import { Box, Button, Divider, Flex, FormControl, HStack, Link, Spacer, Stack, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormControl, HStack, Link, Spacer, Stack, VStack } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCaretDown, BiCaretUp, BiDownload, BiXCircle } from 'react-icons/bi'
+import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
 import { useParams } from 'react-router-dom'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
@@ -96,23 +96,6 @@ export const LienWaiverTab: React.FC<any> = props => {
     generateTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
-  const [clicked, SetClicked] = useState(false)
-
-  const InformationCard = ({ clicked }) => {
-    return (
-      <>
-        {!clicked && (
-          <Flex alignItems="center" fontSize="14px" fontWeight={600}>
-            <Text mr={1}>
-              <BiXCircle size={14} />
-            </Text>
-            <Text>{t('reject')}</Text>
-          </Flex>
-        )}
-        {clicked && <Text>{t('save')}</Text>}
-      </>
-    )
-  }
 
   return (
     <Stack>
@@ -125,74 +108,48 @@ export const LienWaiverTab: React.FC<any> = props => {
               <Box flex="4" minW="59em">
                 <HelpText>{GetHelpText()}</HelpText>
               </Box>
-              {/* <Flex pos="absolute" top={0} right={0} flex="1">
-                {recentLWFile && (
-                  <Flex alignItems={'center'}>
-                    <FormLabel margin={0} fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.700" pr="3px">
-                      Recent LW:
-                    </FormLabel>
-
-                    <Button
-                      fontSize="14px"
-                      fontWeight={500}
-                      bg="white"
-                      color="#4E87F8"
-                      float="right"
-                      mr={3}
-                      h="48px"
-                      onClick={() => downloadFile(recentLWFile?.s3Url)}
-                    >
-                      <Box pos="relative" right="6px"></Box>
-                      {recentLWFile.fileType}
-                    </Button>
-                  </Flex>
-                )}
-              </Flex> */}
             </Flex>
 
             <VStack alignItems="start" spacing="32px">
               <HStack spacing="16px">
                 <InputView
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ w: '13em' }}
                   label={t('nameofClaimant')}
-                  InputElem={<Text>{lienWaiverData.claimantName}</Text>}
+                  InputElem={lienWaiverData.claimantName.toString()}
                 />
 
                 <InputView
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ w: '13em' }}
                   label={t('jobLocation')}
-                  InputElem={<Text>{lienWaiverData.propertyAddress}</Text>}
+                  InputElem={lienWaiverData.propertyAddress}
                 />
               </HStack>
 
               <HStack spacing="16px">
                 <InputView
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ w: '13em' }}
                   label={t('makerOfCheck')}
-                  InputElem={<Text>{lienWaiverData.makerOfCheck}</Text>}
+                  InputElem={lienWaiverData.makerOfCheck}
                 />
                 <InputView
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ w: '13em' }}
                   label={t('amountOfCheck')}
-                  InputElem={<Text>${lienWaiverData.amountOfCheck}</Text>}
+                  InputElem={<>${lienWaiverData.amountOfCheck}</>}
                 />
               </HStack>
 
               <HStack spacing="16px">
                 <InputView
-                  controlStyle={{ w: '20em' }}
+                  controlStyle={{ w: '13em' }}
                   label="Date of signature"
-                  InputElem={<Text>{dateFormatter(lienWaiverData.dateOfSignature)}</Text>}
-                />
-
-                <InputView
-                  controlStyle={{ w: '20em' }}
-                  label="Claimant Signature"
                   InputElem={
-                    <Text fontWeight="400" fontSize="14px" color="gray.500">
-                      {lienWaiverData.claimantTitle || 'Null'}
-                    </Text>
+                    <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'dd-mm-yyyy'}</>
                   }
+                />
+                <InputView
+                  controlStyle={{ w: '13em' }}
+                  label="Claimant Signature"
+                  InputElem={<>{lienWaiverData.claimantTitle || 'Null'}</>}
                 />
               </HStack>
             </VStack>
@@ -203,20 +160,22 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Divider borderColor=" #E2E8F0" borderWidth="1px" />
         </Box>
         <Flex justifyContent="end" my="16px" mx="32px">
-          <Box>
-            <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
-              <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
-                See LW{`${lienWaiverData.id}`}
-              </Button>
-            </Link>
-          </Box>
+          {lienWaiverData.claimantTitle && (
+            <Box>
+              <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
+                <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
+                  See LW{`${lienWaiverData.id}`}
+                </Button>
+              </Link>
+            </Box>
+          )}
           <Spacer />
           <HStack spacing="16px">
-            <Button colorScheme="brand" onClick={() => SetClicked(true)}>
-              <InformationCard clicked={clicked} />
-            </Button>
             <Button onClick={onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
+            </Button>
+            <Button type="submit" colorScheme="brand" isDisabled={props.rejectChecked}>
+              {t('save')}
             </Button>
           </HStack>
         </Flex>
@@ -235,23 +194,13 @@ const HelpText = ({ children }) => {
   return (
     <>
       {!isReadMore ? (
-        <Link onClick={toggleReadMore} style={{ color: '#4A5568' }}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px">
-            <Box>{t('readMore')}</Box>
-            <Box ml="3px" mt="3px">
-              <BiCaretDown />
-            </Box>
-          </Flex>
-        </Link>
+        <Button variant="link" color="#4A5568" onClick={toggleReadMore} rightIcon={<BiCaretDown />}>
+          {t('readMore')}
+        </Button>
       ) : (
-        <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4E87F8' }}>
-            <Box>{t('readLess')}</Box>
-            <Box ml="3px" mt="4px">
-              <BiCaretUp />
-            </Box>
-          </Flex>
-        </Link>
+        <Button colorScheme="brand" variant="link" onClick={toggleReadMore} rightIcon={<BiCaretUp />}>
+          {t('readLess')}
+        </Button>
       )}
       {isReadMore && (
         <Box mt="28px" className="text">

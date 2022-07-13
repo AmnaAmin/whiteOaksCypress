@@ -255,13 +255,13 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        <Flex align="center" mt="20px">
-          <FormLabel mt={2} variant="strong-label" size="lg">
-            {t('insurances')}
+        <HStack mt="20px">
+          <FormLabel m={0} variant="strong-label" size="lg">
+            {t('insurance')}
           </FormLabel>
 
-          <Divider border="1px solid #E2E8F0" />
-        </Flex>
+          <Divider borderWidth="1px" />
+        </HStack>
         <Box mt="20px">
           <HStack alignItems="flex-start" spacing="16px">
             <Box>

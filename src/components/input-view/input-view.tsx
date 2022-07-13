@@ -1,17 +1,5 @@
 import React from 'react'
-import {
-  Box,
-  Divider,
-  Heading,
-  HStack,
-  InputProps,
-  Stack,
-  Text,
-  FormControl,
-  FormLabel,
-  Input,
-  Flex,
-} from '@chakra-ui/react'
+import { Box, Divider, Heading, InputProps, Stack, Text, FormControl, FormLabel, Input, Flex } from '@chakra-ui/react'
 
 interface InputViewProps {
   label: string
@@ -23,17 +11,25 @@ interface InputViewProps {
 
 const InputView = ({ label, InputElem, showDivider = true, controlStyle = {} }: InputViewProps) => {
   return (
-    <Box {...controlStyle} whiteSpace="nowrap" pt={6}>
-      <HStack align="flex-start" spacing={5}>
-        <Stack>
-          <Heading color="gray.600" fontSize="14px" fontWeight={500}>
-            {label}
-          </Heading>
-          <Text minH="22px" fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.500">
-            {InputElem}
-          </Text>
-        </Stack>
-      </HStack>
+    <Box {...controlStyle} pt={6}>
+      <Stack>
+        <Heading color="gray.600" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
+          {label}
+        </Heading>
+        <Text
+          minH="22px"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+          color="gray.500"
+          {...controlStyle}
+          isTruncated
+          title={InputElem}
+        >
+          {InputElem}
+        </Text>
+      </Stack>
+
       {showDivider && <Divider orientation="horizontal" pt={2} />}
     </Box>
   )
