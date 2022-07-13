@@ -49,7 +49,12 @@ const useWeekdayCardJson = days => {
   ]
 }
 
-export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
+export type WeekDayFiltersProps = {
+  onSelectDay: (string) => void
+  selectedDay: string
+}
+
+export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, selectedDay }) => {
   const { data: values } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
 
