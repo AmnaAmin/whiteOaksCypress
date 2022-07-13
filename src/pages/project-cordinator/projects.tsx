@@ -27,7 +27,6 @@ export const Projects = () => {
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-  const [isClicked, setIsClicked] = useState(false)
   const { t } = useTranslation()
 
   const setProjectTableInstance = tableInstance => {
@@ -48,20 +47,8 @@ export const Projects = () => {
 
   useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
-  const clearAll = () => {
-    setSelectedDay('')
-    setIsClicked(false)
-    setSelectedCard('')
-  }
-
-  const allDays = () => {
-    setSelectedDay('All')
-    setSelectedCard('')
-    setIsClicked(true)
-  }
-
   const clearSelected = () => {
-    setIsClicked(false)
+    setSelectedCard('')    
   }
 
   return (
@@ -78,40 +65,9 @@ export const Projects = () => {
           </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <Button
-            bg={isClicked ? '#4E87F8' : 'none'}
-            color={isClicked ? 'white' : 'black'}
-            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={500}
-            alignContent="right"
-            onClick={allDays}
-            rounded={20}
-            p={0}
-            mt={1}
-          >
-            {t('All')}
-          </Button>
           <Box onClick={clearSelected}>
             <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
           </Box>
-          <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="16px"
-            fontStyle="inter"
-            fontWeight={600}
-            alignContent="right"
-            onClick={clearAll}
-            pt={2}
-            pl={1}
-          >
-            {t('Clear Filter')}
-          </Button>
           <Button
             alignContent="right"
             onClick={onNewProjectModalOpen}
