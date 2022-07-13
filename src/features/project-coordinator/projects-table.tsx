@@ -110,7 +110,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     // To get pastDue Ids
     const pastDueIds = projects?.filter(project => project?.pastDue)
     const idPastDue = pastDueIds?.map(project => project?.id)
-    console.log("selectedCard", selectedCard, "selectedDay", selectedDay)
+
     if (!selectedCard && !selectedDay) setFilterProjects(projects)
     setFilterProjects(
       projects?.filter(
