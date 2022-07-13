@@ -59,7 +59,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
-
+  
   const methods = useForm<ProjectFormValues>({
     defaultValues: {
       acknowledgeCheck: false,
