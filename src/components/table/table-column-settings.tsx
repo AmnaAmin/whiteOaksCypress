@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Box,
   List,
   ListItem,
   HStack,
@@ -15,6 +14,7 @@ import {
   useDisclosure,
   Center,
   Text,
+  Icon,
 } from '@chakra-ui/react'
 import { FaAtom } from 'react-icons/fa'
 import { BiGridVertical } from 'react-icons/bi'
@@ -89,7 +89,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        ml="1"
+        m={0}
         variant="ghost"
         colorScheme="brand"
         _focus={{ border: 'none' }}
@@ -97,9 +97,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         disabled={disabled}
         data-testid="column-settings-button"
       >
-        <Box pos="relative" right="6px">
-          <FaAtom />
-        </Box>
+        <Icon as={FaAtom} fontSize="18px" mr={1} />
         {t('setting')}
       </Button>
 

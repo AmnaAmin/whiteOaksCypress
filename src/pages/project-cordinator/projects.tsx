@@ -133,7 +133,7 @@ export const Projects = () => {
             resizeElementRef={resizeElementRef}
             projectColumns={tableColumns}
           />
-          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}>
+          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={3}>
             <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
               {isLoading ? (
                 <>
