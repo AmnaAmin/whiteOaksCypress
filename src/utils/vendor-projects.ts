@@ -173,23 +173,25 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items, s
   }
   const rectL = 86
   const rectW = 10
+  const summaryInfo = [
+    { title: 'Subtotal', value: currencyFormatter(summary.subTotal) },
+    { title: 'Amount Paid', value: currencyFormatter(Math.abs(summary.amountPaid)) },
+    { title: 'Balance Due', value: currencyFormatter(summary.subTotal + summary.amountPaid) },
+  ]
   doc.rect(14, rectY, 96, 30, 'D')
-  doc.rect(rectX, rectY, rectL, rectW, 'D')
-  doc.setFont(baseFont, 'bold')
-  doc.text('Subtotal', summaryX, rectY + 6)
-  doc.setFont(baseFont, 'normal')
-  doc.text(currencyFormatter(summary.subTotal), summaryX + 40, rectY + 6)
-  doc.rect(rectX, rectY + 10, rectL, rectW, 'D')
-  doc.setFont(baseFont, 'bold')
-  doc.text('Amount Paid', summaryX, rectY + 16)
-  doc.setFont(baseFont, 'normal')
-  doc.text(currencyFormatter(Math.abs(summary.amountPaid)), summaryX + 40, rectY + 16)
-  doc.setFillColor(211)
-  doc.rect(rectX, rectY + 20, rectL, rectW, 'FD')
-  doc.setFont(baseFont, 'bold')
-  doc.text('Balance Due', summaryX, rectY + 26)
-  doc.setFont(baseFont, 'normal')
-  doc.text(currencyFormatter(summary.subTotal + summary.amountPaid), summaryX + 40, rectY + 26)
+  summaryInfo.forEach(sum => {
+    let rectD = 'D'
+    if (sum.title === 'Balance Due') {
+      doc.setFillColor(211)
+      rectD = 'FD'
+    }
+    doc.rect(rectX, rectY, rectL, rectW, rectD)
+    doc.setFont(baseFont, 'bold')
+    doc.text(sum.title, summaryX, rectY + 6)
+    doc.setFont(baseFont, 'normal')
+    doc.text(sum.value, summaryX + 40, rectY + 6)
+    rectY = rectY + 10
+  })
   return doc
 }
 
