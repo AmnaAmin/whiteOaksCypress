@@ -1,6 +1,6 @@
-import { Box, Divider, Flex, Stack, Icon, Text } from '@chakra-ui/react'
+import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
-import { BsFillCalendar3Fill } from 'react-icons/bs'
+import { AccountIcon } from './accounts-Icon'
 
 type AccountPaybleCardType = {
   IconColor: string
@@ -31,13 +31,13 @@ export const AccountFilterCard = (props: AccountPaybleCardType) => {
             {props.value}
           </Text>
           <Flex alignItems="center">
-            <Icon as={BsFillCalendar3Fill} color={props.IconColor} />
+            <AccountIcon color={props.IconColor} />
             <Text ml={2} fontSize="16px" fontWeight={400} color="gray.600">
               {props.text}
             </Text>
           </Flex>
         </Box>
-        <Divider border="3px solid" borderColor="blue.200" />
+        <Divider h="4px" bg="blue.200" opacity="30%" />
         <Box>
           <Text fontSize="16px" fontWeight={400} color="gray.600">
             {props.number}
