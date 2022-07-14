@@ -40,7 +40,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           paddingTop={1}
           paddingLeft={2}
           paddingRight={2}
-          mb={1}
+          mb={2}
         >
           {props.count}
         </Flex>
