@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { monDayValue, wedDayValue } from '../data.pc'
+import { monDayValue, wedDayValue, allValue } from 'mocks/api/projects/data.pc'
 import { Providers } from 'providers'
 import React from 'react'
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
@@ -35,13 +35,13 @@ describe('Weekday Filter Render properly', () => {
 
       const card = screen.getByText('Mon')
      
-      waitFor( () => {
-         userEvent.click(card)
-      })
+     // waitFor( () => {
+      await userEvent.click(card)
+     // })
 
 
       expect(onSelectDay).toHaveBeenCalled()
-      expect(onSelectDay).toBeCalledWith('Mon')
+      expect(onSelectDay).toBeCalledWith('mon')
     })
   })
 })

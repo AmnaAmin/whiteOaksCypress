@@ -8,6 +8,7 @@ type weekdayCardTypes = {
   selectedDay: string
   onSelectDay: (string) => void
   disabled?: boolean
+  isLoading,
 }
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
@@ -37,10 +38,8 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           color={props.selectedDay === props.id ? '#4E87F8' : 'black'}
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
           fontSize="14px"
-          paddingTop={1}
+          mt={2}
           paddingLeft={2}
-          paddingRight={2}
-          mb={1}
         >
           {props.count}
         </Flex>
