@@ -1,4 +1,19 @@
-import { Box, Button, Divider, Flex, FormControl, HStack, Link, Spacer, Stack, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  Heading,
+  HStack,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
+  Spacer,
+  Stack,
+  VStack,
+} from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
@@ -27,7 +42,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const { handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       claimantName: lienWaiverData.claimantName,
       customerName: lienWaiverData.customerName,
@@ -113,13 +128,13 @@ export const LienWaiverTab: React.FC<any> = props => {
             <VStack alignItems="start" spacing="32px">
               <HStack spacing="16px">
                 <InputView
-                  controlStyle={{ w: '13em' }}
+                  controlStyle={{ w: '207px' }}
                   label={t('nameofClaimant')}
                   InputElem={lienWaiverData.claimantName.toString()}
                 />
 
                 <InputView
-                  controlStyle={{ w: '13em' }}
+                  controlStyle={{ w: '207px' }}
                   label={t('jobLocation')}
                   InputElem={lienWaiverData.propertyAddress}
                 />
@@ -127,27 +142,58 @@ export const LienWaiverTab: React.FC<any> = props => {
 
               <HStack spacing="16px">
                 <InputView
-                  controlStyle={{ w: '13em' }}
+                  controlStyle={{ w: '207px' }}
                   label={t('makerOfCheck')}
                   InputElem={lienWaiverData.makerOfCheck}
                 />
-                <InputView
+                {/* <InputView
                   controlStyle={{ w: '13em' }}
                   label={t('amountOfCheck')}
                   InputElem={<>${lienWaiverData.amountOfCheck}</>}
-                />
+                /> */}
+                <Stack pt={6}>
+                  <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
+                    {t('amountOfCheck')}
+                  </Heading>
+
+                  <InputGroup p={0}>
+                    <InputLeftElement
+                      fontSize="14px"
+                      fontStyle="normal"
+                      fontWeight={400}
+                      color="gray.500"
+                      p={0}
+                      h="35px"
+                      w={2}
+                      children="$"
+                    />
+                    <Input
+                      {...register('amountOfCheck')}
+                      h="35px"
+                      m={0}
+                      pl={2}
+                      fontSize="14px"
+                      fontStyle="normal"
+                      fontWeight={400}
+                      color="gray.500"
+                      isDisabled={props.rejectChecked}
+                      variant="flushed"
+                      borderColor="gray.100"
+                    />
+                  </InputGroup>
+                </Stack>
               </HStack>
 
               <HStack spacing="16px">
                 <InputView
-                  controlStyle={{ w: '13em' }}
+                  controlStyle={{ w: '207px' }}
                   label="Date of signature"
                   InputElem={
                     <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'dd-mm-yyyy'}</>
                   }
                 />
                 <InputView
-                  controlStyle={{ w: '13em' }}
+                  controlStyle={{ w: '207px' }}
                   label="Claimant Signature"
                   InputElem={<>{lienWaiverData.claimantTitle || 'Null'}</>}
                 />
