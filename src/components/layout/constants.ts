@@ -88,4 +88,4 @@ export const useRoleBasedMenu = (): Array<Menu> => {
   return MENU_ROLE_BASED[userTypeLabel] || []
 }
 
-export const APP_LOCAL_DATE_FORMAT_Z = 'YYYY-MM-DD Z'
+export const APP_LOCAL_DATE_FORMAT_Z = 'yyyy-MM-dd'
