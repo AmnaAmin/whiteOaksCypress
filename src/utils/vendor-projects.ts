@@ -139,8 +139,9 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items, s
   // Table
   autoTable(doc, {
     startY: 85,
-    alternateRowStyles: { fillColor: '#FFFFFF' },
-    headStyles: { fillColor: '#F7FAFC', textColor: '#4A5568', lineColor: [0, 0, 0] },
+    headStyles: { fillColor: '#D3D3D3', textColor: '#000000' },
+    tableLineColor: [0, 0, 0],
+    tableLineWidth: 0.1,
     body: [
       ...items.map(ai => {
         return {
@@ -155,20 +156,42 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items, s
       { header: 'Description', dataKey: 'description' },
       { header: 'Total', dataKey: 'amount' },
     ],
-    theme: 'grid',
-    bodyStyles: { lineColor: '#edf2f7', minCellHeight: 15 },
+    theme: 'plain',
+    bodyStyles: { minCellHeight: 15 },
   })
 
   // Summary
   const tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
   const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-  doc.setFont(baseFont, 'normal')
-  doc.text('Subtotal:', summaryX, tableEndsY + 10)
-  doc.text('Amount Paid:', summaryX, tableEndsY + 20)
-  doc.text('Balance Due:', summaryX, tableEndsY + 30)
-  doc.text(currencyFormatter(summary.subTotal), summaryX + 40, tableEndsY + 10)
-  doc.text(currencyFormatter(Math.abs(summary.amountPaid)), summaryX + 40, tableEndsY + 20)
-  doc.text(currencyFormatter(summary.subTotal + summary.amountPaid), summaryX + 40, tableEndsY + 30)
+  doc.internal.pageSize.getHeight()
+  doc.setDrawColor(0)
+  let rectX = summaryX - 10
+  let rectY = tableEndsY
+  if (doc.internal.pageSize.getHeight() - tableEndsY < 30) {
+    doc.addPage()
+    rectY = 20
+  }
+  const rectL = 86
+  const rectW = 10
+  const summaryInfo = [
+    { title: 'Subtotal', value: currencyFormatter(summary.subTotal) },
+    { title: 'Amount Paid', value: currencyFormatter(Math.abs(summary.amountPaid)) },
+    { title: 'Balance Due', value: currencyFormatter(summary.subTotal + summary.amountPaid) },
+  ]
+  doc.rect(14, rectY, 96, 30, 'D')
+  summaryInfo.forEach(sum => {
+    let rectD = 'D'
+    if (sum.title === 'Balance Due') {
+      doc.setFillColor(211)
+      rectD = 'FD'
+    }
+    doc.rect(rectX, rectY, rectL, rectW, rectD)
+    doc.setFont(baseFont, 'bold')
+    doc.text(sum.title, summaryX, rectY + 6)
+    doc.setFont(baseFont, 'normal')
+    doc.text(sum.value, summaryX + 40, rectY + 6)
+    rectY = rectY + 10
+  })
   return doc
 }
 
