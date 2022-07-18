@@ -183,7 +183,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         <FormControl>
           <VStack align="start" spacing="30px">
             {lienWaiverData?.leanWaiverSubmitted && !lienWaiverData?.lienWaiverAccepted && (
-              <Alert status="info" variant="custom" size="sm">
+              <Alert data-testid="lienWaiverRejectInfo" status="info" variant="custom" size="sm">
                 <AlertIcon />
                 <AlertDescription>{t('lienWaiverRejectInfo')}</AlertDescription>
                 <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
@@ -200,13 +200,13 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('nameofClaimant')}
-                    InputElem={<Text>{lienWaiverData.claimantName}</Text>}
+                    InputElem={<Text data-testid="nameOfClaimant">{lienWaiverData.claimantName}</Text>}
                   />
 
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('jobLocation')}
-                    InputElem={<Text>{lienWaiverData.propertyAddress}</Text>}
+                    InputElem={<Text data-testid="propertyAddress">{lienWaiverData.propertyAddress}</Text>}
                   />
                 </HStack>
 
@@ -214,12 +214,12 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('makerOfCheck')}
-                    InputElem={<Text>{lienWaiverData.makerOfCheck}</Text>}
+                    InputElem={<Text data-testid="makerOfCheck">{lienWaiverData.makerOfCheck}</Text>}
                   />
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('amountOfCheck')}
-                    InputElem={<Text>${lienWaiverData.amountOfCheck}</Text>}
+                    InputElem={<Text data-testid="amountOfCheck">${lienWaiverData.amountOfCheck}</Text>}
                   />
                 </HStack>
 
@@ -238,6 +238,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       bg: 'white',
                       borderLeft: '2px solid #4E87F8',
                     }}
+                    testId="claimantsTitle"
                     rules={{ required: 'This is required field' }}
                     name={`claimantTitle`}
                   />
@@ -274,6 +275,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     >
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                       <Image
+                        data-testid="claimantsSignature"
                         hidden={!claimantsSignature}
                         maxW={'100%'}
                         src={claimantsSignature}
@@ -295,6 +297,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                               lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                             ) || lienWaiverData?.lienWaiverAccepted
                           }
+                          data-testid="openSignature"
                           onClick={() => setOpenSignature(true)}
                         >
                           <BiEditAlt color="#A0AEC0" />
@@ -311,6 +314,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                                 lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                               ) || lienWaiverData?.lienWaiverAccepted
                             }
+                            data-testid="removeSignature"
                             onClick={onRemoveSignature}
                           >
                             <BiTrash className="mr-1" color="#A0AEC0" />
@@ -324,6 +328,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <FormInput
                     errorMessage={errors?.dateOfSignature?.message}
                     label={t('dateOfSignature')}
+                    testId="signature-date"
                     placeholder="mm/dd/yy"
                     register={register}
                     name={`dateOfSignature`}
@@ -352,6 +357,7 @@ export const LienWaiverTab: React.FC<any> = props => {
               variant="outline"
               colorScheme="brand"
               size="md"
+              data-testid="recentLW"
               mr={3}
               disabled={lienWaiverData?.statusLabel === STATUS.Cancelled}
               onClick={() => downloadFile(recentLWFile.s3Url)}
@@ -368,7 +374,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           </Button>
           {![STATUS.Cancelled, STATUS.Paid].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) &&
             !lienWaiverData.lienWaiverAccepted && (
-              <Button colorScheme="brand" type="submit">
+              <Button colorScheme="brand" type="submit" data-testid="save-lien-waiver">
                 {t('save')}
               </Button>
             )}

@@ -14,7 +14,7 @@ import {
   ModalFooter,
   ModalBody,
 } from '@chakra-ui/react'
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { BiCalendar, BiDownload } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -35,8 +35,8 @@ const CalenderCard = props => {
         <FormLabel variant="strong-label" size="md">
           {props.title}
         </FormLabel>
-        <FormLabel variant="light-label" size="md">
-          {props.value ? props.value : 'mm/dd/yyy'}
+        <FormLabel data-testid={props.title} variant="light-label" size="md">
+          {props.value ? props.value : 'mm/dd/yy'}
         </FormLabel>
       </Box>
     </Flex>
