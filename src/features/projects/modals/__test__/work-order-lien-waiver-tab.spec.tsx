@@ -6,7 +6,6 @@ import { waitForLoadingToFinish, screen, act } from 'utils/test-utils'
 import { LienWaiverTab } from '../lien-waiver-tab'
 import { Modal } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
-import 'jest-canvas-mock'
 
 export const renderLienWaiver = async ({ onClose, workOrder, documentsData }: any) => {
   await render(
