@@ -16,24 +16,24 @@ const renderWeekDayFilters = async ({ selectedDay, onSelectDay }: WeekDayFilters
 describe('Weekday Filter Render properly', () => {
   describe('When the component is mounted', () => {
     test('Then it should render properly', async () => {
-      const selectedDay = 'Mon'
+      const selectedDay = 'All'
       const onSelectDay = jest.fn()
 
       await renderWeekDayFilters({ selectedDay, onSelectDay })
 
-      expect(screen.getByText('Mon')).toBeInTheDocument()
-      expect(screen.getByTestId('value-of-mon').textContent).toEqual(`${monDayValue}`)
+      expect(screen.getByText('All')).toBeInTheDocument()
+      expect(screen.getByTestId('value-of-all').textContent).toEqual(`${allValue}`)
       expect(screen.getByText('Wed')).toBeInTheDocument()
       expect(screen.getByTestId('value-of-wed').textContent).toEqual(`${wedDayValue}`)
     })
 
     test('Then onSelect of day onSelectDay should be called', async () => {
-      const selectedDay = 'Mon'
+      const selectedDay = 'All'
       const onSelectDay = jest.fn()
 
       await renderWeekDayFilters({ selectedDay, onSelectDay })
 
-      const card = screen.getByText('Mon')
+      const card = screen.getByText('All')
      
      // waitFor( () => {
       await userEvent.click(card)
@@ -41,7 +41,7 @@ describe('Weekday Filter Render properly', () => {
 
 
       expect(onSelectDay).toHaveBeenCalled()
-      expect(onSelectDay).toBeCalledWith('mon')
+      expect(onSelectDay).toBeCalledWith('All')
     })
   })
 })
