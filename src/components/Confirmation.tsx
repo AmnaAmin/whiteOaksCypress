@@ -49,14 +49,21 @@ export function ConfirmationBox({
         <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
-          <Text color="gray.500" fontSize="16px" fontWeight={400} fontStyle="normal" mb="2">
+          <Text
+            data-testid="confirmation-message"
+            color="gray.500"
+            fontSize="16px"
+            fontWeight={400}
+            fontStyle="normal"
+            mb="2"
+          >
             {content}
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
             {showNoButton && (
-              <Button colorScheme="brand" variant="outline" mr={3} onClick={onClose}>
+              <Button colorScheme="brand" data-testid="confirmation-no" variant="outline" mr={3} onClick={onClose}>
                 No
               </Button>
             )}
@@ -67,6 +74,7 @@ export function ConfirmationBox({
               colorScheme="CustomPrimaryColor"
               rounded="6px"
               fontSize="14px"
+              data-testid="confirmation-yes"
               fontWeight={500}
             >
               {yesButtonText}

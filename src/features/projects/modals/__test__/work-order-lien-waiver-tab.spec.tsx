@@ -1,14 +1,17 @@
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
-import { WORK_ORDERS, DOCUMENTS } from 'mocks/api/projects/data'
+import { WORK_ORDERS, DOCUMENTS, SIGNATURE_IMG } from 'mocks/api/projects/data'
 import { waitForLoadingToFinish, screen, act } from 'utils/test-utils'
 import { LienWaiverTab } from '../lien-waiver-tab'
 import { Modal } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
+import { imgUtility } from 'utils/file-utils'
 
 export const renderLienWaiver = async ({ onClose, workOrder, documentsData }: any) => {
-  await render(
+  // mocking signature to image as canvas context as not supported in jest
+  jest.spyOn(imgUtility, 'generateTextToImage').mockReturnValue(SIGNATURE_IMG)
+  const component = await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <LienWaiverTab lienWaiverData={workOrder} documentsData={documentsData} onClose={onClose} />
     </Modal>,
@@ -18,7 +21,10 @@ export const renderLienWaiver = async ({ onClose, workOrder, documentsData }: an
   )
 
   await waitForLoadingToFinish()
+  return component
 }
+
+jest.setTimeout(150000)
 
 describe('Work Order Lien Waiver Test Cases', () => {
   test('User is able to view readonly info on lien waiver. User can enter claimants title & signature for the first time when lienwaiver has not been submitted', async () => {
@@ -48,18 +54,26 @@ describe('Work Order Lien Waiver Test Cases', () => {
     userEvent.type(screen.getByTestId('signature-input'), 'Siddiqui')
     expect((screen.getByTestId('signature-input') as HTMLInputElement).value).toEqual('Siddiqui')
 
-    // Click on Applu button
+    // Click on Apply button
     await act(async () => await userEvent.click(screen.getByTestId('save-signature')))
 
     // Check Signature date rendered properly
     expect((screen.getByTestId('signature-date') as HTMLInputElement).value).toEqual(dateFormat(new Date()))
+
+    // Save Lien Waiver and confirmation box shows
+    await act(async () => await userEvent.click(screen.getByTestId('save-lien-waiver')))
+    expect(screen.queryByTestId('confirmation-message')).toBeInTheDocument()
+
+    // Confirm yes will start loading as api is called
+    await act(async () => await userEvent.click(screen.getByTestId('confirmation-yes')))
+
+    expect(screen.queryByText(/Loading/i)).toBeInTheDocument()
   })
 
   test('User is able to view readonly info in lien waiver. When Lien Waiver has been submitted claimant title and signature are readonly, Submitted LW link is there and save ', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.leanWaiverSubmitted && w.lienWaiverAccepted)
     const documentsData = DOCUMENTS
-
     await renderLienWaiver({ onClose, workOrder, documentsData })
 
     // Check all fields are diabled
@@ -105,5 +119,13 @@ describe('Work Order Lien Waiver Test Cases', () => {
 
     // Check Signature date rendered properly
     expect((screen.getByTestId('signature-date') as HTMLInputElement).value).toEqual(dateFormat(new Date()))
+
+    // Save Lien Waiver and confirmation box shows
+    await act(async () => await userEvent.click(screen.getByTestId('save-lien-waiver')))
+    expect(screen.queryByTestId('confirmation-message')).toBeInTheDocument()
+
+    // Confirm yes will start loading as api is called
+    await act(async () => await userEvent.click(screen.getByTestId('confirmation-yes')))
+    expect(screen.queryByText(/Loading/i)).toBeInTheDocument()
   })
 })

@@ -1518,3 +1518,6 @@ export const SETTING_COLUMNS = [
     userId: 'vendor@devtek.ai',
   },
 ]
+
+export const SIGNATURE_IMG =
+  'https://dev.woaharvest.com/documents/vendor@devtek.ai.1658071747670.project.4282.Claimants-Signature.png'

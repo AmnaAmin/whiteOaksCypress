@@ -32,6 +32,7 @@ import { countInCircle } from 'theme/common-style'
 import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { generateTextToImage } from 'utils/file-utils'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -117,6 +118,7 @@ export const WorkOrderDetails = ({
                     onProjectTabChange={onProjectTabChange}
                     lienWaiverData={workOrder}
                     onClose={onClose}
+                    generateTextToImage={generateTextToImage}
                   />
                 )}
               </TabPanel>

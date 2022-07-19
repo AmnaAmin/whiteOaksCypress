@@ -17,7 +17,7 @@ import {
 import InputView from 'components/input-view/input-view'
 import { convertImageToDataURL } from 'components/table/util'
 import { dateFormat } from 'utils/date-time-utils'
-import { downloadFile } from 'utils/file-utils'
+import { downloadFile, imgUtility } from 'utils/file-utils'
 import jsPdf from 'jspdf'
 import { head } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -26,7 +26,6 @@ import { BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiTrash } from 'react-ic
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import trimCanvas from 'trim-canvas'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
@@ -140,20 +139,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     }
   }, [documentsData, setValue, lienWaiverData])
 
-  const generateTextToImage = value => {
-    const context = canvasRef?.current?.getContext('2d')
-
-    if (!context || !canvasRef.current) return
-    canvasRef.current.width = 1000
-    canvasRef.current.height = 64
-
-    context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
-    context.font = 'italic 500 14px Inter'
-    context.textAlign = 'start'
-    context.fillText(value, 10, 50)
-    const trimContext = trimCanvas(canvasRef.current)
-
-    const uri = trimContext?.toDataURL('image/png')
+  const convertSignatureTextToImage = value => {
+    const uri = imgUtility.generateTextToImage(canvasRef, value)
     setDocuments(doc => [
       ...doc,
       {
@@ -168,7 +155,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   }
 
   const onSignatureChange = value => {
-    generateTextToImage(value)
+    convertSignatureTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
   const onRemoveSignature = () => {
