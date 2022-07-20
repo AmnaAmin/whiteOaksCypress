@@ -113,10 +113,6 @@ export const Projects = () => {
                     }}
                   >
                     <Icon as={BsBoxArrowUp} fontSize="18px" mr={1} />
-
-                    {/* <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <BsBoxArrowUp />
-                    </Box> */}
                     {'Export'}
                   </Button>
                   <Center>
