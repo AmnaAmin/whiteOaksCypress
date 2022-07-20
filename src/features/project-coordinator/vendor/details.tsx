@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { t } from 'i18next'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ onClose, VendorType }) => {
@@ -25,12 +25,78 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
     handleSubmit,
     register,
     control,
+    watch,
     formState: { errors },
-  } = useForm()
+  } = useForm<{
+    businessName: string | any
+    score: string | any
+    status: string | any
+    primaryContact: string | any
+    primaryEmail: string | any
+    businessPhoneNo: string | any
+    streetAdress: string | any
+    zipCode: string | any
+    capacity: string | any
+    ein: string | any
+    city: string | any
+    state: string | any
+    sin: string | any
+    paymentTerms: string | any
+    creditCard: boolean
+    check: boolean
+    ach: boolean
+  }>()
 
   const onSubmit = values => {
     console.log(values)
   }
+
+  const fields = watch()
+  const isEnabled = useMemo(() => {
+    const {
+      businessName,
+      score,
+      status,
+      primaryContact,
+      primaryEmail,
+      businessPhoneNo,
+      streetAdress,
+      zipCode,
+      capacity,
+      ein,
+      city,
+      state,
+      sin,
+      paymentTerms,
+      check,
+    } = fields
+
+    return !!(
+      businessName &&
+      score &&
+      status &&
+      primaryContact &&
+      primaryEmail &&
+      businessPhoneNo &&
+      streetAdress &&
+      zipCode &&
+      capacity &&
+      ein &&
+      city &&
+      state &&
+      sin &&
+      paymentTerms &&
+      check
+    )
+  }, [fields])
+
+  const documentTypes = [
+    { value: 1, label: 'Option 1' },
+    { value: 2, label: 'Option 2' },
+    { value: 3, label: 'Option 3' },
+    { value: 4, label: 'Option 4' },
+  ]
+
   return (
     <Stack spacing={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -40,12 +106,12 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               {t('businessName')}
             </FormLabel>
             <Input
+              type="text"
               {...register('businessName', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
-              placeholder="Input size medium"
             />
             <FormErrorMessage>{errors.businessName && errors.businessName.message}</FormErrorMessage>
           </FormControl>
@@ -59,7 +125,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -75,7 +141,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -93,7 +159,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               })}
               variant="required-field"
               size="md"
-              placeholder="Input size medium"
             />
             <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
           </FormControl>
@@ -107,7 +172,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               })}
               variant="required-field"
               size="md"
-              placeholder="Input size medium"
             />
             <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
           </FormControl>
@@ -116,14 +180,14 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input variant="outline" size="md" placeholder="Input size medium" />
+            <Input variant="outline" size="md" />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
               {t('secondaryEmail')}
             </FormLabel>
 
-            <Input variant="outline" size="md" placeholder="Input size medium" />
+            <Input variant="outline" size="md" />
           </FormControl>
           <GridItem></GridItem>
         </HStack>
@@ -141,7 +205,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.businessPhoneNo && errors.businessPhoneNo.message}</FormErrorMessage>
             </FormControl>
@@ -152,17 +215,17 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('ext')}
               </FormLabel>
 
-              <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input w="121px" variant="outline" size="md" />
             </FormControl>
-            <Spacer w="108px" />
+            <Spacer w="95px" />
           </Flex>
           <Box w="215px">
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('state')}
+                {t('secondaryPhoneNo')}
               </FormLabel>
 
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input w="215px" variant="outline" size="md" />
             </FormControl>
           </Box>
           <Box w="109px">
@@ -171,7 +234,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('ext')}
               </FormLabel>
 
-              <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input w="121px" variant="outline" size="md" />
             </FormControl>
           </Box>
         </HStack>
@@ -189,7 +252,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
             </FormControl>
@@ -197,6 +259,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           <GridItem>
             <FormControl isInvalid={errors.city}>
               <FormLabel variant="strong-label" size="md">
+                | true
                 {t('city')}
               </FormLabel>
               <Input
@@ -206,7 +269,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.city && errors.city.message}</FormErrorMessage>
             </FormControl>
@@ -222,7 +284,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                    <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
@@ -241,7 +303,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
             </FormControl>
@@ -258,7 +319,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.capacity && errors.capacity.message}</FormErrorMessage>
             </FormControl>
@@ -275,7 +335,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.ein && errors.ein.message}</FormErrorMessage>
             </FormControl>
@@ -292,7 +351,6 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
               <FormErrorMessage>{errors.sin && errors.sin.message}</FormErrorMessage>
             </FormControl>
@@ -313,23 +371,25 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
                 />
               </FormControl>
             </Box>
-            <VStack alignItems="start">
-              <Text fontSize="14px" fontWeight={500} color="gray.600">
-                {t('paymentMethods')}
-              </Text>
+            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+              <Text>{t('paymentMethods')}</Text>
               <HStack spacing="16px">
-                <Checkbox colorScheme="brand">Credit Card</Checkbox>
-                <Checkbox isChecked colorScheme="brand">
+                <Checkbox {...register('creditCard')} colorScheme="brand">
+                  Credit Card
+                </Checkbox>
+                <Checkbox {...register('check')} colorScheme="brand">
                   {t('check')}
                 </Checkbox>
-                <Checkbox colorScheme="brand">ACH</Checkbox>
+                <Checkbox {...register('ach')} colorScheme="brand">
+                  ACH
+                </Checkbox>
               </HStack>
             </VStack>
           </Stack>
@@ -341,11 +401,23 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
             </Button>
           )}
           {VendorType === 'detail' ? (
-            <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            <Button
+              isDisabled={!isEnabled}
+              type="submit"
+              data-testid="saveDocumentCards"
+              variant="solid"
+              colorScheme="brand"
+            >
               {t('save')}
             </Button>
           ) : (
-            <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            <Button
+              isDisabled={!isEnabled}
+              type="submit"
+              data-testid="saveDocumentCards"
+              variant="solid"
+              colorScheme="brand"
+            >
               {t('next')}
             </Button>
           )}
