@@ -1,14 +1,13 @@
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { monDayValue, wedDayValue, allValue } from 'mocks/api/projects/data.pc'
+import { monDayValue, tueDayValue, wedDayValue } from 'mocks/api/projects/data.pc'
 import { Providers } from 'providers'
 import React from 'react'
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
 import { WeekDayFilters, WeekDayFiltersProps } from '../weekday-filters'
 
 const renderWeekDayFilters = async ({ selectedDay, onSelectDay }: WeekDayFiltersProps) => {
-  await render(<WeekDayFilters onSelectDay={onSelectDay} selectedDay={selectedDay} />
-  , { wrapper: Providers })
+  await render(<WeekDayFilters onSelectDay={onSelectDay} selectedDay={selectedDay} />, { wrapper: Providers })
 
   await waitForLoadingToFinish()
 }
@@ -22,9 +21,13 @@ describe('Weekday Filter Render properly', () => {
       await renderWeekDayFilters({ selectedDay, onSelectDay })
 
       expect(screen.getByText('All')).toBeInTheDocument()
-      expect(screen.getByTestId('value-of-all').textContent).toEqual(`${allValue}`)
+      expect(screen.getByText('Mon')).toBeInTheDocument()
+      expect(screen.getByTestId('value-of-mon').textContent).toEqual(`${monDayValue}`)
+      expect(screen.getByText('Tue')).toBeInTheDocument()
+      expect(screen.getByTestId('value-of-tue').textContent).toEqual(`${tueDayValue}`)
       expect(screen.getByText('Wed')).toBeInTheDocument()
       expect(screen.getByTestId('value-of-wed').textContent).toEqual(`${wedDayValue}`)
+      expect(screen.getByText('Clear Filter')).toBeInTheDocument()
     })
 
     test('Then onSelect of day onSelectDay should be called', async () => {
@@ -34,11 +37,8 @@ describe('Weekday Filter Render properly', () => {
       await renderWeekDayFilters({ selectedDay, onSelectDay })
 
       const card = screen.getByText('All')
-     
-     // waitFor( () => {
-      await userEvent.click(card)
-     // })
 
+      await userEvent.click(card)
 
       expect(onSelectDay).toHaveBeenCalled()
       expect(onSelectDay).toBeCalledWith('All')

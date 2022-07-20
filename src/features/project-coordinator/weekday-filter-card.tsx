@@ -40,6 +40,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           fontSize="14px"
           mt={2}
           paddingLeft={2}
+          data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}
         </Flex>
