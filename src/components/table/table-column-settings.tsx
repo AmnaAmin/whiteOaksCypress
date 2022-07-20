@@ -96,9 +96,10 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         onClick={onOpen}
         disabled={disabled}
         data-testid="column-settings-button"
+        fontSize={'12px'}
       >
         <Icon as={FaAtom} fontSize="18px" mr={1} />
-        {t('setting')}
+        {t('settings')}
       </Button>
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
