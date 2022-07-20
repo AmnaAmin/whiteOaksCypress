@@ -24,9 +24,6 @@ type DatePickerProps = {
   testId?: string
   errorBoxheight?: any
 }
-// const CalendarContainer = ({ children }) => {
-//   return <Portal>{children}</Portal>
-// }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
   <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
@@ -41,7 +38,6 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
         <>
           <DatePicker
             style={props.style}
-            // popperContainer={CalendarContainer}
             selected={value ? new Date(value) : new Date()}
             value={value || ''}
             onBlur={onBlur}

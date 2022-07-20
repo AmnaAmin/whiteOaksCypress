@@ -85,7 +85,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
         <HStack spacing="16px" mt="30px">
           <FormControl w="215px" isInvalid={errors.primaryContact}>
             <FormLabel variant="strong-label" size="md">
-              {t('primaryEmail')}
+              {t('primaryContact')}
             </FormLabel>
             <Input
               {...register('primaryContact', {
