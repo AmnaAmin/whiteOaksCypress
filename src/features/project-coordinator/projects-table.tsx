@@ -65,7 +65,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
             <Link to={`/project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
-                  noOfLines={2}
+                  noOfLines={1}
                   title={cell.value}
                   padding="0 15px"
                   color="gray.600"
