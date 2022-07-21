@@ -2,7 +2,7 @@ import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { WorkOrderDetails } from '../work-order-details'
 import { Providers } from 'providers'
-import { WORK_ORDERS, PROJECTS, TRANSACTIONS } from 'mocks/api/projects/data'
+import { WORK_ORDERS, PROJECTS } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 
@@ -22,7 +22,7 @@ describe('Work Order modal showing work order specific details', () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'past due')
     const projectData = PROJECTS.find(p => p.id === workOrder?.projectId)
-    const transactions = TRANSACTIONS
+    const transactions = []
     await renderWorkOrderDetails({ onClose, workOrder, projectData, transactions })
 
     const openTab = screen.getByRole('tab', { selected: true })
@@ -50,7 +50,7 @@ describe('Work Order modal showing work order specific details', () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'completed')
     const projectData = PROJECTS.find(p => p.id === workOrder?.projectId)
-    const transactions = TRANSACTIONS
+    const transactions = []
     await renderWorkOrderDetails({ onClose, workOrder, projectData, transactions })
 
     expect(screen.getByTestId('Completed by Vendor').textContent).toEqual(
