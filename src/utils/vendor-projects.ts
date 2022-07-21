@@ -94,7 +94,7 @@ export const documentTerm = [
 ]
 
 export const createInvoice = (doc, workOrder, projectData: ProjectType, items, summary) => {
-  const baseFont = 'arial'
+  const baseFont = 'times'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
     streetAddress: '4 14th Street #601',
