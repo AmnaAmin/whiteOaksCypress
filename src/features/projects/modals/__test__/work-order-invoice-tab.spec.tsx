@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
-import { WORK_ORDERS, DOCUMENTS, TRANSACTIONS } from 'mocks/api/projects/data'
+import { WORK_ORDERS, DOCUMENTS, TRANSACTIONS } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen, act } from 'utils/test-utils'
 import { InvoiceTab } from '../invoice-tab'
 import { Modal } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/stringFormatters'
-import { TransactionStatusValues as TSV, TransactionTypeValues } from 'types/transaction.type'
+import { TransactionStatusValues as TSV } from 'types/transaction.type'
 
 export const renderInvoice = async ({ onClose, workOrder, documentsData, transactions }: any) => {
   const component = await render(
