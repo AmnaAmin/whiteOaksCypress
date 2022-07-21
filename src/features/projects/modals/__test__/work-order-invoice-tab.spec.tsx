@@ -31,7 +31,7 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
 jest.setTimeout(150000)
 
 describe('Work Order Invoice Test Cases', () => {
-  test('Work Order User is able to view readonly info on Invoice Tab. User cannot generate invoice till the workorder is completed', async () => {
+  test('User is able to view readonly info on Invoice Tab. User cannot generate invoice till the workorder is completed', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel === 'PAST DUE')
     const documentsData = []
@@ -47,7 +47,7 @@ describe('Work Order Invoice Test Cases', () => {
 
     expect(screen.queryByTestId('generateInvoice')).toHaveAttribute('disabled')
   })
-  test('Work Order User can generate invoice in completed state. The table shows transactions in approved state', async () => {
+  test('User can generate invoice in completed state. The table shows transactions in approved state', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.id == 8984 && w.statusLabel?.toLocaleLowerCase() === 'completed')
     const documentsData = []
@@ -69,7 +69,7 @@ describe('Work Order Invoice Test Cases', () => {
     expect(screen.queryByText(/Loading/i)).toBeInTheDocument()
   })
 
-  test('Work Order User can view invoice in invoiced/paid state', async () => {
+  test('User can view invoice in invoiced/paid state', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'invoiced')
     const documentsData = DOCUMENTS
@@ -78,7 +78,7 @@ describe('Work Order Invoice Test Cases', () => {
     expect(screen.queryByTestId('seeInvoice')).toBeInTheDocument()
   })
 
-  test('Work Order User can regenerate invoice in declined state', async () => {
+  test('User can regenerate invoice in declined state', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'declined')
     const documentsData = []
