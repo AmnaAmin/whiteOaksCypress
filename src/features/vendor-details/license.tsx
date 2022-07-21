@@ -11,7 +11,6 @@ import {
   FormErrorMessage,
   Text,
 } from '@chakra-ui/react'
-import { MdAdd } from 'react-icons/md'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -30,7 +29,7 @@ import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
-import { BiDownload } from 'react-icons/bi'
+import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 type LicenseProps = {
   setNextTab: () => void
   vendor: VendorProfile
@@ -143,10 +142,8 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
               expirationFile: null,
             })
           }
+          leftIcon={<BiAddToQueue />}
         >
-          <Box pos="relative" right="6px">
-            <MdAdd />
-          </Box>
           {t('addLicense')}
         </Button>
         <VStack align="start" h="470px" spacing="15px" ml="8px" overflow="auto">

@@ -97,8 +97,6 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selec
   const { data: values, isLoading } = useProjectCards()
   const cards = useProjectCardJson(values)
 
-  console.log('cards', values)
-
   return (
     <>
       <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">

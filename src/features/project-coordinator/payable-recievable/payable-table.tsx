@@ -5,6 +5,7 @@ import ReactTable, { RowProps } from 'components/table/react-table'
 
 // import { usePcClients } from 'utils/clients-table-api'
 import { useAccountPayable } from 'utils/account-payable'
+import { FieldValues, UseFormRegister } from 'react-hook-form'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -37,8 +38,16 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
-  (props, ref) => {
+type PayablePropsTyep = {
+  resizeElementRef?: any
+  ref?: any
+  setTableInstance: (tableInstance: any) => void
+  register: UseFormRegister<FieldValues>
+  loading?: boolean
+}
+
+export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
+  ({ ref, loading, register, setTableInstance }) => {
     const { columns } = useColumnWidthResize(
       [
         {
@@ -87,11 +96,15 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         },
         {
           Header: 'Checkbox',
-          accessor: () => {
+          Cell: ({ row }) => {
             return (
               <Flex justifyContent="end">
                 <Spacer w="50px" />
-                <Checkbox />
+                <Checkbox
+                  isDisabled={loading}
+                  value={(row.original as any).id}
+                  {...register('id', { required: true })}
+                />
               </Flex>
             )
           },
@@ -104,12 +117,13 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
       <Box overflow="auto" width="100%">
         <ReactTable
           columns={columns}
-          setTableInstance={props.setTableInstance}
-          data={PayableData?.workOrders}
+          setTableInstance={setTableInstance}
+          data={PayableData?.workOrders || []}
           isLoading={isLoading}
           TableRow={payableRow}
           tableHeight="calc(100vh - 300px)"
           name="payable-table"
+          defaultFlexStyle={false}
         />
       </Box>
     )

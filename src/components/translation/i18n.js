@@ -271,6 +271,7 @@ i18n.use(initReactI18next).init({
         back: 'Back',
         cancel: 'Cancel',
         insurances: 'Insurances',
+        insurance: 'Insurance',
         // Vendor-profile-license
         license: 'License',
         addLicense: 'Add License',
@@ -690,6 +691,7 @@ i18n.use(initReactI18next).init({
         back: 'Espalda',
         cancel: 'Cancelar',
         insurances: 'Seguros',
+        insurance: 'seguro',
 
         // Vendor-profile-license
         license: 'Licencia',

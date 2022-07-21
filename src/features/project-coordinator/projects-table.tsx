@@ -65,7 +65,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
             <Link to={`/project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
-                  noOfLines={2}
+                  noOfLines={1}
                   title={cell.value}
                   padding="0 15px"
                   color="gray.600"
@@ -100,7 +100,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
   selectedDay,
 }) => {
-  const { projects } = useProjects()
+  const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
 
   const { data: days } = useWeekDayProjectsDue()
@@ -141,6 +141,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   return (
     <Box ref={resizeElementRef} height="100%">
       <ReactTable
+        isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
         TableRow={ProjectRow}

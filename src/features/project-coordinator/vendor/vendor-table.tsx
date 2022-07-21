@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, Center, Spinner } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import { useVendor } from 'utils/pc-projects'
 import { Column } from 'react-table'
@@ -139,23 +139,16 @@ export const VendorTable: React.FC<ProjectProps> = ({
         }}
       />
 
-      {isLoading && (
-        <Center>
-          <Spinner size="xl" />
-        </Center>
-      )}
-      {vendors && (
-        <ReactTable
-          isLoading={isLoading}
-          columns={projectColumns}
-          data={filterVendors ? filterVendors : []}
-          TableRow={VendorRow}
-          name="vendor-table"
-          tableHeight="calc(100vh - 350px)"
-          setTableInstance={setTableInstance}
-          onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
-        />
-      )}
+      <ReactTable
+        isLoading={isLoading}
+        columns={projectColumns}
+        data={filterVendors ? filterVendors : []}
+        TableRow={VendorRow}
+        name="vendor-table"
+        tableHeight="calc(100vh - 350px)"
+        setTableInstance={setTableInstance}
+        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+      />
     </Box>
   )
 }

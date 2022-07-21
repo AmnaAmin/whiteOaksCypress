@@ -58,8 +58,8 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
         Header: () => {
           return (
             <Flex alignItems="center">
-              <input type="checkbox"></input>
-              <Text ml={3}>{t('name') as string}</Text>
+              <input type="checkbox" />
+              <Text ml={3}>{t('name')}</Text>
             </Flex>
           )
         },
