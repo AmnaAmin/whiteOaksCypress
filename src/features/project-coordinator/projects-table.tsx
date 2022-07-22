@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const PROJECT_COLUMNS = [
   {
@@ -35,10 +36,12 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'Client Start Date',
     accessor: 'clientStartDate',
+    Cell: ({ value }) => dateFormat(value),
   },
   {
     Header: 'Client Due Date',
     accessor: 'clientDueDate',
+    Cell: ({ value }) => dateFormat(value),
   },
 ]
 
