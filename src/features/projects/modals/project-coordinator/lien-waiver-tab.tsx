@@ -170,11 +170,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   label={t('makerOfCheck')}
                   InputElem={lienWaiverData.makerOfCheck}
                 />
-                {/* <InputView
-                    controlStyle={{ w: '13em' }}
-                    label={t('amountOfCheck')}
-                    InputElem={<>${lienWaiverData.amountOfCheck}</>}
-                  /> */}
+
                 <Stack pt={6}>
                   <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
                     {t('amountOfCheck')}
