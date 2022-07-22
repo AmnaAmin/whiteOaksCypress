@@ -1,13 +1,16 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
-import { STATUS } from 'features/projects/status'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 import { ProjectType } from 'types/project.type'
 import { dateFormatter } from 'utils/date-time-utils'
+import { usePCProject } from 'utils/pc-projects'
 
 const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
-  const { projectData, dataMisc } = props
+  const { projectId } = useParams<{ projectId: string }>()
+  const { projectData } = usePCProject(projectId)
+
   const {
     register,
     handleSubmit,
@@ -19,33 +22,6 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
     console.log('FormValues', formValues)
     reset()
   }
-  const createdDate = dataMisc?.dataMisc?.createdDate
-  const woaStartDate = dataMisc?.dataMisc?.woaStartDate
-  const clientSignoffDate = dataMisc?.dataMisc?.clientSignoffDate
-  const projectClosedDate = dataMisc?.dataMisc?.projectClosedDate
-  const clientPaidDate = dataMisc?.dataMisc?.clientPaidDate
-  const woaCompletionDate = dataMisc?.dataMisc?.woaCompletionDate
-  const woaBackdatedInvoiceDate = dataMisc?.dataMisc?.woaBackdatedInvoiceDate
-  // const woaInvoiceDate = dataMisc?.dataMisc?.woaInvoiceDate
-  const woaPaidDate = dataMisc?.dataMisc?.woaPaidDate
-  const dueDateVariance = dataMisc?.dataMisc?.dueDateVariance
-  const signoffDateVariance = dataMisc?.dataMisc?.signoffDateVariance
-  const woaPayVariance = dataMisc?.dataMisc?.woaPayVariance
-
-  const statusArray = [
-    STATUS.New.valueOf(),
-    STATUS.Active.valueOf(),
-    STATUS.Punch.valueOf(),
-    STATUS.Closed.valueOf(),
-    STATUS.Invoiced.valueOf(),
-    STATUS.ClientPaid.valueOf(),
-    STATUS.Paid.valueOf(),
-    STATUS.Overpayment.valueOf(),
-    STATUS.PastDue.valueOf(),
-    STATUS.Cancelled.valueOf(),
-  ]
-
-  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
 
   return (
     <Box>
@@ -59,8 +35,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={createdDate !== null ? dateFormatter(createdDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.createdDate !== null ? dateFormatter(projectData?.createdDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -73,8 +49,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={woaStartDate !== null ? dateFormatter(woaStartDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.woaStartDate !== null ? dateFormatter(projectData?.woaStartDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -87,8 +63,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={clientSignoffDate !== null ? dateFormatter(clientSignoffDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.clientSignoffDate !== null ? dateFormatter(projectData?.clientSignoffDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -101,8 +77,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectClosedDate !== null ? dateFormatter(projectClosedDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.projectClosedDate !== null ? dateFormatter(projectData?.projectClosedDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -115,8 +91,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={clientPaidDate !== null ? dateFormatter(clientPaidDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.clientPaidDate !== null ? dateFormatter(projectData?.clientPaidDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -129,8 +105,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={woaCompletionDate !== null ? dateFormatter(woaCompletionDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.woaCompletionDate !== null  && projectData?.projectStatus === 'COLLECTION' ? dateFormatter(projectData?.woaCompletionDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -143,28 +119,14 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={woaBackdatedInvoiceDate !== null ? dateFormatter(woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.woaBackdatedInvoiceDate !== null && projectData?.projectStatus === 'DISPUTED' ? dateFormatter(projectData?.woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            {/* Figma change? */}
 
-            {/* <GridItem>
-              <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  WOA Invoice
-                </FormLabel>
-
-                <DatePickerInput
-                  value={woaInvoiceDate !== null ? dateFormatter(woaInvoiceDate) : 'mm/dd/yyyy'}            
-                />
-
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem> */}
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
@@ -172,8 +134,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={woaPaidDate !== null ? dateFormatter(woaPaidDate) : 'mm/dd/yyyy'}
-                  disable={projectStatus}
+                  value={projectData?.woaPaidDate !== null ? dateFormatter(projectData?.woaPaidDate) : 'mm/dd/yyyy'}
+                  disable
                 />
 
                 <FormErrorMessage></FormErrorMessage>
@@ -185,8 +147,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                   Due Date Variance
                 </FormLabel>
                 <Input
-                  value={dueDateVariance}
-                  isDisabled={projectStatus}
+                  value={projectData?.dueDateVariance as string}
+                  isDisabled
                   id="dueDate"
                   {...register('dueDateVariance')}
                 />
@@ -200,8 +162,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <Input
-                  value={signoffDateVariance}
-                  isDisabled={projectStatus}
+                  value={projectData?.signoffDateVariance as string}
+                  isDisabled
                   id="finalDate"
                   {...register('finalDateVariance')}
                 />
@@ -214,8 +176,8 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                   Pay Variance
                 </FormLabel>
                 <Input
-                  value={woaPayVariance}
-                  isDisabled={projectStatus}
+                  value={projectData?.woaPayVariance as string}
+                  isDisabled
                   id="payVariance"
                   {...register('payVariance')}
                 />
