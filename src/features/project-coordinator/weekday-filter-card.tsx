@@ -1,6 +1,6 @@
 import { Button, Flex, Stack } from '@chakra-ui/react'
 
-type multitypes = {
+type weekdayCardTypes = {
   id: number | string
   dayName: string
   dueDate: string
@@ -10,7 +10,7 @@ type multitypes = {
   disabled?: boolean
 }
 
-export const WeekdayCard = (props: multitypes) => {
+export const WeekdayCard = (props: weekdayCardTypes) => {
   return (
     <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
       <Button
@@ -40,7 +40,7 @@ export const WeekdayCard = (props: multitypes) => {
           paddingTop={1}
           paddingLeft={2}
           paddingRight={2}
-          mb={1}
+          mb={2}
         >
           {props.count}
         </Flex>

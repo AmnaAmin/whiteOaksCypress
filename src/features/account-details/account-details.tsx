@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
+import { Box, Center, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 import { PayableFiltter } from 'features/project-coordinator/payable-recievable/filtter'
@@ -12,12 +12,15 @@ import { BiExport, BiSync } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
 import { useBatchProcessing, useCheckBatch } from 'utils/account-receivable'
 
-type payableReceivable = {
+type accountDetailsTypes = {
   topTitle: string
   ID: number | string
+  payloadType: string
+  typeCode: string
+  apiNumber: string
 }
 
-export const AccountDetails = (props: payableReceivable) => {
+export const AccountDetails = (props: accountDetailsTypes) => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
   const [isClicked, setIsClicked] = useState(false)
@@ -47,16 +50,15 @@ export const AccountDetails = (props: payableReceivable) => {
   const Submit = e => {
     setLoading(true)
     setIsBatchClick(true)
-    const payloadData = e.id.map(n => ({ id: parseInt(n), type: 'Remaining Payments' }))
+    const payloadData = e.id.map(n => ({ id: parseInt(n), type: props.payloadType }))
     const obj = {
-      typeCode: 'AR',
+      typeCode: props.typeCode,
       entities: payloadData,
     }
-    // @ts-ignore
-    batchCall(obj)
+    batchCall(obj as any)
     // batchCall?.(obj) not working
   }
-  useCheckBatch(setLoading)
+  useCheckBatch(setLoading, props.apiNumber)
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
@@ -115,29 +117,34 @@ export const AccountDetails = (props: payableReceivable) => {
               setTableInstance={setProjectTableInstance}
             />
           ) : (
-            <PayableTable setTableInstance={setProjectTableInstance} />
+            <PayableTable setTableInstance={setProjectTableInstance} register={register} loading={loading} />
           )}
         </Box>
 
-        <Flex justifyContent="end" h="100px">
-          <Button
-            colorScheme="brand"
-            variant="ghost"
-            onClick={() => {
-              if (projectTableInstance) {
-                projectTableInstance?.exportData('xlsx', false)
-              }
-            }}
-          >
-            <Icon as={BiExport} fontSize="18px" mr={2} />
-            {t('export')}
-          </Button>
-          <Divider orientation="vertical" height="30px" border="2px solid" />
-          <Button colorScheme="brand" variant="ghost" m={0}>
-            <Icon as={FaAtom} fontSize="18px" mr={2} />
-            {t('setting')}
-          </Button>
-        </Flex>
+        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={4}>
+          <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
+            <Button
+              m={0}
+              colorScheme="brand"
+              variant="ghost"
+              onClick={() => {
+                if (projectTableInstance) {
+                  projectTableInstance?.exportData('xlsx', false)
+                }
+              }}
+            >
+              <Icon as={BiExport} fontSize="18px" mr={1} />
+              {t('export')}
+            </Button>
+            <Center>
+              <Divider orientation="vertical" height="25px" border="1px solid" />
+            </Center>
+            <Button colorScheme="brand" variant="ghost" m={0}>
+              <Icon as={FaAtom} fontSize="18px" mr={1} />
+              {t('setting')}
+            </Button>
+          </Flex>
+        </Stack>
       </Box>
       <ConfirmationBox
         title="Batch processing"
