@@ -132,12 +132,14 @@ export const VendorTable: React.FC<ProjectProps> = ({
 
   return (
     <Box ref={resizeElementRef}>
-      <Vendor
-        vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
-        onClose={() => {
-          setSelectedWorkOrder(undefined)
-        }}
-      />
+      {selectedWorkOrder && (
+        <Vendor
+          vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
+          onClose={() => {
+            setSelectedWorkOrder(undefined)
+          }}
+        />
+      )}
 
       <ReactTable
         isLoading={isLoading}
