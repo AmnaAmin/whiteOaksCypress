@@ -7,7 +7,6 @@ import {
   HStack,
   Icon,
   Table,
-  TableContainer,
   Tbody,
   Td,
   Text,
@@ -19,8 +18,13 @@ import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
-import { t } from 'i18next'
-import { useCall } from 'utils/pc-projects'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
+import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
+import { orderBy } from 'lodash'
+import { downloadFile } from 'utils/file-utils'
+import { STATUS } from 'features/projects/status'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -40,123 +44,169 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTabPC = ({ onClose, workOrder }) => {
-  const dummyData = [
-    {
-      item: '1',
-      description: 'abx',
-      unitPrice: '12',
-      quantity: '5',
-      amount: '100',
-    },
-  ]
+export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, rejectInvoiceCheck }) => {
+  const [recentInvoice, setRecentInvoice] = useState<any>(null)
+  const { t } = useTranslation()
+  const [items, setItems] = useState<Array<TransactionType>>([])
+  const [subTotal, setSubTotal] = useState(0)
+  const [amountPaid, setAmountPaid] = useState(0)
+  const { mutate: rejectInvocie } = useUpdateWorkOrderMutation()
 
   const entity = {
     ...workOrder,
     ...{ status: 111 },
   }
-  const { mutate: rejectInvocie } = useCall()
 
+  useEffect(() => {
+    if (documentsData && documentsData.length > 0) {
+      let invoices = documentsData.filter(d => d.documentType === 48 && d.workOrderId === workOrder.id)
+      if (invoices.length > 0) {
+        /* sorting invoices by created datetime to fetch latest */
+        invoices = orderBy(
+          invoices,
+          [
+            item => {
+              const createdDate = new Date(item.createdDate)
+              return createdDate
+            },
+          ],
+          ['desc'],
+        )
+        const recentInvoice = invoices[0]
+        setRecentInvoice({ s3Url: recentInvoice.s3Url, fileType: recentInvoice.fileType })
+      }
+    }
+  }, [documentsData])
+
+  useEffect(() => {
+    if (transactions && transactions.length > 0) {
+      // only show approved or paid transactions.
+      const transactionItems = transactions.filter(
+        co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
+      )
+      setItems(transactionItems)
+
+      // Draw Transaction Type = 30
+      const changeOrders = transactionItems.filter(it => it.transactionType !== TransactionTypeValues.draw)
+      const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
+
+      // Sum of all approved (:not paid) transactions (Change Orders)
+      if (changeOrders && changeOrders.length > 0) {
+        setSubTotal(
+          changeOrders
+            .filter(co => co.transactionType !== TransactionTypeValues.woPaid)
+            .map(t => parseFloat(t.changeOrderAmount))
+            .reduce((sum, x) => sum + x),
+        )
+      }
+      // Sum of all Draws
+      if (drawTransactions && drawTransactions.length > 0) {
+        setAmountPaid(drawTransactions.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
+      }
+    }
+  }, [transactions])
+  const rejectInvoice = () => {
+    rejectInvocie({
+      ...entity,
+    })
+  }
   return (
     <Box>
       <Box w="100%">
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
+          <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
-            title={'WO Original Amount'}
-            value={currencyFormatter(workOrder?.clientOriginalApprovedAmount)}
-            icons={BiDollarCircle}
-          />
-          <InvoiceInfo
-            title={'Final Invoice:'}
+            title={t('finalInvoice')}
             value={currencyFormatter(workOrder?.finalInvoiceAmount)}
             icons={BiDollarCircle}
           />
           <InvoiceInfo
-            title={'PO Number'}
-            value={workOrder.invoiceNumber ? workOrder.invoiceNumber : ''}
+            title={t('PONumber')}
+            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
             icons={BiFile}
           />
           <InvoiceInfo
-            title={'Invoice Date'}
+            title={t('invoiceDate')}
             value={workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
           <InvoiceInfo
-            title={'Due Date'}
-            value={workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy'}
+            title={t('dueDate')}
+            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
             icons={BiCalendar}
           />
         </Grid>
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
-
         <Box>
-          <TableContainer border="1px solid #E2E8F0">
-            <Box h="400px" overflow="auto">
-              <Table colorScheme="teal" size="lg">
-                <Thead position="sticky" top={0} zIndex={2}>
-                  <Tr h="72px" bg="gray.50" fontSize="14px" fontWeight={500} color="gray.600">
-                    <Td>Item</Td>
-                    <Td>Description</Td>
-                    <Td>Unit Price </Td>
-                    <Td>Quantity</Td>
-                    <Td>Amount</Td>
-                  </Tr>
-                </Thead>
-                <Tbody fontWeight={400} fontSize="14px" color="gray.600" zIndex="1">
-                  {dummyData.map((item, index) => {
-                    return (
-                      <Tr h="72px">
-                        <Td>{item.item}</Td>
-                        <Td>{item.description}</Td>
-                        <Td>{item.unitPrice}</Td>
-                        <Td>{item.quantity}</Td>
-                        <Td>
-                          <Text>{item.amount}</Text>
-                        </Td>
-                      </Tr>
-                    )
-                  })}
-                </Tbody>
-              </Table>
-
-              <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
-                <Box>
-                  <HStack w={300} height="60px" justifyContent="space-between">
-                    <Text>Subtotal:</Text>
-                    <Text>$1710.00</Text>
-                  </HStack>
-                  <HStack w={300} height="60px" justifyContent="space-between">
-                    <Text>Total Amount Paid:</Text>
-                    <Text>$1710.00</Text>
-                  </HStack>
-                  <HStack w={300} height="60px" justifyContent="space-between">
-                    <Text>Balance Due:</Text>
-                    <Text>$0.00</Text>
-                  </HStack>
-                </Box>
-              </VStack>
-            </Box>
-          </TableContainer>
+          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
+            <Table variant="simple" size="md">
+              <Thead pos="sticky" top={0}>
+                <Tr>
+                  <Td>{t('item')}</Td>
+                  <Td>{t('description')}</Td>
+                  <Td>Total</Td>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {items.map((item, index) => {
+                  return (
+                    <Tr h="72px">
+                      <Td>{item.id}</Td>
+                      <Td>{item.name}</Td>
+                      <Td>
+                        <Flex justifyContent="space-between" alignItems="center">
+                          <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
+                        </Flex>
+                      </Td>
+                    </Tr>
+                  )
+                })}
+              </Tbody>
+            </Table>
+            <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
+              <Box>
+                <HStack w={300} height="60px" justifyContent="space-between">
+                  <Text>{t('subTotal')}:</Text>
+                  <Text>{currencyFormatter(subTotal)}</Text>
+                </HStack>
+                <HStack w={300} height="60px" justifyContent="space-between">
+                  <Text>{t('totalAmountPaid')}:</Text>
+                  <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
+                </HStack>
+                <HStack w={300} height="60px" justifyContent="space-between">
+                  <Text>{t('balanceDue')}</Text>
+                  <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
+                </HStack>
+              </Box>
+            </VStack>
+          </Box>
         </Box>
       </Box>
       <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
         <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
           <Flex w="100%" alignContent="space-between" pos="relative">
             <Flex fontSize="14px" fontWeight={500} mr={1}>
-              <Button colorScheme="brand" variant="outline">
-                <Text mr={1}>
-                  <BiDownload size={14} />
-                </Text>
-                See Inv 2705_AR
-              </Button>
+              {recentInvoice && (
+                <Button
+                  variant="outline"
+                  colorScheme="brand"
+                  size="md"
+                  onClick={() => downloadFile(recentInvoice?.s3Url)}
+                  leftIcon={<BiDownload />}
+                >
+                  {t('see')} {t('invoice')}
+                </Button>
+              )}
             </Flex>
           </Flex>
         </HStack>
         <Flex>
-          <Button onClick={() => rejectInvocie(entity)} colorScheme="brand" mr={3}>
-            {t('reject')}
-          </Button>
+          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && (
+            <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand" mr={3}>
+              {t('save')}
+            </Button>
+          )}
           <Button onClick={onClose} colorScheme="brand" variant="outline">
             {t('cancel')}
           </Button>

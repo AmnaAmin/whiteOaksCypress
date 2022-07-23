@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
@@ -6,9 +6,8 @@ import ReactTable, { RowProps } from 'components/table/react-table'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
-import { ProjectType, ProjectWorkOrderType } from 'types/project.type'
+import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'
-import { usePCProject } from 'utils/pc-projects'
 import Status from 'features/projects/status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -61,7 +60,14 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
 
-  const { projectData } = usePCProject(projectId)
+  useEffect(() => {
+    if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
+      const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+      if (updatedWorkOrder) {
+        setSelectedWorkOrder({ ...updatedWorkOrder })
+      }
+    }
+  }, [workOrders])
 
   const { columns } = useColumnWidthResize(
     [
@@ -114,7 +120,6 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           setSelectedWorkOrder(undefined)
           refetch()
         }}
-        projectData={projectData as ProjectType}
       />
       {isLoading && (
         <Center>
