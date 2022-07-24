@@ -13,7 +13,7 @@ import {
 import { t } from 'i18next'
 
 import { ClientDetailsTabs } from 'pages/project-cordinator/client-details'
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Clients } from 'types/client.type'
 
 const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
@@ -43,7 +43,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
                   {t('Details')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                 ** A Chimney Sweep **
+                  ** A Chimney Sweep **
                 </Text>
               </HStack>
             </HStack>
