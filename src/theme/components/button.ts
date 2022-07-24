@@ -65,6 +65,21 @@ const ButtonVariants = {
           },
         }
       },
+      'clear-filter': props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          bg: 'none',
+          color: '#4E87F8',
+          _hover: { bg: 'none' },
+          _focus: { border: 'none' },
+          fontSize: '16px',
+          fontStyle: 'inter',
+          fontWeight: 600,
+          alignContent: 'right',
+          pl: 1,
+          pt: 2,
+        }
+      },
     },
 
     sizes: {

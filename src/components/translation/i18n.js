@@ -374,6 +374,9 @@ i18n.use(initReactI18next).init({
         body: 'Body',
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
+
+        // PC
+        clearFilter:'Clear Filter'
       },
     },
     es: {

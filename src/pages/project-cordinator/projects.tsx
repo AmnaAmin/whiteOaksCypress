@@ -47,8 +47,6 @@ export const Projects = () => {
 
   useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
-  const [isClicked, setIsClicked] = useState(false)
-
   const clearAll = () => {
     setSelectedCard('')
     setSelectedDay('')
@@ -70,19 +68,10 @@ export const Projects = () => {
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
             <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
           <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="16px"
-            fontStyle="inter"
-            fontWeight={600}
-            alignContent="right"
-            onClick={clearAll}
-            pl={1}
-            pt={2}
+          variant={'clear-filter'}
+          onClick={clearAll}
           >
-            {t('Clear Filter')}
+            {t('clearFilter')}
           </Button>
           <Button
             alignContent="right"
