@@ -7,6 +7,7 @@ import { FieldValues, UseFormRegister } from 'react-hook-form'
 import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { TableWrapper } from 'components/table/table'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -139,7 +140,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                 refetch()
               }}
             />
-            <ReactTable
+            <TableWrapper
               columns={columns}
               setTableInstance={setTableInstance}
               data={PayableData?.workOrders || []}
