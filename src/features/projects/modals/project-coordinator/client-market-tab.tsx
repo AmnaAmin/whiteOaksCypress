@@ -76,7 +76,7 @@ const cuntryName = [
   },
 ]
 
-const CheckStructer = props => {
+const Market = props => {
   const [check, setCheck] = useState(false)
   //   console.log('check', props.name, check)
   return (
@@ -100,12 +100,12 @@ const CheckStructer = props => {
   )
 }
 
-export const CheckBoxes = props => {
+export const Markets = props => {
   return (
     <Box h="517px">
       <Flex flexWrap="wrap">
         {cuntryName.map(name => {
-          return <CheckStructer name={name.name} />
+          return <Market name={name.name} />
         })}
       </Flex>
       <Flex mt={355} h="80px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">

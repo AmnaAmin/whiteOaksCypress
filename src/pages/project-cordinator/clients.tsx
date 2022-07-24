@@ -11,9 +11,6 @@ const Clients = () => {
         <Text fontSize="18px" fontWeight={500} color="gray.600">
           Clients Overview
         </Text>
-        <Button colorScheme="brand" variant="ghost">
-          + New Client
-        </Button>
       </Flex>
       <Flex
         px={7}
