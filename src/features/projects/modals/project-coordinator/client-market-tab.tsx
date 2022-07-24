@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { Box, Checkbox, Flex, Center, Text, Button } from '@chakra-ui/react'
-const cuntryName = [
+const countryName = [
   {
     id: 1,
     name: 'Atlanta',
@@ -92,7 +92,7 @@ const Market = props => {
         m={2}
         bg={check ? 'green.200' : 'gray.200'}
         rounded={6}
-        fontWeight={600}
+        fontSize='14px'
       >
         <Text color="gray.500">{props.name}</Text>
       </Center>
@@ -104,15 +104,15 @@ export const Markets = props => {
   return (
     <Box h="517px">
       <Flex flexWrap="wrap">
-        {cuntryName.map(name => {
+        {countryName.map(name => {
           return <Market name={name.name} />
         })}
       </Flex>
       <Flex mt={355} h="80px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
-        <Button colorScheme="brand" variant="outline" mr={3} onClick={props.onClose}>
-          Close
-        </Button>
-        <Button colorScheme="brand">Next</Button>
+        {/* <Button colorScheme="brand" variant="outline" mr={3} onClick={props.onClose}>
+          Cancel
+        </Button> */}
+        <Button colorScheme="brand">Close</Button>
       </Flex>
     </Box>
   )

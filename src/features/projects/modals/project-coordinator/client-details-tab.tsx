@@ -148,12 +148,11 @@ const Details = props => {
           </GridItem>
         </Grid>
         <Flex h="90px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0" py="3" mt={10}>
-          <Button colorScheme="brand" variant="outline" size="lg" mr={3} onClick={props.onClose}>
+          {/* <Button colorScheme="brand" variant="outline" size="lg" mr={3} onClick={props.onClose}>
             Close
-          </Button>
-          <Button colorScheme="brand" size="lg">
-            Next
-          </Button>
+          </Button> */}
+                  <Button colorScheme="brand">Cancel</Button>
+
         </Flex>
       </Box>
   )

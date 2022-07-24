@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom'
 import DetailsTab from 'features/projects/modals/project-coordinator/client-details-tab'
 import { Markets } from 'features/projects/modals/project-coordinator/client-market-tab'
 import WorkOrderNotes from 'features/projects/modals/work-order-notes'
+// import { NotesTab } from 'features/common/notes-tab'
 
 type Props = {
   // clientProfileData?: ClientProfile //VendorProfile
@@ -60,8 +61,7 @@ export const ClientDetailsTabs: React.FC<Props> = props => {
           <Markets/>
         </TabPanel>
         <TabPanel p="0px">
-          <WorkOrderNotes/>
-          {/* <Notes/> */}
+          <WorkOrderNotes />
         </TabPanel>        
       </TabPanels>
     </Tabs>
