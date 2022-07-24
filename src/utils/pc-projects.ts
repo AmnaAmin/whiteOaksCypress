@@ -6,11 +6,15 @@ import { Vendors } from 'types/vendor.types'
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
 
-  const { data: projectData, ...rest } = useQuery<ProjectType>(['project', projectId], async () => {
-    const response = await client(`projects/${projectId}`, {})
+  const { data: projectData, ...rest } = useQuery<ProjectType>(
+    ['project', projectId],
+    async () => {
+      const response = await client(`projects/${projectId}`, {})
 
-    return response?.data
-  })
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     projectData,

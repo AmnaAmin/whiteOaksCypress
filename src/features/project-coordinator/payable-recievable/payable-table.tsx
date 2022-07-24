@@ -117,15 +117,17 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { data: PayableData, isLoading, refetch } = useAccountPayable()
 
     useEffect(() => {
-      if (PayableData?.workOrders && PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+      if (PayableData && PayableData?.workOrders && PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
         const updatedWorkOrder = PayableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
         if (updatedWorkOrder) {
           setSelectedWorkOrder({ ...updatedWorkOrder })
         } else {
           setSelectedWorkOrder(undefined)
         }
+      } else {
+        setSelectedWorkOrder(undefined)
       }
-    }, [PayableData?.workOrders])
+    }, [PayableData])
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
     return (
       <Box overflow="auto" width="100%">

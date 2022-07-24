@@ -136,7 +136,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                           <Checkbox
                             onChange={() => setRejectInvoice(!rejectInvoice)}
                             isChecked={rejectInvoice}
-                            disabled={rejectInvoice}
+                            disabled={workOrder.status === 111}
                             color="#4A5568"
                             fontSize="14px"
                             fontWeight={500}
