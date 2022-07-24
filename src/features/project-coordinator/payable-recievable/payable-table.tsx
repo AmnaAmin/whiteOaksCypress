@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Checkbox, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
-
-// import { usePcClients } from 'utils/clients-table-api'
+import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'utils/account-payable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
 import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'

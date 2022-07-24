@@ -89,7 +89,6 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        m={0}
         variant="ghost"
         colorScheme="brand"
         _focus={{ border: 'none' }}

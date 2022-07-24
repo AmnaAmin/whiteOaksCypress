@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex, Icon, Divider, Link, Spacer, HStack } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
@@ -113,7 +114,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
 
   return (
     <Box>
-      <ReactTable
+      <TableWrapper
         columns={columns}
         data={documents}
         TableRow={vendorDocumentRow}

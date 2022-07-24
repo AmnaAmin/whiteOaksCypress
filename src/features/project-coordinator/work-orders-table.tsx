@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
@@ -127,7 +128,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
         </Center>
       )}
       {workOrders && (
-        <ReactTable
+        <TableWrapper
           columns={columns}
           data={workOrders}
           TableRow={WorkOrderRow}
