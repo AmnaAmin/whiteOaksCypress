@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Center, Spinner } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { useVendor } from 'utils/pc-projects'
 import { Column } from 'react-table'
 import Status from 'features/projects/status'
@@ -145,7 +146,7 @@ export const VendorTable: React.FC<ProjectProps> = ({
         </Center>
       )}
       {vendors && (
-        <ReactTable
+        <TableWrapper
           isLoading={isLoading}
           columns={projectColumns}
           data={filterVendors ? filterVendors : []}

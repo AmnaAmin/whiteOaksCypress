@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
 import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
@@ -138,7 +139,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
 
   return (
     <Box overflow="auto" width="100%">
-      <ReactTable
+      <TableWrapper
         onRowClick={onRowClick}
         columns={columns}
         setTableInstance={setTableInstance}

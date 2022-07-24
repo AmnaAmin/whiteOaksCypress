@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
 import { useProjectAlerts } from 'utils/projects'
 import { useParams } from 'react-router-dom'
@@ -91,7 +92,7 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <ReactTable
+      <TableWrapper
         onRowClick={props.onRowClick}
         columns={columns}
         data={alerts || []}
