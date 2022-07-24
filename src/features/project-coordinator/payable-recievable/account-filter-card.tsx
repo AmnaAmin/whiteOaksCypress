@@ -40,9 +40,11 @@ export const AccountFilterCard: React.FC<AccountPaybleCardType> = ({
       <Stack>
         <Box lineHeight="32px">
           {isLoading ? <BlankSlate size="sm" /> : children}
-          <Text fontSize="18px" fontWeight={600}>
-            {value}
-          </Text>
+          {!isLoading && (
+            <Text fontSize="18px" fontWeight={600}>
+              {value}
+            </Text>
+          )}
           <Flex alignItems="center">
             <AccountIcon color={IconColor} />
             <Text ml={2} fontSize="16px" fontWeight={400} color="gray.600">
