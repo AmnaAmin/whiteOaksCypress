@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex, Button } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { Column } from 'react-table'
 
 export const AUDIT_LOGS_COLUMNS = [
@@ -86,7 +87,7 @@ export const AuditLogs: React.FC<ProjectProps> = ({
 }) => {
   return (
     <Box ref={resizeElementRef}>
-      <ReactTable
+      <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
         data={[]}
