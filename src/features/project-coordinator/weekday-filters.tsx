@@ -54,18 +54,18 @@ const useWeekdayCardJson = days => {
 export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
   const { data: values } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
- const [isClicked, setIsClicked] = useState(true)
+  const [isClicked, setIsClicked] = useState(true)
 
- useEffect(() => {
-  onSelectDay('All')
-  setIsClicked(true)
-}, [])
+  useEffect(() => {
+    onSelectDay('All')
+    setIsClicked(true)
+  }, [])
 
   const clearAll = () => {
     onSelectDay('')
     setIsClicked(false)
   }
-  
+
   const allDays = () => {
     onSelectDay('All')
     setIsClicked(true)
@@ -74,21 +74,21 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-      <Button
-            bg={isClicked ? '#4E87F8' : 'none'}
-            color={isClicked ? 'white' : 'black'}
-            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={500}
-            alignContent="right"
-            onClick={allDays}
-            rounded={20}
-            p={0}
-          >
-            {t('All')}
-          </Button>
+        <Button
+          bg={isClicked ? '#4E87F8' : 'none'}
+          color={isClicked ? 'white' : 'black'}
+          _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
+          _focus={{ border: 'none' }}
+          fontSize="16px"
+          fontStyle="normal"
+          fontWeight={500}
+          alignContent="right"
+          onClick={allDays}
+          rounded={20}
+          p={0}
+        >
+          {t('All')}
+        </Button>
         <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
         {days.map(day => {
           return (
@@ -105,19 +105,19 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
         })}
         <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
         <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="16px"
-            fontStyle="inter"
-            fontWeight={600}
-            alignContent="right"
-            onClick={clearAll}
-            pl={1}
-          >
-            {t('Clear Filter')}
-          </Button>
+          bg="none"
+          color="#4E87F8"
+          _hover={{ bg: 'none' }}
+          _focus={{ border: 'none' }}
+          fontSize="16px"
+          fontStyle="inter"
+          fontWeight={600}
+          alignContent="right"
+          onClick={clearAll}
+          pl={1}
+        >
+          {t('Clear Filter')}
+        </Button>
       </Stack>
     </>
   )
