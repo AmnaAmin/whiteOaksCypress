@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { t } from 'i18next'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ onClose, VendorType }) => {
@@ -25,31 +25,101 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
     handleSubmit,
     register,
     control,
+    watch,
     formState: { errors },
-  } = useForm()
+  } = useForm<{
+    businessName: string
+    score: string
+    status: string
+    primaryContact: string
+    primaryEmail: string
+    businessPhoneNo: string
+    streetAdress: string
+    zipCode: string
+    capacity: string
+    ein: string
+    city: string
+    state: string
+    sin: string
+    paymentTerms: string
+    creditCard: boolean
+    check: boolean
+    ach: boolean
+  }>()
 
   const onSubmit = values => {
     console.log(values)
   }
+
+  const fields = watch()
+  const isEnabled = useMemo(() => {
+    const {
+      businessName,
+      score,
+      status,
+      primaryContact,
+      primaryEmail,
+      businessPhoneNo,
+      streetAdress,
+      zipCode,
+      capacity,
+      ein,
+      city,
+      state,
+      sin,
+      paymentTerms,
+      creditCard,
+      check,
+      ach,
+    } = fields
+
+    return !!(
+      (businessName &&
+        score &&
+        status &&
+        primaryContact &&
+        primaryEmail &&
+        businessPhoneNo &&
+        streetAdress &&
+        zipCode &&
+        capacity &&
+        ein &&
+        city &&
+        state &&
+        sin &&
+        paymentTerms) ||
+      check ||
+      creditCard ||
+      ach
+    )
+  }, [fields])
+
+  const documentTypes = [
+    { value: 1, label: 'Option 1' },
+    { value: 2, label: 'Option 2' },
+    { value: 3, label: 'Option 3' },
+    { value: 4, label: 'Option 4' },
+  ]
+
   return (
     <Stack spacing={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <HStack spacing="16px">
-          <FormControl w="215px" isInvalid={errors.businessName}>
+          <FormControl w="215px" isInvalid={!!errors.businessName}>
             <FormLabel variant="strong-label" size="md">
               {t('businessName')}
             </FormLabel>
             <Input
+              type="text"
               {...register('businessName', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
-              placeholder="Input size medium"
             />
-            <FormErrorMessage>{errors.businessName && errors.businessName.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.businessName && errors.businessName.message}</FormErrorMessage>
           </FormControl>
-          <FormControl w="215px" isInvalid={errors.score}>
+          <FormControl w="215px" isInvalid={!!errors.score}>
             <FormLabel variant="strong-label" size="md">
               {t('score')}
             </FormLabel>
@@ -59,13 +129,13 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
             />
           </FormControl>
-          <FormControl w="215px" isInvalid={errors.status}>
+          <FormControl w="215px" isInvalid={!!errors.status}>
             <FormLabel variant="strong-label" size="md">
               {t('status')}
             </FormLabel>
@@ -75,75 +145,77 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
             />
           </FormControl>
         </HStack>
         <HStack spacing="16px" mt="30px">
-          <FormControl w="215px" isInvalid={errors.primaryContact}>
+          <FormControl w="215px" isInvalid={!!errors.primaryContact}>
             <FormLabel variant="strong-label" size="md">
-              {t('primaryEmail')}
+              {t('primaryContact')}
             </FormLabel>
             <Input
+              type="number"
               {...register('primaryContact', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
-              placeholder="Input size medium"
             />
-            <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
           </FormControl>
-          <FormControl w="215px" isInvalid={errors.primaryEmail}>
+          <FormControl w="215px" isInvalid={!!errors.primaryEmail}>
             <FormLabel variant="strong-label" size="md">
               {t('primaryEmail')}
             </FormLabel>
             <Input
+              type="email"
               {...register('primaryEmail', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
-              placeholder="Input size medium"
             />
-            <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input variant="outline" size="md" placeholder="Input size medium" />
+            <Input variant="outline" size="md" />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
               {t('secondaryEmail')}
             </FormLabel>
 
-            <Input variant="outline" size="md" placeholder="Input size medium" />
+            <Input variant="outline" size="md" />
           </FormControl>
           <GridItem></GridItem>
         </HStack>
 
         <HStack spacing="4" my="30px">
           <Box w="215px">
-            <FormControl isInvalid={errors.businessPhoneNo}>
+            <FormControl isInvalid={!!errors.businessPhoneNo}>
               <FormLabel variant="strong-label" size="md">
                 {t('businessPhoneNo')}
               </FormLabel>
               <Input
+                type="number"
                 {...register('businessPhoneNo', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.businessPhoneNo && errors.businessPhoneNo.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">
+                {errors.businessPhoneNo && errors.businessPhoneNo.message}
+              </FormErrorMessage>
             </FormControl>
           </Box>
           <Flex>
@@ -152,17 +224,17 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('ext')}
               </FormLabel>
 
-              <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input w="121px" variant="outline" size="md" />
             </FormControl>
-            <Spacer w="108px" />
+            <Spacer w="95px" />
           </Flex>
           <Box w="215px">
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('state')}
+                {t('secondaryPhoneNo')}
               </FormLabel>
 
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input w="215px" variant="outline" size="md" />
             </FormControl>
           </Box>
           <Box w="109px">
@@ -171,48 +243,48 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('ext')}
               </FormLabel>
 
-              <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input w="121px" variant="outline" size="md" />
             </FormControl>
           </Box>
         </HStack>
 
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
-            <FormControl isInvalid={errors.streetAdress}>
+            <FormControl isInvalid={!!errors.streetAdress}>
               <FormLabel variant="strong-label" size="md">
                 {t('streetAddress')}
               </FormLabel>
               <Input
+                type="text"
                 {...register('streetAdress', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.city}>
+            <FormControl isInvalid={!!errors.city}>
               <FormLabel variant="strong-label" size="md">
                 {t('city')}
               </FormLabel>
               <Input
+                type="text"
                 {...register('city', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.city && errors.city.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.city && errors.city.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.state}>
+            <FormControl isInvalid={!!errors.state}>
               <FormLabel variant="strong-label" size="md">
                 {t('state')}
               </FormLabel>
@@ -222,79 +294,79 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
               />
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.zipCode}>
+            <FormControl isInvalid={!!errors.zipCode}>
               <FormLabel variant="strong-label" size="md">
                 {t('zip')}
               </FormLabel>
               <Input
+                type="number"
                 {...register('zipCode', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.capacity}>
+            <FormControl isInvalid={!!errors.capacity}>
               <FormLabel variant="strong-label" size="md">
                 {t('capacity')}
               </FormLabel>
               <Input
+                type="text"
                 {...register('capacity', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.capacity && errors.capacity.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.capacity && errors.capacity.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.ein}>
+            <FormControl isInvalid={!!errors.ein}>
               <FormLabel variant="strong-label" size="md">
                 EIN
               </FormLabel>
               <Input
+                type="number"
                 {...register('ein', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.ein && errors.ein.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.ein && errors.ein.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.sin}>
+            <FormControl isInvalid={!!errors.sin}>
               <FormLabel variant="strong-label" size="md">
-                SIN
+                {t('sin')}
               </FormLabel>
               <Input
+                type="text"
                 {...register('sin', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.sin && errors.sin.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.sin && errors.sin.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
@@ -303,7 +375,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
         <Box>
           <Stack alignItems="center" direction="row" spacing="16px">
             <Box w="215px">
-              <FormControl isInvalid={errors.paymentTerms}>
+              <FormControl isInvalid={!!errors.paymentTerms}>
                 <FormLabel variant="strong-label" size="md">
                   {t('paymentTerms')}
                 </FormLabel>
@@ -313,23 +385,25 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                      <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
                 />
               </FormControl>
             </Box>
-            <VStack alignItems="start">
-              <Text fontSize="14px" fontWeight={500} color="gray.600">
-                {t('paymentMethods')}
-              </Text>
+            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+              <Text>{t('paymentMethods')}</Text>
               <HStack spacing="16px">
-                <Checkbox colorScheme="brand">Credit Card</Checkbox>
-                <Checkbox isChecked colorScheme="brand">
+                <Checkbox {...register('creditCard')} colorScheme="brand">
+                  Credit Card
+                </Checkbox>
+                <Checkbox {...register('check')} colorScheme="brand">
                   {t('check')}
                 </Checkbox>
-                <Checkbox colorScheme="brand">ACH</Checkbox>
+                <Checkbox {...register('ach')} colorScheme="brand">
+                  ACH
+                </Checkbox>
               </HStack>
             </VStack>
           </Stack>
@@ -341,11 +415,23 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
             </Button>
           )}
           {VendorType === 'detail' ? (
-            <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            <Button
+              isDisabled={!isEnabled}
+              type="submit"
+              data-testid="saveDocumentCards"
+              variant="solid"
+              colorScheme="brand"
+            >
               {t('save')}
             </Button>
           ) : (
-            <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            <Button
+              isDisabled={!isEnabled}
+              type="submit"
+              data-testid="saveDocumentCards"
+              variant="solid"
+              colorScheme="brand"
+            >
               {t('next')}
             </Button>
           )}

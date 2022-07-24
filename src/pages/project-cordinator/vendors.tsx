@@ -7,7 +7,7 @@ import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor
 import NewVendorModal from 'features/projects/modals/project-coordinator/new-vendor-modal'
 import { t } from 'i18next'
 import { useState } from 'react'
-import { BsBoxArrowUp } from 'react-icons/bs'
+import { BiExport } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 
@@ -80,13 +80,11 @@ const Vendors = () => {
                   }
                 }}
               >
-                <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                  <BsBoxArrowUp />
-                </Box>
+                <Icon as={BiExport} fontSize="18px" mr={1} />
                 {t('export')}
               </Button>
               <Center>
-                <Divider orientation="vertical" height="25px" border="1px solid" ml="1" />
+                <Divider orientation="vertical" height="25px" border="1px solid" />
               </Center>
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </>

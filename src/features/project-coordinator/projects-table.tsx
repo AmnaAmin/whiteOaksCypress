@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const PROJECT_COLUMNS = [
   {
@@ -36,10 +37,12 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'Client Start Date',
     accessor: 'clientStartDate',
+    Cell: ({ value }) => dateFormat(value),
   },
   {
     Header: 'Client Due Date',
     accessor: 'clientDueDate',
+    Cell: ({ value }) => dateFormat(value),
   },
 ]
 
@@ -66,7 +69,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
             <Link to={`/project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
-                  noOfLines={2}
+                  noOfLines={1}
                   title={cell.value}
                   padding="0 15px"
                   color="gray.600"
@@ -101,7 +104,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
   selectedDay,
 }) => {
-  const { projects } = useProjects()
+  const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
 
   const { data: days } = useWeekDayProjectsDue()
@@ -142,6 +145,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   return (
     <Box ref={resizeElementRef} height="100%">
       <TableWrapper
+        isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
         TableRow={ProjectRow}

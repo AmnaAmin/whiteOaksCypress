@@ -79,7 +79,7 @@ export function useCustomTable(props: TableProps, ...rest) {
     }),
     [],
   )
-  const getExportFileBlob = ({ columns, data, fileType, fileName }) => {
+  const getExportFileBlob = ({ columns, data: tableData, fileType, fileName }) => {
     getFileBlob({ columns, data: tableData, fileType, fileName })
   }
 

@@ -140,12 +140,11 @@ export const VendorTable: React.FC<ProjectProps> = ({
         }}
       />
 
-      {isLoading && (
+      {isLoading ? (
         <Center>
           <Spinner size="xl" />
         </Center>
-      )}
-      {vendors && (
+      ) : (
         <TableWrapper
           isLoading={isLoading}
           columns={projectColumns}

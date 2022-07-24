@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Box,
   List,
   ListItem,
   HStack,
@@ -15,6 +14,7 @@ import {
   useDisclosure,
   Center,
   Text,
+  Icon,
 } from '@chakra-ui/react'
 import { FaAtom } from 'react-icons/fa'
 import { BiGridVertical } from 'react-icons/bi'
@@ -95,11 +95,10 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         onClick={onOpen}
         disabled={disabled}
         data-testid="column-settings-button"
+        fontSize={'12px'}
       >
-        <Box pos="relative" right="6px">
-          <FaAtom />
-        </Box>
-        {t('setting')}
+        <Icon as={FaAtom} fontSize="18px" mr={1} />
+        {t('settings')}
       </Button>
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">

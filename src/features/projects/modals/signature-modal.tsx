@@ -46,7 +46,7 @@ const SignatureModal = ({
   }, [open, onOpen, onCloseDisclosure])
 
   return (
-    <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
+    <Modal data-testid="signature-modal" blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
       <ModalContent h="400px" mt="200px">
         <ModalHeader color="gray.700" fontWeight={500} fontSize="16px" fontStyle="normal">

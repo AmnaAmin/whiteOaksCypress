@@ -30,6 +30,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
     STATUS.Cancelled.valueOf(),
     STATUS.Closed.valueOf(),
     STATUS.ClientPaid.valueOf(),
+    STATUS.Invoiced.valueOf(),
   ]
 
   const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
@@ -41,6 +42,11 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
   const projectManager = dataContact?.projectManager
   const projectManagerPhoneNumber = dataContact?.projectManagerPhoneNumber
   const clientName = dataContact?.clientName
+  const fieldDisable = dataContact ? true : false
+  const superEmailAddress = dataContact?.superEmailAddress
+  const superFirstName = dataContact?.superFirstName
+  const superPhoneNumber = dataContact?.superPhoneNumber
+  const superPhoneNumberExtension = dataContact?.superPhoneNumberExtension
 
   return (
     <Box>
@@ -98,6 +104,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                 </FormLabel>
                 <Input
                   id="ext"
+                  value={superPhoneNumberExtension}
                   isDisabled={projectStatus || statusInvoice_Paid}
                   {...register('ext', {
                     required: 'This is required',
@@ -162,6 +169,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                 </FormLabel>
                 <Input
                   id="ext"
+                  value={superPhoneNumberExtension}
                   isDisabled={projectStatus || statusInvoice_Paid}
                   {...register('ext', {
                     required: 'This is required',
@@ -181,6 +189,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                   Super Email Name
                 </FormLabel>
                 <Input
+                  value={superFirstName}
                   id="superEmailName"
                   {...register('superEmailName', {
                     required: 'This is required',
@@ -197,6 +206,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                   Super Phone
                 </FormLabel>
                 <Input
+                  value={superPhoneNumber}
                   id="superPhone"
                   {...register('superPhone', {
                     required: 'This is required',
@@ -213,6 +223,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                 </FormLabel>
                 <Input
                   id="ext"
+                  value={superPhoneNumberExtension}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -228,6 +239,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                   Super Email
                 </FormLabel>
                 <Input
+                  value={superEmailAddress}
                   id="superEmail"
                   {...register('superEmail', {
                     required: 'This is required',
@@ -254,7 +266,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                       {...field}
                       selectProps={{ isBorderLeft: true }}
                       placeholder={clientName}
-                      isDisabled={projectStatus || statusInvoice_Paid}
+                      isDisabled={projectStatus || statusInvoice_Paid || fieldDisable}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>

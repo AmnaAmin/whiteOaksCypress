@@ -249,12 +249,12 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           ...doc,
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
-          licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
+          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
         }
       } else {
         fileContents = await readFileContent(license.expirationFile)
         doc = {
-          licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
+          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           fileObjectContentType: license?.expirationFile?.type,

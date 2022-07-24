@@ -356,7 +356,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               onClick={() => downloadFile(recentInvoice?.s3Url)}
               leftIcon={<BiDownload />}
             >
-              {t('see')} {'invoice.pdf'}
+              {t('see')} {t('invoice')}
             </Button>
           ) : (
             <Button
