@@ -121,7 +121,7 @@ const WorkOrderDetails = ({
                 </Tab>
                 {tabIndex === 1 && (
                   <Center w="100%" justifyContent="end">
-                    {workOrder?.claimantTitle && (
+                    {workOrder?.lienWaiverAccepted && (
                       <Checkbox
                         onChange={() => setRejectChecked(!rejectChecked)}
                         color="#4A5568"

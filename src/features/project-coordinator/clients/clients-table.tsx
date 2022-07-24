@@ -5,6 +5,7 @@ import ReactTable, { RowProps } from 'components/table/react-table'
 import { useClients } from 'utils/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/projects/modals/project-coordinator/client-modal'
+import { TableWrapper } from 'components/table/table'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -91,7 +92,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         }}
       />
 
-      <ReactTable
+      <TableWrapper
         columns={columns}
         data={clients || []}
         TableRow={clientsTableRow}

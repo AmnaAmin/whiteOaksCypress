@@ -28,7 +28,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       h="40px"
       borderWidth="1px"
       borderStyle="solid"
-      borderColor={isError ? 'red' : '#ddd'}
+      borderColor={isError ? 'red' : '#E2E8F0'}
       rounded="6"
       onClick={() => inputRef?.current?.click()}
       bg="white"
@@ -46,12 +46,13 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       />
       <Box flex="1" position="relative" overflow="hidden">
         {value && (
-          <Flex rounded="6px" borderLeft="2.5px solid #4E87F8" alignItems="center" height="40px">
+          <Flex rounded="6px" alignItems="center" height="40px">
             <Text
               whiteSpace="nowrap"
               title={value as string}
               color={isError ? 'red' : '#4E87F8'}
               fontSize="14px"
+              fontWeight={400}
               fontStyle={'normal'}
               marginLeft={3}
               isTruncated

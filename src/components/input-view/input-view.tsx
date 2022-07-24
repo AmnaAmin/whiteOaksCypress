@@ -4,7 +4,7 @@ import { Box, Divider, Heading, InputProps, Stack, Text, FormControl, FormLabel,
 interface InputViewProps {
   label: string
   Icon?: JSX.Element
-  InputElem?: JSX.Element
+  InputElem?: JSX.Element | string
   showDivider?: boolean
   controlStyle?: any
 }
