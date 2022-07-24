@@ -374,10 +374,23 @@ i18n.use(initReactI18next).init({
         body: 'Body',
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
+
+        //PC projectDetails
+        projectCoordinator: 'Project Coordinator',
+        fieldProjectManager: 'Field Project Manager',
+        superName: 'Super Name',
+        superPhone: 'Super Phone',
+        superEmail: 'Super Email',
       },
     },
     es: {
       translation: {
+        //PC projectDetails
+        projectCoordinator: 'Coordinador del proyecto',
+        fieldProjectManager: 'Gerente de Proyectos de Campo',
+        superName: 'Súper Nombre',
+        superPhone: 'Súper Teléfono',
+        superEmail: 'Súper correo electrónico',
         // Alerts
         triggeredAlert: 'Alerta activada',
         managedAlert: 'Alerta gestionada',
