@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { TableWrapper } from 'components/table/table'
-import { RowProps } from 'components/table/react-table'
-import { usePcClients } from 'utils/clients-table-api'
+import ReactTable, { RowProps } from 'components/table/react-table'
+import { useClients } from 'utils/clients'
+import { Clients } from 'types/client.type'
+import Client from 'features/projects/modals/project-coordinator/client-modal'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -37,7 +38,8 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { data: PcData } = usePcClients()
+  const { data: clients } = useClients()
+  const [selectedClientId, setSelectedClientId] = useState<Clients>()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -82,13 +84,20 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <TableWrapper
-        onRowClick={props.onRowClick}
+      <Client
+        clientDetails={selectedClientId as Clients}
+        onClose={() => {
+          setSelectedClientId(undefined)
+        }}
+      />
+
+      <ReactTable
         columns={columns}
-        data={PcData || []}
+        data={clients || []}
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
-        name="alerts-table"
+        name="clients-table"
+        onRowClick={(e, row) => setSelectedClientId(row.original)}
       />
     </Box>
   )

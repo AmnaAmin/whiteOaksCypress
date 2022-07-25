@@ -18,9 +18,9 @@ import {
 import React from 'react'
 import { ProjectType } from 'types/project.type'
 
-import { CheckBoxes } from './client-market-tab'
+import { Markets } from './client-market-tab'
 
-import DetailsTab from './clitent-details-tab'
+import DetailsTab from './client-details-tab'
 
 const Client: React.FC<{
   projectData: ProjectType
@@ -101,7 +101,7 @@ const Client: React.FC<{
                   <TabPanel></TabPanel>
 
                   <TabPanel>
-                    <CheckBoxes onClose={onClose} />
+                    <Markets onClose={onClose} />
                   </TabPanel>
 
                   <TabPanel></TabPanel>
