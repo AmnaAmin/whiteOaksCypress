@@ -24,7 +24,15 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text
+                isTruncated
+                title={cell.value}
+                padding="0 15px"
+                fontSize="14px"
+                color="#4A5568"
+                fontWeight={400}
+                fontStyle="normal"
+              >
                 {cell.render('Cell')}
               </Text>
             </Flex>
@@ -36,7 +44,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { data: PcData } = usePcClients()
+  const { data: PcData, isLoading } = usePcClients()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -82,6 +90,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   return (
     <Box ref={resizeElementRef}>
       <ReactTable
+        isLoading={isLoading}
         onRowClick={props.onRowClick}
         columns={columns}
         data={PcData || []}
