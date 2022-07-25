@@ -2,7 +2,6 @@ import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { monDayValue, tueDayValue, wedDayValue } from 'mocks/api/projects/data.pc'
 import { Providers } from 'providers'
-import React from 'react'
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
 import { WeekDayFilters, WeekDayFiltersProps } from '../weekday-filters'
 
@@ -12,9 +11,8 @@ const renderWeekDayFilters = async ({ selectedDay, onSelectDay }: WeekDayFilters
   await waitForLoadingToFinish()
 }
 
-describe('Weekday Filter Render properly', () => {
-  describe('When the component is mounted', () => {
-    test('Then it should render properly', async () => {
+describe('Weekday Filter Test Cases', () => {
+    test('Weekday Filter should show accurate count', async () => {
       const selectedDay = 'All'
       const onSelectDay = jest.fn()
 
@@ -28,20 +26,11 @@ describe('Weekday Filter Render properly', () => {
       expect(screen.getByText('Wed')).toBeInTheDocument()
       expect(screen.getByTestId('value-of-wed').textContent).toEqual(`${wedDayValue}`)
       expect(screen.getByText('Clear Filter')).toBeInTheDocument()
-    })
-
-    test('Then onSelect of day onSelectDay should be called', async () => {
-      const selectedDay = 'All'
-      const onSelectDay = jest.fn()
-
-      await renderWeekDayFilters({ selectedDay, onSelectDay })
 
       const card = screen.getByText('All')
-
       await userEvent.click(card)
-
       expect(onSelectDay).toHaveBeenCalled()
       expect(onSelectDay).toBeCalledWith('All')
     })
   })
-})
+
