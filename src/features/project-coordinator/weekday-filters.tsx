@@ -53,7 +53,7 @@ const useWeekdayCardJson = days => {
 export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
   const { data: values } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
-  
+
   const allDays = () => {
     onSelectDay('All')
   }
@@ -61,21 +61,15 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-      <Button
-            bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
-            color={selectedDay === 'All' ? 'white' : 'black'}
-            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="16px"
-            fontStyle="normal"
-            fontWeight={500}
-            alignContent="right"
-            onClick={allDays}
-            rounded={20}
-            p={0}
-          >
-            {t('All')}
-          </Button>
+        <Button
+          bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
+          color={selectedDay === 'All' ? 'white' : 'black'}
+          variant={'pills'}
+          onClick={allDays}
+          p={0}
+        >
+          {t('All')}
+        </Button>
         <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
         {days.map(day => {
           return (

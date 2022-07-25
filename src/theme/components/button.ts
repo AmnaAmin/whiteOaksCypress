@@ -80,6 +80,18 @@ const ButtonVariants = {
           pt: 2,
         }
       },
+      pills: props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          _hover: { bg: '#4E87F8', color: 'white', border: 'none' },
+          _focus: { border: 'none' },
+          fontSize: '16px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          alignContent: 'right',
+          rounded: 20,
+        }
+      },
     },
 
     sizes: {
