@@ -2,29 +2,21 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
-import { useClients } from 'utils/clients'
 import DetailsTab from 'features/projects/modals/project-coordinator/client-details-tab'
-import { Markets } from 'features/projects/modals/project-coordinator/client-market-tab'
+import { Market } from 'features/projects/modals/project-coordinator/client-market-tab'
 import WorkOrderNotes from 'features/projects/modals/work-order-notes'
 
-type Props = {
-  // clientProfileData?: ClientProfile //VendorProfile
-  onClose?: () => void
+type ClientDetailsTabsProps = {
   refetch?: () => void
+  onClose?: () => void
   clientModalType?: string
+  clientDetails?: any
 }
 
-export const ClientDetailsTabs: React.FC<Props> = props => {
-  const ClientType = props.clientModalType
+export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps, ref) => {
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
-  const { data: clientsData } = useClients()
-  const clientProfileData = clientsData
-
-  const setNextTab = () => {
-    setTabIndex(tabIndex + 1)
-    props.refetch?.()
-  }
+  const clientDetails = props?.clientDetails
 
   return (
     <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
@@ -36,15 +28,15 @@ export const ClientDetailsTabs: React.FC<Props> = props => {
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          <DetailsTab />
+          <DetailsTab clientDetails={clientDetails} onClose={props.onClose} />
         </TabPanel>
         <TabPanel p="0px">
-          <Markets />
+          <Market clientDetails={clientDetails} />
         </TabPanel>
         <TabPanel p="0px">
-          <WorkOrderNotes />
+          <WorkOrderNotes clientDetails={clientDetails} />
         </TabPanel>
       </TabPanels>
     </Tabs>
   )
-}
+})

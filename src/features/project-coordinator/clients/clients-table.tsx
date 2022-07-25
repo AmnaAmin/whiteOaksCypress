@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
 import { useClients } from 'utils/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/projects/modals/project-coordinator/client-modal'
+import { TableWrapper } from 'components/table/table'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -26,7 +27,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text noOfLines={1} title={cell.value} padding="0 15px" color="blackAlpha.600">
                 {cell.render('Cell')}
               </Text>
             </Flex>
@@ -39,7 +40,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients } = useClients()
-  const [selectedClientId, setSelectedClientId] = useState<Clients>()
+  const [selectedClient, setSelectedClient] = useState<Clients>()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -85,19 +86,19 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   return (
     <Box ref={resizeElementRef}>
       <Client
-        clientDetails={selectedClientId as Clients}
+        clientDetails={selectedClient as Clients}
         onClose={() => {
-          setSelectedClientId(undefined)
+          setSelectedClient(undefined)
         }}
       />
 
-      <ReactTable
+      <TableWrapper
         columns={columns}
         data={clients || []}
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
         name="clients-table"
-        onRowClick={(e, row) => setSelectedClientId(row.original)}
+        onRowClick={(e, row) => setSelectedClient(row.original)}
       />
     </Box>
   )

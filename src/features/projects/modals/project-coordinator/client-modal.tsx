@@ -18,7 +18,6 @@ import { Clients } from 'types/client.type'
 
 const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
@@ -43,7 +42,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
                   {t('Details')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  ** A Chimney Sweep **
+                {clientDetails?.companyName}                
                 </Text>
               </HStack>
             </HStack>
@@ -51,7 +50,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="detail" onClose={onClose} />
+              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} />
             </Box>
           </ModalBody>
         </ModalContent>
