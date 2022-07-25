@@ -64,7 +64,7 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
         <Button
           bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
           color={selectedDay === 'All' ? 'white' : 'black'}
-          variant={'pills'}
+          variant={'pill'}
           onClick={allDays}
           p={0}
         >

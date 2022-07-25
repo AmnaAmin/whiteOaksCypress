@@ -80,7 +80,7 @@ const ButtonVariants = {
           pt: 2,
         }
       },
-      pills: props => {
+      pill: props => {
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
           _hover: { bg: '#4E87F8', color: 'white', border: 'none' },

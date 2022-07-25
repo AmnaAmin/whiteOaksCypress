@@ -25,7 +25,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
   return (
     <Stack direction="row" justify="left" marginTop={1} marginLeft={15}>
       <Button
-        variant={'pills'}
+        variant={'pill'}
         bg={props.selectedDay === props.id ? '#4E87F8' : 'none'}
         color={props.selectedDay === props.id ? 'white' : 'black'}
         onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
