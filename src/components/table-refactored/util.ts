@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx'
-// import moment from 'moment'
-// import { APP_LOCAL_DATE_FORMAT_Z } from 'components/layout/constants'
+import moment from 'moment'
+import { APP_LOCAL_DATE_FORMAT_Z } from 'components/layout/constants'
 
 export const getFileBlob = ({ columns, data, fileType, fileName }) => {
   const header = columns.map(c => c.exportValue)
@@ -113,9 +113,9 @@ export const convertImageToDataURL = (src, callback) => {
   }
 }
 
-// export const convertDateTimeToServerISO = date => {
-//   return date ? moment(date, APP_LOCAL_DATE_FORMAT_Z).toISOString() : null
-// }
+export const convertDateTimeToServerISO = date => {
+  return date ? moment(date, APP_LOCAL_DATE_FORMAT_Z).toISOString() : null
+}
 
 export const convertImageUrltoDataURL = url =>
   fetch(url)

@@ -20,7 +20,6 @@ type clientDetailProps = {
 }
 
 export const Details = React.forwardRef((props: clientDetailProps) => {
-
   const market = props?.clientDetails?.markets
     ? props?.clientDetails?.markets?.map(market => ({
         label: market?.metropolitanServiceArea,
@@ -34,6 +33,12 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
         value: market?.state?.id,
       }))
     : null
+
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
 
   return (
     <Box>
@@ -74,7 +79,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
             <FormLabel variant="strong-label" size="md">
               Address
             </FormLabel>
-            <Input variant="required-field" value={props?.clientDetails?.streetAddress} isDisabled/>
+            <Input variant="required-field" value={props?.clientDetails?.streetAddress} isDisabled />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -90,12 +95,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
             <FormLabel variant="strong-label" size="md">
               State
             </FormLabel>
-            <ReactSelect
-              options={state}
-              value={state}
-              selectProps={{ isBorderLeft: true }}
-              isDisabled
-            />
+            <ReactSelect options={state} value={state} selectProps={{ isBorderLeft: true }} isDisabled />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -103,7 +103,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
             <FormLabel variant="strong-label" size="md">
               Zip Code
             </FormLabel>
-            <Input variant="required-field" value={props?.clientDetails?.zipCode} isDisabled/>
+            <Input variant="required-field" value={props?.clientDetails?.zipCode} isDisabled />
           </FormControl>
         </GridItem>
       </Grid>
@@ -114,7 +114,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
             <FormLabel variant="strong-label" size="md">
               Contact
             </FormLabel>
-            <Input variant="required-field" value={props?.clientDetails?.contacts[0].contact} isDisabled/>
+            <Input variant="required-field" value={props?.clientDetails?.contacts[0].contact} isDisabled />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -180,7 +180,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
             <FormLabel variant="strong-label" size="md">
               City
             </FormLabel>
-            <Input variant="required-field" value={props?.clientDetails?.city} isDisabled/>
+            <Input variant="required-field" value={props?.clientDetails?.city} isDisabled />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -196,8 +196,10 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Flex h="90px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0" py="3" mt={10}>
-        <Button colorScheme="brand" onClick={props?.onClose}>Cancel</Button>
+      <Flex style={ btnStyle } py="4" pt={5}>
+        <Button colorScheme="brand" onClick={props?.onClose}>
+          Cancel
+        </Button>
       </Flex>
     </Box>
   )

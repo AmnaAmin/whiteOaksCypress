@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import DetailsTab from 'features/projects/modals/project-coordinator/client-details-tab'
 import { Market } from 'features/projects/modals/project-coordinator/client-market-tab'
-import WorkOrderNotes from 'features/projects/modals/work-order-notes'
+import ClientNotes from 'features/projects/modals/project-coordinator/clients-notes-tab'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -26,15 +26,15 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         <Tab>{t('notes')}</Tab>
       </TabList>
 
-      <TabPanels mt="31px">
+      <TabPanels mt="20px">
         <TabPanel p="0px">
-          <DetailsTab clientDetails={clientDetails} onClose={props.onClose} />
+          <DetailsTab clientDetails={clientDetails} onClose={props?.onClose} />
         </TabPanel>
         <TabPanel p="0px">
           <Market clientDetails={clientDetails} />
         </TabPanel>
         <TabPanel p="0px">
-          <WorkOrderNotes clientDetails={clientDetails} />
+          <ClientNotes clientDetails={clientDetails} />
         </TabPanel>
       </TabPanels>
     </Tabs>

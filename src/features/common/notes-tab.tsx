@@ -43,10 +43,13 @@ type NotesProps = {
   messageBoxStyle?: any
   chatListStyle?: any
   pageLayoutStyle?: any
+  hideSave?: boolean
+  labelTextBoxStyle?: any
 }
 
 export const NotesTab = (props: NotesProps) => {
-  const { notes, saveNote, onClose, messageBoxStyle, chatListStyle, pageLayoutStyle } = props
+  const { notes, saveNote, onClose, messageBoxStyle, chatListStyle, pageLayoutStyle, hideSave, labelTextBoxStyle } =
+    props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
@@ -83,7 +86,7 @@ export const NotesTab = (props: NotesProps) => {
           )}
         </Box>
         <Flex mt="10px">
-          <Box w="100%">
+          <Box w="100%" {...labelTextBoxStyle}>
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
               {t('enterNewNote')}
             </FormLabel>
@@ -96,16 +99,18 @@ export const NotesTab = (props: NotesProps) => {
           </Box>
         </Flex>
       </Box>
-      <HStack borderTop="1px solid #CBD5E0" p={5} bg="white">
+      <HStack borderTop="1px solid #CBD5E0" p={3} bg="white">
         <HStack spacing="16px" w="100%" justifyContent="end">
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>
           )}
-          <Button type="submit" colorScheme="brand" isDisabled={!message}>
-            {t('save')}
-          </Button>
+          {!hideSave && (
+            <Button type="submit" colorScheme="brand" isDisabled={!message}>
+              {t('save')}
+            </Button>
+          )}
         </HStack>
       </HStack>
     </form>

@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query'
 import { useClient } from './auth-context'
-// import { Clients } from 'types/client.type'
 
 export const useClients = () => {
   const client = useClient()
@@ -10,4 +9,18 @@ export const useClients = () => {
 
     return response?.data
   })
+}
+
+export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
+  const client = useClient()
+
+  const { data: notes, ...rest } = useQuery<Array<Document>>(['notes', clientId], async () => {
+    const response = await client(`notes?clientId.equals=${clientId}&sort=modifiedDate,asc`, {})
+    return response?.data
+  })
+
+  return {
+    notes,
+    ...rest,
+  }
 }
