@@ -78,7 +78,7 @@ export function useCustomTable(props: Props) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [{ id: 'type', desc: false, ...props.sortBy }],
+        sortBy: [],
       },
     },
     useBlockLayout,

@@ -44,7 +44,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { data: PcData, isLoading } = usePcClients()
+  const { data: clients, isLoading } = usePcClients()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -93,7 +93,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         isLoading={isLoading}
         onRowClick={props.onRowClick}
         columns={columns}
-        data={PcData || []}
+        data={clients || []}
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"
