@@ -48,7 +48,7 @@ export const Projects = () => {
   useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
   const clearSelected = () => {
-    setSelectedCard('')    
+    setSelectedCard('')
   }
 
   return (
@@ -99,9 +99,9 @@ export const Projects = () => {
               ) : (
                 <>
                   <Button
-                    bg="none"
-                    color="#4E87F8"
-                    _hover={{ bg: 'none' }}
+                    m={0}
+                    variant="ghost"
+                    colorScheme="brand"
                     _focus={{ border: 'none' }}
                     fontSize="12px"
                     fontStyle="normal"
@@ -112,9 +112,7 @@ export const Projects = () => {
                       }
                     }}
                   >
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <BsBoxArrowUp />
-                    </Box>
+                    <Icon as={BsBoxArrowUp} fontSize="18px" mr={1} />
                     {'Export'}
                   </Button>
                   <Center>

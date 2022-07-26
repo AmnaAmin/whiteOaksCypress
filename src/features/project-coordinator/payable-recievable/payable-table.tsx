@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex, Checkbox, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 
 // import { usePcClients } from 'utils/clients-table-api'
 import { useAccountPayable } from 'utils/account-payable'
@@ -115,7 +116,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { data: PayableData, isLoading } = useAccountPayable()
     return (
       <Box overflow="auto" width="100%">
-        <ReactTable
+        <TableWrapper
           columns={columns}
           setTableInstance={setTableInstance}
           data={PayableData?.workOrders || []}

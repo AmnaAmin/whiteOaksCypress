@@ -1,11 +1,14 @@
 import React, { useCallback } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
 import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
 import { t } from 'i18next'
+import { dateFormat } from 'utils/date-time-utils'
+import numeral from 'numeral'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -27,7 +30,17 @@ const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text
+                noOfLines={2}
+                title={cell.value}
+                padding="0 15px"
+                color="gray.600"
+                mb="20px"
+                mt="10px"
+                fontSize="14px"
+                fontStyle="normal"
+                fontWeight="400"
+              >
                 {cell.render('Cell')}
               </Text>
             </Flex>
@@ -69,19 +82,28 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
       },
       {
         Header: t('paymentTypes') as string,
-        accessor: 'transactionType',
+        accessor: 'type',
       },
       {
         Header: t('vendorWOExpectedPaymentDate') as string,
         accessor: 'expectedPaymentDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
       },
       {
         Header: t('balance') as string,
         accessor: 'amount',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0[.]00')
+        },
       },
       {
         Header: t('finalInvoice') as string,
-        accessor: 'famount',
+        accessor: 'finalInvoice',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0[.]00')
+        },
       },
       {
         Header: t('markets') as string,
@@ -90,6 +112,9 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
       {
         Header: t('woInvoiceDate') as string,
         accessor: 'woaInvoiceDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
       },
       {
         Header: t('poNo') as string,
@@ -138,7 +163,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
 
   return (
     <Box overflow="auto" width="100%">
-      <ReactTable
+      <TableWrapper
         onRowClick={onRowClick}
         columns={columns}
         setTableInstance={setTableInstance}

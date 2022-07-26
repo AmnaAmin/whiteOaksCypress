@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { usePcClients } from 'utils/clients-table-api'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -89,7 +90,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <ReactTable
+      <TableWrapper
         isLoading={isLoading}
         onRowClick={props.onRowClick}
         columns={columns}
