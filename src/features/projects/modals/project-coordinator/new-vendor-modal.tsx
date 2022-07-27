@@ -13,7 +13,7 @@ import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
 import React from 'react'
 
 export const NewVendorTabs: React.FC<{ onClose: () => void }> = props => {
-  return <VendorProfileTabs onClose={props.onClose} />
+  return <VendorProfileTabs vendorModalType="newVendor" onClose={props.onClose} />
 }
 
 type NewVendorModalType = {

@@ -183,6 +183,16 @@ export type VendorProfileDetailsFormData = {
   secondaryNumberExtenstion: string
   primaryEmail: string
   secondaryEmail: string
+  companyName?: String
+  score?: String
+  status?: null | Number
+  streetAddress?: String
+  state?: String
+  city?: String
+  zipCode?: null | Number
+  capacity?: String
+  einNumber?: String
+  ssnNumber?: String
 }
 
 export type VendorTrade = {

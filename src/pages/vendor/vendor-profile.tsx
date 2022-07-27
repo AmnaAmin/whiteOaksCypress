@@ -52,10 +52,14 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          {vendorProfileData ? (
-            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          {VendorType === 'newVendor' ? (
+            <PcDetails
+              vendorProfileData={vendorProfileData as VendorProfile}
+              VendorType={VendorType!}
+              onClose={props.onClose}
+            />
           ) : (
-            <PcDetails VendorType={VendorType!} onClose={props.onClose} />
+            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
           )}
         </TabPanel>
         <TabPanel p="0px">

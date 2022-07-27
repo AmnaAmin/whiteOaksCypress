@@ -14,85 +14,152 @@ import {
   Flex,
   FormErrorMessage,
   Spacer,
+  useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { t } from 'i18next'
-import React, { useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
+import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateMutation } from 'utils/vendor-details'
 
-const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ onClose, VendorType }) => {
+const PcDetails: React.FC<{
+  onClose?: () => void
+  VendorType?: string
+
+  vendorProfileData: VendorProfile
+}> = ({ onClose, VendorType, vendorProfileData }) => {
+  const toast = useToast()
+  const { t } = useTranslation()
+  const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
+  const queryClient = useQueryClient()
+
+  const submitForm = useCallback(
+    (formData: VendorProfileDetailsFormData) => {
+      const payload = parseFormDataToAPIData(vendorProfileData, formData)
+      updateVendorProfileDetails(payload, {
+        onSuccess() {
+          queryClient.invalidateQueries('vendorProfile')
+          toast({
+            title: t('updateProfile'),
+            description: t('updateProfileSuccess'),
+            status: 'success',
+            isClosable: true,
+          })
+        },
+      })
+    },
+    [toast, updateVendorProfileDetails, vendorProfileData],
+  )
   const {
-    handleSubmit,
     register,
     control,
-    watch,
+    handleSubmit,
     formState: { errors },
-  } = useForm<{
-    businessName: string
-    score: string
-    status: string
-    primaryContact: string
-    primaryEmail: string
-    businessPhoneNo: string
-    streetAdress: string
-    zipCode: string
-    capacity: string
-    ein: string
-    city: string
-    state: string
-    sin: string
-    paymentTerms: string
-    creditCard: boolean
-    check: boolean
-    ach: boolean
-  }>()
+    watch,
+    reset,
+  } = useForm<VendorProfileDetailsFormData>({
+    defaultValues: {
+      primaryContact: '',
+      secondaryContact: '',
+      businessPhoneNumber: '',
+      businessNumberExtention: '',
+      secondaryNumber: '',
+      secondaryNumberExtenstion: '',
+      primaryEmail: '',
+      secondaryEmail: '',
+      companyName: '',
+      score: '',
+      status: null,
+      streetAddress: '',
+      state: '',
+      city: '',
+      zipCode: null,
+      capacity: '',
+      einNumber: '',
+      ssnNumber: '',
+    },
+  })
 
-  const onSubmit = values => {
-    console.log(values)
-  }
+  useEffect(() => {
+    if (!vendorProfileData) return
+    reset(parseAPIDataToFormData(vendorProfileData))
+  }, [reset, vendorProfileData])
 
-  const fields = watch()
-  const isEnabled = useMemo(() => {
-    const {
-      businessName,
-      score,
-      status,
-      primaryContact,
-      primaryEmail,
-      businessPhoneNo,
-      streetAdress,
-      zipCode,
-      capacity,
-      ein,
-      city,
-      state,
-      sin,
-      paymentTerms,
-      creditCard,
-      check,
-      ach,
-    } = fields
+  // const {
+  //   handleSubmit,
+  //   register,
+  //   control,
+  //   watch,
+  //   formState: { errors },
+  // } = useForm<{
+  //   businessName: string
+  //   score: string
+  //   status: string
+  //   primaryContact: string
+  //   primaryEmail: string
+  //   businessPhoneNumber: string
+  //   streetAddress: string
+  //   zipCode: string
+  //   capacity: string
+  //   ein: string
+  //   city: string
+  //   state: string
+  //   sin: string
+  //   paymentTerms: string
+  //   creditCard: boolean
+  //   check: boolean
+  //   ach: boolean
+  // }>()
 
-    return !!(
-      (businessName &&
-        score &&
-        status &&
-        primaryContact &&
-        primaryEmail &&
-        businessPhoneNo &&
-        streetAdress &&
-        zipCode &&
-        capacity &&
-        ein &&
-        city &&
-        state &&
-        sin &&
-        paymentTerms) ||
-      check ||
-      creditCard ||
-      ach
-    )
-  }, [fields])
+  // const onSubmit = values => {
+  //   console.log(values)
+  // }
+
+  // const fields = watch()
+  // const isEnabled = useMemo(() => {
+  //   const {
+  //     businessName,
+  //     score,
+  //     status,
+  //     primaryContact,
+  //     primaryEmail,
+  //     businessPhoneNumber,
+  //     streetAddress,
+  //     zipCode,
+  //     capacity,
+  //     ein,
+  //     city,
+  //     state,
+  //     sin,
+  //     paymentTerms,
+  //     creditCard,
+  //     check,
+  //     ach,
+  //   } = fields
+
+  //   return !!(
+  //     (businessName &&
+  //       score &&
+  //       status &&
+  //       primaryContact &&
+  //       primaryEmail &&
+  //       businessPhoneNumber &&
+  //       streetAddress &&
+  //       zipCode &&
+  //       capacity &&
+  //       ein &&
+  //       city &&
+  //       state &&
+  //       sin &&
+  //       paymentTerms) ||
+  //     check ||
+  //     creditCard ||
+  //     ach
+  //   )
+  // }, [fields])
 
   const documentTypes = [
     { value: 1, label: 'Option 1' },
@@ -103,21 +170,21 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
 
   return (
     <Stack spacing={3}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(submitForm)}>
         <HStack spacing="16px">
-          <FormControl w="215px" isInvalid={!!errors.businessName}>
+          <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
-              {t('businessName')}
+              {t('companyName')}
             </FormLabel>
             <Input
               type="text"
-              {...register('businessName', {
+              {...register('companyName', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.businessName && errors.businessName.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.companyName?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.score}>
             <FormLabel variant="strong-label" size="md">
@@ -165,7 +232,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.primaryContact?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.primaryEmail}>
             <FormLabel variant="strong-label" size="md">
@@ -179,7 +246,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.primaryEmail?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -200,22 +267,20 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
 
         <HStack spacing="4" my="30px">
           <Box w="215px">
-            <FormControl isInvalid={!!errors.businessPhoneNo}>
+            <FormControl isInvalid={!!errors.businessPhoneNumber}>
               <FormLabel variant="strong-label" size="md">
-                {t('businessPhoneNo')}
+                {t('businessPhoneNumber')}
               </FormLabel>
               <Input
                 type="number"
-                {...register('businessPhoneNo', {
+                {...register('businessPhoneNumber', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">
-                {errors.businessPhoneNo && errors.businessPhoneNo.message}
-              </FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.businessPhoneNumber?.message}</FormErrorMessage>
             </FormControl>
           </Box>
           <Flex>
@@ -250,20 +315,20 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
 
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
-            <FormControl isInvalid={!!errors.streetAdress}>
+            <FormControl isInvalid={!!errors.streetAddress}>
               <FormLabel variant="strong-label" size="md">
                 {t('streetAddress')}
               </FormLabel>
               <Input
                 type="text"
-                {...register('streetAdress', {
+                {...register('streetAddress', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -280,7 +345,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.city && errors.city.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -315,7 +380,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -332,24 +397,24 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.capacity && errors.capacity.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.ein}>
+            <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
                 EIN
               </FormLabel>
               <Input
                 type="number"
-                {...register('ein', {
+                {...register('einNumber', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.ein && errors.ein.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.ein?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -366,7 +431,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.sin && errors.sin.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.sin?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
@@ -416,7 +481,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           )}
           {VendorType === 'detail' ? (
             <Button
-              isDisabled={!isEnabled}
+              // isDisabled={!isEnabled}
               type="submit"
               data-testid="saveDocumentCards"
               variant="solid"
@@ -426,7 +491,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
             </Button>
           ) : (
             <Button
-              isDisabled={!isEnabled}
+              // isDisabled={!isEnabled}
               type="submit"
               data-testid="saveDocumentCards"
               variant="solid"
