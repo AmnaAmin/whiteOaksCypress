@@ -194,27 +194,8 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               {t('Original SOW Amount')}
             </Heading>
             <InputGroup p={0} mt={3}>
-              <InputLeftElement
-                fontSize="14px"
-                fontStyle="normal"
-                fontWeight={400}
-                color="gray.500"
-                p={4}
-                h="51px"
-                w={2}
-                children="$"
-              />
-              <Input
-                {...register('sowOriginalContractAmount')}
-                variant="required-field"
-                // h="35px"
-                m={0}
-                pl={5}
-                fontSize="14px"
-                fontStyle="normal"
-                fontWeight={400}
-                color="gray.500"
-              />
+              <InputLeftElement color="gray.500" p={4} h="51px" w={2} children="$" />
+              <Input {...register('sowOriginalContractAmount')} variant="required-field" m={0} pl={5} />
             </InputGroup>
           </FormControl>
         </GridItem>
