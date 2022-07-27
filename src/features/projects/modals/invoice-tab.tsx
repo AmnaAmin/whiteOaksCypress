@@ -221,7 +221,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
                 <Tr>
                   <Td>{t('item')}</Td>
                   <Td>{t('description')}</Td>
-                  <Td>Total</Td>
+                  <Td>{t('total')}</Td>
                 </Tr>
               </Thead>
               <Tbody>
@@ -259,7 +259,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
                             fontWeight={600}
                             color="#4E87F8"
                           >
-                            +Add New Item
+                            +{t('addNewItem')}
                           </Button>
 
                           <FormControl isInvalid={!!errors.item?.message}>
