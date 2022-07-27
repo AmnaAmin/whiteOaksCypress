@@ -127,7 +127,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
         city: values.city,
         state: values.state,
         zipCode: values.zipCode,
-        newMarketId: values.market,
+        newMarketId: values.newMarketId,
         gateCode: values.gateCode,
         lockBoxCode: values.lockBoxCode,
         hoaPhone: values.hoaPhone,
