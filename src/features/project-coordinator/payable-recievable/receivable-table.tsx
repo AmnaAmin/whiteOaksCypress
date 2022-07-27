@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/rea
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import ReactTable, { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
-import { usePCReveviable, useReveviableRowData } from 'utils/account-receivable'
+import { usePCRecievable, useReveviableRowData } from 'utils/account-receivable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
 import { t } from 'i18next'
 import { dateFormat } from 'utils/date-time-utils'
@@ -156,7 +156,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
     },
     [onAccountReceivableModalOpen],
   )
-  const { receivableData, isLoading } = usePCReveviable()
+  const { receivableData, isLoading } = usePCRecievable()
   const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
   const rowSelectedData = receivableDataa?.data
 

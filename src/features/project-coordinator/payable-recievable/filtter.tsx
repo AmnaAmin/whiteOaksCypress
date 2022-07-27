@@ -1,10 +1,10 @@
 import { Grid } from '@chakra-ui/react'
-import { usePCReveviable } from 'utils/account-receivable'
+import { usePCRecievable } from 'utils/account-receivable'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { AccountFilterCard } from './account-filter-card'
 
-export const PayableFiltter = ({ cardSelected, onSelected }) => {
-  const { receivableData, isLoading } = usePCReveviable()
+export const PayableFilter = ({ cardSelected, onSelected }) => {
+  const { receivableData, isLoading } = usePCRecievable()
   enum PayableCardTypes {
     PastDue = '1',
     SevenDays = '2',
@@ -48,8 +48,6 @@ export const PayableFiltter = ({ cardSelected, onSelected }) => {
     ?.filter(a => a.durationCategory === PayableCardTypes.ThirtyToFourtyDays)
     .map(a => a.amount)
     .reduce((sum, current) => sum + current, 0)
-
-  console.log(eightToTenDays, EightToTenDaysSum)
 
   const payableData = [
     {
