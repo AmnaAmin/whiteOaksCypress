@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Stack } from '@chakra-ui/react'
+import { Box, Button, Stack } from '@chakra-ui/react'
 
 type weekdayCardTypes = {
   id: number | string
