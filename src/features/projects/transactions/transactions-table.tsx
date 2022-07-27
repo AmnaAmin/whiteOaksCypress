@@ -117,7 +117,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )
 
-  console.log(`table data - `, transactions);
   return (
     <Box h="100%">
       <TableWrapper
