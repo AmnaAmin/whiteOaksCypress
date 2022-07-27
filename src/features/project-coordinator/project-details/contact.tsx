@@ -76,7 +76,11 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                       <ReactSelect
                         {...field}
                         selectProps={{ isBorderLeft: true }}
-                        placeholder={projectManager}
+                        placeholder={
+                          <Box noOfLines={1} title={projectManager}>
+                            {projectManager}
+                          </Box>
+                        }
                         isDisabled={isInvoicedPaid || isDisabled || projectData?.projectStatus === 'clientPaid'}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -133,7 +137,11 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                       <ReactSelect
                         {...field}
                         selectProps={{ isBorderLeft: true }}
-                        placeholder={projectManager}
+                        placeholder={
+                          <Box noOfLines={1} title={projectManager}>
+                            {projectManager}
+                          </Box>
+                        }
                         isDisabled={isInvoicedPaid}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -250,7 +258,11 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                     <ReactSelect
                       {...field}
                       selectProps={{ isBorderLeft: true }}
-                      placeholder={clientName}
+                      placeholder={
+                        <Box noOfLines={1} title={clientName}>
+                          {clientName}
+                        </Box>
+                      }
                       isDisabled={isDisabled || isInvoicedPaid || isContactNull || isClientPaid}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
