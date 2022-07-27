@@ -8,6 +8,7 @@ type weekdayCardTypes = {
   selectedDay: string
   onSelectDay: (string) => void
   disabled?: boolean
+  isLoading,
 }
 
 const clearFilterCount = {
@@ -38,6 +39,10 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           bg={props.selectedDay === props.id ? 'white' : '#E2E8F0'}
           color={props.selectedDay === props.id ? '#4E87F8' : 'black'}
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
+          fontSize="14px"
+          mt={2}
+          paddingLeft={2}
+          data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}
         </Box>
