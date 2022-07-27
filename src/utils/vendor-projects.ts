@@ -63,7 +63,7 @@ export const useDocumentTypes = () => {
 
   return useQuery('documentTypes', async () => {
     const response = await client(`/lk_value/lookupType/4`, {})
-    console.log('response', response?.data)
+
     return response?.data
   })
 }
