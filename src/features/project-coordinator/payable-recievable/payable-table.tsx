@@ -114,7 +114,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       ],
       ref,
     )
-    const { data: PayableData, isLoading, refetch } = useAccountPayable()
+    const { data: PayableData, isLoading } = useAccountPayable()
 
     useEffect(() => {
       if (PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -139,7 +139,6 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
               workOrder={selectedWorkOrder as ProjectWorkOrderType}
               onClose={() => {
                 setSelectedWorkOrder(undefined)
-                refetch()
               }}
             />
             <TableWrapper
