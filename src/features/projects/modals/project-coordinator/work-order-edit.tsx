@@ -123,7 +123,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                             fontSize="14px"
                             fontWeight={500}
                           >
-                            Reject Lien Waiver
+                            {t('rejectLienWaiver')}
                           </Checkbox>
                         )}
                       </Center>
@@ -141,7 +141,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                             fontSize="14px"
                             fontWeight={500}
                           >
-                            Reject Invoice
+                            {t('rejectInvoice')}
                           </Checkbox>
                         </Center>
                       )}
