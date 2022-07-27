@@ -6,7 +6,6 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export default function AuthenticatedApp() {
   const { isVendor, isProjectCoordinator, isVendorManager } = useUserRolesSelector()
-  console.log('isVendorManager', isVendorManager, isVendor)
   return (
     <Layout>
       {isVendor ? (
