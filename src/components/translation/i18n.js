@@ -242,7 +242,9 @@ i18n.use(initReactI18next).init({
         last4digits: 'Last 4 digits of SSN/EIN',
         streetAddress: 'Street Address',
         state: 'State',
+        secondaryPhoneNo: 'Secondary Phone No',
         city: 'City',
+        sin: 'SIN',
         zip: 'Zipcode',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
@@ -374,10 +376,23 @@ i18n.use(initReactI18next).init({
         body: 'Body',
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
+
+        //PC projectDetails
+        projectCoordinator: 'Project Coordinator',
+        fieldProjectManager: 'Field Project Manager',
+        superName: 'Super Name',
+        superPhone: 'Super Phone',
+        superEmail: 'Super Email',
       },
     },
     es: {
       translation: {
+        //PC projectDetails
+        projectCoordinator: 'Coordinador del proyecto',
+        fieldProjectManager: 'Gerente de Proyectos de Campo',
+        superName: 'Súper Nombre',
+        superPhone: 'Súper Teléfono',
+        superEmail: 'Súper correo electrónico',
         // Alerts
         triggeredAlert: 'Alerta activada',
         managedAlert: 'Alerta gestionada',
@@ -662,7 +677,9 @@ i18n.use(initReactI18next).init({
         paymentMethods: 'Métodos de Pago',
         streetAddress: 'Dirección',
         state: 'Expresar',
+        secondaryPhoneNo: 'Número de teléfono secundario',
         city: 'Ciudad',
+        sin: 'PECADO',
         zip: 'Cremallera postal',
         primaryContact: 'Contacto Primario',
         secondaryContact: 'Contacto Secundario',

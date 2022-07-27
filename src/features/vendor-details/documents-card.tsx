@@ -132,7 +132,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
   const documents = getValues()
   return (
     <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-      <Box h="502px" overflow="auto">
+      <Box h="600px" overflow="auto">
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
@@ -193,7 +193,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </FormControl>
           </Flex>
         </HStack>
-        <Box mt="20px">
+        <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md">
@@ -255,14 +255,14 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </HStack>
         </Box>
 
-        <HStack mt="20px">
+        <HStack mt="30px">
           <FormLabel m={0} variant="strong-label" size="lg">
             {t('insurance')}
           </FormLabel>
 
           <Divider borderWidth="1px" />
         </HStack>
-        <Box mt="20px">
+        <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md" w="200px" isTruncated title={t('autoInsuranceExpDate')}>
@@ -323,7 +323,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </Flex>
           </HStack>
         </Box>
-        <Box mt="20px">
+        <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md">
@@ -382,7 +382,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             </Flex>
           </HStack>
         </Box>
-        <Box mt="20px">
+        <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
               <FormLabel variant="strong-label" size="md">
