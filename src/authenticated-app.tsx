@@ -1,10 +1,21 @@
 import { Layout } from 'components/layout'
 import VendorRoutes from 'pages/vendor/routes'
 import ProjectCordinatorRoutes from 'pages/project-cordinator/routes'
+import VendorManagerRoutes from 'pages/vendor-manager/routes'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export default function AuthenticatedApp() {
-  const { isVendor, isProjectCoordinator } = useUserRolesSelector()
-
-  return <Layout>{isVendor ? <VendorRoutes /> : isProjectCoordinator ? <ProjectCordinatorRoutes /> : null}</Layout>
+  const { isVendor, isProjectCoordinator, isVendorManager } = useUserRolesSelector()
+  console.log('isVendorManager', isVendorManager, isVendor)
+  return (
+    <Layout>
+      {isVendor ? (
+        <VendorRoutes />
+      ) : isProjectCoordinator ? (
+        <ProjectCordinatorRoutes />
+      ) : isVendorManager ? (
+        <VendorManagerRoutes />
+      ) : null}
+    </Layout>
+  )
 }
