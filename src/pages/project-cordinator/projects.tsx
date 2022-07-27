@@ -66,13 +66,7 @@ export const Projects = () => {
           </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-            <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-          <Button
-          variant={'clear-filter'}
-          onClick={clearAll}
-          >
-            {t('clearFilter')}
-          </Button>
+          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} clear={clearAll} />
           <Button
             alignContent="right"
             onClick={onNewProjectModalOpen}

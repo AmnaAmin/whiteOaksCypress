@@ -1,4 +1,3 @@
-
 import { Button, Center, Stack } from '@chakra-ui/react'
 type weekdayCardTypes = {
   id: number | string
@@ -8,18 +7,7 @@ type weekdayCardTypes = {
   selectedDay: string
   onSelectDay: (string) => void
   disabled?: boolean
-  isLoading,
-}
-
-const clearFilterCount = {
-  width: '24px',
-  height: '24px',
-  m: 1,
-  borderRadius: '50%',
-  fontSize: '14px',
-  paddingTop: 2,
-  display: 'flex',
-  justifyContent: 'center',
+  isLoading
 }
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
@@ -51,7 +39,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           fontSize="16px"
           fontWeight={600}
           mb={2}
-           data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
+          data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}
         </Center>
