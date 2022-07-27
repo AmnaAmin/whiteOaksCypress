@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 
 import { MdOutlineCancel } from 'react-icons/md'
-import { documentTypes, useUploadDocument } from 'utils/vendor-projects'
+import { useDocumentTypes, useUploadDocument } from 'utils/vendor-projects'
 // import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -36,6 +36,14 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const [isError, setError] = useState(false)
   const { vendorId } = useUserProfile() as Account
   const { mutate: saveDocument, isLoading } = useUploadDocument()
+  const { data: documentTypes } = useDocumentTypes()
+
+  const states = documentTypes
+    ? documentTypes?.map(state => ({
+        label: state?.value,
+        value: state?.id,
+      }))
+    : null
 
   const onFileChange = useCallback(
     e => {
@@ -80,6 +88,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       projectId,
       vendorId,
     }
+
     saveDocument(doc, {
       onSuccess() {
         resetUpload()
@@ -130,7 +139,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               <HStack spacing="20px" w="100%">
                 <Box w={215}>
                   <ReactSelect
-                    options={documentTypes}
+                    options={states}
                     selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
                     value={documentType}
                     onChange={onDocumentTypeChange}

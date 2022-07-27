@@ -79,12 +79,19 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#0BC5EA',
     },
   ],
+  [UserTypes.vendorManager]: [
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+  ],
 }
 
 export const useRoleBasedMenu = (): Array<Menu> => {
   const { data } = useAuth()
   const { userTypeLabel } = data?.user as Account
-
   return MENU_ROLE_BASED[userTypeLabel] || []
 }
 

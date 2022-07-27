@@ -1,7 +1,7 @@
 import { Box, Center, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
-import { PayableFiltter } from 'features/project-coordinator/payable-recievable/filtter'
+import { PayableFilter } from 'features/project-coordinator/payable-recievable/filtter'
 import { PayableTable } from 'features/project-coordinator/payable-recievable/payable-table'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
@@ -71,7 +71,7 @@ export const AccountDetails = (props: accountDetailsTypes) => {
           {props.topTitle}
         </FormLabel>
         <Box>
-          <PayableFiltter onSelected={setSelectedCard} cardSelected={selectedCard} />
+          <PayableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
         </Box>
         <Box mt={6}>
           <FormLabel variant="strong-label" size="lg">

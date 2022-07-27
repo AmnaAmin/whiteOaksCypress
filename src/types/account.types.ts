@@ -3,6 +3,7 @@ export type Authorities = ['ROLE_USER', 'ROLE_ADMIN']
 export enum UserTypes {
   vendor = 'Vendor',
   pc = 'Project Coordinator',
+  vendorManager = 'Vendor Manager',
 }
 
 export type Account = {

@@ -63,7 +63,11 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.clientSignoffDate !== null ? dateFormatter(projectData?.clientSignoffDate) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.clientSignoffDate !== null
+                      ? dateFormatter(projectData?.clientSignoffDate)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -77,7 +81,11 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.projectClosedDate !== null ? dateFormatter(projectData?.projectClosedDate) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.projectClosedDate !== null
+                      ? dateFormatter(projectData?.projectClosedDate)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -91,7 +99,9 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.clientPaidDate !== null ? dateFormatter(projectData?.clientPaidDate) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.clientPaidDate !== null ? dateFormatter(projectData?.clientPaidDate) : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -105,7 +115,11 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.woaCompletionDate !== null  && projectData?.projectStatus === 'COLLECTION' ? dateFormatter(projectData?.woaCompletionDate) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.woaCompletionDate !== null && projectData?.projectStatus === 'COLLECTION'
+                      ? dateFormatter(projectData?.woaCompletionDate)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -119,7 +133,11 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.woaBackdatedInvoiceDate !== null && projectData?.projectStatus === 'DISPUTED' ? dateFormatter(projectData?.woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.woaBackdatedInvoiceDate !== null && projectData?.projectStatus === 'DISPUTED'
+                      ? dateFormatter(projectData?.woaBackdatedInvoiceDate)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 

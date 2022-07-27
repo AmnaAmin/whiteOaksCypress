@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Checkbox, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
-
-// import { usePcClients } from 'utils/clients-table-api'
+import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'utils/account-payable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
+import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'
+import { ProjectWorkOrderType } from 'types/project.type'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { TableWrapper } from 'components/table/table'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -113,18 +115,45 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       ref,
     )
     const { data: PayableData, isLoading } = useAccountPayable()
+
+    useEffect(() => {
+      if (PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+        const updatedWorkOrder = PayableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+        if (updatedWorkOrder) {
+          setSelectedWorkOrder({ ...updatedWorkOrder })
+        } else {
+          setSelectedWorkOrder(undefined)
+        }
+      } else {
+        setSelectedWorkOrder(undefined)
+      }
+    }, [PayableData])
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
     return (
       <Box overflow="auto" width="100%">
-        <ReactTable
-          columns={columns}
-          setTableInstance={setTableInstance}
-          data={PayableData?.workOrders || []}
-          isLoading={isLoading}
-          TableRow={payableRow}
-          tableHeight="calc(100vh - 300px)"
-          name="payable-table"
-          defaultFlexStyle={false}
-        />
+        {isLoading ? (
+          <BlankSlate />
+        ) : (
+          <>
+            <WorkOrderDetails
+              workOrder={selectedWorkOrder as ProjectWorkOrderType}
+              onClose={() => {
+                setSelectedWorkOrder(undefined)
+              }}
+            />
+            <TableWrapper
+              columns={columns}
+              setTableInstance={setTableInstance}
+              data={PayableData?.workOrders || []}
+              isLoading={isLoading}
+              TableRow={payableRow}
+              tableHeight="calc(100vh - 300px)"
+              name="payable-table"
+              defaultFlexStyle={false}
+              onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+            />
+          </>
+        )}
       </Box>
     )
   },

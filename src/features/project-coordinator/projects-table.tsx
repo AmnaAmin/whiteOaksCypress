@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
 import { Link } from 'react-router-dom'
 import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
@@ -143,7 +144,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 
   return (
     <Box ref={resizeElementRef} height="100%">
-      <ReactTable
+      <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
@@ -151,6 +152,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         name="my-table"
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
+        enablePagination={true}
+        sortBy={{ id: 'id', desc: true }}
       />
     </Box>
   )

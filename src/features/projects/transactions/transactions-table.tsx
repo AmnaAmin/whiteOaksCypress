@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Button, Icon, Divider } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { useTransactions } from 'utils/transactions'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
@@ -118,7 +119,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
   return (
     <Box h="100%">
-      <ReactTable
+      <TableWrapper
         isLoading={isLoading}
         columns={columns}
         data={transactions}
