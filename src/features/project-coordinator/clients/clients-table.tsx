@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { usePcClients } from 'utils/clients-table-api'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -24,7 +25,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text isTruncated title={cell.value} padding="0 15px">
                 {cell.render('Cell')}
               </Text>
             </Flex>
@@ -36,7 +37,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { data: PcData } = usePcClients()
+  const { data: clients, isLoading } = usePcClients()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -81,10 +82,11 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <ReactTable
+      <TableWrapper
+        isLoading={isLoading}
         onRowClick={props.onRowClick}
         columns={columns}
-        data={PcData || []}
+        data={clients || []}
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"

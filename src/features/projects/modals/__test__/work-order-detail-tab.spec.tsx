@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { WorkOrderDetails } from '../work-order-details'
 import { Providers } from 'providers'
 import { WORK_ORDERS, PROJECTS } from 'mocks/api/workorder/data'
@@ -17,6 +16,7 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData, 
   await waitForLoadingToFinish()
 }
 
+jest.setTimeout(150000)
 describe('Work Order modal showing work order specific details', () => {
   test('Verify work order details in active state', async () => {
     const onClose = jest.fn()

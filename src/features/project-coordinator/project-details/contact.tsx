@@ -1,10 +1,20 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/projects/status'
+import { useTranslation } from 'react-i18next'
 
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { ProjectType } from 'types/project.type'
+
+const InputLabel: React.FC<{ title: string; htmlFor: string }> = ({ title, htmlFor }) => {
+  const { t } = useTranslation()
+  return (
+    <FormLabel title={t(title)} isTruncated variant="strong-label" size="md" htmlFor={htmlFor}>
+      {t(title)}
+    </FormLabel>
+  )
+}
 
 const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props => {
   const { projectData, dataContact } = props
@@ -21,28 +31,29 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
     reset()
   }
 
-  const statusArray = [
+  const disableStatusList = [
     STATUS.New.valueOf(),
     STATUS.Active.valueOf(),
     STATUS.Punch.valueOf(),
-    STATUS.Overpayment.valueOf(),
     STATUS.PastDue.valueOf(),
     STATUS.Cancelled.valueOf(),
     STATUS.Closed.valueOf(),
-    STATUS.ClientPaid.valueOf(),
     STATUS.Invoiced.valueOf(),
   ]
 
-  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
+  const isDisabled = disableStatusList.includes((projectData?.projectStatus || '').toLowerCase())
 
-  const statusInvoice_Paid = [STATUS.Invoiced.valueOf(), STATUS.Paid.valueOf()].includes(
+  const isClientPaid = [STATUS.ClientPaid.valueOf(), STATUS.Overpayment.valueOf()].includes(
+    (projectData?.projectStatus || '').toLowerCase(),
+  )
+  const isInvoicedPaid = [STATUS.Invoiced.valueOf(), STATUS.Paid.valueOf()].includes(
     projectData?.projectStatus.toLowerCase(),
   )
 
   const projectManager = dataContact?.projectManager
   const projectManagerPhoneNumber = dataContact?.projectManagerPhoneNumber
   const clientName = dataContact?.clientName
-  const fieldDisable = dataContact ? true : false
+  const isContactNull = !dataContact
   const superEmailAddress = dataContact?.superEmailAddress
   const superFirstName = dataContact?.superFirstName
   const superPhoneNumber = dataContact?.superPhoneNumber
@@ -55,9 +66,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
           <HStack spacing="16px">
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectManager}>
-                <FormLabel variant="strong-label" size="md">
-                  Field Project Manager
-                </FormLabel>
+                <InputLabel title={'projectCoordinator'} htmlFor={'projectCoordinator'} />
                 <Controller
                   control={control}
                   name="projectManager"
@@ -67,8 +76,12 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                       <ReactSelect
                         {...field}
                         selectProps={{ isBorderLeft: true }}
-                        placeholder={projectManager}
-                        isDisabled={statusInvoice_Paid}
+                        placeholder={
+                          <Box noOfLines={1} title={projectManager}>
+                            {projectManager}
+                          </Box>
+                        }
+                        isDisabled={isInvoicedPaid || isDisabled || projectData?.projectStatus === 'clientPaid'}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -79,18 +92,15 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
             <Box h="40px">
               <FormControl isInvalid={errors.fpmPhone}>
-                <FormLabel variant="strong-label" size="md" htmlFor="fpmPhone">
-                  FPM Phone
-                </FormLabel>
+                <InputLabel title={'phone'} htmlFor={'phone'} />
                 <Input
                   placeholder="098-987-2233"
                   id="fpmPhone"
                   value={projectManagerPhoneNumber}
-                  isDisabled={projectStatus || statusInvoice_Paid}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   {...register('fpmPhone', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="215px"
                 />
                 <FormErrorMessage>{errors.fpmPhone && errors.fpmPhone.message}</FormErrorMessage>
@@ -99,17 +109,14 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel variant="strong-label" size="md" htmlFor="ext">
-                  Ext
-                </FormLabel>
+                <InputLabel title={'ext'} htmlFor={'ext'} />
                 <Input
                   id="ext"
                   value={superPhoneNumberExtension}
-                  isDisabled={projectStatus || statusInvoice_Paid}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="124px"
                 />
                 <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
@@ -120,9 +127,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
           <HStack spacing="16px">
             <Box h="40px">
               <FormControl w="215px" isInvalid={errors.projectCoordinator}>
-                <FormLabel variant="strong-label" size="md">
-                  Field Project Manager
-                </FormLabel>
+                <InputLabel title={'fieldProjectManager'} htmlFor={'fieldProjectManager'} />
                 <Controller
                   control={control}
                   name="projectCoordinator"
@@ -132,8 +137,12 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                       <ReactSelect
                         {...field}
                         selectProps={{ isBorderLeft: true }}
-                        placeholder={projectManager}
-                        isDisabled={statusInvoice_Paid}
+                        placeholder={
+                          <Box noOfLines={1} title={projectManager}>
+                            {projectManager}
+                          </Box>
+                        }
+                        isDisabled={isInvoicedPaid}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -144,18 +153,15 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
             <Box h="40px">
               <FormControl isInvalid={errors.pcPhone}>
-                <FormLabel variant="strong-label" size="md" htmlFor="pcPhone">
-                  FPM Phone
-                </FormLabel>
+                <InputLabel title={'phone'} htmlFor={'phone'} />
                 <Input
                   placeholder="098-987-2233"
                   value={projectManagerPhoneNumber}
-                  isDisabled={projectStatus || statusInvoice_Paid}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   id="pcPhone"
                   {...register('pcPhone', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="215px"
                 />
                 <FormErrorMessage>{errors.pcPhone && errors.pcPhone.message}</FormErrorMessage>
@@ -164,17 +170,14 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel variant="strong-label" size="md" htmlFor="ext">
-                  Ext
-                </FormLabel>
+                <InputLabel title={'ext'} htmlFor={'ext'} />
                 <Input
                   id="ext"
                   value={superPhoneNumberExtension}
-                  isDisabled={projectStatus || statusInvoice_Paid}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="124px"
                 />
                 <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
@@ -185,9 +188,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
           <HStack spacing="16px">
             <Box h="40px">
               <FormControl isInvalid={errors.superEmailName}>
-                <FormLabel variant="strong-label" size="md" htmlFor="superEmailName">
-                  Super Email Name
-                </FormLabel>
+                <InputLabel title={'superName'} htmlFor={'superName'} />
                 <Input
                   value={superFirstName}
                   id="superEmailName"
@@ -202,9 +203,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
             <Box h="40px">
               <FormControl isInvalid={errors.superPhone}>
-                <FormLabel variant="strong-label" size="md" htmlFor="superPhone">
-                  Super Phone
-                </FormLabel>
+                <InputLabel title={'superPhone'} htmlFor={'superPhone'} />
                 <Input
                   value={superPhoneNumber}
                   id="superPhone"
@@ -218,9 +217,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
             </Box>
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel variant="strong-label" size="md" htmlFor="ext">
-                  Ext
-                </FormLabel>
+                <InputLabel title={'ext'} htmlFor={'ext'} />
                 <Input
                   id="ext"
                   value={superPhoneNumberExtension}
@@ -235,9 +232,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
             <Box h="40px">
               <FormControl isInvalid={errors.superEmail}>
-                <FormLabel variant="strong-label" size="md" htmlFor="superEmail">
-                  Super Email
-                </FormLabel>
+                <InputLabel title={'superEmail'} htmlFor={'superEmail'} />
                 <Input
                   value={superEmailAddress}
                   id="superEmail"
@@ -253,9 +248,7 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
 
           <Box h="40px">
             <FormControl w="215px" isInvalid={errors.client}>
-              <FormLabel variant="strong-label" size="md" htmlFor="client">
-                Client
-              </FormLabel>
+              <InputLabel title={'client'} htmlFor={'client'} />
               <Controller
                 control={control}
                 name="client"
@@ -265,8 +258,12 @@ const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props 
                     <ReactSelect
                       {...field}
                       selectProps={{ isBorderLeft: true }}
-                      placeholder={clientName}
-                      isDisabled={projectStatus || statusInvoice_Paid || fieldDisable}
+                      placeholder={
+                        <Box noOfLines={1} title={clientName}>
+                          {clientName}
+                        </Box>
+                      }
+                      isDisabled={isDisabled || isInvoicedPaid || isContactNull || isClientPaid}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>

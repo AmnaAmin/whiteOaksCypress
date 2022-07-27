@@ -219,7 +219,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     controlStyle={{ w: '16em' }}
                     disabled={
                       [STATUS.Paid, STATUS.Cancelled].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) ||
-                      lienWaiverData?.lienWaiverAccepted
+                      (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
                     }
                     elementStyle={{
                       bg: 'white',
@@ -257,7 +257,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       }}
                       disabled={
                         [STATUS.Paid, STATUS.Cancelled].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) ||
-                        lienWaiverData?.lienWaiverAccepted
+                        (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
                       }
                     >
                       <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
@@ -282,7 +282,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                           disabled={
                             [STATUS.Paid, STATUS.Cancelled].includes(
                               lienWaiverData?.statusLabel?.toLocaleLowerCase(),
-                            ) || lienWaiverData?.lienWaiverAccepted
+                            ) ||
+                            (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
                           }
                           data-testid="openSignature"
                           onClick={() => setOpenSignature(true)}
@@ -299,7 +300,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                             disabled={
                               [STATUS.Paid, STATUS.Cancelled].includes(
                                 lienWaiverData?.statusLabel?.toLocaleLowerCase(),
-                              ) || lienWaiverData?.lienWaiverAccepted
+                              ) ||
+                              (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
                             }
                             data-testid="removeSignature"
                             onClick={onRemoveSignature}
@@ -360,7 +362,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             {t('cancel')}
           </Button>
           {![STATUS.Cancelled, STATUS.Paid].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) &&
-            !lienWaiverData.lienWaiverAccepted && (
+            !(lienWaiverData.leanWaiverSubmitted && lienWaiverData.lienWaiverAccepted) && (
               <Button colorScheme="brand" type="submit" data-testid="save-lien-waiver">
                 {t('save')}
               </Button>

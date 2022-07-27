@@ -46,11 +46,15 @@ export const useUploadDocument = () => {
 export const useDocuments = ({ projectId }: { projectId: string | undefined }) => {
   const client = useClient()
 
-  const { data: documents, ...rest } = useQuery<Array<Document>>(['documents', projectId], async () => {
-    const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
+  const { data: documents, ...rest } = useQuery<Array<Document>>(
+    ['documents', projectId],
+    async () => {
+      const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
 
-    return response?.data ? response?.data : []
-  })
+      return response?.data ? response?.data : []
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     documents,
@@ -58,17 +62,15 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
   }
 }
 
-export const documentTypes = [
-  { value: 24, label: 'Permit' },
-  { value: 25, label: 'Warranty' },
-  { value: 56, label: 'Drawings' },
-  { value: 57, label: 'NOC' },
-  { value: 39, label: 'Original SOW' },
-  { value: 58, label: 'Other' },
-  { value: 19, label: 'Photos' },
-  { value: 18, label: 'Reciept' },
-  { value: 17, label: 'Change Order' },
-]
+export const useDocumentTypes = () => {
+  const client = useClient()
+
+  return useQuery('documentTypes', async () => {
+    const response = await client(`/lk_value/lookupType/4`, {})
+
+    return response?.data
+  })
+}
 
 export const documentScore = [
   { value: 24, label: '1' },
@@ -94,7 +96,7 @@ export const documentTerm = [
 ]
 
 export const createInvoice = (doc, workOrder, projectData: ProjectType, items, summary) => {
-  const baseFont = 'arial'
+  const baseFont = 'times'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
     streetAddress: '4 14th Street #601',

@@ -1,8 +1,7 @@
 import { useClient } from 'utils/auth-context'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { Column } from 'react-table'
+import { ColumnDef } from '@tanstack/react-table'
 import { TableColumnSetting, TableNames } from 'types/table-column.types'
-import { useColumnWidthResize } from './hooks/useColumnsWidthResize'
 import { useUserProfile } from './redux-common-selectors'
 import { Account } from 'types/account.types'
 import { useTranslation } from 'react-i18next'
@@ -35,21 +34,25 @@ const generateSettingColumn = (options: generateSettingColumnProps): TableColumn
   }
 }
 
+type TableColumns = ColumnDef<any>[]
+
 const sortTableColumnsBasedOnSettingColumnsOrder = (
   settingColumns: TableColumnSetting[],
-  tableColumns: Column[],
-): Column[] => {
+  tableColumns: TableColumns,
+): TableColumns => {
   const getOrder = (accessor: any) => settingColumns?.find(item => item.colId === accessor)?.order
 
   return tableColumns?.sort((itemA, itemB) => {
-    const itemAOrder = getOrder(itemA.accessor) ?? 0
+    // @ts-ignore
+    const itemAOrder = getOrder(itemA.accessKey) ?? 0
+    // @ts-ignore
     const itemBOrder = getOrder(itemB.accessor) ?? 0
 
     return itemAOrder - itemBOrder
   })
 }
 
-export const useTableColumnSettings = (columns: Column[], tableName: TableNames) => {
+export const useTableColumnSettings = (columns: TableColumns, tableName: TableNames) => {
   const client = useClient()
   const { email } = useUserProfile() as Account
   const { t } = useTranslation()
@@ -73,7 +76,8 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
       })
     : columns.map((col, index) => {
         return generateSettingColumn({
-          field: col.Header as string,
+          field: col.header as string,
+          // @ts-ignore
           contentKey: col.accessor as string,
           order: index,
           userId: email,
@@ -86,17 +90,16 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
     return !settingColumns?.find(pCol => {
       // console.log('column', pCol)
 
+      // @ts-ignore
       return pCol.colId === col.accessor
     })?.hide
   })
 
-  const { columns: rezizedColumns, resizeElementRef } = useColumnWidthResize(filteredColumns)
-  const tableColumns = sortTableColumnsBasedOnSettingColumnsOrder(settingColumns, rezizedColumns)
+  const tableColumns = sortTableColumnsBasedOnSettingColumnsOrder(settingColumns, filteredColumns)
 
   return {
     tableColumns,
     settingColumns,
-    resizeElementRef,
     ...rest,
   }
 }
