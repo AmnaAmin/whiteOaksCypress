@@ -46,11 +46,15 @@ export const useUploadDocument = () => {
 export const useDocuments = ({ projectId }: { projectId: string | undefined }) => {
   const client = useClient()
 
-  const { data: documents, ...rest } = useQuery<Array<Document>>(['documents', projectId], async () => {
-    const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
+  const { data: documents, ...rest } = useQuery<Array<Document>>(
+    ['documents', projectId],
+    async () => {
+      const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
 
-    return response?.data ? response?.data : []
-  })
+      return response?.data ? response?.data : []
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     documents,
@@ -94,7 +98,7 @@ export const documentTerm = [
 ]
 
 export const createInvoice = (doc, workOrder, projectData: ProjectType, items, summary) => {
-  const baseFont = 'arial'
+  const baseFont = 'times'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
     streetAddress: '4 14th Street #601',
