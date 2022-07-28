@@ -40,7 +40,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients } = useClients()
-  const [selectedClientId, setSelectedClientId] = useState<Clients>()
+  const [selectedClient, setSelectedClient] = useState<Clients>()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -86,9 +86,9 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   return (
     <Box ref={resizeElementRef}>
       <Client
-        clientDetails={selectedClientId as Clients}
+        clientDetails={selectedClient as Clients}
         onClose={() => {
-          setSelectedClientId(undefined)
+          setSelectedClient(undefined)
         }}
       />
 
@@ -98,7 +98,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 300px)"
         name="clients-table"
-        onRowClick={(e, row) => setSelectedClientId(row.original)}
+        onRowClick={(e, row) => setSelectedClient(row.original)}
       />
     </Box>
   )
