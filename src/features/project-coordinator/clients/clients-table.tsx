@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
 import { useClients } from 'utils/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/projects/modals/project-coordinator/client-modal'
