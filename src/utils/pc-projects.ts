@@ -192,3 +192,22 @@ export const useVendor = () => {
     ...rest,
   }
 }
+
+export const useGanttChart = (projectId?: string) => {
+  const client = useClient()
+
+  const { data: ganttChartData, ...rest } = useQuery<ProjectType>(
+    ['projectSchedule', projectId],
+    async () => {
+      const response = await client(`ganChartElastic/${projectId}`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
+
+  return {
+    ganttChartData,
+    ...rest,
+  }
+}

@@ -31,6 +31,7 @@
     "focus-visible": "^5.2.0",
     "framer-motion": "^6.2.8",
     "gantt-schedule-timeline-calendar": "^3.16.1",
+    "gantt-task-react": "^0.3.9",
     "history": "^5.2.0",
     "i18next": "^21.6.13",
     "import": "^0.0.6",

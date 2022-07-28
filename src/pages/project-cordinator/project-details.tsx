@@ -25,6 +25,11 @@ import { UploadDocumentModal } from 'features/projects/documents/upload-document
 import { Card } from 'components/card/card'
 import { AlertsTable } from 'features/projects/alerts/alerts-table'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
+// import { ProjectSchedule } from 'features/project-coordinator/project-schedule'
+import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'gantt-task-react'
+import 'gantt-task-react/dist/index.css'
+import ProjectSchedule from 'features/project-coordinator/project-schedule/project-schedule'
+import { useGanttChart } from 'utils/pc-projects'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -32,7 +37,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-
+  const { ganttChartData } = useGanttChart(projectId)
   const [alertRow, selectedAlertRow] = useState(true)
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
@@ -43,6 +48,7 @@ export const ProjectDetails: React.FC = props => {
   // const onSave = columns => {
   //   postProjectColumn(columns)
   // }
+
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -57,10 +63,13 @@ export const ProjectDetails: React.FC = props => {
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
+  console.log("ganttChartData", ganttChartData)
+
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
+        <ProjectSchedule isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         {tabIndex === 1}
