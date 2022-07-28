@@ -198,6 +198,6 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items, s
 }
 
 export const paymentsTerms = [
-  { value: 24, label: '20' },
-  { value: 25, label: '30' },
+  { value: '20', label: '20' },
+  { value: '30', label: '30' },
 ]

@@ -4,6 +4,8 @@ import { useToast } from '@chakra-ui/toast'
 import { useParams } from 'react-router-dom'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
+import { ProjectWorkOrder } from 'types/transaction.type'
+import { STATUS } from 'features/projects/status'
 
 export const useUpdateWorkOrderMutation = () => {
   const client = useClient()
@@ -167,4 +169,21 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
   doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
   doc.text('Total Award:', summaryX, tableEndsY + 7)
   return doc
+}
+
+export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
+  const defaultStatus = false
+  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  return {
+    dateInvoiceSubmittedEnabled: defaultStatus || invoicedState,
+    paymentTermEnabled: defaultStatus || invoicedState,
+    paymentTermDateEnabled: defaultStatus,
+    expectedPaymentDateEnabled: defaultStatus || completedState || invoicedState,
+    datePaymentProcessedEnabled: defaultStatus || completedState,
+    datePaidEnabled: defaultStatus || completedState || invoicedState,
+    clientApprovedAmountEnabled: defaultStatus,
+    clientOriginalApprovedAmountEnabled: defaultStatus,
+    finalInvoiceAmountEnabled: defaultStatus,
+  }
 }

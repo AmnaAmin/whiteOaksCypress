@@ -157,7 +157,6 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const parseValuesToPayload = formValues => {
-    console.log(dateISOFormat(formValues?.workOrderStartDate))
     return {
       workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
       workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
