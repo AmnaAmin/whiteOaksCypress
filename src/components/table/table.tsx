@@ -1,4 +1,3 @@
-import { Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { usePagination } from 'react-table'
 
