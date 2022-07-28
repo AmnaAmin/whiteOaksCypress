@@ -10,14 +10,17 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
 
 import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
 import React, { useCallback, useEffect } from 'react'
 import { ProjectWorkOrderType } from 'types/project.type'
+import { useVendorProfile } from 'utils/vendor-details'
 
 const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkOrderType; onClose: () => void }) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorDetails.id)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -43,7 +46,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
                   {t('vendorDetail')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  A Chimney Sweep
+                  {vendorDetails?.companyName}
                 </Text>
               </HStack>
             </HStack>
@@ -51,7 +54,16 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <VendorProfileTabs vendorModalType="detail" onClose={onClose} />
+              {isLoading ? (
+                <BlankSlate width="60px" />
+              ) : (
+                <VendorProfileTabs
+                  vendorProfileData={vendorProfileData}
+                  refetch={refetch}
+                  // vendorModalType="detail"
+                  onClose={onClose}
+                />
+              )}
             </Box>
           </ModalBody>
         </ModalContent>

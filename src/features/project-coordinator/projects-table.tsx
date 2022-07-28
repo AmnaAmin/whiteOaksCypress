@@ -153,6 +153,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
         enablePagination={true}
+        sortBy={{ id: 'id', desc: true }}
       />
     </Box>
   )

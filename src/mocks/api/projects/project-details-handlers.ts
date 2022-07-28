@@ -3,6 +3,7 @@ import {
   ALERT_HISTORIES,
   CHANGE_ORDERS,
   DOCUMENTS,
+  DOCUMENT_TYPES,
   getTransactionById,
   makeChangeOrderObject,
   NEW_DOCUMENT,
@@ -10,7 +11,7 @@ import {
   WORK_ORDERS_WITH_CHANGE_ORDERS,
 } from './data'
 import { pushData, getData, appendData } from '../../local-db'
-import { PROJECT_FILTER_CARDS } from './data.pc'
+import { PROJECT_FILTER_CARDS, WEEKDAY_FILTER } from './data.pc'
 
 pushData('/documents', DOCUMENTS)
 pushData('/transactions', CHANGE_ORDERS)
@@ -18,6 +19,10 @@ pushData('/transactions', CHANGE_ORDERS)
 const projectPCProjectDetailHandlers = [
   rest.get('/api/projectCards', (req: RestRequest, res, ctx) => {
     return res(ctx.status(200), ctx.json(PROJECT_FILTER_CARDS))
+  }),
+
+  rest.get('/api/projects-due-this-week', (req: RestRequest, res, ctx) => {
+    return res(ctx.status(200), ctx.json(WEEKDAY_FILTER))
   }),
 ]
 
@@ -58,6 +63,10 @@ export const projectDetailHandlers = [
   }),
   rest.get('/api/project/:projectId/workorders', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(WORK_ORDERS))
+  }),
+
+  rest.get('/api/lk_value/lookupType/4', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(DOCUMENT_TYPES))
   }),
 
   ...projectPCProjectDetailHandlers,
