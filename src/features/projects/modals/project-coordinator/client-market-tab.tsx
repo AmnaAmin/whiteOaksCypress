@@ -1,7 +1,6 @@
-import * as React from 'react'
 import { useState } from 'react'
 import { Box, Checkbox, Flex, Center, Text, Button } from '@chakra-ui/react'
-const cuntryName = [
+const countryName = [
   {
     id: 1,
     name: 'Atlanta',
@@ -76,9 +75,8 @@ const cuntryName = [
   },
 ]
 
-const CheckStructer = props => {
+const Market = props => {
   const [check, setCheck] = useState(false)
-  //   console.log('check', props.name, check)
   return (
     <Box>
       <Checkbox isChecked={check} bg="red" hidden />
@@ -92,7 +90,7 @@ const CheckStructer = props => {
         m={2}
         bg={check ? 'green.200' : 'gray.200'}
         rounded={6}
-        fontWeight={600}
+        fontSize="14px"
       >
         <Text color="gray.500">{props.name}</Text>
       </Center>
@@ -100,19 +98,16 @@ const CheckStructer = props => {
   )
 }
 
-export const CheckBoxes = props => {
+export const Markets = props => {
   return (
     <Box h="517px">
       <Flex flexWrap="wrap">
-        {cuntryName.map(name => {
-          return <CheckStructer name={name.name} />
+        {countryName.map(name => {
+          return <Market name={name.name} />
         })}
       </Flex>
       <Flex mt={355} h="80px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
-        <Button colorScheme="brand" variant="outline" mr={3} onClick={props.onClose}>
-          Close
-        </Button>
-        <Button colorScheme="brand">Next</Button>
+        <Button colorScheme="brand">Cancel</Button>
       </Flex>
     </Box>
   )

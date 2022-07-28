@@ -1,5 +1,4 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
-import { Button } from 'components/button/button'
 import { ClientsTable } from 'features/project-coordinator/clients/clients-table'
 import { useRef } from 'react'
 
@@ -11,9 +10,6 @@ const Clients = () => {
         <Text fontSize="18px" fontWeight={500} color="gray.600">
           Clients Overview
         </Text>
-        <Button colorScheme="brand" variant="ghost">
-          + New Client
-        </Button>
       </Flex>
       <Flex
         px={7}
