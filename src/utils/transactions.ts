@@ -27,11 +27,15 @@ import { Document } from 'types/vendor.types'
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
 
-  const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(['transactions', projectId], async () => {
-    const response = await client(`change-orders?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
+  const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
+    ['transactions', projectId],
+    async () => {
+      const response = await client(`change-orders?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
 
-    return response?.data
-  })
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     transactions,

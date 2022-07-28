@@ -23,6 +23,7 @@ export const useUpdateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries('accountPayable')
         toast({
           title: 'Work Order',
           description: 'Work Order has been saved successfully.',

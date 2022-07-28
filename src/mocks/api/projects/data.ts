@@ -1235,3 +1235,25 @@ export const SETTING_COLUMNS = [
     userId: 'vendor@devtek.ai',
   },
 ]
+
+export const DOCUMENT_TYPES = [
+  {
+    id: 16,
+    lookupId: 4,
+    value: 'Work Order',
+    createdBy: null,
+    createdDate: null,
+    modifiedBy: null,
+    modifiedDate: null,
+  },
+
+  {
+    id: 56,
+    lookupId: 4,
+    value: 'Drawings',
+    createdBy: null,
+    createdDate: null,
+    modifiedBy: null,
+    modifiedDate: null,
+  },
+]

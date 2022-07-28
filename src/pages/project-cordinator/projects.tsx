@@ -47,8 +47,9 @@ export const Projects = () => {
 
   useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
-  const clearSelected = () => {
+  const clearAll = () => {
     setSelectedCard('')
+    setSelectedDay('')
   }
 
   return (
@@ -65,9 +66,7 @@ export const Projects = () => {
           </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <Box onClick={clearSelected}>
-            <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-          </Box>
+          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} clear={clearAll} />
           <Button
             alignContent="right"
             onClick={onNewProjectModalOpen}

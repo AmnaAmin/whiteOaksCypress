@@ -48,7 +48,14 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
         <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {title}
         </Text>
-        <Text color="gray.500" lineHeight="20px" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          data-testid={title}
+          color="gray.500"
+          lineHeight="20px"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+        >
           {value}
         </Text>
       </Box>
@@ -195,12 +202,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           />
           <InvoiceInfo
             title={t('invoiceDate')}
-            value={workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy'}
+            value={workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yy'}
             icons={BiCalendar}
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
+            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yy'}
             icons={BiCalendar}
           />
         </Grid>
@@ -209,135 +216,137 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
         <Box>
           <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
-            <form>
-              <Table variant="simple" size="md">
-                <Thead pos="sticky" top={0}>
-                  <Tr>
-                    <Td>{t('item')}</Td>
-                    <Td>{t('description')}</Td>
-                    <Td>Total</Td>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {items.map((item, index) => {
-                    return (
-                      <Tr h="72px">
-                        <Td>{item.id}</Td>
-                        <Td>{item.name}</Td>
-                        <Td>
-                          <Flex justifyContent="space-between" alignItems="center">
-                            <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
-                            {allowManualEntry && (
-                              <Text>
-                                <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
-                              </Text>
-                            )}
-                          </Flex>
-                        </Td>
-                      </Tr>
-                    )
-                  })}
-                </Tbody>
-                {allowManualEntry && (
-                  <Tfoot>
-                    <Tr>
-                      <Td pt="0" pb={6}>
-                        <Button
-                          type="submit"
-                          size="xs"
-                          variant="ghost"
-                          my={0.5}
-                          fontSize="14px"
-                          fontWeight={600}
-                          color="#4E87F8"
-                        >
-                          +Add New Item
-                        </Button>
-
-                        <FormControl isInvalid={!!errors.item?.message}>
-                          <Input
-                            w={165}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="item"
-                            {...register('item', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-
+            <Table variant="simple" size="md">
+              <Thead pos="sticky" top={0}>
+                <Tr>
+                  <Td>{t('item')}</Td>
+                  <Td>{t('description')}</Td>
+                  <Td>{t('total')}</Td>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {items.map((item, index) => {
+                  return (
+                    <Tr key={index} data-testid={'invoice-items'} h="72px">
+                      <Td>{item.id}</Td>
+                      <Td>{item.name}</Td>
                       <Td>
-                        <FormControl isInvalid={!!errors.description?.message}>
-                          <Input
-                            w={149}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="description"
-                            {...register('description', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.unitPrice?.message}>
-                          <Input
-                            w={149}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="unitPrice"
-                            {...register('unitPrice', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.quantity?.message}>
-                          <Input
-                            w={84}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="quantity"
-                            {...register('quantity', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
-                        </FormControl>
-                      </Td>
-                      <Td>
-                        <FormControl isInvalid={!!errors.amount?.message}>
-                          <Input
-                            w={84}
-                            type="text"
-                            h="28px"
-                            bg="gray.50"
-                            // id="amount"
-                            {...register('amount', { required: 'This field is required.' })}
-                          />
-                          <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
-                        </FormControl>
+                        <Flex justifyContent="space-between" alignItems="center">
+                          <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
+                          {allowManualEntry && (
+                            <Text>
+                              <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
+                            </Text>
+                          )}
+                        </Flex>
                       </Td>
                     </Tr>
-                  </Tfoot>
-                )}
-              </Table>
-            </form>
+                  )
+                })}
+              </Tbody>
+              <form>
+                <>
+                  {allowManualEntry && (
+                    <Tfoot>
+                      <Tr>
+                        <Td pt="0" pb={6}>
+                          <Button
+                            type="submit"
+                            size="xs"
+                            variant="ghost"
+                            my={0.5}
+                            fontSize="14px"
+                            fontWeight={600}
+                            color="#4E87F8"
+                          >
+                            +{t('addNewItem')}
+                          </Button>
+
+                          <FormControl isInvalid={!!errors.item?.message}>
+                            <Input
+                              w={165}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="item"
+                              {...register('item', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+
+                        <Td>
+                          <FormControl isInvalid={!!errors.description?.message}>
+                            <Input
+                              w={149}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="description"
+                              {...register('description', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.unitPrice?.message}>
+                            <Input
+                              w={149}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="unitPrice"
+                              {...register('unitPrice', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.quantity?.message}>
+                            <Input
+                              w={84}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="quantity"
+                              {...register('quantity', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                        <Td>
+                          <FormControl isInvalid={!!errors.amount?.message}>
+                            <Input
+                              w={84}
+                              type="text"
+                              h="28px"
+                              bg="gray.50"
+                              // id="amount"
+                              {...register('amount', { required: 'This field is required.' })}
+                            />
+                            <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
+                          </FormControl>
+                        </Td>
+                      </Tr>
+                    </Tfoot>
+                  )}
+                </>
+              </form>
+            </Table>
 
             <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
               <Box>
                 <HStack w={300} height="60px" justifyContent="space-between">
                   <Text>{t('subTotal')}:</Text>
-                  <Text>{currencyFormatter(subTotal)}</Text>
+                  <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
                 </HStack>
                 <HStack w={300} height="60px" justifyContent="space-between">
                   <Text>{t('totalAmountPaid')}:</Text>
-                  <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
+                  <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
                 </HStack>
                 <HStack w={300} height="60px" justifyContent="space-between">
                   <Text>{t('balanceDue')}</Text>
-                  <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
+                  <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
                 </HStack>
               </Box>
             </VStack>
@@ -353,6 +362,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               variant="outline"
               colorScheme="brand"
               size="md"
+              data-testid="seeInvoice"
               onClick={() => downloadFile(recentInvoice?.s3Url)}
               leftIcon={<BiDownload />}
             >
@@ -361,6 +371,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           ) : (
             <Button
               variant="outline"
+              data-testid="generateInvoice"
               disabled={
                 !(
                   workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
