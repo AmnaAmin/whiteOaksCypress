@@ -51,7 +51,7 @@ export const WithAllComponents = () => {
       <Table tableHeight="inherit" isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
-          <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xslx" />
+          <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </ButtonsWrapper>
 
@@ -123,7 +123,7 @@ export const WithExportAndColumnSettings = () => {
       <Table tableHeight="inherit" isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
-          <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xslx" />
+          <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </ButtonsWrapper>
       </TableFooter>
