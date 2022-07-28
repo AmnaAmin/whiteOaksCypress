@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react'
-// import { useNotes, useNoteMutation } from 'utils/work-order'
-import { useAccountDetails } from 'utils/vendor-details'
+import React from 'react'
 import { NotesTab } from 'features/common/notes-tab'
 import { useNotes } from 'utils/clients'
-import { Box, Button, Flex, HStack } from '@chakra-ui/react'
+import { Button, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 type clientNotesProps = {
@@ -13,7 +11,6 @@ type clientNotesProps = {
 
 export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCount) => {
   const { clientDetails, onClose } = props
-  const { data: account } = useAccountDetails()
   const { t } = useTranslation()
 
   const { notes = [] } = useNotes({
@@ -21,11 +18,6 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
   })
 
   const saveNote = data => {
-    const payload = {
-      comment: data.message,
-      clientId: clientDetails?.id,
-      projectId: clientDetails?.projectId,
-    }
   }
 
   return (
@@ -42,7 +34,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
       />
       <Flex justifyContent="end">
         <Button colorScheme="brand" onClick={props?.onClose} mb={4}>
-          Cancel
+          {t('cancel')}
         </Button>
       </Flex>
     </>

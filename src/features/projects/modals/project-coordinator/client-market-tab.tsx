@@ -1,8 +1,6 @@
-import { useState } from 'react'
-import { Box, Checkbox, Flex, Center, Text, Button } from '@chakra-ui/react'
+import { Box, Flex, Button } from '@chakra-ui/react'
 import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { Controller } from 'react-hook-form'
 
 type clientDetailProps = {
   clientDetails?: any

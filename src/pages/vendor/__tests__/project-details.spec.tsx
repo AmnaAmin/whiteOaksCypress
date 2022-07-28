@@ -1,16 +1,12 @@
 import userEvent from '@testing-library/user-event'
-import App from 'App'
-import { act, render, screen, selectOption } from 'utils/test-utils'
+import { UploadDocumentModal } from 'features/projects/documents/upload-document'
+import { Providers } from 'providers'
+import { act, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
 
-const renderProjectDetailsAndSwitchToDocumentTab = async () => {
-  await render(<App />, { route: '/project-details/2951' })
+const renderDocumentUploadModal = async () => {
+  render(<UploadDocumentModal isOpen={true} />, { wrapper: Providers })
 
-  expect(window.location.pathname).toEqual('/project-details/2951')
-
-  // screen.debug(undefined, 10000000)
-  userEvent.click(screen.getByText('Documents', { selector: 'button' }))
-  const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
-  expect(uploadDocumentButton).toBeInTheDocument()
+  await waitForLoadingToFinish()
 }
 
 const chooseFileByLabel = (labelRegExp: RegExp) => {
@@ -29,22 +25,17 @@ jest.setTimeout(150000)
 
 describe('Porject Details: Document tab test cases', () => {
   test('Should render project details page and switch to document tab', async () => {
-    await renderProjectDetailsAndSwitchToDocumentTab()
+    await renderDocumentUploadModal()
   })
 
   test('Upload document button should open upload document modal with form', async () => {
-    await renderProjectDetailsAndSwitchToDocumentTab()
+    await renderDocumentUploadModal()
 
-    const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
-    userEvent.click(uploadDocumentButton)
     expect(screen.getByText('Upload Document', { selector: 'header' })).toBeInTheDocument()
   })
 
   test('Upload document happy flow', async () => {
-    await renderProjectDetailsAndSwitchToDocumentTab()
-
-    const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
-    userEvent.click(uploadDocumentButton)
+    await renderDocumentUploadModal()
 
     // Fill document form
     // userEvent.selectOptions(screen.getByLabelText('Document Type', { selector: 'select' }), ['56'])
@@ -65,10 +56,7 @@ describe('Porject Details: Document tab test cases', () => {
   })
 
   test('Upload document Empty fields validation', async () => {
-    await renderProjectDetailsAndSwitchToDocumentTab()
-
-    const uploadDocumentButton = screen.getByText('Upload', { selector: 'button' })
-    userEvent.click(uploadDocumentButton)
+    await renderDocumentUploadModal()
 
     act(() => {
       userEvent.click(screen.getByText(/Save/i))

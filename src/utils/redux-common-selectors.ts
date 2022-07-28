@@ -6,6 +6,7 @@ type UserRoles = {
   isAdmin: boolean
   isGeneralLabor: boolean
   isProjectCoordinator: boolean
+  isVendorManager: boolean
 }
 
 export const useUserRolesSelector = (): UserRoles => {
@@ -15,8 +16,9 @@ export const useUserRolesSelector = (): UserRoles => {
   return {
     isAdmin: userTypeLabel?.includes('Admin'),
     isGeneralLabor: userTypeLabel?.includes('General Labor'),
-    isVendor: userTypeLabel?.includes('Vendor'),
+    isVendor: userTypeLabel === 'Vendor',
     isProjectCoordinator: userTypeLabel?.includes('Project Coordinator'),
+    isVendorManager: userTypeLabel?.includes('Vendor Manager'),
   }
 }
 

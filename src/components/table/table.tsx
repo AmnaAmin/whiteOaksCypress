@@ -1,4 +1,3 @@
-import { Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { usePagination } from 'react-table'
 
@@ -36,15 +35,13 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
   }, [tableInstance, setTableInstance])
 
   return (
-    <Stack h="100%">
-      <Table tableInstance={tableInstance} tableHeight={tableHeight}>
-        <TableHead {...tableInstance} />
-        {isLoading ? (
-          <TableLoadingState {...tableInstance} />
-        ) : (
-          <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
-        )}
-      </Table>
-    </Stack>
+    <Table tableInstance={tableInstance} tableHeight={tableHeight}>
+      <TableHead {...tableInstance} />
+      {isLoading ? (
+        <TableLoadingState {...tableInstance} />
+      ) : (
+        <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
+      )}
+    </Table>
   )
 }

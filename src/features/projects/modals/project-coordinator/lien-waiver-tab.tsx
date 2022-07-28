@@ -21,10 +21,8 @@ import { orderBy } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
-import { useParams } from 'react-router-dom'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
@@ -32,13 +30,9 @@ import { dateFormatter } from 'utils/date-time-utils'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose } = props
+  const { lienWaiverData, onClose, documentsData } = props
   const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
-  const { projectId } = useParams<'projectId'>()
-  const { documents: documentsData = [] } = useDocuments({
-    projectId,
-  })
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
