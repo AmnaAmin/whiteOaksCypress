@@ -28,7 +28,7 @@ const AccountReceivableModal: React.FC<{
           <HStack spacing="3">
             <Text>ID {data?.id} </Text>
             <Divider orientation="vertical" borderWidth="1px" borderColor="#E2E8F0" height="21px" />
-            <Text>2504 STONE RD</Text>
+            <Text>{data?.streetAddress}</Text>
             <Tag variant="subtle" color="#48BB78" bg="#E2EFDF">
               Invoice
             </Tag>
