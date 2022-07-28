@@ -27,6 +27,7 @@ import { Document } from 'types/vendor.types'
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
+import { ViewLoader } from 'components/page-level-loader'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -36,7 +37,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const [isError, setError] = useState(false)
   const { vendorId } = useUserProfile() as Account
   const { mutate: saveDocument, isLoading } = useUploadDocument()
-  const { data: documentTypes } = useDocumentTypes()
+  const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
 
   const states = documentTypes
     ? documentTypes?.map(state => ({
@@ -131,67 +132,71 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
-          <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
-            <VStack align="start">
-              <FormLabel fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600" htmlFor="documentType">
-                {t('documentType')}{' '}
-              </FormLabel>
-              <HStack spacing="20px" w="100%">
-                <Box w={215}>
-                  <ReactSelect
-                    options={states}
-                    selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
-                    value={documentType}
-                    onChange={onDocumentTypeChange}
-                  />
-                </Box>
-
-                <input
-                  aria-labelledby="upload-document-field"
-                  type="file"
-                  ref={inputRef}
-                  style={{ display: 'none' }}
-                  onChange={onFileChange}
-                ></input>
-                {document ? (
-                  <Box
-                    color="barColor.100"
-                    border="1px solid #4E87F8"
-                    // a
-                    borderRadius="6px"
-                    fontSize="14px"
-                  >
-                    <HStack spacing="5px" h="37px" padding="10px" align="center">
-                      <Box as="span" maxWidth="400px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-                        {document.name}
-                      </Box>
-                      <MdOutlineCancel
-                        cursor="pointer"
-                        onClick={() => {
-                          setDocument(null)
-                          if (inputRef.current) inputRef.current.value = ''
-                        }}
-                      />
-                    </HStack>
+          {isDocumentTypesLoading ? (
+            <ViewLoader />
+          ) : (
+            <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
+              <VStack align="start">
+                <FormLabel fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600" htmlFor="documentType">
+                  {t('documentType')}{' '}
+                </FormLabel>
+                <HStack spacing="20px" w="100%">
+                  <Box w={215}>
+                    <ReactSelect
+                      options={states}
+                      selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                      value={documentType}
+                      onChange={onDocumentTypeChange}
+                    />
                   </Box>
-                ) : (
-                  <Button
-                    id="upload-document-field"
-                    onClick={e => {
-                      if (inputRef.current) {
-                        inputRef.current.click()
-                      }
-                    }}
-                    variant="outline"
-                    colorScheme="brand"
-                  >
-                    {t('chooseFile')}
-                  </Button>
-                )}
-              </HStack>
-              {isError && <FormErrorMessage>Document type is required</FormErrorMessage>}
-            </VStack>
-          </FormControl>
+
+                  <input
+                    aria-labelledby="upload-document-field"
+                    type="file"
+                    ref={inputRef}
+                    style={{ display: 'none' }}
+                    onChange={onFileChange}
+                  ></input>
+                  {document ? (
+                    <Box
+                      color="barColor.100"
+                      border="1px solid #4E87F8"
+                      // a
+                      borderRadius="6px"
+                      fontSize="14px"
+                    >
+                      <HStack spacing="5px" h="37px" padding="10px" align="center">
+                        <Box as="span" maxWidth="400px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                          {document.name}
+                        </Box>
+                        <MdOutlineCancel
+                          cursor="pointer"
+                          onClick={() => {
+                            setDocument(null)
+                            if (inputRef.current) inputRef.current.value = ''
+                          }}
+                        />
+                      </HStack>
+                    </Box>
+                  ) : (
+                    <Button
+                      id="upload-document-field"
+                      onClick={e => {
+                        if (inputRef.current) {
+                          inputRef.current.click()
+                        }
+                      }}
+                      variant="outline"
+                      colorScheme="brand"
+                    >
+                      {t('chooseFile')}
+                    </Button>
+                  )}
+                </HStack>
+                {isError && <FormErrorMessage>Document type is required</FormErrorMessage>}
+              </VStack>
+            </FormControl>
+          )}
         </ModalBody>
         <ModalFooter>
           <HStack spacing="16px">
