@@ -351,7 +351,6 @@ i18n.use(initReactI18next).init({
         // Payments tab pc
         lwDate: 'LW Date',
         invoicedSubmitted: 'Invoiced Submitted',
-        payemtTerms: 'Payemt Terms',
         woOriginalAmount: 'WO Original Amount',
         clientOriginalAmount: 'Client Original Amount',
         clientFinalApprovedAmount: 'Client Final Approved Amount',
@@ -423,7 +422,7 @@ i18n.use(initReactI18next).init({
         // Payments tab pc
         lwDate: 'Fecha LW',
         invoicedSubmitted: 'Facturada enviada',
-        payemtTerms: 'Términos de pago',
+        paymentTerms: 'Términos de pago',
         woOriginalAmount: 'Importe original de la OT',
         clientOriginalAmount: 'Importe original del cliente',
         clientFinalApprovedAmount: 'Cantidad final aprobada por el cliente',
@@ -626,7 +625,6 @@ i18n.use(initReactI18next).init({
         paymentTermDate: 'Plazo de Pago Fecha',
         datePaymentProcessed: 'Fecha de Procesamiento del Pago',
         expectedPayDate: 'Fecha de Pago Esperada',
-        paymentTerms: 'Términos de pago',
         check: 'Controlar',
         payDateVariance: 'Variación de la fecha de pago',
         finalInvoice: 'Factura Final',

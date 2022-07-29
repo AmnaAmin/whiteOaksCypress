@@ -9,7 +9,7 @@ import Select from 'components/form/react-select'
 import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
 import { useFieldEnableDecision } from 'utils/work-order'
-// import { addDays } from 'date-fns'
+import { addDays, nextFriday } from 'date-fns'
 
 const CalenderCard = props => {
   return (
@@ -62,7 +62,7 @@ const PaymentInfoTab = props => {
     finalInvoiceAmount: string | null
   }
 
-  const { register, handleSubmit, control, watch } = useForm<FormValues>({
+  const { register, handleSubmit, control, watch, getValues, setValue } = useForm<FormValues>({
     defaultValues: {
       dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
       paymentTerm: workOrder?.paymentTerm
@@ -136,13 +136,23 @@ const PaymentInfoTab = props => {
                   isDisabled={!dateInvoiceSubmittedEnabled}
                   variant="outline"
                   {...register('dateInvoiceSubmitted')}
+                  onChange={e => {
+                    const dateInvSubmitted = e.target.value
+                    const paymentTermDate = addDays(
+                      new Date(dateInvSubmitted as string),
+                      getValues('paymentTerm')?.value,
+                    )
+                    const expectedPaymentDate = nextFriday(paymentTermDate)
+                    setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+                    setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                  }}
                 />
               </FormControl>
             </Box>
             <Box>
               <FormControl height="40px">
                 <FormLabel variant={'strong-label'} size={'md'}>
-                  {t('payemtTerms')}
+                  {t('paymentTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
@@ -157,8 +167,13 @@ const PaymentInfoTab = props => {
                           size="md"
                           value={field.value}
                           selectProps={{ isBorderLeft: false }}
-                          onChange={e => {
-                            // const dateInvoiceSubmitted = getValues('dateInvoiceSubmitted')
+                          onChange={option => {
+                            const dateInvSubmitted = getValues('dateInvoiceSubmitted')
+                            const paymentTermDate = addDays(new Date(dateInvSubmitted as string), option.value)
+                            const expectedPaymentDate = nextFriday(paymentTermDate)
+                            setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+                            setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                            field.onChange(option)
                           }}
                         />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
