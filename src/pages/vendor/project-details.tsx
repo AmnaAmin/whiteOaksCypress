@@ -7,16 +7,15 @@ import { TransactionsTable } from 'features/projects/transactions/transactions-t
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { WorkOrdersTable } from 'features/projects/work-orders-table'
-import { AlertsTable } from 'features/projects/alerts/alerts-table'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/projects/transactions/transaction-info-card'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
 import { ProjectType } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
+import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -106,7 +105,7 @@ const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
-                  <AlertsTable
+                  <TriggeredAlertsTable
                     onRowClick={(e, row) => {
                       selectedAlertRow(row.values)
                       onAlertModalOpen()

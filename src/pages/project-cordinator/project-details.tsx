@@ -23,8 +23,8 @@ import AddNewTransactionModal from 'features/projects/transactions/add-transacti
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
-import { AlertsTable } from 'features/projects/alerts/alerts-table'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
+import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -103,7 +103,7 @@ export const ProjectDetails: React.FC = props => {
 
                 {tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onAlertModalOpen}>
-                    Resolve All
+                    Resolve 
                   </Button>
                 )}
                 {tabIndex === 0 && (
@@ -154,7 +154,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
 
               <TabPanel px="0">
-                <AlertsTable
+                <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
                     onAlertModalOpen()

@@ -92,7 +92,6 @@ i18n.use(initReactI18next).init({
         alerts: 'Alerts',
         upload: 'Upload',
         uploadDocument: 'Upload Document',
-        resolveAll: 'Resolve All',
         contactName: 'Contact Name:',
         projectID: 'Project ID',
         contactNo: 'Contact No',
@@ -359,7 +358,7 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlert: 'Triggered Alert',
         managedAlert: 'Managed Alert',
-        resloveAll: 'Reslove All',
+        resolveAll: 'Resolve All',
         projectId: 'Project Id',
         stateZipcode: 'State/Zipcode',
         workOrderStart: 'Work Order Start',
@@ -399,7 +398,7 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlert: 'Alerta activada',
         managedAlert: 'Alerta gestionada',
-        resloveAll: 'Solucionelo todo',
+        resolveAll: 'Solucionelo todo',
         projectId: 'Projecto ID',
         stateZipcode: 'Estado/Código postal',
         workOrderStart: 'Inicio de orden de trabajo',
@@ -536,7 +535,6 @@ i18n.use(initReactI18next).init({
         alerts: 'Alertas',
         upload: 'Subir',
         uploadDocument: 'Subir documento',
-        resolveAll: 'Solucionelo todo',
         contactName: 'Nombre de Contacto',
         projectID: 'Projecto ID',
         contactNo: 'Número de Contacto',
