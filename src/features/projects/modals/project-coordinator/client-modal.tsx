@@ -10,30 +10,26 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
 
-import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
-import React, { useCallback, useEffect } from 'react'
-import { ProjectWorkOrderType } from 'types/project.type'
-import { useVendorProfile } from 'utils/vendor-details'
+import { ClientDetailsTabs } from 'pages/project-cordinator/client-details'
+import { useCallback, useEffect } from 'react'
+import { Clients } from 'types/client.type'
 
-const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkOrderType; onClose: () => void }) => {
+const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorDetails.id)
-
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
   }, [close, onCloseDisclosure])
 
   useEffect(() => {
-    if (vendorDetails) {
+    if (clientDetails) {
       onOpen()
     } else {
       onCloseDisclosure()
     }
-  }, [onCloseDisclosure, onOpen, vendorDetails])
+  }, [onCloseDisclosure, onOpen, clientDetails])
   return (
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
@@ -43,10 +39,10 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
-                  {t('vendorDetail')}
+                  {t('Details')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                  {vendorDetails?.companyName}
+                  {clientDetails?.companyName}
                 </Text>
               </HStack>
             </HStack>
@@ -54,16 +50,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              {isLoading ? (
-                <BlankSlate width="60px" />
-              ) : (
-                <VendorProfileTabs
-                  vendorProfileData={vendorProfileData}
-                  refetch={refetch}
-                  // vendorModalType="detail"
-                  onClose={onClose}
-                />
-              )}
+              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} />
             </Box>
           </ModalBody>
         </ModalContent>
@@ -72,4 +59,4 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
   )
 }
 
-export default Vendor
+export default Client

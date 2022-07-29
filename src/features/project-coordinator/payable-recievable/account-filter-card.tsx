@@ -1,9 +1,11 @@
 import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { AccountIcon } from './accounts-Icon'
 
 type AccountPaybleCardType = {
   IconColor: string
+  isLoading: boolean
   value: string
   number: number
   text: string
@@ -12,7 +14,17 @@ type AccountPaybleCardType = {
   cardSelected: string
 }
 
-export const AccountFilterCard = (props: AccountPaybleCardType) => {
+export const AccountFilterCard: React.FC<AccountPaybleCardType> = ({
+  children,
+  IconColor,
+  isLoading,
+  value,
+  number,
+  text,
+  Id,
+  onSelected,
+  cardSelected,
+}) => {
   return (
     <Card
       bg="white"
@@ -21,29 +33,33 @@ export const AccountFilterCard = (props: AccountPaybleCardType) => {
       borderRadius={8}
       border="1px solid transparent"
       borderTop="4px solid transparent"
-      borderColor={props.cardSelected === props.Id ? '#4E87F8' : ''}
-      onClick={() => props.onSelected(props.cardSelected !== props.Id && props.Id)}
-      id={props.Id}
+      borderColor={cardSelected === Id ? '#4E87F8' : ''}
+      onClick={() => onSelected(cardSelected !== Id && Id)}
+      id={Id}
     >
       <Stack>
         <Box lineHeight="32px">
-          <Text fontSize="18px" fontWeight={600}>
-            {props.value}
-          </Text>
+          {isLoading ? <BlankSlate size="sm" /> : children}
+          {!isLoading && (
+            <Text fontSize="18px" fontWeight={600}>
+              {value}
+            </Text>
+          )}
           <Flex alignItems="center">
-            <AccountIcon color={props.IconColor} />
+            <AccountIcon color={IconColor} />
             <Text ml={2} fontSize="16px" fontWeight={400} color="gray.600">
-              {props.text}
+              {text}
             </Text>
           </Flex>
         </Box>
         <Divider h="4px" bg="blue.200" opacity="30%" />
         <Box>
           <Text fontSize="16px" fontWeight={400} color="gray.600">
-            {props.number}
+            {number}
           </Text>
         </Box>
       </Stack>
+      {isLoading ? <BlankSlate size="sm" /> : children}
     </Card>
   )
 }

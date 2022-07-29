@@ -21,7 +21,6 @@ import { BiCalendar } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
 import { dateFormatter } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
-import { documentTypes } from 'utils/vendor-projects'
 
 const CalenderCard = props => {
   return (
@@ -87,7 +86,7 @@ const NewWorkOrder: React.FC<{
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         Type
                       </FormLabel>
-                      <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
+                      <ReactSelect selectProps={{ isLeftBorder: true }} />
                     </FormControl>
                   </Box>
                   <Box>
@@ -95,7 +94,7 @@ const NewWorkOrder: React.FC<{
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         Company Name
                       </FormLabel>
-                      <ReactSelect selectProps={{ isLeftBorder: true }} options={documentTypes} />
+                      <ReactSelect selectProps={{ isLeftBorder: true }} />
                     </FormControl>
                   </Box>
                   <Box>
