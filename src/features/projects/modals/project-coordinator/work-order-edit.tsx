@@ -110,9 +110,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                     <Tab>{t('payments')}</Tab>
                     <Tab>
                       {t('notes')}
-                      <Box ml="5px" style={countInCircle}>
-                        {notesCount}
-                      </Box>
+                      {notesCount !== 0 && (
+                        <Box ml="5px" style={countInCircle}>
+                          {notesCount}
+                        </Box>
+                      )}
                     </Tab>
                     {tabIndex === 1 && (
                       <Center w="100%" justifyContent="end">

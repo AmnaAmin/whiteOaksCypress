@@ -88,6 +88,7 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
     ...rest,
   }
 }
+
 export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
   const invoiceInfo = [
     { label: 'Property Address:', value: workOrder.propertyAddress },
