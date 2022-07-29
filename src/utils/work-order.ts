@@ -2,10 +2,11 @@ import { useClient } from 'utils/auth-context'
 import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useToast } from '@chakra-ui/toast'
 import { useParams } from 'react-router-dom'
-import { convertDateTimeFromServer } from 'utils/date-time-utils'
+import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
+import { currencyFormatter } from './stringFormatters'
 
 export const useUpdateWorkOrderMutation = () => {
   const client = useClient()
@@ -90,6 +91,8 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
     ...rest,
   }
 }
+
+/* WorkOrder Invoice */
 export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
   const invoiceInfo = [
     { label: 'Property Address:', value: workOrder.propertyAddress },
@@ -171,6 +174,7 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
   return doc
 }
 
+/* WorkOrder Payments */
 export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const defaultStatus = false
   const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
@@ -186,4 +190,71 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     clientOriginalApprovedAmountEnabled: defaultStatus,
     finalInvoiceAmountEnabled: defaultStatus,
   }
+}
+
+export const parsePaymentValuesToPayload = formValues => {
+  return {
+    dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
+    paymentTerm: formValues?.paymenTerm?.value,
+    paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
+    expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
+    datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
+    datePaid: dateISOFormat(formValues?.datePaid),
+  }
+}
+
+export const defaultValuesPayment = (workOrder, paymentsTerms) => {
+  const defaultValues = {
+    dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
+    paymentTerm: workOrder?.paymentTerm
+      ? paymentsTerms.find(p => p.value === workOrder?.paymentTerm)
+      : paymentsTerms.find(p => p.value === '20'),
+    paymentTermDate: datePickerFormat(workOrder?.paymentTermDate),
+    expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
+    datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
+    datePaid: datePickerFormat(workOrder?.datePaid),
+    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
+    finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
+  }
+  return defaultValues
+}
+
+/* WorkOrder Details */
+
+export const parseWODetailValuesToPayload = formValues => {
+  return {
+    workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
+    workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
+    workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
+  }
+}
+
+export const defaultValuesWODetails = workOrder => {
+  const defaultValues = {
+    workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
+    workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
+    workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
+    assignedItems: workOrder?.assignedItems,
+  }
+  return defaultValues
+}
+
+/* WorkOrder LienWaiver */
+
+export const defaultValuesLienWaiver = lienWaiverData => {
+  const defaultValues = {
+    claimantName: lienWaiverData.claimantName,
+    customerName: lienWaiverData.customerName,
+    propertyAddress: lienWaiverData.propertyAddress,
+    owner: lienWaiverData.owner,
+    makerOfCheck: lienWaiverData.makerOfCheck,
+    amountOfCheck: lienWaiverData.amountOfCheck,
+    checkPayableTo: lienWaiverData.claimantName,
+    claimantsSignature: lienWaiverData.claimantsSignature,
+    claimantTitle: lienWaiverData.claimantTitle,
+    dateOfSignature: lienWaiverData.dateOfSignature,
+    lienWaiverAccepted: !lienWaiverData.lienWaiverAccepted,
+  }
+  return defaultValues
 }

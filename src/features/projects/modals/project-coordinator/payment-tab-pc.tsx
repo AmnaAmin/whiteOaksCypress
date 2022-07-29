@@ -1,14 +1,12 @@
 import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input, FormErrorMessage } from '@chakra-ui/react'
-import { useEffect } from 'react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'utils/vendor-projects'
-import { dateFormat, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
-import { currencyFormatter } from 'utils/stringFormatters'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
 import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
-import { useFieldEnableDecision } from 'utils/work-order'
+import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'utils/work-order'
 import { addDays, nextFriday } from 'date-fns'
 
 const CalenderCard = props => {
@@ -62,20 +60,8 @@ const PaymentInfoTab = props => {
     finalInvoiceAmount: string | null
   }
 
-  const { register, handleSubmit, control, watch, getValues, setValue } = useForm<FormValues>({
-    defaultValues: {
-      dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
-      paymentTerm: workOrder?.paymentTerm
-        ? paymentsTerms.find(p => p.value === workOrder?.paymentTerm)
-        : paymentsTerms.find(p => p.value === '20'),
-      paymentTermDate: datePickerFormat(workOrder?.paymentTermDate),
-      expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
-      datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
-      datePaid: datePickerFormat(workOrder?.datePaid),
-      clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
-      clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
-      finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
-    },
+  const { register, handleSubmit, control, getValues, setValue } = useForm<FormValues>({
+    defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
   })
 
   const {
@@ -90,27 +76,8 @@ const PaymentInfoTab = props => {
     paymentTermEnabled,
   } = useFieldEnableDecision(workOrder)
 
-  const watchAllFields = watch()
-  useEffect(() => {
-    const subscription = watch(value => {
-      console.log('Value Change', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
-
-  const parseValuesToPayload = formValues => {
-    return {
-      dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
-      paymentTerm: formValues?.paymenTerm?.value,
-      paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
-      expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
-      datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
-      datePaid: dateISOFormat(formValues?.datePaid),
-    }
-  }
-
   const onSubmit = values => {
-    onSave(parseValuesToPayload(values))
+    onSave(parsePaymentValuesToPayload(values))
   }
 
   return (

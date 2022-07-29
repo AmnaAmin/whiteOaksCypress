@@ -26,6 +26,7 @@ import { GetHelpText } from 'utils/lien-waiver'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 import { dateFormatter } from 'utils/date-time-utils'
+import { defaultValuesLienWaiver } from 'utils/work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -35,32 +36,15 @@ export const LienWaiverTab: React.FC<any> = props => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const { register, handleSubmit, setValue } = useForm({
-    defaultValues: {
-      claimantName: lienWaiverData.claimantName,
-      customerName: lienWaiverData.customerName,
-      propertyAddress: lienWaiverData.propertyAddress,
-      owner: lienWaiverData.owner,
-      makerOfCheck: lienWaiverData.makerOfCheck,
-      amountOfCheck: lienWaiverData.amountOfCheck,
-      checkPayableTo: lienWaiverData.claimantName,
-      claimantsSignature: lienWaiverData.claimantsSignature,
-      claimantTitle: lienWaiverData.claimantTitle,
-      dateOfSignature: lienWaiverData.dateOfSignature,
-      lienWaiverAccepted: !lienWaiverData.lienWaiverAccepted,
-    },
+    defaultValues: defaultValuesLienWaiver(lienWaiverData),
   })
   const { leanwieverLink } = props.lienWaiverData
 
-  const parseValuesToPayload = (formValues, documents) => {
-    return {
+  const onSubmit = formValues => {
+    onSave({
       ...formValues,
       documents,
-    }
-  }
-
-  const onSubmit = formValues => {
-    const lienWaiverData = parseValuesToPayload(formValues, documents)
-    onSave(lienWaiverData)
+    })
   }
 
   useEffect(() => {

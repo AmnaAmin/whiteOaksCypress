@@ -26,12 +26,13 @@ import {
 import { useState } from 'react'
 import { BiCalendar, BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import { dateFormat, datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { useForm, useFieldArray } from 'react-hook-form'
 import RemainingItemsModal from './remaining-items-modal'
 import { calendarIcon } from 'theme/common-style'
 import { STATUS } from 'features/projects/status'
+import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'utils/work-order'
 
 const CalenderCard = props => {
   return (
@@ -127,12 +128,7 @@ const WorkOrderDetailTab = props => {
   } = useDisclosure()
 
   const { register, handleSubmit, control } = useForm<FormValues>({
-    defaultValues: {
-      workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
-      workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
-      workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
-      assignedItems: workOrder?.assignedItems,
-    },
+    defaultValues: defaultValuesWODetails(workOrder),
   })
 
   const {
@@ -156,16 +152,8 @@ const WorkOrderDetailTab = props => {
     durationCategory,
   } = props.workOrder
 
-  const parseValuesToPayload = formValues => {
-    return {
-      workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
-      workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
-      workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
-    }
-  }
-
   const onSubmit = values => {
-    onSave(parseValuesToPayload(values))
+    onSave(parseWODetailValuesToPayload(values))
   }
 
   return (
