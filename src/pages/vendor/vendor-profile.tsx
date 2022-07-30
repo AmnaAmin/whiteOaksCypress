@@ -44,10 +44,18 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
       <TabList>
         <Tab>{t('details')}</Tab>
-        <Tab data-testid="documents">{t('documents')}</Tab>
-        <Tab data-testid="license">{t('license')}</Tab>
-        <Tab data-testid="tradetab">{t('trade')}</Tab>
-        <Tab data-testid="markettab">{t('market')}</Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="documents">
+          {t('documents')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="license">
+          {t('license')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="tradetab">
+          {t('trade')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="markettab">
+          {t('market')}
+        </Tab>
         {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
       </TabList>
 

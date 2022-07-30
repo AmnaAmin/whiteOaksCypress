@@ -20,7 +20,7 @@ export const NewVendorTabs: React.FC<{ onClose: () => void }> = props => {
   return (
     <VendorProfileTabs
       vendorModalType="editVendor"
-      vendorProfileData={vendorProfileData}
+      vendorProfileData={vendorId ? vendorProfileData : undefined}
       refetch={refetch}
       onClose={props.onClose}
       updateVendorId={setVendorId}
