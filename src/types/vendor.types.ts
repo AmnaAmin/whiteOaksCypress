@@ -71,6 +71,7 @@ export type Vendor = {
   paymentOptions: any[]
   markets: VendorMarket[]
   projects: any[]
+  paymentTerm: number
 }
 
 type Override<T1, T2> = Omit<T1, keyof T2> & T2
@@ -107,7 +108,7 @@ export type VendorProfilePayload = {
   streetAddress: string
   city: string
   state: string
-  paymentTerm?: string
+  paymentTerm?: number
   zipCode: string
   createdBy: string
   createdDate: string | null

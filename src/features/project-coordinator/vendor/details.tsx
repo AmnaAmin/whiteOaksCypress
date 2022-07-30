@@ -17,7 +17,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { emailPattern } from 'components/layout/constants'
 import { t } from 'i18next'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -104,6 +103,7 @@ const PcDetails: React.FC<{
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
     reset,
   } = useForm<VendorProfileDetailsFormData>({
     defaultValues: {
@@ -132,8 +132,21 @@ const PcDetails: React.FC<{
   useEffect(() => {
     if (!vendorProfileData) return
     reset(parseVendorAPIDataToFormData(vendorProfileData))
-    console.log('parseVendorAPIDataToFormData(vendorProfileData)', parseVendorAPIDataToFormData(vendorProfileData))
-  }, [reset, vendorProfileData])
+    const state = statesData?.find(s => s.code === vendorProfileData.state)
+    setValue(
+      'score',
+      documentScore.find(s => s.value === vendorProfileData.score),
+    )
+    setValue(
+      'status',
+      documentStatus.find(s => s.value === vendorProfileData.status),
+    )
+    setValue('state', { label: state?.name, value: state?.code })
+    setValue(
+      'paymentTerm',
+      PAYMENT_TERMS_OPTIONS.find(s => parseInt(s.value, 10) === vendorProfileData.paymentTerm),
+    )
+  }, [reset, vendorProfileData, documentScore, documentStatus, statesData])
 
   const states = statesData?.map(state => ({
     label: state?.name,
@@ -183,9 +196,9 @@ const PcDetails: React.FC<{
               control={control}
               name="status"
               rules={{ required: 'This is required' }}
-              render={({ field: { value }, fieldState }) => (
+              render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={documentStatus} selected={value} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -378,12 +391,11 @@ const PcDetails: React.FC<{
                 control={control}
                 name="state"
                 rules={{ required: 'This is required' }}
-                render={({ field: { value }, fieldState }) => (
+                render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
                       options={states}
-                      // {...field}
-                      selected={value}
+                      {...field}
                       // onChange={setStates}
                       // selectProps={{ isBorderLeft: true }}
                     />
@@ -477,14 +489,9 @@ const PcDetails: React.FC<{
                   control={control}
                   name="paymentTerm"
                   rules={{ required: 'This is required' }}
-                  render={({ field: { value }, fieldState }) => (
+                  render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect
-                        options={PAYMENT_TERMS_OPTIONS}
-                        selected={value}
-                        // {...field}
-                        selectProps={{ isBorderLeft: true }}
-                      />
+                      <ReactSelect options={PAYMENT_TERMS_OPTIONS} {...field} selectProps={{ isBorderLeft: true }} />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -499,12 +506,6 @@ const PcDetails: React.FC<{
                     {payment.name}
                   </Checkbox>
                 ))}
-                {/* <Checkbox {...register('check')} colorScheme="brand">
-                  {t('check')}
-                </Checkbox>
-                <Checkbox {...register('ach')} colorScheme="brand">
-                  ACH
-                </Checkbox> */}
               </HStack>
             </VStack>
           </Stack>
