@@ -44,6 +44,90 @@ export const PROJECT_COLUMNS = [
     accessor: 'clientDueDate',
     Cell: ({ value }) => dateFormat(value),
   },
+  {
+    Header: 'Type',
+    accessor: 'type',
+  },
+  {
+    Header: 'Project Coordinator',
+    accessor: 'projectCoordinator',
+  },
+  {
+    Header: 'Account Payable',
+    accessor: 'accountPayable',
+  },
+  {
+    Header: 'Zip',
+    accessor: 'zipCode',
+  },
+  {
+    Header: 'Client',
+    accessor: 'clientName',
+  },
+  {
+    Header: 'SOW Final Amount',
+    accessor: 'sowOriginalContractAmount',
+  },
+  {
+    Header: 'Project Cost',
+    accessor: 'projectRelatedCost',
+  },
+  {
+    Header: 'Paid Date',
+    accessor: 'woaPaidDate',
+  },
+  {
+    Header: 'Invoice Number',
+    accessor: 'invoiceNumber',
+  },
+  {
+    Header: 'Invoice Date',
+    accessor: 'woaInvoiceDate',
+  },
+  {
+    Header: 'Account Receivable',
+    accessor: 'accountRecievable',
+  },
+  {
+    Header: 'Market',
+    accessor: 'market',
+  },
+  {
+    Header: 'State',
+    accessor: 'state',
+  },
+  {
+    Header: 'WOA Finish',
+    accessor: 'woaCompletionDate',
+  },
+  {
+    Header: 'Region',
+    accessor: 'region',
+  },
+  {
+    Header: 'Partial Payment',
+    accessor: 'partialPayment',
+  },
+  {
+    Header: 'Expected Payment',
+    accessor: 'expectedPaymentDate',
+  },
+  {
+    Header: 'Profit Margins',
+    accessor: 'profitPercentage',
+  },
+  {
+    Header: 'Profits',
+    accessor: 'profitTotal',
+  },
+  {
+    Header: 'WO Number',
+    accessor: 'WONumber',
+  },
+  {
+    Header: 'PO Number',
+    accessor: 'PONumber',
+  },
 ]
 
 const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
@@ -143,7 +227,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, selectedDay, projects])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box overflow={'auto'} height="100%">
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
@@ -154,6 +238,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         tableHeight={'inherit'}
         enablePagination={true}
         sortBy={{ id: 'id', desc: true }}
+        defaultFlexStyle={false}
       />
     </Box>
   )
