@@ -52,7 +52,6 @@ const PcDetails: React.FC<{
 
   const submitForm = useCallback(
     (formData: VendorProfileDetailsFormData) => {
-      console.log('formData', formData)
       const payload = parseVendorFormDataToAPIData(vendorProfileData, formData, paymentsMethods)
       if (vendorProfileData?.id) {
         updateVendorProfileDetails(payload, {
@@ -146,7 +145,7 @@ const PcDetails: React.FC<{
       'paymentTerm',
       PAYMENT_TERMS_OPTIONS.find(s => parseInt(s.value, 10) === vendorProfileData.paymentTerm),
     )
-  }, [reset, vendorProfileData, documentScore, documentStatus, statesData])
+  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
 
   const states = statesData?.map(state => ({
     label: state?.name,
@@ -282,16 +281,6 @@ const PcDetails: React.FC<{
                   )
                 }}
               />
-              {/* <Input
-                type="text"
-                {...register('businessPhoneNumber', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="required-field"
-                size="md"
-              />
-              <FormErrorMessage pos="absolute">{errors.businessPhoneNumber?.message}</FormErrorMessage> */}
             </FormControl>
           </Box>
           <Flex>
@@ -316,7 +305,6 @@ const PcDetails: React.FC<{
                   return (
                     <Input
                       {...field}
-                      // {...register('secondPhoneNumber')}
                       w="215px"
                       variant="outline"
                       size="md"
@@ -447,7 +435,7 @@ const PcDetails: React.FC<{
                 EIN
               </FormLabel>
               <Input
-                type="number"
+                type="string"
                 {...register('einNumber', {
                   required: 'This is required',
                 })}
