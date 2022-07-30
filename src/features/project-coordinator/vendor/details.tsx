@@ -17,7 +17,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { t } from 'i18next'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +25,6 @@ import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useStates } from 'utils/pc-projects'
 import { PAYMENT_TERMS_OPTIONS } from 'utils/transactions'
 import {
-  parseAPIDataToFormData,
   parseVendorAPIDataToFormData,
   parseVendorFormDataToAPIData,
   useCreateVendorMutation,
