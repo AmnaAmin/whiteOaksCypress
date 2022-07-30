@@ -120,7 +120,7 @@ export const parseVendorFormDataToAPIData = (
     state: formValues.state?.value,
     isSsn: false,
     paymentTerm: formValues.paymentTerm?.value,
-    documents: vendorProfileData?.documents || [],
+    documents: [],
     vendorSkills: vendorProfileData?.vendorSkills || [],
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
