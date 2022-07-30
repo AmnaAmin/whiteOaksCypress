@@ -218,6 +218,7 @@ i18n.use(initReactI18next).init({
         fileType: 'File Type',
         vendorGL: 'Vendor/GL',
         createdDate: 'Created Date',
+        createdBy: 'Created By',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -664,6 +665,7 @@ i18n.use(initReactI18next).init({
         fileType: 'Tipo de Archivo',
         vendorGL: 'Vendedor/GL',
         createdDate: 'Fecha de creación',
+        createdBy: 'creado por',
         // Project - Alerts
         value: 'Valor',
         category: 'Categoría',
