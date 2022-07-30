@@ -289,4 +289,6 @@ export type Vendors = {
   availableCapacity: number
   skills: string
   market: string
+  businessEmailAddress: string
+  businessPhoneNumber: string
 }
