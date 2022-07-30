@@ -27,6 +27,14 @@ export const chakraStyles = {
       // background: '#F7FAFC',
     }
   },
+
+  placeholder: provider => ({
+    ...provider,
+    fontSize: '14px',
+    color: 'gray.600',
+    fontWeight: 400,
+  }),
+
   singleValue: (provider: any) => ({
     ...provider,
     color: '#2D3748',
@@ -73,7 +81,7 @@ export const chakraStyles = {
     ...provided,
     backgroundColor: 'transparent',
     '&>svg': {
-      color: 'gray.500',
+      color: 'gray.600',
     },
   }),
   control: (provider: any, state) => {
@@ -117,6 +125,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => (
       IndicatorSeparator: false,
     }}
     {...props}
+    placeholder={'Select'}
   />
 ))
 
