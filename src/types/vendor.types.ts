@@ -276,6 +276,7 @@ export type SettingsValues = {
 }
 
 export type Vendors = {
+  id: number
   statusLabel: string
   companyName: string
   region: string

@@ -138,6 +138,10 @@ i18n.use(initReactI18next).init({
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
+        companyName: 'Company Name',
+        clientApprovedAmount: 'Client Approved Amount',
+        profitPercentage: 'Profit Percentage',
+        vendorWorkOrderAmount: 'Vendor WO Amount',
         name: 'Name',
         email: 'Email',
         phone: 'Phone',
@@ -581,6 +585,10 @@ i18n.use(initReactI18next).init({
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
+        companyName: 'Nombre de empresa',
+        clientApprovedAmount: 'Monto aprobado por el cliente',
+        profitPercentage: 'Porcentaje de beneficio',
+        vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',
         name: 'Nombre',
         email: 'Email',
         phone: 'Teléfono',
