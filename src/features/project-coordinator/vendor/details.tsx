@@ -14,110 +14,162 @@ import {
   Flex,
   FormErrorMessage,
   Spacer,
+  useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { t } from 'i18next'
-import React, { useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
+import { useStates } from 'utils/pc-projects'
+import { PAYMENT_TERMS_OPTIONS } from 'utils/transactions'
+import {
+  parseAPIDataToFormData,
+  parseVendorAPIDataToFormData,
+  parseVendorFormDataToAPIData,
+  useCreateVendorMutation,
+  usePaymentMethods,
+  useVendorProfileUpdateMutation,
+} from 'utils/vendor-details'
+import { documentStatus, documentScore } from 'utils/vendor-projects'
 
-const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ onClose, VendorType }) => {
+const PcDetails: React.FC<{
+  onClose?: () => void
+  VendorType?: string
+  updateVendorId?: (number) => void
+
+  vendorProfileData: VendorProfile
+}> = ({ onClose, VendorType, vendorProfileData, updateVendorId }) => {
+  const toast = useToast()
+  const { t } = useTranslation()
+  const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
+  const { mutate: createVendorProfileDetails } = useCreateVendorMutation()
+  const queryClient = useQueryClient()
+  const { data: paymentsMethods } = usePaymentMethods()
+  const { data: statesData } = useStates()
+
+  const submitForm = useCallback(
+    (formData: VendorProfileDetailsFormData) => {
+      const payload = parseVendorFormDataToAPIData(vendorProfileData, formData, paymentsMethods)
+      if (vendorProfileData?.id) {
+        updateVendorProfileDetails(payload, {
+          onSuccess() {
+            queryClient.invalidateQueries('vendorProfile')
+            toast({
+              title: t('updateProfile'),
+              description: t('updateProfileSuccess'),
+              status: 'success',
+              isClosable: true,
+            })
+          },
+          onError(error: any) {
+            toast({
+              title: 'Update Vendor',
+              description: (error.title as string) ?? 'Unable to save project.',
+              status: 'error',
+              isClosable: true,
+            })
+          },
+        })
+      } else {
+        createVendorProfileDetails(payload, {
+          onSuccess(res: any) {
+            updateVendorId?.(res?.data?.id)
+            toast({
+              title: t('updateProfile'),
+              description: t('updateProfileSuccess'),
+              status: 'success',
+              isClosable: true,
+            })
+          },
+          onError(error: any) {
+            toast({
+              title: 'Create Vendor',
+              description: (error.title as string) ?? 'Unable to create project.',
+              status: 'error',
+              isClosable: true,
+            })
+          },
+        })
+      }
+    },
+    [toast, updateVendorProfileDetails, vendorProfileData, paymentsMethods],
+  )
   const {
-    handleSubmit,
     register,
     control,
-    watch,
+    handleSubmit,
     formState: { errors },
-  } = useForm<{
-    businessName: string
-    score: string
-    status: string
-    primaryContact: string
-    primaryEmail: string
-    businessPhoneNo: string
-    streetAdress: string
-    zipCode: string
-    capacity: string
-    ein: string
-    city: string
-    state: string
-    sin: string
-    paymentTerms: string
-    creditCard: boolean
-    check: boolean
-    ach: boolean
-  }>()
+    setValue,
+    reset,
+  } = useForm<VendorProfileDetailsFormData>({
+    defaultValues: {
+      ownerName: '',
+      secondName: '',
+      businessPhoneNumber: '',
+      businessPhoneNumberExtension: '',
+      secondPhoneNumber: '',
+      secondPhoneNumberExtension: '',
+      businessEmailAddress: '',
+      secondEmailAddress: '',
+      companyName: '',
+      score: {},
+      status: {},
+      state: {},
+      paymentTerm: {},
+      streetAddress: '',
+      city: '',
+      zipCode: '',
+      capacity: null,
+      einNumber: '',
+      ssnNumber: '',
+    },
+  })
 
-  const onSubmit = values => {
-    console.log(values)
-  }
-
-  const fields = watch()
-  const isEnabled = useMemo(() => {
-    const {
-      businessName,
-      score,
-      status,
-      primaryContact,
-      primaryEmail,
-      businessPhoneNo,
-      streetAdress,
-      zipCode,
-      capacity,
-      ein,
-      city,
-      state,
-      sin,
-      paymentTerms,
-      creditCard,
-      check,
-      ach,
-    } = fields
-
-    return !!(
-      (businessName &&
-        score &&
-        status &&
-        primaryContact &&
-        primaryEmail &&
-        businessPhoneNo &&
-        streetAdress &&
-        zipCode &&
-        capacity &&
-        ein &&
-        city &&
-        state &&
-        sin &&
-        paymentTerms) ||
-      check ||
-      creditCard ||
-      ach
+  useEffect(() => {
+    if (!vendorProfileData) return
+    reset(parseVendorAPIDataToFormData(vendorProfileData))
+    const state = statesData?.find(s => s.code === vendorProfileData.state)
+    setValue(
+      'score',
+      documentScore.find(s => s.value === vendorProfileData.score),
     )
-  }, [fields])
+    setValue(
+      'status',
+      documentStatus.find(s => s.value === vendorProfileData.status),
+    )
+    setValue('state', { label: state?.name, value: state?.code })
+    setValue(
+      'paymentTerm',
+      PAYMENT_TERMS_OPTIONS.find(s => parseInt(s.value, 10) === vendorProfileData.paymentTerm),
+    )
+  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
 
-  const documentTypes = [
-    { value: 1, label: 'Option 1' },
-    { value: 2, label: 'Option 2' },
-    { value: 3, label: 'Option 3' },
-    { value: 4, label: 'Option 4' },
-  ]
+  const states = statesData?.map(state => ({
+    label: state?.name,
+    value: state?.code,
+  }))
 
   return (
     <Stack spacing={3}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(submitForm)}>
         <HStack spacing="16px">
-          <FormControl w="215px" isInvalid={!!errors.businessName}>
+          <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
               {t('businessName')}
             </FormLabel>
             <Input
               type="text"
-              {...register('businessName', {
+              id="companyName"
+              variant="required-field"
+              {...register('companyName', {
                 required: 'This is required',
               })}
-              variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.businessName && errors.businessName.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.score}>
             <FormLabel variant="strong-label" size="md">
@@ -129,7 +181,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect options={documentScore} {...field} selectProps={{ isBorderLeft: true }} />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -145,7 +197,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -153,69 +205,82 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
           </FormControl>
         </HStack>
         <HStack spacing="16px" mt="30px">
-          <FormControl w="215px" isInvalid={!!errors.primaryContact}>
+          <FormControl w="215px" isInvalid={!!errors.ownerName}>
             <FormLabel variant="strong-label" size="md">
               {t('primaryContact')}
             </FormLabel>
             <Input
-              type="number"
-              {...register('primaryContact', {
+              type="text"
+              {...register('ownerName', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl w="215px" isInvalid={!!errors.primaryEmail}>
+          <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
             <FormLabel variant="strong-label" size="md">
               {t('primaryEmail')}
             </FormLabel>
             <Input
               type="email"
-              {...register('primaryEmail', {
+              {...register('businessEmailAddress', {
                 required: 'This is required',
               })}
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.businessEmailAddress?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input variant="outline" size="md" />
+            <Input type="text" {...register('secondName')} variant="outline" size="md" />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
               {t('secondaryEmail')}
             </FormLabel>
 
-            <Input variant="outline" size="md" />
+            <Input {...register('secondEmailAddress')} variant="outline" size="md" />
           </FormControl>
           <GridItem></GridItem>
         </HStack>
 
         <HStack spacing="4" my="30px">
           <Box w="215px">
-            <FormControl isInvalid={!!errors.businessPhoneNo}>
+            <FormControl isInvalid={!!errors.businessPhoneNumber}>
               <FormLabel variant="strong-label" size="md">
                 {t('businessPhoneNo')}
               </FormLabel>
-              <Input
-                type="number"
-                {...register('businessPhoneNo', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="required-field"
-                size="md"
+              <Controller
+                name="businessPhoneNumber"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      {...field}
+                      // {...register('businessPhoneNumber')}
+                      w="215px"
+                      variant="outline"
+                      size="md"
+                      onChange={event => {
+                        const value = event.currentTarget.value
+                        const denormarlizedValue = value.split('-').join('')
+
+                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
+                          maskValue?.[3] || '____'
+                        }`
+                        field.onChange(actualValue)
+                      }}
+                    />
+                  )
+                }}
               />
-              <FormErrorMessage pos="absolute">
-                {errors.businessPhoneNo && errors.businessPhoneNo.message}
-              </FormErrorMessage>
             </FormControl>
           </Box>
           <Flex>
@@ -224,7 +289,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('ext')}
               </FormLabel>
 
-              <Input w="121px" variant="outline" size="md" />
+              <Input {...register('businessPhoneNumberExtension')} w="121px" variant="outline" size="md" />
             </FormControl>
             <Spacer w="95px" />
           </Flex>
@@ -233,8 +298,30 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               <FormLabel variant="strong-label" size="md">
                 {t('secondaryPhoneNo')}
               </FormLabel>
+              <Controller
+                name="secondPhoneNumber"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      {...field}
+                      w="215px"
+                      variant="outline"
+                      size="md"
+                      onChange={event => {
+                        const value = event.currentTarget.value
+                        const denormarlizedValue = value.split('-').join('')
 
-              <Input w="215px" variant="outline" size="md" />
+                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
+                          maskValue?.[3] || '____'
+                        }`
+                        field.onChange(actualValue)
+                      }}
+                    />
+                  )
+                }}
+              />
             </FormControl>
           </Box>
           <Box w="109px">
@@ -243,27 +330,27 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('ext')}
               </FormLabel>
 
-              <Input w="121px" variant="outline" size="md" />
+              <Input {...register('secondPhoneNumberExtension')} w="121px" variant="outline" size="md" />
             </FormControl>
           </Box>
         </HStack>
 
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
-            <FormControl isInvalid={!!errors.streetAdress}>
+            <FormControl isInvalid={!!errors.streetAddress}>
               <FormLabel variant="strong-label" size="md">
                 {t('streetAddress')}
               </FormLabel>
               <Input
                 type="text"
-                {...register('streetAdress', {
+                {...register('streetAddress', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -280,7 +367,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.city && errors.city.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -294,7 +381,14 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                    <ReactSelect
+                      options={states}
+                      {...field}
+                      // onChange={setStates}
+                      // selectProps={{ isBorderLeft: true }}
+                    />
+
+                    {/* <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} /> */}
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
@@ -315,7 +409,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -324,7 +418,7 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 {t('capacity')}
               </FormLabel>
               <Input
-                type="text"
+                type="number"
                 {...register('capacity', {
                   required: 'This is required',
                 })}
@@ -332,41 +426,41 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.capacity && errors.capacity.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.ein}>
+            <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
                 EIN
               </FormLabel>
               <Input
-                type="number"
-                {...register('ein', {
+                type="string"
+                {...register('einNumber', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.ein && errors.ein.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.sin}>
+            <FormControl isInvalid={!!errors.ssnNumber}>
               <FormLabel variant="strong-label" size="md">
                 {t('sin')}
               </FormLabel>
               <Input
                 type="text"
-                {...register('sin', {
+                {...register('ssnNumber', {
                   required: 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
               />
-              <FormErrorMessage pos="absolute">{errors.sin && errors.sin.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
@@ -375,17 +469,17 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
         <Box>
           <Stack alignItems="center" direction="row" spacing="16px">
             <Box w="215px">
-              <FormControl isInvalid={!!errors.paymentTerms}>
+              <FormControl isInvalid={!!errors.paymentTerm}>
                 <FormLabel variant="strong-label" size="md">
                   {t('paymentTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
-                  name="paymentTerms"
+                  name="paymentTerm"
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect options={PAYMENT_TERMS_OPTIONS} {...field} selectProps={{ isBorderLeft: true }} />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -395,15 +489,11 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
             <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
               <Text>{t('paymentMethods')}</Text>
               <HStack spacing="16px">
-                <Checkbox {...register('creditCard')} colorScheme="brand">
-                  Credit Card
-                </Checkbox>
-                <Checkbox {...register('check')} colorScheme="brand">
-                  {t('check')}
-                </Checkbox>
-                <Checkbox {...register('ach')} colorScheme="brand">
-                  ACH
-                </Checkbox>
+                {paymentsMethods?.map(payment => (
+                  <Checkbox {...register(payment.name)} colorScheme="brand">
+                    {payment.name}
+                  </Checkbox>
+                ))}
               </HStack>
             </VStack>
           </Stack>
@@ -414,27 +504,28 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
               {t('cancel')}
             </Button>
           )}
-          {VendorType === 'detail' ? (
-            <Button
-              isDisabled={!isEnabled}
-              type="submit"
-              data-testid="saveDocumentCards"
-              variant="solid"
-              colorScheme="brand"
-            >
-              {t('save')}
-            </Button>
-          ) : (
-            <Button
-              isDisabled={!isEnabled}
-              type="submit"
-              data-testid="saveDocumentCards"
-              variant="solid"
-              colorScheme="brand"
-            >
-              {t('next')}
-            </Button>
-          )}
+          {/* {VendorType === 'detail' ? ( */}
+          <Button
+            // isDisabled={!isEnabled}
+            type="submit"
+            data-testid="saveDocumentCards"
+            variant="solid"
+            colorScheme="brand"
+          >
+            {t('save')}
+          </Button>
+          {/* ) */}
+          {/* //  : (
+          //   <Button
+          //     // isDisabled={!isEnabled}
+          //     type="submit"
+          //     data-testid="saveDocumentCards"
+          //     variant="solid"
+          //     colorScheme="brand"
+          //   >
+          //     {t('next')}
+          //   </Button>
+          // )} */}
         </HStack>
       </form>
     </Stack>
