@@ -17,8 +17,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
     clientId: clientDetails?.id,
   })
 
-  const saveNote = data => {
-  }
+  const saveNote = data => {}
 
   return (
     <>

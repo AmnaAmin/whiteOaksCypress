@@ -710,7 +710,7 @@ i18n.use(initReactI18next).init({
         primaryContact: 'Contacto Primario',
         secondaryContact: 'Contacto Secundario',
         businessPhoneNo: 'Número de teléfono de la empresa',
-        ext: 'Ext',
+        ext: 'Extensión',
         secondaryNo: 'Número Secundario',
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
