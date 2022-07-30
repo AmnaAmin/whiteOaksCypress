@@ -6,6 +6,7 @@ import {
   FormControl,
   Heading,
   HStack,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -20,10 +21,8 @@ import { orderBy } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
-import { useParams } from 'react-router-dom'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { useDocuments } from 'utils/vendor-projects'
 
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
@@ -31,14 +30,9 @@ import { dateFormatter } from 'utils/date-time-utils'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose } = props
+  const { lienWaiverData, onClose, documentsData } = props
   const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
   const [documents, setDocuments] = useState<any[]>([])
-  const { projectId } = useParams<'projectId'>()
-  const { documents: documentsData = [] } = useDocuments({
-    projectId,
-  })
-  // const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -54,6 +48,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       claimantsSignature: lienWaiverData.claimantsSignature,
       claimantTitle: lienWaiverData.claimantTitle,
       dateOfSignature: lienWaiverData.dateOfSignature,
+      lienWaiverAccepted: !lienWaiverData.lienWaiverAccepted,
     },
   })
   const { leanwieverLink } = props.lienWaiverData
@@ -78,8 +73,7 @@ export const LienWaiverTab: React.FC<any> = props => {
     if (!documentsData?.length) return
     const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
     const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-    // const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
-    // setRecentLWFile(recentLW)
+
     setValue('claimantsSignature', signatureDoc?.s3Url)
   }, [documentsData, setValue])
 
@@ -111,6 +105,30 @@ export const LienWaiverTab: React.FC<any> = props => {
     generateTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
+
+  const [claimantsSignature, setClaimantsSignature] = useState('')
+
+  useEffect(() => {
+    if (!documentsData?.length) return
+    setDocuments(documentsData)
+    if (lienWaiverData.lienWaiverAccepted) {
+      const orderDocs = orderBy(
+        documentsData,
+        [
+          item => {
+            if (item?.createdDate) {
+              const createdDate = new Date(item?.createdDate)
+              return createdDate
+            }
+          },
+        ],
+        ['desc'],
+      )
+      const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
+
+      setClaimantsSignature(signatureDoc?.s3Url ?? '')
+    }
+  }, [documentsData, setValue, lienWaiverData])
 
   return (
     <Stack>
@@ -146,11 +164,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   label={t('makerOfCheck')}
                   InputElem={lienWaiverData.makerOfCheck}
                 />
-                {/* <InputView
-                  controlStyle={{ w: '13em' }}
-                  label={t('amountOfCheck')}
-                  InputElem={<>${lienWaiverData.amountOfCheck}</>}
-                /> */}
+
                 <Stack pt={6}>
                   <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
                     {t('amountOfCheck')}
@@ -195,7 +209,13 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <InputView
                   controlStyle={{ w: '207px' }}
                   label="Claimant Signature"
-                  InputElem={<>{lienWaiverData.claimantTitle || 'Null'}</>}
+                  InputElem={
+                    claimantsSignature ? (
+                      <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                    ) : (
+                      'Null'
+                    )
+                  }
                 />
               </HStack>
             </VStack>
@@ -206,7 +226,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Divider borderColor=" #E2E8F0" borderWidth="1px" />
         </Box>
         <Flex justifyContent="end" my="16px" mx="32px">
-          {lienWaiverData.claimantTitle && (
+          {lienWaiverData.lienWaiverAccepted && (
             <Box>
               <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
                 <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
@@ -217,12 +237,21 @@ export const LienWaiverTab: React.FC<any> = props => {
           )}
           <Spacer />
           <HStack spacing="16px">
-            <Button onClick={onClose} colorScheme="brand" variant="outline">
-              {t('cancel')}
-            </Button>
-            <Button type="submit" colorScheme="brand" isDisabled={props.rejectChecked}>
-              {t('save')}
-            </Button>
+            {!lienWaiverData.lienWaiverAccepted && (
+              <Button onClick={onClose} colorScheme="brand">
+                {t('cancel')}
+              </Button>
+            )}
+            {lienWaiverData.lienWaiverAccepted && (
+              <>
+                <Button onClick={onClose} colorScheme="brand" variant="outline">
+                  {t('cancel')}
+                </Button>
+                <Button type="submit" colorScheme="brand" isDisabled={props.rejectChecked}>
+                  {t('save')}
+                </Button>
+              </>
+            )}
           </HStack>
         </Flex>
       </form>

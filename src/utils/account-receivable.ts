@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-export const usePCReveviable = () => {
+export const usePCRecievable = () => {
   const client = useClient()
 
   const { data: receivableData, ...rest } = useQuery(['receivable'], async () => {

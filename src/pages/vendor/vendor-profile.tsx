@@ -21,14 +21,15 @@ import { TableNames } from 'types/table-column.types'
 import { Card } from 'features/login-form-centered/Card'
 
 type Props = {
-  vendorPropfileData?: VendorProfile
+  vendorProfileData?: VendorProfile
   onClose?: () => void
   refetch?: () => void
+  updateVendorId?: (number) => void
   vendorModalType?: string
 }
 
 export const VendorProfileTabs: React.FC<Props> = props => {
-  const vendorProfileData = props.vendorPropfileData
+  const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
@@ -52,10 +53,15 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          {vendorProfileData ? (
-            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          {VendorType === 'editVendor' ? (
+            <PcDetails
+              vendorProfileData={vendorProfileData as VendorProfile}
+              VendorType={VendorType!}
+              onClose={props.onClose}
+              updateVendorId={props.updateVendorId}
+            />
           ) : (
-            <PcDetails VendorType={VendorType!} onClose={props.onClose} />
+            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
           )}
         </TabPanel>
         <TabPanel p="0px">
@@ -106,7 +112,7 @@ const VendorProfilePage: React.FC<Props> = props => {
         <BlankSlate width="60px" />
       ) : (
         <Card p="18px" px="0">
-          <VendorProfileTabs vendorPropfileData={vendorProfileData} onClose={props.onClose} refetch={refetch} />
+          <VendorProfileTabs vendorProfileData={vendorProfileData} onClose={props.onClose} refetch={refetch} />
         </Card>
       )}
     </Stack>

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
 import { Link } from 'react-router-dom'
 import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const PROJECT_COLUMNS = [
   {
@@ -35,10 +37,12 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'Client Start Date',
     accessor: 'clientStartDate',
+    Cell: ({ value }) => dateFormat(value),
   },
   {
     Header: 'Client Due Date',
     accessor: 'clientDueDate',
+    Cell: ({ value }) => dateFormat(value),
   },
 ]
 
@@ -140,7 +144,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 
   return (
     <Box ref={resizeElementRef} height="100%">
-      <ReactTable
+      <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
@@ -148,6 +152,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         name="my-table"
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
+        enablePagination={true}
+        sortBy={{ id: 'id', desc: true }}
       />
     </Box>
   )

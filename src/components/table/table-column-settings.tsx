@@ -20,8 +20,7 @@ import { FaAtom } from 'react-icons/fa'
 import { BiGridVertical } from 'react-icons/bi'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { t } from 'i18next'
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { Button } from 'components/button/button'
 
@@ -43,7 +42,7 @@ interface TableColumnSettingsProps {
 const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnSettingsProps) => {
   const [columnRecords, setColumnRecords] = useState(columns)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  // const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const saveModal = useCallback(() => {
     const columnsPayload = columnRecords.map((item, index) => ({
@@ -89,16 +88,16 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        m={0}
         variant="ghost"
         colorScheme="brand"
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
         data-testid="column-settings-button"
+        fontSize={'12px'}
       >
         <Icon as={FaAtom} fontSize="18px" mr={1} />
-        {t('setting')}
+        {t('settings')}
       </Button>
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
@@ -164,7 +163,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                       fontWeight={500}
                                       fontSize="14px"
                                     >
-                                      {field}
+                                      {t(field)}
                                     </Text>
                                   </Checkbox>
                                 </HStack>

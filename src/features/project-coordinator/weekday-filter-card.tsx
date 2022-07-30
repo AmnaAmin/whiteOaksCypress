@@ -1,9 +1,7 @@
-import { Button, Flex, Stack } from '@chakra-ui/react'
-
+import { Button, Center, Stack } from '@chakra-ui/react'
 type weekdayCardTypes = {
   id: number | string
   dayName: string
-  dueDate: string
   count: string | number
   selectedDay: string
   onSelectDay: (string) => void
@@ -21,29 +19,28 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
         _focus={{ border: 'none' }}
         fontSize="16px"
         fontStyle="normal"
-        fontWeight={500}
+        fontWeight={400}
         alignContent="right"
-        color={props.selectedDay === props.id ? 'white' : 'black'}
+        color={props.selectedDay === props.id ? 'white' : '#4A5568'}
         onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
         disabled={props.count ? false : true}
       >
         {props.dayName}
-        <Flex
-          w="22px"
-          h="22px !important"
+        <Center
+          minW="22px"
+          h="22px"
           m={1}
-          rounded="50"
+          rounded="full"
           bg={props.selectedDay === props.id ? 'white' : '#E2E8F0'}
-          color={props.selectedDay === props.id ? '#4E87F8' : 'black'}
+          color={props.selectedDay === props.id ? '#4E87F8' : '#4A5568'}
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
-          fontSize="14px"
-          paddingTop={1}
-          paddingLeft={2}
-          paddingRight={2}
+          fontSize="16px"
+          fontWeight={600}
           mb={2}
+          data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}
-        </Flex>
+        </Center>
       </Button>
     </Stack>
   )
