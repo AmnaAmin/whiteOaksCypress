@@ -17,7 +17,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
