@@ -107,6 +107,7 @@ export type VendorProfilePayload = {
   streetAddress: string
   city: string
   state: string
+  paymentTerm?: string
   zipCode: string
   createdBy: string
   createdDate: string | null
@@ -121,6 +122,7 @@ export type VendorProfilePayload = {
   vendorSkills: Trade[]
   markets: Array<Market>
   projects: any[]
+  paymentOptions: any[]
   documents: {
     id?: number
     fileType: string
@@ -174,6 +176,11 @@ export type Document = {
   workOrderName?: string
 }
 
+type Select = {
+  label: string
+  value: any
+}
+
 export type VendorProfileDetailsFormData = {
   primaryContact: string
   secondaryContact: string
@@ -181,18 +188,29 @@ export type VendorProfileDetailsFormData = {
   businessNumberExtention: string
   secondaryNumber: string
   secondaryNumberExtenstion: string
+  businessPhoneNumberExtension?: string
+  secondPhoneNumber?: string
+  secondPhoneNumberExtension?: string
   primaryEmail: string
+  businessEmailAddress?: string
   secondaryEmail: string
-  companyName?: String
-  score?: String
-  status?: null | Number
-  streetAddress?: String
-  state?: String
-  city?: String
-  zipCode?: null | Number
-  capacity?: String
-  einNumber?: String
-  ssnNumber?: String
+  secondEmailAddress?: string
+  ownerName?: string
+  secondName?: string
+  companyName?: string
+  score?: Select
+  status?: Select
+  streetAddress?: string
+  state?: Select
+  city?: string
+  zipCode?: string
+  capacity?: null | number
+  einNumber?: string
+  ssnNumber?: string
+  paymentTerm?: Select
+  creditCard?: boolean
+  check?: boolean
+  ach?: boolean
 }
 
 export type VendorTrade = {

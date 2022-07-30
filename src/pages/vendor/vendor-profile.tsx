@@ -24,6 +24,7 @@ type Props = {
   vendorProfileData?: VendorProfile
   onClose?: () => void
   refetch?: () => void
+  updateVendorId?: (number) => void
   vendorModalType?: string
 }
 
@@ -52,11 +53,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          {VendorType === 'newVendor' ? (
+          {VendorType === 'editVendor' ? (
             <PcDetails
               vendorProfileData={vendorProfileData as VendorProfile}
               VendorType={VendorType!}
               onClose={props.onClose}
+              updateVendorId={props.updateVendorId}
             />
           ) : (
             <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />

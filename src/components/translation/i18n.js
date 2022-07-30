@@ -247,7 +247,7 @@ i18n.use(initReactI18next).init({
         state: 'State',
         secondaryPhoneNo: 'Secondary Phone No',
         city: 'City',
-        sin: 'SIN',
+        sin: 'SSN',
         zip: 'Zipcode',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
