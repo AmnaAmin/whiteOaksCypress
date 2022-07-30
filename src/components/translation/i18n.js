@@ -81,6 +81,10 @@ i18n.use(initReactI18next).init({
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
+        transactionTypeLabel: 'Type',
+        transactionTotal: 'Total Amount',
+        modifiedDate: 'Submit',
+        skillName: 'Trade',
         pastDueWorkorders: 'Past Due WO',
         vendorWOExpectedPaymentDate: 'Expected Payment Date',
 
@@ -525,6 +529,10 @@ i18n.use(initReactI18next).init({
         //  Projects - Table Setting Columns
         projectTypeLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
+        transactionTypeLabel: 'Escribe',
+        transactionTotal: 'Cantidad Total',
+        modifiedDate: 'Entregar',
+        skillName: 'Comercio',
         pastDueWorkorders: 'Vencido WO',
         vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
 
