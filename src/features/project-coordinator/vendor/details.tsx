@@ -32,7 +32,7 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { documentStatus, documentScore } from 'utils/vendor-projects'
-
+import first from 'lodash/first'
 const PcDetails: React.FC<{
   onClose?: () => void
   VendorType?: string
@@ -76,7 +76,7 @@ const PcDetails: React.FC<{
           onSuccess(res: any) {
             updateVendorId?.(res?.data?.id)
             toast({
-              title: t('updateProfile'),
+              title: 'Create Vendor',
               description: t('updateProfileSuccess'),
               status: 'success',
               isClosable: true,
@@ -113,10 +113,10 @@ const PcDetails: React.FC<{
       businessEmailAddress: '',
       secondEmailAddress: '',
       companyName: '',
-      score: {},
-      status: {},
-      state: {},
-      paymentTerm: {},
+      score: undefined,
+      status: undefined,
+      state: undefined,
+      paymentTerm: undefined,
       streetAddress: '',
       city: '',
       zipCode: '',
@@ -127,7 +127,11 @@ const PcDetails: React.FC<{
   })
 
   useEffect(() => {
-    if (!vendorProfileData) return
+    if (!vendorProfileData) {
+      setValue('score', first(documentScore))
+      setValue('status', first(documentStatus))
+      return
+    }
     reset(parseVendorAPIDataToFormData(vendorProfileData))
     const state = statesData?.find(s => s.code === vendorProfileData.state)
     setValue(
@@ -145,10 +149,11 @@ const PcDetails: React.FC<{
     )
   }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
 
-  const states = statesData?.map(state => ({
-    label: state?.name,
-    value: state?.code,
-  }))
+  const states =
+    statesData?.map(state => ({
+      label: state?.name,
+      value: state?.code,
+    })) ?? []
 
   return (
     <Stack spacing={3}>
@@ -379,14 +384,7 @@ const PcDetails: React.FC<{
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
-                      options={states}
-                      {...field}
-                      // onChange={setStates}
-                      // selectProps={{ isBorderLeft: true }}
-                    />
-
-                    {/* <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} /> */}
+                    <ReactSelect options={states} {...field} />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}

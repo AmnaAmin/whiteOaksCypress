@@ -39,6 +39,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
     updateVendorProfile(vendorProfilePayload, {
       onSuccess() {
         queryClient.invalidateQueries('vendorProfile')
+        onClose?.()
         toast({
           title: t('updateMarkets'),
           description: t('updateMarketsSuccess'),

@@ -50,12 +50,16 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
       const results = await parseLicenseValues(values, props?.vendor?.licenseDocuments)
       const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
       saveLicenses(vendorPayload, {
-        onSuccess() {
-          setNextTab()
-        },
+        // onSuccess() {
+        //   setNextTab()
+        // },
       })
     },
-    [vendor, setNextTab, saveLicenses],
+    [
+      vendor,
+      // setNextTab,
+      saveLicenses,
+    ],
   )
   return (
     <Box>
@@ -253,7 +257,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
         </VStack>
         <Flex id="footer" w="100%" pt="12px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
           {onClose && (
-            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+            <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
               Cancel
             </Button>
           )}

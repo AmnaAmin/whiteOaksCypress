@@ -54,12 +54,16 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
       }
       const vendorPayload = createVendorPayload(updatedObject, vendor)
       saveDocuments(vendorPayload, {
-        onSuccess() {
-          setNextTab()
-        },
+        // onSuccess() {
+        //   setNextTab()
+        // },
       })
     },
-    [vendor, setNextTab, saveDocuments],
+    [
+      vendor,
+      //  setNextTab,
+      saveDocuments,
+    ],
   )
   return (
     <Box w="100%">
