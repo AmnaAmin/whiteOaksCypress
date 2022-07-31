@@ -36,7 +36,7 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
 
                 <DatePickerInput
                   value={projectData?.createdDate ? dateFormat(projectData?.createdDate as string) : 'mm/dd/yyyy'}
-                  color='#718096'
+                  color="#718096"
                   disable
                 />
 
@@ -50,7 +50,11 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.modifiedDate && projectData?.projectStatus !== 'NEW' ? dateFormat(projectData?.modifiedDate as string) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.modifiedDate && projectData?.projectStatus !== 'NEW'
+                      ? dateFormat(projectData?.modifiedDate as string)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -63,8 +67,12 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                   Punch
                 </FormLabel>
 
-                <DatePickerInput 
-                  value={projectData?.modifiedDate && projectData?.projectStatus !== 'ACTIVE' ? dateFormat(projectData?.modifiedDate as string) : 'mm/dd/yyyy'}
+                <DatePickerInput
+                  value={
+                    projectData?.modifiedDate && projectData?.projectStatus !== 'ACTIVE'
+                      ? dateFormat(projectData?.modifiedDate as string)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -78,7 +86,9 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.projectClosedDate ? dateFormat(projectData?.projectClosedDate as string) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.projectClosedDate ? dateFormat(projectData?.projectClosedDate as string) : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -92,7 +102,11 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                 </FormLabel>
 
                 <DatePickerInput
-                  value={projectData?.clientPaidDate ? dateFormat(projectData?.clientPaidDate as unknown as string) : 'mm/dd/yyyy'}
+                  value={
+                    projectData?.clientPaidDate
+                      ? dateFormat(projectData?.clientPaidDate as unknown as string)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -105,8 +119,12 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                   Collection
                 </FormLabel>
 
-                <DatePickerInput //date has to be added, once the funcationality is implemented 
-                  value={projectData?.woaCompletionDate && projectData?.projectStatus === 'COLLECTION' ? dateFormat(projectData?.woaCompletionDate) : 'mm/dd/yyyy'}
+                <DatePickerInput //date has to be added, once the funcationality is implemented
+                  value={
+                    projectData?.woaCompletionDate && projectData?.projectStatus === 'COLLECTION'
+                      ? dateFormat(projectData?.woaCompletionDate)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
@@ -119,8 +137,12 @@ const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
                   Disputed
                 </FormLabel>
 
-                <DatePickerInput //date has to be added, once the funcationality is implemented 
-                  value={projectData?.woaBackdatedInvoiceDate && projectData?.projectStatus === 'DISPUTED' ? dateFormat(projectData?.woaBackdatedInvoiceDate) : 'mm/dd/yyyy'}
+                <DatePickerInput //date has to be added, once the funcationality is implemented
+                  value={
+                    projectData?.woaBackdatedInvoiceDate && projectData?.projectStatus === 'DISPUTED'
+                      ? dateFormat(projectData?.woaBackdatedInvoiceDate)
+                      : 'mm/dd/yyyy'
+                  }
                   disable
                 />
 
