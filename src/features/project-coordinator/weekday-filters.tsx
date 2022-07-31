@@ -33,7 +33,6 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({
         id: 'Monday',
         title: 'Mon',
         number: monday?.count,
-        // date: days?.find(c => c.dayName === 'Monday')?.dueDate,
       },
       {
         id: 'Tuesday',
@@ -70,14 +69,17 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({
 
   const days = useWeekdayCardJson()
 
-  const allDays = () => {
-    onSelectDay('All')
-  }
+  // const allDays = () => {
+  //   onSelectDay('All')
+  // }
 
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-        <Button
+        
+        {/* Hiding All and Clear Filter for now */}
+
+        {/* <Button
           bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
           color={selectedDay === 'All' ? 'white' : 'black'}
           variant={'pill'}
@@ -85,8 +87,8 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({
           p={0}
         >
           {t('All')}
-        </Button>
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
+        </Button> */}
+        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
         {days.map(day => {
           return (
             <WeekdayCard
@@ -99,10 +101,13 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({
             />
           )
         })}
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
-        <Button variant="ghost" colorScheme="brand" onClick={clear}>
+
+        {/* Hiding All and Clear Filter for now */}
+
+        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
+        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
-        </Button>
+        </Button> */}
       </Stack>
     </>
   )

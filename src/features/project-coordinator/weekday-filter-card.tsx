@@ -36,7 +36,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
           fontSize="16px"
           fontWeight={600}
-          mb={2}
+         // mb={2}
           data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}
