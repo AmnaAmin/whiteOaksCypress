@@ -14,20 +14,20 @@ export const PROJECT_COLUMNS = [
     accessor: 'id',
   },
   {
+    Header: 'General Labor',
+    accessor: 'generalLabourName',
+  },
+  {
     Header: 'FPM',
     accessor: 'projectManager',
   },
   {
-    Header: 'generalLabor',
-    accessor: 'generalLabourName',
-  },
-  {
-    Header: 'status',
+    Header: 'Status',
     accessor: 'projectStatus',
     Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
   },
   {
-    Header: 'address',
+    Header: 'Address',
     accessor: 'streetAddress',
   },
   {
@@ -122,11 +122,11 @@ export const PROJECT_COLUMNS = [
   },
   {
     Header: 'WO Number',
-    accessor: 'WONumber',
+    accessor: 'woNumber',
   },
   {
     Header: 'PO Number',
-    accessor: 'PONumber',
+    accessor: 'poNumber',
   },
 ]
 
