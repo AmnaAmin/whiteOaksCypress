@@ -50,7 +50,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} />
+              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} onClose={onClose}/>
             </Box>
           </ModalBody>
         </ModalContent>

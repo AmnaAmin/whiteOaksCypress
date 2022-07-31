@@ -8,7 +8,7 @@ import ClientNotes from 'features/projects/modals/project-coordinator/clients-no
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
-  onClose?: () => void
+  onClose: () => void
   clientModalType?: string
   clientDetails?: any
 }
@@ -27,13 +27,13 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
       <TabPanels mt="20px">
         <TabPanel p="0px">
-          <DetailsTab clientDetails={clientDetails} onClose={props?.onClose} />
+          <DetailsTab clientDetails={clientDetails} onClose={props.onClose} />
         </TabPanel>
         <TabPanel p="0px">
-          <Market clientDetails={clientDetails} />
+          <Market clientDetails={clientDetails} onClose={props.onClose}/>
         </TabPanel>
         <TabPanel p="0px">
-          <ClientNotes clientDetails={clientDetails} />
+          <ClientNotes clientDetails={clientDetails} onClose={props.onClose}/>
         </TabPanel>
       </TabPanels>
     </Tabs>

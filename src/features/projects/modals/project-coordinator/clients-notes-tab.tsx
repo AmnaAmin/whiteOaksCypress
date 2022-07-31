@@ -1,12 +1,12 @@
 import React from 'react'
 import { NotesTab } from 'features/common/notes-tab'
 import { useNotes } from 'utils/clients'
-import { Button, Flex } from '@chakra-ui/react'
+import { Box, Button, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 type clientNotesProps = {
   clientDetails?: any
-  onClose?: () => void
+  onClose: () => void
 }
 
 export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCount) => {
@@ -17,24 +17,31 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
     clientId: clientDetails?.id,
   })
 
-  const saveNote = data => {
+  const saveNote = data => {}
+
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+   // borderTop: '1px solid #CBD5E0',
   }
 
   return (
     <>
-      <NotesTab
-        saveNote={saveNote}
-        notes={notes}
-        onClose={onClose}
-        hideSave={true}
-        messageBoxStyle={{ height: '120px', resize: 'none', display: 'none' }}
-        chatListStyle={{ height: '200px' }}
-        pageLayoutStyle={{ height: '400px', padding: '25px' }}
-        labelTextBoxStyle={{ display: 'none' }}
-      />
-      <Flex justifyContent="end">
-        <Button colorScheme="brand" onClick={props?.onClose} mb={4}>
-          {t('cancel')}
+      <Box p={0} >
+        <NotesTab
+          saveNote={saveNote}
+          notes={notes}
+          onClose={onClose}
+          hideSave={true}
+          messageBoxStyle={{ height: '120px', resize: 'none', display: 'none' }}
+          chatListStyle={{ height: '390px' }}
+          pageLayoutStyle={{ height: '395px' }}
+          labelTextBoxStyle={{ display: 'none' }}
+        />
+      </Box>
+      <Flex style={ btnStyle } pb="4">
+        <Button colorScheme="brand" onClick={props?.onClose}>
+          Cancel
         </Button>
       </Flex>
     </>

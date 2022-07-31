@@ -101,7 +101,7 @@ export const NotesTab = (props: NotesProps) => {
       </Box>
       <HStack borderTop="1px solid #CBD5E0" p={3} bg="white">
         <HStack spacing="16px" w="100%" justifyContent="end">
-          {onClose && (
+          {onClose && !hideSave && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>

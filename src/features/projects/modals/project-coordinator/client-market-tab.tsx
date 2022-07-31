@@ -4,7 +4,7 @@ import { CheckboxButton } from 'components/form/checkbox-button'
 
 type clientDetailProps = {
   clientDetails?: any
-  onClose?: () => void
+  onClose: () => void
 }
 
 export const Market = React.forwardRef((props: clientDetailProps) => {
@@ -31,7 +31,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         </Flex>
       </Box>
       <Flex style={ btnStyle } py={4} pt={5}>
-        <Button colorScheme="brand" onClick={props?.onClose}>
+        <Button colorScheme="brand" onClick={props.onClose}>
           Cancel
         </Button>
       </Flex>
