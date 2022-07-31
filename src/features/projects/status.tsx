@@ -1,6 +1,10 @@
 import React from 'react'
 import { Tag, TagLabel } from '@chakra-ui/react'
 
+export const STATUSCODE = {
+  DECLINED: 111,
+}
+
 export enum STATUS {
   Paid = 'paid',
   Active = 'active',
