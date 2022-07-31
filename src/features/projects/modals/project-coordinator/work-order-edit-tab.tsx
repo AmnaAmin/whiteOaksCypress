@@ -19,18 +19,20 @@ import {
   Th,
   Td,
   Tbody,
-  FormErrorMessage,
   useCheckbox,
   chakra,
   useDisclosure,
 } from '@chakra-ui/react'
-import React from 'react'
+import { useState } from 'react'
 import { BiCalendar, BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { dateFormat } from 'utils/date-time-utils'
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { useForm, useFieldArray } from 'react-hook-form'
 import RemainingItemsModal from './remaining-items-modal'
+import { calendarIcon } from 'theme/common-style'
+import { STATUS } from 'features/projects/status'
+import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'utils/work-order'
 
 const CalenderCard = props => {
   return (
@@ -108,27 +110,34 @@ export const CustomCheckBox = props => {
   )
 }
 
+interface FormValues {
+  workOrderStartDate: string | null
+  workOrderDateCompleted: string | null
+  workOrderExpectedCompletionDate: string | null
+  assignedItems: any[]
+}
+
 const WorkOrderDetailTab = props => {
+  const { workOrder, onSave } = props
+  const [showLineItems] = useState(false)
+
   const {
     onClose: onCloseRemainingItemsModal,
     isOpen: isOpenRemainingItemsModal,
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm()
+  const { register, handleSubmit, control } = useForm<FormValues>({
+    defaultValues: defaultValuesWODetails(workOrder),
+  })
 
   const {
-    fields: workOrder,
+    fields: assignedItems,
     append,
     remove,
   } = useFieldArray({
     control,
-    name: 'workOrderTab',
+    name: 'assignedItems',
   })
 
   const { t } = useTranslation()
@@ -144,7 +153,7 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const onSubmit = values => {
-    console.log('Data', values)
+    onSave(parseWODetailValuesToPayload(values))
   }
 
   return (
@@ -176,181 +185,210 @@ const WorkOrderDetailTab = props => {
             <Box w="215px">
               <FormControl zIndex="2">
                 <FormLabel variant="strong-label" size="md">
-                  Expected Start
+                  {t('expectedStart')}
                 </FormLabel>
-                <Input w="215px" variant="required-field" size="md" placeholder="Input size medium" type="date" />
-              </FormControl>
-            </Box>
-            <Box w="215px">
-              <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  Expected Completion
-                </FormLabel>
-                <Input w="215px" variant="required-field" size="md" placeholder="Input size medium" type="date" />
-              </FormControl>
-            </Box>
-            <Box w="215px">
-              <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  Completed by Vendor
-                </FormLabel>
-                <Input type="date" />
-              </FormControl>
-            </Box>
-          </HStack>
-        </Box>
-
-        <Stack direction="row" mt="32px" justifyContent="space-between" mx="32px">
-          <HStack>
-            <Text>Assigned Items</Text>
-            <Box pl="2" pr="1">
-              <Divider orientation="vertical" h="20px" />
-            </Box>
-            <Button
-              type="button"
-              variant="ghost"
-              colorScheme="brand"
-              leftIcon={<Icon as={AddIcon} boxSize={3} />}
-              onClick={() =>
-                append({
-                  sku: '',
-                  productName: '',
-                  details: '',
-                  quantity: '',
-                  price: '',
-                  checked: false,
-                })
-              }
-            >
-              Add New Item
-            </Button>
-          </HStack>
-          <HStack spacing="16px">
-            <Checkbox size="lg">Show Prices to vendor</Checkbox>
-            <Checkbox size="lg">Mark all verified</Checkbox>
-          </HStack>
-          <HStack spacing="16px">
-            <Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
-              Download as PDF
-            </Button>
-            <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
-              Remaining Items
-            </Button>
-          </HStack>
-        </Stack>
-        <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md" mx="32px">
-          <TableContainer>
-            <Box overflow="auto" h="300px">
-              <Table>
-                <Thead h="72px" zIndex="1" position="sticky" top="0">
-                  <Tr whiteSpace="nowrap">
-                    <Th>SKU</Th>
-                    <Th>Product Name</Th>
-                    <Th>Details</Th>
-                    <Th>Quantity</Th>
-                    <Th>Price</Th>
-                    <Th>Status</Th>
-                    <Th>Images</Th>
-                    <Th>Verification</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {workOrder.map((items, index) => {
-                    return (
-                      <Tr>
-                        <Td>
-                          <HStack position="relative" right="16px">
-                            <Icon
-                              as={BiXCircle}
-                              boxSize={5}
-                              color="#4E87F8"
-                              onClick={() => remove(index)}
-                              cursor="pointer"
-                              mt="2"
-                            />
-                            <FormControl isInvalid={errors.now}>
-                              <FormLabel></FormLabel>
-                              <Input
-                                size="sm"
-                                id="now"
-                                {...register(`workOrderTab.${index}.sku`, { required: 'This is required' })}
-                              />
-                              <FormErrorMessage> {errors.now && errors.now.message} </FormErrorMessage>
-                            </FormControl>
-                          </HStack>
-                        </Td>
-                        <Td>
-                          <FormControl>
-                            <FormLabel></FormLabel>
-                            <Input
-                              size="sm"
-                              id="productName"
-                              {...register(`workOrderTab.${index}.productName`, { required: 'This is required' })}
-                            />
-                          </FormControl>
-                        </Td>
-                        <Td>
-                          <Box>
-                            <FormControl>
-                              <FormLabel></FormLabel>
-                              <Input
-                                size="sm"
-                                id="details"
-                                {...register(`workOrderTab.${index}.details`, { required: 'This is required' })}
-                              />
-                            </FormControl>
-                          </Box>
-                        </Td>
-                        <Td>
-                          <FormControl>
-                            <FormLabel></FormLabel>
-                            <Input
-                              size="sm"
-                              id="quantity"
-                              {...register(`workOrderTab.${index}.quantity`, { required: 'This is required' })}
-                            />
-                          </FormControl>
-                        </Td>
-                        <Td>
-                          <FormControl>
-                            <FormLabel></FormLabel>
-                            <Input
-                              size="sm"
-                              id="price"
-                              {...register(`workOrderTab.${index}.price`, { required: 'This is required' })}
-                            />
-                          </FormControl>
-                        </Td>
-                        <Td>
-                          <CustomCheckBox text="Completed" />
-                        </Td>
-                        <Td>
-                          <Box>
-                            <Button
-                              pt="1"
-                              variant="outline"
-                              colorScheme="brand"
-                              rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
-                              size="sm"
-                            >
-                              Upload
-                            </Button>
-                          </Box>
-                        </Td>
-
-                        <Td>
-                          {' '}
-                          <CustomCheckBox text="Verified" />{' '}
-                        </Td>
-                      </Tr>
-                    )
+                <Input
+                  id="workOrderStartDate"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                  variant="required-field"
+                  {...register('workOrderStartDate', {
+                    required: 'This is required field.',
                   })}
-                </Tbody>
-              </Table>
+                />
+              </FormControl>
             </Box>
-          </TableContainer>
+            <Box w="215px">
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('expectedCompletion')}
+                </FormLabel>
+                <Input
+                  id="workOrderExpectedCompletionDate"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                  variant="required-field"
+                  {...register('workOrderExpectedCompletionDate', {
+                    required: 'This is required field.',
+                  })}
+                />
+              </FormControl>
+            </Box>
+            <Box w="215px">
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('completedByVendor')}
+                </FormLabel>
+                <Input
+                  id="workOrderDateCompleted"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                  variant="outline"
+                  {...register('workOrderDateCompleted')}
+                />
+              </FormControl>
+            </Box>
+          </HStack>
         </Box>
+        {showLineItems && (
+          <>
+            <Stack direction="row" mt="32px" justifyContent="space-between" mx="32px">
+              <HStack>
+                <Text>Assigned Items</Text>
+                <Box pl="2" pr="1">
+                  <Divider orientation="vertical" h="20px" />
+                </Box>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  colorScheme="brand"
+                  leftIcon={<Icon as={AddIcon} boxSize={3} />}
+                  onClick={() =>
+                    append({
+                      sku: '',
+                      productName: '',
+                      details: '',
+                      quantity: '',
+                      price: '',
+                      checked: false,
+                    })
+                  }
+                >
+                  Add New Item
+                </Button>
+              </HStack>
+              <HStack spacing="16px">
+                <Checkbox size="lg">Show Prices to vendor</Checkbox>
+                <Checkbox size="lg">Mark all verified</Checkbox>
+              </HStack>
+              <HStack spacing="16px">
+                <Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
+                  Download as PDF
+                </Button>
+                <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
+                  Remaining Items
+                </Button>
+              </HStack>
+            </Stack>
 
+            <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md" mx="32px">
+              <TableContainer>
+                <Box overflow="auto" h="300px">
+                  <Table>
+                    <Thead h="72px" zIndex="1" position="sticky" top="0">
+                      <Tr whiteSpace="nowrap">
+                        <Th>SKU</Th>
+                        <Th>Product Name</Th>
+                        <Th>Details</Th>
+                        <Th>Quantity</Th>
+                        <Th>Price</Th>
+                        <Th>Status</Th>
+                        <Th>Images</Th>
+                        <Th>Verification</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {assignedItems.map((items, index) => {
+                        return (
+                          <Tr>
+                            <Td>
+                              <HStack position="relative" right="16px">
+                                <Icon
+                                  as={BiXCircle}
+                                  boxSize={5}
+                                  color="#4E87F8"
+                                  onClick={() => remove(index)}
+                                  cursor="pointer"
+                                  mt="2"
+                                />
+                                <FormControl>
+                                  <FormLabel></FormLabel>
+                                  <Input
+                                    size="sm"
+                                    id="now"
+                                    {...register(`assignedItems.${index}.sku`, { required: 'This is required' })}
+                                  />
+                                </FormControl>
+                              </HStack>
+                            </Td>
+                            <Td>
+                              <FormControl>
+                                <FormLabel></FormLabel>
+                                <Input
+                                  size="sm"
+                                  id="productName"
+                                  {...register(`assignedItems.${index}.productName`, { required: 'This is required' })}
+                                />
+                              </FormControl>
+                            </Td>
+                            <Td>
+                              <Box>
+                                <FormControl>
+                                  <FormLabel></FormLabel>
+                                  <Input
+                                    size="sm"
+                                    id="details"
+                                    {...register(`assignedItems.${index}.details`, { required: 'This is required' })}
+                                  />
+                                </FormControl>
+                              </Box>
+                            </Td>
+                            <Td>
+                              <FormControl>
+                                <FormLabel></FormLabel>
+                                <Input
+                                  size="sm"
+                                  id="quantity"
+                                  {...register(`assignedItems.${index}.quantity`, { required: 'This is required' })}
+                                />
+                              </FormControl>
+                            </Td>
+                            <Td>
+                              <FormControl>
+                                <FormLabel></FormLabel>
+                                <Input
+                                  size="sm"
+                                  id="price"
+                                  {...register(`assignedItems.${index}.price`, { required: 'This is required' })}
+                                />
+                              </FormControl>
+                            </Td>
+                            <Td>
+                              <CustomCheckBox text="Completed" />
+                            </Td>
+                            <Td>
+                              <Box>
+                                <Button
+                                  pt="1"
+                                  variant="outline"
+                                  colorScheme="brand"
+                                  rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
+                                  size="sm"
+                                >
+                                  Upload
+                                </Button>
+                              </Box>
+                            </Td>
+
+                            <Td>
+                              <CustomCheckBox text="Verified" />
+                            </Td>
+                          </Tr>
+                        )
+                      })}
+                    </Tbody>
+                  </Table>
+                </Box>
+              </TableContainer>
+            </Box>
+          </>
+        )}
         <Box mt="16px">
           <Divider borderColor="#CBD5E0" />
           <HStack alignItems="center" justifyContent="end" spacing="16px" my="16px" mx="32px">
