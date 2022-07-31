@@ -72,7 +72,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab>{t('projectDetails')}</Tab>
               <Tab>{t('vendorWorkOrders')}</Tab>
               <Tab>{t('documents')}</Tab>
-              <Tab>{t('alerts')}</Tab>
+              {/* <Tab>{t('alerts')}</Tab> */}
               <Tab>{'Notes'}</Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
