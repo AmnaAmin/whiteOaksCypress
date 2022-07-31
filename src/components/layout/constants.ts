@@ -36,12 +36,12 @@ export const MENU_ROLE_BASED: Menus = {
     },
   ],
   [UserTypes.pc]: [
-    {
-      pathTo: '/pcDashboard',
-      title: 'Dashboard',
-      Icon: FaHome,
-      color: '#ED8936',
-    },
+    // {
+    //   pathTo: '/pcDashboard',
+    //   title: 'Dashboard',
+    //   Icon: FaHome,
+    //   color: '#ED8936',
+    // },
     {
       pathTo: '/projects',
       title: 'Projects',
@@ -66,12 +66,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
-    {
-      pathTo: '/alerts',
-      title: 'Alerts',
-      Icon: BiError,
-      color: '#ED64A6',
-    },
+    // {
+    //   pathTo: '/alerts',
+    //   title: 'Alerts',
+    //   Icon: BiError,
+    //   color: '#ED64A6',
+    // },
     {
       pathTo: '/clients',
       title: 'Clients',
