@@ -7,6 +7,7 @@ import autoTable from 'jspdf-autotable'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
+import { removeCurrencyFormat } from './stringFormatters'
 
 export const useUpdateWorkOrderMutation = () => {
   const client = useClient()
@@ -45,6 +46,43 @@ export const useUpdateWorkOrderMutation = () => {
     },
   )
 }
+
+export const useCreateWorkOrderMutation = () => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const { projectId } = useParams<'projectId'>()
+
+  return useMutation(
+    payload => {
+      return client('work-orders', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+
+        toast({
+          title: 'Work Order',
+          description: 'Work Order created successfully',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Work Order',
+          description: (error.title as string) ?? 'Unable to create workorder.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
 export const useNoteMutation = projectId => {
   const client = useClient()
   const toast = useToast()
@@ -257,4 +295,28 @@ export const defaultValuesLienWaiver = lienWaiverData => {
     lienWaiverAccepted: !lienWaiverData.lienWaiverAccepted,
   }
   return defaultValues
+}
+/* New Work Order */
+
+export const parseNewWoValuesToPayload = (formValues, documents, projectId) => {
+  const selectedCapacity = 1
+  const arr = [] as any
+  Object.keys(documents).forEach(function (key) {
+    arr.push(documents[key])
+  })
+
+  return {
+    workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
+    workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
+    invoiceAmount: removeCurrencyFormat(formValues.invoiceAmount),
+    clientApprovedAmount: removeCurrencyFormat(formValues.clientApprovedAmount),
+    percentage: formValues.percentage,
+    vendorId: formValues.vendorId?.value,
+    vendorSkillId: formValues.vendorSkillId?.value,
+    // new work-order have hardcoded capacity
+    capacity: selectedCapacity,
+    documents: arr,
+    status: 34,
+    projectId: projectId,
+  }
 }

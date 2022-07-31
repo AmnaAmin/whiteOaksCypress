@@ -43,7 +43,7 @@ export const useUploadDocument = () => {
   )
 }
 
-export const useDocuments = ({ projectId }: { projectId: string | undefined }) => {
+export const useDocuments = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
 
   const { data: documents, ...rest } = useQuery<Array<Document>>(
@@ -73,18 +73,18 @@ export const useDocumentTypes = () => {
 }
 
 export const documentScore = [
-  { value: 24, label: '1' },
-  { value: 25, label: '2' },
-  { value: 56, label: '3' },
-  { value: 57, label: '4' },
-  { value: 39, label: '5' },
+  { value: 1, label: '1' },
+  { value: 2, label: '2' },
+  { value: 3, label: '3' },
+  { value: 4, label: '4' },
+  { value: 5, label: '5' },
 ]
 
 export const documentStatus = [
-  { value: 24, label: 'Active' },
-  { value: 25, label: 'Inactive' },
-  { value: 56, label: 'Expired' },
-  { value: 57, label: 'DoNotUse' },
+  { value: 12, label: 'Active' },
+  { value: 13, label: 'Inactive' },
+  { value: 15, label: 'Expired' },
+  { value: 14, label: 'DoNotUse' },
 ]
 
 export const documentTerm = [

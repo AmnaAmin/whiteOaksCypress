@@ -118,7 +118,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )
-  const onSave = (columns) => {
+  const onSave = columns => {
     postGridColumn(columns)
   }
 
@@ -147,7 +147,10 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
       />
       <Flex justifyContent="end">
         <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-          <Button variant="ghost" colorScheme="brand" m={0}
+          <Button
+            variant="ghost"
+            colorScheme="brand"
+            m={0}
             onClick={() => {
               if (transactionTableInstance) {
                 transactionTableInstance?.exportData('xlsx', false)
@@ -158,9 +161,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
             {t('export')}
           </Button>
           <Divider orientation="vertical" border="1px solid" h="20px" />
-          {settingColumns && (
-            <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
-          )}
+          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </HStack>
       </Flex>
     </Box>

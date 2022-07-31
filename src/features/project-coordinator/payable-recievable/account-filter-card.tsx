@@ -5,7 +5,7 @@ import { AccountIcon } from './accounts-Icon'
 
 type AccountPaybleCardType = {
   IconColor: string
-  isLoading: boolean
+  isLoading?: boolean
   value: string
   number: number
   text: string

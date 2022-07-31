@@ -192,3 +192,31 @@ export const useVendor = () => {
     ...rest,
   }
 }
+
+export const useFilteredVendors = vendorSkillId => {
+  const status_active = 12
+  const capacity = 1 // sfor new workorder capacity is fixed
+  const client = useClient()
+  const requestUrl =
+    'view-vendors?generalLabor.equals=' +
+    false +
+    '&vendorSkillId.equals=' +
+    vendorSkillId +
+    '&capacity.greaterThanOrEqual=' +
+    capacity +
+    '&status.equals=' +
+    status_active
+  const { data, ...rest } = useQuery<Array<Vendors>>(
+    ['FETCH_FILTERED_VENDORS', vendorSkillId],
+    async () => {
+      const response = await client(requestUrl, {})
+
+      return response?.data
+    },
+    { enabled: !!vendorSkillId },
+  )
+  return {
+    vendors: data,
+    ...rest,
+  }
+}
