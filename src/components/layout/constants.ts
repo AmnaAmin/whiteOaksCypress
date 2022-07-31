@@ -1,4 +1,4 @@
-import { BiCreditCard, BiDollarCircle, BiError, BiGroup, BiUser, BiUserPin } from 'react-icons/bi'
+import { BiCreditCard, BiDollarCircle, BiGroup, BiUser, BiUserPin } from 'react-icons/bi'
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
