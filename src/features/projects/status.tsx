@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tag, TagLabel } from '@chakra-ui/react'
 
-export const STATUSCODE = {
+export const STATUS_CODE = {
   DECLINED: 111,
 }
 

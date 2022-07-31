@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
-import { STATUS, STATUSCODE } from 'features/projects/status'
+import { STATUS, STATUS_CODE } from 'features/projects/status'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -101,7 +101,7 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
 
   const rejectInvoice = () => {
     onSave({
-      status: STATUSCODE.DECLINED,
+      status: STATUS_CODE.DECLINED,
     })
   }
   return (
