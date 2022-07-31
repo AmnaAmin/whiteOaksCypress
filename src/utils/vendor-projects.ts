@@ -43,7 +43,7 @@ export const useUploadDocument = () => {
   )
 }
 
-export const useDocuments = ({ projectId }: { projectId: string | undefined }) => {
+export const useDocuments = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
 
   const { data: documents, ...rest } = useQuery<Array<Document>>(

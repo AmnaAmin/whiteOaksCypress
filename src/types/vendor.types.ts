@@ -305,6 +305,7 @@ export type SettingsValues = {
 }
 
 export type Vendors = {
+  id: number
   statusLabel: string
   companyName: string
   region: string
@@ -317,4 +318,6 @@ export type Vendors = {
   availableCapacity: number
   skills: string
   market: string
+  businessEmailAddress: string
+  businessPhoneNumber: string
 }

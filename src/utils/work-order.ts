@@ -2,8 +2,9 @@ import { useClient } from 'utils/auth-context'
 import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useToast } from '@chakra-ui/toast'
 import { useParams } from 'react-router-dom'
-import { convertDateTimeFromServer } from 'utils/date-time-utils'
+import { convertDateTimeFromServer, dateISOFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
+import { removeCurrencyFormat } from './stringFormatters'
 
 export const useUpdateWorkOrderMutation = () => {
   const client = useClient()
@@ -42,6 +43,43 @@ export const useUpdateWorkOrderMutation = () => {
     },
   )
 }
+
+export const useCreateWorkOrderMutation = () => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const { projectId } = useParams<'projectId'>()
+
+  return useMutation(
+    payload => {
+      return client('work-orders', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+
+        toast({
+          title: 'Work Order',
+          description: 'Work Order created successfully',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Work Order',
+          description: (error.title as string) ?? 'Unable to create workorder.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
 export const useNoteMutation = projectId => {
   const client = useClient()
   const toast = useToast()
@@ -167,4 +205,29 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
   doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
   doc.text('Total Award:', summaryX, tableEndsY + 7)
   return doc
+}
+
+/* New Work Order */
+
+export const parseNewWoValuesToPayload = (formValues, documents, projectId) => {
+  const selectedCapacity = 1
+  const arr = [] as any
+  Object.keys(documents).forEach(function (key) {
+    arr.push(documents[key])
+  })
+
+  return {
+    workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
+    workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
+    invoiceAmount: removeCurrencyFormat(formValues.invoiceAmount),
+    clientApprovedAmount: removeCurrencyFormat(formValues.clientApprovedAmount),
+    percentage: formValues.percentage,
+    vendorId: formValues.vendorId?.value,
+    vendorSkillId: formValues.vendorSkillId?.value,
+    // new work-order have hardcoded capacity
+    capacity: selectedCapacity,
+    documents: arr,
+    status: 34,
+    projectId: projectId,
+  }
 }
