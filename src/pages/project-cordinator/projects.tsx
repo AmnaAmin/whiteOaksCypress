@@ -66,7 +66,7 @@ export const Projects = () => {
           </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <WeekDayFilters clearAll={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
 
           <Button
             alignContent="right"

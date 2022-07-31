@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   useDisclosure,
   Modal,
@@ -35,6 +35,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'utils/pc-projects'
 import { useDocuments } from 'utils/vendor-projects'
 import { useTransactions } from 'utils/transactions'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
 
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
   const { t } = useTranslation()
@@ -50,6 +51,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     projectId: projId,
   })
   const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -70,6 +72,10 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 
+  const onSave = values => {
+    const payload = { ...workOrder, ...values }
+    updateWorkOrder(payload)
+  }
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
@@ -149,7 +155,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
                   <TabPanels>
                     <TabPanel p="0">
-                      <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
+                      <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} onSave={onSave} />
                     </TabPanel>
                     <TabPanel p="1.4px">
                       {isDocumentsLoading ? (
@@ -160,6 +166,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                           lienWaiverData={workOrder}
                           onClose={onClose}
                           rejectChecked={!rejectLW}
+                          onSave={onSave}
                         />
                       )}
                     </TabPanel>
@@ -173,6 +180,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                           documentsData={documentsData}
                           workOrder={workOrder}
                           onClose={onClose}
+                          onSave={onSave}
                         />
                       )}
                     </TabPanel>
@@ -180,12 +188,22 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       {isProjectLoading ? (
                         <BlankSlate />
                       ) : (
-                        <PaymentInfoTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                        <PaymentInfoTab
+                          projectData={projectData}
+                          workOrder={workOrder}
+                          onClose={onClose}
+                          onSave={onSave}
+                        />
                       )}
                     </TabPanel>
 
                     <TabPanel>
-                      <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
+                      <WorkOrderNotes
+                        workOrder={workOrder}
+                        onClose={onClose}
+                        setNotesCount={setNotesCount}
+                        onSave={onSave}
+                      />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

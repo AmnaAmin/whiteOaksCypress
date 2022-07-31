@@ -30,12 +30,11 @@ export const ProjectNotes: React.FC<any> = props => {
   }
   return (
     <NotesTab
-      meinBoxStyle={{ bg: 'white', rounded: 16, pb: 2 }}
       saveNote={saveNote}
       notes={notes}
       messageBoxStyle={{ height: '120px', resize: 'none' }}
-      chatListStyle={{ height: '300px' }}
-      pageLayoutStyle={{ padding: '25px' }}
+      chatListStyle={{ height: '340px' }}
+      pageLayoutStyle={{ padding: '25px', bg: 'white', rounded: 16, pb: 2 }}
     />
   )
 }

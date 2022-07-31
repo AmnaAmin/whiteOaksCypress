@@ -45,21 +45,11 @@ type NotesProps = {
   pageLayoutStyle?: any
   hideSave?: boolean
   labelTextBoxStyle?: any
-  meinBoxStyle?: any
 }
 
 export const NotesTab = (props: NotesProps) => {
-  const {
-    notes,
-    saveNote,
-    onClose,
-    messageBoxStyle,
-    chatListStyle,
-    pageLayoutStyle,
-    hideSave,
-    labelTextBoxStyle,
-    meinBoxStyle,
-  } = props
+  const { notes, saveNote, onClose, messageBoxStyle, chatListStyle, pageLayoutStyle, hideSave, labelTextBoxStyle } =
+    props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
@@ -80,37 +70,35 @@ export const NotesTab = (props: NotesProps) => {
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
-      <Box {...meinBoxStyle}>
-        <Box {...pageLayoutStyle}>
-          <Box h={chatListStyle?.height || '300px'} {...chatListStyle} overflow="auto">
-            {notes && notes.length > 0 && (
-              <Box>
-                {notes.map(note => {
-                  return note.createdBy === account.login ? (
-                    <MessagesTypes userNote={note} />
-                  ) : (
-                    <MessagesTypes otherNote={note} />
-                  )
-                })}
-                <div ref={messagesEndRef} />
-              </Box>
-            )}
-          </Box>
-          <Flex mt="10px">
-            <Box w="100%" {...labelTextBoxStyle}>
-              <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-                {t('enterNewNote')}
-              </FormLabel>
-              <Textarea
-                flexWrap="wrap"
-                h={messageBoxStyle?.height || '200px'}
-                {...messageBoxStyle}
-                {...register('message')}
-              />
+      <Box {...pageLayoutStyle} bg="white">
+        <Box h={chatListStyle?.height || '300px'} {...chatListStyle} overflow="auto">
+          {notes && notes.length > 0 && (
+            <Box>
+              {notes.map(note => {
+                return note.createdBy === account.login ? (
+                  <MessagesTypes userNote={note} />
+                ) : (
+                  <MessagesTypes otherNote={note} />
+                )
+              })}
+              <div ref={messagesEndRef} />
             </Box>
-          </Flex>
+          )}
         </Box>
-        <HStack borderTop="1px solid #CBD5E0" p={3} bg="white">
+        <Flex mt="10px">
+          <Box w="100%" {...labelTextBoxStyle}>
+            <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
+              {t('enterNewNote')}
+            </FormLabel>
+            <Textarea
+              flexWrap="wrap"
+              h={messageBoxStyle?.height || '200px'}
+              {...messageBoxStyle}
+              {...register('message')}
+            />
+          </Box>
+        </Flex>
+        <HStack mt={6} borderTop="1px solid #CBD5E0" p={3} bg="white">
           <HStack spacing="16px" w="100%" justifyContent="end">
             {onClose && (
               <Button variant="outline" colorScheme="brand" onClick={onClose}>

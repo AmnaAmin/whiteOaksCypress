@@ -24,6 +24,7 @@ type Props = {
   vendorProfileData?: VendorProfile
   onClose?: () => void
   refetch?: () => void
+  updateVendorId?: (number) => void
   vendorModalType?: string
 }
 
@@ -43,19 +44,32 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
       <TabList>
         <Tab>{t('details')}</Tab>
-        <Tab data-testid="documents">{t('documents')}</Tab>
-        <Tab data-testid="license">{t('license')}</Tab>
-        <Tab data-testid="tradetab">{t('trade')}</Tab>
-        <Tab data-testid="markettab">{t('market')}</Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="documents">
+          {t('documents')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="license">
+          {t('license')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="tradetab">
+          {t('trade')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="markettab">
+          {t('market')}
+        </Tab>
         {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
       </TabList>
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          {vendorProfileData ? (
-            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          {VendorType === 'editVendor' ? (
+            <PcDetails
+              vendorProfileData={vendorProfileData as VendorProfile}
+              VendorType={VendorType!}
+              onClose={props.onClose}
+              updateVendorId={props.updateVendorId}
+            />
           ) : (
-            <PcDetails VendorType={VendorType!} onClose={props.onClose} />
+            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
           )}
         </TabPanel>
         <TabPanel p="0px">

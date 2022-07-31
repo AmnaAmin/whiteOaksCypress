@@ -27,11 +27,14 @@ export const licenseTypes = [
 export const useVendorProfile = (vendorId: number) => {
   const client = useClient()
 
-  return useQuery<VendorProfile>('vendorProfile', async () => {
-    const response = await client(`vendors/${vendorId}`, {})
-
-    return response?.data
-  })
+  return useQuery<VendorProfile>(
+    'vendorProfile',
+    async () => {
+      const response = await client(`vendors/${vendorId}`, {})
+      return response?.data
+    },
+    { enabled: !!vendorId },
+  )
 }
 
 export const useAccountDetails = () => {
@@ -52,6 +55,11 @@ export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
   return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
+}
+
+export const useCreateVendorMutation = () => {
+  const client = useClient()
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'POST' }))
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
@@ -82,6 +90,48 @@ export const parseFormDataToAPIData = (
     businessEmailAddress: formValues.primaryEmail,
     secondEmailAddress: formValues.secondaryEmail,
     documents: [],
+  }
+}
+
+export const parseVendorFormDataToAPIData = (
+  vendorProfileData: VendorProfile,
+  formValues: VendorProfileDetailsFormData,
+  paymentsMethods,
+): VendorProfilePayload => {
+  return {
+    ...vendorProfileData,
+    ownerName: formValues.ownerName!,
+    secondName: formValues.secondName!,
+    businessPhoneNumber: formValues.businessPhoneNumber,
+    businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
+    secondPhoneNumber: formValues.secondPhoneNumber!,
+    secondPhoneNumberExtension: formValues.secondPhoneNumberExtension!,
+    businessEmailAddress: formValues.businessEmailAddress!,
+    companyName: formValues.companyName!,
+    streetAddress: formValues.streetAddress!,
+    city: formValues.city!,
+    zipCode: formValues.zipCode!,
+    capacity: formValues.capacity!,
+    einNumber: formValues.einNumber!,
+    ssnNumber: formValues.ssnNumber!,
+    secondEmailAddress: formValues.secondEmailAddress!,
+    score: formValues.score?.value,
+    status: formValues.status?.value,
+    state: formValues.state?.value,
+    isSsn: false,
+    paymentTerm: formValues.paymentTerm?.value,
+    documents: [],
+    vendorSkills: vendorProfileData?.vendorSkills || [],
+    markets: vendorProfileData?.markets || [],
+    licenseDocuments: vendorProfileData?.licenseDocuments || [],
+    paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
+  }
+}
+
+export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDetailsFormData => {
+  return {
+    ...vendorProfileData,
+    ...vendorProfileData.paymentOptions.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
   }
 }
 
