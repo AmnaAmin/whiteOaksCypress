@@ -12,6 +12,7 @@ import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, 
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { exportBtnIcon } from 'theme/common-style'
 
 export const Projects = () => {
   const {
@@ -111,16 +112,7 @@ export const Projects = () => {
                       }
                     }}
                   >
-                    <Icon
-                      as={BsBoxArrowUp}
-                      fontSize="18px"
-                      mr={1}
-                      height="14px"
-                      width="14px"
-                      left="17px"
-                      top="11px"
-                      border-radius=" 0px"
-                    />
+                    <Icon as={BsBoxArrowUp} style={exportBtnIcon} mr={1} />
                     {'Export'}
                   </Button>
                   <Center>
