@@ -450,9 +450,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       <Flex
         id="footer"
         mt={2}
-        pt="12px"
+        height="72px"
+        pt="8px"
         w="100%"
-        // minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"

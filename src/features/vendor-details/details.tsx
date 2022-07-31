@@ -314,7 +314,8 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
               </Box>
             </VStack>
             <Flex
-              pt="12px"
+              height="72px"
+              pt="8px"
               mt="50px"
               w="100%"
               alignItems="center"

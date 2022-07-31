@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React, { useCallback, useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
@@ -125,6 +125,8 @@ const PcDetails: React.FC<{
       ssnNumber: '',
     },
   })
+  const einNumber = useWatch({ name: 'einNumber', control })
+  const ssnNumber = useWatch({ name: 'ssnNumber', control })
 
   useEffect(() => {
     if (!vendorProfileData) {
@@ -433,10 +435,10 @@ const PcDetails: React.FC<{
               <Input
                 type="string"
                 {...register('einNumber', {
-                  required: 'This is required',
+                  required: ssnNumber ? '' : 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={ssnNumber ? 'outline' : 'required-field'}
                 size="md"
               />
               <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
@@ -450,10 +452,10 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('ssnNumber', {
-                  required: 'This is required',
+                  required: einNumber ? '' : 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={einNumber ? 'outline' : 'required-field'}
                 size="md"
               />
               <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
@@ -494,34 +496,23 @@ const PcDetails: React.FC<{
             </VStack>
           </Stack>
         </Box>
-        <HStack height="80px" mt="30px" id="footer" borderTop="2px solid #E2E8F0" justifyContent="end" spacing="16px">
+        <HStack
+          height="72px"
+          pt="8px"
+          mt="30px"
+          id="footer"
+          borderTop="2px solid #E2E8F0"
+          justifyContent="end"
+          spacing="16px"
+        >
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>
           )}
-          {/* {VendorType === 'detail' ? ( */}
-          <Button
-            // isDisabled={!isEnabled}
-            type="submit"
-            data-testid="saveDocumentCards"
-            variant="solid"
-            colorScheme="brand"
-          >
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
             {t('save')}
           </Button>
-          {/* ) */}
-          {/* //  : (
-          //   <Button
-          //     // isDisabled={!isEnabled}
-          //     type="submit"
-          //     data-testid="saveDocumentCards"
-          //     variant="solid"
-          //     colorScheme="brand"
-          //   >
-          //     {t('next')}
-          //   </Button>
-          // )} */}
         </HStack>
       </form>
     </Stack>

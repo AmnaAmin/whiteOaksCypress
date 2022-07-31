@@ -109,7 +109,7 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
           })}
         </Flex>
       </Box>
-      <Flex alignItems="center" w="100%" pt="12px" justifyContent="end" borderTop="2px solid #E2E8F0">
+      <Flex alignItems="center" w="100%" height="72px" pt="8px" justifyContent="end" borderTop="2px solid #E2E8F0">
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
