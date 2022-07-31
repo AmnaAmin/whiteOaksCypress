@@ -22,7 +22,6 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
-   // borderTop: '1px solid #CBD5E0',
   }
 
   return (

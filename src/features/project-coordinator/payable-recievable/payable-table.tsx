@@ -27,9 +27,9 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0" onClick={e => e.stopPropagation()}>
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text noOfLines={2} title={cell.value} padding="0 15px">
                 {cell.render('Cell')}
               </Text>
             </Flex>

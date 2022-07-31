@@ -15,11 +15,11 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
       }))
     : null
 
-    const btnStyle = {
-      alignItems: 'center',
-      justifyContent: 'end',
-      borderTop: '1px solid #CBD5E0',
-    }
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
 
   return (
     <>

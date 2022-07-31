@@ -49,7 +49,7 @@ describe('Work Order Invoice Test Cases', () => {
   })
   test('User can generate invoice in completed state. The table shows transactions in approved state', async () => {
     const onClose = jest.fn()
-    const workOrder = WORK_ORDERS.find(w => w.id == 8984 && w.statusLabel?.toLocaleLowerCase() === 'completed')
+    const workOrder = WORK_ORDERS.find(w => w.id === 8984 && w.statusLabel?.toLocaleLowerCase() === 'completed')
     const documentsData = []
 
     const transactionItems = TRANSACTIONS.filter(co => co.status === TSV.approved && co.parentWorkOrderId === 8984)

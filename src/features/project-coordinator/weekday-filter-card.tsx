@@ -2,12 +2,10 @@ import { Button, Center, Stack } from '@chakra-ui/react'
 type weekdayCardTypes = {
   id: number | string
   dayName: string
-  dueDate: string
   count: string | number
   selectedDay: string
   onSelectDay: (string) => void
   disabled?: boolean
-  isLoading
 }
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
