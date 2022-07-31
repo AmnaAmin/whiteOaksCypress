@@ -135,7 +135,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
           {isDocumentTypesLoading ? (
             <ViewLoader />
           ) : (
-            <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
+            <FormControl mt="20px" isInvalid={isError} data-testid="document-type">
               <VStack align="start">
                 <FormLabel fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600" htmlFor="documentType">
                   {t('documentType')}{' '}
@@ -208,7 +208,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               }}
               colorScheme="brand"
             >
-              {t('close')}
+              {t('cancel')}
             </Button>
             <Button isDisabled={isLoading} onClick={uploadDocument} colorScheme="brand" type="submit">
               {t('save')}
