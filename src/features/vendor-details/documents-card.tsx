@@ -27,7 +27,6 @@ import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 
 type DocumentsProps = {
-  setNextTab: () => void
   vendor: VendorProfile
   onClose?: () => void
   VendorType: string
@@ -39,7 +38,7 @@ type DocumentFormProps = {
   VendorType?: string
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
-  const { vendor = {}, setNextTab } = props
+  const { vendor = {} } = props
   // const { mutate: saveDocuments } = useSaveVendorDetails()
   const { mutate: saveDocuments } = useSaveVendorDetails('Document')
   const onSubmit = useCallback(
@@ -53,17 +52,9 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
         coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
       }
       const vendorPayload = createVendorPayload(updatedObject, vendor)
-      saveDocuments(vendorPayload, {
-        // onSuccess() {
-        //   setNextTab()
-        // },
-      })
+      saveDocuments(vendorPayload)
     },
-    [
-      vendor,
-      //  setNextTab,
-      saveDocuments,
-    ],
+    [vendor, saveDocuments],
   )
   return (
     <Box w="100%">
