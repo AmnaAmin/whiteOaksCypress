@@ -31,14 +31,14 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
         <Center
           minW="22px"
           h="22px"
-          m={1}
+          ml="4px"
+          px="2px"
           rounded="full"
           bg={props.selectedDay === props.id ? 'white' : '#E2E8F0'}
           color={props.selectedDay === props.id ? '#4E87F8' : '#4A5568'}
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
           fontSize="16px"
           fontWeight={600}
-          mb={2}
           data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}
