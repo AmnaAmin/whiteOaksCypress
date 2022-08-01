@@ -269,6 +269,13 @@ i18n.use(initReactI18next).init({
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
+        coiglExpirationDate: 'COI-GL Expiration Date',
+        statusLabel: 'Status',
+        coiWcExpirationDate: 'COI-WC Expiration Date',
+        einNumber: 'EIN/SSN',
+        availableCapacity: 'Available Capacity',
+        skills: 'Construction Trade',
+
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
         uploadAgreement: 'Upload Agreement',
@@ -718,6 +725,13 @@ i18n.use(initReactI18next).init({
         secondaryNo: 'Número Secundario',
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
+        coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        statusLabel: 'Estado',
+        coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
+        einNumber: 'EIN/SSN',
+        availableCapacity: 'Capacidad disponible',
+        skills: 'Habilidades',
+
         // Vendor-profile-documents
         agreementSignedDate: 'Documento firmado',
         uploadAgreement: 'Acuerdo de Carga',

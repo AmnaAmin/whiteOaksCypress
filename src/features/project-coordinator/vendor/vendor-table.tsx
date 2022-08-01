@@ -7,6 +7,7 @@ import { Column } from 'react-table'
 import Status from 'features/projects/status'
 import Vendor from 'features/projects/modals/project-coordinator/vendor-table'
 import { ProjectWorkOrderType } from 'types/project.type'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const VENDOR_COLUMNS = [
   {
@@ -31,14 +32,23 @@ export const VENDOR_COLUMNS = [
   {
     Header: 'Active Date',
     accessor: 'createdDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
   },
   {
     Header: 'COI-GL Expiration Date',
     accessor: 'coiglExpirationDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
   },
   {
     Header: 'COI-WC Expiration Date',
     accessor: 'coiWcExpirationDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
   },
   {
     Header: 'EIN/SSN',
@@ -132,7 +142,7 @@ export const VendorTable: React.FC<ProjectProps> = ({
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   return (
-    <Box ref={resizeElementRef}>
+    <Box overflow="auto">
       {selectedWorkOrder && (
         <Vendor
           vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
