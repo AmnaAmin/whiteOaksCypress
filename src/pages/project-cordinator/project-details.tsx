@@ -24,8 +24,8 @@ import { UploadDocumentModal } from 'features/projects/documents/upload-document
 import { Card } from 'components/card/card'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
-import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 import { countInCircle } from 'theme/common-style'
+import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()

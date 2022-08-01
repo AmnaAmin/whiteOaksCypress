@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Checkbox } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
