@@ -34,7 +34,8 @@ export const ProjectNotes: React.FC<any> = props => {
       notes={notes}
       messageBoxStyle={{ height: '120px', resize: 'none' }}
       chatListStyle={{ height: '340px' }}
-      pageLayoutStyle={{ padding: '25px', bg: 'white', rounded: 16, pb: 2 }}
+      contentStyle={{ padding: '25px' }}
+      pageLayoutStyle={{ bg: 'white', rounded: 16, pb: 2 }}
     />
   )
 }

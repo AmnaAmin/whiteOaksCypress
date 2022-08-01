@@ -25,9 +25,9 @@ import { LienWaiverTab } from './lien-waiver-tab'
 import { useTranslation } from 'react-i18next'
 // import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment-tab-pc'
-import { InvoiceTabPC } from './invoice-tab-pc'
+import { InvoiceTabPC } from './invoice-tab'
 import Status, { STATUS } from 'features/projects/status'
-import WorkOrderNotes from '../work-order-notes'
+import WorkOrderNotes from '../../work-order-notes'
 import { countInCircle } from 'theme/common-style'
 import WorkOrderDetailTab from './work-order-edit-tab'
 import { useParams } from 'react-router-dom'
@@ -154,10 +154,10 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   </TabList>
 
                   <TabPanels>
-                    <TabPanel p="0">
+                    <TabPanel p={0}>
                       <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} onSave={onSave} />
                     </TabPanel>
-                    <TabPanel p="1.4px">
+                    <TabPanel p={0}>
                       {isDocumentsLoading ? (
                         <BlankSlate />
                       ) : (
@@ -170,7 +170,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                         />
                       )}
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel p={0}>
                       {isDocumentsLoading || isTransLoading ? (
                         <BlankSlate />
                       ) : (
@@ -184,7 +184,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                         />
                       )}
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel p={0}>
                       {isProjectLoading ? (
                         <BlankSlate />
                       ) : (
@@ -197,7 +197,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       )}
                     </TabPanel>
 
-                    <TabPanel>
+                    <TabPanel p={0}>
                       <WorkOrderNotes
                         workOrder={workOrder}
                         onClose={onClose}

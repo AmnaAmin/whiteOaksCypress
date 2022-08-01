@@ -26,8 +26,8 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
         notes={notes}
         onClose={onClose}
         hideSave={true}
-        messageBoxStyle={{ height: '120px', resize: 'none', display: 'none' }}
-        chatListStyle={{ height: '200px' }}
+        messageBoxStyle={{ display: 'none' }}
+        chatListStyle={{ height: '350px' }}
         pageLayoutStyle={{ height: '400px', padding: '25px' }}
         labelTextBoxStyle={{ display: 'none' }}
       />
