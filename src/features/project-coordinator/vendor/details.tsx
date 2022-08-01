@@ -17,7 +17,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
@@ -134,6 +134,10 @@ const PcDetails: React.FC<{
       setValue('status', first(documentStatus))
       return
     }
+  }, [vendorProfileData])
+
+  useEffect(() => {
+    if (!vendorProfileData) return
     reset(parseVendorAPIDataToFormData(vendorProfileData))
     const state = statesData?.find(s => s.code === vendorProfileData.state)
     setValue(
@@ -151,11 +155,14 @@ const PcDetails: React.FC<{
     )
   }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
 
-  const states =
-    statesData?.map(state => ({
-      label: state?.name,
-      value: state?.code,
-    })) ?? []
+  const states = useMemo(
+    () =>
+      statesData?.map(state => ({
+        label: state?.name,
+        value: state?.code,
+      })) ?? [],
+    [statesData],
+  )
 
   return (
     <Stack spacing={3}>
