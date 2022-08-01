@@ -12,6 +12,7 @@ import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, 
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { exportBtnIcon } from 'theme/common-style'
 
 export const Projects = () => {
   const {
@@ -66,7 +67,8 @@ export const Projects = () => {
           </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} clear={clearAll} />
+          <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+
           <Button
             alignContent="right"
             onClick={onNewProjectModalOpen}
@@ -111,7 +113,7 @@ export const Projects = () => {
                       }
                     }}
                   >
-                    <Icon as={BsBoxArrowUp} fontSize="18px" mr={1} />
+                    <Icon as={BsBoxArrowUp} style={exportBtnIcon} mr={1} />
                     {'Export'}
                   </Button>
                   <Center>

@@ -95,8 +95,19 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         disabled={disabled}
         data-testid="column-settings-button"
         fontSize={'12px'}
+        fontStyle="normal"
+        fontWeight={500}
       >
-        <Icon as={FaAtom} fontSize="18px" mr={1} />
+        <Icon
+          as={FaAtom}
+          fontSize="18px"
+          mr={1}
+          height="14px"
+          width="14px"
+          left="17px"
+          top="11px"
+          border-radius=" 0px"
+        />
         {t('settings')}
       </Button>
 
