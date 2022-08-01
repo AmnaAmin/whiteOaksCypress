@@ -2,12 +2,12 @@ import { Button, Center, Stack } from '@chakra-ui/react'
 type weekdayCardTypes = {
   id: number | string
   dayName: string
-  dueDate: string
+  dueDate?: string
   count: string | number
   selectedDay: string
   onSelectDay: (string) => void
   disabled?: boolean
-  isLoading
+  isLoading?: boolean
 }
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
@@ -29,8 +29,8 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
       >
         {props.dayName}
         <Center
-          minW="22px"
-          h="22px"
+          minW="20px"
+          h="20px"
           m={1}
           rounded="full"
           bg={props.selectedDay === props.id ? 'white' : '#E2E8F0'}
@@ -38,7 +38,6 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
           fontSize="16px"
           fontWeight={600}
-          mb={2}
           data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}
         >
           {props.count}

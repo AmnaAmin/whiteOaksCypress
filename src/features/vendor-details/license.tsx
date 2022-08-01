@@ -31,7 +31,6 @@ import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 type LicenseProps = {
-  setNextTab: () => void
   vendor: VendorProfile
   onClose?: () => void
 }
@@ -41,7 +40,7 @@ type licenseFormProps = {
   onClose?: () => void
 }
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { vendor = {}, setNextTab } = props
+  const { vendor = {} } = props
 
   const { mutate: saveLicenses } = useSaveVendorDetails('License')
 
@@ -49,13 +48,9 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
     async values => {
       const results = await parseLicenseValues(values, props?.vendor?.licenseDocuments)
       const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
-      saveLicenses(vendorPayload, {
-        onSuccess() {
-          setNextTab()
-        },
-      })
+      saveLicenses(vendorPayload)
     },
-    [vendor, setNextTab, saveLicenses],
+    [vendor, saveLicenses],
   )
   return (
     <Box>

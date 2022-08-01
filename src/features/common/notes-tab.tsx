@@ -18,7 +18,7 @@ const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote
           <Center color="gray.500">{convertDateTimeFromServer(otherNote.createdDate)}</Center>
         </Box>
       ) : (
-        <Box w="115px" />
+        <Box w="113px" />
       )}
       <Text
         whiteSpace="pre-wrap"
@@ -70,7 +70,7 @@ export const NotesTab = (props: NotesProps) => {
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
-      <Box {...pageLayoutStyle} bg="white" rounded={16}>
+      <Box {...pageLayoutStyle} bg="white">
         <Box h={chatListStyle?.height || '300px'} {...chatListStyle} overflow="auto">
           {notes && notes.length > 0 && (
             <Box>
@@ -98,21 +98,21 @@ export const NotesTab = (props: NotesProps) => {
             />
           </Box>
         </Flex>
-      </Box>
-      <HStack borderTop="1px solid #CBD5E0" p={3} bg="white">
-        <HStack spacing="16px" w="100%" justifyContent="end">
-          {onClose && (
-            <Button variant="outline" colorScheme="brand" onClick={onClose}>
-              {t('cancel')}
-            </Button>
-          )}
-          {!hideSave && (
-            <Button type="submit" colorScheme="brand" isDisabled={!message}>
-              {t('save')}
-            </Button>
-          )}
+        <HStack mt={6} borderTop="1px solid #CBD5E0" p={3} bg="white">
+          <HStack spacing="16px" w="100%" justifyContent="end">
+            {onClose && (
+              <Button variant="outline" colorScheme="brand" onClick={onClose}>
+                {t('cancel')}
+              </Button>
+            )}
+            {!hideSave && (
+              <Button type="submit" colorScheme="brand" isDisabled={!message}>
+                {t('save')}
+              </Button>
+            )}
+          </HStack>
         </HStack>
-      </HStack>
+      </Box>
     </form>
   )
 }

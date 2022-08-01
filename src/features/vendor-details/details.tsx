@@ -75,7 +75,6 @@ export const Details: React.FC<{
   const toast = useToast()
   const { t } = useTranslation()
   const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  // const { data: payments, isLoading } = usePaymentMethods()
   const queryClient = useQueryClient()
 
   const submitForm = useCallback(

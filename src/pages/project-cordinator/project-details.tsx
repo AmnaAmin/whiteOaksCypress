@@ -18,20 +18,23 @@ import ProjectDetailsTab from 'features/project-coordinator/project-details/proj
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
-import { NotesTab } from '../../features/common/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
+import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
+import { countInCircle } from 'theme/common-style'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
+
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
 
   const [alertRow, selectedAlertRow] = useState(true)
   // const [projectTableInstance, setInstance] = useState<any>(null)
@@ -73,7 +76,12 @@ export const ProjectDetails: React.FC = props => {
               <Tab>{t('vendorWorkOrders')}</Tab>
               <Tab>{t('documents')}</Tab>
               <Tab>{t('alerts')}</Tab>
-              <Tab>{'Notes'}</Tab>
+              <Tab>
+                {t('notes')}
+                <Box ml="5px" style={countInCircle}>
+                  {notesCount}
+                </Box>
+              </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
@@ -164,7 +172,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
 
               <TabPanel px="0">
-                <NotesTab notes={[]} saveNote={() => {}} />
+                <ProjectNotes projectId={projectId} setNotesCount={setNotesCount} />
               </TabPanel>
             </TabPanels>
           </Tabs>

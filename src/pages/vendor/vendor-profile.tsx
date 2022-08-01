@@ -5,7 +5,7 @@ import { TradeList } from 'features/vendor-details/trades'
 import { MarketList } from 'features/vendor-details/markets'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Box, Stack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { License } from 'features/vendor-details/license'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 // import { t } from 'i18next';
@@ -24,6 +24,7 @@ type Props = {
   vendorProfileData?: VendorProfile
   onClose?: () => void
   refetch?: () => void
+  updateVendorId?: (number) => void
   vendorModalType?: string
 }
 
@@ -31,38 +32,45 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
   const { t } = useTranslation()
-  const [tabIndex, setTabIndex] = useState(0)
 
-  const setNextTab = () => {
-    setTabIndex(tabIndex + 1)
-    props.refetch?.()
-  }
   const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.vendors)
 
   return (
-    <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
+    <Tabs size="md" variant="enclosed" colorScheme="brand">
       <TabList>
         <Tab>{t('details')}</Tab>
-        <Tab data-testid="documents">{t('documents')}</Tab>
-        <Tab data-testid="license">{t('license')}</Tab>
-        <Tab data-testid="tradetab">{t('trade')}</Tab>
-        <Tab data-testid="markettab">{t('market')}</Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="documents">
+          {t('documents')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="license">
+          {t('license')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="tradetab">
+          {t('trade')}
+        </Tab>
+        <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="markettab">
+          {t('market')}
+        </Tab>
         {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
       </TabList>
 
       <TabPanels mt="31px">
         <TabPanel p="0px">
-          {vendorProfileData ? (
-            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+          {VendorType === 'editVendor' ? (
+            <PcDetails
+              vendorProfileData={vendorProfileData as VendorProfile}
+              VendorType={VendorType!}
+              onClose={props.onClose}
+              updateVendorId={props.updateVendorId}
+            />
           ) : (
-            <PcDetails VendorType={VendorType!} onClose={props.onClose} />
+            <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
           )}
         </TabPanel>
         <TabPanel p="0px">
           <Box h="100%" w="100%">
             <DocumentsCard
               VendorType={VendorType!}
-              setNextTab={setNextTab}
               vendor={vendorProfileData as VendorProfile}
               onClose={props.onClose}
             />
@@ -70,7 +78,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         </TabPanel>
         <TabPanel p="0px">
           <Box h="100%" w="100%">
-            <License setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
+            <License vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
           </Box>
         </TabPanel>
         <TabPanel p="0px">
