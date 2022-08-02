@@ -8,6 +8,30 @@ export const currencyFormatter = (amount: number | string, maxFractionDigits?: n
   return formatter.format(Number(amount))
 }
 
+export const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
+const currencyPrefix = '$'
+const currencyThousandSeparator = ','
+const percentageSuffix = '%'
+
+export const removeCurrencyFormat = (value = '') => {
+  if (value) {
+    return replaceAll(replaceAll(value + '', `\\${currencyPrefix}`, ''), `\\${currencyThousandSeparator}`, '')
+  }
+
+  return value
+}
+
+export const removePercentageFormat = (value = '') => {
+  if (value) {
+    return replaceAll(replaceAll(value + '', `\\${percentageSuffix}`, ''), `\\${currencyThousandSeparator}`, '')
+  }
+
+  return value
+}
+
 export const truncateWithEllipsis = (s: string, maxLength: number) => {
   if (s.length > maxLength) {
     return s.substring(0, maxLength) + '...'

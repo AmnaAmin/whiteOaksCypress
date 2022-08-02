@@ -8,6 +8,7 @@ import Misc from './misc'
 import InvoiceAndPayments from './invoice-and-payments'
 import { BiSpreadsheet } from 'react-icons/bi'
 import { ProjectType } from 'types/project.type'
+import { Link } from 'react-router-dom'
 
 type tabProps = {
   onClose?: () => void
@@ -89,6 +90,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                       Cancel
                     </Button>
                     <Button
+                      as={Link}
+                      to={`/project-details/${props.selectedData?.id}`}
                       mt="8px"
                       ml="32px"
                       variant="outline"
@@ -137,6 +140,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                       Cancel
                     </Button>
                     <Button
+                      as={Link}
+                      to={`/project-details/${props.selectedData?.id}`}
                       mt="8px"
                       ml="32px"
                       variant="outline"
@@ -182,6 +187,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                       Cancel
                     </Button>
                     <Button
+                      as={Link}
+                      to={`/project-details/${props.selectedData?.id}`}
                       mt="8px"
                       ml="32px"
                       variant="outline"
@@ -227,6 +234,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                       Cancel
                     </Button>
                     <Button
+                      as={Link}
+                      to={`/project-details/${props.selectedData?.id}`}
                       mt="8px"
                       ml="32px"
                       variant="outline"
@@ -272,6 +281,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                       Cancel
                     </Button>
                     <Button
+                      as={Link}
+                      to={`/project-details/${props.selectedData?.id}`}
                       mt="8px"
                       ml="32px"
                       variant="outline"

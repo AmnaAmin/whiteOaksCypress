@@ -43,7 +43,7 @@ export const useUploadDocument = () => {
   )
 }
 
-export const useDocuments = ({ projectId }: { projectId: string | undefined }) => {
+export const useDocuments = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
 
   const { data: documents, ...rest } = useQuery<Array<Document>>(
@@ -62,31 +62,29 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
   }
 }
 
-export const documentTypes = [
-  { value: 24, label: 'Permit' },
-  { value: 25, label: 'Warranty' },
-  { value: 56, label: 'Drawings' },
-  { value: 57, label: 'NOC' },
-  { value: 39, label: 'Original SOW' },
-  { value: 58, label: 'Other' },
-  { value: 19, label: 'Photos' },
-  { value: 18, label: 'Reciept' },
-  { value: 17, label: 'Change Order' },
-]
+export const useDocumentTypes = () => {
+  const client = useClient()
+
+  return useQuery('documentTypes', async () => {
+    const response = await client(`lk_value/lookupType/4`, {})
+
+    return response?.data
+  })
+}
 
 export const documentScore = [
-  { value: 24, label: '1' },
-  { value: 25, label: '2' },
-  { value: 56, label: '3' },
-  { value: 57, label: '4' },
-  { value: 39, label: '5' },
+  { value: 1, label: '1' },
+  { value: 2, label: '2' },
+  { value: 3, label: '3' },
+  { value: 4, label: '4' },
+  { value: 5, label: '5' },
 ]
 
 export const documentStatus = [
-  { value: 24, label: 'Active' },
-  { value: 25, label: 'Inactive' },
-  { value: 56, label: 'Expired' },
-  { value: 57, label: 'DoNotUse' },
+  { value: 12, label: 'Active' },
+  { value: 13, label: 'Inactive' },
+  { value: 15, label: 'Expired' },
+  { value: 14, label: 'DoNotUse' },
 ]
 
 export const documentTerm = [
@@ -200,6 +198,6 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items, s
 }
 
 export const paymentsTerms = [
-  { value: 24, label: '20' },
-  { value: 25, label: '30' },
+  { value: '20', label: '20' },
+  { value: '30', label: '30' },
 ]

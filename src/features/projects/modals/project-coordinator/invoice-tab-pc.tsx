@@ -20,11 +20,10 @@ import { dateFormat } from 'utils/date-time-utils'
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
-import { STATUS } from 'features/projects/status'
+import { STATUS, STATUS_CODE } from 'features/projects/status'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -44,18 +43,12 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, rejectInvoiceCheck }) => {
+export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, rejectInvoiceCheck, onSave }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)
   const [amountPaid, setAmountPaid] = useState(0)
-  const { mutate: rejectInvocie } = useUpdateWorkOrderMutation()
-
-  const entity = {
-    ...workOrder,
-    ...{ status: 111 },
-  }
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
@@ -105,9 +98,10 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
       }
     }
   }, [transactions])
+
   const rejectInvoice = () => {
-    rejectInvocie({
-      ...entity,
+    onSave({
+      status: STATUS_CODE.DECLINED,
     })
   }
   return (

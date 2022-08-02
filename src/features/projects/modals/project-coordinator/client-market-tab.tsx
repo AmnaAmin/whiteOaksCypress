@@ -1,119 +1,40 @@
-import * as React from 'react'
-import { useState } from 'react'
-import { Box, Checkbox, Flex, Center, Text, Button } from '@chakra-ui/react'
-const cuntryName = [
-  {
-    id: 1,
-    name: 'Atlanta',
-  },
-  {
-    id: 2,
-    name: 'Baltimore',
-  },
-  {
-    id: 3,
-    name: 'Birmingham',
-  },
-  {
-    id: 4,
-    name: 'Brooklyn',
-  },
-  {
-    id: 5,
-    name: 'Charlotte',
-  },
-  {
-    id: 6,
-    name: 'Chicago',
-  },
-  {
-    id: 7,
-    name: 'Dallas',
-  },
-  {
-    id: 8,
-    name: 'DS',
-  },
-  {
-    id: 9,
-    name: 'Iran',
-  },
-  {
-    id: 10,
-    name: 'Denver',
-  },
-  {
-    id: 11,
-    name: 'Fayetteville',
-  },
-  {
-    id: 12,
-    name: 'Greenville',
-  },
-  {
-    id: 13,
-    name: 'Houston',
-  },
-  {
-    id: 14,
-    name: 'Jacksonville',
-  },
-  {
-    id: 15,
-    name: 'Las vegas',
-  },
-  {
-    id: 16,
-    name: 'Long island',
-  },
-  {
-    id: 17,
-    name: 'Manhattan',
-  },
-  {
-    id: 18,
-    name: 'Miami- Ft Lauderdale',
-  },
-]
+import { Box, Flex, Button } from '@chakra-ui/react'
+import React from 'react'
+import { CheckboxButton } from 'components/form/checkbox-button'
 
-const CheckStructer = props => {
-  const [check, setCheck] = useState(false)
-  //   console.log('check', props.name, check)
-  return (
-    <Box>
-      <Checkbox isChecked={check} bg="red" hidden />
-      <Center
-        cursor="pointer"
-        onClick={() => {
-          setCheck(!check)
-        }}
-        p="3px"
-        px="8px"
-        m={2}
-        bg={check ? 'green.200' : 'gray.200'}
-        rounded={6}
-        fontWeight={600}
-      >
-        <Text color="gray.500">{props.name}</Text>
-      </Center>
-    </Box>
-  )
+type clientDetailProps = {
+  clientDetails?: any
+  onClose?: () => void
 }
 
-export const CheckBoxes = props => {
+export const Market = React.forwardRef((props: clientDetailProps) => {
+  const market = props?.clientDetails?.markets
+    ? props?.clientDetails?.markets?.map(market => ({
+        label: market?.metropolitanServiceArea,
+        value: market?.id,
+      }))
+    : null
+
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
+
   return (
-    <Box h="517px">
-      <Flex flexWrap="wrap">
-        {cuntryName.map(name => {
-          return <CheckStructer name={name.name} />
-        })}
-      </Flex>
-      <Flex mt={355} h="80px" alignItems="center" justifyContent="end" borderTop="1px solid #CBD5E0 ">
-        <Button colorScheme="brand" variant="outline" mr={3} onClick={props.onClose}>
-          Close
+    <>
+      <Box h="400px" overflow="auto">
+        <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
+          {market?.map(m => {
+            return <CheckboxButton>{m?.label}</CheckboxButton>
+          })}
+        </Flex>
+      </Box>
+      <Flex style={btnStyle} py={4} pt={5}>
+        <Button colorScheme="brand" onClick={props?.onClose}>
+          Cancel
         </Button>
-        <Button colorScheme="brand">Next</Button>
       </Flex>
-    </Box>
+    </>
   )
-}
+})

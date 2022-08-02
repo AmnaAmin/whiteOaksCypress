@@ -3,6 +3,7 @@ import {
   ALERT_HISTORIES,
   CHANGE_ORDERS,
   DOCUMENTS,
+  DOCUMENT_TYPES,
   getTransactionById,
   makeChangeOrderObject,
   NEW_DOCUMENT,
@@ -62,6 +63,10 @@ export const projectDetailHandlers = [
   }),
   rest.get('/api/project/:projectId/workorders', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(WORK_ORDERS))
+  }),
+
+  rest.get('/api/lk_value/lookupType/4', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(DOCUMENT_TYPES))
   }),
 
   ...projectPCProjectDetailHandlers,
