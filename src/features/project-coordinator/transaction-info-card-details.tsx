@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Center, CenterProps, Flex, HStack, VStack, Tooltip, FormLabel } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useAuth } from 'utils/auth-context'
 
@@ -19,7 +19,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
 }
 
 export const TransactionInfoCardDetails: React.FC<{
-  projectData: ProjectType
+  projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
   const { data } = useAuth()

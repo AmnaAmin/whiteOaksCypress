@@ -10,7 +10,7 @@ import {
   Divider,
   Tag,
 } from '@chakra-ui/react'
-import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-form'
 import React from 'react'
 
 const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void; rowData: any }> = props => {
@@ -36,7 +36,7 @@ const AccountReceivableModal: React.FC<{ isOpen: boolean; onClose: () => void; r
             style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '430px' }}
             tabVariant="enclosed"
             onClose={props.onClose}
-            selectedData={data}
+            projectData={data}
           />
         </ModalBody>
       </ModalContent>

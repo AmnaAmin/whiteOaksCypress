@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Center, CenterProps, Flex, FormLabel } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from '../projects/status'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useState } from 'react'
@@ -23,7 +23,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
 }
 
 export const TransactionInfoCard: React.FC<{
-  projectData: ProjectType
+  projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
   const [isSeeMore, setSeeMore] = useState(true)
@@ -118,9 +118,7 @@ export const TransactionInfoCard: React.FC<{
           )}
         </InfoStructureCard>
       </Flex>
-      {isShowMoreDetails && (
-        <TransactionInfoCardDetails projectData={projectData as ProjectType} isLoading={isLoading} />
-      )}
+      {isShowMoreDetails && <TransactionInfoCardDetails projectData={projectData as Project} isLoading={isLoading} />}
     </>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Center, CenterProps, Flex, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import axios from 'axios'
 
@@ -26,7 +26,7 @@ const InfoStructureCard: React.FC<{ amount; isLoading: boolean } & CenterProps> 
 }
 
 export const AmountDetailsCard: React.FC<{
-  projectData: ProjectType
+  projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
   const { t } = useTranslation()

@@ -74,7 +74,7 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Clear Filter',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Type',
+        ProjectLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
         pastDueWorkorders: 'Past Due WO',
         vendorWOExpectedPaymentDate: 'Expected Payment Date',
@@ -513,7 +513,7 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Filtro claro',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Escribe',
+        ProjectLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
         pastDueWorkorders: 'Vencido WO',
         vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
