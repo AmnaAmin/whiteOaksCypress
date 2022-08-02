@@ -40,31 +40,29 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
   const { t } = useTranslation()
 
-  const { columns, resizeElementRef } = useColumnWidthResize(
-    [
-      {
-        Header: t('name'),
-        accessor: 'title',
-      },
+  const { columns, resizeElementRef } = useColumnWidthResize([
+    {
+      Header: t('name'),
+      accessor: 'title',
+    },
 
-      {
-        Header: t('type') as string,
-        accessor: 'triggeredType',
-      },
-      {
-        Header: t('value') as string,
-        accessor: 'attribute',
-      },
-      {
-        Header: t('category') as string,
-        accessor: 'category',
-      },
-      {
-        Header: t('dateTriggered') as string,
-        accessor: 'dateCreated',
-      },
-    ],
-  )
+    {
+      Header: t('type') as string,
+      accessor: 'triggeredType',
+    },
+    {
+      Header: t('value') as string,
+      accessor: 'attribute',
+    },
+    {
+      Header: t('category') as string,
+      accessor: 'category',
+    },
+    {
+      Header: t('dateTriggered') as string,
+      accessor: 'dateCreated',
+    },
+  ])
 
   return (
     <Box ref={resizeElementRef}>

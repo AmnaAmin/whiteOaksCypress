@@ -53,39 +53,37 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
   const { data: alerts } = useProjectAlerts(projectId, account?.login)
   const { t } = useTranslation()
 
-  const { columns, resizeElementRef } = useColumnWidthResize(
-    [
-      {
-        Header: <input type="checkbox"></input>,
-        Cell: () => <input type="checkbox"></input>,
-        accessor: 'checkbox',
-        width: 60,
-      },
-      {
-        Header: 'Name',
-        accessor: 'subject',
-      },
+  const { columns, resizeElementRef } = useColumnWidthResize([
+    {
+      Header: <input type="checkbox"></input>,
+      Cell: () => <input type="checkbox"></input>,
+      accessor: 'checkbox',
+      width: 60,
+    },
+    {
+      Header: 'Name',
+      accessor: 'subject',
+    },
 
-      {
-        Header: t('type') as string,
-        accessor: 'triggeredType',
-      },
-      {
-        Header: t('value') as string,
-        accessor: 'attribute',
-      },
-      {
-        Header: t('category') as string,
-        accessor: 'category',
-        Cell: ({ value }) => PROJECT_CATEGORY[value],
-      },
-      {
-        Header: t('dateTriggered') as string,
-        accessor: 'dateCreated',
-        Cell: ({ value }) => dateFormat(value),
-      },
-    ],
-  )
+    {
+      Header: t('type') as string,
+      accessor: 'triggeredType',
+    },
+    {
+      Header: t('value') as string,
+      accessor: 'attribute',
+    },
+    {
+      Header: t('category') as string,
+      accessor: 'category',
+      Cell: ({ value }) => PROJECT_CATEGORY[value],
+    },
+    {
+      Header: t('dateTriggered') as string,
+      accessor: 'dateCreated',
+      Cell: ({ value }) => dateFormat(value),
+    },
+  ])
 
   return (
     <Box ref={resizeElementRef}>
@@ -96,7 +94,7 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
         TableRow={alertsRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"
-        />
+      />
     </Box>
   )
 })

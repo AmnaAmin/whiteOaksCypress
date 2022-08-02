@@ -111,7 +111,7 @@ export const ProjectDetails: React.FC = props => {
 
                 {tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onAlertModalOpen}>
-                    Resolve 
+                    Resolve
                   </Button>
                 )}
                 {tabIndex === 0 && (

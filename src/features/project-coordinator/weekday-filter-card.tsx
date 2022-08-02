@@ -29,9 +29,10 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
       >
         {props.dayName}
         <Center
-          minW="20px"
-          h="20px"
-          m={1}
+          minW="22px"
+          h="22px"
+          ml="4px"
+          px="2px"
           rounded="full"
           bg={props.selectedDay === props.id ? 'white' : '#E2E8F0'}
           color={props.selectedDay === props.id ? '#4E87F8' : '#4A5568'}

@@ -26,7 +26,7 @@ describe('Weekday Filter Test Cases', () => {
     expect(screen.getByTestId('value-of-wed').textContent).toEqual(`${wedDayValue}`)
 
     //** COMMENTING OUT DUE TO CHANGE IN LOGIC **//
-    
+
     // expect(screen.getByText('All')).toBeInTheDocument()
     // expect(screen.getByText('Clear Filter')).toBeInTheDocument()
 
