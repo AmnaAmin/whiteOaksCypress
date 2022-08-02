@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text, HStack, VStack } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text, HStack, FormControl } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -38,14 +38,15 @@ const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote
 }
 type NotesProps = {
   notes: Array<any>
-  saveNote: (note) => void
+  saveNote?: (note) => void
   onClose?: () => void
   messageBoxStyle?: any
   chatListStyle?: any
   pageLayoutStyle?: any
   hideSave?: boolean
-  labelTextBoxStyle?: any
+  textAreaStyle?: any
   contentStyle?: any
+  hideFooter?: boolean
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -57,8 +58,9 @@ export const NotesTab = (props: NotesProps) => {
     chatListStyle,
     pageLayoutStyle,
     hideSave,
-    labelTextBoxStyle,
+    textAreaStyle,
     contentStyle,
+    hideFooter,
   } = props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -74,15 +76,17 @@ export const NotesTab = (props: NotesProps) => {
 
   const message = useWatch({ name: 'message', control })
   const Submit = data => {
-    saveNote(data)
+    if (saveNote) {
+      saveNote(data)
+    }
     reset()
   }
 
   return (
-    <form onSubmit={handleSubmit(Submit)}>
-      <Box {...pageLayoutStyle} bg="white">
-        <Box {...contentStyle}>
-          <Box h={chatListStyle?.height || '300px'} {...chatListStyle} overflow="auto">
+    <Box {...pageLayoutStyle}>
+      <form onSubmit={handleSubmit(Submit)}>
+        <Box display="flex" flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
+          <Box {...chatListStyle} overflow="auto">
             {notes && notes.length > 0 && (
               <Box>
                 {notes.map(note => {
@@ -96,35 +100,30 @@ export const NotesTab = (props: NotesProps) => {
               </Box>
             )}
           </Box>
-          <Flex mt="10px">
-            <Box w="100%" {...labelTextBoxStyle}>
-              <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-                {t('enterNewNote')}
-              </FormLabel>
-              <Textarea
-                flexWrap="wrap"
-                h={messageBoxStyle?.height || '200px'}
-                {...messageBoxStyle}
-                {...register('message')}
-              />
-            </Box>
-          </Flex>
+          <FormControl {...textAreaStyle}>
+            <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
+              {t('enterNewNote')}
+            </FormLabel>
+            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
+          </FormControl>
         </Box>
-        <HStack borderTop="1px solid #CBD5E0" bg="white">
-          <HStack padding={5} spacing="16px" w="100%" justifyContent="end">
-            {onClose && (
-              <Button variant="outline" colorScheme="brand" onClick={onClose}>
-                {t('cancel')}
-              </Button>
-            )}
-            {!hideSave && (
-              <Button type="submit" colorScheme="brand" isDisabled={!message}>
-                {t('save')}
-              </Button>
-            )}
+        {!hideFooter && (
+          <HStack borderTop="1px solid #CBD5E0" bg="white">
+            <HStack padding={5} spacing="16px" w="100%" justifyContent="end">
+              {onClose && (
+                <Button variant="outline" colorScheme="brand" onClick={onClose}>
+                  {t('cancel')}
+                </Button>
+              )}
+              {!hideSave && (
+                <Button type="submit" colorScheme="brand" isDisabled={!message}>
+                  {t('save')}
+                </Button>
+              )}
+            </HStack>
           </HStack>
-        </HStack>
-      </Box>
-    </form>
+        )}
+      </form>
+    </Box>
   )
 }

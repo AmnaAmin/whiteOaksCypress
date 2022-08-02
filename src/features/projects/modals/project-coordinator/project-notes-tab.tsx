@@ -32,9 +32,7 @@ export const ProjectNotes: React.FC<any> = props => {
     <NotesTab
       saveNote={saveNote}
       notes={notes}
-      messageBoxStyle={{ height: '120px', resize: 'none' }}
-      chatListStyle={{ height: '340px' }}
-      contentStyle={{ padding: '25px' }}
+      contentStyle={{ padding: '25px', maxHeight: '400px' }}
       pageLayoutStyle={{ bg: 'white', rounded: 16, pb: 2 }}
     />
   )

@@ -17,19 +17,14 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps, setNotesCo
     clientId: clientDetails?.id,
   })
 
-  const saveNote = data => {}
-
   return (
     <>
       <NotesTab
-        saveNote={saveNote}
         notes={notes}
         onClose={onClose}
-        hideSave={true}
-        messageBoxStyle={{ display: 'none' }}
-        chatListStyle={{ height: '350px' }}
-        pageLayoutStyle={{ height: '400px', padding: '25px' }}
-        labelTextBoxStyle={{ display: 'none' }}
+        hideFooter={true}
+        contentStyle={{ height: '400px' }}
+        textAreaStyle={{ display: 'none' }}
       />
       <Flex justifyContent="end">
         <Button colorScheme="brand" onClick={props?.onClose} mb={4}>

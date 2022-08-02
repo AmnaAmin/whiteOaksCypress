@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  ModalBody,
   Text,
   Tabs,
   TabList,
@@ -100,115 +99,113 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
             <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
             <Divider mb={3} />
-            <ModalBody p="0">
-              <Stack spacing={5}>
-                <Tabs
-                  variant="enclosed"
-                  colorScheme="brand"
-                  size="md"
-                  onChange={index => setTabIndex(index)}
-                  whiteSpace="nowrap"
-                >
-                  <TabList color="gray.600" mx="32px">
-                    <Tab>{t('workOrderDetails')}</Tab>
-                    <Tab>{t('lienWaiver')}</Tab>
-                    <Tab>{t('invoice')}</Tab>
-                    <Tab>{t('payments')}</Tab>
-                    <Tab>
-                      {t('notes')}
-                      <Box ml="5px" style={countInCircle}>
-                        {notesCount}
-                      </Box>
-                    </Tab>
-                    {tabIndex === 1 && (
+            <Stack>
+              <Tabs
+                variant="enclosed"
+                colorScheme="brand"
+                size="md"
+                onChange={index => setTabIndex(index)}
+                whiteSpace="nowrap"
+              >
+                <TabList color="gray.600" mx="32px">
+                  <Tab>{t('workOrderDetails')}</Tab>
+                  <Tab>{t('lienWaiver')}</Tab>
+                  <Tab>{t('invoice')}</Tab>
+                  <Tab>{t('payments')}</Tab>
+                  <Tab>
+                    {t('notes')}
+                    <Box ml="5px" style={countInCircle}>
+                      {notesCount}
+                    </Box>
+                  </Tab>
+                  {tabIndex === 1 && (
+                    <Center w="100%" justifyContent="end">
+                      {workOrder?.claimantTitle && (
+                        <Checkbox
+                          onChange={() => setRejectLW(!rejectLW)}
+                          color="#4A5568"
+                          fontSize="14px"
+                          fontWeight={500}
+                        >
+                          {t('rejectLienWaiver')}
+                        </Checkbox>
+                      )}
+                    </Center>
+                  )}
+                  {tabIndex === 2 &&
+                    [STATUS.Invoiced, STATUS.Declined].includes(
+                      workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
+                    ) && (
                       <Center w="100%" justifyContent="end">
-                        {workOrder?.claimantTitle && (
-                          <Checkbox
-                            onChange={() => setRejectLW(!rejectLW)}
-                            color="#4A5568"
-                            fontSize="14px"
-                            fontWeight={500}
-                          >
-                            {t('rejectLienWaiver')}
-                          </Checkbox>
-                        )}
+                        <Checkbox
+                          onChange={() => setRejectInvoice(!rejectInvoice)}
+                          isChecked={rejectInvoice}
+                          disabled={workOrder.status === 111}
+                          color="#4A5568"
+                          fontSize="14px"
+                          fontWeight={500}
+                        >
+                          {t('rejectInvoice')}
+                        </Checkbox>
                       </Center>
                     )}
-                    {tabIndex === 2 &&
-                      [STATUS.Invoiced, STATUS.Declined].includes(
-                        workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
-                      ) && (
-                        <Center w="100%" justifyContent="end">
-                          <Checkbox
-                            onChange={() => setRejectInvoice(!rejectInvoice)}
-                            isChecked={rejectInvoice}
-                            disabled={workOrder.status === 111}
-                            color="#4A5568"
-                            fontSize="14px"
-                            fontWeight={500}
-                          >
-                            {t('rejectInvoice')}
-                          </Checkbox>
-                        </Center>
-                      )}
-                  </TabList>
+                </TabList>
 
-                  <TabPanels>
-                    <TabPanel p={0}>
-                      <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} onSave={onSave} />
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      {isDocumentsLoading ? (
-                        <BlankSlate />
-                      ) : (
-                        <LienWaiverTab
-                          documentsData={documentsData}
-                          lienWaiverData={workOrder}
-                          onClose={onClose}
-                          rejectChecked={!rejectLW}
-                          onSave={onSave}
-                        />
-                      )}
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      {isDocumentsLoading || isTransLoading ? (
-                        <BlankSlate />
-                      ) : (
-                        <InvoiceTabPC
-                          rejectInvoiceCheck={rejectInvoice}
-                          transactions={transactions}
-                          documentsData={documentsData}
-                          workOrder={workOrder}
-                          onClose={onClose}
-                          onSave={onSave}
-                        />
-                      )}
-                    </TabPanel>
-                    <TabPanel p={0}>
-                      {isProjectLoading ? (
-                        <BlankSlate />
-                      ) : (
-                        <PaymentInfoTab
-                          projectData={projectData}
-                          workOrder={workOrder}
-                          onClose={onClose}
-                          onSave={onSave}
-                        />
-                      )}
-                    </TabPanel>
-
-                    <TabPanel p={0}>
-                      <WorkOrderNotes
-                        workOrder={workOrder}
+                <TabPanels>
+                  <TabPanel p={0}>
+                    <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} onSave={onSave} />
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    {isDocumentsLoading ? (
+                      <BlankSlate />
+                    ) : (
+                      <LienWaiverTab
+                        documentsData={documentsData}
+                        lienWaiverData={workOrder}
                         onClose={onClose}
-                        setNotesCount={setNotesCount}
+                        rejectChecked={!rejectLW}
                         onSave={onSave}
                       />
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </Stack>
-            </ModalBody>
+                    )}
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    {isDocumentsLoading || isTransLoading ? (
+                      <BlankSlate />
+                    ) : (
+                      <InvoiceTabPC
+                        rejectInvoiceCheck={rejectInvoice}
+                        transactions={transactions}
+                        documentsData={documentsData}
+                        workOrder={workOrder}
+                        onClose={onClose}
+                        onSave={onSave}
+                      />
+                    )}
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    {isProjectLoading ? (
+                      <BlankSlate />
+                    ) : (
+                      <PaymentInfoTab
+                        projectData={projectData}
+                        workOrder={workOrder}
+                        onClose={onClose}
+                        onSave={onSave}
+                      />
+                    )}
+                  </TabPanel>
+
+                  <TabPanel p={0}>
+                    <WorkOrderNotes
+                      workOrder={workOrder}
+                      onClose={onClose}
+                      setNotesCount={setNotesCount}
+                      onSave={onSave}
+                    />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Stack>
           </ModalContent>
         </>
       )}
