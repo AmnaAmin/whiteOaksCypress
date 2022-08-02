@@ -13,6 +13,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { convertDateTimeFromServer, customFormat } from './date-time-utils'
+import { useTranslation } from 'react-i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -26,11 +27,14 @@ export const licenseTypes = [
 export const useVendorProfile = (vendorId: number) => {
   const client = useClient()
 
-  return useQuery<VendorProfile>('vendorProfile', async () => {
-    const response = await client(`vendors/${vendorId}`, {})
-
-    return response?.data
-  })
+  return useQuery<VendorProfile>(
+    'vendorProfile',
+    async () => {
+      const response = await client(`vendors/${vendorId}`, {})
+      return response?.data
+    },
+    { enabled: !!vendorId },
+  )
 }
 
 export const useAccountDetails = () => {
@@ -50,11 +54,12 @@ export const useAccountDetails = () => {
 export const useVendorProfileUpdateMutation = () => {
   const client = useClient()
 
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }), {
-    onSuccess(response) {
-      console.log('response', response)
-    },
-  })
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
+}
+
+export const useCreateVendorMutation = () => {
+  const client = useClient()
+  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'POST' }))
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
@@ -88,6 +93,48 @@ export const parseFormDataToAPIData = (
   }
 }
 
+export const parseVendorFormDataToAPIData = (
+  vendorProfileData: VendorProfile,
+  formValues: VendorProfileDetailsFormData,
+  paymentsMethods,
+): VendorProfilePayload => {
+  return {
+    ...vendorProfileData,
+    ownerName: formValues.ownerName!,
+    secondName: formValues.secondName!,
+    businessPhoneNumber: formValues.businessPhoneNumber,
+    businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
+    secondPhoneNumber: formValues.secondPhoneNumber!,
+    secondPhoneNumberExtension: formValues.secondPhoneNumberExtension!,
+    businessEmailAddress: formValues.businessEmailAddress!,
+    companyName: formValues.companyName!,
+    streetAddress: formValues.streetAddress!,
+    city: formValues.city!,
+    zipCode: formValues.zipCode!,
+    capacity: formValues.capacity!,
+    einNumber: formValues.einNumber!,
+    ssnNumber: formValues.ssnNumber!,
+    secondEmailAddress: formValues.secondEmailAddress!,
+    score: formValues.score?.value,
+    status: formValues.status?.value,
+    state: formValues.state?.value,
+    isSsn: false,
+    paymentTerm: formValues.paymentTerm?.value,
+    documents: [],
+    vendorSkills: vendorProfileData?.vendorSkills || [],
+    markets: vendorProfileData?.markets || [],
+    licenseDocuments: vendorProfileData?.licenseDocuments || [],
+    paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
+  }
+}
+
+export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDetailsFormData => {
+  return {
+    ...vendorProfileData,
+    ...vendorProfileData.paymentOptions.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
+  }
+}
+
 export const useTrades = () => {
   const client = useClient()
 
@@ -115,7 +162,7 @@ export const useMarkets = () => {
 export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: VendorProfile): VendorTradeFormValues => {
   return {
     trades: trades.map(trade => ({
-      ...trade,
+      trade,
       checked: !!vendorData?.vendorSkills?.find(skill => skill.id === trade.id),
     })),
   }
@@ -128,6 +175,7 @@ export const parseTradeFormValuesToAPIPayload = (
   return {
     ...vendorData,
     vendorSkills: formValues.trades
+      .map(trade => ({ ...trade.trade, checked: trade.checked }))
       .filter(trade => trade.checked)
       .map(trade => {
         const { checked, ...rest } = trade
@@ -143,7 +191,7 @@ export const parseMarketAPIDataToFormValues = (
 ): VendorMarketFormValues => {
   return {
     markets: markets.map(market => ({
-      ...market,
+      market,
       checked: !!vendorData?.markets?.find(skill => skill.id === market.id),
     })),
   }
@@ -156,6 +204,7 @@ export const parseMarketFormValuesToAPIPayload = (
   return {
     ...vendorData,
     markets: formValues.markets
+      .map(market => ({ ...market.market, checked: market.checked }))
       .filter(market => market.checked)
       .map(market => {
         const { checked, ...rest } = market
@@ -173,9 +222,10 @@ export const DOCUMENTS_TYPES = {
   W9_DOCUMENT: { value: 'W9 DOCUMENT', id: 99 },
 }
 
-export const useSaveVendorDetails = () => {
+export const useSaveVendorDetails = (name: string) => {
   const client = useClient()
   const toast = useToast()
+  const { t } = useTranslation()
 
   return useMutation(
     (licenses: any) => {
@@ -187,10 +237,9 @@ export const useSaveVendorDetails = () => {
     {
       onSuccess() {
         toast({
-          title: 'Update Vendor Details',
-          description: 'Vendor Details have been updated successfully.',
+          title: t(`update${name}Details`),
+          description: t(`update${name}DetailsSuccess`),
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },
@@ -199,6 +248,8 @@ export const useSaveVendorDetails = () => {
 }
 
 export const readFileContent = async (file: File) => {
+  if (!file) return Promise.resolve(null)
+
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
@@ -215,10 +266,11 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
   vendor.licenseDocuments &&
     vendor.licenseDocuments.forEach(license => {
       const licenseObject = {
+        id: license.id,
         licenseType: license.licenseType,
         licenseNumber: license.licenseNumber,
         expiryDate: convertDateTimeFromServer(license.licenseExpirationDate),
-        expirationFile: [new File([license.fileObject], license.fileType)],
+        expirationFile: null,
         downloadableFile: { url: license.s3Url, name: license.fileType },
       }
       licenses.push(licenseObject)
@@ -227,17 +279,38 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
   return licenses
 }
 
-export const parseLicenseValues = async (values: any) => {
+export const parseLicenseValues = async (values: any, licensesDocuments: any) => {
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
-      const fileContents = await readFileContent(license.expirationFile[0])
-      const doc = {
-        licenseExpirationDate: customFormat(license.expiryDate, 'YYYY-MM-DD'),
-        licenseNumber: license.licenseNumber,
-        licenseType: license.licenseType,
-        fileObjectContentType: license.expirationFile[0].type,
-        fileType: license.expirationFile[0].name,
-        fileObject: fileContents,
+      let existingLicense = licensesDocuments.find(l => l.id === license.id)
+      let doc = {}
+      let fileContents
+      if (existingLicense) {
+        if (license.expirationFile) {
+          fileContents = await readFileContent(license.expirationFile)
+          doc = {
+            fileObjectContentType: license.expirationFile?.type,
+            fileType: license.expirationFile?.name,
+            fileObject: fileContents,
+          }
+        }
+        doc = {
+          ...existingLicense,
+          ...doc,
+          licenseNumber: license.licenseNumber,
+          licenseType: license.licenseType,
+          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+        }
+      } else {
+        fileContents = await readFileContent(license.expirationFile)
+        doc = {
+          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          licenseNumber: license.licenseNumber,
+          licenseType: license.licenseType,
+          fileObjectContentType: license?.expirationFile?.type,
+          fileType: license.expirationFile.name,
+          fileObject: fileContents,
+        }
       }
       return doc
     }),
@@ -309,11 +382,11 @@ export const parseDocumentCardsValues = async (values: any) => {
 
   const results = await Promise.all(
     documentsList.map(async (doc, index) => {
-      const fileContents = await readFileContent(doc.file[0])
+      const fileContents = await readFileContent(doc.file)
       const document = {
         documentType: doc.type,
-        fileObjectContentType: doc.file[0].type,
-        fileType: doc.file[0].name,
+        fileObjectContentType: doc.file.type,
+        fileType: doc.file.name,
         fileObject: fileContents,
       }
       return document
@@ -343,7 +416,6 @@ export const useSaveSettings = () => {
           title: 'Update Settings',
           description: 'Settings have been updated successfully.',
           status: 'success',
-          duration: 9000,
           isClosable: true,
         })
       },

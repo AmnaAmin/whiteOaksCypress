@@ -1,9 +1,31 @@
-import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import {
+  Box,
+  FormLabel,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/react'
+import { t } from 'i18next'
 import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
-import React from 'react'
+import React, { useState } from 'react'
+import { useVendorProfile } from 'utils/vendor-details'
 
 export const NewVendorTabs: React.FC<{ onClose: () => void }> = props => {
-  return <VendorProfileTabs onClose={props.onClose} />
+  const [vendorId, setVendorId] = useState(0)
+  const { data: vendorProfileData, refetch } = useVendorProfile(vendorId)
+
+  return (
+    <VendorProfileTabs
+      vendorModalType="editVendor"
+      vendorProfileData={vendorId ? vendorProfileData : undefined}
+      refetch={refetch}
+      onClose={props.onClose}
+      updateVendorId={setVendorId}
+    />
+  )
 }
 
 type NewVendorModalType = {
@@ -17,8 +39,12 @@ const NewVendorModal: React.FC<NewVendorModalType> = props => {
       <Modal onClose={props.onClose} isOpen={props.isOpen} size="6xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>New Vendor</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader mb="5px" borderBottom="2px solid #E2E8F0">
+            <FormLabel variant="strong-label" size="lg">
+              {t('newVendor')}
+            </FormLabel>
+          </ModalHeader>
+          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody>
             <NewVendorTabs onClose={props.onClose} />
           </ModalBody>

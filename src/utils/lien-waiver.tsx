@@ -1,9 +1,7 @@
 import { Text } from '@chakra-ui/react'
-import { useClient } from 'utils/auth-context'
-import React from 'react'
 import { t } from 'i18next'
-import { useMutation } from 'react-query'
 import { dateFormat } from './date-time-utils'
+import { useTranslation } from 'react-i18next'
 
 const headings = {
   first: t('firstHeading'),
@@ -29,7 +27,7 @@ const identifyingInformation = {
 }
 
 const checkInformation = {
-  makerOfCheck: 'Maker of Check',
+  makerOfCheck: 'Maker of check',
   amountOfCheck: 'Amount of Check',
   checkPayableTo: 'Check Payable To',
 }
@@ -46,11 +44,14 @@ const signature = {
 const dateOfSignature = 'Date of Signature'
 const claimantsSignature = 'Claimant`s Signature'
 
-export const getHelpText = () => {
+export const GetHelpText = () => {
+  const { t } = useTranslation()
+
   return (
     <>
       <Text fontSize="14px" fontWeight={500} color="gray.600">
-        {headings.first}
+        {t('firstHeading')}
+        {/* {headings.first} */}
       </Text>
       <br />
       <Text fontSize="14px" fontWeight="400" color="gray.500" w="724px" whiteSpace="normal">
@@ -58,7 +59,7 @@ export const getHelpText = () => {
       </Text>
       <br />
       <Text fontSize="14px" fontWeight={500} color="gray.600">
-        {headings.third}
+        {t('thirdHeading')}
       </Text>
       <br />
       <Text fontSize="14px" fontWeight="400" color="gray.500" w="740px" whiteSpace="normal">
@@ -146,10 +147,4 @@ export const createForm = (form, values, signatureDimention, imageUrl) => {
   form.text(`${dateOfSignature}: ${values.dateOfSignature ? dateFormat(values.dateOfSignature) : ''}`, 20, o)
 
   return form
-}
-
-export const useLienWaiverMutation = () => {
-  const client = useClient()
-
-  return useMutation(payload => client(`work-orders`, { data: payload, method: 'PUT' }))
 }

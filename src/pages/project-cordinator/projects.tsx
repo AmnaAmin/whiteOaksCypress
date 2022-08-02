@@ -1,6 +1,5 @@
-import { Box, Button, Center, Divider, Flex, Stack, useDisclosure, VStack } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import { Box, Button, Center, Divider, Flex, FormLabel, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ProjectFilters } from 'features/project-coordinator/project-filters'
@@ -8,45 +7,50 @@ import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/pro
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import PlusIcon from 'icons/plus-icon'
 import { AddNewProjectModal } from 'features/project-coordinator/add-project'
+import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, useStates } from 'utils/pc-projects'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
+import { BiBookAdd } from 'react-icons/bi'
+import { useTranslation } from 'react-i18next'
+import { exportBtnIcon } from 'theme/common-style'
 
 export const Projects = () => {
-  const { t } = useTranslation()
-
   const {
     isOpen: isOpenNewProjectModal,
     onClose: onNewProjectModalClose,
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.pcproject)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.pcproject,
   )
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-
-  const [isClicked, setIsClicked] = useState(false)
+  const { t } = useTranslation()
 
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-
   const onSave = columns => {
     postProjectColumn(columns)
   }
 
+  // Calling all APIs
+  const { data: properties } = useProperties()
+  const { data: projectTypes } = useProjectTypes()
+  const { data: statesData } = useStates()
+  const { data: fieldProjectManager } = useFPM()
+  const { data: projectCoordinator } = usePC()
+  const { data: client } = useClients()
+  const { data: markets } = useMarkets()
+
+  useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
+
   const clearAll = () => {
     setSelectedCard('')
-    setIsClicked(false)
-  }
-
-  const allDays = () => {
-    setSelectedCard('All')
-    setIsClicked(true)
+    setSelectedDay('')
   }
 
   return (
@@ -56,54 +60,25 @@ export const Projects = () => {
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
         </Box>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
-          <Box fontWeight={'bold'}>Due Projects</Box>
+          <Box mt={4}>
+            <FormLabel variant="strong-label" fontSize="18px">
+              {t('Due Projects')}
+            </FormLabel>
+          </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
+          <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+
           <Button
-            bg={isClicked ? '#4E87F8' : 'none'}
-            color={isClicked ? 'white' : 'black'}
-            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="12px"
-            fontStyle="normal"
-            fontWeight={500}
-            alignContent="right"
-            onClick={allDays}
-            rounded={20}
-          >
-            All
-          </Button>
-          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-          <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="12px"
-            fontStyle="normal"
-            fontWeight={500}
-            alignContent="right"
-            onClick={clearAll}
-          >
-            Clear All
-          </Button>
-          <Button
-            bg="none"
-            color="#4E87F8"
-            _hover={{ bg: 'none' }}
-            _focus={{ border: 'none' }}
-            fontSize="12px"
-            fontStyle="normal"
-            fontWeight={500}
             alignContent="right"
             onClick={onNewProjectModalOpen}
             position="absolute"
             right={8}
+            colorScheme="brand"
+            fontSize="14px"
           >
-            <Box pos="relative" fontWeight="bold" p="2px">
-              <PlusIcon />
-            </Box>
-            New Project
+            <Icon as={BiBookAdd} fontSize="18px" mr={2} />
+            {t('New Project')}
           </Button>
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}></Stack>
@@ -115,7 +90,7 @@ export const Projects = () => {
             resizeElementRef={resizeElementRef}
             projectColumns={tableColumns}
           />
-          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} marginTop={1}>
+          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={3}>
             <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
               {isLoading ? (
                 <>
@@ -125,9 +100,9 @@ export const Projects = () => {
               ) : (
                 <>
                   <Button
-                    bg="none"
-                    color="#4E87F8"
-                    _hover={{ bg: 'none' }}
+                    m={0}
+                    variant="ghost"
+                    colorScheme="brand"
                     _focus={{ border: 'none' }}
                     fontSize="12px"
                     fontStyle="normal"
@@ -138,10 +113,8 @@ export const Projects = () => {
                       }
                     }}
                   >
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <BsBoxArrowUp />
-                    </Box>
-                    {t('export')}
+                    <Icon as={BsBoxArrowUp} style={exportBtnIcon} mr={1} />
+                    {'Export'}
                   </Button>
                   <Center>
                     <Divider orientation="vertical" height="25px" border="1px solid" />
@@ -155,7 +128,17 @@ export const Projects = () => {
           </Stack>
         </Box>
       </VStack>
-      <AddNewProjectModal isOpen={isOpenNewProjectModal} onClose={onNewProjectModalClose} />
+      <AddNewProjectModal
+        markets={markets}
+        properties={properties}
+        projectTypes={projectTypes}
+        statesData={statesData}
+        fieldProjectManager={fieldProjectManager}
+        projectCoordinator={projectCoordinator}
+        client={client}
+        isOpen={isOpenNewProjectModal}
+        onClose={onNewProjectModalClose}
+      />
     </>
   )
 }

@@ -1,5 +1,6 @@
 import { InputProps } from '@chakra-ui/input'
 import { css } from '@emotion/react'
+// import calendarPNG from 'assets/calendar-icon.png'
 
 export const disabledInputStyle = {
   bg: 'gray.200',
@@ -17,7 +18,7 @@ export const inputFocusStateStyle = {
 }
 
 export const inputBorderLeftStyle: InputProps = {
-  borderLeftWidth: '2px',
+  borderLeftWidth: '2.5px',
   borderLeftStyle: 'solid',
   borderLeftColor: 'brand.300',
   _hover: {
@@ -36,10 +37,21 @@ export const countInCircle = {
   justifyContent: 'center',
 }
 
+export const exportBtnIcon = {
+  height: '14px',
+  width: '14px',
+  left: '17px',
+  top: '11px',
+  borderRadius: '0px',
+  fontSize: '18px',
+}
+
+/* background: url(${calendarPNG}) no-repeat; */
 export const calendarIcon = css`
   ::-webkit-calendar-picker-indicator {
-    background: url('https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png')
-      center/80% no-repeat;
+    /* background-size: contain; */
+    /* width: 12px;
+    height: 12px; */
     color: '#ddd';
   }
 `

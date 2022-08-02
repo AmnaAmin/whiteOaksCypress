@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  ModalBody,
   Text,
   Tabs,
   TabList,
@@ -28,10 +27,13 @@ import { InvoiceTab } from './invoice-tab'
 import { ProjectType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
 import Status from '../status'
-import { NotesTab } from '../../common/notes-tab'
+import { WorkOrderNotes } from './work-order-notes'
 import { countInCircle } from 'theme/common-style'
+import { useDocuments } from 'utils/vendor-projects'
+import { useParams } from 'react-router-dom'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
-const WorkOrderDetails = ({
+export const WorkOrderDetails = ({
   workOrder,
   onClose: close,
   onProjectTabChange,
@@ -46,7 +48,11 @@ const WorkOrderDetails = ({
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
+  const { projectId } = useParams<'projectId'>()
+  const { documents: documentsData = [], isLoading } = useDocuments({
+    projectId,
+  })
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -58,73 +64,75 @@ const WorkOrderDetails = ({
       onOpen()
     } else {
       onCloseDisclosure()
-      setTabIndex(0)
     }
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="none">
       <ModalOverlay />
-
-      <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
-        <ModalHeader h="64px" py={4} display="flex" alignItems="center">
-          {tabIndex === 2 && (
+      {workOrder && (
+        <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
+          <ModalHeader h="64px" py={4} display="flex" alignItems="center">
             <Box>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
-                <Text borderRight="2px solid black" color="#4E87F8" lineHeight="22px" h="22px" pr={2}>
-                  WO {workOrder?.id ? `#` + workOrder?.id : ''}
+              <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
+                <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2} data-testid="work-order-id">
+                  WO {workOrder?.id ? workOrder?.id : ''}
                 </Text>
-                <Text lineHeight="22px" h="22px">
+                <Text lineHeight="22px" h="22px" data-testid="work-order-company">
                   {workOrder?.companyName}
                 </Text>
+                {workOrder?.statusLabel && <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />}
               </HStack>
             </Box>
-          )}
+          </ModalHeader>
 
-          {tabIndex !== 2 && (
-            <HStack spacing={4}>
-              <Text fontWeight={500} fontSize="16px" fontStyle="normal" color="gray.600">
-                {t('editVendorWorkOrder')}
-              </Text>
-              {workOrder?.statusLabel && <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />}
-            </HStack>
-          )}
-        </ModalHeader>
+          <ModalCloseButton m={3} _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
 
-        <ModalCloseButton m={3} _focus={{ outline: 'none' }} />
-
-        <Divider mb={3} />
-        <ModalBody>
+          <Divider mb={3} />
           <Stack spacing={5}>
-            <Tabs variant="enclosed" onChange={index => setTabIndex(index)} colorScheme="brand" whiteSpace="nowrap">
-              <TabList height="50px" borderBottomWidth={2} alignItems={'end'}>
-                <Tab minW={180}>{t('workOrderDetails')}</Tab>
-                <Tab>{t('lienWaiver')}</Tab>
-                <Tab>{t('Invoice')}</Tab>
-                <Tab>{t('Payments')}</Tab>
-                <Tab>
-                  {t('Notes')}
+            <Tabs variant="enclosed" colorScheme="brand" size="md">
+              <TabList mr="30px" ml="30px" color="gray.500">
+                <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
+                <Tab data-testid="invoice">{t('invoice')}</Tab>
+                <Tab data-testid="payments">{t('payments')}</Tab>
+                <Tab data-testid="notes">
+                  {t('notes')}
                   <Box ml="5px" style={countInCircle}>
-                    2
+                    {notesCount}
                   </Box>
                 </Tab>
               </TabList>
               <TabPanels>
-                <TabPanel p="0px">
-                  <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} />
-                </TabPanel>
-                <TabPanel>
-                  <LienWaiverTab onProjectTabChange={onProjectTabChange} lienWaiverData={workOrder} onClose={onClose} />
+                <TabPanel p={0}>
+                  <WorkOrderDetailTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
                 <TabPanel p={0}>
-                  <InvoiceTab
-                    projectData={projectData}
-                    workOrder={workOrder}
-                    transactions={transactions}
-                    onClose={onClose}
-                  />
+                  {isLoading ? (
+                    <BlankSlate />
+                  ) : (
+                    <LienWaiverTab
+                      documentsData={documentsData}
+                      onProjectTabChange={onProjectTabChange}
+                      lienWaiverData={workOrder}
+                      onClose={onClose}
+                    />
+                  )}
                 </TabPanel>
-                <TabPanel p="0px">
+                <TabPanel p={0}>
+                  {isLoading ? (
+                    <BlankSlate />
+                  ) : (
+                    <InvoiceTab
+                      documentsData={documentsData}
+                      projectData={projectData}
+                      workOrder={workOrder}
+                      transactions={transactions}
+                      onClose={onClose}
+                    />
+                  )}
+                </TabPanel>
+                <TabPanel p={0}>
                   <InvoicingAndPaymentTab
                     onClose={onClose}
                     invoiceAndPaymentData={{
@@ -143,14 +151,14 @@ const WorkOrderDetails = ({
                     }}
                   />
                 </TabPanel>
-                <TabPanel p="20px">
-                  <NotesTab />
+                <TabPanel p={0}>
+                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
           </Stack>
-        </ModalBody>
-      </ModalContent>
+        </ModalContent>
+      )}
     </Modal>
   )
 }

@@ -62,6 +62,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
           ...props.rules,
           onChange: props.onChange,
         })}
+        variant={props.variant}
       />
     </InputGroup>
     <Box minH="20px" mt="3px">

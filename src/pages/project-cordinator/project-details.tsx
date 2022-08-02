@@ -1,4 +1,4 @@
-import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex } from '@chakra-ui/react'
+import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -12,21 +12,31 @@ import { ProjectType } from 'types/project.type'
 // import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
-import { BiAddToQueue } from 'react-icons/bi'
-import { UploadModal } from '../../features/projects/modals/project-coordinator/upload-modal'
+import { BiAddToQueue, BiUpload } from 'react-icons/bi'
+
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
-import { NotesTab } from '../../features/common/notes-tab'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
+import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
+import { UploadDocumentModal } from 'features/projects/documents/upload-document'
+import { Card } from 'components/card/card'
+import { AlertStatusModal } from 'features/projects/alerts/alert-status'
+import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
+import { countInCircle } from 'theme/common-style'
+import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<{ projectId: string }>()
+
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
+  const [notesCount, setNotesCount] = useState(0)
+
+  const [alertRow, selectedAlertRow] = useState(true)
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -41,9 +51,11 @@ export const ProjectDetails: React.FC = props => {
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
+  const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isOpen: isOpenUploadModal, onOpen: OnUploadMdal, onClose: onCloseUploadModal } = useDisclosure()
+  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
@@ -57,14 +69,19 @@ export const ProjectDetails: React.FC = props => {
         {tabIndex === 1}
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
+          <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
               <Tab>{t('Transactions')}</Tab>
               <Tab>{t('projectDetails')}</Tab>
               <Tab>{t('vendorWorkOrders')}</Tab>
               <Tab>{t('documents')}</Tab>
               <Tab>{t('alerts')}</Tab>
-              <Tab>{'Notes'}</Tab>
+              <Tab>
+                {t('notes')}
+                <Box ml="5px" style={countInCircle}>
+                  {notesCount}
+                </Box>
+              </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
@@ -87,20 +104,29 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button
-                    _hover={{ bg: 'gray.200' }}
-                    color="blue"
-                    fontSize={14}
-                    fontWeight={500}
-                    onClick={OnUploadMdal}
-                  >
+                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
                     Upload
                   </Button>
                 )}
+
+                {tabIndex === 4 && (
+                  <Button colorScheme="brand" onClick={onAlertModalOpen}>
+                    Resolve
+                  </Button>
+                )}
                 {tabIndex === 0 && (
-                  <>
+                  <HStack spacing="16px">
+                    <Box>
+                      <FormControl display="flex" alignItems="center">
+                        <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
+                          View Details
+                        </FormLabel>
+                        <Switch size="sm" id="view-details" />
+                      </FormControl>
+                    </Box>
+
                     <Button
-                      variant="ghost"
+                      variant="solid"
                       colorScheme="brand"
                       onClick={onTransactionModalOpen}
                       isDisabled={preventNewTransaction}
@@ -108,27 +134,21 @@ export const ProjectDetails: React.FC = props => {
                     >
                       {t('newTransaction')}
                     </Button>
-                  </>
+                  </HStack>
                 )}
               </Box>
             </TabList>
 
             <TabPanels h="100%">
-              <TabPanel p="0px" h="100%" mt="31px">
-                <Box mb="5">
-                  <FormControl display="flex" alignItems="center">
-                    <FormLabel htmlFor="view-details" mb="0">
-                      View Details
-                    </FormLabel>
-                    <Switch id="view-details" />
-                  </FormControl>
-                </Box>
+              <TabPanel p="0px" h="100%" mt="7px">
                 <Box h="100%">
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" mt="3">
-                <ProjectDetailsTab />
+              <TabPanel p="0px" mt="7px">
+                <Card rounded="16px" padding="0">
+                  <ProjectDetailsTab projectData={projectData as ProjectType} />
+                </Card>
               </TabPanel>
 
               <TabPanel p="0px" h="0px">
@@ -136,17 +156,31 @@ export const ProjectDetails: React.FC = props => {
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
-              <TabPanel p="0px" h="0px"></TabPanel>
+
+              <TabPanel p="0px" mt="3">
+                <VendorDocumentsTable ref={tabsContainerRef} />
+              </TabPanel>
 
               <TabPanel px="0">
-                <NotesTab />
+                <TriggeredAlertsTable
+                  onRowClick={(e, row) => {
+                    selectedAlertRow(row.values)
+                    onAlertModalOpen()
+                  }}
+                  ref={tabsContainerRef}
+                />
+              </TabPanel>
+
+              <TabPanel px="0">
+                <ProjectNotes projectId={projectId} setNotesCount={setNotesCount} />
               </TabPanel>
             </TabPanels>
           </Tabs>
         </Stack>
+
         <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
-        <UploadModal isOpen={isOpenUploadModal} onClose={onCloseUploadModal} />
+        <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
+        <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
     </>
   )

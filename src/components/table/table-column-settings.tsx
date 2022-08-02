@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Box,
   List,
   ListItem,
   HStack,
@@ -15,13 +14,13 @@ import {
   useDisclosure,
   Center,
   Text,
+  Icon,
 } from '@chakra-ui/react'
 import { FaAtom } from 'react-icons/fa'
 import { BiGridVertical } from 'react-icons/bi'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { t } from 'i18next'
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 import 'components/translation/i18n'
 import { Button } from 'components/button/button'
 
@@ -43,7 +42,7 @@ interface TableColumnSettingsProps {
 const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnSettingsProps) => {
   const [columnRecords, setColumnRecords] = useState(columns)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  // const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const saveModal = useCallback(() => {
     const columnsPayload = columnRecords.map((item, index) => ({
@@ -89,18 +88,27 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        ml="1"
         variant="ghost"
         colorScheme="brand"
         _focus={{ border: 'none' }}
         onClick={onOpen}
         disabled={disabled}
         data-testid="column-settings-button"
+        fontSize={'12px'}
+        fontStyle="normal"
+        fontWeight={500}
       >
-        <Box pos="relative" right="6px">
-          <FaAtom />
-        </Box>
-        {t('setting')}
+        <Icon
+          as={FaAtom}
+          fontSize="18px"
+          mr={1}
+          height="14px"
+          width="14px"
+          left="17px"
+          top="11px"
+          border-radius=" 0px"
+        />
+        {t('settings')}
       </Button>
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
@@ -115,9 +123,9 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             color="gray.600"
             mb="6"
           >
-            Column Settings
+            {t('columnSettings')}
           </ModalHeader>
-          <ModalCloseButton _focus={{ border: 'none' }} />
+          <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
           <ModalBody h="50vh" overflowY="scroll">
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
@@ -145,7 +153,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                 fontSize="1em"
                                 fontWeight={600}
                                 backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                                _hover={{ bg: 'gray.100' }}
+                                _hover={{ bg: 'blue.50' }}
                               >
                                 <HStack spacing="24px">
                                   <BiGridVertical
@@ -166,7 +174,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                       fontWeight={500}
                                       fontSize="14px"
                                     >
-                                      {field}
+                                      {t(field)}
                                     </Text>
                                   </Checkbox>
                                 </HStack>
@@ -184,12 +192,14 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid" mr={3}>
-              Close
-            </Button>
-            <Button colorScheme="brand" onClick={saveModal}>
-              Save
-            </Button>
+            <HStack spacing="16px">
+              <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+                {t('close')}
+              </Button>
+              <Button colorScheme="brand" onClick={saveModal}>
+                {t('save')}
+              </Button>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

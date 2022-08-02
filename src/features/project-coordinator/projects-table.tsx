@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
 import { Link } from 'react-router-dom'
 import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
-import { t } from 'i18next'
-import moment from 'moment'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const PROJECT_COLUMNS = [
   {
@@ -14,12 +14,12 @@ export const PROJECT_COLUMNS = [
     accessor: 'id',
   },
   {
-    Header: 'Project Coordinator',
-    accessor: 'projectCoordinator',
-  },
-  {
     Header: 'General Labor',
     accessor: 'generalLabourName',
+  },
+  {
+    Header: 'FPM',
+    accessor: 'projectManager',
   },
   {
     Header: 'Status',
@@ -35,12 +35,98 @@ export const PROJECT_COLUMNS = [
     accessor: 'city',
   },
   {
-    Header: t('Client Start Date'),
+    Header: 'Client Start Date',
     accessor: 'clientStartDate',
+    Cell: ({ value }) => dateFormat(value),
   },
   {
-    Header: t('Client Due Date'),
+    Header: 'Client Due Date',
     accessor: 'clientDueDate',
+    Cell: ({ value }) => dateFormat(value),
+  },
+  {
+    Header: 'Type',
+    accessor: 'type',
+  },
+  {
+    Header: 'Project Coordinator',
+    accessor: 'projectCoordinator',
+  },
+  {
+    Header: 'Account Payable',
+    accessor: 'accountPayable',
+  },
+  {
+    Header: 'Zip',
+    accessor: 'zipCode',
+  },
+  {
+    Header: 'Client',
+    accessor: 'clientName',
+  },
+  {
+    Header: 'SOW Final Amount',
+    accessor: 'sowOriginalContractAmount',
+  },
+  {
+    Header: 'Project Cost',
+    accessor: 'projectRelatedCost',
+  },
+  {
+    Header: 'Paid Date',
+    accessor: 'woaPaidDate',
+  },
+  {
+    Header: 'Invoice Number',
+    accessor: 'invoiceNumber',
+  },
+  {
+    Header: 'Invoice Date',
+    accessor: 'woaInvoiceDate',
+  },
+  {
+    Header: 'Account Receivable',
+    accessor: 'accountRecievable',
+  },
+  {
+    Header: 'Market',
+    accessor: 'market',
+  },
+  {
+    Header: 'State',
+    accessor: 'state',
+  },
+  {
+    Header: 'WOA Finish',
+    accessor: 'woaCompletionDate',
+  },
+  {
+    Header: 'Region',
+    accessor: 'region',
+  },
+  {
+    Header: 'Partial Payment',
+    accessor: 'partialPayment',
+  },
+  {
+    Header: 'Expected Payment',
+    accessor: 'expectedPaymentDate',
+  },
+  {
+    Header: 'Profit Margins',
+    accessor: 'profitPercentage',
+  },
+  {
+    Header: 'Profits',
+    accessor: 'profitTotal',
+  },
+  {
+    Header: 'WO Number',
+    accessor: 'woNumber',
+  },
+  {
+    Header: 'PO Number',
+    accessor: 'poNumber',
   },
 ]
 
@@ -67,7 +153,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
             <Link to={`/project-details/${projectId}`}>
               <Flex alignItems="center" h="72px" pl="3">
                 <Text
-                  noOfLines={2}
+                  noOfLines={1}
                   title={cell.value}
                   padding="0 15px"
                   color="gray.600"
@@ -102,46 +188,57 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
   selectedDay,
 }) => {
-  const { projects } = useProjects()
+  const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
 
   const { data: days } = useWeekDayProjectsDue()
 
   useEffect(() => {
-    if (!selectedCard) setFilterProjects(projects)
+    // To get pastDue Ids
+    const pastDueIds = projects?.filter(project => project?.pastDue)
+    const idPastDue = pastDueIds?.map(project => project?.id)
+
+    if (!selectedCard && !selectedDay) setFilterProjects(projects)
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard || project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          !selectedCard ||
+          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
+          (selectedCard === 'pastDue' && idPastDue?.includes(project?.id)),
       ),
     )
-    // Due Project Filter
+
+    // Due Project Weekly Filter
+    const getDates = days?.filter(day => {
+      if (selectedDay === 'All' || selectedDay === day.dayName) {
+        return true
+      }
+      return false
+    })
+
+    const clientDate = getDates?.map(dates => {
+      var date = dates?.dueDate
+      return date.substr(0, 10)
+    })
+
     if (selectedDay) {
-      setFilterProjects(
-        projects?.filter(
-          project =>
-            project.clientDueDate ===
-            days?.forEach(day => {
-              if (selectedDay === day.dayName) {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              } else if (selectedDay === 'All') {
-                return moment.utc(day?.dueDate).format('YYYY-MM-DD')
-              }
-            })?.dueDate,
-        ),
-      )
+      setFilterProjects(projects?.filter(project => clientDate.includes(project?.clientDueDate?.substr(0, 10))))
     }
   }, [selectedCard, selectedDay, projects])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
-      <ReactTable
+    <Box overflow={'auto'} height="100%">
+      <TableWrapper
+        isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
         TableRow={ProjectRow}
         name="my-table"
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
+        enablePagination={true}
+        sortBy={{ id: 'id', desc: true }}
+        defaultFlexStyle={false}
       />
     </Box>
   )

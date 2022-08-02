@@ -8,6 +8,7 @@ import alert from './components/alert'
 import checkbox from './components/checkbox'
 import label from './components/label'
 import spinner from './components/spinner'
+import table from './components/table'
 
 export const theme = extendTheme({
   styles: {
@@ -62,7 +63,7 @@ export const theme = extendTheme({
       50: '#e1eeff',
       100: '#b2cdff',
       200: '#83acfb',
-      300: '#538bf8',
+      300: '#4e87f8',
       400: '#2569f5',
       500: '#0f50dc',
       600: '#073eac',
@@ -129,5 +130,6 @@ export const theme = extendTheme({
     ...checkbox,
     ...label,
     ...spinner,
+    ...table,
   },
 })

@@ -29,7 +29,9 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
     ? {
         ...selectedLinkStyle,
         borderLeftColor: '#4E87F8',
-        bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 54.08%, rgba(230, 241, 255, 0) 94.01%)',
+        bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 87.64%, rgba(230, 241, 255, 0) 98.4%)',
+        boxShadow: '0px 2px 4px -3px gray !important',
+        fontWeight: 600,
       }
     : {}
 
@@ -37,7 +39,6 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
     <Box
       as={Link}
       to={pathTo}
-      marginEnd="2"
       color="gray.600"
       fontSize="sm"
       display="block"
@@ -46,18 +47,18 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       borderLeft="4px solid transparent"
       cursor="pointer"
       _hover={{
-        bgGradient: 'linear(to-l, whiteAlpha.100,gray.100, gray.100)',
+        bgGradient: 'linear-gradient(90deg, #EBF8FF 78.66%, rgba(235, 248, 255, 0) 98.79%)',
       }}
       className="group"
-      fontWeight="medium"
+      fontWeight={500}
       {...linkState}
       {...rest}
     >
       <HStack>
-        <Box _groupHover={{ opacity: 1 }} fontSize="18px">
+        <Box _groupHover={{ opacity: 1 }} fontSize="20px">
           {icon}
         </Box>
-        <Text fontSize="18px" fontWeight={500} lineHeight="28px" fontStyle="normal" pt="2px">
+        <Text fontSize="18px" lineHeight="28px" fontStyle="normal">
           {title}
         </Text>
       </HStack>

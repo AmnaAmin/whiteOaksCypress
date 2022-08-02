@@ -30,7 +30,7 @@ export const Notification = () => {
                       <BiXCircle size="35px" onClick={() => handleDelete(data.id)} />
                     </Button>
                   </Center>
-                  <Box flexDir="column" pl={5} p={3} lineHeight="24px" _hover={{ bg: 'gray.100' }} w="100%">
+                  <Box flexDir="column" pl={5} p={3} lineHeight="24px" _hover={{ bg: 'blue.50' }} w="100%">
                     <Text fontSize={16} color="#4A5568" fontWeight={500}>
                       {data.title}
                     </Text>

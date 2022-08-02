@@ -13,222 +13,379 @@ import {
   Button,
   Flex,
   FormErrorMessage,
+  Spacer,
+  useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { t } from 'i18next'
-import React from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import React, { useCallback, useEffect, useMemo } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
+import { useStates } from 'utils/pc-projects'
+import { PAYMENT_TERMS_OPTIONS } from 'utils/transactions'
+import {
+  parseVendorAPIDataToFormData,
+  parseVendorFormDataToAPIData,
+  useCreateVendorMutation,
+  usePaymentMethods,
+  useVendorProfileUpdateMutation,
+} from 'utils/vendor-details'
+import { documentStatus, documentScore } from 'utils/vendor-projects'
+import first from 'lodash/first'
+const PcDetails: React.FC<{
+  onClose?: () => void
+  VendorType?: string
+  updateVendorId?: (number) => void
 
-const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ onClose, VendorType }) => {
+  vendorProfileData: VendorProfile
+}> = ({ onClose, VendorType, vendorProfileData, updateVendorId }) => {
+  const toast = useToast()
+  const { t } = useTranslation()
+  const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
+  const { mutate: createVendorProfileDetails } = useCreateVendorMutation()
+  const queryClient = useQueryClient()
+  const { data: paymentsMethods } = usePaymentMethods()
+  const { data: statesData } = useStates()
+
+  const submitForm = useCallback(
+    (formData: VendorProfileDetailsFormData) => {
+      const payload = parseVendorFormDataToAPIData(vendorProfileData, formData, paymentsMethods)
+      if (vendorProfileData?.id) {
+        updateVendorProfileDetails(payload, {
+          onSuccess() {
+            queryClient.invalidateQueries('vendorProfile')
+            toast({
+              title: t('updateProfile'),
+              description: t('updateProfileSuccess'),
+              status: 'success',
+              isClosable: true,
+            })
+          },
+          onError(error: any) {
+            toast({
+              title: 'Update Vendor',
+              description: (error.title as string) ?? 'Unable to save project.',
+              status: 'error',
+              isClosable: true,
+            })
+          },
+        })
+      } else {
+        createVendorProfileDetails(payload, {
+          onSuccess(res: any) {
+            updateVendorId?.(res?.data?.id)
+            toast({
+              title: 'Create Vendor',
+              description: t('updateProfileSuccess'),
+              status: 'success',
+              isClosable: true,
+            })
+          },
+          onError(error: any) {
+            toast({
+              title: 'Create Vendor',
+              description: (error.title as string) ?? 'Unable to create project.',
+              status: 'error',
+              isClosable: true,
+            })
+          },
+        })
+      }
+    },
+    [toast, updateVendorProfileDetails, vendorProfileData, paymentsMethods],
+  )
   const {
-    handleSubmit,
     register,
     control,
+    handleSubmit,
     formState: { errors },
-  } = useForm()
+    setValue,
+    reset,
+  } = useForm<VendorProfileDetailsFormData>({
+    defaultValues: {
+      ownerName: '',
+      secondName: '',
+      businessPhoneNumber: '',
+      businessPhoneNumberExtension: '',
+      secondPhoneNumber: '',
+      secondPhoneNumberExtension: '',
+      businessEmailAddress: '',
+      secondEmailAddress: '',
+      companyName: '',
+      score: undefined,
+      status: undefined,
+      state: undefined,
+      paymentTerm: undefined,
+      streetAddress: '',
+      city: '',
+      zipCode: '',
+      capacity: null,
+      einNumber: '',
+      ssnNumber: '',
+    },
+  })
+  const einNumber = useWatch({ name: 'einNumber', control })
+  const ssnNumber = useWatch({ name: 'ssnNumber', control })
 
-  const onSubmit = values => {
-    console.log(values)
-  }
+  useEffect(() => {
+    if (!vendorProfileData) {
+      setValue('score', first(documentScore))
+      setValue('status', first(documentStatus))
+      return
+    }
+  }, [vendorProfileData])
+
+  useEffect(() => {
+    if (!vendorProfileData) return
+    reset(parseVendorAPIDataToFormData(vendorProfileData))
+    const state = statesData?.find(s => s.code === vendorProfileData.state)
+    setValue(
+      'score',
+      documentScore.find(s => s.value === vendorProfileData.score),
+    )
+    setValue(
+      'status',
+      documentStatus.find(s => s.value === vendorProfileData.status),
+    )
+    setValue('state', { label: state?.name, value: state?.code })
+    setValue(
+      'paymentTerm',
+      PAYMENT_TERMS_OPTIONS.find(s => parseInt(s.value, 10) === vendorProfileData.paymentTerm),
+    )
+  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
+
+  const states = useMemo(
+    () =>
+      statesData?.map(state => ({
+        label: state?.name,
+        value: state?.code,
+      })) ?? [],
+    [statesData],
+  )
+
   return (
     <Stack spacing={3}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid templateColumns="repeat(3,215px)" rowGap="6" columnGap="4">
-          <GridItem>
-            <FormControl isInvalid={errors.businessName}>
+      <form onSubmit={handleSubmit(submitForm)}>
+        <HStack spacing="16px">
+          <FormControl w="215px" isInvalid={!!errors.companyName}>
+            <FormLabel variant="strong-label" size="md">
+              {t('businessName')}
+            </FormLabel>
+            <Input
+              type="text"
+              id="companyName"
+              variant="required-field"
+              {...register('companyName', {
+                required: 'This is required',
+              })}
+              size="md"
+            />
+            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl w="215px" isInvalid={!!errors.score}>
+            <FormLabel variant="strong-label" size="md">
+              {t('score')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="score"
+              rules={{ required: 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect options={documentScore} {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+          <FormControl w="215px" isInvalid={!!errors.status}>
+            <FormLabel variant="strong-label" size="md">
+              {t('status')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="status"
+              rules={{ required: 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+        </HStack>
+        <HStack spacing="16px" mt="30px">
+          <FormControl w="215px" isInvalid={!!errors.ownerName}>
+            <FormLabel variant="strong-label" size="md">
+              {t('primaryContact')}
+            </FormLabel>
+            <Input
+              type="text"
+              {...register('ownerName', {
+                required: 'This is required',
+              })}
+              variant="required-field"
+              size="md"
+            />
+            <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
+            <FormLabel variant="strong-label" size="md">
+              {t('primaryEmail')}
+            </FormLabel>
+            <Input
+              type="email"
+              {...register('businessEmailAddress', {
+                required: 'This is required',
+              })}
+              variant="required-field"
+              size="md"
+            />
+            <FormErrorMessage pos="absolute">{errors.businessEmailAddress?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t('secondaryContact')}
+            </FormLabel>
+
+            <Input type="text" {...register('secondName')} variant="outline" size="md" />
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t('secondaryEmail')}
+            </FormLabel>
+
+            <Input {...register('secondEmailAddress')} variant="outline" size="md" />
+          </FormControl>
+          <GridItem></GridItem>
+        </HStack>
+
+        <HStack spacing="4" my="30px">
+          <Box w="215px">
+            <FormControl isInvalid={!!errors.businessPhoneNumber}>
               <FormLabel variant="strong-label" size="md">
-                Business Name
-              </FormLabel>
-              <Input
-                {...register('businessName', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="reguired-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.businessName && errors.businessName.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.score}>
-              <FormLabel variant="strong-label" size="md">
-                Score
+                {t('businessPhoneNo')}
               </FormLabel>
               <Controller
+                name="businessPhoneNumber"
                 control={control}
-                name="score"
-                rules={{ required: 'This is required' }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
-                )}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      {...field}
+                      // {...register('businessPhoneNumber')}
+                      w="215px"
+                      variant="outline"
+                      size="md"
+                      onChange={event => {
+                        const value = event.currentTarget.value
+                        const denormarlizedValue = value.split('-').join('')
+
+                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
+                          maskValue?.[3] || '____'
+                        }`
+                        field.onChange(actualValue)
+                      }}
+                    />
+                  )
+                }}
               />
             </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.status}>
+          </Box>
+          <Flex>
+            <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Status
+                {t('ext')}
+              </FormLabel>
+
+              <Input {...register('businessPhoneNumberExtension')} w="121px" variant="outline" size="md" />
+            </FormControl>
+            <Spacer w="95px" />
+          </Flex>
+          <Box w="215px">
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('secondaryPhoneNo')}
               </FormLabel>
               <Controller
+                name="secondPhoneNumber"
                 control={control}
-                name="status"
-                rules={{ required: 'This is required' }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
-                )}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      {...field}
+                      w="215px"
+                      variant="outline"
+                      size="md"
+                      onChange={event => {
+                        const value = event.currentTarget.value
+                        const denormarlizedValue = value.split('-').join('')
+
+                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
+                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
+                          maskValue?.[3] || '____'
+                        }`
+                        field.onChange(actualValue)
+                      }}
+                    />
+                  )
+                }}
               />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.primaryContact}>
-              <FormLabel variant="strong-label" size="md">
-                Primary Contact
-              </FormLabel>
-              <Input
-                {...register('primaryContact', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="reguired-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={errors.primaryEmail}>
-              <FormLabel variant="strong-label" size="md">
-                Primary Email
-              </FormLabel>
-              <Input
-                {...register('primaryEmail', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="reguired-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem></GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                Secondary Contact
-              </FormLabel>
-
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                Secondary Email
-              </FormLabel>
-
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
-            </FormControl>
-          </GridItem>
-          <GridItem></GridItem>
-        </Grid>
-
-        <HStack spacing="4" pb="2" pt="2">
-          <Box w="215px">
-            <FormControl isInvalid={errors.businessPhoneNo}>
-              <FormLabel variant="strong-label" size="md">
-                Business Phone No
-              </FormLabel>
-              <Input
-                {...register('businessPhoneNo', {
-                  required: 'This is required',
-                })}
-                w="215px"
-                variant="reguired-field"
-                size="md"
-                placeholder="Input size medium"
-              />
-              <FormErrorMessage>{errors.businessPhoneNo && errors.businessPhoneNo.message}</FormErrorMessage>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                Exit
-              </FormLabel>
-
-              <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
-            </FormControl>
-          </Box>
-          <Box w="215px">
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                State
-              </FormLabel>
-
-              <Input w="215px" variant="outline" size="md" placeholder="Input size medium" />
             </FormControl>
           </Box>
           <Box w="109px">
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Exit
+                {t('ext')}
               </FormLabel>
 
-              <Input w="109px" variant="outline" size="md" placeholder="Input size medium" />
+              <Input {...register('secondPhoneNumberExtension')} w="121px" variant="outline" size="md" />
             </FormControl>
           </Box>
         </HStack>
 
-        <Grid templateColumns="repeat(4,215px)" rowGap="6" columnGap="4">
+        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
-            <FormControl isInvalid={errors.streetAdress}>
+            <FormControl isInvalid={!!errors.streetAddress}>
               <FormLabel variant="strong-label" size="md">
-                Street Adress
+                {t('streetAddress')}
               </FormLabel>
               <Input
-                {...register('streetAdress', {
+                type="text"
+                {...register('streetAddress', {
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.streetAdress && errors.streetAdress.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.city}>
+            <FormControl isInvalid={!!errors.city}>
               <FormLabel variant="strong-label" size="md">
-                City
+                {t('city')}
               </FormLabel>
               <Input
+                type="text"
                 {...register('city', {
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.city && errors.city.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.state}>
+            <FormControl isInvalid={!!errors.state}>
               <FormLabel variant="strong-label" size="md">
-                State
+                {t('state')}
               </FormLabel>
               <Controller
                 control={control}
@@ -236,143 +393,134 @@ const PcDetails: React.FC<{ onClose?: () => void; VendorType?: string }> = ({ on
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    <ReactSelect options={states} {...field} />
+                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
               />
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.zipCode}>
+            <FormControl isInvalid={!!errors.zipCode}>
               <FormLabel variant="strong-label" size="md">
-                Zip Code
+                {t('zip')}
               </FormLabel>
               <Input
+                type="number"
                 {...register('zipCode', {
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.zipCode && errors.zipCode.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.capacity}>
+            <FormControl isInvalid={!!errors.capacity}>
               <FormLabel variant="strong-label" size="md">
-                Capacity
+                {t('capacity')}
               </FormLabel>
               <Input
+                type="number"
                 {...register('capacity', {
                   required: 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant="required-field"
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.capacity && errors.capacity.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.ein}>
+            <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
                 EIN
               </FormLabel>
               <Input
-                {...register('ein', {
-                  required: 'This is required',
+                type="string"
+                {...register('einNumber', {
+                  required: ssnNumber ? '' : 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant={ssnNumber ? 'outline' : 'required-field'}
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.ein && errors.ein.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={errors.sin}>
+            <FormControl isInvalid={!!errors.ssnNumber}>
               <FormLabel variant="strong-label" size="md">
-                SIN
+                {t('sin')}
               </FormLabel>
               <Input
-                {...register('sin', {
-                  required: 'This is required',
+                type="text"
+                {...register('ssnNumber', {
+                  required: einNumber ? '' : 'This is required',
                 })}
                 w="215px"
-                variant="reguired-field"
+                variant={einNumber ? 'outline' : 'required-field'}
                 size="md"
-                placeholder="Input size medium"
               />
-              <FormErrorMessage>{errors.sin && errors.sin.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
           <GridItem></GridItem>
         </Grid>
         <Box>
-          <Stack alignItems="center" direction="row">
-            <VStack alignItems="start">
-              <Text fontSize="14px" fontWeight={500} color="gray.600">
-                Payment Method
-              </Text>
-              <HStack>
-                <Checkbox colorScheme="brand">Credit Card</Checkbox>
-                <Checkbox isChecked colorScheme="brand">
-                  Check
-                </Checkbox>
-                <Checkbox colorScheme="brand">ACH</Checkbox>
-              </HStack>
-            </VStack>
+          <Stack alignItems="center" direction="row" spacing="16px">
             <Box w="215px">
-              <FormControl isInvalid={errors.paymentTerms}>
+              <FormControl isInvalid={!!errors.paymentTerm}>
                 <FormLabel variant="strong-label" size="md">
-                  Payment Terms
+                  {t('paymentTerms')}
                 </FormLabel>
                 <Controller
                   control={control}
-                  name="paymentTerms"
+                  name="paymentTerm"
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect {...field} selectProps={{ isBorderLeft: true }} />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      <ReactSelect options={PAYMENT_TERMS_OPTIONS} {...field} selectProps={{ isBorderLeft: true }} />
+                      <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
                 />
               </FormControl>
             </Box>
+            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+              <Text>{t('paymentMethods')}</Text>
+              <HStack spacing="16px">
+                {paymentsMethods?.map(payment => (
+                  <Checkbox {...register(payment.name)} colorScheme="brand">
+                    {payment.name}
+                  </Checkbox>
+                ))}
+              </HStack>
+            </VStack>
           </Stack>
         </Box>
-        <Flex
+        <HStack
+          height="72px"
+          pt="8px"
           mt="30px"
           id="footer"
-          w="100%"
-          h="100px"
-          minH="60px"
           borderTop="2px solid #E2E8F0"
-          alignItems="center"
           justifyContent="end"
+          spacing="16px"
         >
           {onClose && (
-            <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
-              Cancel
+            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+              {t('cancel')}
             </Button>
           )}
-          {VendorType === 'detail' ? (
-            <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-              {t('save')}
-            </Button>
-          ) : (
-            <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-              {t('next')}
-            </Button>
-          )}
-        </Flex>
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            {t('save')}
+          </Button>
+        </HStack>
       </form>
     </Stack>
   )

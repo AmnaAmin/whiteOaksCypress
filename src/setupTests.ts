@@ -13,7 +13,7 @@ import { server } from './mocks/server'
 import { setToken } from 'utils/storage.utils'
 import { fireEvent } from '@testing-library/react'
 
-setToken('Token for testing')
+setToken('vendor')
 
 window.matchMedia =
   window.matchMedia ||

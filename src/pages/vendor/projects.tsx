@@ -1,5 +1,5 @@
 import { Box, Button, Center, Divider, Flex, Stack, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -8,11 +8,12 @@ import { ProjectsTable, PROJECT_COLUMNS } from 'features/projects/projects-table
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { useLocation } from 'react-router-dom'
 
 const Projects = () => {
   const { t } = useTranslation()
   const [projectTableInstance, setInstance] = useState<any>(null)
-  const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.project,
@@ -23,8 +24,15 @@ const Projects = () => {
   }
 
   const onSave = columns => {
-    postProjectColumn(columns)
+    postGridColumn(columns)
   }
+  const { state } = useLocation()
+
+  useEffect(() => {
+    if (state) {
+      setSelectedCard(`${state}`)
+    }
+  }, [state])
 
   return (
     <>

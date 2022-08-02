@@ -1,24 +1,13 @@
-import {
-  Box,
-  Text,
-  Flex,
-  SimpleGrid,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  InputLeftElement,
-  InputGroup,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Box, Text, Flex, SimpleGrid, Button, FormControl, FormLabel, Input, FormErrorMessage } from '@chakra-ui/react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'utils/vendor-projects'
-import { dateFormat } from 'utils/date-time-utils'
-import { currencyFormatter } from 'utils/stringFormatters'
-import { useCall } from 'utils/pc-projects'
-import { convertDateTimeToServerISO } from 'components/table/util'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
+import { useForm, Controller } from 'react-hook-form'
+import { calendarIcon } from 'theme/common-style'
+import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'utils/work-order'
+import { addDays, nextFriday } from 'date-fns'
 
 const CalenderCard = props => {
   return (
@@ -54,163 +43,243 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder } = props
-
-  interface Date {
-    date: string
-    prevState: null
-  }
-  const [paymentProcessed, setPaymentProcessed] = useState<Date | null>(null)
-  const [paidDate, setPaidDate] = useState<Date | null>(null)
-  const [paidTerm, setPaidTerm] = useState<Date | null>(null)
-
-  const handlePPChange = e => {
-    setPaymentProcessed(e.target.value)
-  }
-  const handlePDChange = e => {
-    setPaidDate(e.target.value)
-  }
-  const handlePTChange = e => {
-    setPaidTerm(e.label)
-  }
+  const { workOrder, onSave } = props
 
   const { t } = useTranslation()
-  const {
-    leanWaiverSubmitted,
-    paymentTermDate,
-    durationCategory,
-    dateInvoiceSubmitted,
-    clientApprovedAmount,
-    clientOriginalApprovedAmount,
-    expectedPaymentDate,
-    paid,
-  } = props.workOrder
+  const { leanWaiverSubmitted, paymentTermDate, durationCategory } = props.workOrder
 
-  const entity = {
-    ...workOrder,
-    ...{ datePaymentProcessed: convertDateTimeToServerISO(paymentProcessed) },
-    ...{ datePaid: convertDateTimeToServerISO(paidDate) },
-    ...{ paymentTerm: paidTerm },
+  interface FormValues {
+    dateInvoiceSubmitted: string | null
+    paymentTerm: any
+    paymentTermDate: string | null
+    expectedPaymentDate: string | null
+    datePaymentProcessed: string | null
+    datePaid: string | null
+    clientApprovedAmount: string | null
+    clientOriginalApprovedAmount: string | null
+    finalInvoiceAmount: string | null
   }
 
-  const { mutate: saveChanges } = useCall()
+  const { register, handleSubmit, control, getValues, setValue } = useForm<FormValues>({
+    defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
+  })
 
-  const { sowOriginalContractAmount } = props?.projectData
+  const {
+    clientApprovedAmountEnabled,
+    clientOriginalApprovedAmountEnabled,
+    dateInvoiceSubmittedEnabled,
+    datePaidEnabled,
+    datePaymentProcessedEnabled,
+    expectedPaymentDateEnabled,
+    finalInvoiceAmountEnabled,
+    paymentTermDateEnabled,
+    paymentTermEnabled,
+  } = useFieldEnableDecision(workOrder)
+
+  const onSubmit = values => {
+    onSave(parsePaymentValuesToPayload(values))
+  }
 
   return (
     <Box>
       <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-        <CalenderCard title="LW Date" date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
-        <CalenderCard title="Permit Date " date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-        <InformationCard title="Pay date variance" date={durationCategory} />
+        <CalenderCard title={t('lwDate')} date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'} />
+        <CalenderCard title={t('permitDate')} date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
+        <InformationCard title={t('payDateVariance')} date={durationCategory} />
       </SimpleGrid>
-
-      <Box mt={10}>
-        <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Invoiced Submitted
-              </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={dateInvoiceSubmitted ? dateFormat(dateInvoiceSubmitted) : 'mm/dd/yyyy'} />
-              </InputGroup>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl height="40px">
-              <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                Payemt Terms
-              </FormLabel>
-              <Select options={paymentsTerms} selectProps={{ isBorderLeft: true }} onChange={e => handlePTChange(e)} />
-            </FormControl>
-          </Box>
-
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Payment Term Date
-              </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-              </InputGroup>
-            </FormControl>
-          </Box>
-        </SimpleGrid>
-      </Box>
-
-      <Box mt={10}>
-        <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Expected Pay
-              </FormLabel>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" children={<BiCalendar color="gray.300" />} />
-                <Input readOnly value={expectedPaymentDate ? dateFormat(expectedPaymentDate) : 'mm/dd/yyyy'} />
-              </InputGroup>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Payment Processed
-              </FormLabel>
-              <Input onChange={date => handlePPChange(date)} type="date" />
-            </FormControl>
-          </Box>
-
-          <Box>
-            <FormControl>
-              <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                Paid
-              </FormLabel>
-              <Input onChange={date => handlePDChange(date)} type="date" readOnly={!paid ? true : false} />
-            </FormControl>
-          </Box>
-        </SimpleGrid>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box mt={10}>
           <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
             <Box>
               <FormControl>
-                <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                  WO Original amount
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('invoicedSubmitted')}
                 </FormLabel>
-                <Input readOnly={true} value={currencyFormatter(sowOriginalContractAmount)} />
+                <Input
+                  id="dateInvoiceSubmitted"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!dateInvoiceSubmittedEnabled}
+                  variant="outline"
+                  {...register('dateInvoiceSubmitted')}
+                  onChange={e => {
+                    const dateInvSubmitted = e.target.value
+                    const paymentTermDate = addDays(
+                      new Date(dateInvSubmitted as string),
+                      getValues('paymentTerm')?.value,
+                    )
+                    const expectedPaymentDate = nextFriday(paymentTermDate)
+                    setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+                    setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                  }}
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl height="40px">
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('paymentTerms')}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="paymentTerm"
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <Select
+                          {...field}
+                          options={paymentsTerms}
+                          isDisabled={!paymentTermEnabled}
+                          size="md"
+                          value={field.value}
+                          selectProps={{ isBorderLeft: false }}
+                          onChange={option => {
+                            const dateInvSubmitted = getValues('dateInvoiceSubmitted')
+                            const paymentTermDate = addDays(new Date(dateInvSubmitted as string), option.value)
+                            const expectedPaymentDate = nextFriday(paymentTermDate)
+                            setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+                            setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                            field.onChange(option)
+                          }}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+
+            <Box>
+              <FormControl>
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('paymentTermDate')}
+                </FormLabel>
+                <Input
+                  id="paymentTermDate"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!paymentTermDateEnabled}
+                  variant="outline"
+                  {...register('paymentTermDate')}
+                />
               </FormControl>
             </Box>
             <Box>
               <FormControl>
-                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                  Client original amount
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('expectedPayDate')}
                 </FormLabel>
-                <Input readOnly={true} value={currencyFormatter(clientApprovedAmount)} />
+                <Input
+                  id="expectedPaymentDate"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!expectedPaymentDateEnabled}
+                  variant="outline"
+                  {...register('expectedPaymentDate')}
+                />
+              </FormControl>
+            </Box>
+          </SimpleGrid>
+        </Box>
+
+        <Box mt={10}>
+          <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+            <Box>
+              <FormControl>
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('paymentProcessed')}
+                </FormLabel>
+                <Input
+                  id="datePaymentProcessed"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!datePaymentProcessedEnabled}
+                  variant="outline"
+                  {...register('datePaymentProcessed')}
+                />
+              </FormControl>
+            </Box>
+
+            <Box>
+              <FormControl>
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('paid')}
+                </FormLabel>
+                <Input
+                  id="datePaid"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!datePaidEnabled}
+                  variant="outline"
+                  {...register('datePaid')}
+                />
+              </FormControl>
+            </Box>
+
+            <Box>
+              <FormControl>
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('woOriginalAmount')}
+                </FormLabel>
+                <Input
+                  id="clientApprovedAmount"
+                  type="text"
+                  size="md"
+                  isDisabled={!clientApprovedAmountEnabled}
+                  variant="outline"
+                  {...register('clientApprovedAmount')}
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl>
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('clientOriginalAmount')}
+                </FormLabel>
+                <Input
+                  id="clientApprovedAmount"
+                  type="text"
+                  size="md"
+                  isDisabled={!clientOriginalApprovedAmountEnabled}
+                  variant="outline"
+                  {...register('clientOriginalApprovedAmount')}
+                />
               </FormControl>
             </Box>
 
             <Box height="80px">
               <FormControl>
-                <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                  Client final approved amount
+                <FormLabel variant={'strong-label'} size={'md'}>
+                  {t('clientFinalApprovedAmount')}
                 </FormLabel>
-                <Input value={currencyFormatter(clientOriginalApprovedAmount)} readOnly={true} />
+                <Input
+                  id="cc"
+                  type="text"
+                  size="md"
+                  isDisabled={!finalInvoiceAmountEnabled}
+                  variant="outline"
+                  {...register('finalInvoiceAmount')}
+                />
               </FormControl>
             </Box>
           </SimpleGrid>
         </Box>
-      </Box>
 
-      <Flex mt="40px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
-        <Button variant="ghost" onClick={props.onClose} colorScheme="brand">
-          {t('close')}
-        </Button>
-        <Button onClick={() => saveChanges(entity)} colorScheme="brand">
-          {t('save')}
-        </Button>
-      </Flex>
+        <Flex mt="40px" borderTop="1px solid #CBD5E0" h="100px" alignItems="center" justifyContent="end">
+          <Button variant="outline" onClick={props.onClose} colorScheme="brand" mr={3}>
+            {t('close')}
+          </Button>
+          <Button type="submit" colorScheme="brand">
+            {t('save')}
+          </Button>
+        </Flex>
+      </form>
     </Box>
   )
 }

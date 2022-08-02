@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
+import sub from 'date-fns/sub'
 import { range } from 'lodash'
-import moment from 'moment'
 
 export const dateFormat = (date: string | Date) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
@@ -31,19 +31,29 @@ export type MonthOption = {
 
 export const monthOptions: MonthOption[] = range(12).map(n => ({
   value: n,
-  label: moment().subtract(n, 'month').format('MMMM'),
-  year: moment().subtract(n, 'month').format('YYYY'),
-  month: moment().subtract(n, 'month').format('MM'),
+  label: format(sub(new Date(), { months: n }), 'MMMM'),
+  year: format(sub(new Date(), { months: n }), 'yyyy'),
+  month: format(sub(new Date(), { months: n }), 'MM'),
 }))
 
 export const convertDateTimeFromServer = (date: string) => {
-  return date ? moment.utc(date).format('MM/DD/YYYY') : null
+  return date ? format(new Date(date), 'MM/dd/yyyy') : null
 }
 
 export const convertDateTimeToServer = (date: Date) => {
-  return date ? moment(date, 'MM/DD/YYYY').toDate() : null
+  return date ? new Date(format(new Date(date), 'MM/dd/yyyy')) : null
 }
 
-export const customFormat = (date: Date, format: string) => {
-  return date ? moment.utc(date).format(format) : null
+export const customFormat = (date: Date, dateFormat: string) => {
+  return date ? format(new Date(date), dateFormat) : null
+}
+
+export const dateFormatter = d => {
+  const date = new Date(String(d))
+  const formattedDate = date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+  })
+  return formattedDate
 }

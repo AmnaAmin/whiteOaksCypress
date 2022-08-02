@@ -1,41 +1,32 @@
 import React, { LegacyRef } from 'react'
-import {
-  Input,
-  FormErrorMessage,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  Box,
-  Portal,
-  InputLeftElement,
-} from '@chakra-ui/react'
-import { AiOutlineCalendar } from 'react-icons/ai'
+import { Input, FormErrorMessage, FormControl, FormLabel, InputGroup, Box, InputRightElement } from '@chakra-ui/react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, Control } from 'react-hook-form'
 import { getFormattedDate } from 'utils/date-time-utils'
+import { BiCalendar } from 'react-icons/bi'
 
 type DatePickerProps = {
+  disabled?: boolean
   elementStyle?: any
   errorMessage: any
   label?: string
   name: string
-  control: any | Control // need to fix
+  control?: any | Control // need to fix
   className?: string
   rules?: any
   size?: 'lg' | 'sm'
   style?: any
-  defaultValue?: Date
+  isRequired?: boolean
+  defaultValue?: Date | string | null
   placeholder?: string
   onChange?: (e) => void
   testId?: string
-}
-const CalendarContainer = ({ children }) => {
-  return <Portal>{children}</Portal>
+  errorBoxheight?: any
 }
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
-  <FormControl {...props.style} size={props.size || 'lg'}>
+  <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
     <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
       {props.label}
     </FormLabel>
@@ -47,8 +38,7 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
         <>
           <DatePicker
             style={props.style}
-            popperContainer={CalendarContainer}
-            selected={new Date(value)}
+            selected={value ? new Date(value) : new Date()}
             value={value || ''}
             onBlur={onBlur}
             onChange={val => {
@@ -57,10 +47,20 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
               if (props.onChange) props.onChange(val)
             }}
             placeholderText={props.placeholder}
-            customInput={<DatePickerInput testId={props.testId} size={props.size || 'lg'} style={props.elementStyle} />}
+            customInput={
+              <DatePickerInput
+                disable={props.disabled}
+                variant={props.isRequired}
+                testId={props.testId}
+                size={props.size || 'lg'}
+                style={props.elementStyle}
+              />
+            }
           />
-          <Box minH="20px" mt="3px">
-            <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
+          <Box>
+            <FormErrorMessage position="absolute" mt="3px">
+              {fieldState.error?.message}
+            </FormErrorMessage>
           </Box>
         </>
       )}
@@ -68,8 +68,8 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
   </FormControl>
 ))
 
-const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputElement>) => (
-  <InputGroup>
+export const DatePickerInput = React.forwardRef((props: any | boolean, ref: LegacyRef<HTMLInputElement>) => (
+  <InputGroup zIndex={0}>
     <Input
       {...props.style}
       bg="white"
@@ -82,11 +82,14 @@ const DatePickerInput = React.forwardRef((props: any, ref: LegacyRef<HTMLInputEl
       type="text"
       ref={ref}
       data-testid={props.testId}
+      disabled={props.disable}
+      variant={props.variant ? 'required-field' : 'outline'}
     />
-    <InputLeftElement className="InputLeft" pointerEvents="none" zIndex={1}>
+
+    <InputRightElement className="InputLeft" pointerEvents="none">
       <Box color="gray.400" fontSize="14px">
-        <AiOutlineCalendar size={20} cursor="pointer" color="#A0AEC0" />
+        <BiCalendar size={20} cursor="pointer" color="#A0AEC0" />
       </Box>
-    </InputLeftElement>
+    </InputRightElement>
   </InputGroup>
 ))

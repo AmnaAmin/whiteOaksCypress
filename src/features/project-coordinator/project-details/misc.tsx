@@ -1,35 +1,16 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  Icon,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCalendar } from 'react-icons/bi'
+import { useParams } from 'react-router-dom'
+import { ProjectType } from 'types/project.type'
+import { dateFormat } from 'utils/date-time-utils'
+import { usePCProject } from 'utils/pc-projects'
 
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'gray.600',
-}
+const Misc: React.FC<{ projectData: ProjectType; dataMisc?: any }> = props => {
+  const { projectId } = useParams<{ projectId: string }>()
+  const { projectData } = usePCProject(projectId)
 
-const inputTextStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'blackAlpha.500',
-}
-
-function Misc() {
   const {
     register,
     handleSubmit,
@@ -41,146 +22,193 @@ function Misc() {
     console.log('FormValues', formValues)
     reset()
   }
+
   return (
     <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack minH="51vh" spacing={14}>
-          <Grid templateColumns="repeat(4,1fr)" rowGap={7} columnGap={4} w="908px">
+      <form onSubmit={handleSubmit(onSubmit)} id="misc">
+        <Stack>
+          <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Created</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem>
-              <FormControl>
-                <FormLabel sx={labelStyle}>Active</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem>
-              <FormControl>
-                <FormLabel sx={labelStyle}>Punch</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem>
-              <FormControl>
-                <FormLabel sx={labelStyle}>Closed</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+                <FormLabel variant="strong-label" size="md">
+                  Created
+                </FormLabel>
+
+                <DatePickerInput
+                  value={projectData?.createdDate ? dateFormat(projectData?.createdDate as string) : 'mm/dd/yyyy'}
+                  color="#718096"
+                  disable
+                />
 
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Client Paid</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+                <FormLabel variant="strong-label" size="md">
+                  Active
+                </FormLabel>
+
+                <DatePickerInput
+                  value={
+                    projectData?.modifiedDate && projectData?.projectStatus !== 'NEW'
+                      ? dateFormat(projectData?.modifiedDate as string)
+                      : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Collection</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+                <FormLabel variant="strong-label" size="md">
+                  Punch
+                </FormLabel>
+
+                <DatePickerInput
+                  value={
+                    projectData?.modifiedDate && projectData?.projectStatus !== 'ACTIVE'
+                      ? dateFormat(projectData?.modifiedDate as string)
+                      : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>Disputed</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
-                <FormErrorMessage></FormErrorMessage>
-              </FormControl>
-            </GridItem>
-            <GridItem></GridItem>
-            <GridItem>
-              <FormControl>
-                <FormLabel sx={labelStyle}>WOA Invoice</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+                <FormLabel variant="strong-label" size="md">
+                  Closed
+                </FormLabel>
+
+                <DatePickerInput
+                  value={
+                    projectData?.projectClosedDate ? dateFormat(projectData?.projectClosedDate as string) : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl>
-                <FormLabel sx={labelStyle}>WOA Paid</FormLabel>
-                <InputGroup>
-                  <Input placeholder="mm/dd/yyyy" isDisabled={true} />
-                  <InputRightElement children={<Icon as={BiCalendar} boxSize={5} color="gray.500" mr="3" />} />
-                </InputGroup>
+                <FormLabel variant="strong-label" size="md">
+                  Client Paid
+                </FormLabel>
+
+                <DatePickerInput
+                  value={
+                    projectData?.clientPaidDate
+                      ? dateFormat(projectData?.clientPaidDate as unknown as string)
+                      : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
+
                 <FormErrorMessage></FormErrorMessage>
               </FormControl>
             </GridItem>
-            <GridItem></GridItem>
-            <GridItem></GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  Collection
+                </FormLabel>
+
+                <DatePickerInput //date has to be added, once the funcationality is implemented
+                  value={
+                    projectData?.woaCompletionDate && projectData?.projectStatus === 'COLLECTION'
+                      ? dateFormat(projectData?.woaCompletionDate)
+                      : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
+
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  Disputed
+                </FormLabel>
+
+                <DatePickerInput //date has to be added, once the funcationality is implemented
+                  value={
+                    projectData?.woaBackdatedInvoiceDate && projectData?.projectStatus === 'DISPUTED'
+                      ? dateFormat(projectData?.woaBackdatedInvoiceDate)
+                      : 'mm/dd/yyyy'
+                  }
+                  disable
+                />
+
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </GridItem>
+
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  WOA Paid
+                </FormLabel>
+
+                <DatePickerInput
+                  value={projectData?.woaPaidDate ? dateFormat(projectData?.woaPaidDate as string) : 'mm/dd/yyyy'}
+                  disable
+                />
+
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.dueDateVariance} w="215px">
-                <FormLabel sx={labelStyle} htmlFor="dueDateVariance">
+                <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
                   Due Date Variance
                 </FormLabel>
-                <Input sx={inputTextStyle} isDisabled={true} id="dueDate" {...register('dueDateVariance')} />
+                <Input
+                  value={projectData?.dueDateVariance as string}
+                  isDisabled
+                  id="dueDate"
+                  {...register('dueDateVariance')}
+                />
                 <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.finalDateVariance} w="215px">
-                <FormLabel sx={labelStyle} htmlFor="finalDateVariance">
-                  Final Date Variance
+                <FormLabel variant="strong-label" size="md" htmlFor="finalDateVariance">
+                  Pay Date Variance
                 </FormLabel>
 
-                <Input sx={inputTextStyle} isDisabled={true} id="finalDate" {...register('finalDateVariance')} />
+                <Input
+                  value={projectData?.signoffDateVariance as string}
+                  isDisabled
+                  id="finalDate"
+                  {...register('finalDateVariance')}
+                />
                 <FormErrorMessage>{errors.finalDateVariance && errors.finalDateVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
               <FormControl isInvalid={errors.payVariance} w="215px">
-                <FormLabel sx={labelStyle} htmlFor="payVariance">
+                <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
                   Pay Variance
                 </FormLabel>
-                <Input sx={inputTextStyle} isDisabled={true} id="payVariance" {...register('payVariance')} />
+                <Input
+                  value={projectData?.woaPayVariance as string}
+                  isDisabled
+                  id="payVariance"
+                  {...register('payVariance')}
+                />
                 <FormErrorMessage>{errors.payVariance && errors.payVariance.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem></GridItem>
           </Grid>
-
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
       </form>
     </Box>

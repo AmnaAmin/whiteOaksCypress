@@ -1,12 +1,13 @@
 import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { dateFormat } from 'utils/date-time-utils'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { useTranslation } from 'react-i18next'
 import { useProjectAlerts } from 'utils/projects'
 import { useParams } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
-import { useTranslation } from 'react-i18next'
+import { dateFormat } from 'utils/date-time-utils'
 
 enum PROJECT_CATEGORY {
   WARNING = 1,
@@ -55,14 +56,18 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: <input type="checkbox"></input>,
-        accessor: 'checkbox',
+        Header: () => {
+          return (
+            <Flex alignItems="center">
+              <input type="checkbox" />
+              <Text ml={3}>{t('name')}</Text>
+            </Flex>
+          )
+        },
         Cell: () => <input type="checkbox"></input>,
+        accessor: 'checkbox',
       },
-      {
-        Header: t('name') as string,
-        accessor: 'subject',
-      },
+
       {
         Header: t('type') as string,
         accessor: 'triggeredType',
@@ -87,7 +92,7 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <ReactTable
+      <TableWrapper
         onRowClick={props.onRowClick}
         columns={columns}
         data={alerts || []}

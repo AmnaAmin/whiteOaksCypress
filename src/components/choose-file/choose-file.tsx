@@ -1,13 +1,14 @@
 import { Button, Box, Text, Flex } from '@chakra-ui/react'
 import * as React from 'react'
-import { CloseIcon } from '@chakra-ui/icons'
+import { BiUpload } from 'react-icons/bi'
 
 type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   onClear?: () => void
-  isError: boolean
+  isError?: boolean
+  testId?: string
 }
 
-const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, isError, ...inputProps }) => {
+const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, onClear, isError, ...inputProps }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const onFileChange = event => {
     const file = event.currentTarget.files?.[0]
@@ -19,24 +20,21 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
 
     onClear?.()
   }
-
   return (
     <Box
-      // outline="1px solid green"
-      as="button"
-      display="flex"
+      cursor="pointer"
       w="100%"
-      minW="300px"
+      minW="215px"
+      h="40px"
       borderWidth="1px"
       borderStyle="solid"
-      borderColor={isError ? 'red' : '#ddd'}
+      borderColor={isError ? 'red' : '#E2E8F0'}
       rounded="6"
       onClick={() => inputRef?.current?.click()}
       bg="white"
       _hover={{
-        borderColor: 'gray.400',
+        borderColor: 'gray.300',
       }}
-      alignItems="center"
     >
       <input
         {...inputProps}
@@ -44,35 +42,34 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, onClear, 
         type="file"
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
+        data-testid={testId}
       />
-      <Button rounded={0} roundedLeft={5} variant="choose-file" colorScheme={isError ? 'red' : 'gray'}>
-        {children}
-      </Button>
       <Box flex="1" position="relative" overflow="hidden">
         {value && (
-          <Flex alignItems="center">
+          <Flex rounded="6px" alignItems="center" height="40px">
             <Text
               whiteSpace="nowrap"
               title={value as string}
+              color={isError ? 'red' : '#4E87F8'}
+              fontSize="14px"
+              fontWeight={400}
+              fontStyle={'normal'}
+              marginLeft={3}
               isTruncated
               w="170px"
-              color="#4E87F8"
-              fontSize="14px"
-              fontWeight={500}
-              pl={3}
+              textAlign="start"
             >
               {value}
             </Text>
             <Button
+              type="button"
               variant="link"
-              size="xs"
-              colorScheme="red"
+              size="xl"
+              colorScheme={isError ? 'red' : 'brand'}
               onClick={onFileClear}
-              position="absolute"
-              right="0"
               bg="white"
             >
-              <CloseIcon w="10px" />
+              <BiUpload />
             </Button>
           </Flex>
         )}

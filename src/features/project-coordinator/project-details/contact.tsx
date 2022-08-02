@@ -1,23 +1,26 @@
-import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+import { STATUS } from 'features/projects/status'
+import { useTranslation } from 'react-i18next'
+
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
+import { ProjectType } from 'types/project.type'
 
-const labelStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'gray.600',
+const InputLabel: React.FC<{ title: string; htmlFor: string }> = ({ title, htmlFor }) => {
+  const { t } = useTranslation()
+  return (
+    <FormLabel title={t(title)} isTruncated variant="strong-label" size="md" htmlFor={htmlFor}>
+      {t(title)}
+    </FormLabel>
+  )
 }
 
-const inputTextStyle = {
-  fontSize: '14px',
-  fontWeight: 500,
-  color: 'blackAlpha.500',
-}
-
-const Contact = () => {
+const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props => {
+  const { projectData, dataContact } = props
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -28,31 +31,76 @@ const Contact = () => {
     reset()
   }
 
+  const disableStatusList = [
+    STATUS.New.valueOf(),
+    STATUS.Active.valueOf(),
+    STATUS.Punch.valueOf(),
+    STATUS.PastDue.valueOf(),
+    STATUS.Cancelled.valueOf(),
+    STATUS.Closed.valueOf(),
+    STATUS.Invoiced.valueOf(),
+  ]
+
+  const isDisabled = disableStatusList.includes((projectData?.projectStatus || '').toLowerCase())
+
+  const isClientPaid = [STATUS.ClientPaid.valueOf(), STATUS.Overpayment.valueOf()].includes(
+    (projectData?.projectStatus || '').toLowerCase(),
+  )
+  const isInvoicedPaid = [STATUS.Invoiced.valueOf(), STATUS.Paid.valueOf()].includes(
+    projectData?.projectStatus.toLowerCase(),
+  )
+
+  const projectManager = dataContact?.projectManager
+  const projectManagerPhoneNumber = dataContact?.projectManagerPhoneNumber
+  const clientName = dataContact?.clientName
+  const isContactNull = !dataContact
+  const superEmailAddress = dataContact?.superEmailAddress
+  const superFirstName = dataContact?.superFirstName
+  const superPhoneNumber = dataContact?.superPhoneNumber
+  const superPhoneNumberExtension = dataContact?.superPhoneNumberExtension
+
   return (
     <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack minH="50vh" spacing={20} mt="7">
-          <HStack spacing={4}>
+      <form onSubmit={handleSubmit(onSubmit)} id="contact">
+        <Stack spacing={14} mt="7">
+          <HStack spacing="16px">
             <Box h="40px">
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Field Project Manager</FormLabel>
-                <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <FormControl w="215px" isInvalid={errors.projectManager}>
+                <InputLabel title={'projectCoordinator'} htmlFor={'projectCoordinator'} />
+                <Controller
+                  control={control}
+                  name="projectManager"
+                  rules={{ required: 'This is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        placeholder={
+                          <Box noOfLines={1} title={projectManager}>
+                            {projectManager}
+                          </Box>
+                        }
+                        isDisabled={isInvoicedPaid || isDisabled || projectData?.projectStatus === 'clientPaid'}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
               </FormControl>
             </Box>
 
             <Box h="40px">
               <FormControl isInvalid={errors.fpmPhone}>
-                <FormLabel sx={labelStyle} htmlFor="fpmPhone">
-                  FPM Phone
-                </FormLabel>
+                <InputLabel title={'phone'} htmlFor={'phone'} />
                 <Input
-                  sx={inputTextStyle}
                   placeholder="098-987-2233"
                   id="fpmPhone"
+                  value={projectManagerPhoneNumber}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   {...register('fpmPhone', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="215px"
                 />
                 <FormErrorMessage>{errors.fpmPhone && errors.fpmPhone.message}</FormErrorMessage>
@@ -61,16 +109,14 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel sx={labelStyle} htmlFor="ext">
-                  Ext
-                </FormLabel>
+                <InputLabel title={'ext'} htmlFor={'ext'} />
                 <Input
-                  sx={inputTextStyle}
                   id="ext"
+                  value={superPhoneNumberExtension}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="124px"
                 />
                 <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
@@ -78,27 +124,44 @@ const Contact = () => {
             </Box>
           </HStack>
 
-          <HStack spacing={4}>
+          <HStack spacing="16px">
             <Box h="40px">
-              <FormControl w="215px">
-                <FormLabel sx={labelStyle}>Project Coordinator</FormLabel>
-                <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <FormControl w="215px" isInvalid={errors.projectCoordinator}>
+                <InputLabel title={'fieldProjectManager'} htmlFor={'fieldProjectManager'} />
+                <Controller
+                  control={control}
+                  name="projectCoordinator"
+                  rules={{ required: 'This is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        placeholder={
+                          <Box noOfLines={1} title={projectManager}>
+                            {projectManager}
+                          </Box>
+                        }
+                        isDisabled={isInvoicedPaid}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
               </FormControl>
             </Box>
 
             <Box h="40px">
               <FormControl isInvalid={errors.pcPhone}>
-                <FormLabel sx={labelStyle} htmlFor="pcPhone">
-                  PC Phone
-                </FormLabel>
+                <InputLabel title={'phone'} htmlFor={'phone'} />
                 <Input
-                  sx={inputTextStyle}
                   placeholder="098-987-2233"
+                  value={projectManagerPhoneNumber}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   id="pcPhone"
                   {...register('pcPhone', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="215px"
                 />
                 <FormErrorMessage>{errors.pcPhone && errors.pcPhone.message}</FormErrorMessage>
@@ -107,16 +170,14 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel sx={labelStyle} htmlFor="ext">
-                  Ext
-                </FormLabel>
+                <InputLabel title={'ext'} htmlFor={'ext'} />
                 <Input
-                  sx={inputTextStyle}
                   id="ext"
+                  value={superPhoneNumberExtension}
+                  isDisabled={isDisabled || isInvoicedPaid || isClientPaid}
                   {...register('ext', {
                     required: 'This is required',
                   })}
-                  bg="#EDF2F7"
                   w="124px"
                 />
                 <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
@@ -124,14 +185,12 @@ const Contact = () => {
             </Box>
           </HStack>
 
-          <HStack spacing={4}>
+          <HStack spacing="16px">
             <Box h="40px">
               <FormControl isInvalid={errors.superEmailName}>
-                <FormLabel sx={labelStyle} htmlFor="superEmailName">
-                  Super Email Name
-                </FormLabel>
+                <InputLabel title={'superName'} htmlFor={'superName'} />
                 <Input
-                  sx={inputTextStyle}
+                  value={superFirstName}
                   id="superEmailName"
                   {...register('superEmailName', {
                     required: 'This is required',
@@ -144,11 +203,9 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.superPhone}>
-                <FormLabel sx={labelStyle} htmlFor="superPhone">
-                  Super Phone
-                </FormLabel>
+                <InputLabel title={'superPhone'} htmlFor={'superPhone'} />
                 <Input
-                  sx={inputTextStyle}
+                  value={superPhoneNumber}
                   id="superPhone"
                   {...register('superPhone', {
                     required: 'This is required',
@@ -160,12 +217,10 @@ const Contact = () => {
             </Box>
             <Box h="40px">
               <FormControl isInvalid={errors.ext}>
-                <FormLabel sx={labelStyle} htmlFor="ext">
-                  Ext
-                </FormLabel>
+                <InputLabel title={'ext'} htmlFor={'ext'} />
                 <Input
-                  sx={inputTextStyle}
                   id="ext"
+                  value={superPhoneNumberExtension}
                   {...register('ext', {
                     required: 'This is required',
                   })}
@@ -177,11 +232,9 @@ const Contact = () => {
 
             <Box h="40px">
               <FormControl isInvalid={errors.superEmail}>
-                <FormLabel sx={labelStyle} htmlFor="superEmail">
-                  Super Email
-                </FormLabel>
+                <InputLabel title={'superEmail'} htmlFor={'superEmail'} />
                 <Input
-                  sx={inputTextStyle}
+                  value={superEmailAddress}
                   id="superEmail"
                   {...register('superEmail', {
                     required: 'This is required',
@@ -194,48 +247,31 @@ const Contact = () => {
           </HStack>
 
           <Box h="40px">
-            <FormControl w="215px">
-              <FormLabel sx={labelStyle} htmlFor="client">
-                Client
-              </FormLabel>
-              <ReactSelect selectProps={{ isBorderLeft: true }} />
-              <FormErrorMessage></FormErrorMessage>
+            <FormControl w="215px" isInvalid={errors.client}>
+              <InputLabel title={'client'} htmlFor={'client'} />
+              <Controller
+                control={control}
+                name="client"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      {...field}
+                      selectProps={{ isBorderLeft: true }}
+                      placeholder={
+                        <Box noOfLines={1} title={clientName}>
+                          {clientName}
+                        </Box>
+                      }
+                      isDisabled={isDisabled || isInvoicedPaid || isContactNull || isClientPaid}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
             </FormControl>
           </Box>
-          <Stack>
-            <Box pr="8">
-              <Divider border="1px solid" />
-            </Box>
-            <Box w="100%" pb="3">
-              <Button mt="8px" mr="7" float={'right'} variant="solid" colorScheme="brand" size="lg" type="submit">
-                Save
-              </Button>
-            </Box>
-          </Stack>
         </Stack>
-        {/* 
-        <Stack w="100%">
-          <Box pr="8">
-            <Divider border="1px solid" />
-          </Box>
-          <Box w="100%" minH="70px">
-            <Button
-              mt="8px"
-              mr="7"
-              float={'right'}
-              colorScheme="CustomPrimaryColor"
-              _focus={{ outline: 'none' }}
-              w="130px"
-              h="48px"
-              fontSize="14px"
-              fontStyle="normal"
-              fontWeight={500}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
-        </Stack> */}
       </form>
     </Box>
   )

@@ -1,4 +1,4 @@
-import { Divider, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { WeekdayCard } from 'features/project-coordinator/weekday-filter-card'
 import { useWeekDayProjectsDue } from 'utils/projects'
 
@@ -49,14 +49,36 @@ const useWeekdayCardJson = days => {
   ]
 }
 
-export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
-  const { data: values } = useWeekDayProjectsDue()
+export type WeekDayFiltersProps = {
+  onSelectDay: (string) => void
+  selectedDay: string
+  clear?: () => void
+}
+
+export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, selectedDay, clear }) => {
+  const { data: values, isLoading } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
+
+  // const allDays = () => {
+  //   onSelectDay('All')
+  // }
 
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
+        {/* Hiding All and Clear Filter for now */}
+
+        {/* <Button
+          bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
+          color={selectedDay === 'All' ? 'white' : 'black'}
+          variant={'pill'}
+          onClick={allDays}
+          p={0}
+        >
+          {t('All')}
+        </Button> */}
+        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
+
         {days.map(day => {
           return (
             <WeekdayCard
@@ -67,10 +89,17 @@ export const WeekDayFilters = ({ onSelectDay, selectedDay }) => {
               {...day}
               onSelectDay={onSelectDay}
               selectedDay={selectedDay}
+              isLoading={isLoading}
             />
           )
         })}
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
+
+        {/* Hiding All and Clear Filter for now */}
+
+        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
+        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
+          {t('clearFilter')}
+        </Button> */}
       </Stack>
     </>
   )

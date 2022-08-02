@@ -71,6 +71,7 @@ export type Vendor = {
   paymentOptions: any[]
   markets: VendorMarket[]
   projects: any[]
+  paymentTerm: number
 }
 
 type Override<T1, T2> = Omit<T1, keyof T2> & T2
@@ -107,6 +108,7 @@ export type VendorProfilePayload = {
   streetAddress: string
   city: string
   state: string
+  paymentTerm?: number
   zipCode: string
   createdBy: string
   createdDate: string | null
@@ -121,6 +123,7 @@ export type VendorProfilePayload = {
   vendorSkills: Trade[]
   markets: Array<Market>
   projects: any[]
+  paymentOptions: any[]
   documents: {
     id?: number
     fileType: string
@@ -146,7 +149,7 @@ export type License = {
   licenseType?: any
   licenseNumber?: string
   expiryDate?: null | string
-  expirationFile?: any
+  expirationFile?: File | null
   downloadableFile?: any
 }
 export type LicenseFormValues = {
@@ -174,6 +177,11 @@ export type Document = {
   workOrderName?: string
 }
 
+type Select = {
+  label: string
+  value: any
+}
+
 export type VendorProfileDetailsFormData = {
   primaryContact: string
   secondaryContact: string
@@ -181,8 +189,29 @@ export type VendorProfileDetailsFormData = {
   businessNumberExtention: string
   secondaryNumber: string
   secondaryNumberExtenstion: string
+  businessPhoneNumberExtension?: string
+  secondPhoneNumber?: string
+  secondPhoneNumberExtension?: string
   primaryEmail: string
+  businessEmailAddress?: string
   secondaryEmail: string
+  secondEmailAddress?: string
+  ownerName?: string
+  secondName?: string
+  companyName?: string
+  score?: Select
+  status?: Select
+  streetAddress?: string
+  state?: Select
+  city?: string
+  zipCode?: string
+  capacity?: null | number
+  einNumber?: string
+  ssnNumber?: string
+  paymentTerm?: Select
+  creditCard?: boolean
+  check?: boolean
+  ach?: boolean
 }
 
 export type VendorTrade = {
@@ -205,8 +234,10 @@ export type Trade = {
   skill: string
 }
 
-type TradeFormValues = Trade & {
+type TradeFormValues = {
+  trade: Trade
   checked: boolean
+  id?: string
 }
 
 export type VendorTradeFormValues = {
@@ -224,8 +255,10 @@ export type Market = {
   stateName: string
 }
 
-type MarketFormValues = Market & {
+type MarketFormValues = {
+  market: Market
   checked: boolean
+  id?: string
 }
 
 export type VendorMarketFormValues = {
@@ -235,17 +268,17 @@ export type VendorMarketFormValues = {
 export type DocumentsCardFormValues = {
   agreementSignedDate?: string | Date
   agreementUrl?: string
-  agreement?: File
+  agreement?: File | null
   w9DocumentDate?: string | Date
-  w9Document?: File
+  w9Document?: File | null
   autoInsuranceExpDate?: string | Date
   insuranceUrl?: string
-  insurance?: File
+  insurance?: File | null
   coiGlExpDate?: string | Date
-  coiGlExpFile?: File
+  coiGlExpFile?: File | null
   coiGLExpUrl?: string
   coiWcExpDate?: string | Date
-  coiWcExpFile?: File
+  coiWcExpFile?: File | null
   coiWcExpUrl?: string
   w9DocumentUrl?: string
 }
@@ -272,6 +305,7 @@ export type SettingsValues = {
 }
 
 export type Vendors = {
+  id: number
   statusLabel: string
   companyName: string
   region: string
@@ -280,4 +314,10 @@ export type Vendors = {
   coiglExpirationDate: string
   coiWcExpirationDate: string
   einNumber: string
+  capacity: number
+  availableCapacity: number
+  skills: string
+  market: string
+  businessEmailAddress: string
+  businessPhoneNumber: string
 }

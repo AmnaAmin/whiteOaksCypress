@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "client": "james",
+    "streetAddress": "198 NY LN",
+    "terms": "9",
+    "paymentTerms": "Draw",
+    "expectedPayDate": "11/14/2021",
+    "balance": "$9500.00",
+    "finalInvoice": "$9500.00",
+    "markets": "Atlanta",
+    "woInvoiceDate": "11/14/2021",
+    "poNumber": "927 LABURNUM LN",
+    "woNumber": "6234",
+    "invoiceNumber": "2395",
+    "checkbox": ""
+  }
+]

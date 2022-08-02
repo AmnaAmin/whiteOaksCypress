@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import autoTable from 'jspdf-autotable'
 import { dateFormat } from 'utils/date-time-utils'
-import { truncateWithEllipsis } from 'utils/stringFormatters'
+import { currencyFormatter, truncateWithEllipsis } from 'utils/stringFormatters'
 import { ProjectType } from 'types/project.type'
 
 export const useUploadDocument = () => {
@@ -43,13 +43,18 @@ export const useUploadDocument = () => {
   )
 }
 
-export const useDocuments = ({ projectId }: { projectId: string | undefined }) => {
+export const useDocuments = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
 
-  const { data: documents, ...rest } = useQuery<Array<Document>>(['documents', projectId], async () => {
-    const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
-    return response?.data
-  })
+  const { data: documents, ...rest } = useQuery<Array<Document>>(
+    ['documents', projectId],
+    async () => {
+      const response = await client(`documents?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
+
+      return response?.data ? response?.data : []
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     documents,
@@ -57,30 +62,29 @@ export const useDocuments = ({ projectId }: { projectId: string | undefined }) =
   }
 }
 
-export const documentTypes = [
-  { value: 24, label: 'Permit' },
-  { value: 25, label: 'Warranty' },
-  { value: 56, label: 'Drawings' },
-  { value: 57, label: 'NOC' },
-  { value: 39, label: 'Original SOW' },
-  { value: 58, label: 'Other' },
-  { value: 19, label: 'Photos' },
-  { value: 18, label: 'Reciept' },
-]
+export const useDocumentTypes = () => {
+  const client = useClient()
+
+  return useQuery('documentTypes', async () => {
+    const response = await client(`lk_value/lookupType/4`, {})
+
+    return response?.data
+  })
+}
 
 export const documentScore = [
-  { value: 24, label: '1' },
-  { value: 25, label: '2' },
-  { value: 56, label: '3' },
-  { value: 57, label: '4' },
-  { value: 39, label: '5' },
+  { value: 1, label: '1' },
+  { value: 2, label: '2' },
+  { value: 3, label: '3' },
+  { value: 4, label: '4' },
+  { value: 5, label: '5' },
 ]
 
 export const documentStatus = [
-  { value: 24, label: 'Active' },
-  { value: 25, label: 'Inactive' },
-  { value: 56, label: 'Expired' },
-  { value: 57, label: 'DoNotUse' },
+  { value: 12, label: 'Active' },
+  { value: 13, label: 'Inactive' },
+  { value: 15, label: 'Expired' },
+  { value: 14, label: 'DoNotUse' },
 ]
 
 export const documentTerm = [
@@ -91,8 +95,8 @@ export const documentTerm = [
   { value: 39, label: '30' },
 ]
 
-export const createInvoice = (doc, workOrder, projectData: ProjectType, items) => {
-  const baseFont = 'arial'
+export const createInvoice = (doc, workOrder, projectData: ProjectType, items, summary) => {
+  const baseFont = 'times'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
     streetAddress: '4 14th Street #601',
@@ -123,7 +127,6 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
   doc.text('P.O. #', rightMarginX, 55)
   doc.text('Invoice Date', rightMarginX, 65)
   doc.text('Due Date', rightMarginX, 75)
-  doc.save('a4.pdf')
 
   doc.setFont(baseFont, 'normal')
   doc.text(workOrder?.invoiceNumber, rightMarginX + 35, 45)
@@ -133,55 +136,68 @@ export const createInvoice = (doc, workOrder, projectData: ProjectType, items) =
     rightMarginX + 35,
     65,
   )
-  doc.text(
-    workOrder.expectedPaymentDate ? dateFormat(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy',
-    rightMarginX + 35,
-    75,
-  )
+  doc.text(workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 35, 75)
 
   // Table
   autoTable(doc, {
     startY: 85,
-    alternateRowStyles: { fillColor: '#FFFFFF' },
-    headStyles: { fillColor: '#F7FAFC', textColor: '#4A5568', lineColor: [0, 0, 0] },
+    headStyles: { fillColor: '#D3D3D3', textColor: '#000000' },
+    tableLineColor: [0, 0, 0],
+    tableLineWidth: 0.1,
     body: [
       ...items.map(ai => {
         return {
-          item: ai.item,
-          description: ai.description,
-          unitPrice: ai.unitPrice,
-          quantity: ai.quantity,
-          amount: ai.amount,
+          item: ai.id,
+          description: ai.name,
+          amount: ai.changeOrderAmount,
         }
       }),
     ],
     columns: [
       { header: 'Item', dataKey: 'item' },
       { header: 'Description', dataKey: 'description' },
-      { header: 'Unit Price', dataKey: 'unitPrice' },
-      { header: 'Quantity', dataKey: 'quantity' },
-      { header: 'Amount', dataKey: 'amount' },
+      { header: 'Total', dataKey: 'amount' },
     ],
-    theme: 'grid',
-    bodyStyles: { lineColor: '#B2F5EA', minCellHeight: 15 },
+    theme: 'plain',
+    bodyStyles: { minCellHeight: 15 },
   })
 
   // Summary
   const tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
   const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-  doc.setFont(baseFont, 'normal')
-  doc.text('Subtotal:', summaryX, tableEndsY + 10)
-  doc.text('Total:', summaryX, tableEndsY + 20)
-  doc.text('Amount Paid:', summaryX, tableEndsY + 30)
-  doc.text('Balance Due:', summaryX, tableEndsY + 40)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 10)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 20)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 30)
-  doc.text('$0.00', summaryX + 40, tableEndsY + 40)
+  doc.internal.pageSize.getHeight()
+  doc.setDrawColor(0)
+  let rectX = summaryX - 10
+  let rectY = tableEndsY
+  if (doc.internal.pageSize.getHeight() - tableEndsY < 30) {
+    doc.addPage()
+    rectY = 20
+  }
+  const rectL = 86
+  const rectW = 10
+  const summaryInfo = [
+    { title: 'Subtotal', value: currencyFormatter(summary.subTotal) },
+    { title: 'Amount Paid', value: currencyFormatter(Math.abs(summary.amountPaid)) },
+    { title: 'Balance Due', value: currencyFormatter(summary.subTotal + summary.amountPaid) },
+  ]
+  doc.rect(14, rectY, 96, 30, 'D')
+  summaryInfo.forEach(sum => {
+    let rectD = 'D'
+    if (sum.title === 'Balance Due') {
+      doc.setFillColor(211)
+      rectD = 'FD'
+    }
+    doc.rect(rectX, rectY, rectL, rectW, rectD)
+    doc.setFont(baseFont, 'bold')
+    doc.text(sum.title, summaryX, rectY + 6)
+    doc.setFont(baseFont, 'normal')
+    doc.text(sum.value, summaryX + 40, rectY + 6)
+    rectY = rectY + 10
+  })
   return doc
 }
 
 export const paymentsTerms = [
-  { value: 24, label: '20' },
-  { value: 25, label: '30' },
+  { value: '20', label: '20' },
+  { value: '30', label: '30' },
 ]

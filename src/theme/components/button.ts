@@ -22,8 +22,8 @@ const ButtonVariants = {
       outline: props => {
         return {
           ...chakraTheme.components.Button.variants.outline(props),
-          borderColor: `${props.colorScheme}.400`,
-          color: `${props.colorScheme}.400`,
+          borderColor: `${props.colorScheme}.300`,
+          color: `${props.colorScheme}.300`,
           _hover: {
             bg: `${props.colorScheme}.50`,
           },
@@ -35,7 +35,7 @@ const ButtonVariants = {
       ghost: props => {
         return {
           ...chakraTheme.components.Button.variants.ghost(props),
-          color: `${props.colorScheme}.400`,
+          color: `${props.colorScheme}.300`,
           _focus: {
             outline: 'none',
           },
@@ -63,6 +63,33 @@ const ButtonVariants = {
             color: `${props.colorScheme}.600`,
             bg: `${props.colorScheme}.200`,
           },
+        }
+      },
+      'clear-filter': props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          bg: 'none',
+          color: '#4E87F8',
+          _hover: { bg: 'none' },
+          _focus: { border: 'none' },
+          fontSize: '16px',
+          fontStyle: 'inter',
+          fontWeight: 600,
+          alignContent: 'right',
+          pl: 1,
+          pt: 2,
+        }
+      },
+      pill: props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          _hover: { bg: '#4E87F8', color: 'white', border: 'none' },
+          _focus: { border: 'none' },
+          fontSize: '16px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          alignContent: 'right',
+          rounded: 20,
         }
       },
     },

@@ -1,8 +1,13 @@
-import React from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { Box, Td, Tr, Text, Flex, Checkbox, Spacer } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
-import data from './moc-data.json'
+import { RowProps } from 'components/table/react-table'
+import { useAccountPayable } from 'utils/account-payable'
+import { FieldValues, UseFormRegister } from 'react-hook-form'
+import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'
+import { ProjectWorkOrderType } from 'types/project.type'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { TableWrapper } from 'components/table/table'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -24,7 +29,7 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text noOfLines={2} title={cell.value} padding="0 15px">
                 {cell.render('Cell')}
               </Text>
             </Flex>
@@ -35,8 +40,16 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => void }> = React.forwardRef(
-  (props, ref) => {
+type PayablePropsTyep = {
+  resizeElementRef?: any
+  ref?: any
+  setTableInstance: (tableInstance: any) => void
+  register: UseFormRegister<FieldValues>
+  loading?: boolean
+}
+
+export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
+  ({ ref, loading, register, setTableInstance }) => {
     const { columns } = useColumnWidthResize(
       [
         {
@@ -45,7 +58,7 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         },
         {
           Header: 'Vendor Name',
-          accessor: 'vendorName',
+          accessor: 'claimantName',
         },
         {
           Header: 'Property Address',
@@ -57,51 +70,90 @@ export const PayableTable: React.FC<{ setTableInstance: (tableInstance: any) => 
         },
         {
           Header: 'Payment Terms',
-          accessor: 'paymentTerms',
+          accessor: 'paymentTerm',
         },
         {
           Header: 'Expected pay date',
-          accessor: 'expectedPayDate',
+          accessor: 'expectedPaymentDate',
         },
         {
           Header: 'Final Invoice',
-          accessor: 'finalInvoice',
+          accessor: 'finalInvoiceAmount',
         },
-
         {
           Header: 'Markets',
-          accessor: 'markets',
+          accessor: 'marketName',
         },
         {
           Header: 'WO Start Date',
-          accessor: 'woStarteDate',
+          accessor: 'workOrderStartDate',
         },
         {
           Header: 'WO Completed Date',
-          accessor: 'woCompleteDate',
+          accessor: 'workOrderDateCompleted',
         },
         {
           Header: 'WO Issue Date',
-          accessor: 'woIssueDate',
+          accessor: 'workOrderIssueDate',
         },
         {
           Header: 'Checkbox',
-          accessor: 'checkbox',
+          Cell: ({ row }) => {
+            return (
+              <Flex justifyContent="end">
+                <Spacer w="50px" />
+                <Checkbox
+                  isDisabled={loading}
+                  value={(row.original as any).id}
+                  {...register('id', { required: true })}
+                />
+              </Flex>
+            )
+          },
         },
       ],
       ref,
     )
+    const { data: PayableData, isLoading } = useAccountPayable()
 
+    useEffect(() => {
+      if (PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+        const updatedWorkOrder = PayableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+        if (updatedWorkOrder) {
+          setSelectedWorkOrder({ ...updatedWorkOrder })
+        } else {
+          setSelectedWorkOrder(undefined)
+        }
+      } else {
+        setSelectedWorkOrder(undefined)
+      }
+    }, [PayableData])
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
     return (
       <Box overflow="auto" width="100%">
-        <ReactTable
-          columns={columns}
-          setTableInstance={props.setTableInstance}
-          data={data}
-          TableRow={payableRow}
-          tableHeight="calc(100vh - 300px)"
-          name="alerts-table"
-        />
+        {isLoading ? (
+          <BlankSlate />
+        ) : (
+          <>
+            <WorkOrderDetails
+              workOrder={selectedWorkOrder as ProjectWorkOrderType}
+              onClose={() => {
+                setSelectedWorkOrder(undefined)
+              }}
+            />
+            <TableWrapper
+              columns={columns}
+              setTableInstance={setTableInstance}
+              data={PayableData?.workOrders || []}
+              isLoading={isLoading}
+              TableRow={payableRow}
+              tableHeight="calc(100vh - 300px)"
+              name="payable-table"
+              defaultFlexStyle={false}
+              onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+            />
+          </>
+        )}
       </Box>
     )
   },

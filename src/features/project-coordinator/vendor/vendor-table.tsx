@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, Center, Spinner } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { useVendor } from 'utils/pc-projects'
 import { Column } from 'react-table'
 import Status from 'features/projects/status'
 import Vendor from 'features/projects/modals/project-coordinator/vendor-table'
 import { ProjectWorkOrderType } from 'types/project.type'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const VENDOR_COLUMNS = [
   {
@@ -13,6 +15,7 @@ export const VENDOR_COLUMNS = [
     accessor: 'statusLabel',
     Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
   },
+
   {
     Header: 'Name',
     accessor: 'companyName',
@@ -21,6 +24,7 @@ export const VENDOR_COLUMNS = [
     Header: 'Region',
     accessor: 'region',
   },
+
   {
     Header: 'State',
     accessor: 'state',
@@ -28,18 +32,43 @@ export const VENDOR_COLUMNS = [
   {
     Header: 'Active Date',
     accessor: 'createdDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
   },
   {
     Header: 'COI-GL Expiration Date',
     accessor: 'coiglExpirationDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
   },
   {
     Header: 'COI-WC Expiration Date',
     accessor: 'coiWcExpirationDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
   },
   {
     Header: 'EIN/SSN',
     accessor: 'einNumber',
+  },
+  {
+    Header: 'Total Capacity',
+    accessor: 'capacity',
+  },
+  {
+    Header: 'Available Capacity',
+    accessor: 'availableCapacity',
+  },
+  {
+    Header: 'Construction Trade',
+    accessor: 'skills',
+  },
+  {
+    Header: 'Market',
+    accessor: 'market',
   },
 ]
 
@@ -113,21 +142,22 @@ export const VendorTable: React.FC<ProjectProps> = ({
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   return (
-    <Box ref={resizeElementRef}>
-      <Vendor
-        vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
-        onClose={() => {
-          setSelectedWorkOrder(undefined)
-        }}
-      />
+    <Box overflow="auto">
+      {selectedWorkOrder && (
+        <Vendor
+          vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
+          onClose={() => {
+            setSelectedWorkOrder(undefined)
+          }}
+        />
+      )}
 
-      {isLoading && (
+      {isLoading ? (
         <Center>
           <Spinner size="xl" />
         </Center>
-      )}
-      {vendors && (
-        <ReactTable
+      ) : (
+        <TableWrapper
           isLoading={isLoading}
           columns={projectColumns}
           data={filterVendors ? filterVendors : []}

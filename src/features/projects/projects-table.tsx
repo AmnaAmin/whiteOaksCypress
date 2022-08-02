@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
 import { useProjects } from 'utils/projects'
 import Status from './status'
@@ -39,12 +40,22 @@ export const PROJECT_COLUMNS = [
     accessor: 'pastDueWorkorders',
   },
   {
-    Header: t('expectedPaymentDate'),
-    accessor: 'vendorWOExpectedPaymentDate',
-    Cell({ value, row }) {
+    Header: t('DueDateWO'),
+    accessor: 'clientDueDate',
+    Cell({ value }) {
       return dateFormat(value)
     },
-    getCellExportValue(row, col) {
+    getCellExportValue(row) {
+      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+    },
+  },
+  {
+    Header: t('expectedPaymentDate'),
+    accessor: 'vendorWOExpectedPaymentDate',
+    Cell({ value }) {
+      return dateFormat(value)
+    },
+    getCellExportValue(row) {
       return dateFormat(row.values.vendorWOExpectedPaymentDate)
     },
   },
@@ -59,7 +70,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
       <Tr
         bg="white"
         _hover={{
-          background: 'gray.100',
+          background: 'gray.50',
           '& > td > a': {
             color: '#333',
           },
@@ -71,7 +82,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
         {row.cells.map((cell, index) => {
           return (
             <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-              <Flex alignItems="center" h="72px" pl="3">
+              <Flex alignItems="center" h="72px" pl="10px">
                 <Text
                   noOfLines={2}
                   title={cell.value}
@@ -122,7 +133,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 
   return (
     <Box ref={resizeElementRef} height="100%">
-      <ReactTable
+      <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
         data={filterProjects || []}
@@ -130,6 +141,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         name="my-table"
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
+        sortBy={{ id: 'id', desc: true }}
       />
     </Box>
   )

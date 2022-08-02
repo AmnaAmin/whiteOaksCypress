@@ -106,6 +106,7 @@ export type ProjectColumnType = {
 
 export type ProjectWorkOrderType = {
   id: number
+  lienWaiverAccepted: boolean
   workOrderCompletionDateVariance: string
   workOrderPayDateVariance?: string
   clientApprovedAmount: number
@@ -132,6 +133,8 @@ export type ProjectWorkOrderType = {
   invoiceAmount: number
   finalInvoiceAmount: number
   leanWaiverSubmitted?: string
+  claimantTitle: string
+  claimantsSignature: string
   dateInvoiceSubmitted: string
   dateLeanWaiverSubmitted?: string
   datePaymentProcessed?: string
@@ -154,9 +157,56 @@ export type ProjectAlertType = {
   dateCreated: string
 }
 
-export type verifyAddressValues = {
+export type ProjectFormValues = {
+  acknowledgeCheck?: boolean
+  name?: string
+  projectType?: number
+  projectTypeLabel: string
+  woNumber?: string
+  poNumber?: string
+  clientStartDate?: string
+  clientDueDate?: string
+  clientSignoffDate?: string
+  clientWalkthroughDate?: string
+  woaStartDate?: string
+  sowOriginalContractAmount?: string
+  sowDocumentFile?: any
+  documents?: any
+  sowLink: string
   streetAddress?: string
   city?: string
   state?: string
   zipCode?: any
+  newMarketId?: string
+  gateCode?: string
+  lockBoxCode?: string
+  hoaEmailAddress?: string | null
+  hoaPhone?: string | null
+  hoaPhoneNumberExtension?: string
+  projectManagerId?: number
+  projectCoordinator?: string
+  projectCoordinatorId?: number
+  clientName?: string
+  clientId?: number
+  superLastName?: string | null
+  superPhoneNumber?: string
+  superPhoneNumberExtension?: string
+  superEmailAddress?: string
+  projectClosedDate?: string
+  projectExpectedCloseDate?: string
+  projectStartDate?: string
+  woaCompletionDate?: string
+  propertyId?: number
+  property?: any
+}
+
+export type Market = {
+  createdBy: string
+  createdDate: string | null
+  id: number
+  metropolitanServiceArea: string
+  modifiedBy: string
+  modifiedDate: string | null
+  stateId: number
+  stateName: string
 }

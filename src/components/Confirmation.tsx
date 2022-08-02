@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   Modal,
   ModalOverlay,
@@ -16,10 +14,12 @@ import {
 interface ConfirmationBoxProps {
   isOpen: boolean
   isLoading?: boolean
-  onClose: () => void
-  onConfirm: () => void
+  onClose: any
+  onConfirm?: () => void
   title: string
   content: string
+  yesButtonText?: string
+  showNoButton?: boolean
 }
 
 export function ConfirmationBox({
@@ -29,6 +29,8 @@ export function ConfirmationBox({
   onConfirm,
   title,
   content,
+  yesButtonText = 'Yes',
+  showNoButton = true,
 }: ConfirmationBoxProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
@@ -44,20 +46,27 @@ export function ConfirmationBox({
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton color="gray.700" _focus={{ border: 'none' }} />
+        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
-          <Text color="gray.500" fontSize="14px" fontWeight={400} fontStyle="normal" mb="2">
-            Are you sure you want to {content}?
+          <Text
+            data-testid="confirmation-message"
+            color="gray.500"
+            fontSize="16px"
+            fontWeight={400}
+            fontStyle="normal"
+            mb="2"
+          >
+            {content}
           </Text>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
-            <Button variant="unstyled" mr={5} onClick={onClose}>
-              <Text color="gray.600" fontSize="14px" fontWeight={400}>
-                Cancel
-              </Text>
-            </Button>
+            {showNoButton && (
+              <Button colorScheme="brand" data-testid="confirmation-no" variant="outline" mr={3} onClick={onClose}>
+                No
+              </Button>
+            )}
             <Button
               size="md"
               onClick={onConfirm}
@@ -65,9 +74,10 @@ export function ConfirmationBox({
               colorScheme="CustomPrimaryColor"
               rounded="6px"
               fontSize="14px"
+              data-testid="confirmation-yes"
               fontWeight={500}
             >
-              Delete
+              {yesButtonText}
             </Button>
           </ModalFooter>
         </Flex>

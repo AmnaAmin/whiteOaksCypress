@@ -1,11 +1,35 @@
-export const currencyFormatter = (amount: number | string) => {
+export const currencyFormatter = (amount: number | string, maxFractionDigits?: number) => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0,
+    maximumFractionDigits: maxFractionDigits || 2,
   })
 
   return formatter.format(Number(amount))
+}
+
+export const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
+const currencyPrefix = '$'
+const currencyThousandSeparator = ','
+const percentageSuffix = '%'
+
+export const removeCurrencyFormat = (value = '') => {
+  if (value) {
+    return replaceAll(replaceAll(value + '', `\\${currencyPrefix}`, ''), `\\${currencyThousandSeparator}`, '')
+  }
+
+  return value
+}
+
+export const removePercentageFormat = (value = '') => {
+  if (value) {
+    return replaceAll(replaceAll(value + '', `\\${percentageSuffix}`, ''), `\\${currencyThousandSeparator}`, '')
+  }
+
+  return value
 }
 
 export const truncateWithEllipsis = (s: string, maxLength: number) => {
