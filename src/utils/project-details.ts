@@ -338,18 +338,38 @@ const removePropertiesFromObject = (obj: Project, properties: string[]): Project
   return newObj
 }
 
+const createDocumentPayload = (file: File) => {
+  return new Promise((res, rej) => {
+    const reader = new FileReader()
+    let filetype = 'text/plain'
+
+    if (file.type !== '') filetype = file.type
+
+    reader.addEventListener('load', (event: any) => {
+      res({
+        fileType: file.name,
+        fileObject: event?.target?.result?.split(',')[1],
+        fileObjectContentType: filetype,
+        documentType: 42,
+      })
+    })
+
+    reader.readAsDataURL(file)
+  })
+}
+
 export const parseProjectDetailsPayloadFromFormData = async (
   formValues: ProjectDetailsFormValues,
   project: Project,
 ): Promise<ProjectDetailsAPIPayload> => {
   const projectPayload = removePropertiesFromObject(project, ['projectManager'])
-  // let attachment
+  let attachment
 
   if (formValues?.invoiceAttachment) {
-    // attachment = convertFileToBlob(formValues.invoiceAttachment)
-    console.log('formValues.invoiceAttachment', formValues.invoiceAttachment)
+    attachment = await createDocumentPayload(formValues.invoiceAttachment)
   }
 
+  console.log('attachment', attachment)
   return {
     ...projectPayload,
     // Project Management payload
@@ -368,7 +388,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,
     invoiceNumber: formValues?.invoiceNumber,
-    // documents: attachment ? [attachment] : null,
+    documents: attachment ? [attachment] : null,
     woaBackdatedInvoiceDate: dateISOFormat(formValues?.invoiceBackDate),
     paymentTerm: formValues?.paymentTerms?.value,
     woaInvoiceDate: dateISOFormat(formValues?.woaInvoiceDate),
