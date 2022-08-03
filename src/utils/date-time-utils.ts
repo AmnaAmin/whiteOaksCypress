@@ -3,6 +3,8 @@ import sub from 'date-fns/sub'
 import { range } from 'lodash'
 
 export const dateFormat = (date: string | Date) => {
+  if (date === null) return ''
+
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
 }
 
@@ -10,7 +12,9 @@ export const datePickerFormat = (date: string | Date) => {
   return date ? format(new Date(date), 'yyyy-MM-dd') : null
 }
 
-export const dateISOFormat = (date: string | Date) => {
+export const dateISOFormat = (date: string | Date | null) => {
+  if (date === null) return null
+
   return date ? new Date(date).toISOString() : null
 }
 

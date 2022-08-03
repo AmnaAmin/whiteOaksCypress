@@ -10,7 +10,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from './modals/work-order-details'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import Status from './status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -55,7 +55,7 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 interface PropType {
   onTabChange?: any
-  projectData: ProjectType
+  projectData: Project
 }
 export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
   const { projectId } = useParams<'projectId'>()

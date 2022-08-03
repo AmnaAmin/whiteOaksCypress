@@ -8,13 +8,13 @@ import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
 // import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
 import { usePCProject } from 'utils/pc-projects'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 // import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
-import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-form'
 import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
@@ -63,8 +63,8 @@ export const ProjectDetails: React.FC = props => {
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
-        <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
+        <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
+        <AmountDetailsCard projectData={projectData as Project} isLoading={isLoading} />
 
         {tabIndex === 1}
 
@@ -100,7 +100,7 @@ export const ProjectDetails: React.FC = props => {
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
 
-                    <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
+                    <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
                 {tabIndex === 3 && (
@@ -147,7 +147,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" mt="7px">
                 <Card rounded="16px" padding="0">
-                  <ProjectDetailsTab projectData={projectData as ProjectType} />
+                  <ProjectDetailsTab projectData={projectData as Project} />
                 </Card>
               </TabPanel>
 

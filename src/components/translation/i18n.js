@@ -79,7 +79,7 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Clear Filter',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Type',
+        ProjectLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
         transactionTypeLabel: 'Type',
         transactionTotal: 'Total Amount',
@@ -537,7 +537,7 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Filtro claro',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Escribe',
+        ProjectLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
         transactionTypeLabel: 'Escribe',
         transactionTotal: 'Cantidad Total',
