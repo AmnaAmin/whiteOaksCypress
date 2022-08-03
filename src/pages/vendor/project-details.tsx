@@ -13,7 +13,7 @@ import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/projects/transactions/transaction-info-card'
 import { useTranslation } from 'react-i18next'
 import { useProject } from 'utils/projects'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 
@@ -40,7 +40,7 @@ const ProjectDetails: React.FC = props => {
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
+        <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
 
         <Stack spacing={5}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
@@ -89,7 +89,7 @@ const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="0px">
                 <Box h="100%" w="100%">
                   <WorkOrdersTable
-                    projectData={projectData as ProjectType}
+                    projectData={projectData as Project}
                     onTabChange={n => {
                       console.log(n)
                       setTabIndex(n)

@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useStates } from 'utils/pc-projects'
-import { PAYMENT_TERMS_OPTIONS } from 'utils/transactions'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   parseVendorAPIDataToFormData,
   parseVendorFormDataToAPIData,
@@ -151,7 +151,7 @@ const PcDetails: React.FC<{
     setValue('state', { label: state?.name, value: state?.code })
     setValue(
       'paymentTerm',
-      PAYMENT_TERMS_OPTIONS.find(s => parseInt(s.value, 10) === vendorProfileData.paymentTerm),
+      PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),
     )
   }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
 

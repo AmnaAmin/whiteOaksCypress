@@ -22,7 +22,7 @@ import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors } from 'utils/pc-projects'
 import { currencyFormatter } from 'utils/stringFormatters'
@@ -78,20 +78,20 @@ const CustomRequiredInput = props => {
 }
 
 const NewWorkOrder: React.FC<{
-  projectData: ProjectType
+  projectData: Project
   isOpen: boolean
   onClose: () => void
 }> = ({ projectData, isOpen, onClose }) => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
-
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const [approvedAmount, setApprovedAmount] = useState<number | null>()
   const [percentageField, setPercentageField] = useState<number | null>()
-  const [vendorPhone, setVendorPhone] = useState<string | undefined>()
-  const [vendorEmail, setVendorEmail] = useState<string | undefined>()
+  // commenting as requirement yet to be confirmed
+  // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
+  // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
   const {
     register,
@@ -99,11 +99,10 @@ const NewWorkOrder: React.FC<{
     control,
     setValue,
     reset,
-    watch,
     formState: { errors },
   } = useForm()
 
-  const watchVendorId = watch('vendorId')
+  // const watchVendorId = watch('vendorId')
 
   const onSubmit = values => {
     const payload = parseNewWoValuesToPayload(values, projectData.id)
@@ -152,13 +151,13 @@ const NewWorkOrder: React.FC<{
     setVendorOptions(option)
   }, [vendors])
 
-  useEffect(() => {
+  /* useEffect(() => {
     const subscription = watch(values => {
       setVendorPhone(vendors?.find(v => v?.id === values?.vendorId?.value)?.businessPhoneNumber ?? '')
       setVendorEmail(vendors?.find(v => v?.id === values?.vendorId?.value)?.businessEmailAddress ?? '')
     })
     return () => subscription.unsubscribe()
-  }, [watchVendorId, vendors])
+  }, [watchVendorId, vendors]) */
 
   return (
     <Modal
@@ -193,9 +192,10 @@ const NewWorkOrder: React.FC<{
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
                 <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue)} />
-                <InformationCard title=" Email" date={vendorEmail} />
-                <InformationCard title=" Phone No" date={vendorPhone} />
+
+                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
+                {/*<InformationCard title=" Email" date={vendorEmail} />
+                <InformationCard title=" Phone No" date={vendorPhone} />*/}
               </SimpleGrid>
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
@@ -386,7 +386,7 @@ const NewWorkOrder: React.FC<{
             </Box>
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
             <HStack spacing="16px">
               <Button
                 onClick={() => {

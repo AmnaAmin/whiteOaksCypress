@@ -26,7 +26,6 @@ import {
   parseChangeOrderAPIPayload,
   parseChangeOrderUpdateAPIPayload,
   parseTransactionToFormValues,
-  PAYMENT_TERMS_OPTIONS,
   transactionDefaultFormValues,
   useChangeOrderMutation,
   useChangeOrderUpdateMutation,
@@ -59,6 +58,7 @@ import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
