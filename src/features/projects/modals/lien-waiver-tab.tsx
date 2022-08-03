@@ -87,7 +87,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     }
     const [first, last] = lienWaiverData?.companyName?.split(' ') || []
     convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
-      form = createForm(form, formValues, dimention, dataUrl)
+      const formattedAmountOfCheck = formValues.amountOfCheck ? '$' + formValues.amountOfCheck : '$0.00'
+      form = createForm(form, { ...formValues, amountOfCheck: formattedAmountOfCheck }, dimention, dataUrl)
       const pdfUri = form.output('datauristring')
       const docs = [
         ...documents,
