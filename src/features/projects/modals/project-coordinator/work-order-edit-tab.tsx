@@ -22,6 +22,7 @@ import {
   useCheckbox,
   chakra,
   useDisclosure,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { BiCalendar, BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
@@ -127,7 +128,12 @@ const WorkOrderDetailTab = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
-  const { register, handleSubmit, control } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: defaultValuesWODetails(workOrder),
   })
 
@@ -180,10 +186,10 @@ const WorkOrderDetailTab = props => {
             <Divider borderColor="#CBD5E0" />
           </Box>
         </Stack>
-        <Box mt="32px" mx="32px">
+        <Box mt="32px" mb="32px" mx="32px">
           <HStack spacing="16px">
             <Box w="215px">
-              <FormControl zIndex="2">
+              <FormControl zIndex="2" isInvalid={!!errors.workOrderStartDate}>
                 <FormLabel variant="strong-label" size="md">
                   {t('expectedStart')}
                 </FormLabel>
@@ -198,10 +204,13 @@ const WorkOrderDetailTab = props => {
                     required: 'This is required field.',
                   })}
                 />
+                <FormErrorMessage position={'absolute'}>
+                  {errors.workOrderStartDate && errors.workOrderStartDate.message}
+                </FormErrorMessage>
               </FormControl>
             </Box>
             <Box w="215px">
-              <FormControl>
+              <FormControl isInvalid={!!errors?.workOrderExpectedCompletionDate}>
                 <FormLabel variant="strong-label" size="md">
                   {t('expectedCompletion')}
                 </FormLabel>
@@ -216,6 +225,9 @@ const WorkOrderDetailTab = props => {
                     required: 'This is required field.',
                   })}
                 />
+                <FormErrorMessage position={'absolute'}>
+                  {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
+                </FormErrorMessage>
               </FormControl>
             </Box>
             <Box w="215px">

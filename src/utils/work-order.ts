@@ -7,7 +7,6 @@ import autoTable from 'jspdf-autotable'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
-import { removeCurrencyFormat, removePercentageFormat } from './stringFormatters'
 
 export const useUpdateWorkOrderMutation = () => {
   const client = useClient()
@@ -308,9 +307,9 @@ export const parseNewWoValuesToPayload = (formValues, documents, projectId) => {
   return {
     workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
     workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
-    invoiceAmount: parseFloat(removeCurrencyFormat(formValues.invoiceAmount)),
-    clientApprovedAmount: parseFloat(removeCurrencyFormat(formValues.clientApprovedAmount)),
-    percentage: parseFloat(removePercentageFormat(formValues.percentage)),
+    invoiceAmount: formValues.invoiceAmount,
+    clientApprovedAmount: formValues.clientApprovedAmount,
+    percentage: formValues.percentage,
     vendorId: formValues.vendorId?.value,
     vendorSkillId: formValues.vendorSkillId?.value,
     // new work-order have hardcoded capacity

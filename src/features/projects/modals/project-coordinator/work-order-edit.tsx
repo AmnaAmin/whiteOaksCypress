@@ -126,6 +126,8 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                           <Checkbox
                             onChange={() => setRejectLW(!rejectLW)}
                             color="#4A5568"
+                            isChecked={rejectLW}
+                            disabled={!workOrder?.lienWaiverAccepted}
                             fontSize="14px"
                             fontWeight={500}
                           >

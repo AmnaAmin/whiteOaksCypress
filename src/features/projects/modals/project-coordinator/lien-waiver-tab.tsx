@@ -16,24 +16,20 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
-import { trimCanvas } from 'components/table/util'
 import { orderBy } from 'lodash'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
 import { GetHelpText } from 'utils/lien-waiver'
 
-import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
-import { dateFormatter } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { defaultValuesLienWaiver } from 'utils/work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose, documentsData, onSave } = props
   const [documents, setDocuments] = useState<any[]>([])
-  const [openSignature, setOpenSignature] = useState(false)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: defaultValuesLienWaiver(lienWaiverData),
@@ -47,71 +43,31 @@ export const LienWaiverTab: React.FC<any> = props => {
     })
   }
 
-  useEffect(() => {
-    if (!documentsData?.length) return
-    const orderDocs = orderBy(documentsData, ['modifiedDate'], ['desc'])
-    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-
-    setValue('claimantsSignature', signatureDoc?.s3Url)
-  }, [documentsData, setValue])
-
-  const generateTextToImage = value => {
-    const context = canvasRef?.current?.getContext('2d')
-
-    if (!context) return
-
-    context.clearRect(0, 0, canvasRef?.current?.width ?? 0, canvasRef?.current?.height ?? 0)
-    context.font = 'italic 500 12px Inter'
-    context.textAlign = 'start'
-    context.fillText(value, 10, 50)
-    const trimContext = trimCanvas(canvasRef.current)
-
-    const uri = trimContext?.toDataURL('image/png')
-    setDocuments(doc => [
-      ...doc,
-      {
-        documentType: 108,
-        fileObject: uri?.split(',')[1],
-        fileObjectContentType: 'image/png',
-        fileType: 'Claimants Signature.png',
-      },
-    ])
-    setValue('claimantsSignature', uri)
-  }
-
-  const onSignatureChange = value => {
-    generateTextToImage(value)
-    setValue('dateOfSignature', new Date(), { shouldValidate: true })
-  }
-
   const [claimantsSignature, setClaimantsSignature] = useState('')
 
   useEffect(() => {
     if (!documentsData?.length) return
     setDocuments(documentsData)
-    if (lienWaiverData.lienWaiverAccepted) {
-      const orderDocs = orderBy(
-        documentsData,
-        [
-          item => {
-            if (item?.createdDate) {
-              const createdDate = new Date(item?.createdDate)
-              return createdDate
-            }
-          },
-        ],
-        ['desc'],
-      )
-      const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
 
-      setClaimantsSignature(signatureDoc?.s3Url ?? '')
-    }
+    const orderDocs = orderBy(
+      documentsData,
+      [
+        item => {
+          if (item?.createdDate) {
+            const createdDate = new Date(item?.createdDate)
+            return createdDate
+          }
+        },
+      ],
+      ['desc'],
+    )
+    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
+
+    setClaimantsSignature(signatureDoc?.s3Url ?? '')
   }, [documentsData, setValue, lienWaiverData])
 
   return (
     <Stack>
-      <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-
       <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <VStack align="start" spacing="30px" m="32px">
@@ -181,7 +137,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   controlStyle={{ w: '207px' }}
                   label="Date of signature"
                   InputElem={
-                    <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
+                    <>{lienWaiverData.dateOfSignature ? dateFormat(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
                   }
                 />
                 <InputView
@@ -191,7 +147,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     claimantsSignature ? (
                       <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                     ) : (
-                      'Null'
+                      <></>
                     )
                   }
                 />
