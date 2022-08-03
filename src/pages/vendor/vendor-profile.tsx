@@ -113,7 +113,7 @@ const VendorProfilePage: React.FC<Props> = props => {
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (
-        <Card p="18px" px="0">
+        <Card pb="8px" pt="18px" px="18px">
           <VendorProfileTabs vendorProfileData={vendorProfileData} onClose={props.onClose} refetch={refetch} />
         </Card>
       )}

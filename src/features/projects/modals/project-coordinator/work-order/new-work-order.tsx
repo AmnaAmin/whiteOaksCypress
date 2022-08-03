@@ -22,7 +22,7 @@ import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { dateFormatter } from 'utils/date-time-utils'
 import { useFilteredVendors } from 'utils/pc-projects'
 import { currencyFormatter, removeCurrencyFormat, removePercentageFormat } from 'utils/stringFormatters'
@@ -74,7 +74,7 @@ const InformationCard = props => {
 }
 
 const NewWorkOrder: React.FC<{
-  projectData: ProjectType
+  projectData: Project
   isOpen: boolean
   onClose: () => void
 }> = ({ projectData, isOpen, onClose }) => {
@@ -82,7 +82,7 @@ const NewWorkOrder: React.FC<{
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
   const { documents = [] } = useDocuments({
-    projectId: projectData?.id,
+    projectId: projectData?.id as number,
   })
 
   const [tradeOptions, setTradeOptions] = useState([])
@@ -186,10 +186,9 @@ const NewWorkOrder: React.FC<{
                 <CalenderCard title="Client Start" date={dateFormatter(projectData?.clientStartDate)} />
                 <CalenderCard title="Client End " date={dateFormatter(projectData?.clientDueDate)} />
                 <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue)} />
-                {/* hidden for now  - requirement yet to be confirmed
-                
-                <InformationCard title=" Email" date={vendorEmail} />
+
+                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
+                {/*<InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
               </SimpleGrid>
               <Box mt={10}>

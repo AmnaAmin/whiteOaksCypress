@@ -79,7 +79,7 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Clear Filter',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Type',
+        ProjectLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
         transactionTypeLabel: 'Type',
         transactionTotal: 'Total Amount',
@@ -101,7 +101,6 @@ i18n.use(initReactI18next).init({
         alerts: 'Alerts',
         upload: 'Upload',
         uploadDocument: 'Upload Document',
-        resolveAll: 'Resolve All',
         contactName: 'Contact Name:',
         projectID: 'Project ID',
         contactNo: 'Contact No',
@@ -270,6 +269,13 @@ i18n.use(initReactI18next).init({
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
+        coiglExpirationDate: 'COI-GL Expiration Date',
+        statusLabel: 'Status',
+        coiWcExpirationDate: 'COI-WC Expiration Date',
+        einNumber: 'EIN/SSN',
+        availableCapacity: 'Available Capacity',
+        skills: 'Construction Trade',
+
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
         uploadAgreement: 'Upload Agreement',
@@ -372,7 +378,7 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlert: 'Triggered Alert',
         managedAlert: 'Managed Alert',
-        resloveAll: 'Reslove All',
+        resolveAll: 'Resolve All',
         projectId: 'Project Id',
         stateZipcode: 'State/Zipcode',
         workOrderStart: 'Work Order Start',
@@ -412,7 +418,7 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlert: 'Alerta activada',
         managedAlert: 'Alerta gestionada',
-        resloveAll: 'Solucionelo todo',
+        resolveAll: 'Solucionelo todo',
         projectId: 'Projecto ID',
         stateZipcode: 'Estado/Código postal',
         workOrderStart: 'Inicio de orden de trabajo',
@@ -531,7 +537,7 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Filtro claro',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Escribe',
+        ProjectLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
         transactionTypeLabel: 'Escribe',
         transactionTotal: 'Cantidad Total',
@@ -558,7 +564,6 @@ i18n.use(initReactI18next).init({
         alerts: 'Alertas',
         upload: 'Subir',
         uploadDocument: 'Subir documento',
-        resolveAll: 'Solucionelo todo',
         contactName: 'Nombre de Contacto',
         projectID: 'Projecto ID',
         contactNo: 'Número de Contacto',
@@ -720,6 +725,13 @@ i18n.use(initReactI18next).init({
         secondaryNo: 'Número Secundario',
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
+        coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        statusLabel: 'Estado',
+        coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
+        einNumber: 'EIN/SSN',
+        availableCapacity: 'Capacidad disponible',
+        skills: 'Habilidades',
+
         // Vendor-profile-documents
         agreementSignedDate: 'Documento firmado',
         uploadAgreement: 'Acuerdo de Carga',

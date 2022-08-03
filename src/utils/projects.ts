@@ -1,4 +1,4 @@
-import { ProjectType, ProjectWorkOrderType, ProjectAlertType } from 'types/project.type'
+import { Project, ProjectWorkOrderType, ProjectAlertType } from 'types/project.type'
 import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 
@@ -6,7 +6,7 @@ const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = () => {
   const client = useClient()
 
-  const { data, ...rest } = useQuery<Array<ProjectType>>(PROJECTS_QUERY_KEY, async () => {
+  const { data, ...rest } = useQuery<Array<Project>>(PROJECTS_QUERY_KEY, async () => {
     const response = await client(`projects?page=0&size=10000000&sort=id,asc`, {})
 
     return response?.data
@@ -21,7 +21,7 @@ export const useProjects = () => {
 export const useProject = (projectId?: string) => {
   const client = useClient()
 
-  const { data: projectData, ...rest } = useQuery<ProjectType>(['project', projectId], async () => {
+  const { data: projectData, ...rest } = useQuery<Project>(['project', projectId], async () => {
     const response = await client(`projects/${projectId}/vendor`, {})
 
     return response?.data

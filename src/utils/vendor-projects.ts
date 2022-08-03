@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import autoTable from 'jspdf-autotable'
 import { dateFormat } from 'utils/date-time-utils'
 import { currencyFormatter, truncateWithEllipsis } from 'utils/stringFormatters'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 
 export const useUploadDocument = () => {
   const { projectId } = useParams<'projectId'>()
@@ -95,7 +95,7 @@ export const documentTerm = [
   { value: 39, label: '30' },
 ]
 
-export const createInvoice = (doc, workOrder, projectData: ProjectType, items, summary) => {
+export const createInvoice = (doc, workOrder, projectData: Project, items, summary) => {
   const baseFont = 'times'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
