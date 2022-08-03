@@ -140,7 +140,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 isDisabled={isWOAStartDisabled}
                 min={minOfWoaStartDate}
                 variant="required-field"
-                required
                 {...register('woaStartDate', { required: 'This is required' })}
               />
               <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
