@@ -17,6 +17,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
+ 
   return (
     <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
       <TabList>

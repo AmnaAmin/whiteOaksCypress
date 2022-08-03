@@ -16,7 +16,8 @@ import { ClientDetailsTabs } from 'pages/project-cordinator/client-details'
 import { useCallback, useEffect } from 'react'
 import { Clients } from 'types/client.type'
 
-const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
+const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients, onClose: () => void }) => {
+
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -48,9 +49,9 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
             </HStack>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-          <ModalBody justifyContent="center">
+          <ModalBody justifyContent="center" >
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} onClose={onClose}/>
+              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} onClose={onClose} />
             </Box>
           </ModalBody>
         </ModalContent>
