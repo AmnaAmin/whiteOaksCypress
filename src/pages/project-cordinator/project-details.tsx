@@ -75,7 +75,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab>{t('projectDetails')}</Tab>
               <Tab>{t('vendorWorkOrders')}</Tab>
               <Tab>{t('documents')}</Tab>
-              <Tab>{t('alerts')}</Tab>
+              {/* <Tab>{t('alerts')}</Tab> */}
               <Tab>
                 {t('notes')}
                 <Box ml="5px" style={countInCircle}>
