@@ -23,6 +23,7 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
     setTableInstance,
     isLoading,
     enablePagination = false,
+    disableFilter = false,
     ...restProps
   } = props
   const tableInstance = useCustomTable(
@@ -36,7 +37,7 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
 
   return (
     <Table tableInstance={tableInstance} tableHeight={tableHeight}>
-      <TableHead {...tableInstance} />
+      <TableHead {...tableInstance} disableFilter={disableFilter} />
       {isLoading ? (
         <TableLoadingState {...tableInstance} />
       ) : (

@@ -115,6 +115,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   return (
     <Box>
       <TableWrapper
+        disableFilter={true}
         columns={columns}
         data={documents}
         TableRow={vendorDocumentRow}
