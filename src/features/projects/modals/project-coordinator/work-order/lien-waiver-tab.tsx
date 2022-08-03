@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Divider,
+  ModalBody,
   Flex,
   FormControl,
   Heading,
@@ -11,7 +11,7 @@ import {
   InputGroup,
   InputLeftElement,
   Link,
-  Spacer,
+  ModalFooter,
   Stack,
   VStack,
 } from '@chakra-ui/react'
@@ -109,112 +109,110 @@ export const LienWaiverTab: React.FC<any> = props => {
   }, [documentsData, setValue, lienWaiverData])
 
   return (
-    <Stack>
-      <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-
+    <Box>
       <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <VStack align="start" spacing="30px" m="32px">
-            <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box flex="4" minW="59em">
-                <HelpText>{GetHelpText()}</HelpText>
-              </Box>
-            </Flex>
+        <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
+        <ModalBody h="400px" overflow={'auto'}>
+          <FormControl>
+            <VStack align="start" spacing="30px" m="32px">
+              <Flex w="100%" alignContent="space-between" pos="relative">
+                <Box flex="4" minW="59em">
+                  <HelpText>{GetHelpText()}</HelpText>
+                </Box>
+              </Flex>
 
-            <VStack alignItems="start" spacing="32px">
-              <HStack spacing="16px">
-                <InputView
-                  controlStyle={{ w: '207px' }}
-                  label={t('nameofClaimant')}
-                  InputElem={lienWaiverData.claimantName.toString()}
-                />
+              <VStack alignItems="start" spacing="32px">
+                <HStack spacing="16px">
+                  <InputView
+                    controlStyle={{ w: '207px' }}
+                    label={t('nameofClaimant')}
+                    InputElem={lienWaiverData.claimantName.toString()}
+                  />
 
-                <InputView
-                  controlStyle={{ w: '207px' }}
-                  label={t('jobLocation')}
-                  InputElem={lienWaiverData.propertyAddress}
-                />
-              </HStack>
+                  <InputView
+                    controlStyle={{ w: '207px' }}
+                    label={t('jobLocation')}
+                    InputElem={lienWaiverData.propertyAddress}
+                  />
+                </HStack>
 
-              <HStack spacing="16px">
-                <InputView
-                  controlStyle={{ w: '207px' }}
-                  label={t('makerOfCheck')}
-                  InputElem={lienWaiverData.makerOfCheck}
-                />
+                <HStack spacing="16px">
+                  <InputView
+                    controlStyle={{ w: '207px' }}
+                    label={t('makerOfCheck')}
+                    InputElem={lienWaiverData.makerOfCheck}
+                  />
 
-                <Stack pt={6}>
-                  <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
-                    {t('amountOfCheck')}
-                  </Heading>
+                  <Stack pt={6}>
+                    <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
+                      {t('amountOfCheck')}
+                    </Heading>
 
-                  <InputGroup p={0}>
-                    <InputLeftElement
-                      fontSize="14px"
-                      fontStyle="normal"
-                      fontWeight={400}
-                      color="gray.500"
-                      p={0}
-                      h="35px"
-                      w={2}
-                      children="$"
-                    />
-                    <Input
-                      {...register('amountOfCheck')}
-                      h="35px"
-                      m={0}
-                      pl={2}
-                      fontSize="14px"
-                      fontStyle="normal"
-                      fontWeight={400}
-                      color="gray.500"
-                      isDisabled={props.rejectChecked}
-                      variant="flushed"
-                      borderColor="gray.100"
-                    />
-                  </InputGroup>
-                </Stack>
-              </HStack>
+                    <InputGroup p={0}>
+                      <InputLeftElement
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={400}
+                        color="gray.500"
+                        p={0}
+                        h="35px"
+                        w={2}
+                        children="$"
+                      />
+                      <Input
+                        {...register('amountOfCheck')}
+                        h="35px"
+                        m={0}
+                        pl={2}
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={400}
+                        color="gray.500"
+                        isDisabled={props.rejectChecked}
+                        variant="flushed"
+                        borderColor="gray.100"
+                      />
+                    </InputGroup>
+                  </Stack>
+                </HStack>
 
-              <HStack spacing="16px">
-                <InputView
-                  controlStyle={{ w: '207px' }}
-                  label="Date of signature"
-                  InputElem={
-                    <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
-                  }
-                />
-                <InputView
-                  controlStyle={{ w: '207px' }}
-                  label="Claimant Signature"
-                  InputElem={
-                    claimantsSignature ? (
-                      <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
-                    ) : (
-                      'Null'
-                    )
-                  }
-                />
-              </HStack>
+                <HStack spacing="16px">
+                  <InputView
+                    controlStyle={{ w: '207px' }}
+                    label="Date of signature"
+                    InputElem={
+                      <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
+                    }
+                  />
+                  <InputView
+                    controlStyle={{ w: '207px' }}
+                    label="Claimant Signature"
+                    InputElem={
+                      claimantsSignature ? (
+                        <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                      ) : (
+                        'Null'
+                      )
+                    }
+                  />
+                </HStack>
+              </VStack>
             </VStack>
-          </VStack>
-        </FormControl>
-
-        <Box>
-          <Divider borderColor=" #E2E8F0" borderWidth="1px" />
-        </Box>
-        <Flex justifyContent="end" my="16px" mx="32px">
-          {lienWaiverData.lienWaiverAccepted && (
-            <Box>
-              <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
-                <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
-                  See LW{`${lienWaiverData.id}`}
-                </Button>
-              </Link>
-            </Box>
-          )}
-          <Spacer />
-          <HStack spacing="16px">
+          </FormControl>
+        </ModalBody>
+        <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+          <Flex justifyContent="start" w="100%">
+            {lienWaiverData.lienWaiverAccepted && (
+              <Box>
+                <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
+                  <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
+                    See LW{`${lienWaiverData.id}`}
+                  </Button>
+                </Link>
+              </Box>
+            )}
+          </Flex>
+          <HStack spacing="16px" justifyContent="end">
             {!lienWaiverData.lienWaiverAccepted && (
               <Button onClick={onClose} colorScheme="brand">
                 {t('cancel')}
@@ -231,9 +229,9 @@ export const LienWaiverTab: React.FC<any> = props => {
               </>
             )}
           </HStack>
-        </Flex>
+        </ModalFooter>
       </form>
-    </Stack>
+    </Box>
   )
 }
 
