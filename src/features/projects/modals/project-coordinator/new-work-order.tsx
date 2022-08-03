@@ -27,7 +27,6 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors } from 'utils/pc-projects'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useTrades } from 'utils/vendor-details'
-import { useDocuments } from 'utils/vendor-projects'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
 import NumberFormat from 'react-number-format'
 
@@ -86,9 +85,6 @@ const NewWorkOrder: React.FC<{
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
-  const { documents = [] } = useDocuments({
-    projectId: projectData?.id,
-  })
 
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
@@ -110,7 +106,7 @@ const NewWorkOrder: React.FC<{
   const watchVendorId = watch('vendorId')
 
   const onSubmit = values => {
-    const payload = parseNewWoValuesToPayload(values, documents, projectData.id)
+    const payload = parseNewWoValuesToPayload(values, projectData.id)
     createWorkOrder(payload as any)
   }
 

@@ -297,13 +297,9 @@ export const defaultValuesLienWaiver = lienWaiverData => {
 }
 /* New Work Order */
 
-export const parseNewWoValuesToPayload = (formValues, documents, projectId) => {
+export const parseNewWoValuesToPayload = (formValues, projectId) => {
   const selectedCapacity = 1
   const arr = [] as any
-  Object.keys(documents).forEach(function (key) {
-    arr.push(documents[key])
-  })
-
   return {
     workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
     workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
