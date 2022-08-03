@@ -60,7 +60,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
                 <VendorProfileTabs
                   vendorProfileData={vendorProfileData}
                   refetch={refetch}
-                  // vendorModalType="detail"
+                  vendorModalType="editVendor"
                   onClose={onClose}
                 />
               )}

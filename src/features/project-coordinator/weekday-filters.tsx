@@ -1,6 +1,5 @@
-import { Button, Divider, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { WeekdayCard } from 'features/project-coordinator/weekday-filter-card'
-import { t } from 'i18next'
 import { useWeekDayProjectsDue } from 'utils/projects'
 
 const useWeekdayCardJson = days => {
@@ -60,14 +59,16 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
   const { data: values, isLoading } = useWeekDayProjectsDue()
   const days = useWeekdayCardJson(values)
 
-  const allDays = () => {
-    onSelectDay('All')
-  }
+  // const allDays = () => {
+  //   onSelectDay('All')
+  // }
 
   return (
     <>
       <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-        <Button
+        {/* Hiding All and Clear Filter for now */}
+
+        {/* <Button
           bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
           color={selectedDay === 'All' ? 'white' : 'black'}
           variant={'pill'}
@@ -75,8 +76,9 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
           p={0}
         >
           {t('All')}
-        </Button>
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
+        </Button> */}
+        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
+
         {days.map(day => {
           return (
             <WeekdayCard
@@ -91,10 +93,13 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
             />
           )
         })}
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
-        <Button variant="ghost" colorScheme="brand" onClick={clear}>
+
+        {/* Hiding All and Clear Filter for now */}
+
+        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
+        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
-        </Button>
+        </Button> */}
       </Stack>
     </>
   )

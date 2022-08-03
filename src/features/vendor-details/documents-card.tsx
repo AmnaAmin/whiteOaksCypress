@@ -27,7 +27,6 @@ import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 
 type DocumentsProps = {
-  setNextTab: () => void
   vendor: VendorProfile
   onClose?: () => void
   VendorType: string
@@ -39,7 +38,7 @@ type DocumentFormProps = {
   VendorType?: string
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
-  const { vendor = {}, setNextTab } = props
+  const { vendor = {} } = props
   // const { mutate: saveDocuments } = useSaveVendorDetails()
   const { mutate: saveDocuments } = useSaveVendorDetails('Document')
   const onSubmit = useCallback(
@@ -53,13 +52,9 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
         coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
       }
       const vendorPayload = createVendorPayload(updatedObject, vendor)
-      saveDocuments(vendorPayload, {
-        onSuccess() {
-          setNextTab()
-        },
-      })
+      saveDocuments(vendorPayload)
     },
-    [vendor, setNextTab, saveDocuments],
+    [vendor, saveDocuments],
   )
   return (
     <Box w="100%">
@@ -446,9 +441,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       <Flex
         id="footer"
         mt={2}
-        pt="12px"
+        height="72px"
+        pt="8px"
         w="100%"
-        // minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"

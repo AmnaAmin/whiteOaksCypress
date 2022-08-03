@@ -62,3 +62,17 @@ export const useWeekDayProjectsDue = () => {
     return response?.data
   })
 }
+
+export const useProjectNotes = ({ projectId }: { projectId: number | undefined }) => {
+  const client = useClient()
+
+  const { data: notes, ...rest } = useQuery<Array<Document>>(['notes', projectId], async () => {
+    const response = await client(`notes?projectId.equals=${projectId}`, {})
+    return response?.data
+  })
+
+  return {
+    notes,
+    ...rest,
+  }
+}

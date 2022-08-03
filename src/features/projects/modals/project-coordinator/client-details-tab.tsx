@@ -196,7 +196,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Flex style={ btnStyle } py="4" pt={5}>
+      <Flex style={btnStyle} py="4" pt={5}>
         <Button colorScheme="brand" onClick={props?.onClose}>
           Cancel
         </Button>

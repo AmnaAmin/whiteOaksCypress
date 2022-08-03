@@ -95,14 +95,14 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
         Header: t('balance') as string,
         accessor: 'amount',
         Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
+          return numeral(cellInfo.value).format('$0,0.00')
         },
       },
       {
         Header: t('finalInvoice') as string,
         accessor: 'finalInvoice',
         Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
+          return numeral(cellInfo.value).format('$0,0.00')
         },
       },
       {

@@ -31,7 +31,6 @@ import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 type LicenseProps = {
-  setNextTab: () => void
   vendor: VendorProfile
   onClose?: () => void
 }
@@ -41,7 +40,7 @@ type licenseFormProps = {
   onClose?: () => void
 }
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { vendor = {}, setNextTab } = props
+  const { vendor = {} } = props
 
   const { mutate: saveLicenses } = useSaveVendorDetails('License')
 
@@ -49,13 +48,9 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
     async values => {
       const results = await parseLicenseValues(values, props?.vendor?.licenseDocuments)
       const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
-      saveLicenses(vendorPayload, {
-        onSuccess() {
-          setNextTab()
-        },
-      })
+      saveLicenses(vendorPayload)
     },
-    [vendor, setNextTab, saveLicenses],
+    [vendor, saveLicenses],
   )
   return (
     <Box>
@@ -131,7 +126,6 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
       <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}>
         <Button
           variant="outline"
-          ml="13px"
           colorScheme="brand"
           data-testid="addLicense"
           onClick={() =>
@@ -146,7 +140,7 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
         >
           {t('addLicense')}
         </Button>
-        <VStack align="start" h="470px" spacing="15px" ml="8px" overflow="auto">
+        <VStack align="start" h="470px" spacing="15px" overflow="auto">
           {licenseFields.map((license, index) => {
             return (
               <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -251,9 +245,17 @@ export const LicenseForm = ({ vendor, onSubmit, onClose }: licenseFormProps) => 
             )
           })}
         </VStack>
-        <Flex id="footer" w="100%" pt="12px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
+        <Flex
+          id="footer"
+          w="100%"
+          height="72px"
+          pt="8px"
+          alignItems="center"
+          justifyContent="end"
+          borderTop="2px solid #E2E8F0"
+        >
           {onClose && (
-            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+            <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
               Cancel
             </Button>
           )}

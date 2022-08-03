@@ -22,52 +22,30 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
 import { GetHelpText } from 'utils/lien-waiver'
-import { useUpdateWorkOrderMutation } from 'utils/work-order'
 
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 import { dateFormatter } from 'utils/date-time-utils'
+import { defaultValuesLienWaiver } from 'utils/work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose, documentsData } = props
-  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
+  const { lienWaiverData, onClose, documentsData, onSave } = props
   const [documents, setDocuments] = useState<any[]>([])
   const [openSignature, setOpenSignature] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const { register, handleSubmit, setValue } = useForm({
-    defaultValues: {
-      claimantName: lienWaiverData.claimantName,
-      customerName: lienWaiverData.customerName,
-      propertyAddress: lienWaiverData.propertyAddress,
-      owner: lienWaiverData.owner,
-      makerOfCheck: lienWaiverData.makerOfCheck,
-      amountOfCheck: lienWaiverData.amountOfCheck,
-      checkPayableTo: lienWaiverData.claimantName,
-      claimantsSignature: lienWaiverData.claimantsSignature,
-      claimantTitle: lienWaiverData.claimantTitle,
-      dateOfSignature: lienWaiverData.dateOfSignature,
-      lienWaiverAccepted: !lienWaiverData.lienWaiverAccepted,
-    },
+    defaultValues: defaultValuesLienWaiver(lienWaiverData),
   })
   const { leanwieverLink } = props.lienWaiverData
 
-  const parseValuesToPayload = (formValues, documents) => {
-    return {
-      ...lienWaiverData,
+  const onSubmit = formValues => {
+    onSave({
       ...formValues,
       documents,
-    }
+    })
   }
-
-  const onSubmit = formValues => {
-    const lienWaiverData = parseValuesToPayload(formValues, documents)
-    updateLienWaiver(lienWaiverData)
-  }
-  useEffect(() => {
-    if (isSuccess) onClose()
-  }, [isSuccess, onClose])
 
   useEffect(() => {
     if (!documentsData?.length) return
@@ -203,7 +181,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   controlStyle={{ w: '207px' }}
                   label="Date of signature"
                   InputElem={
-                    <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'dd-mm-yyyy'}</>
+                    <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
                   }
                 />
                 <InputView

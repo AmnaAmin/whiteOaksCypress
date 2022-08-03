@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react'
-import { useNotes, useNoteMutation } from 'utils/work-order'
-import { NotesTab } from '../../common/notes-tab'
-import { useAccountDetails } from 'utils/vendor-details'
+import { useNoteMutation } from 'utils/work-order'
 
-export const WorkOrderNotes: React.FC<any> = props => {
-  const { workOrder, onClose, setNotesCount } = props
-  const { mutate: createNotes } = useNoteMutation(workOrder?.id)
+import { useAccountDetails } from 'utils/vendor-details'
+import { NotesTab } from 'features/common/notes-tab'
+import { useProjectNotes } from 'utils/projects'
+
+export const ProjectNotes: React.FC<any> = props => {
+  const { setNotesCount, projectId } = props
+
+  const { mutate: createNotes } = useNoteMutation(projectId)
   const { data: account } = useAccountDetails()
 
-  const { notes = [] } = useNotes({
-    workOrderId: workOrder?.id,
+  const { notes = [] } = useProjectNotes({
+    projectId: projectId,
   })
 
   useEffect(() => {
@@ -21,8 +24,7 @@ export const WorkOrderNotes: React.FC<any> = props => {
   const saveNote = data => {
     const payload = {
       comment: data.message,
-      workOrderId: workOrder?.id,
-      projectId: workOrder?.projectId,
+      projectId: projectId,
     }
     createNotes(payload)
   }
@@ -30,12 +32,11 @@ export const WorkOrderNotes: React.FC<any> = props => {
     <NotesTab
       saveNote={saveNote}
       notes={notes}
-      onClose={onClose}
       messageBoxStyle={{ height: '120px', resize: 'none' }}
-      chatListStyle={{ height: '205px' }}
-      pageLayoutStyle={{ padding: '25px', pb: 0 }}
+      chatListStyle={{ height: '340px' }}
+      pageLayoutStyle={{ padding: '25px', bg: 'white', rounded: 16, pb: 2 }}
     />
   )
 }
 
-export default WorkOrderNotes
+export default ProjectNotes
