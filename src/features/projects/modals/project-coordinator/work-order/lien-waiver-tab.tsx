@@ -12,7 +12,6 @@ import {
   InputLeftElement,
   Link,
   ModalFooter,
-  Spacer,
   Stack,
   VStack,
 } from '@chakra-ui/react'
