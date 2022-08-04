@@ -62,7 +62,7 @@ export const ProjectDetails: React.FC = props => {
 
   return (
     <>
-      <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
+      <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectData={projectData as Project} isLoading={isLoading} />
 
@@ -85,14 +85,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
-                  <Button
-                    onClick={onOpen}
-                    // bg="#4E87F8"
-                    color="white"
-                    size="md"
-                    bg="#4e87f8"
-                    _hover={{ bg: '#2A61CE' }}
-                  >
+                  <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
                     <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>
                         <BiAddToQueue size={14} />
@@ -109,11 +102,11 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
 
-                {tabIndex === 4 && (
+                {/* {tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onAlertModalOpen}>
                     Resolve
                   </Button>
-                )}
+                )} */}
                 {tabIndex === 0 && (
                   <HStack spacing="16px">
                     <Box>
@@ -151,10 +144,8 @@ export const ProjectDetails: React.FC = props => {
                 </Card>
               </TabPanel>
 
-              <TabPanel p="0px" h="0px">
-                <Box h="100%" w="100%">
-                  <WorkOrdersTable ref={tabsContainerRef} />
-                </Box>
+              <TabPanel p="0px" h="100%" mt="7px">
+                <WorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
 
               <TabPanel p="0px" mt="3">
