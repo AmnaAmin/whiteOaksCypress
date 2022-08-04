@@ -6,7 +6,7 @@ import { useAccountDetails } from 'utils/vendor-details'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 
-const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
+export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
     <Flex mb={4}>
       {otherNote ? (
