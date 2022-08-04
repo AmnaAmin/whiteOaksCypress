@@ -407,7 +407,6 @@ i18n.use(initReactI18next).init({
         superEmail: 'Super Email',
 
         // PC Projects Table
-        profitPercentage: 'Profit Percentage',
         woNumber: 'WO Number',
         poNumber: 'PO Number',
         profitTotal: 'Profit Total',
