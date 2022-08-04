@@ -6,6 +6,8 @@ import {
   Grid,
   HStack,
   Icon,
+  ModalBody,
+  ModalFooter,
   Table,
   Tbody,
   Td,
@@ -106,7 +108,7 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
   }
   return (
     <Box>
-      <Box w="100%">
+      <ModalBody h="400px">
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
@@ -133,7 +135,7 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
         <Box>
-          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
+          <Box h="250px" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
             <Table variant="simple" size="md">
               <Thead pos="sticky" top={0}>
                 <Tr>
@@ -176,36 +178,32 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
             </VStack>
           </Box>
         </Box>
-      </Box>
-      <HStack w="100%" justifyContent="end" h="83px" borderTop="1px solid #CBD5E0" mt={10} pt={5}>
-        <HStack w="100%" justifyContent={'start'} mb={2} alignItems={'start'}>
-          <Flex w="100%" alignContent="space-between" pos="relative">
-            <Flex fontSize="14px" fontWeight={500} mr={1}>
-              {recentInvoice && (
-                <Button
-                  variant="outline"
-                  colorScheme="brand"
-                  size="md"
-                  onClick={() => downloadFile(recentInvoice?.s3Url)}
-                  leftIcon={<BiDownload />}
-                >
-                  {t('see')} {t('invoice')}
-                </Button>
-              )}
-            </Flex>
-          </Flex>
+      </ModalBody>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+        <HStack justifyContent="start" w="100%">
+          {recentInvoice && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              onClick={() => downloadFile(recentInvoice?.s3Url)}
+              leftIcon={<BiDownload />}
+            >
+              {t('see')} {t('invoice')}
+            </Button>
+          )}
         </HStack>
-        <Flex>
+        <HStack justifyContent="end">
           {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && (
-            <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand" mr={3}>
+            <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
               {t('save')}
             </Button>
           )}
           <Button onClick={onClose} colorScheme="brand" variant="outline">
             {t('cancel')}
           </Button>
-        </Flex>
-      </HStack>
+        </HStack>
+      </ModalFooter>
     </Box>
   )
 }

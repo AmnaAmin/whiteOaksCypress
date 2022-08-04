@@ -9,6 +9,8 @@ export const dateFormat = (date: string | Date) => {
 }
 
 export const datePickerFormat = (date: string | Date) => {
+  if (date === null) return null
+
   return date ? format(new Date(date), 'yyyy-MM-dd') : null
 }
 

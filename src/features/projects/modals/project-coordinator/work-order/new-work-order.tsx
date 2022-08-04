@@ -23,12 +23,12 @@ import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
-import { dateFormatter } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors } from 'utils/pc-projects'
-import { currencyFormatter, removeCurrencyFormat, removePercentageFormat } from 'utils/stringFormatters'
+import { currencyFormatter } from 'utils/stringFormatters'
 import { useTrades } from 'utils/vendor-details'
-import { useDocuments } from 'utils/vendor-projects'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
+import NumberFormat from 'react-number-format'
 
 const CalenderCard = props => {
   return (
@@ -73,6 +73,10 @@ const InformationCard = props => {
   )
 }
 
+const CustomRequiredInput = props => {
+  return <Input {...props} variant="required-field" />
+}
+
 const NewWorkOrder: React.FC<{
   projectData: Project
   isOpen: boolean
@@ -81,16 +85,13 @@ const NewWorkOrder: React.FC<{
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
-  const { documents = [] } = useDocuments({
-    projectId: projectData?.id as number,
-  })
-
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const [approvedAmount, setApprovedAmount] = useState<number | null>()
   const [percentageField, setPercentageField] = useState<number | null>()
-  const [vendorPhone, setVendorPhone] = useState<string | undefined>()
-  const [vendorEmail, setVendorEmail] = useState<string | undefined>()
+  // commenting as requirement yet to be confirmed
+  // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
+  // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
   const {
     register,
@@ -98,14 +99,13 @@ const NewWorkOrder: React.FC<{
     control,
     setValue,
     reset,
-    watch,
     formState: { errors },
   } = useForm()
 
-  const watchVendorId = watch('vendorId')
+  // const watchVendorId = watch('vendorId')
 
   const onSubmit = values => {
-    const payload = parseNewWoValuesToPayload(values, documents, projectData.id)
+    const payload = parseNewWoValuesToPayload(values, projectData.id)
     createWorkOrder(payload as any)
   }
 
@@ -117,17 +117,17 @@ const NewWorkOrder: React.FC<{
   }, [isSuccess, onClose])
 
   useEffect(() => {
-    if (approvedAmount === 0 && percentageField === 0) {
+    if (approvedAmount && percentageField) {
+      const amount = approvedAmount
+      const percentage = percentageField
+      const vendorWoAmountResult = amount - amount * (percentage / 100)
+      setValue('invoiceAmount', vendorWoAmountResult.toFixed(2))
+    } else if (approvedAmount === 0) {
       setValue('invoiceAmount', 0)
-    }
-
-    if (approvedAmount && approvedAmount !== 0 && percentageField && percentageField !== 0) {
-      const approvedAmountWithoutCurrency = removeCurrencyFormat((approvedAmount as number)?.toString())
-      const approvedAmountInt = approvedAmountWithoutCurrency
-      const percentageWithoutCurrency = removePercentageFormat((percentageField as number)?.toString())
-      const percentageInt = percentageWithoutCurrency
-      const vendorWoAmountResult = approvedAmountInt - approvedAmountInt * (percentageInt / 100)
-      setValue('invoiceAmount', parseFloat(vendorWoAmountResult.toFixed(2)))
+    } else if (approvedAmount && percentageField === 0) {
+      setValue('invoiceAmount', approvedAmount.toFixed(2))
+    } else {
+      setValue('invoiceAmount', '')
     }
   }, [approvedAmount, percentageField])
 
@@ -151,13 +151,13 @@ const NewWorkOrder: React.FC<{
     setVendorOptions(option)
   }, [vendors])
 
-  useEffect(() => {
+  /* useEffect(() => {
     const subscription = watch(values => {
       setVendorPhone(vendors?.find(v => v?.id === values?.vendorId?.value)?.businessPhoneNumber ?? '')
       setVendorEmail(vendors?.find(v => v?.id === values?.vendorId?.value)?.businessEmailAddress ?? '')
     })
     return () => subscription.unsubscribe()
-  }, [watchVendorId, vendors])
+  }, [watchVendorId, vendors]) */
 
   return (
     <Modal
@@ -183,13 +183,19 @@ const NewWorkOrder: React.FC<{
           <ModalBody justifyContent="center">
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-                <CalenderCard title="Client Start" date={dateFormatter(projectData?.clientStartDate)} />
-                <CalenderCard title="Client End " date={dateFormatter(projectData?.clientDueDate)} />
+                <CalenderCard
+                  title="Client Start"
+                  date={projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy'}
+                />
+                <CalenderCard
+                  title="Client End "
+                  date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
+                />
                 <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
 
                 <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
-                <InformationCard title=" Email" date={vendorEmail} />
-                <InformationCard title=" Phone No" date={vendorPhone} />
+                {/*<InformationCard title=" Email" date={vendorEmail} />
+                <InformationCard title=" Phone No" date={vendorPhone} />*/}
               </SimpleGrid>
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
@@ -254,22 +260,28 @@ const NewWorkOrder: React.FC<{
                       <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                         {t('clientApprovedAmount')}
                       </FormLabel>
-                      <Input
-                        id="clientApprovedAmount"
-                        placeholder="$0.00"
-                        height="40px"
-                        borderLeft="2px solid #4E87F8"
-                        focusBorderColor="none"
-                        {...register('clientApprovedAmount', {
-                          required: 'This field is required.',
-                        })}
-                        onChange={e => {
-                          setApprovedAmount(e.target.value ? parseFloat(e.target.value) : 0)
+                      <Controller
+                        control={control}
+                        rules={{ required: 'This is required' }}
+                        name="clientApprovedAmount"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <NumberFormat
+                                value={field.value}
+                                thousandSeparator
+                                customInput={CustomRequiredInput}
+                                prefix={'$'}
+                                onValueChange={e => {
+                                  field.onChange(e.floatValue)
+                                  setApprovedAmount(e.floatValue)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
                         }}
                       />
-                      <FormErrorMessage>
-                        {errors.clientApprovedAmount && errors.clientApprovedAmount.message}
-                      </FormErrorMessage>
                     </FormControl>
                   </Box>
                   <Box>
@@ -277,20 +289,27 @@ const NewWorkOrder: React.FC<{
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         {t('profitPercentage')}
                       </FormLabel>
-                      <Input
-                        id="percentage"
-                        placeholder="0%"
-                        height="40px"
-                        borderLeft="2px solid #4E87F8"
-                        focusBorderColor="none"
-                        {...register('percentage', {
-                          required: 'This field is required.',
-                        })}
-                        onChange={e => {
-                          setPercentageField(e.target.value ? parseFloat(e.target.value) : 0)
+                      <Controller
+                        control={control}
+                        rules={{ required: 'This is required' }}
+                        name="percentage"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <NumberFormat
+                                value={field.value}
+                                customInput={CustomRequiredInput}
+                                suffix={'%'}
+                                onValueChange={e => {
+                                  field.onChange(e.floatValue)
+                                  setPercentageField(e.floatValue)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
                         }}
                       />
-                      <FormErrorMessage>{errors.percentage && errors.percentage.message}</FormErrorMessage>
                     </FormControl>
                   </Box>
 
@@ -299,17 +318,27 @@ const NewWorkOrder: React.FC<{
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
-                      <Input
-                        id="invoiceAmount"
-                        placeholder="$0.00"
-                        height="40px"
-                        borderLeft="2px solid #4E87F8"
-                        focusBorderColor="none"
-                        {...register('invoiceAmount', {
-                          required: 'This field is required.',
-                        })}
+                      <Controller
+                        control={control}
+                        rules={{ required: 'This is required' }}
+                        name="invoiceAmount"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <NumberFormat
+                                value={field.value}
+                                customInput={CustomRequiredInput}
+                                thousandSeparator
+                                prefix={'$'}
+                                onValueChnge={e => {
+                                  field.onChange(e.floatValue)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
                       />
-                      <FormErrorMessage>{errors.invoiceAmount && errors.invoiceAmount.message}</FormErrorMessage>
                     </FormControl>
                   </Box>
                   <Box>
@@ -357,7 +386,7 @@ const NewWorkOrder: React.FC<{
             </Box>
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
             <HStack spacing="16px">
               <Button
                 onClick={() => {

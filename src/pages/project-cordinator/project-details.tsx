@@ -15,7 +15,7 @@ import { AmountDetailsCard } from 'features/project-coordinator/project-amount-d
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
 import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-form'
-import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
+import NewWorkOrder from 'features/projects/modals/project-coordinator/work-order/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
@@ -75,7 +75,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab>{t('projectDetails')}</Tab>
               <Tab>{t('vendorWorkOrders')}</Tab>
               <Tab>{t('documents')}</Tab>
-              <Tab>{t('alerts')}</Tab>
+              {/* <Tab>{t('alerts')}</Tab> */}
               <Tab>
                 {t('notes')}
                 <Box ml="5px" style={countInCircle}>

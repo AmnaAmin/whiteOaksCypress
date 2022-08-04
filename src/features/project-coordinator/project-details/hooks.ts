@@ -4,6 +4,7 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) => {
   const status = useWatch({ name: 'status', control })
+  const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
 
   const projectStatus = status?.value?.toLocaleLowerCase()
 
@@ -19,6 +20,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   // const isStatusPastDue = projectStatus === STATUS.PastDue
   const isStatusCancelled = projectStatus === STATUS.Cancelled
 
+  console.log('invoiceBackDate', invoiceBackDate)
   return {
     isStatusNew,
     isStatusActive,
@@ -46,7 +48,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isInvoiceNumberDisabled: isStatusPaid,
     isUploadAttachmentDisabled: isStatusPaid,
     isInvoiceBackDateDisabled: isStatusPaid,
-    isPaymentTermsDisabled: !isStatusInvoiced,
+    isPaymentTermsDisabled: !isStatusInvoiced && !invoiceBackDate,
     isWOAInvoiceDateDisabled: isAllTimeDisabled,
     isOverPaymentDisalbed: isAllTimeDisabled,
     isWOAExpectedPayDateDisabled: isAllTimeDisabled,

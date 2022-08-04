@@ -23,6 +23,7 @@ import { BiDownload } from 'react-icons/bi'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { datePickerFormat } from 'utils/date-time-utils'
+import { SelectOption } from 'types/transaction.type'
 
 const InvoiceAndPayments: React.FC = () => {
   const {
@@ -50,6 +51,22 @@ const InvoiceAndPayments: React.FC = () => {
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value
     const paymentTerm = getValues().paymentTerms?.value
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!paymentTerm) return
+
+    const woaExpectedDate = addDays(new Date(date), paymentTerm)
+
+    setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
+  }
+
+  const onPaymentTermChange = (option: SelectOption) => {
+    const date = getValues().invoiceBackDate
+    const paymentTerm = Number(option.value)
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!date) return
+
     const woaExpectedDate = addDays(new Date(date), paymentTerm)
 
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
@@ -194,7 +211,7 @@ const InvoiceAndPayments: React.FC = () => {
             <Controller
               control={control}
               name="paymentTerms"
-              rules={{ required: isStatusInvoiced ? 'This is required' : false }}
+              rules={{ required: !isPaymentTermsDisabled ? 'This is required' : false }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
@@ -202,6 +219,10 @@ const InvoiceAndPayments: React.FC = () => {
                     isDisabled={isPaymentTermsDisabled}
                     options={PAYMENT_TERMS_OPTIONS}
                     selectProps={{ isBorderLeft: isStatusInvoiced }}
+                    onChange={(option: SelectOption) => {
+                      onPaymentTermChange(option)
+                      field.onChange(option)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
