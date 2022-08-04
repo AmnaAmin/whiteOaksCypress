@@ -27,7 +27,7 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} p="0">
             <Flex alignItems="center" h="60px">
               <Text noOfLines={2} title={cell.value} padding="0 15px">
                 {cell.render('Cell')}
@@ -53,8 +53,8 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { columns } = useColumnWidthResize(
       [
         {
-          Header: 'Id',
-          accessor: 'id',
+          Header: 'ID',
+          accessor: 'projectId',
         },
         {
           Header: 'Vendor Name',
