@@ -12,12 +12,12 @@ type clientDetailProps = {
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { data: markets } = useMarkets()
 
-  const clientMarket = props?.clientDetails?.markets
-    ? props?.clientDetails?.markets?.map(market => ({
-        label: market?.metropolitanServiceArea,
-        value: market?.id,
-      }))
-    : null
+  // const clientMarket = props?.clientDetails?.markets
+  //   ? props?.clientDetails?.markets?.map(market => ({
+  //       label: market?.metropolitanServiceArea,
+  //       value: market?.id,
+  //     }))
+  //   : null
 
   const btnStyle = {
     alignItems: 'center',
