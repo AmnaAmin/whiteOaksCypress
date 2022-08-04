@@ -1,43 +1,36 @@
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { Details } from 'features/vendor-details/details'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { TradeList } from 'features/vendor-details/trades'
-import { MarketList } from 'features/vendor-details/markets'
-import { Tabs, TabList, TabPanels, Tab, TabPanel, useToast } from '@chakra-ui/react'
-import { Box, Stack } from '@chakra-ui/react'
-import React, { useCallback, useEffect, useState } from 'react'
-import { License } from 'features/vendor-details/license'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
+import { License } from 'features/vendor-details/license'
+import { MarketList } from 'features/vendor-details/markets'
+import { TradeList } from 'features/vendor-details/trades'
+import React, { useCallback, useState } from 'react'
+import { useUserProfile } from 'utils/redux-common-selectors'
 // import { t } from 'i18next';
-import { useTranslation } from 'react-i18next'
-import 'components/translation/i18n'
-import { Account } from 'types/account.types'
-import { VendorProfile, VendorProfileDetailsFormData, VendorProfilePayload } from 'types/vendor.types'
+import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
-import { AuditLogs, AUDIT_LOGS_COLUMNS } from 'features/vendor-details/audit-logs'
-import { useTableColumnSettings } from 'utils/table-column-settings'
-import { TableNames } from 'types/table-column.types'
+import 'components/translation/i18n'
 import { Card } from 'features/login-form-centered/Card'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
-import { useQueryClient } from 'react-query'
+import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
+import intersection from 'lodash/intersection'
+import keys from 'lodash/keys'
+import { FormProvider, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { Account } from 'types/account.types'
+import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import {
-  parseVendorAPIDataToFormData,
-  parseVendorFormDataToAPIData,
-  useVendorProfile,
-  useCreateVendorMutation,
-  usePaymentMethods,
-  useVendorProfileUpdateMutation,
-  parseMarketFormValuesToAPIPayload,
-  parseTradeFormValuesToAPIPayload,
-  useSaveVendorDetails,
-  parseLicenseValues,
   createVendorPayload,
   parseDocumentCardsValues,
+  parseLicenseValues,
+  parseMarketFormValuesToAPIPayload,
+  parseTradeFormValuesToAPIPayload,
+  parseVendorFormDataToAPIData,
+  prepareVendorDocumentObject,
+  useCreateVendorMutation,
+  usePaymentMethods,
+  useSaveVendorDetails,
+  useVendorProfile,
 } from 'utils/vendor-details'
-import keys from 'lodash/keys'
-import intersection from 'lodash/intersection'
-import { DevTool } from '@hookform/devtools'
-import { convertDateTimeToServer } from 'utils/date-time-utils'
 
 type Props = {
   vendorProfileData?: VendorProfile
@@ -52,128 +45,54 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const VendorType = props.vendorModalType
   const { t } = useTranslation()
   const toast = useToast()
-  const queryClient = useQueryClient()
   const { mutate: createVendorProfileDetails } = useCreateVendorMutation()
-  const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
-  const { mutate: saveLicenses } = useSaveVendorDetails('License')
-  const { mutate: saveDocuments } = useSaveVendorDetails('Document')
+  const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
+  const { mutate: saveDocuments } = useSaveVendorDetails('DocumentDetails')
+  const { mutate: saveProfile } = useSaveVendorDetails('Profile')
+  const { mutate: saveTrades } = useSaveVendorDetails('Trades')
+  const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState(0)
-  // const {
-  //   register,
-  //   control,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   setValue,
-  //   reset,
-  // } = useForm<VendorProfileDetailsFormData>({
-  //   defaultValues: {
-  //     ownerName: '',
-  //     secondName: '',
-  //     businessPhoneNumber: '',
-  //     businessPhoneNumberExtension: '',
-  //     secondPhoneNumber: '',
-  //     secondPhoneNumberExtension: '',
-  //     businessEmailAddress: '',
-  //     secondEmailAddress: '',
-  //     companyName: '',
-  //     score: undefined,
-  //     status: undefined,
-  //     state: undefined,
-  //     paymentTerm: undefined,
-  //     streetAddress: '',
-  //     city: '',
-  //     zipCode: '',
-  //     capacity: null,
-  //     einNumber: '',
-  //     ssnNumber: '',
-  //   },
-  // })
+
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { control, clearErrors } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
-  // const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.vendors)
+
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
       console.log('submiting...', tabIndex)
-      let vendorProfilePayload
       if (vendorProfileData?.id) {
         switch (tabIndex) {
           case 0:
             //detail
-            const payload = parseVendorFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
-            updateVendorProfile(payload, {
-              onSuccess() {
-                queryClient.invalidateQueries('vendorProfile')
-                toast({
-                  title: t('updateProfile'),
-                  description: t('updateProfileSuccess'),
-                  status: 'success',
-                  isClosable: true,
-                })
-              },
-              onError(error: any) {
-                toast({
-                  title: 'Update Vendor',
-                  description: (error.title as string) ?? 'Unable to save project.',
-                  status: 'error',
-                  isClosable: true,
-                })
-              },
-            })
+            const profilePayload = parseVendorFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
+            saveProfile(profilePayload)
             break
 
           case 1:
             //document
-            vendorProfilePayload = await parseDocumentCardsValues(formData)
-            const updatedObject = {
-              documents: vendorProfilePayload,
-              agreementSignedDate: convertDateTimeToServer(formData.agreementSignedDate!),
-              autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
-              coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
-              coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
-            }
+            const documentsPayload = await parseDocumentCardsValues(formData)
+            const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
 
           case 2:
             //license
-            vendorProfilePayload = await parseLicenseValues(formData, vendorProfileData?.licenseDocuments)
-            saveLicenses(createVendorPayload({ licenseDocuments: vendorProfilePayload }, vendorProfileData))
+            const licensePayload = await parseLicenseValues(formData, vendorProfileData?.licenseDocuments)
+            saveLicenses(createVendorPayload({ licenseDocuments: licensePayload }, vendorProfileData))
             break
 
           case 3:
             //trade
-            vendorProfilePayload = parseTradeFormValuesToAPIPayload(formData, vendorProfileData)
-            updateVendorProfile(vendorProfilePayload, {
-              onSuccess() {
-                queryClient.invalidateQueries('vendorProfile')
-                toast({
-                  title: t('updateTrades'),
-                  description: t('updateTradesSuccess'),
-                  status: 'success',
-                  isClosable: true,
-                })
-              },
-            })
+            const tradePayload = parseTradeFormValuesToAPIPayload(formData, vendorProfileData)
+            saveTrades(tradePayload)
             break
 
           case 4:
             //Market
-            vendorProfilePayload = parseMarketFormValuesToAPIPayload(formData, vendorProfileData)
-            updateVendorProfile(vendorProfilePayload, {
-              onSuccess() {
-                queryClient.invalidateQueries('vendorProfile')
-                props.onClose?.()
-                toast({
-                  title: t('updateMarkets'),
-                  description: t('updateMarketsSuccess'),
-                  status: 'success',
-                  isClosable: true,
-                })
-              },
-            })
+            const marketsPayload = parseMarketFormValuesToAPIPayload(formData, vendorProfileData)
+            saveMarkets(marketsPayload)
             break
 
           default:
@@ -213,7 +132,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         }
       }
     },
-    [toast, updateVendorProfile, vendorProfileData, paymentsMethods, tabIndex],
+    [toast, vendorProfileData, useSaveVendorDetails, paymentsMethods, tabIndex],
   )
   const detailErrors = [
     'businessEmailAddress',
@@ -227,11 +146,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     'zipCode',
     'einNumber',
     'ssnNumber',
+    'primaryEmail',
   ]
   const documentErrors = ['w9Document']
   const licenseErrors = []
   const tradeError = []
-  const marketError = []
+
   const onError = (errors, e) => {
     errors = keys(errors)
     console.log(errors)
@@ -309,12 +229,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           <TabPanels mt="31px">
             <TabPanel p="0px">
               {VendorType === 'editVendor' ? (
-                <PcDetails
-                  vendorProfileData={vendorProfileData as VendorProfile}
-                  // VendorType={VendorType!}
-                  onClose={props.onClose}
-                  // updateVendorId={props.updateVendorId}
-                />
+                <PcDetails vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
               ) : (
                 <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
               )}

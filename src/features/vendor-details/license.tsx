@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   HStack,
@@ -13,14 +13,8 @@ import {
 } from '@chakra-ui/react'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-form'
-import {
-  licenseTypes,
-  useSaveVendorDetails,
-  parseLicenseValues,
-  licenseDefaultFormValues,
-  createVendorPayload,
-} from 'utils/vendor-details'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { licenseTypes } from 'utils/vendor-details'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
@@ -36,60 +30,30 @@ type LicenseProps = {
 }
 type licenseFormProps = {
   vendor: VendorProfile
-  // onSubmit: (values: any) => void
   onClose?: () => void
 }
 export const License = React.forwardRef((props: LicenseProps, ref) => {
-  const { vendor = {} } = props
-
-  const { mutate: saveLicenses } = useSaveVendorDetails('License')
-
-  // const onSubmit = useCallback(
-  //   async values => {
-  //     const results = await parseLicenseValues(values, props?.vendor?.licenseDocuments)
-  //     const vendorPayload = createVendorPayload({ licenseDocuments: results }, vendor)
-  //     saveLicenses(vendorPayload)
-  //   },
-  //   [vendor, saveLicenses],
-  // )
   return (
     <Box>
-      <LicenseForm
-        vendor={props.vendor}
-        //  onSubmit={onSubmit}
-        onClose={props.onClose}
-      />
+      <LicenseForm vendor={props.vendor} onClose={props.onClose} />
     </Box>
   )
 })
 export const LicenseForm = ({
   vendor,
-  // onSubmit,
+
   onClose,
 }: licenseFormProps) => {
   const [startDate] = useState()
   const { t } = useTranslation()
-  // const defaultValues: LicenseFormValues = useMemo(() => {
-  //   if (vendor) {
-  //     return { licenses: licenseDefaultFormValues(vendor) }
-  //   }
-  //   return { licenses: [] }
-  // }, [vendor])
+
   const {
-    register,
     formState: { errors },
-    handleSubmit,
     control,
-    watch,
+    register,
     setValue,
-    reset,
   } = useFormContext<LicenseFormValues>()
-  //   {
-  //   defaultValues,
-  // }
-  // useEffect(() => {
-  //   reset(defaultValues)
-  // }, [defaultValues, vendor, reset])
+
   const {
     fields: licenseFields,
     append,
@@ -98,17 +62,8 @@ export const LicenseForm = ({
     control,
     name: 'licenses',
   })
-  /* debug purpose */
-  // const watchAllFields = watch()
-  // React.useEffect(() => {
-  //   const subscription = watch(value => {})
-  //   return () => subscription.unsubscribe()
-  // }, [watch, watchAllFields])
-  const [
-    ,
-    // fileBlob
-    setFileBlob,
-  ] = React.useState<Blob>()
+
+  const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -132,7 +87,6 @@ export const LicenseForm = ({
   }
   return (
     <Box>
-      {/* <form className="License Form" id="licenseForm" data-testid="licenseForm" onSubmit={handleSubmit(onSubmit)}> */}
       <Button
         variant="outline"
         colorScheme="brand"
@@ -272,7 +226,6 @@ export const LicenseForm = ({
           {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>
-      {/* </form> */}
     </Box>
   )
 }

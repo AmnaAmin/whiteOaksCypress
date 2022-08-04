@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -13,16 +13,9 @@ import {
 } from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Controller, useForm, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
-import {
-  parseDocumentCardsValues,
-  useSaveVendorDetails,
-  documentCardsDefaultValues,
-  createVendorPayload,
-} from 'utils/vendor-details'
-import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 
@@ -33,71 +26,31 @@ type DocumentsProps = {
 }
 type DocumentFormProps = {
   vendor: VendorProfile
-  // onSubmit: (values: any) => void
   onClose?: () => void
-  // VendorType?: string
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
-  const { vendor = {} } = props
-  // const { mutate: saveDocuments } = useSaveVendorDetails()
-  const { mutate: saveDocuments } = useSaveVendorDetails('Document')
-  // const onSubmit = useCallback(
-  //   async values => {
-  //     const results = await parseDocumentCardsValues(values)
-  //     const updatedObject = {
-  //       documents: results,
-  //       agreementSignedDate: convertDateTimeToServer(values.agreementSignedDate),
-  //       autoInsuranceExpirationDate: convertDateTimeToServer(values.autoInsuranceExpDate),
-  //       coiglExpirationDate: convertDateTimeToServer(values.coiGlExpDate),
-  //       coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
-  //     }
-  //     const vendorPayload = createVendorPayload(updatedObject, vendor)
-  //     saveDocuments(vendorPayload)
-  //   },
-  //   [vendor, saveDocuments],
-  // )
   return (
     <Box w="100%">
-      <DocumentsForm
-        // VendorType={props.VendorType}
-        vendor={props.vendor}
-        // onSubmit={onSubmit}
-        onClose={props.onClose}
-      ></DocumentsForm>
+      <DocumentsForm vendor={props.vendor} onClose={props.onClose}></DocumentsForm>
     </Box>
   )
 })
-export const DocumentsForm = ({
-  vendor,
-  // VendorType, onSubmit,
-  onClose,
-}: DocumentFormProps) => {
+export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const {
     formState: { errors },
-    handleSubmit,
     control,
-    watch,
     setValue,
     getValues,
-    reset,
   } = useFormContext<DocumentsCardFormValues>()
-  // { defaultValues }
-  // setChangeDateFields([])
-  //   return {}
-  // }, [vendor])
+
   useEffect(() => {
     if (!vendor) {
       setChangeDateFields([])
     }
   }, [vendor])
-  /* debug purpose */
-  // const watchAllFields = watch()
-  // React.useEffect(() => {
-  //   const subscription = watch(value => {})
-  //   return () => subscription.unsubscribe()
-  // }, [watch, watchAllFields])
+
   const [
     ,
     // fileBlob
@@ -126,7 +79,6 @@ export const DocumentsForm = ({
   }
   const documents = getValues()
   return (
-    // <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
     <>
       <Box h="600px" overflow="auto">
         <HStack spacing="16px" alignItems="flex-start">

@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
-import { Controller, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
-import { Market, VendorMarketFormValues, VendorProfile, VendorProfilePayload } from 'types/vendor.types'
-import {
-  parseMarketAPIDataToFormValues,
-  parseMarketFormValuesToAPIPayload,
-  useMarkets,
-  useVendorProfileUpdateMutation,
-} from 'utils/vendor-details'
+import { Box, Button, Flex } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
-import { useQueryClient } from 'react-query'
+import React from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Market, VendorMarketFormValues, VendorProfile } from 'types/vendor.types'
+import { useMarkets } from 'utils/vendor-details'
 // import 'components/translation/i18n';
 
 type marketFormProps = {
@@ -25,30 +19,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
   vendorProfileData,
   onClose,
 }) => {
-  const toast = useToast()
   const { markets, isLoading } = useMarkets()
-  // const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
-  // const queryClient = useQueryClient()
-
-  // const onSubmit = (formValues: VendorMarketFormValues) => {
-  //   const vendorProfilePayload: Partial<VendorProfilePayload> = parseMarketFormValuesToAPIPayload(
-  //     formValues,
-  //     vendorProfileData,
-  //   )
-
-  //   updateVendorProfile(vendorProfilePayload, {
-  //     onSuccess() {
-  //       queryClient.invalidateQueries('vendorProfile')
-  //       onClose?.()
-  //       toast({
-  //         title: t('updateMarkets'),
-  //         description: t('updateMarketsSuccess'),
-  //         status: 'success',
-  //         isClosable: true,
-  //       })
-  //     },
-  //   })
-  // }
 
   return (
     <Box>
@@ -66,38 +37,11 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
   )
 }
 
-export const MarketForm = ({
-  // submitForm,
-  vendorProfileData,
-  markets,
-  onClose,
-}: marketFormProps) => {
-  const {
-    handleSubmit,
-    control,
-    reset,
-    setValue,
-    // formState: { errors }
-  } = useFormContext<VendorMarketFormValues>()
-  //   {
-  //   defaultValues: {
-  //     markets: [],
-  //   },
-  // }
-
-  // const { fields: tradeCheckboxes } = useFieldArray({
-  //   control,
-  //   name: 'markets',
-  // })
+export const MarketForm = ({ onClose }: marketFormProps) => {
+  const { control } = useFormContext<VendorMarketFormValues>()
   const tradeCheckboxes = useWatch({ control, name: 'markets' })
-  // useEffect(() => {
-  //   if (markets?.length && vendorProfileData) {
-  //     const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
-  //     setValue('markets', tradeFormValues.markets)
-  //   }
-  // }, [markets, vendorProfileData, setValue])
+
   return (
-    // <form onSubmit={handleSubmit(submitForm)} id="market">
     <>
       <Box h="502px" overflow="auto">
         <Flex maxW="800px" wrap="wrap" gridGap={3}>
@@ -148,6 +92,5 @@ export const MarketForm = ({
         </Button>
       </Flex>
     </>
-    // </form>
   )
 }

@@ -14,13 +14,11 @@ import {
   Flex,
   FormErrorMessage,
   Spacer,
-  useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { Controller, useForm, useFormContext, useWatch } from 'react-hook-form'
+import React, { useEffect, useMemo } from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useQueryClient } from 'react-query'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useStates } from 'utils/pc-projects'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
@@ -28,117 +26,26 @@ import {
   parseMarketAPIDataToFormValues,
   parseTradeAPIDataToFormValues,
   parseVendorAPIDataToFormData,
-  parseVendorFormDataToAPIData,
-  useCreateVendorMutation,
   useMarkets,
   usePaymentMethods,
   useTrades,
-  useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { documentStatus, documentScore } from 'utils/vendor-projects'
 import first from 'lodash/first'
 const PcDetails: React.FC<{
   onClose?: () => void
-  // VendorType?: string
-  // updateVendorId?: (number) => void
   vendorProfileData: VendorProfile
-}> = ({
-  onClose,
-  //  VendorType,
-  vendorProfileData,
-  // updateVendorId
-}) => {
-  // const toast = useToast()
+}> = ({ onClose, vendorProfileData }) => {
   const { t } = useTranslation()
-  // const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  // const { mutate: createVendorProfileDetails } = useCreateVendorMutation()
-  // const queryClient = useQueryClient()
+
   const { data: paymentsMethods } = usePaymentMethods()
   const { data: statesData } = useStates()
   const {
     formState: { errors },
     control,
     register,
-    // setValue,
-    // reset,
   } = useFormContext<VendorProfileDetailsFormData>()
-  // const submitForm = useCallback(
-  //   (formData: VendorProfileDetailsFormData) => {
-  //     const payload = parseVendorFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
-  //     if (vendorProfileData?.id) {
-  //       updateVendorProfileDetails(payload, {
-  //         onSuccess() {
-  //           queryClient.invalidateQueries('vendorProfile')
-  //           toast({
-  //             title: t('updateProfile'),
-  //             description: t('updateProfileSuccess'),
-  //             status: 'success',
-  //             isClosable: true,
-  //           })
-  //         },
-  //         onError(error: any) {
-  //           toast({
-  //             title: 'Update Vendor',
-  //             description: (error.title as string) ?? 'Unable to save project.',
-  //             status: 'error',
-  //             isClosable: true,
-  //           })
-  //         },
-  //       })
-  //     } else {
-  //       createVendorProfileDetails(payload, {
-  //         onSuccess(res: any) {
-  //           updateVendorId?.(res?.data?.id)
-  //           toast({
-  //             title: 'Create Vendor',
-  //             description: t('updateProfileSuccess'),
-  //             status: 'success',
-  //             isClosable: true,
-  //           })
-  //         },
-  //         onError(error: any) {
-  //           toast({
-  //             title: 'Create Vendor',
-  //             description: (error.title as string) ?? 'Unable to create project.',
-  //             status: 'error',
-  //             isClosable: true,
-  //           })
-  //         },
-  //       })
-  //     }
-  //   },
-  //   [toast, updateVendorProfileDetails, vendorProfileData, paymentsMethods],
-  // )
-  // const {
-  //   register,
-  //   control,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   setValue,
-  //   reset,
-  // } = useForm<VendorProfileDetailsFormData>({
-  //   defaultValues: {
-  //     ownerName: '',
-  //     secondName: '',
-  //     businessPhoneNumber: '',
-  //     businessPhoneNumberExtension: '',
-  //     secondPhoneNumber: '',
-  //     secondPhoneNumberExtension: '',
-  //     businessEmailAddress: '',
-  //     secondEmailAddress: '',
-  //     companyName: '',
-  //     score: undefined,
-  //     status: undefined,
-  //     state: undefined,
-  //     paymentTerm: undefined,
-  //     streetAddress: '',
-  //     city: '',
-  //     zipCode: '',
-  //     capacity: null,
-  //     einNumber: '',
-  //     ssnNumber: '',
-  //   },
-  // })
+
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
 
@@ -153,7 +60,6 @@ const PcDetails: React.FC<{
 
   return (
     <Stack spacing={3}>
-      {/* <form onSubmit={handleSubmit(submitForm)}> */}
       <HStack spacing="16px">
         <FormControl w="215px" isInvalid={!!errors.companyName}>
           <FormLabel variant="strong-label" size="md">

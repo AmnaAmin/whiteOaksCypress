@@ -1,20 +1,13 @@
-import React, { useEffect } from 'react'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
-import { Controller, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
-import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
-import {
-  parseTradeAPIDataToFormValues,
-  parseTradeFormValuesToAPIPayload,
-  useTrades,
-  useVendorProfileUpdateMutation,
-} from 'utils/vendor-details'
+import { Box, Button, Flex } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
-import { useQueryClient } from 'react-query'
+import React from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
+import { useTrades } from 'utils/vendor-details'
 
 type tradesFormProps = {
-  // submitForm: (values: any) => void
   vendorProfileData: VendorProfile
   onClose?: () => void
   trades?: Array<Trade>
@@ -24,62 +17,25 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
   vendorProfileData,
   onClose,
 }) => {
-  const toast = useToast()
   const { data: trades, isLoading } = useTrades()
-  const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
-  const queryClient = useQueryClient()
-
-  // const onSubmit = (formValues: VendorTradeFormValues) => {
-  //   const vendorProfilePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData)
-  //   updateVendorProfile(vendorProfilePayload, {
-  //     onSuccess() {
-  //       queryClient.invalidateQueries('vendorProfile')
-  //       toast({
-  //         title: t('updateTrades'),
-  //         description: t('updateTradesSuccess'),
-  //         status: 'success',
-  //         isClosable: true,
-  //       })
-  //     },
-  //   })
-  // }
 
   return (
     <Box>
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <TradeForm
-          // submitForm={onSubmit}
-          vendorProfileData={vendorProfileData}
-          trades={trades}
-          onClose={onClose}
-        />
+        <TradeForm vendorProfileData={vendorProfileData} trades={trades} onClose={onClose} />
       )}
     </Box>
   )
 }
 
 export const TradeForm = ({ vendorProfileData, trades, onClose }: tradesFormProps) => {
-  // const { t } = useTranslation()
-
-  const {
-    //  handleSubmit,
-    control,
-  } = useFormContext<VendorTradeFormValues>()
+  const { control } = useFormContext<VendorTradeFormValues>()
 
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
-
-  // useEffect(() => {
-  //   if (trades?.length) {
-  //     const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
-  //     replace(tradeFormValues.trades)
-  //   }
-  // }, [trades, vendorProfileData, replace])
-
   return (
     <>
-      {/* <form onSubmit={handleSubmit(submitForm)} id="trade"> */}
       <Box h="510px" overflow="auto">
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
@@ -120,6 +76,5 @@ export const TradeForm = ({ vendorProfileData, trades, onClose }: tradesFormProp
         </Button>
       </Flex>
     </>
-    // {/* </form> */}
   )
 }

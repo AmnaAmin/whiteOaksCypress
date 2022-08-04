@@ -1,6 +1,7 @@
 import { useToast } from '@chakra-ui/toast'
 import { useClient } from 'utils/auth-context'
 import _ from 'lodash'
+import { useQueryClient } from 'react-query'
 import { useMutation, useQuery } from 'react-query'
 import {
   License,
@@ -12,8 +13,9 @@ import {
   VendorProfilePayload,
   VendorTradeFormValues,
 } from 'types/vendor.types'
-import { convertDateTimeFromServer, customFormat } from './date-time-utils'
+import { convertDateTimeFromServer, convertDateTimeToServer, customFormat } from './date-time-utils'
 import { useTranslation } from 'react-i18next'
+import { t } from 'i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -49,12 +51,6 @@ export const useAccountDetails = () => {
     },
     { enabled: false },
   )
-}
-
-export const useVendorProfileUpdateMutation = () => {
-  const client = useClient()
-
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
 }
 
 export const useCreateVendorMutation = () => {
@@ -241,8 +237,8 @@ export const useSaveVendorDetails = (name: string) => {
     {
       onSuccess() {
         toast({
-          title: t(`update${name}Details`),
-          description: t(`update${name}DetailsSuccess`),
+          title: t(`update${name}`),
+          description: t(`update${name}Success`),
           status: 'success',
           isClosable: true,
         })
@@ -356,6 +352,15 @@ export const documentCardsDefaultValues = (vendor: any) => {
   return documentCards
 }
 
+export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
+  return {
+    documents: vendorProfilePayload,
+    agreementSignedDate: convertDateTimeToServer(formData.agreementSignedDate!),
+    autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
+    coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
+    coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
+  }
+}
 export const parseDocumentCardsValues = async (values: any) => {
   const documentsList: any[] = []
   values.agreement &&
