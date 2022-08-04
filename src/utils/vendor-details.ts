@@ -172,7 +172,6 @@ export const parseCreateVendorFormToAPIData = async (
   const licensePayload = await parseLicenseValues(formValues, vendorProfileData?.licenseDocuments)
   const tradePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData!)
   const marketsPayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData!)
-  console.log({ profilePayload, updatedObject, licensePayload, tradePayload, marketsPayload })
   return {
     ...profilePayload,
     licenseDocuments: licensePayload,

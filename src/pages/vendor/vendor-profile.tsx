@@ -83,8 +83,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   }
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
-      console.log(formData)
-
       if (vendorProfileData?.id) {
         switch (tabIndex) {
           case 0:
@@ -137,7 +135,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             //create vendor: market tab
             if (validateMarket(formData)) {
               const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
-              console.log(createPayload)
               createVendor(createPayload, {
                 onSuccess() {
                   props.onClose?.()
@@ -168,7 +165,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   const onError = (errors, e) => {
     errors = keys(errors)
-    console.log(errors)
     if (vendorProfileData?.id) return
     switch (tabIndex) {
       case 0:
