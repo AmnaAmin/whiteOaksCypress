@@ -85,7 +85,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   return (
     <>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -144,7 +144,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
         <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
@@ -187,19 +187,19 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" mt={3}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3" mt={3}>
         <GridItem>
           <FormControl>
             <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
               {t('Original SOW Amount')}
             </Heading>
             <InputGroup p={0} mt={3}>
-              <InputLeftElement color="gray.500" p={4} h="51px" w={2} children="$" />
+              <InputLeftElement color="gray.500" children="$" />
               <Input {...register('sowOriginalContractAmount')} variant="required-field" m={0} pl={5} />
             </InputGroup>
           </FormControl>
         </GridItem>
-        <GridItem>
+        <GridItem mb={10}>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
               Upload Project SOW

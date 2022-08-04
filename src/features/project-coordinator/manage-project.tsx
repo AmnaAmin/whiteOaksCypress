@@ -61,7 +61,7 @@ export const ManageProject: React.FC<{
 
   return (
     <>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
@@ -146,7 +146,7 @@ export const ManageProject: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -170,7 +170,7 @@ export const ManageProject: React.FC<{
             />
           </FormControl>
         </GridItem>
-        <GridItem mb={120}>
+        <GridItem mb={145}>
           <FormControl>
             <FormInput
               errorMessage={errors.superEmailAddress && errors.superEmailAddress?.message}

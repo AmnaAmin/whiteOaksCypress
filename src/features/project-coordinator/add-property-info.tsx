@@ -188,7 +188,7 @@ export const AddPropertyInfo: React.FC<{
           </Checkbox>
         </Alert>
       )}
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
@@ -266,7 +266,7 @@ export const AddPropertyInfo: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
@@ -314,7 +314,7 @@ export const AddPropertyInfo: React.FC<{
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
         <GridItem>
           <FormControl>
             <FormInput
@@ -337,7 +337,7 @@ export const AddPropertyInfo: React.FC<{
             />
           </FormControl>
         </GridItem>
-        <GridItem>
+        <GridItem  pb={1}>
           <FormControl>
             <FormInput
               errorMessage={errors?.hoaEmailAddress && errors?.hoaEmailAddress?.message}
