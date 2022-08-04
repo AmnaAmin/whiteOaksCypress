@@ -7,6 +7,7 @@ import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
 import { dateFormat } from 'utils/date-time-utils'
+import numeral from 'numeral'
 
 export const PROJECT_COLUMNS = [
   {
@@ -38,15 +39,21 @@ export const PROJECT_COLUMNS = [
     Header: 'Client Start Date',
     accessor: 'clientStartDate',
     Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.values.clientStartDate)
+    },
   },
   {
     Header: 'Client Due Date',
     accessor: 'clientDueDate',
     Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.values.clientDueDate)
+    },
   },
   {
     Header: 'Type',
-    accessor: 'type',
+    accessor: 'projectTypeLabel',
   },
   {
     Header: 'Project Coordinator',
@@ -55,6 +62,9 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'Account Payable',
     accessor: 'accountPayable',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
   },
   {
     Header: 'Zip',
@@ -67,14 +77,24 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'SOW Final Amount',
     accessor: 'sowOriginalContractAmount',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
   },
   {
     Header: 'Project Cost',
     accessor: 'projectRelatedCost',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
   },
   {
     Header: 'Paid Date',
     accessor: 'woaPaidDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.values.woaPaidDate)
+    },
   },
   {
     Header: 'Invoice Number',
@@ -83,10 +103,17 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'Invoice Date',
     accessor: 'woaInvoiceDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.values.woaInvoiceDate)
+    },
   },
   {
     Header: 'Account Receivable',
     accessor: 'accountRecievable',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
   },
   {
     Header: 'Market',
@@ -99,6 +126,10 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'WOA Finish',
     accessor: 'woaCompletionDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.values.woaCompletionDate)
+    },
   },
   {
     Header: 'Region',
@@ -107,18 +138,31 @@ export const PROJECT_COLUMNS = [
   {
     Header: 'Partial Payment',
     accessor: 'partialPayment',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
   },
   {
     Header: 'Expected Payment',
     accessor: 'expectedPaymentDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.values.expectedPaymentDate)
+    },
   },
   {
     Header: 'Profit Margins',
     accessor: 'profitPercentage',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('0.00%')
+    },
   },
   {
     Header: 'Profits',
     accessor: 'profitTotal',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
   },
   {
     Header: 'WO Number',
