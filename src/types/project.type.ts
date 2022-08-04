@@ -1,85 +1,101 @@
-export type ProjectType = {
-  accountRecievable: number
-  changeordersTotal: string
-  city: string
+export type Project = {
+  accountRecievable: number | null
+  accountPayable: number | null
+  changeordersTotal: string | null
+  city: string | null
   clientDueDate: string | null
-  clientName: string
-  clientPaidDate: null
-  clientSignoffDate: null
+  clientName: string | null
+  clientPaidDate: string | null
+  clientSignoffDate: string | null
   clientStartDate: string | null
-  clientWalkthroughDate: null
-  code: string
-  createdBy: string
+  clientWalkthroughDate: string | null
+  code: string | null
+  createdBy: string | null
   createdDate: string | null
   dueDateVariance: string | null
   expectedPaymentDate: string | null
-  finalInvoiceAmount: string | null
+  finalInvoiceAmount: number | null
   firstWorkOrderDate: string | null
-  gateCode: string
+  gateCode: string | null
   gatedCommunity: string | null
   generalLabourName: string | null
   hoaEmailAddress: string | null
   hoaPhone: string | null
-  hoaPhoneNumberExtension: string
-  id: number
+  hoaPhoneNumberExtension: string | null
+  id: number | null
   invoiceNumber: string | null
   lastCompletedWorkOrder: string | null
-  lockBoxCode: string
-  market: string
-  modifiedBy: string
+  lockBoxCode: string | null
+  market: string | null
+  modifiedBy: string | null
   modifiedDate: string | null
-  name: string
-  numberOfCompletedWorkOrders: 0
-  numberOfPaidWorkOrders: 0
-  numberOfWorkOrders: 2
-  paid: string
-  partialPayment: 0
-  pastDue: false
+  name: string | null
+  numberOfCompletedWorkOrders: number | null
+  numberOfPaidWorkOrders: number | null
+  numberOfWorkOrders: number | null
+  numberOfActiveWorkOrders: number | null
+  paid: string | null
+  partialPayment: number | null
+  pastDue: boolean | null
   paymentTerm: string | null
-  pendingTransactions: 0
-  poNumber: string
-  profitPercentage: number
-  profitTotal: number
+  pendingTransactions: number | null
+  poNumber: string | null
+  profitPercentage: number | null
+  profitTotal: number | null
   projectClosedDate: string | null
-  projectManager: string
-  projectCoordinator: string
-  projectManagerId: number
-  projectManagerPhoneNumber: string
-  projectRelatedCost: number
-  projectStatus: string
-  projectStatusId: number
-  projectType: number
-  projectTypeLabel: string
-  propertyId: number
-  region: string
-  revenue: number
+  projectManager: string | null
+  projectCoordinator: string | null
+  projectCoordinatorId: number | null
+  projectManagerId: number | null
+  projectManagerPhoneNumber: string | null
+  projectManagerPhoneNumberExtension: string | null
+  projectRelatedCost: number | null
+  projectStatus: string | null
+  projectStatusId: number | null
+  projectType: number | null
+  projectTypeLabel: string | null
+  propertyId: number | null
+  region: string | null
+  revenue: number | null
   signoffDateVariance: string | null
-  sowLink: string
-  sowNewAmount: number
-  sowOriginalContractAmount: number
-  state: string
-  streetAddress: string
-  superEmailAddress: string
+  sowLink: string | null
+  sowNewAmount: number | null
+  sowOriginalContractAmount: number | null
+  state: string | null
+  streetAddress: string | null
+  superEmailAddress: string | null
   superFirstName: string | null
-  superLastName: string
-  superPhoneNumber: string
+  superLastName: string | null
+  superPhoneNumber: string | null
   superPhoneNumberExtension: string
-  vendorId: number
+  vendorId: number | null
   vendorWODateCompleted: string | null
   vendorWODateInvoiceSubmitted: string | null
-  vendorWOId: number
-  vendorWOStatus: string
-  vendorWOStatusValue: string
-  woNumber: string
+  vendorWOId: number | null
+  vendorWOStatus: string | null
+  vendorWOStatusValue: string | null
+  woNumber: string | null
   woaBackdatedInvoiceDate: string | null
   woaCompletionDate: string | null
   woaInvoiceDate: string | null
   woaPaidDate: string | null
   woaPayVariance: string | null
   woaStartDate: string | null
-  workOrderInvoiceTotal: number
-  zipCode: string
-  upcomingInvoiceTotal: number
+  workOrderInvoiceTotal: number | null
+  zipCode: string | null
+  upcomingInvoiceTotal: number | null
+  numberOfChangeOrders: number | null
+  overPayment: number | null
+  newPartialPayment: number | null
+  overrideProjectStatus: string | null
+  projectStartDate: string | null
+  punchDate: string | null
+  closedDate: string | null
+  disputedDate: string | null
+  payDateVariance: string | null
+  payVariance: string | null
+  collectionDate: string | null
+  documents: any[] | null
 }
 
 export type ProjectColumnType = {

@@ -4,7 +4,7 @@ import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'utils/account-payable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
-import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order-edit'
+import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { TableWrapper } from 'components/table/table'
@@ -29,7 +29,7 @@ const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
             <Flex alignItems="center" h="60px">
-              <Text noOfLines={2} title={cell.value} padding="0 15px" color="blackAlpha.600">
+              <Text noOfLines={2} title={cell.value} padding="0 15px">
                 {cell.render('Cell')}
               </Text>
             </Flex>

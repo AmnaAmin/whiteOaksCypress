@@ -79,8 +79,12 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Clear Filter',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Type',
+        ProjectLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
+        transactionTypeLabel: 'Type',
+        transactionTotal: 'Total Amount',
+        modifiedDate: 'Submit',
+        skillName: 'Trade',
         pastDueWorkorders: 'Past Due WO',
         vendorWOExpectedPaymentDate: 'Expected Payment Date',
 
@@ -97,7 +101,6 @@ i18n.use(initReactI18next).init({
         alerts: 'Alerts',
         upload: 'Upload',
         uploadDocument: 'Upload Document',
-        resolveAll: 'Resolve All',
         contactName: 'Contact Name:',
         projectID: 'Project ID',
         contactNo: 'Contact No',
@@ -138,6 +141,10 @@ i18n.use(initReactI18next).init({
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
+        companyName: 'Company Name',
+        clientApprovedAmount: 'Client Approved Amount',
+        profitPercentage: 'Profit Percentage',
+        vendorWorkOrderAmount: 'Vendor WO Amount',
         name: 'Name',
         email: 'Email',
         phone: 'Phone',
@@ -214,6 +221,7 @@ i18n.use(initReactI18next).init({
         fileType: 'File Type',
         vendorGL: 'Vendor/GL',
         createdDate: 'Created Date',
+        createdBy: 'Created By',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -252,15 +260,22 @@ i18n.use(initReactI18next).init({
         state: 'State',
         secondaryPhoneNo: 'Secondary Phone No',
         city: 'City',
-        sin: 'SIN',
+        sin: 'SSN',
         zip: 'Zipcode',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
         businessPhoneNo: 'Business Phone No',
-        ext: 'Exit',
+        ext: 'Ext',
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
+        coiglExpirationDate: 'COI-GL Expiration Date',
+        statusLabel: 'Status',
+        coiWcExpirationDate: 'COI-WC Expiration Date',
+        einNumber: 'EIN/SSN',
+        availableCapacity: 'Available Capacity',
+        skills: 'Construction Trade',
+
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
         uploadAgreement: 'Upload Agreement',
@@ -356,7 +371,6 @@ i18n.use(initReactI18next).init({
         // Payments tab pc
         lwDate: 'LW Date',
         invoicedSubmitted: 'Invoiced Submitted',
-        payemtTerms: 'Payemt Terms',
         woOriginalAmount: 'WO Original Amount',
         clientOriginalAmount: 'Client Original Amount',
         clientFinalApprovedAmount: 'Client Final Approved Amount',
@@ -364,7 +378,7 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlert: 'Triggered Alert',
         managedAlert: 'Managed Alert',
-        resloveAll: 'Reslove All',
+        resolveAll: 'Resolve All',
         projectId: 'Project Id',
         stateZipcode: 'State/Zipcode',
         workOrderStart: 'Work Order Start',
@@ -421,7 +435,7 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlert: 'Alerta activada',
         managedAlert: 'Alerta gestionada',
-        resloveAll: 'Solucionelo todo',
+        resolveAll: 'Solucionelo todo',
         projectId: 'Projecto ID',
         stateZipcode: 'Estado/Código postal',
         workOrderStart: 'Inicio de orden de trabajo',
@@ -445,7 +459,7 @@ i18n.use(initReactI18next).init({
         // Payments tab pc
         lwDate: 'Fecha LW',
         invoicedSubmitted: 'Facturada enviada',
-        payemtTerms: 'Términos de pago',
+        paymentTerms: 'Términos de pago',
         woOriginalAmount: 'Importe original de la OT',
         clientOriginalAmount: 'Importe original del cliente',
         clientFinalApprovedAmount: 'Cantidad final aprobada por el cliente',
@@ -540,8 +554,12 @@ i18n.use(initReactI18next).init({
         clearFilter: 'Filtro claro',
 
         //  Projects - Table Setting Columns
-        projectTypeLabel: 'Escribe',
+        ProjectLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
+        transactionTypeLabel: 'Escribe',
+        transactionTotal: 'Cantidad Total',
+        modifiedDate: 'Entregar',
+        skillName: 'Comercio',
         pastDueWorkorders: 'Vencido WO',
         vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
 
@@ -563,7 +581,6 @@ i18n.use(initReactI18next).init({
         alerts: 'Alertas',
         upload: 'Subir',
         uploadDocument: 'Subir documento',
-        resolveAll: 'Solucionelo todo',
         contactName: 'Nombre de Contacto',
         projectID: 'Projecto ID',
         contactNo: 'Número de Contacto',
@@ -598,6 +615,10 @@ i18n.use(initReactI18next).init({
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
+        companyName: 'Nombre de empresa',
+        clientApprovedAmount: 'Monto aprobado por el cliente',
+        profitPercentage: 'Porcentaje de beneficio',
+        vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',
         name: 'Nombre',
         email: 'Email',
         phone: 'Teléfono',
@@ -653,7 +674,6 @@ i18n.use(initReactI18next).init({
         paymentTermDate: 'Plazo de Pago Fecha',
         datePaymentProcessed: 'Fecha de Procesamiento del Pago',
         expectedPayDate: 'Fecha de Pago Esperada',
-        paymentTerms: 'Términos de pago',
         check: 'Controlar',
         payDateVariance: 'Variación de la fecha de pago',
         finalInvoice: 'Factura Final',
@@ -673,6 +693,7 @@ i18n.use(initReactI18next).init({
         fileType: 'Tipo de Archivo',
         vendorGL: 'Vendedor/GL',
         createdDate: 'Fecha de creación',
+        createdBy: 'creado por',
         // Project - Alerts
         value: 'Valor',
         category: 'Categoría',
@@ -717,10 +738,17 @@ i18n.use(initReactI18next).init({
         primaryContact: 'Contacto Primario',
         secondaryContact: 'Contacto Secundario',
         businessPhoneNo: 'Número de teléfono de la empresa',
-        ext: 'Salida',
+        ext: 'Extensión',
         secondaryNo: 'Número Secundario',
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
+        coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        statusLabel: 'Estado',
+        coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
+        einNumber: 'EIN/SSN',
+        availableCapacity: 'Capacidad disponible',
+        skills: 'Habilidades',
+
         // Vendor-profile-documents
         agreementSignedDate: 'Documento firmado',
         uploadAgreement: 'Acuerdo de Carga',

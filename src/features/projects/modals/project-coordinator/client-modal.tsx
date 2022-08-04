@@ -42,7 +42,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
                   {t('Details')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                {clientDetails?.companyName}                
+                  {clientDetails?.companyName}
                 </Text>
               </HStack>
             </HStack>

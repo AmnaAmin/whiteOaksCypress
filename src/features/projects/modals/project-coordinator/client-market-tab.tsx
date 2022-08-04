@@ -15,11 +15,11 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
       }))
     : null
 
-    const btnStyle = {
-      alignItems: 'center',
-      justifyContent: 'end',
-      borderTop: '1px solid #CBD5E0',
-    }
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
 
   return (
     <>
@@ -30,7 +30,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           })}
         </Flex>
       </Box>
-      <Flex style={ btnStyle } py={4} pt={5}>
+      <Flex style={btnStyle} py={4} pt={5}>
         <Button colorScheme="brand" onClick={props?.onClose}>
           Cancel
         </Button>
