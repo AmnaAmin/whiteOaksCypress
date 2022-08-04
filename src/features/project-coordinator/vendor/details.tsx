@@ -17,13 +17,13 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useCallback, useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import React, { useCallback, useEffect, useMemo } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useStates } from 'utils/pc-projects'
-import { PAYMENT_TERMS_OPTIONS } from 'utils/transactions'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   parseVendorAPIDataToFormData,
   parseVendorFormDataToAPIData,
@@ -32,7 +32,7 @@ import {
   useVendorProfileUpdateMutation,
 } from 'utils/vendor-details'
 import { documentStatus, documentScore } from 'utils/vendor-projects'
-
+import first from 'lodash/first'
 const PcDetails: React.FC<{
   onClose?: () => void
   VendorType?: string
@@ -76,7 +76,7 @@ const PcDetails: React.FC<{
           onSuccess(res: any) {
             updateVendorId?.(res?.data?.id)
             toast({
-              title: t('updateProfile'),
+              title: 'Create Vendor',
               description: t('updateProfileSuccess'),
               status: 'success',
               isClosable: true,
@@ -113,10 +113,10 @@ const PcDetails: React.FC<{
       businessEmailAddress: '',
       secondEmailAddress: '',
       companyName: '',
-      score: {},
-      status: {},
-      state: {},
-      paymentTerm: {},
+      score: undefined,
+      status: undefined,
+      state: undefined,
+      paymentTerm: undefined,
       streetAddress: '',
       city: '',
       zipCode: '',
@@ -125,6 +125,16 @@ const PcDetails: React.FC<{
       ssnNumber: '',
     },
   })
+  const einNumber = useWatch({ name: 'einNumber', control })
+  const ssnNumber = useWatch({ name: 'ssnNumber', control })
+
+  useEffect(() => {
+    if (!vendorProfileData) {
+      setValue('score', first(documentScore))
+      setValue('status', first(documentStatus))
+      return
+    }
+  }, [vendorProfileData])
 
   useEffect(() => {
     if (!vendorProfileData) return
@@ -141,14 +151,18 @@ const PcDetails: React.FC<{
     setValue('state', { label: state?.name, value: state?.code })
     setValue(
       'paymentTerm',
-      PAYMENT_TERMS_OPTIONS.find(s => parseInt(s.value, 10) === vendorProfileData.paymentTerm),
+      PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),
     )
   }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
 
-  const states = statesData?.map(state => ({
-    label: state?.name,
-    value: state?.code,
-  }))
+  const states = useMemo(
+    () =>
+      statesData?.map(state => ({
+        label: state?.name,
+        value: state?.code,
+      })) ?? [],
+    [statesData],
+  )
 
   return (
     <Stack spacing={3}>
@@ -379,14 +393,7 @@ const PcDetails: React.FC<{
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
-                      options={states}
-                      {...field}
-                      // onChange={setStates}
-                      // selectProps={{ isBorderLeft: true }}
-                    />
-
-                    {/* <ReactSelect options={documentTypes} {...field} selectProps={{ isBorderLeft: true }} /> */}
+                    <ReactSelect options={states} {...field} />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
@@ -435,10 +442,10 @@ const PcDetails: React.FC<{
               <Input
                 type="string"
                 {...register('einNumber', {
-                  required: 'This is required',
+                  required: ssnNumber ? '' : 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={ssnNumber ? 'outline' : 'required-field'}
                 size="md"
               />
               <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
@@ -452,10 +459,10 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('ssnNumber', {
-                  required: 'This is required',
+                  required: einNumber ? '' : 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={einNumber ? 'outline' : 'required-field'}
                 size="md"
               />
               <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
@@ -496,34 +503,23 @@ const PcDetails: React.FC<{
             </VStack>
           </Stack>
         </Box>
-        <HStack height="80px" mt="30px" id="footer" borderTop="2px solid #E2E8F0" justifyContent="end" spacing="16px">
+        <HStack
+          height="72px"
+          pt="8px"
+          mt="30px"
+          id="footer"
+          borderTop="2px solid #E2E8F0"
+          justifyContent="end"
+          spacing="16px"
+        >
           {onClose && (
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>
           )}
-          {/* {VendorType === 'detail' ? ( */}
-          <Button
-            // isDisabled={!isEnabled}
-            type="submit"
-            data-testid="saveDocumentCards"
-            variant="solid"
-            colorScheme="brand"
-          >
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
             {t('save')}
           </Button>
-          {/* ) */}
-          {/* //  : (
-          //   <Button
-          //     // isDisabled={!isEnabled}
-          //     type="submit"
-          //     data-testid="saveDocumentCards"
-          //     variant="solid"
-          //     colorScheme="brand"
-          //   >
-          //     {t('next')}
-          //   </Button>
-          // )} */}
         </HStack>
       </form>
     </Stack>

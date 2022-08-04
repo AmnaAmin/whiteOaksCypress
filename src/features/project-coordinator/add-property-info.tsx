@@ -109,7 +109,7 @@ export const AddPropertyInfo: React.FC<{
         projects?.map(p => {
           if (p.propertyId === property.id) {
             setExistProperty(existProperty)
-            existProperty?.push({ id: p.id, status: p.projectStatus })
+            existProperty?.push({ id: p.id as number, status: p.projectStatus as string })
             delete existProperty[0]
             if (existProperty) {
               setIsDuplicateAddress(true)

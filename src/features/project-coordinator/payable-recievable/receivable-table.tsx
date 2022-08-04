@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/rea
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
-import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
+import AccountReceivableModal from 'features/projects/modals/project-coordinator/receivable/account-receivable-modal'
 import { usePCRecievable, useReveviableRowData } from 'utils/account-receivable'
 import { FieldValues, UseFormRegister } from 'react-hook-form'
 import { t } from 'i18next'
@@ -95,14 +95,14 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
         Header: t('balance') as string,
         accessor: 'amount',
         Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
+          return numeral(cellInfo.value).format('$0,0.00')
         },
       },
       {
         Header: t('finalInvoice') as string,
         accessor: 'finalInvoice',
         Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
+          return numeral(cellInfo.value).format('$0,0.00')
         },
       },
       {

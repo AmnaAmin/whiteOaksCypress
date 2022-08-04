@@ -1,4 +1,4 @@
-import { ProjectType, ProjectWorkOrderType, ProjectAlertType } from 'types/project.type'
+import { Project, ProjectWorkOrderType, ProjectAlertType } from 'types/project.type'
 import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 
@@ -6,7 +6,7 @@ const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = () => {
   const client = useClient()
 
-  const { data, ...rest } = useQuery<Array<ProjectType>>(PROJECTS_QUERY_KEY, async () => {
+  const { data, ...rest } = useQuery<Array<Project>>(PROJECTS_QUERY_KEY, async () => {
     const response = await client(`projects?page=0&size=10000000&sort=id,asc`, {})
 
     return response?.data
@@ -21,7 +21,7 @@ export const useProjects = () => {
 export const useProject = (projectId?: string) => {
   const client = useClient()
 
-  const { data: projectData, ...rest } = useQuery<ProjectType>(['project', projectId], async () => {
+  const { data: projectData, ...rest } = useQuery<Project>(['project', projectId], async () => {
     const response = await client(`projects/${projectId}/vendor`, {})
 
     return response?.data
@@ -61,4 +61,18 @@ export const useWeekDayProjectsDue = () => {
 
     return response?.data
   })
+}
+
+export const useProjectNotes = ({ projectId }: { projectId: number | undefined }) => {
+  const client = useClient()
+
+  const { data: notes, ...rest } = useQuery<Array<Document>>(['notes', projectId], async () => {
+    const response = await client(`notes?projectId.equals=${projectId}`, {})
+    return response?.data
+  })
+
+  return {
+    notes,
+    ...rest,
+  }
 }

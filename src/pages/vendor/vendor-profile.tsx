@@ -5,7 +5,7 @@ import { TradeList } from 'features/vendor-details/trades'
 import { MarketList } from 'features/vendor-details/markets'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Box, Stack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React from 'react'
 import { License } from 'features/vendor-details/license'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 // import { t } from 'i18next';
@@ -32,16 +32,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
   const { t } = useTranslation()
-  const [tabIndex, setTabIndex] = useState(0)
 
-  const setNextTab = () => {
-    setTabIndex(tabIndex + 1)
-    props.refetch?.()
-  }
   const { tableColumns, resizeElementRef, isLoading } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.vendors)
 
   return (
-    <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
+    <Tabs size="md" variant="enclosed" colorScheme="brand">
       <TabList>
         <Tab>{t('details')}</Tab>
         <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={!vendorProfileData?.id} data-testid="documents">
@@ -76,7 +71,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           <Box h="100%" w="100%">
             <DocumentsCard
               VendorType={VendorType!}
-              setNextTab={setNextTab}
               vendor={vendorProfileData as VendorProfile}
               onClose={props.onClose}
             />
@@ -84,7 +78,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         </TabPanel>
         <TabPanel p="0px">
           <Box h="100%" w="100%">
-            <License setNextTab={setNextTab} vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
+            <License vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
           </Box>
         </TabPanel>
         <TabPanel p="0px">
@@ -119,7 +113,7 @@ const VendorProfilePage: React.FC<Props> = props => {
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (
-        <Card p="18px" px="0">
+        <Card pb="8px" pt="18px" px="18px">
           <VendorProfileTabs vendorProfileData={vendorProfileData} onClose={props.onClose} refetch={refetch} />
         </Card>
       )}

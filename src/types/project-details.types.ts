@@ -1,0 +1,214 @@
+import { SelectOption } from './transaction.type'
+
+export enum ProjectStatus {
+  Paid = 'paid',
+  Active = 'active',
+  Approved = 'approved',
+  Completed = 'completed',
+  PastDue = 'past due',
+  Pending = 'pending',
+  Denied = 'denied',
+  Cancelled = 'cancelled',
+  Invoiced = 'invoiced',
+  Punch = 'punch',
+  New = 'new',
+  Closed = 'closed',
+  ClientPaid = 'client paid',
+  Overpayment = 'overpayment',
+  Collection = 'collection',
+  Dispute = 'dispute',
+  Cancel = 'cancel',
+  Expired = 'expired',
+  Declined = 'declined',
+  Inactive = 'inactive',
+  DoNotUse = 'do not use',
+  Decline = 'decline',
+}
+
+type ProjectManagementValues = {
+  status: SelectOption | null
+  type: SelectOption | null
+  woNumber: string | null
+  poNumber: string | null
+  projectName: string | null
+  woaStartDate: string | null
+  woaCompletionDate: string | null
+  clientStartDate: string | null
+  clientDueDate: string | null
+  clientWalkthroughDate: string | null
+  clientSignOffDate: string | null
+}
+
+type ProjectInvoicingAndPaymentFormValues = {
+  originalSOWAmount: number
+  sowLink: string | null
+  finalSOWAmount: number
+  invoiceNumber: string | null
+  invoiceAttachment: File | null
+  invoiceBackDate: string | null
+  paymentTerms: SelectOption | null
+  woaInvoiceDate: string | null
+  woaExpectedPayDate: string | null
+  overPayment: number | null
+  remainingPayment: number | null
+  payment: number | null
+}
+
+type ContactsFormValues = {
+  projectCoordinator: SelectOption | null
+  projectCoordinatorPhoneNumber: string | null
+  projectCoordinatorExtension: string | null
+  fieldProjectManager: SelectOption | null
+  fieldProjectManagerPhoneNumber: string | null
+  fieldProjectManagerExtension: string | null
+  superName: string | null
+  superPhoneNumber: string | null
+  superPhoneNumberExtension: string | null
+  superEmail: string | null
+  client: SelectOption | null
+}
+
+type ProjectDetailsLocationFormValues = {
+  address: string | null
+  city: string | null
+  state: SelectOption | null
+  zip: string | null
+  market: SelectOption | null
+  gateCode: string | null
+  lockBoxCode: string | null
+  hoaContactPhoneNumber: string | null
+  hoaContactExtension: string | null
+  hoaContactEmail: string | null
+}
+
+type ProjectDetailsMiscFormValues = {
+  dateCreated: string | null
+  activeDate: string | null
+  punchDate: string | null
+  closedDate: string | null
+  clientPaidDate: string | null
+  collectionDate: string | null
+  disputedDate: string | null
+  woaPaidDate: string | null
+  dueDateVariance: number | null
+  payDateVariance: number | null
+  payVariance: number | null
+}
+
+// Project Details form values types
+export type ProjectDetailsFormValues = ProjectManagementValues &
+  ProjectInvoicingAndPaymentFormValues &
+  ContactsFormValues &
+  ProjectDetailsLocationFormValues &
+  ProjectDetailsMiscFormValues
+
+export type ProjectDetailsAPIPayload = {
+  id: number | null
+
+  // Project Management payload
+  projectStatus: string | null
+  projectType: string | null
+  woNumber: string | null
+  poNumber: string | null
+  name: string | null
+  woaStartDate: string | null
+  woaCompletionDate: string | null
+  clientStartDate: string | null
+  clientDueDate: string | null
+  clientWalkthroughDate: string | null
+
+  // invoicing and payment payload
+  sowOriginalContractAmount: number | null
+  sowNewAmount: number | null
+  invoiceNumber: string | null
+  documents?: any[] | null
+  woaBackdatedInvoiceDate: string | null
+  paymentTerm: string | null
+  woaInvoiceDate: string | null
+  expectedPaymentDate: string | null
+  overPayment: number | null
+  remainingPayment: number | null
+
+  // Contacts payload
+  projectCordinatorId: number | null
+  projectCoordinatorPhoneNumber: string | null
+  projectCoordinatorPhoneNumberExtension: string | null
+  projectManagerId: number | null
+  projectManagerPhoneNumber: string | null
+  projectManagerPhoneNumberExtension: string | null
+  superFirstName: string | null
+  superLastName: string | null
+  superPhoneNumber: string | null
+  superPhoneNumberExtension: string | null
+  superEmailAddress: string | null
+  clientName: string | null
+
+  // Location
+  streetAddress: string | null
+  city: string | null
+  state: string | null
+  zipCode: string | null
+  market: string | null
+  gateCode: string | null
+  lockBoxCode: string | null
+  hoaPhone: string | null
+  hoaPhoneNumberExtension: string | null
+  hoaEmailAddress: string | null
+  woaPayVariance: number | null
+
+  // Misc payload
+  createdDate: string | null
+  activeDate: string | null
+  punchDate: string | null
+  closedDate: string | null
+  clientPaidDate: string | null
+  collectionDate: string | null
+  woaPaidDate: string | null
+  dueDateVariance: number | null
+  payDateVariance: number | null
+  payVariance: number | null
+
+  // Other project Details payload
+  signoffDateVariance: string | null
+  sowLink: string | null
+  paid: string | null
+  region: string | null
+  changeordersTotal: string | null
+  numberOfWorkOrders: number | null
+  numberOfCompletedWorkOrders: number | null
+  numberOfPaidWorkOrders: number | null
+  numberOfActiveWorkOrders: number | null
+  workOrderInvoiceTotal: number | null
+  firstWorkOrderDate: string | null
+  lastCompletedWorkOrder: string | null
+  projectStatusId: number | null
+  projectClosedDate: string | null
+  finalInvoiceAmount: number | null
+  accountRecievable: number | null
+  accountPayable: number | null
+  generalLabourName: string | null
+  gatedCommunity: string | null
+  clientSignoffDate: string | null
+  createdBy: string | null
+  modifiedBy: string | null
+  disputedDate: string | null
+  modifiedDate: string | null
+  partialPayment: number | null
+  projectTypeLabel: string | null
+  propertyId: number | null
+  pastDue: boolean | null
+  pendingTransactions: number | null
+  projectRelatedCost: number | null
+  profitTotal: number | null
+  profitPercentage: number | null
+  revenue: number | null
+  newPartialPayment: number | null
+  overrideProjectStatus: string | null
+  property: {
+    streetAddress: string | null
+    city: string | null
+    state: string | null
+    zipCode: string | null
+  }
+  projectStartDate: string | null
+}

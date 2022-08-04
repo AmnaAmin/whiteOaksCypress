@@ -140,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                     fontWeight={400}
                     fontSize="14px"
                     target="_blank"
-                    href="https://13.212.88.107/"
+                    href="https://docs.woaharvest.com/"
                     title="help"
                     _hover={{ textDecorationLine: 'none' }}
                   >
