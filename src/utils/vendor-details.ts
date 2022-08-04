@@ -94,12 +94,12 @@ export const parseFormDataToAPIData = (
 }
 
 export const parseVendorFormDataToAPIData = (
-  vendorProfileData: VendorProfile,
   formValues: VendorProfileDetailsFormData,
   paymentsMethods,
+  vendorProfileData?: VendorProfile,
 ): VendorProfilePayload => {
   return {
-    ...vendorProfileData,
+    ...vendorProfileData!,
     ownerName: formValues.ownerName!,
     secondName: formValues.secondName!,
     businessPhoneNumber: formValues.businessPhoneNumber,
@@ -132,6 +132,10 @@ export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDe
   return {
     ...vendorProfileData,
     ...vendorProfileData.paymentOptions.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
+    ...documentCardsDefaultValues(vendorProfileData),
+    licenses: licenseDefaultFormValues(vendorProfileData),
+    trades: [],
+    markets: [],
   }
 }
 
@@ -169,7 +173,7 @@ export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: Vendo
 }
 
 export const parseTradeFormValuesToAPIPayload = (
-  formValues: VendorTradeFormValues,
+  formValues, //: VendorTradeFormValues,
   vendorData: VendorProfile | {},
 ): Partial<VendorProfilePayload> => {
   return {
@@ -198,7 +202,7 @@ export const parseMarketAPIDataToFormValues = (
 }
 
 export const parseMarketFormValuesToAPIPayload = (
-  formValues: VendorMarketFormValues,
+  formValues, //: VendorMarketFormValues,
   vendorData: VendorProfile | {},
 ): Partial<VendorProfilePayload> => {
   return {

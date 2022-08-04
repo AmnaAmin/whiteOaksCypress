@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useFormContext } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import {
@@ -33,52 +33,47 @@ type DocumentsProps = {
 }
 type DocumentFormProps = {
   vendor: VendorProfile
-  onSubmit: (values: any) => void
+  // onSubmit: (values: any) => void
   onClose?: () => void
-  VendorType?: string
+  // VendorType?: string
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   const { vendor = {} } = props
   // const { mutate: saveDocuments } = useSaveVendorDetails()
   const { mutate: saveDocuments } = useSaveVendorDetails('Document')
-  const onSubmit = useCallback(
-    async values => {
-      const results = await parseDocumentCardsValues(values)
-      const updatedObject = {
-        documents: results,
-        agreementSignedDate: convertDateTimeToServer(values.agreementSignedDate),
-        autoInsuranceExpirationDate: convertDateTimeToServer(values.autoInsuranceExpDate),
-        coiglExpirationDate: convertDateTimeToServer(values.coiGlExpDate),
-        coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
-      }
-      const vendorPayload = createVendorPayload(updatedObject, vendor)
-      saveDocuments(vendorPayload)
-    },
-    [vendor, saveDocuments],
-  )
+  // const onSubmit = useCallback(
+  //   async values => {
+  //     const results = await parseDocumentCardsValues(values)
+  //     const updatedObject = {
+  //       documents: results,
+  //       agreementSignedDate: convertDateTimeToServer(values.agreementSignedDate),
+  //       autoInsuranceExpirationDate: convertDateTimeToServer(values.autoInsuranceExpDate),
+  //       coiglExpirationDate: convertDateTimeToServer(values.coiGlExpDate),
+  //       coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
+  //     }
+  //     const vendorPayload = createVendorPayload(updatedObject, vendor)
+  //     saveDocuments(vendorPayload)
+  //   },
+  //   [vendor, saveDocuments],
+  // )
   return (
     <Box w="100%">
       <DocumentsForm
-        VendorType={props.VendorType}
+        // VendorType={props.VendorType}
         vendor={props.vendor}
-        onSubmit={onSubmit}
+        // onSubmit={onSubmit}
         onClose={props.onClose}
       ></DocumentsForm>
     </Box>
   )
 })
-export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: DocumentFormProps) => {
+export const DocumentsForm = ({
+  vendor,
+  // VendorType, onSubmit,
+  onClose,
+}: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
-  const defaultValue = vendor => {
-    return documentCardsDefaultValues(vendor)
-  }
-  const defaultValues: DocumentsCardFormValues = useMemo(() => {
-    if (vendor) {
-      return defaultValue(vendor)
-    }
-    setChangeDateFields([])
-    return {}
-  }, [vendor])
+
   const {
     formState: { errors },
     handleSubmit,
@@ -87,17 +82,22 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
     setValue,
     getValues,
     reset,
-  } = useForm<DocumentsCardFormValues>({ defaultValues })
+  } = useFormContext<DocumentsCardFormValues>()
+  // { defaultValues }
+  // setChangeDateFields([])
+  //   return {}
+  // }, [vendor])
   useEffect(() => {
-    reset(defaultValues)
-  }, [defaultValues, vendor, reset])
-
+    if (!vendor) {
+      setChangeDateFields([])
+    }
+  }, [vendor])
   /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {})
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
+  // const watchAllFields = watch()
+  // React.useEffect(() => {
+  //   const subscription = watch(value => {})
+  //   return () => subscription.unsubscribe()
+  // }, [watch, watchAllFields])
   const [
     ,
     // fileBlob
@@ -126,7 +126,8 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
   }
   const documents = getValues()
   return (
-    <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
+    // <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
+    <>
       <Box h="600px" overflow="auto">
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
@@ -454,9 +455,10 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
           </Button>
         )}
         <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-          {t('save')}
+          {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>
-    </form>
+    </>
+    // </form>
   )
 }
