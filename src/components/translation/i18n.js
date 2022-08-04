@@ -315,7 +315,7 @@ i18n.use(initReactI18next).init({
         updateMarketsSuccess: 'Vendor profile markets have been saved successfully.',
         updateTrades: 'Update Vendor Profile Trades',
         updateTradesSuccess: 'Vendor profile trades have been saved successfully.',
-        createVendorSuccess: 'Vendor have been created successfully.',
+        createVendorSuccess: 'Vendor has been created successfully.',
 
         // Settings Page
         settings: 'Settings',
