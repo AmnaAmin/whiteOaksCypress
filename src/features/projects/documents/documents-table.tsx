@@ -6,7 +6,6 @@ import { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'

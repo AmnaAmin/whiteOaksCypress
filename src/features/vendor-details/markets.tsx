@@ -1,96 +1,44 @@
-import React, { useEffect } from 'react'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { Market, VendorMarketFormValues, VendorProfile, VendorProfilePayload } from 'types/vendor.types'
-import {
-  parseMarketAPIDataToFormValues,
-  parseMarketFormValuesToAPIPayload,
-  useMarkets,
-  useVendorProfileUpdateMutation,
-} from 'utils/vendor-details'
+import { Box, Button, Flex } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
-import { useQueryClient } from 'react-query'
-// import 'components/translation/i18n';
+import React from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Market, VendorMarketFormValues, VendorProfile } from 'types/vendor.types'
+import { useMarkets } from 'utils/vendor-details'
 
 type marketFormProps = {
-  submitForm: (values: any) => void
   onClose?: () => void
-  vendorProfileData: VendorProfile | {}
+  vendorProfileData: VendorProfile
   markets?: Array<Market>
 }
 
 export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void }> = ({
-  vendorProfileData = {},
+  vendorProfileData,
   onClose,
 }) => {
-  const toast = useToast()
   const { markets, isLoading } = useMarkets()
-  const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
-  const queryClient = useQueryClient()
-
-  const onSubmit = (formValues: VendorMarketFormValues) => {
-    const vendorProfilePayload: Partial<VendorProfilePayload> = parseMarketFormValuesToAPIPayload(
-      formValues,
-      vendorProfileData,
-    )
-
-    updateVendorProfile(vendorProfilePayload, {
-      onSuccess() {
-        queryClient.invalidateQueries('vendorProfile')
-        onClose?.()
-        toast({
-          title: t('updateMarkets'),
-          description: t('updateMarketsSuccess'),
-          status: 'success',
-          isClosable: true,
-        })
-      },
-    })
-  }
 
   return (
     <Box>
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <MarketForm submitForm={onSubmit} vendorProfileData={vendorProfileData} markets={markets} onClose={onClose} />
+        <MarketForm vendorProfileData={vendorProfileData} markets={markets} onClose={onClose} />
       )}
     </Box>
   )
 }
 
-export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: marketFormProps) => {
-  const {
-    handleSubmit,
-    control,
-    reset,
-    // formState: { errors }
-  } = useForm<VendorMarketFormValues>({
-    defaultValues: {
-      markets: [],
-    },
-  })
-
-  const { fields: tradeCheckboxes } = useFieldArray({
-    control,
-    name: 'markets',
-  })
-
-  useEffect(() => {
-    if (markets?.length && vendorProfileData) {
-      const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
-
-      reset(tradeFormValues)
-    }
-  }, [markets, vendorProfileData, reset])
+export const MarketForm = ({ onClose }: marketFormProps) => {
+  const { control } = useFormContext<VendorMarketFormValues>()
+  const tradeCheckboxes = useWatch({ control, name: 'markets' })
 
   return (
-    <form onSubmit={handleSubmit(submitForm)} id="market">
+    <>
       <Box h="502px" overflow="auto">
         <Flex maxW="800px" wrap="wrap" gridGap={3}>
-          {tradeCheckboxes.map((checkbox, index) => {
+          {tradeCheckboxes?.map((checkbox, index) => {
             return (
               <Controller
                 name={`markets.${index}`}
@@ -102,13 +50,13 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
                       name={name}
                       key={name}
                       isChecked={value.checked}
-                      data-testid={`marketChecks.${value.market.id}`}
+                      data-testid={`marketChecks.${value.market?.id}`}
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
                     >
-                      {value.market.metropolitanServiceArea}
+                      {value.market?.metropolitanServiceArea}
                     </CheckboxButton>
                   )
                 }}
@@ -136,6 +84,6 @@ export const MarketForm = ({ submitForm, vendorProfileData, markets, onClose }: 
           {t('save')}
         </Button>
       </Flex>
-    </form>
+    </>
   )
 }

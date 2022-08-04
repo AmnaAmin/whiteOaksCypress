@@ -315,6 +315,7 @@ i18n.use(initReactI18next).init({
         updateMarketsSuccess: 'Vendor profile markets have been saved successfully.',
         updateTrades: 'Update Vendor Profile Trades',
         updateTradesSuccess: 'Vendor profile trades have been saved successfully.',
+        createVendorSuccess: 'Vendor has been created successfully.',
 
         // Settings Page
         settings: 'Settings',
@@ -788,6 +789,8 @@ i18n.use(initReactI18next).init({
         updateMarketsSuccess: 'Los mercados de perfiles de proveedores se han guardado correctamente.',
         updateTrades: 'Actualizar intercambios de perfiles de proveedores',
         updateTradesSuccess: 'Las transacciones del perfil del proveedor se han guardado correctamente.',
+        createVendorSuccess: 'El proveedor se ha creado correctamente.',
+
         // Settings Page
         settings: 'Ajustes',
         firstName: 'Primer Nombre',

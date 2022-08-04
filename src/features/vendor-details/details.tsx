@@ -1,32 +1,29 @@
-import React, { useCallback, useEffect } from 'react'
 import {
   Box,
-  Flex,
-  VStack,
-  HStack,
-  Stack,
-  Text,
+  Button,
   Divider,
-  Input,
+  Flex,
   FormControl,
-  FormLabel,
   FormErrorMessage,
+  FormLabel,
   Grid,
   GridItem,
-  useToast,
-  Button,
+  HStack,
+  Icon,
+  Input,
+  Stack,
+  Text,
+  VStack,
 } from '@chakra-ui/react'
-import { Icon } from '@chakra-ui/react'
+import React, { useEffect } from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
 import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-icons/bi'
 import { HiOutlineLocationMarker, HiOutlineMap } from 'react-icons/hi'
-import { Controller, useForm } from 'react-hook-form'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import { parseAPIDataToFormData, parseFormDataToAPIData, useVendorProfileUpdateMutation } from 'utils/vendor-details'
-// import { t } from 'i18next';
-import { useTranslation } from 'react-i18next'
-import 'components/translation/i18n'
+import { parseAPIDataToFormData } from 'utils/vendor-details'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { useQueryClient } from 'react-query'
+import 'components/translation/i18n'
+import { useTranslation } from 'react-i18next'
 
 const textStyle = {
   color: '#4A5568',
@@ -45,7 +42,6 @@ type FieldInfoCardProps = {
 
 type detailsFormProps = {
   vendorProfileData: VendorProfile
-  submitForm: (values: any) => void
   onClose?: () => void
 }
 
@@ -72,28 +68,7 @@ export const Details: React.FC<{
   onClose?: () => void
 }> = props => {
   const { vendorProfileData } = props
-  const toast = useToast()
   const { t } = useTranslation()
-  const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  const queryClient = useQueryClient()
-
-  const submitForm = useCallback(
-    (formData: VendorProfileDetailsFormData) => {
-      const payload = parseFormDataToAPIData(vendorProfileData, formData)
-      updateVendorProfileDetails(payload, {
-        onSuccess() {
-          queryClient.invalidateQueries('vendorProfile')
-          toast({
-            title: t('updateProfile'),
-            description: t('updateProfileSuccess'),
-            status: 'success',
-            isClosable: true,
-          })
-        },
-      })
-    },
-    [toast, updateVendorProfileDetails, vendorProfileData],
-  )
 
   return (
     <>
@@ -150,32 +125,20 @@ export const Details: React.FC<{
             <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
           </GridItem>
         </Grid>
-        <DetailsForm vendorProfileData={vendorProfileData} submitForm={submitForm} onClose={props.onClose} />
+        <DetailsForm vendorProfileData={vendorProfileData} onClose={props.onClose} />
       </Flex>
     </>
   )
 }
 
-export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsFormProps) => {
+export const DetailsForm = ({ vendorProfileData, onClose }: detailsFormProps) => {
   const { t } = useTranslation()
   const {
     register,
     control,
-    handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<VendorProfileDetailsFormData>({
-    defaultValues: {
-      primaryContact: '',
-      secondaryContact: '',
-      businessPhoneNumber: '',
-      businessNumberExtention: '',
-      secondaryNumber: '',
-      secondaryNumberExtenstion: '',
-      primaryEmail: '',
-      secondaryEmail: '',
-    },
-  })
+  } = useFormContext<VendorProfileDetailsFormData>()
 
   useEffect(() => {
     if (!vendorProfileData) return
@@ -187,29 +150,29 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
       {!vendorProfileData ? (
         <BlankSlate />
       ) : (
-        <Box as="form" onSubmit={handleSubmit(submitForm)} data-testid="detailForm" id="details">
+        <Box data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
             <VStack alignItems="start" spacing="32px">
               <Box>
                 <Stack spacing={4} direction={['row']}>
-                  <FormControl w="215px" isInvalid={!!errors.primaryContact}>
+                  <FormControl w="215px" isInvalid={!!errors.ownerName}>
                     <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
                     <Input
                       data-testid="primaryContact"
                       id="primaryContact"
                       type="text"
                       variant="required-field"
-                      {...register('primaryContact', {
+                      {...register('ownerName', {
                         required: 'This is required',
                       })}
                     />
-                    <FormErrorMessage>{errors.primaryContact && errors.primaryContact.message}</FormErrorMessage>
+                    <FormErrorMessage>{errors.ownerName && errors.ownerName.message}</FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondaryContact} w="215px">
+                  <FormControl isInvalid={!!errors.secondName} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
-                    <Input bg="white" {...register('secondaryContact')} id="secondaryContact" type="text" />
-                    <FormErrorMessage>{errors.secondaryContact && errors.secondaryContact.message}</FormErrorMessage>
+                    <Input bg="white" {...register('secondName')} id="secondaryContact" type="text" />
+                    <FormErrorMessage>{errors.secondName && errors.secondName.message}</FormErrorMessage>
                   </FormControl>
                 </Stack>
               </Box>
@@ -218,24 +181,28 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                 <Stack direction="row" spacing={4}>
                   {/* Primary Email => Input */}
 
-                  <FormControl isInvalid={!!errors.primaryEmail} w="215px">
+                  <FormControl isInvalid={!!errors.businessEmailAddress} w="215px">
                     <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
                     <Input
                       variant="required-field"
-                      {...register('primaryEmail', {
+                      {...register('businessEmailAddress', {
                         required: 'This is required',
                       })}
                       id="primaryEmail"
                       data-testid="primaryEmail"
                       type="text"
                     />
-                    <FormErrorMessage>{errors.primaryEmail && errors.primaryEmail.message}</FormErrorMessage>
+                    <FormErrorMessage>
+                      {errors.businessEmailAddress && errors.businessEmailAddress.message}
+                    </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondaryEmail} w="215px">
+                  <FormControl isInvalid={!!errors.secondEmailAddress} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
-                    <Input {...register('secondaryEmail')} id="secondaryEmail" type="text" />
-                    <FormErrorMessage>{errors.secondaryEmail && errors.secondaryEmail.message}</FormErrorMessage>
+                    <Input {...register('secondEmailAddress')} id="secondaryEmail" type="text" />
+                    <FormErrorMessage>
+                      {errors.secondEmailAddress && errors.secondEmailAddress.message}
+                    </FormErrorMessage>
                   </FormControl>
                 </Stack>
               </Box>
@@ -261,18 +228,22 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl w="100px" isInvalid={!!errors.businessNumberExtention}>
+                  <FormControl w="100px" isInvalid={!!errors.businessPhoneNumberExtension}>
                     <FormLabel sx={textStyle}>Ext</FormLabel>
-                    <Input {...register('businessNumberExtention')} id="businessNumberExtention" type="text" />
+                    <Input
+                      {...register('businessPhoneNumberExtension')}
+                      id="businessPhoneNumberExtension"
+                      type="text"
+                    />
                     <FormErrorMessage>
-                      {errors.businessNumberExtention && errors.businessNumberExtention.message}
+                      {errors.businessPhoneNumberExtension && errors.businessPhoneNumberExtension.message}
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondaryNumber} w="215px">
+                  <FormControl isInvalid={!!errors.secondPhoneNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryNo')}</FormLabel>
                     <Controller
-                      name="secondaryNumber"
+                      name="secondPhoneNumber"
                       control={control}
                       render={({ field }) => {
                         return (
@@ -300,14 +271,14 @@ export const DetailsForm = ({ submitForm, vendorProfileData, onClose }: detailsF
                         )
                       }}
                     />
-                    <FormErrorMessage>{errors.secondaryNumber && errors.secondaryNumber.message}</FormErrorMessage>
+                    <FormErrorMessage>{errors.secondPhoneNumber && errors.secondPhoneNumber.message}</FormErrorMessage>
                   </FormControl>
 
-                  <FormControl w="100px" isInvalid={!!errors.secondaryNumberExtenstion}>
+                  <FormControl w="100px" isInvalid={!!errors.secondPhoneNumberExtension}>
                     <FormLabel sx={textStyle}>Ext</FormLabel>
-                    <Input id="Ext" {...register('secondaryNumberExtenstion')} type="text" />
+                    <Input id="Ext" {...register('secondPhoneNumberExtension')} type="text" />
                     <FormErrorMessage>
-                      {errors.secondaryNumberExtenstion && errors.secondaryNumberExtenstion.message}
+                      {errors.secondPhoneNumberExtension && errors.secondPhoneNumberExtension.message}
                     </FormErrorMessage>
                   </FormControl>
                 </Stack>
