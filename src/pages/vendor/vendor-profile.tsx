@@ -6,7 +6,6 @@ import { MarketList } from 'features/vendor-details/markets'
 import { TradeList } from 'features/vendor-details/trades'
 import React, { useCallback, useState } from 'react'
 import { useUserProfile } from 'utils/redux-common-selectors'
-// import { t } from 'i18next';
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import 'components/translation/i18n'

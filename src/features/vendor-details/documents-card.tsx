@@ -51,11 +51,7 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
     }
   }, [vendor])
 
-  const [
-    ,
-    // fileBlob
-    setFileBlob,
-  ] = React.useState<Blob>()
+  const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -411,6 +407,5 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
         </Button>
       </Flex>
     </>
-    // </form>
   )
 }

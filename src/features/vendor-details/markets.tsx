@@ -6,10 +6,8 @@ import React from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Market, VendorMarketFormValues, VendorProfile } from 'types/vendor.types'
 import { useMarkets } from 'utils/vendor-details'
-// import 'components/translation/i18n';
 
 type marketFormProps = {
-  // submitForm: (values: any) => void
   onClose?: () => void
   vendorProfileData: VendorProfile
   markets?: Array<Market>
@@ -26,12 +24,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <MarketForm
-          // submitForm={onSubmit}
-          vendorProfileData={vendorProfileData}
-          markets={markets}
-          onClose={onClose}
-        />
+        <MarketForm vendorProfileData={vendorProfileData} markets={markets} onClose={onClose} />
       )}
     </Box>
   )

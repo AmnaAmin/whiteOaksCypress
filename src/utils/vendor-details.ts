@@ -226,7 +226,7 @@ export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: Vendo
 }
 
 export const parseTradeFormValuesToAPIPayload = (
-  formValues, //: VendorTradeFormValues,
+  formValues,
   vendorData: VendorProfile | {},
 ): Partial<VendorProfilePayload> => {
   return {
@@ -255,7 +255,7 @@ export const parseMarketAPIDataToFormValues = (
 }
 
 export const parseMarketFormValuesToAPIPayload = (
-  formValues, //: VendorMarketFormValues,
+  formValues,
   vendorData: VendorProfile | {},
 ): Partial<VendorProfilePayload> => {
   return {

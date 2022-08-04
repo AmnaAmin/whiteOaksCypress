@@ -25,7 +25,6 @@ import {
 import { useTransaction } from 'utils/transactions'
 import { BiCalendar, BiUser } from 'react-icons/bi'
 import { dateFormat } from 'utils/date-time-utils'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 
