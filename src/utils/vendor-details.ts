@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/toast'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   License,
   Market,
@@ -71,7 +71,28 @@ export const useAccountDetails = () => {
 
 export const useCreateVendorMutation = () => {
   const client = useClient()
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'POST' }))
+  const { t } = useTranslation()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  return useMutation((payload: any) => client(`vendors`, { data: payload, method: 'POST' }), {
+    onSuccess() {
+      queryClient.invalidateQueries('vendor')
+      toast({
+        title: 'Create Vendor',
+        description: t('createVendorSuccess'),
+        status: 'success',
+        isClosable: true,
+      })
+    },
+    onError(error: any) {
+      toast({
+        title: 'Create Vendor',
+        description: (error.title as string) ?? 'Unable to create project.',
+        status: 'error',
+        isClosable: true,
+      })
+    },
+  })
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
@@ -137,6 +158,27 @@ export const parseVendorFormDataToAPIData = (
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
     paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
+  }
+}
+
+export const parseCreateVendorFormToAPIData = async (
+  formValues,
+  paymentsMethods,
+  vendorProfileData?: VendorProfile,
+) => {
+  const profilePayload = parseVendorFormDataToAPIData(formValues, paymentsMethods, vendorProfileData)
+  const documentsPayload = await parseDocumentCardsValues(formValues)
+  const updatedObject = prepareVendorDocumentObject(documentsPayload, formValues)
+  const licensePayload = await parseLicenseValues(formValues, vendorProfileData?.licenseDocuments)
+  const tradePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData!)
+  const marketsPayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData!)
+  console.log({ profilePayload, updatedObject, licensePayload, tradePayload, marketsPayload })
+  return {
+    ...profilePayload,
+    licenseDocuments: licensePayload,
+    ...tradePayload,
+    ...marketsPayload,
+    ...updatedObject,
   }
 }
 
@@ -242,20 +284,31 @@ export const useSaveVendorDetails = (name: string) => {
   const client = useClient()
   const toast = useToast()
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
 
   return useMutation(
-    (licenses: any) => {
+    (payload: any) => {
       return client('vendors', {
-        data: licenses,
+        data: payload,
         method: 'PUT',
       })
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries('vendorProfile')
+        queryClient.invalidateQueries('vendor')
         toast({
           title: t(`update${name}`),
           description: t(`update${name}Success`),
           status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: t(`update${name}`),
+          description: (error.title as string) ?? 'Unable to update vendor.',
+          status: 'error',
           isClosable: true,
         })
       },
@@ -298,7 +351,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
 export const parseLicenseValues = async (values: any, licensesDocuments: any) => {
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
-      let existingLicense = licensesDocuments.find(l => l.id === license.id)
+      let existingLicense = licensesDocuments?.find(l => l.id === license.id)
       let doc = {}
       let fileContents
       if (existingLicense) {

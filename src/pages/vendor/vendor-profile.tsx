@@ -1,4 +1,4 @@
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, toast, useToast } from '@chakra-ui/react'
 import { Details } from 'features/vendor-details/details'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 import { License } from 'features/vendor-details/license'
@@ -20,6 +20,7 @@ import { Account } from 'types/account.types'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import {
   createVendorPayload,
+  parseCreateVendorFormToAPIData,
   parseDocumentCardsValues,
   parseLicenseValues,
   parseMarketFormValuesToAPIPayload,
@@ -40,18 +41,32 @@ type Props = {
   updateVendorId?: (number) => void
   vendorModalType?: string
 }
+const validateTrade = formData => {
+  const checkedTrades = formData?.trades?.filter(t => t.checked)
+  if (!(checkedTrades && checkedTrades.length > 0)) {
+    return false
+  }
+  return true
+}
 
+const validateMarket = formData => {
+  const checkedMarkets = formData?.markets?.filter(t => t.checked)
+  if (!(checkedMarkets && checkedMarkets.length > 0)) {
+    return false
+  }
+  return true
+}
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
   const { t } = useTranslation()
   const toast = useToast()
-  const { mutate: createVendorProfileDetails } = useCreateVendorMutation()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
   const { mutate: saveDocuments } = useSaveVendorDetails('DocumentDetails')
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
+  const { mutate: createVendor } = useCreateVendorMutation()
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState(0)
@@ -59,10 +74,17 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { control, clearErrors } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
-
+  const showError = name => {
+    toast({
+      description: `Atleast one ${name} must be selected`,
+      status: 'error',
+      isClosable: true,
+    })
+  }
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
-      console.log('submiting...', tabIndex)
+      console.log(formData)
+
       if (vendorProfileData?.id) {
         switch (tabIndex) {
           case 0:
@@ -86,31 +108,22 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
           case 3:
             //trade
-            const checkedTrades = formData?.trades?.filter(t => t.checked)
-            if (checkedTrades && checkedTrades.length > 0) {
+            if (validateTrade(formData)) {
               const tradePayload = parseTradeFormValuesToAPIPayload(formData, vendorProfileData)
               saveTrades(tradePayload)
             } else {
-              toast({
-                description: 'Atleast one trade must be selected',
-                status: 'error',
-                isClosable: true,
-              })
+              showError('Trade')
             }
+
             break
 
           case 4:
             //Market
-            const checkedMarkets = formData?.markets?.filter(t => t.checked)
-            if (checkedMarkets && checkedMarkets.length > 0) {
+            if (validateMarket(formData)) {
               const marketsPayload = parseMarketFormValuesToAPIPayload(formData, vendorProfileData)
               saveMarkets(marketsPayload)
             } else {
-              toast({
-                description: 'Atleast one market must be selected',
-                status: 'error',
-                isClosable: true,
-              })
+              showError('Market')
             }
             break
 
@@ -121,28 +134,27 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         //Create Vendor
         switch (tabIndex) {
           case 4:
-            console.log(formData)
-            //refactor detail, licse , doc, ...
-            const payload = parseVendorFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
-            createVendorProfileDetails(payload, {
-              onSuccess(res: any) {
-                props.updateVendorId?.(res?.data?.id)
-                toast({
-                  title: 'Create Vendor',
-                  description: t('updateProfileSuccess'),
-                  status: 'success',
-                  isClosable: true,
-                })
-              },
-              onError(error: any) {
-                toast({
-                  title: 'Create Vendor',
-                  description: (error.title as string) ?? 'Unable to create project.',
-                  status: 'error',
-                  isClosable: true,
-                })
-              },
-            })
+            //create vendor: market tab
+            if (validateMarket(formData)) {
+              const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+              console.log(createPayload)
+              createVendor(createPayload, {
+                onSuccess() {
+                  props.onClose?.()
+                },
+              })
+            } else {
+              showError('Market')
+            }
+
+            break
+          case 3:
+            //create vendor: trade
+            if (validateTrade(formData)) {
+              setTabIndex(i => i + 1)
+            } else {
+              showError('Trade')
+            }
             break
 
           default:
@@ -157,6 +169,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const onError = (errors, e) => {
     errors = keys(errors)
     console.log(errors)
+    if (vendorProfileData?.id) return
     switch (tabIndex) {
       case 0:
         //detail
@@ -206,7 +219,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             </Tab>
             <Tab
               _disabled={{ cursor: 'not-allowed' }}
-              // isDisabled={tabIndex <= 2 && !vendorProfileData?.id}
+              isDisabled={tabIndex <= 2 && !vendorProfileData?.id}
               data-testid="tradetab"
             >
               {t('trade')}
