@@ -420,7 +420,7 @@ i18n.use(initReactI18next).init({
         sowOriginalContractAmount: 'SOW Original Contract Amount',
         clientName: 'Client Name',
         zipCode: 'Zip Code',
-        
+        projectTypeLabel: 'Type',
       },
     },
     es: {
