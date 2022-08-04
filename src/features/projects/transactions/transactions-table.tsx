@@ -123,18 +123,40 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   }
 
   return (
-    <Box h="100%">
-      <TableWrapper
-        isLoading={isLoading}
-        columns={tableColumns}
-        data={transactions}
-        TableRow={TransactionRow}
-        tableHeight="calc(100vh - 400px)"
-        setTableInstance={setTransactionTableInstance}
-        name="transaction-table"
-        onRowClick={onRowClick}
-      />
-
+    <>
+    <Box>
+      <Box h="100%" overflow={'auto'}>
+        <TableWrapper
+          isLoading={isLoading}
+          columns={tableColumns}
+          data={transactions}
+          TableRow={TransactionRow}
+          tableHeight="calc(100vh - 300px)"
+          setTableInstance={setTransactionTableInstance}
+          name="transaction-table"
+          onRowClick={onRowClick}
+        />
+        </Box>
+        <Flex justifyContent="flex-end">
+          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+            <Button
+              variant="ghost"
+              colorScheme="brand"
+              m={0}
+              onClick={() => {
+                if (transactionTableInstance) {
+                  transactionTableInstance?.exportData('xlsx', false)
+                }
+              }}
+            >
+              <Icon as={BiExport} fontSize="18px" mr={1} />
+              {t('export')}
+            </Button>
+            <Divider orientation="vertical" border="1px solid" h="20px" />
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </HStack>
+        </Flex>
+      </Box>
       <UpdateTransactionModal
         isOpen={isOpenEditModal}
         onClose={onEditModalClose}
@@ -145,25 +167,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         onClose={onTransactionDetailsModalClose}
         selectedTransactionId={selectedTransactionId as number}
       />
-      <Flex justifyContent="end">
-        <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-          <Button
-            variant="ghost"
-            colorScheme="brand"
-            m={0}
-            onClick={() => {
-              if (transactionTableInstance) {
-                transactionTableInstance?.exportData('xlsx', false)
-              }
-            }}
-          >
-            <Icon as={BiExport} fontSize="18px" mr={1} />
-            {t('export')}
-          </Button>
-          <Divider orientation="vertical" border="1px solid" h="20px" />
-          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-        </HStack>
-      </Flex>
-    </Box>
+    </>
   )
 })

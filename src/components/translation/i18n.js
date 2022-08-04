@@ -405,6 +405,22 @@ i18n.use(initReactI18next).init({
         superName: 'Super Name',
         superPhone: 'Super Phone',
         superEmail: 'Super Email',
+
+        // PC Projects Table
+        woNumber: 'WO Number',
+        poNumber: 'PO Number',
+        profitTotal: 'Profit Total',
+        partialPayment: 'Partial Payment',
+        woaCompletionDate: 'WOA Completion Date',
+        accountPayable: 'Account Payable',
+        accountRecievable: 'Account Recievable',
+        woaPaidDate: 'WOA Paid Date',
+        projectRelatedCost: 'Project Related Cost',
+        invoiceNumber: 'Invoice Number',
+        sowOriginalContractAmount: 'SOW Original Contract Amount',
+        clientName: 'Client Name',
+        zipCode: 'Zip Code',
+        projectTypeLabel: 'Type',
       },
     },
     es: {

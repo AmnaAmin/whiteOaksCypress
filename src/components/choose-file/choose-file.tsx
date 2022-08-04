@@ -20,6 +20,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
 
     onClear?.()
   }
+
   return (
     <Box
       cursor="pointer"
@@ -30,7 +31,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       borderStyle="solid"
       borderColor={isError ? 'red' : '#E2E8F0'}
       rounded="6"
-      onClick={() => inputRef?.current?.click()}
+      onClick={onFileClear}
       bg="white"
       _hover={{
         borderColor: 'gray.300',
@@ -66,7 +67,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
               variant="link"
               size="xl"
               colorScheme={isError ? 'red' : 'brand'}
-              onClick={onFileClear}
+              onClick={() => inputRef?.current?.click()}
               bg="white"
             >
               <BiUpload />
