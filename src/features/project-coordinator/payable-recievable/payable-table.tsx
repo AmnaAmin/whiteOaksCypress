@@ -8,6 +8,7 @@ import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-
 import { ProjectWorkOrderType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { TableWrapper } from 'components/table/table'
+import { dateFormat } from 'utils/date-time-utils'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -75,6 +76,9 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
         {
           Header: 'Expected pay date',
           accessor: 'expectedPaymentDate',
+          Cell({ value }) {
+            return <Box>{dateFormat(value)}</Box>
+          },
         },
         {
           Header: 'Final Invoice',
@@ -87,20 +91,29 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
         {
           Header: 'WO Start Date',
           accessor: 'workOrderStartDate',
+          Cell({ value }) {
+            return <Box>{dateFormat(value)}</Box>
+          },
         },
         {
           Header: 'WO Completed Date',
           accessor: 'workOrderDateCompleted',
+          Cell({ value }) {
+            return <Box>{dateFormat(value)}</Box>
+          },
         },
         {
           Header: 'WO Issue Date',
           accessor: 'workOrderIssueDate',
+          Cell({ value }) {
+            return <Box>{dateFormat(value)}</Box>
+          },
         },
         {
           Header: 'Checkbox',
           Cell: ({ row }) => {
             return (
-              <Flex justifyContent="end">
+              <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
                 <Spacer w="50px" />
                 <Checkbox
                   isDisabled={loading}
