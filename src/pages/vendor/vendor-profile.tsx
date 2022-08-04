@@ -1,4 +1,4 @@
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, toast, useToast } from '@chakra-ui/react'
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { Details } from 'features/vendor-details/details'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 import { License } from 'features/vendor-details/license'
