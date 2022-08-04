@@ -1,7 +1,6 @@
 import { useToast } from '@chakra-ui/toast'
-import { useClient } from 'utils/auth-context'
 import _ from 'lodash'
-import { useQueryClient } from 'react-query'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-query'
 import {
   License,
@@ -13,9 +12,8 @@ import {
   VendorProfilePayload,
   VendorTradeFormValues,
 } from 'types/vendor.types'
+import { useClient } from 'utils/auth-context'
 import { convertDateTimeFromServer, convertDateTimeToServer, customFormat } from './date-time-utils'
-import { useTranslation } from 'react-i18next'
-import { t } from 'i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -26,6 +24,24 @@ export const licenseTypes = [
   { value: '6', label: 'Mechanical' },
 ]
 
+export const requiredField = {
+  detailErrors: [
+    'businessEmailAddress',
+    'capacity',
+    'city',
+    'companyName',
+    'ownerName',
+    'paymentTerm',
+    'state',
+    'streetAddress',
+    'zipCode',
+    'einNumber',
+    'ssnNumber',
+    'primaryEmail',
+  ],
+  documentErrors: ['w9Document'],
+  licenseErrors: ['licenses'],
+}
 export const useVendorProfile = (vendorId: number) => {
   const client = useClient()
 

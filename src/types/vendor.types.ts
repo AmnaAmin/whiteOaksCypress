@@ -216,6 +216,8 @@ export type VendorProfileDetailsFormData = {
   autoInsuranceExpDate?: Date
   coiGlExpDate?: Date
   coiWcExpDate?: Date
+  trades?: any[]
+  markets?: any[]
 }
 
 export type VendorTrade = {

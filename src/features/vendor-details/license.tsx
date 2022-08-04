@@ -44,7 +44,7 @@ export const LicenseForm = ({
 
   onClose,
 }: licenseFormProps) => {
-  const [startDate] = useState()
+  const [startDate] = useState(null)
   const { t } = useTranslation()
 
   const {

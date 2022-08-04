@@ -26,6 +26,7 @@ import {
   parseTradeFormValuesToAPIPayload,
   parseVendorFormDataToAPIData,
   prepareVendorDocumentObject,
+  requiredField,
   useCreateVendorMutation,
   usePaymentMethods,
   useSaveVendorDetails,
@@ -85,14 +86,32 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
           case 3:
             //trade
-            const tradePayload = parseTradeFormValuesToAPIPayload(formData, vendorProfileData)
-            saveTrades(tradePayload)
+            const checkedTrades = formData?.trades?.filter(t => t.checked)
+            if (checkedTrades && checkedTrades.length > 0) {
+              const tradePayload = parseTradeFormValuesToAPIPayload(formData, vendorProfileData)
+              saveTrades(tradePayload)
+            } else {
+              toast({
+                description: 'Atleast one trade must be selected',
+                status: 'error',
+                isClosable: true,
+              })
+            }
             break
 
           case 4:
             //Market
-            const marketsPayload = parseMarketFormValuesToAPIPayload(formData, vendorProfileData)
-            saveMarkets(marketsPayload)
+            const checkedMarkets = formData?.markets?.filter(t => t.checked)
+            if (checkedMarkets && checkedMarkets.length > 0) {
+              const marketsPayload = parseMarketFormValuesToAPIPayload(formData, vendorProfileData)
+              saveMarkets(marketsPayload)
+            } else {
+              toast({
+                description: 'Atleast one market must be selected',
+                status: 'error',
+                isClosable: true,
+              })
+            }
             break
 
           default:
@@ -134,23 +153,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     },
     [toast, vendorProfileData, useSaveVendorDetails, paymentsMethods, tabIndex],
   )
-  const detailErrors = [
-    'businessEmailAddress',
-    'capacity',
-    'city',
-    'companyName',
-    'ownerName',
-    'paymentTerm',
-    'state',
-    'streetAddress',
-    'zipCode',
-    'einNumber',
-    'ssnNumber',
-    'primaryEmail',
-  ]
-  const documentErrors = ['w9Document']
-  const licenseErrors = []
-  const tradeError = []
 
   const onError = (errors, e) => {
     errors = keys(errors)
@@ -158,28 +160,21 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     switch (tabIndex) {
       case 0:
         //detail
-        if (!intersection(errors, detailErrors).length) {
+        if (!intersection(errors, requiredField.detailErrors).length) {
           setTabIndex(i => i + 1)
           clearErrors()
         }
         break
 
       case 1:
-        if (!intersection(errors, documentErrors).length) {
+        if (!intersection(errors, requiredField.documentErrors).length) {
           setTabIndex(i => i + 1)
           clearErrors()
         }
         break
 
       case 2:
-        if (!intersection(errors, licenseErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      case 3:
-        if (!intersection(errors, tradeError).length) {
+        if (!intersection(errors, requiredField.licenseErrors).length) {
           setTabIndex(i => i + 1)
           clearErrors()
         }
