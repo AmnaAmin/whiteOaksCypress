@@ -21,6 +21,7 @@ import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useProjects } from 'utils/projects'
+import Select from 'components/form/react-select'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -35,6 +36,7 @@ export const AddPropertyInfo: React.FC<{
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
   const [zipCode, setZipCode] = useState('')
+  const [marketValue, setMarketValue] = useState('')
   const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [verificationInProgress, setVerificationInProgress] = useState(false)
@@ -90,8 +92,12 @@ export const AddPropertyInfo: React.FC<{
   } = useFormContext<ProjectFormValues>()
 
   // On Street Address change, set values of City, State and Zip
+let abc=''
   const setAddressValues = e => {
     setIsDuplicateAddress(false)
+    // setValue('newMarketId', 'abcd')
+    // setValue('state', 'anhfllsdhsf')
+
     props?.properties.map(property => {
       if (e.label === property?.streetAddress) {
         setValue('streetAddress', property.streetAddress)
@@ -99,11 +105,24 @@ export const AddPropertyInfo: React.FC<{
         setValue('state', property.state)
         setValue('zipCode', property.zipCode)
         setValue('propertyId', property.id)
+        setValue('newMarketId', property.marketId)
         setValue('property', property)
         setStreetAddress(property.streetAddress)
         setCity(property.city)
         setZipCode(property.zipCode)
         setState(property.state)
+
+        console.log('property', property)
+        // props?.markets.map(m => {
+        //   if (m?.id === property?.marketId) {
+        //     console.log(m, m?.metropolitanServiceArea, m?.stateName)
+        //     // setMarketValue(m?.metropolitanServiceArea)
+        //     abc = m?.metropolitanServiceArea
+        //     setValue('newMarketId', m?.metropolitanServiceArea)
+        //     //setState(m?.stateName)
+        //     setValue('state', m?.stateName)
+        //   }
+        // })
 
         // Check for duplicate address
         projects?.map(p => {
@@ -126,11 +145,12 @@ export const AddPropertyInfo: React.FC<{
 
   const setStates = e => {
     setValue('state', e.label)
-    setState(e.value)
+    setState(e.label)
   }
 
   const setMarket = e => {
-    setValue('newMarketId', e.value)
+    setValue('newMarketId', e.label)
+    setMarketValue(e.label)
   }
 
   // Parse XML to Verify Address
@@ -242,6 +262,7 @@ export const AddPropertyInfo: React.FC<{
                   <ReactSelect
                     id="state"
                     options={states}
+                    value={states?.value}
                     selected={value}
                     onChange={setStates}
                     selectProps={{ isBorderLeft: true }}
@@ -275,15 +296,16 @@ export const AddPropertyInfo: React.FC<{
             <Controller
               control={control}
               name={`newMarketId`}
-              render={({ field: { value }, fieldState }) => (
+              rules={{ required: 'This is required field' }}
+              render={({ field: {value}, fieldState }) => (
                 <>
-                  <ReactSelect
-                    id="market"
+                  <Select
+                   // id="market"
                     options={market}
+                    value={market?.label}
                     selected={value}
                     onChange={setMarket}
                     selectProps={{ isBorderLeft: true }}
-                    rules={{ required: 'This is required field' }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
