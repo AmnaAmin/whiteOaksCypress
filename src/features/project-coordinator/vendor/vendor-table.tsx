@@ -166,6 +166,7 @@ export const VendorTable: React.FC<ProjectProps> = ({
           tableHeight="calc(100vh - 350px)"
           setTableInstance={setTableInstance}
           onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+          sortBy={{ id: 'id', desc: true }}
         />
       )}
     </Box>
