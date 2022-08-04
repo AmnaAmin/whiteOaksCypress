@@ -522,7 +522,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
     if (!vendorProfileData) {
       setValue('score', first(documentScore))
       setValue('status', first(documentStatus))
-      if (markets?.length && vendorProfileData) {
+      if (markets?.length) {
         const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
         setValue('markets', tradeFormValues.markets)
       }
