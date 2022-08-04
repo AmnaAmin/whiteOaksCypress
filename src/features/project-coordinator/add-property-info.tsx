@@ -36,7 +36,6 @@ export const AddPropertyInfo: React.FC<{
   const [city, setCity] = useState('')
   const [state, setState] = useState('')
   const [zipCode, setZipCode] = useState('')
-  const [marketValue, setMarketValue] = useState('')
   const [addressVerificationStatus, setAddressVerificationStatus] = useState('verifying')
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [verificationInProgress, setVerificationInProgress] = useState(false)
@@ -92,37 +91,29 @@ export const AddPropertyInfo: React.FC<{
   } = useFormContext<ProjectFormValues>()
 
   // On Street Address change, set values of City, State and Zip
-let abc=''
   const setAddressValues = e => {
     setIsDuplicateAddress(false)
-    // setValue('newMarketId', 'abcd')
-    // setValue('state', 'anhfllsdhsf')
 
     props?.properties.map(property => {
       if (e.label === property?.streetAddress) {
         setValue('streetAddress', property.streetAddress)
         setValue('city', property.city)
-        setValue('state', property.state)
         setValue('zipCode', property.zipCode)
         setValue('propertyId', property.id)
-        setValue('newMarketId', property.marketId)
         setValue('property', property)
         setStreetAddress(property.streetAddress)
         setCity(property.city)
         setZipCode(property.zipCode)
         setState(property.state)
 
-        console.log('property', property)
-        // props?.markets.map(m => {
-        //   if (m?.id === property?.marketId) {
-        //     console.log(m, m?.metropolitanServiceArea, m?.stateName)
-        //     // setMarketValue(m?.metropolitanServiceArea)
-        //     abc = m?.metropolitanServiceArea
-        //     setValue('newMarketId', m?.metropolitanServiceArea)
-        //     //setState(m?.stateName)
-        //     setValue('state', m?.stateName)
-        //   }
-        // })
+        // Set State and Market w.r.t Address
+        props?.markets.map(m => {
+          if (m?.id === property?.marketId) {
+            setValue('newMarketId', {label: m?.metropolitanServiceArea, value: m?.id,})
+            setValue('state', { label: m?.stateName, value: m?.state })
+          }
+          return props?.markets
+        })
 
         // Check for duplicate address
         projects?.map(p => {
@@ -144,13 +135,11 @@ let abc=''
   }
 
   const setStates = e => {
-    setValue('state', e.label)
     setState(e.label)
   }
 
-  const setMarket = e => {
+  const setMarkets = e => {
     setValue('newMarketId', e.label)
-    setMarketValue(e.label)
   }
 
   // Parse XML to Verify Address
@@ -257,15 +246,18 @@ let abc=''
               control={control}
               name={`state`}
               rules={{ required: 'This is required field' }}
-              render={({ field: { value }, fieldState }) => (
+              render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect
-                    id="state"
+                  <Select
+                    {...field}
                     options={states}
-                    value={states?.value}
-                    selected={value}
-                    onChange={setStates}
+                    size="md"
+                    value={field.value}
                     selectProps={{ isBorderLeft: true }}
+                    onChange={option => {
+                      setStates(option)
+                      field.onChange(option)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -297,15 +289,18 @@ let abc=''
               control={control}
               name={`newMarketId`}
               rules={{ required: 'This is required field' }}
-              render={({ field: {value}, fieldState }) => (
+              render={({ field, fieldState }) => (
                 <>
-                  <Select
-                   // id="market"
+                <Select
+                    {...field}
                     options={market}
-                    value={market?.label}
-                    selected={value}
-                    onChange={setMarket}
+                    size="md"
+                    value={field.value}
                     selectProps={{ isBorderLeft: true }}
+                    onChange={option => {
+                      setMarkets(option)
+                      field.onChange(option)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
