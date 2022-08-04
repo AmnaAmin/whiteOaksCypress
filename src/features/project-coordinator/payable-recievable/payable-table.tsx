@@ -8,6 +8,7 @@ import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-
 import { ProjectWorkOrderType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { TableWrapper } from 'components/table/table'
+import numeral from 'numeral'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -79,6 +80,9 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
         {
           Header: 'Final Invoice',
           accessor: 'finalInvoiceAmount',
+          Cell: ({ value }) => {
+            return numeral(value).format('$0,0.00')
+          },
         },
         {
           Header: 'Markets',
