@@ -191,9 +191,9 @@ export type ProjectFormValues = {
   sowLink: string
   streetAddress?: string
   city?: string
-  state?: string
+  state?: any
   zipCode?: any
-  newMarketId?: string
+  newMarketId?: any
   gateCode?: string
   lockBoxCode?: string
   hoaEmailAddress?: string | null
