@@ -26,7 +26,6 @@ import {
   parseMarketAPIDataToFormValues,
   parseTradeAPIDataToFormValues,
   parseVendorAPIDataToFormData,
-  requiredField,
   useMarkets,
   usePaymentMethods,
   useTrades,
@@ -50,7 +49,6 @@ const PcDetails: React.FC<{
   const disableNext = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
-  console.log(disableNext)
   const states = useMemo(
     () =>
       statesData?.map(state => ({
