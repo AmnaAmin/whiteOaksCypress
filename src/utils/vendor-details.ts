@@ -28,6 +28,7 @@ export const licenseTypes = [
 export const requiredField = {
   detailErrors: [
     'businessEmailAddress',
+    'businessPhoneNumber',
     'capacity',
     'city',
     'companyName',
@@ -532,12 +533,13 @@ export const useSaveLanguage = () => {
 }
 
 export const useVendorNext = ({ control }) => {
-  const [ein, ssn, ...fields] = useWatch({
+  const [ein, ssn, ...detailfields] = useWatch({
     control,
     name: [
       'einNumber',
       'ssnNumber',
       'businessEmailAddress',
+      'businessPhoneNumber',
       'capacity',
       'city',
       'companyName',
@@ -548,5 +550,19 @@ export const useVendorNext = ({ control }) => {
       'zipCode',
     ],
   })
-  return fields.some(n => !n) || (ein && ssn)
+  const [...documentFields] = useWatch({
+    control,
+    name: ['w9Document'],
+  })
+  const licenseField = useWatch({
+    control,
+    name: ['licenses'],
+  })
+  const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
+  console.log(licensesArray)
+  return {
+    disableDetailsNext: detailfields.some(n => !n) || !(ein || ssn),
+    disableDocumentsNext: documentFields.some(n => !n),
+    disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
+  }
 }

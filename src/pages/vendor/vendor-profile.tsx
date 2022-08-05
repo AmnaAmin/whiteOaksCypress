@@ -40,16 +40,16 @@ type Props = {
   updateVendorId?: (number) => void
   vendorModalType?: string
 }
-const validateTrade = formData => {
-  const checkedTrades = formData?.trades?.filter(t => t.checked)
+export const validateTrade = trades => {
+  const checkedTrades = trades?.filter(t => t.checked)
   if (!(checkedTrades && checkedTrades.length > 0)) {
     return false
   }
   return true
 }
 
-const validateMarket = formData => {
-  const checkedMarkets = formData?.markets?.filter(t => t.checked)
+export const validateMarket = markets => {
+  const checkedMarkets = markets?.filter(t => t.checked)
   if (!(checkedMarkets && checkedMarkets.length > 0)) {
     return false
   }
@@ -105,7 +105,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
           case 3:
             //trade
-            if (validateTrade(formData)) {
+            if (validateTrade(formData?.trades)) {
               const tradePayload = parseTradeFormValuesToAPIPayload(formData, vendorProfileData)
               saveTrades(tradePayload)
             } else {
@@ -116,7 +116,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
           case 4:
             //Market
-            if (validateMarket(formData)) {
+            if (validateMarket(formData?.markets)) {
               const marketsPayload = parseMarketFormValuesToAPIPayload(formData, vendorProfileData)
               saveMarkets(marketsPayload)
             } else {
@@ -132,7 +132,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         switch (tabIndex) {
           case 4:
             //create vendor: market tab
-            if (validateMarket(formData)) {
+            if (validateMarket(formData?.markets)) {
               const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
               createVendor(createPayload, {
                 onSuccess() {
@@ -146,7 +146,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             break
           case 3:
             //create vendor: trade
-            if (validateTrade(formData)) {
+            if (validateTrade(formData?.trades)) {
               setTabIndex(i => i + 1)
             } else {
               showError('Trade')
