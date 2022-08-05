@@ -2,6 +2,7 @@ import { Box, Button, Flex } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
+import { validateTrade } from 'pages/vendor/vendor-profile'
 import React from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
@@ -71,7 +72,13 @@ export const TradeForm = ({ vendorProfileData, trades, onClose }: tradesFormProp
             Cancel
           </Button>
         )}
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveVendorSkills">
+        <Button
+          disabled={!validateTrade(tradeCheckboxes)}
+          type="submit"
+          variant="solid"
+          colorScheme="brand"
+          data-testid="saveVendorSkills"
+        >
           {vendorProfileData?.id ? t('save') : t('next')}
         </Button>
       </Flex>

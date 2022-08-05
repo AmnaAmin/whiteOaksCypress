@@ -2,6 +2,7 @@ import { Box, Button, Flex } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
+import { validateMarket } from 'pages/vendor/vendor-profile'
 import React from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Market, VendorMarketFormValues, VendorProfile } from 'types/vendor.types'
@@ -80,7 +81,13 @@ export const MarketForm = ({ onClose }: marketFormProps) => {
           </Button>
         )}
 
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets">
+        <Button
+          disabled={!validateMarket(tradeCheckboxes)}
+          type="submit"
+          variant="solid"
+          colorScheme="brand"
+          data-testid="saveMarkets"
+        >
           {t('save')}
         </Button>
       </Flex>

@@ -46,7 +46,7 @@ const PcDetails: React.FC<{
     control,
     register,
   } = useFormContext<VendorProfileDetailsFormData>()
-  const disableNext = useVendorNext({ control })
+  const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
   const states = useMemo(
@@ -165,12 +165,13 @@ const PcDetails: React.FC<{
               <Controller
                 name="businessPhoneNumber"
                 control={control}
+                rules={{ required: 'This is required' }}
                 render={({ field }) => {
                   return (
                     <Input
                       {...field}
                       w="215px"
-                      variant="outline"
+                      variant="required-field"
                       size="md"
                       onChange={event => {
                         const value = event.currentTarget.value
@@ -423,7 +424,7 @@ const PcDetails: React.FC<{
           </Button>
         )}
         <Button
-          disabled={disableNext}
+          disabled={disableDetailsNext}
           type="submit"
           data-testid="saveDocumentCards"
           variant="solid"

@@ -14,7 +14,7 @@ import {
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { licenseTypes } from 'utils/vendor-details'
+import { licenseTypes, useVendorNext } from 'utils/vendor-details'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
@@ -63,6 +63,7 @@ export const LicenseForm = ({
     name: 'licenses',
   })
 
+  const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
@@ -222,7 +223,13 @@ export const LicenseForm = ({
             Cancel
           </Button>
         )}
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveLicenses">
+        <Button
+          disabled={disableLicenseNext}
+          type="submit"
+          variant="solid"
+          colorScheme="brand"
+          data-testid="saveLicenses"
+        >
           {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>
