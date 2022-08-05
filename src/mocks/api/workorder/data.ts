@@ -17,7 +17,7 @@ export const DOCUMENTS = [
     vendorName: 'Vendor ++ Test',
     workOrderName: 'General Labor',
     fileType: 'Claimants-Signature.png',
-    documentTypelabel: 'Leinwaver Signature',
+    documentTypelabel: 'Lien Waiver Signature',
   },
   {
     id: 24318,
