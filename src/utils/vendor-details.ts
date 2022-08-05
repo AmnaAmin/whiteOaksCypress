@@ -527,12 +527,12 @@ export const useSaveLanguage = () => {
       })
     },
     {
-      onSuccess() { },
+      onSuccess() {},
     },
   )
 }
 
-export const useVendorNext = ({ control }) => {
+export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
   const [ein, ssn, ...detailfields] = useWatch({
     control,
     name: [
@@ -550,7 +550,7 @@ export const useVendorNext = ({ control }) => {
       'zipCode',
     ],
   })
-  const [...documentFields] = useWatch({
+  const documentFields = useWatch({
     control,
     name: ['w9Document'],
   })
@@ -559,10 +559,9 @@ export const useVendorNext = ({ control }) => {
     name: ['licenses'],
   })
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
-
   return {
     disableDetailsNext: detailfields.some(n => !n) || !(ein || ssn),
-    disableDocumentsNext: documentFields.some(n => !n),
+    disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl),
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
   }
 }

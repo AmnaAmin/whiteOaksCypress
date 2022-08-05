@@ -24,19 +24,21 @@ type DocumentsProps = {
   vendor: VendorProfile
   onClose?: () => void
   VendorType: string
+  isActive: boolean
 }
 type DocumentFormProps = {
   vendor: VendorProfile
   onClose?: () => void
+  isActive: boolean
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   return (
     <Box w="100%">
-      <DocumentsForm vendor={props.vendor} onClose={props.onClose}></DocumentsForm>
+      <DocumentsForm isActive={props.isActive} vendor={props.vendor} onClose={props.onClose}></DocumentsForm>
     </Box>
   )
 })
-export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
+export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
 
   const {
@@ -45,7 +47,8 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
     setValue,
     getValues,
   } = useFormContext<DocumentsCardFormValues>()
-  const { disableDocumentsNext } = useVendorNext({ control })
+  const documents = getValues()
+  const { disableDocumentsNext } = useVendorNext({ control, documents })
   useEffect(() => {
     if (!vendor) {
       setChangeDateFields([])
@@ -74,7 +77,6 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
       </a>
     )
   }
-  const documents = getValues()
   return (
     <>
       <Box h="502px" overflow="auto">
@@ -109,7 +111,7 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
               <Controller
                 name="w9Document"
                 control={control}
-                rules={{ required: documents.w9DocumentUrl ? '' : 'This is required field' }}
+                rules={{ required: documents.w9DocumentUrl ? '' : isActive && 'This is required field' }}
                 render={({ field, fieldState }) => {
                   return (
                     <VStack alignItems="baseline">
@@ -168,7 +170,9 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
                   name="agreement"
                   control={control}
                   rules={{
-                    required: changedDateFields.includes('agreementSignedDate') ? 'This is required field' : '',
+                    required: changedDateFields.includes('agreementSignedDate')
+                      ? isActive && 'This is required field'
+                      : '',
                   }}
                   render={({ field, fieldState }) => {
                     return (
@@ -237,7 +241,9 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
                   name="insurance"
                   control={control}
                   rules={{
-                    required: changedDateFields.includes('autoInsuranceExpDate') ? 'This is required field' : '',
+                    required: changedDateFields.includes('autoInsuranceExpDate')
+                      ? isActive && 'This is required field'
+                      : '',
                   }}
                   render={({ field, fieldState }) => {
                     return (
@@ -297,7 +303,9 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
                 <Controller
                   name="coiGlExpFile"
                   control={control}
-                  rules={{ required: changedDateFields.includes('COIGLExpDate') ? 'This is required field' : '' }}
+                  rules={{
+                    required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : '',
+                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -356,7 +364,9 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
                 <Controller
                   name="coiWcExpFile"
                   control={control}
-                  rules={{ required: changedDateFields.includes('coiWcExpDate') ? 'This is required field' : '' }}
+                  rules={{
+                    required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
+                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">

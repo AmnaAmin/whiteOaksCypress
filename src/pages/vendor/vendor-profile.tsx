@@ -162,39 +162,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     [toast, vendorProfileData, useSaveVendorDetails, paymentsMethods, tabIndex],
   )
 
-  const onError = (errors, e) => {
-    errors = keys(errors)
-    if (vendorProfileData?.id) return
-    switch (tabIndex) {
-      case 0:
-        //detail
-        if (!intersection(errors, requiredField.detailErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      case 1:
-        if (!intersection(errors, requiredField.documentErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      case 2:
-        if (!intersection(errors, requiredField.licenseErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      default:
-        break
-    }
-  }
   return (
     <FormProvider {...formReturn}>
-      <form onSubmit={formReturn.handleSubmit(submitForm, onError)}>
+      <form onSubmit={formReturn.handleSubmit(submitForm)}>
         <Tabs index={tabIndex} size="md" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab>{t('details')}</Tab>
@@ -232,14 +202,23 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           <TabPanels mt="31px">
             <TabPanel p="0px">
               {VendorType === 'editVendor' ? (
-                <PcDetails vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+                <PcDetails
+                  isActive={tabIndex === 0}
+                  vendorProfileData={vendorProfileData as VendorProfile}
+                  onClose={props.onClose}
+                />
               ) : (
-                <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+                <Details
+                  isActive={tabIndex === 0}
+                  vendorProfileData={vendorProfileData as VendorProfile}
+                  onClose={props.onClose}
+                />
               )}
             </TabPanel>
             <TabPanel p="0px">
               <Box h="100%" w="100%">
                 <DocumentsCard
+                  isActive={tabIndex === 1}
                   VendorType={VendorType!}
                   vendor={vendorProfileData as VendorProfile}
                   onClose={props.onClose}
@@ -248,14 +227,26 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             </TabPanel>
             <TabPanel p="0px">
               <Box h="100%" w="100%">
-                <License vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
+                <License
+                  isActive={tabIndex === 2}
+                  vendor={vendorProfileData as VendorProfile}
+                  onClose={props.onClose}
+                />
               </Box>
             </TabPanel>
             <TabPanel p="0px">
-              <TradeList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+              <TradeList
+                isActive={tabIndex === 3}
+                vendorProfileData={vendorProfileData as VendorProfile}
+                onClose={props.onClose}
+              />
             </TabPanel>
             <TabPanel p="0px">
-              <MarketList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+              <MarketList
+                isActive={tabIndex === 4}
+                vendorProfileData={vendorProfileData as VendorProfile}
+                onClose={props.onClose}
+              />
             </TabPanel>
             {/* <TabPanel p="0px">
               <Box overflow="auto">

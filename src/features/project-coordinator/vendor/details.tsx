@@ -36,7 +36,8 @@ import first from 'lodash/first'
 const PcDetails: React.FC<{
   onClose?: () => void
   vendorProfileData: VendorProfile
-}> = ({ onClose, vendorProfileData }) => {
+  isActive: boolean
+}> = ({ onClose, vendorProfileData, isActive }) => {
   const { t } = useTranslation()
 
   const { data: paymentsMethods } = usePaymentMethods()
@@ -71,7 +72,7 @@ const PcDetails: React.FC<{
               id="companyName"
               variant="required-field"
               {...register('companyName', {
-                required: 'This is required',
+                required: isActive && 'This is required',
               })}
               size="md"
             />
@@ -84,7 +85,7 @@ const PcDetails: React.FC<{
             <Controller
               control={control}
               name="score"
-              rules={{ required: 'This is required' }}
+              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect options={documentScore} {...field} selectProps={{ isBorderLeft: true }} />
@@ -100,7 +101,7 @@ const PcDetails: React.FC<{
             <Controller
               control={control}
               name="status"
-              rules={{ required: 'This is required' }}
+              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
@@ -118,7 +119,7 @@ const PcDetails: React.FC<{
             <Input
               type="text"
               {...register('ownerName', {
-                required: 'This is required',
+                required: isActive && 'This is required',
               })}
               variant="required-field"
               size="md"
@@ -132,7 +133,7 @@ const PcDetails: React.FC<{
             <Input
               type="email"
               {...register('businessEmailAddress', {
-                required: 'This is required',
+                required: isActive && 'This is required',
               })}
               variant="required-field"
               size="md"
@@ -165,7 +166,7 @@ const PcDetails: React.FC<{
               <Controller
                 name="businessPhoneNumber"
                 control={control}
-                rules={{ required: 'This is required' }}
+                rules={{ required: isActive && 'This is required' }}
                 render={({ field }) => {
                   return (
                     <Input
@@ -250,7 +251,7 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('streetAddress', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -267,7 +268,7 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('city', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -284,7 +285,7 @@ const PcDetails: React.FC<{
               <Controller
                 control={control}
                 name="state"
-                rules={{ required: 'This is required' }}
+                rules={{ required: isActive && 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
@@ -307,7 +308,7 @@ const PcDetails: React.FC<{
               <Input
                 type="number"
                 {...register('zipCode', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -324,7 +325,7 @@ const PcDetails: React.FC<{
               <Input
                 type="number"
                 {...register('capacity', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -341,7 +342,7 @@ const PcDetails: React.FC<{
               <Input
                 type="string"
                 {...register('einNumber', {
-                  required: ssnNumber ? '' : 'This is required',
+                  required: ssnNumber ? '' : isActive && 'This is required',
                 })}
                 w="215px"
                 variant={ssnNumber ? 'outline' : 'required-field'}
@@ -358,7 +359,7 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('ssnNumber', {
-                  required: einNumber ? '' : 'This is required',
+                  required: einNumber ? '' : isActive && 'This is required',
                 })}
                 w="215px"
                 variant={einNumber ? 'outline' : 'required-field'}
@@ -380,7 +381,7 @@ const PcDetails: React.FC<{
                 <Controller
                   control={control}
                   name="paymentTerm"
-                  rules={{ required: 'This is required' }}
+                  rules={{ required: isActive && 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect

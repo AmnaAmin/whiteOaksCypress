@@ -27,23 +27,21 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 type LicenseProps = {
   vendor: VendorProfile
   onClose?: () => void
+  isActive: boolean
 }
 type licenseFormProps = {
   vendor: VendorProfile
   onClose?: () => void
+  isActive: boolean
 }
 export const License = React.forwardRef((props: LicenseProps, ref) => {
   return (
     <Box>
-      <LicenseForm vendor={props.vendor} onClose={props.onClose} />
+      <LicenseForm isActive={props.isActive} vendor={props.vendor} onClose={props.onClose} />
     </Box>
   )
 })
-export const LicenseForm = ({
-  vendor,
-
-  onClose,
-}: licenseFormProps) => {
+export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
 

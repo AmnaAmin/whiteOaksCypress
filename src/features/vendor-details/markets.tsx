@@ -12,11 +12,13 @@ type marketFormProps = {
   onClose?: () => void
   vendorProfileData: VendorProfile
   markets?: Array<Market>
+  isActive: boolean
 }
 
-export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void }> = ({
+export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void; isActive: boolean }> = ({
   vendorProfileData,
   onClose,
+  isActive,
 }) => {
   const { markets, isLoading } = useMarkets()
 
@@ -25,13 +27,13 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <MarketForm vendorProfileData={vendorProfileData} markets={markets} onClose={onClose} />
+        <MarketForm isActive={isActive} vendorProfileData={vendorProfileData} markets={markets} onClose={onClose} />
       )}
     </Box>
   )
 }
 
-export const MarketForm = ({ onClose }: marketFormProps) => {
+export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
   const { control } = useFormContext<VendorMarketFormValues>()
   const tradeCheckboxes = useWatch({ control, name: 'markets' })
 

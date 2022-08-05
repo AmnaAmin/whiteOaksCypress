@@ -66,8 +66,9 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
 export const Details: React.FC<{
   vendorProfileData: VendorProfile
   onClose?: () => void
+  isActive: boolean
 }> = props => {
-  const { vendorProfileData } = props
+  const { vendorProfileData, isActive } = props
   const { t } = useTranslation()
 
   return (

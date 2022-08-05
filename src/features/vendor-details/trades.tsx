@@ -12,11 +12,13 @@ type tradesFormProps = {
   vendorProfileData: VendorProfile
   onClose?: () => void
   trades?: Array<Trade>
+  isActive: boolean
 }
 
-export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void }> = ({
+export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void; isActive: boolean }> = ({
   vendorProfileData,
   onClose,
+  isActive,
 }) => {
   const { data: trades, isLoading } = useTrades()
 
@@ -25,13 +27,13 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <TradeForm vendorProfileData={vendorProfileData} trades={trades} onClose={onClose} />
+        <TradeForm isActive={isActive} vendorProfileData={vendorProfileData} trades={trades} onClose={onClose} />
       )}
     </Box>
   )
 }
 
-export const TradeForm = ({ vendorProfileData, trades, onClose }: tradesFormProps) => {
+export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: tradesFormProps) => {
   const { control } = useFormContext<VendorTradeFormValues>()
 
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
