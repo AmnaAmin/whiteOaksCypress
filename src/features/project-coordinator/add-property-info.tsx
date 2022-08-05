@@ -21,6 +21,7 @@ import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useProjects } from 'utils/projects'
+import Select from 'components/form/react-select'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -92,11 +93,11 @@ export const AddPropertyInfo: React.FC<{
   // On Street Address change, set values of City, State and Zip
   const setAddressValues = e => {
     setIsDuplicateAddress(false)
+
     props?.properties.map(property => {
       if (e.label === property?.streetAddress) {
         setValue('streetAddress', property.streetAddress)
         setValue('city', property.city)
-        setValue('state', property.state)
         setValue('zipCode', property.zipCode)
         setValue('propertyId', property.id)
         setValue('property', property)
@@ -104,6 +105,15 @@ export const AddPropertyInfo: React.FC<{
         setCity(property.city)
         setZipCode(property.zipCode)
         setState(property.state)
+
+        // Set State and Market w.r.t Address
+        props?.markets.map(m => {
+          if (m?.id === property?.marketId) {
+            setValue('newMarketId', {label: m?.metropolitanServiceArea, value: m?.id,})
+            setValue('state', { label: m?.stateName, value: m?.state })
+          }
+          return props?.markets
+        })
 
         // Check for duplicate address
         projects?.map(p => {
@@ -125,12 +135,11 @@ export const AddPropertyInfo: React.FC<{
   }
 
   const setStates = e => {
-    setValue('state', e.label)
-    setState(e.value)
+    setState(e.label)
   }
 
-  const setMarket = e => {
-    setValue('newMarketId', e.value)
+  const setMarkets = e => {
+    setValue('newMarketId', e.label)
   }
 
   // Parse XML to Verify Address
@@ -237,14 +246,18 @@ export const AddPropertyInfo: React.FC<{
               control={control}
               name={`state`}
               rules={{ required: 'This is required field' }}
-              render={({ field: { value }, fieldState }) => (
+              render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect
-                    id="state"
+                  <Select
+                    {...field}
                     options={states}
-                    selected={value}
-                    onChange={setStates}
+                    size="md"
+                    value={field.value}
                     selectProps={{ isBorderLeft: true }}
+                    onChange={option => {
+                      setStates(option)
+                      field.onChange(option)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -275,15 +288,19 @@ export const AddPropertyInfo: React.FC<{
             <Controller
               control={control}
               name={`newMarketId`}
-              render={({ field: { value }, fieldState }) => (
+              rules={{ required: 'This is required field' }}
+              render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect
-                    id="market"
+                <Select
+                    {...field}
                     options={market}
-                    selected={value}
-                    onChange={setMarket}
+                    size="md"
+                    value={field.value}
                     selectProps={{ isBorderLeft: true }}
-                    rules={{ required: 'This is required field' }}
+                    onChange={option => {
+                      setMarkets(option)
+                      field.onChange(option)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
