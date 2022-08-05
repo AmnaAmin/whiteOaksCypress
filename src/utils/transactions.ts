@@ -24,6 +24,7 @@ import { convertImageToDataURL } from 'components/table/util'
 import { createForm } from './lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { getProjectDetailsAPIKey } from 'utils/project-details'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -560,6 +561,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(getProjectDetailsAPIKey(projectId))
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
@@ -587,6 +589,8 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(getProjectDetailsAPIKey(projectId))
+
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',

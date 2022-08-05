@@ -20,7 +20,6 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   // const isStatusPastDue = projectStatus === STATUS.PastDue
   const isStatusCancelled = projectStatus === STATUS.Cancelled
 
-  console.log('invoiceBackDate', invoiceBackDate)
   return {
     isStatusNew,
     isStatusActive,
@@ -53,7 +52,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isOverPaymentDisalbed: isAllTimeDisabled,
     isWOAExpectedPayDateDisabled: isAllTimeDisabled,
     isRemainingPaymentDisabled: isAllTimeDisabled,
-    isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced),
+    isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate),
 
     // Contacts field states
     isProjectCoordinatorDisabled: isAllTimeDisabled,
