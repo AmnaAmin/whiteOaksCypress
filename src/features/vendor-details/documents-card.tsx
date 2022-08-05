@@ -76,7 +76,7 @@ export const DocumentsForm = ({ vendor, onClose }: DocumentFormProps) => {
   const documents = getValues()
   return (
     <>
-      <Box h="600px" overflow="auto">
+      <Box h="502px" overflow="auto">
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
