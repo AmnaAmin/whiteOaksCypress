@@ -1,22 +1,20 @@
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { DevTool } from '@hookform/devtools'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import 'components/translation/i18n'
+import { Card } from 'features/login-form-centered/Card'
+import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
 import { Details } from 'features/vendor-details/details'
 import { DocumentsCard } from 'features/vendor-details/documents-card'
 import { License } from 'features/vendor-details/license'
 import { MarketList } from 'features/vendor-details/markets'
 import { TradeList } from 'features/vendor-details/trades'
 import React, { useCallback, useState } from 'react'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { DevTool } from '@hookform/devtools'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import 'components/translation/i18n'
-import { Card } from 'features/login-form-centered/Card'
-import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
-import intersection from 'lodash/intersection'
-import keys from 'lodash/keys'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
+import { useUserProfile } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
   parseCreateVendorFormToAPIData,
@@ -26,7 +24,6 @@ import {
   parseTradeFormValuesToAPIPayload,
   parseVendorFormDataToAPIData,
   prepareVendorDocumentObject,
-  requiredField,
   useCreateVendorMutation,
   usePaymentMethods,
   useSaveVendorDetails,
@@ -71,7 +68,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const [tabIndex, setTabIndex] = useState(0)
 
   const formReturn = useForm<VendorProfileDetailsFormData>()
-  const { control, clearErrors } = formReturn
+  const { control } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
     toast({
@@ -162,39 +159,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     [toast, vendorProfileData, useSaveVendorDetails, paymentsMethods, tabIndex],
   )
 
-  const onError = (errors, e) => {
-    errors = keys(errors)
-    if (vendorProfileData?.id) return
-    switch (tabIndex) {
-      case 0:
-        //detail
-        if (!intersection(errors, requiredField.detailErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      case 1:
-        if (!intersection(errors, requiredField.documentErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      case 2:
-        if (!intersection(errors, requiredField.licenseErrors).length) {
-          setTabIndex(i => i + 1)
-          clearErrors()
-        }
-        break
-
-      default:
-        break
-    }
-  }
   return (
     <FormProvider {...formReturn}>
-      <form onSubmit={formReturn.handleSubmit(submitForm, onError)}>
+      <form onSubmit={formReturn.handleSubmit(submitForm)}>
         <Tabs index={tabIndex} size="md" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab>{t('details')}</Tab>
@@ -231,31 +198,62 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
           <TabPanels mt="31px">
             <TabPanel p="0px">
-              {VendorType === 'editVendor' ? (
-                <PcDetails vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
-              ) : (
-                <Details vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+              {tabIndex === 0 ? (
+                VendorType === 'editVendor' ? (
+                  <PcDetails
+                    isActive={tabIndex === 0}
+                    vendorProfileData={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                ) : (
+                  <Details
+                    isActive={tabIndex === 0}
+                    vendorProfileData={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                )
+              ) : null}
+            </TabPanel>
+            <TabPanel p="0px">
+              <Box h="100%" w="100%">
+                {tabIndex === 1 && (
+                  <DocumentsCard
+                    isActive={tabIndex === 1}
+                    VendorType={VendorType!}
+                    vendor={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                )}
+              </Box>
+            </TabPanel>
+            <TabPanel p="0px">
+              <Box h="100%" w="100%">
+                {tabIndex === 2 && (
+                  <License
+                    isActive={tabIndex === 2}
+                    vendor={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                )}
+              </Box>
+            </TabPanel>
+            <TabPanel p="0px">
+              {tabIndex === 3 && (
+                <TradeList
+                  isActive={tabIndex === 3}
+                  vendorProfileData={vendorProfileData as VendorProfile}
+                  onClose={props.onClose}
+                />
               )}
             </TabPanel>
             <TabPanel p="0px">
-              <Box h="100%" w="100%">
-                <DocumentsCard
-                  VendorType={VendorType!}
-                  vendor={vendorProfileData as VendorProfile}
+              {tabIndex === 4 && (
+                <MarketList
+                  isActive={tabIndex === 4}
+                  vendorProfileData={vendorProfileData as VendorProfile}
                   onClose={props.onClose}
                 />
-              </Box>
-            </TabPanel>
-            <TabPanel p="0px">
-              <Box h="100%" w="100%">
-                <License vendor={vendorProfileData as VendorProfile} onClose={props.onClose} />
-              </Box>
-            </TabPanel>
-            <TabPanel p="0px">
-              <TradeList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
-            </TabPanel>
-            <TabPanel p="0px">
-              <MarketList vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+              )}
             </TabPanel>
             {/* <TabPanel p="0px">
               <Box overflow="auto">
