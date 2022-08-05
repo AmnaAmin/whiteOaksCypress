@@ -559,7 +559,7 @@ export const useVendorNext = ({ control }) => {
     name: ['licenses'],
   })
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
-  console.log(licensesArray)
+
   return {
     disableDetailsNext: detailfields.some(n => !n) || !(ein || ssn),
     disableDocumentsNext: documentFields.some(n => !n),
