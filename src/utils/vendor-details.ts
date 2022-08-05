@@ -277,7 +277,7 @@ export const DOCUMENTS_TYPES = {
   COI_WC: { value: 'Certificate Of Insurance-Worker Comp', id: 20 },
   AGREEMENT_SIGNED_DOCUMENT: { value: 'Signed Agreement', id: 40 },
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
-  W9_DOCUMENT: { value: 'W9 DOCUMENT', id: 99 },
+  W9_DOCUMENT: { value: 'W9 Document', id: 99 },
 }
 
 export const useSaveVendorDetails = (name: string) => {
@@ -527,7 +527,7 @@ export const useSaveLanguage = () => {
       })
     },
     {
-      onSuccess() {},
+      onSuccess() { },
     },
   )
 }
