@@ -84,7 +84,7 @@ describe('Work Order Lien Waiver Test Cases', () => {
     // Check signature is displayed
     expect(screen.getByTestId('claimantsSignature')).toHaveAttribute(
       'src',
-      DOCUMENTS.find(d => d.documentTypelabel === 'Lien Waiver Signature')?.s3Url,
+      DOCUMENTS.find(d => d.documentTypelabel === 'Leinwaver Signature')?.s3Url,
     )
     // Check Lien Waiver link is present
     expect(screen.queryByTestId('save-lien-waiver')).not.toBeInTheDocument()
