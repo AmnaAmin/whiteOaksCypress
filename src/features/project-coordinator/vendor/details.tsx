@@ -26,9 +26,11 @@ import {
   parseMarketAPIDataToFormValues,
   parseTradeAPIDataToFormValues,
   parseVendorAPIDataToFormData,
+  requiredField,
   useMarkets,
   usePaymentMethods,
   useTrades,
+  useVendorNext,
 } from 'utils/vendor-details'
 import { documentStatus, documentScore } from 'utils/vendor-projects'
 import first from 'lodash/first'
@@ -45,10 +47,10 @@ const PcDetails: React.FC<{
     control,
     register,
   } = useFormContext<VendorProfileDetailsFormData>()
-
+  const disableNext = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
-
+  console.log(disableNext)
   const states = useMemo(
     () =>
       statesData?.map(state => ({
@@ -57,6 +59,7 @@ const PcDetails: React.FC<{
       })) ?? [],
     [statesData],
   )
+
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -285,7 +288,12 @@ const PcDetails: React.FC<{
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect options={states} {...field} />
+                    <ReactSelect
+                      menuPosition="fixed"
+                      options={states}
+                      {...field}
+                      selectProps={{ isBorderLeft: true }}
+                    />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
@@ -376,7 +384,12 @@ const PcDetails: React.FC<{
                   rules={{ required: 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect options={PAYMENT_TERMS_OPTIONS} {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect
+                        options={PAYMENT_TERMS_OPTIONS}
+                        menuPosition="fixed"
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                      />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -411,7 +424,13 @@ const PcDetails: React.FC<{
             {t('cancel')}
           </Button>
         )}
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+        <Button
+          disabled={disableNext}
+          type="submit"
+          data-testid="saveDocumentCards"
+          variant="solid"
+          colorScheme="brand"
+        >
           {vendorProfileData?.id ? t('save') : t('next')}
         </Button>
       </HStack>
