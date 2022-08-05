@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/toast'
 import _ from 'lodash'
+import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
@@ -37,7 +38,6 @@ export const requiredField = {
     'zipCode',
     'einNumber',
     'ssnNumber',
-    'primaryEmail',
   ],
   documentErrors: ['w9Document'],
   licenseErrors: ['licenses'],
@@ -529,4 +529,24 @@ export const useSaveLanguage = () => {
       onSuccess() {},
     },
   )
+}
+
+export const useVendorNext = ({ control }) => {
+  const [ein, ssn, ...fields] = useWatch({
+    control,
+    name: [
+      'einNumber',
+      'ssnNumber',
+      'businessEmailAddress',
+      'capacity',
+      'city',
+      'companyName',
+      'ownerName',
+      'paymentTerm',
+      'state',
+      'streetAddress',
+      'zipCode',
+    ],
+  })
+  return fields.some(n => !n) || (ein && ssn)
 }
