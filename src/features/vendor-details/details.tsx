@@ -24,6 +24,8 @@ import { parseAPIDataToFormData } from 'utils/vendor-details'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import 'components/translation/i18n'
 import { useTranslation } from 'react-i18next'
+import NumberFormat from 'react-number-format'
+import { CustomRequiredInput } from 'components/input/input'
 
 const textStyle = {
   color: '#4A5568',
@@ -43,6 +45,7 @@ type FieldInfoCardProps = {
 type detailsFormProps = {
   vendorProfileData: VendorProfile
   onClose?: () => void
+  isActive?: boolean
 }
 
 const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
@@ -126,13 +129,13 @@ export const Details: React.FC<{
             <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
           </GridItem>
         </Grid>
-        <DetailsForm vendorProfileData={vendorProfileData} onClose={props.onClose} />
+        <DetailsForm isActive={isActive} vendorProfileData={vendorProfileData} onClose={props.onClose} />
       </Flex>
     </>
   )
 }
 
-export const DetailsForm = ({ vendorProfileData, onClose }: detailsFormProps) => {
+export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFormProps) => {
   const { t } = useTranslation()
   const {
     register,
@@ -164,7 +167,7 @@ export const DetailsForm = ({ vendorProfileData, onClose }: detailsFormProps) =>
                       type="text"
                       variant="required-field"
                       {...register('ownerName', {
-                        required: 'This is required',
+                        required: isActive && 'This is required',
                       })}
                     />
                     <FormErrorMessage>{errors.ownerName && errors.ownerName.message}</FormErrorMessage>
@@ -187,7 +190,7 @@ export const DetailsForm = ({ vendorProfileData, onClose }: detailsFormProps) =>
                     <Input
                       variant="required-field"
                       {...register('businessEmailAddress', {
-                        required: 'This is required',
+                        required: isActive && 'This is required',
                       })}
                       id="primaryEmail"
                       data-testid="primaryEmail"
@@ -214,16 +217,27 @@ export const DetailsForm = ({ vendorProfileData, onClose }: detailsFormProps) =>
                     <FormLabel isTruncated sx={textStyle}>
                       {t('businessPhoneNo')}
                     </FormLabel>
-
-                    <Input
-                      id="businessPhoneNumber"
-                      type="text"
-                      data-testid="businessPhoneNumber"
-                      variant="required-field"
-                      {...register('businessPhoneNumber', {
-                        required: 'This is required',
-                      })}
-                    />
+                    <Controller
+                      control={control}
+                      rules={{ required: isActive && 'This is required' }}
+                      name="businessPhoneNumber"
+                      render={({ field, fieldState }) => {
+                        return (
+                          <>
+                            <NumberFormat
+                              value={field.value}
+                              customInput={CustomRequiredInput}
+                              format="(###) ###-####"
+                              mask="_"
+                              onValueChange={e => {
+                                field.onChange(e.value)
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
+                        )
+                      }}
+                    ></Controller>
                     <FormErrorMessage>
                       {errors.businessPhoneNumber && errors.businessPhoneNumber.message}
                     </FormErrorMessage>
@@ -244,34 +258,25 @@ export const DetailsForm = ({ vendorProfileData, onClose }: detailsFormProps) =>
                   <FormControl isInvalid={!!errors.secondPhoneNumber} w="215px">
                     <FormLabel sx={textStyle}>{t('secondaryNo')}</FormLabel>
                     <Controller
-                      name="secondPhoneNumber"
                       control={control}
-                      render={({ field }) => {
+                      name="secondPhoneNumber"
+                      render={({ field, fieldState }) => {
                         return (
-                          <Input
-                            {...field}
-                            id="SecondaryNo"
-                            // variant="required-field"
-                            placeholder="(___)-___-____"
-                            autoComplete="cc-number"
-                            type="text"
-                            inputMode="text"
-                            onChange={event => {
-                              const value = event.currentTarget.value
-                              const denormarlizedValue = value.split('-').join('')
-
-                              const maskValue = denormarlizedValue
-                                ?.replace(/\D/g, '')
-                                .match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
-                              const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
-                                maskValue?.[3] || '____'
-                              }`
-                              field.onChange(actualValue)
-                            }}
-                          />
+                          <>
+                            <NumberFormat
+                              value={field.value}
+                              customInput={CustomRequiredInput}
+                              format="(###)-###-####"
+                              mask="_"
+                              onValueChange={e => {
+                                field.onChange(e.value)
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </>
                         )
                       }}
-                    />
+                    ></Controller>
                     <FormErrorMessage>{errors.secondPhoneNumber && errors.secondPhoneNumber.message}</FormErrorMessage>
                   </FormControl>
 

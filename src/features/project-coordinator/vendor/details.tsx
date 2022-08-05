@@ -33,6 +33,8 @@ import {
 } from 'utils/vendor-details'
 import { documentStatus, documentScore } from 'utils/vendor-projects'
 import first from 'lodash/first'
+import NumberFormat from 'react-number-format'
+import { CustomInput, CustomRequiredInput } from 'components/input/input'
 const PcDetails: React.FC<{
   onClose?: () => void
   vendorProfileData: VendorProfile
@@ -164,30 +166,26 @@ const PcDetails: React.FC<{
                 {t('businessPhoneNo')}
               </FormLabel>
               <Controller
-                name="businessPhoneNumber"
                 control={control}
                 rules={{ required: isActive && 'This is required' }}
-                render={({ field }) => {
+                name="businessPhoneNumber"
+                render={({ field, fieldState }) => {
                   return (
-                    <Input
-                      {...field}
-                      w="215px"
-                      variant="required-field"
-                      size="md"
-                      onChange={event => {
-                        const value = event.currentTarget.value
-                        const denormarlizedValue = value.split('-').join('')
-
-                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
-                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
-                          maskValue?.[3] || '____'
-                        }`
-                        field.onChange(actualValue)
-                      }}
-                    />
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomRequiredInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
                   )
                 }}
-              />
+              ></Controller>
             </FormControl>
           </Box>
           <Flex>
@@ -206,29 +204,25 @@ const PcDetails: React.FC<{
                 {t('secondaryPhoneNo')}
               </FormLabel>
               <Controller
-                name="secondPhoneNumber"
                 control={control}
-                render={({ field }) => {
+                name="secondPhoneNumber"
+                render={({ field, fieldState }) => {
                   return (
-                    <Input
-                      {...field}
-                      w="215px"
-                      variant="outline"
-                      size="md"
-                      onChange={event => {
-                        const value = event.currentTarget.value
-                        const denormarlizedValue = value.split('-').join('')
-
-                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
-                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
-                          maskValue?.[3] || '____'
-                        }`
-                        field.onChange(actualValue)
-                      }}
-                    />
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
                   )
                 }}
-              />
+              ></Controller>
             </FormControl>
           </Box>
           <Box w="109px">
@@ -337,17 +331,29 @@ const PcDetails: React.FC<{
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
-                EIN
+                {t('ein')}
               </FormLabel>
-              <Input
-                type="string"
-                {...register('einNumber', {
-                  required: ssnNumber ? '' : isActive && 'This is required',
-                })}
-                w="215px"
-                variant={ssnNumber ? 'outline' : 'required-field'}
-                size="md"
-              />
+              <Controller
+                control={control}
+                name="einNumber"
+                rules={{ required: ssnNumber ? '' : isActive && 'This is required' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={ssnNumber ? CustomInput : CustomRequiredInput}
+                        format="##-#######"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
               <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -356,15 +362,27 @@ const PcDetails: React.FC<{
               <FormLabel variant="strong-label" size="md">
                 {t('sin')}
               </FormLabel>
-              <Input
-                type="text"
-                {...register('ssnNumber', {
-                  required: einNumber ? '' : isActive && 'This is required',
-                })}
-                w="215px"
-                variant={einNumber ? 'outline' : 'required-field'}
-                size="md"
-              />
+              <Controller
+                control={control}
+                name="ssnNumber"
+                rules={{ required: einNumber ? '' : isActive && 'This is required' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={einNumber ? CustomInput : CustomRequiredInput}
+                        format="###-##-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
               <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
