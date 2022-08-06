@@ -17,7 +17,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
- 
+
   return (
     <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
       <TabList>
@@ -31,10 +31,10 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           <DetailsTab clientDetails={clientDetails} onClose={props.onClose} />
         </TabPanel>
         <TabPanel p="0px">
-          <Market clientDetails={clientDetails} onClose={props.onClose}/>
+          <Market clientDetails={clientDetails} onClose={props.onClose} />
         </TabPanel>
         <TabPanel p="0px">
-          <ClientNotes clientDetails={clientDetails} onClose={props.onClose}/>
+          <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
         </TabPanel>
       </TabPanels>
     </Tabs>
