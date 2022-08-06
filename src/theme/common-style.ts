@@ -37,6 +37,15 @@ export const countInCircle = {
   justifyContent: 'center',
 }
 
+export const exportBtnIcon = {
+  height: '14px',
+  width: '14px',
+  left: '17px',
+  top: '11px',
+  borderRadius: '0px',
+  fontSize: '18px',
+}
+
 /* background: url(${calendarPNG}) no-repeat; */
 export const calendarIcon = css`
   ::-webkit-calendar-picker-indicator {

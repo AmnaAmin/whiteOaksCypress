@@ -7,10 +7,12 @@ declare global {
   }
 }
 
-export const usePCReveviable = () => {
+export const ACCONT_RECEIVABLE_API_KEY = 'account-receivable'
+
+export const usePCRecievable = () => {
   const client = useClient()
 
-  const { data: receivableData, ...rest } = useQuery(['receivable'], async () => {
+  const { data: receivableData, ...rest } = useQuery(ACCONT_RECEIVABLE_API_KEY, async () => {
     const response = await client(`account_receivable`, {})
 
     return response?.data
@@ -22,17 +24,7 @@ export const usePCReveviable = () => {
   }
 }
 
-export const useReveviableRowData = () => {
-  const client = useClient()
-
-  return useMutation(id => {
-    return client(`projects/${id}`, {
-      method: 'GET',
-    })
-  })
-}
-
-export const useBatchProcessing = () => {
+export const useBatchProcessingMutation = () => {
   const client = useClient()
   const queryClient = useQueryClient()
   return useMutation(

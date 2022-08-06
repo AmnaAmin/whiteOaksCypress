@@ -1,282 +1,209 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, HStack, Input, Stack } from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, FormLabelProps, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { STATUS } from 'features/projects/status'
+import { useTranslation } from 'react-i18next'
 
 import React from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { ProjectType } from 'types/project.type'
+import { Controller, useFormContext } from 'react-hook-form'
+import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { useFieldsDisabled } from './hooks'
+import { SelectOption } from 'types/transaction.type'
 
-const Contact: React.FC<{ projectData: ProjectType; dataContact: any }> = props => {
-  const { projectData, dataContact } = props
+const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
+  const { t } = useTranslation()
+
+  return (
+    <FormLabel title={t(title as string)} isTruncated variant="strong-label" size="md" htmlFor={htmlFor}>
+      {t(title as string)}
+    </FormLabel>
+  )
+}
+
+type ContactProps = {
+  projectCoordinatorSelectOptions: SelectOption[]
+  projectManagerSelectOptions: SelectOption[]
+  clientSelectOptions: SelectOption[]
+}
+const Contact: React.FC<ContactProps> = ({
+  projectCoordinatorSelectOptions,
+  projectManagerSelectOptions,
+  clientSelectOptions,
+}) => {
   const {
     register,
     control,
-    handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm()
+  } = useFormContext<ProjectDetailsFormValues>()
 
-  const onSubmit = FormValues => {
-    console.log('formValues', FormValues)
-    reset()
-  }
-
-  const statusArray = [
-    STATUS.New.valueOf(),
-    STATUS.Active.valueOf(),
-    STATUS.Punch.valueOf(),
-    STATUS.Overpayment.valueOf(),
-    STATUS.PastDue.valueOf(),
-    STATUS.Cancelled.valueOf(),
-    STATUS.Closed.valueOf(),
-    STATUS.ClientPaid.valueOf(),
-    STATUS.Invoiced.valueOf(),
-  ]
-
-  const projectStatus = statusArray.includes((projectData?.projectStatus || '').toLowerCase())
-
-  const statusInvoice_Paid = [STATUS.Invoiced.valueOf(), STATUS.Paid.valueOf()].includes(
-    projectData?.projectStatus.toLowerCase(),
-  )
-
-  const projectManager = dataContact?.projectManager
-  const projectManagerPhoneNumber = dataContact?.projectManagerPhoneNumber
-  const clientName = dataContact?.clientName
-  const fieldDisable = dataContact ? true : false
-  const superEmailAddress = dataContact?.superEmailAddress
-  const superFirstName = dataContact?.superFirstName
-  const superPhoneNumber = dataContact?.superPhoneNumber
-  const superPhoneNumberExtension = dataContact?.superPhoneNumberExtension
+  const {
+    isProjectCoordinatorDisabled,
+    isProjectCoordinatorPhoneNumberDisabled,
+    isProjectCoordinatorExtensionDisabled,
+    isFieldProjectManagerDisabled,
+    isFieldProjectManagerPhoneNumberDisabled,
+    isFieldProjectManagerExtensionDisabled,
+    isClientDisabled,
+  } = useFieldsDisabled(control)
 
   return (
-    <Box>
-      <form onSubmit={handleSubmit(onSubmit)} id="contact">
-        <Stack spacing={14} mt="7">
-          <HStack spacing="16px">
-            <Box h="40px">
-              <FormControl w="215px" isInvalid={errors.projectManager}>
-                <FormLabel variant="strong-label" size="md">
-                  Field Project Manager
-                </FormLabel>
-                <Controller
-                  control={control}
-                  name="projectManager"
-                  rules={{ required: 'This is required' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <ReactSelect
-                        {...field}
-                        selectProps={{ isBorderLeft: true }}
-                        placeholder={projectManager}
-                        isDisabled={statusInvoice_Paid}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )}
-                />
-              </FormControl>
-            </Box>
+    <Stack spacing={14} mt="7">
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
+            <InputLabel title={'projectCoordinator'} htmlFor={'projectCoordinator'} />
+            <Controller
+              control={control}
+              name="projectCoordinator"
+              rules={{ required: 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect
+                    {...field}
+                    selectProps={{ isBorderLeft: true }}
+                    options={projectCoordinatorSelectOptions}
+                    isDisabled={isProjectCoordinatorDisabled}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+        </Box>
 
-            <Box h="40px">
-              <FormControl isInvalid={errors.fpmPhone}>
-                <FormLabel variant="strong-label" size="md" htmlFor="fpmPhone">
-                  FPM Phone
-                </FormLabel>
-                <Input
-                  placeholder="098-987-2233"
-                  id="fpmPhone"
-                  value={projectManagerPhoneNumber}
-                  isDisabled={projectStatus || statusInvoice_Paid}
-                  {...register('fpmPhone', {
-                    required: 'This is required',
-                  })}
-                  bg="#EDF2F7"
-                  w="215px"
-                />
-                <FormErrorMessage>{errors.fpmPhone && errors.fpmPhone.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors?.projectCoordinatorPhoneNumber}>
+            <InputLabel title={'phone'} htmlFor={'projectCoordinatorPhoneNumber'} />
+            <Input
+              placeholder="098-987-2233"
+              id="projectCoordinatorPhoneNumber"
+              isDisabled={isProjectCoordinatorPhoneNumberDisabled}
+              {...register('projectCoordinatorPhoneNumber')}
+              w="215px"
+            />
+            <FormErrorMessage>{errors?.projectCoordinatorPhoneNumber?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
 
-            <Box h="40px">
-              <FormControl isInvalid={errors.ext}>
-                <FormLabel variant="strong-label" size="md" htmlFor="ext">
-                  Ext
-                </FormLabel>
-                <Input
-                  id="ext"
-                  value={superPhoneNumberExtension}
-                  isDisabled={projectStatus || statusInvoice_Paid}
-                  {...register('ext', {
-                    required: 'This is required',
-                  })}
-                  bg="#EDF2F7"
-                  w="124px"
-                />
-                <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-          </HStack>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors.projectCoordinatorExtension}>
+            <InputLabel title={'ext'} htmlFor={'projectCoordinatorExtension'}>
+              Ext
+            </InputLabel>
+            <Input
+              id="projectCoordinatorExtension"
+              isDisabled={isProjectCoordinatorExtensionDisabled}
+              {...register('projectCoordinatorExtension')}
+              w="124px"
+            />
+            <FormErrorMessage>{errors?.projectCoordinatorExtension?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
 
-          <HStack spacing="16px">
-            <Box h="40px">
-              <FormControl w="215px" isInvalid={errors.projectCoordinator}>
-                <FormLabel variant="strong-label" size="md">
-                  Field Project Manager
-                </FormLabel>
-                <Controller
-                  control={control}
-                  name="projectCoordinator"
-                  rules={{ required: 'This is required' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <ReactSelect
-                        {...field}
-                        selectProps={{ isBorderLeft: true }}
-                        placeholder={projectManager}
-                        isDisabled={statusInvoice_Paid}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )}
-                />
-              </FormControl>
-            </Box>
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors.fieldProjectManager}>
+            <InputLabel title={'fieldProjectManager'} htmlFor={'fieldProjectManager'} />
+            <Controller
+              control={control}
+              name="fieldProjectManager"
+              rules={{ required: 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect
+                    {...field}
+                    selectProps={{ isBorderLeft: true }}
+                    options={projectManagerSelectOptions}
+                    isDisabled={isFieldProjectManagerDisabled}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+        </Box>
 
-            <Box h="40px">
-              <FormControl isInvalid={errors.pcPhone}>
-                <FormLabel variant="strong-label" size="md" htmlFor="pcPhone">
-                  FPM Phone
-                </FormLabel>
-                <Input
-                  placeholder="098-987-2233"
-                  value={projectManagerPhoneNumber}
-                  isDisabled={projectStatus || statusInvoice_Paid}
-                  id="pcPhone"
-                  {...register('pcPhone', {
-                    required: 'This is required',
-                  })}
-                  bg="#EDF2F7"
-                  w="215px"
-                />
-                <FormErrorMessage>{errors.pcPhone && errors.pcPhone.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors?.fieldProjectManagerPhoneNumber}>
+            <InputLabel title={'phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
+            <Input
+              placeholder="098-987-2233"
+              isDisabled={isFieldProjectManagerPhoneNumberDisabled}
+              id="fieldProjectManagerPhoneNumber"
+              {...register('fieldProjectManagerPhoneNumber')}
+              w="215px"
+            />
+            <FormErrorMessage>{errors?.fieldProjectManagerPhoneNumber?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
 
-            <Box h="40px">
-              <FormControl isInvalid={errors.ext}>
-                <FormLabel variant="strong-label" size="md" htmlFor="ext">
-                  Ext
-                </FormLabel>
-                <Input
-                  id="ext"
-                  value={superPhoneNumberExtension}
-                  isDisabled={projectStatus || statusInvoice_Paid}
-                  {...register('ext', {
-                    required: 'This is required',
-                  })}
-                  bg="#EDF2F7"
-                  w="124px"
-                />
-                <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-          </HStack>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors?.fieldProjectManagerExtension}>
+            <InputLabel title={'ext'} htmlFor={'fieldProjectManagerExtension'} />
+            <Input
+              id="fieldProjectManagerExtension"
+              isDisabled={isFieldProjectManagerExtensionDisabled}
+              {...register('fieldProjectManagerExtension')}
+              w="124px"
+            />
+            <FormErrorMessage>{errors?.fieldProjectManagerExtension?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
 
-          <HStack spacing="16px">
-            <Box h="40px">
-              <FormControl isInvalid={errors.superEmailName}>
-                <FormLabel variant="strong-label" size="md" htmlFor="superEmailName">
-                  Super Email Name
-                </FormLabel>
-                <Input
-                  value={superFirstName}
-                  id="superEmailName"
-                  {...register('superEmailName', {
-                    required: 'This is required',
-                  })}
-                  w="215px"
-                />
-                <FormErrorMessage>{errors.superEmailName && errors.superEmailName.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl isInvalid={!!errors?.superName}>
+            <InputLabel title={'superName'} htmlFor={'superName'} />
+            <Input id="superName" {...register('superName')} w="215px" />
+            <FormErrorMessage>{errors?.superName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
 
-            <Box h="40px">
-              <FormControl isInvalid={errors.superPhone}>
-                <FormLabel variant="strong-label" size="md" htmlFor="superPhone">
-                  Super Phone
-                </FormLabel>
-                <Input
-                  value={superPhoneNumber}
-                  id="superPhone"
-                  {...register('superPhone', {
-                    required: 'This is required',
-                  })}
-                  w="215px"
-                />
-                <FormErrorMessage>{errors.superPhone && errors.superPhone.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-            <Box h="40px">
-              <FormControl isInvalid={errors.ext}>
-                <FormLabel variant="strong-label" size="md" htmlFor="ext">
-                  Ext
-                </FormLabel>
-                <Input
-                  id="ext"
-                  value={superPhoneNumberExtension}
-                  {...register('ext', {
-                    required: 'This is required',
-                  })}
-                  w="124px"
-                />
-                <FormErrorMessage>{errors.ext && errors.ext.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors?.superPhoneNumber}>
+            <InputLabel title={'superPhone'} htmlFor={'superPhoneNumber'} />
+            <Input id="superPhoneNumber" {...register('superPhoneNumber')} w="215px" />
+            <FormErrorMessage>{errors?.superPhoneNumber?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
+            <InputLabel title={'ext'} htmlFor={'superPhoneNumberExtension'} />
+            <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" />
+            <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
 
-            <Box h="40px">
-              <FormControl isInvalid={errors.superEmail}>
-                <FormLabel variant="strong-label" size="md" htmlFor="superEmail">
-                  Super Email
-                </FormLabel>
-                <Input
-                  value={superEmailAddress}
-                  id="superEmail"
-                  {...register('superEmail', {
-                    required: 'This is required',
-                  })}
-                  w="215px"
-                />
-                <FormErrorMessage>{errors.superEmail && errors.superEmail.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-          </HStack>
+        <Box h="40px">
+          <FormControl isInvalid={!!errors.superEmail}>
+            <InputLabel title={'superEmail'} htmlFor={'superEmail'} />
+            <Input id="superEmail" {...register('superEmail')} w="215px" />
+            <FormErrorMessage>{errors?.superEmail?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
 
-          <Box h="40px">
-            <FormControl w="215px" isInvalid={errors.client}>
-              <FormLabel variant="strong-label" size="md" htmlFor="client">
-                Client
-              </FormLabel>
-              <Controller
-                control={control}
-                name="client"
-                rules={{ required: 'This is required' }}
-                render={({ field, fieldState }) => (
-                  <>
-                    <ReactSelect
-                      {...field}
-                      selectProps={{ isBorderLeft: true }}
-                      placeholder={clientName}
-                      isDisabled={projectStatus || statusInvoice_Paid || fieldDisable}
-                    />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
-                )}
-              />
-            </FormControl>
-          </Box>
-        </Stack>
-      </form>
-    </Box>
+      <Box h="40px">
+        <FormControl w="215px" isInvalid={!!errors.client}>
+          <InputLabel title={'client'} htmlFor={'client'} />
+          <Controller
+            control={control}
+            name="client"
+            render={({ field, fieldState }) => (
+              <>
+                <ReactSelect
+                  {...field}
+                  options={clientSelectOptions}
+                  selectProps={{ isBorderLeft: true }}
+                  isDisabled={isClientDisabled}
+                />
+                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+              </>
+            )}
+          />
+        </FormControl>
+      </Box>
+    </Stack>
   )
 }
 

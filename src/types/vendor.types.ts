@@ -71,6 +71,7 @@ export type Vendor = {
   paymentOptions: any[]
   markets: VendorMarket[]
   projects: any[]
+  paymentTerm: number
 }
 
 type Override<T1, T2> = Omit<T1, keyof T2> & T2
@@ -107,6 +108,7 @@ export type VendorProfilePayload = {
   streetAddress: string
   city: string
   state: string
+  paymentTerm?: number
   zipCode: string
   createdBy: string
   createdDate: string | null
@@ -121,6 +123,7 @@ export type VendorProfilePayload = {
   vendorSkills: Trade[]
   markets: Array<Market>
   projects: any[]
+  paymentOptions: any[]
   documents: {
     id?: number
     fileType: string
@@ -174,6 +177,11 @@ export type Document = {
   workOrderName?: string
 }
 
+type Select = {
+  label: string
+  value: any
+}
+
 export type VendorProfileDetailsFormData = {
   primaryContact: string
   secondaryContact: string
@@ -181,8 +189,35 @@ export type VendorProfileDetailsFormData = {
   businessNumberExtention: string
   secondaryNumber: string
   secondaryNumberExtenstion: string
+  businessPhoneNumberExtension?: string
+  secondPhoneNumber?: string
+  secondPhoneNumberExtension?: string
   primaryEmail: string
+  businessEmailAddress?: string
   secondaryEmail: string
+  secondEmailAddress?: string
+  ownerName?: string
+  secondName?: string
+  companyName?: string
+  score?: Select
+  status?: Select
+  streetAddress?: string
+  state?: Select
+  city?: string
+  zipCode?: string
+  capacity?: null | number
+  einNumber?: string
+  ssnNumber?: string
+  paymentTerm?: Select
+  creditCard?: boolean
+  check?: boolean
+  ach?: boolean
+  agreementSignedDate?: Date
+  autoInsuranceExpDate?: Date
+  coiGlExpDate?: Date
+  coiWcExpDate?: Date
+  trades?: any[]
+  markets?: any[]
 }
 
 export type VendorTrade = {
@@ -276,6 +311,7 @@ export type SettingsValues = {
 }
 
 export type Vendors = {
+  id: number
   statusLabel: string
   companyName: string
   region: string
@@ -288,4 +324,6 @@ export type Vendors = {
   availableCapacity: number
   skills: string
   market: string
+  businessEmailAddress: string
+  businessPhoneNumber: string
 }

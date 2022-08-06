@@ -1,9 +1,9 @@
 import { Box, Button, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import { AlertsTable } from 'features/projects/alerts/alerts-table'
 import { ManagedAlertTable } from 'features/projects/alerts/managed-alert-table'
+import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 import { ManagedAlertsModal } from 'features/projects/modals/project-coordinator/managed-alerts-modal'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiOutlinePlus } from 'react-icons/ai'
 
@@ -23,7 +23,7 @@ const Alerts = () => {
           <Box w="100%" display="flex" justifyContent="end" position="relative">
             {tabIndex === 0 && (
               <Button colorScheme="brand" onClick={onAlertModalOpen}>
-                {t('resloveAll')}
+                {t('resolve')}
               </Button>
             )}
 
@@ -36,7 +36,7 @@ const Alerts = () => {
         </TabList>
         <TabPanels>
           <TabPanel px={0}>
-            <AlertsTable
+            <TriggeredAlertsTable
               onRowClick={(e, row) => {
                 selectedAlertRow(row.values)
                 onAlertModalOpen()

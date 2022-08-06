@@ -28,3 +28,26 @@ export const imgUtility = {
     return uri
   },
 }
+
+// get blob from File object
+export const getBlobFromFile = file => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+    reader.onerror = error => {
+      reject(error)
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+// extract the fileObject, fileObjectContentType, fileType from File
+export const convertFileToBlob = async (file: File) => {
+  const fileObject = await getBlobFromFile(file)
+  const fileObjectContentType = file.type
+  const fileType = file.name
+
+  return { fileObject, fileObjectContentType, fileType }
+}

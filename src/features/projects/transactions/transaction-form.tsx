@@ -20,13 +20,12 @@ import { DevTool } from '@hookform/devtools'
 
 // import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
-import { useParams } from 'react-router'
+
 import {
   AGAINST_DEFAULT_VALUE,
   parseChangeOrderAPIPayload,
   parseChangeOrderUpdateAPIPayload,
   parseTransactionToFormValues,
-  PAYMENT_TERMS_OPTIONS,
   transactionDefaultFormValues,
   useChangeOrderMutation,
   useChangeOrderUpdateMutation,
@@ -59,6 +58,7 @@ import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -110,13 +110,13 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 export type TransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
+  projectId: string
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
   const { t } = useTranslation()
   const { isVendor, isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
-  const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()

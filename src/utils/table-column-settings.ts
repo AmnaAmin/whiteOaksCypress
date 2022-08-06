@@ -15,6 +15,7 @@ type generateSettingColumnProps = {
   order: number
   hide: boolean
 }
+
 const generateSettingColumn = (options: generateSettingColumnProps): TableColumnSetting => {
   return {
     ...options,
