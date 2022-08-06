@@ -122,7 +122,11 @@ const ProjectDetails: React.FC = props => {
       {isOpenDocumentModal && (
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       )}
-      <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+      <AddNewTransactionModal
+        isOpen={isOpenTransactionModal}
+        onClose={onTransactionModalClose}
+        projectId={projectId as string}
+      />
     </>
   )
 }

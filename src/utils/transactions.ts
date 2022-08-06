@@ -25,6 +25,7 @@ import { createForm } from './lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
+import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -593,6 +594,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
 
         toast({
           title: 'Update Transaction.',
