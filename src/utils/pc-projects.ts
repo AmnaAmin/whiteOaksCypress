@@ -1,13 +1,13 @@
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
 import { useQueryClient } from 'react-query'
-
+import orderBy from 'lodash/orderBy'
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
 
-  const { data: projectData, ...rest } = useQuery<ProjectType>(
+  const { data: projectData, ...rest } = useQuery<Project>(
     ['project', projectId],
     async () => {
       const response = await client(`projects/${projectId}`, {})
@@ -184,7 +184,7 @@ export const useVendor = () => {
   const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
     const response = await client(`view-vendors`, {})
 
-    return response?.data
+    return orderBy(response?.data || [], ['id', 'desc'])
   })
 
   return {

@@ -57,6 +57,8 @@ export interface TableProps {
 }
 
 export type TableExtraProps = {
+  disableFilter?: boolean
+  headerGroups?: any
   name?: string
   TableRow?: React.ElementType
   TableBody?: React.ElementType
@@ -92,7 +94,7 @@ export function useCustomTable(props: TableProps, ...rest) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [],
+        sortBy: [{ id: 'id', desc: true, ...props.sortBy }],
       },
     },
     useBlockLayout,
@@ -132,7 +134,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
-export const TableHeader = ({ headerGroups }) => {
+export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) => {
   const { t } = useTranslation()
 
   return (
@@ -163,15 +165,12 @@ export const TableHeader = ({ headerGroups }) => {
                   >
                     {t(title)}
                   </Text>
-                  {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <AiOutlineArrowUp fontSize="17px" />
-                    ) : (
+                  {column.isSorted &&
+                    (column.isSortedDesc ? (
                       <AiOutlineArrowDown fontSize="17px" />
-                    )
-                  ) : (
-                    ''
-                  )}
+                    ) : (
+                      <AiOutlineArrowUp fontSize="17px" />
+                    ))}
                 </Flex>
               </Th>
             )
@@ -179,15 +178,17 @@ export const TableHeader = ({ headerGroups }) => {
         </Tr>
       ))}
 
-      {headerGroups.map(headerGroup => (
-        <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map(column => (
-            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
-              {column.canFilter ? column.render('Filter') : null}
-            </Th>
-          ))}
-        </Tr>
-      ))}
+      {!disableFilter
+        ? headerGroups.map(headerGroup => (
+            <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
+                  {column.canFilter ? column.render('Filter') : null}
+                </Th>
+              ))}
+            </Tr>
+          ))
+        : null}
     </Thead>
   )
 }

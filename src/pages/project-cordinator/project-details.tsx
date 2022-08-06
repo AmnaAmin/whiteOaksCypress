@@ -8,24 +8,24 @@ import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
 // import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
 import { usePCProject } from 'utils/pc-projects'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 // import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 // import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
-import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-tab'
-import NewWorkOrder from 'features/projects/modals/project-coordinator/new-work-order'
+import ProjectDetailsTab from 'features/project-coordinator/project-details/project-details-form'
+import NewWorkOrder from 'features/projects/modals/project-coordinator/work-order/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/project-coordinator/work-orders-table'
 import AddNewTransactionModal from 'features/projects/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
-import { AlertsTable } from 'features/projects/alerts/alerts-table'
 import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
+import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 import { countInCircle } from 'theme/common-style'
+import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -62,9 +62,10 @@ export const ProjectDetails: React.FC = props => {
 
   return (
     <>
-      <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
-        <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
+      <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
+        <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
+
+        {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
         {tabIndex === 1}
 
@@ -75,7 +76,7 @@ export const ProjectDetails: React.FC = props => {
               <Tab>{t('projectDetails')}</Tab>
               <Tab>{t('vendorWorkOrders')}</Tab>
               <Tab>{t('documents')}</Tab>
-              <Tab>{t('alerts')}</Tab>
+              {/* <Tab>{t('alerts')}</Tab> */}
               <Tab>
                 {t('notes')}
                 <Box ml="5px" style={countInCircle}>
@@ -85,14 +86,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
-                  <Button
-                    onClick={onOpen}
-                    // bg="#4E87F8"
-                    color="white"
-                    size="md"
-                    bg="#4e87f8"
-                    _hover={{ bg: '#2A61CE' }}
-                  >
+                  <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
                     <Flex alignItems="center" fontSize="14px" fontWeight={500}>
                       <Text mr={1}>
                         <BiAddToQueue size={14} />
@@ -100,7 +94,7 @@ export const ProjectDetails: React.FC = props => {
                       <Text>{t('newWorkOrder')}</Text>
                     </Flex>
 
-                    <NewWorkOrder projectData={projectData as ProjectType} isOpen={isOpen} onClose={onClose} />
+                    <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
                   </Button>
                 )}
                 {tabIndex === 3 && (
@@ -109,11 +103,11 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
 
-                {tabIndex === 4 && (
+                {/* {tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onAlertModalOpen}>
-                    Resolve All
+                    Resolve
                   </Button>
-                )}
+                )} */}
                 {tabIndex === 0 && (
                   <HStack spacing="16px">
                     <Box>
@@ -147,14 +141,12 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" mt="7px">
                 <Card rounded="16px" padding="0">
-                  <ProjectDetailsTab projectData={projectData as ProjectType} />
+                  <ProjectDetailsTab projectData={projectData as Project} />
                 </Card>
               </TabPanel>
 
-              <TabPanel p="0px" h="0px">
-                <Box h="100%" w="100%">
-                  <WorkOrdersTable ref={tabsContainerRef} />
-                </Box>
+              <TabPanel p="0px" h="100%" mt="7px">
+                <WorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
 
               <TabPanel p="0px" mt="3">
@@ -162,7 +154,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
 
               <TabPanel px="0">
-                <AlertsTable
+                <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
                     onAlertModalOpen()

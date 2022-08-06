@@ -1,88 +1,47 @@
-import React, { useEffect } from 'react'
-import { Box, Button, Flex, useToast } from '@chakra-ui/react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
-import {
-  parseTradeAPIDataToFormValues,
-  parseTradeFormValuesToAPIPayload,
-  useTrades,
-  useVendorProfileUpdateMutation,
-} from 'utils/vendor-details'
+import { Box, Button, Flex } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
-import { DevTool } from '@hookform/devtools'
-import { useQueryClient } from 'react-query'
+import { validateTrade } from 'pages/vendor/vendor-profile'
+import React from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
+import { useTrades } from 'utils/vendor-details'
 
 type tradesFormProps = {
-  submitForm: (values: any) => void
+  vendorProfileData: VendorProfile
   onClose?: () => void
-  vendorProfileData: VendorProfile | {}
   trades?: Array<Trade>
+  isActive: boolean
 }
 
-export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void }> = ({
-  vendorProfileData = {},
+export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: () => void; isActive: boolean }> = ({
+  vendorProfileData,
   onClose,
+  isActive,
 }) => {
-  const toast = useToast()
   const { data: trades, isLoading } = useTrades()
-  const { mutate: updateVendorProfile } = useVendorProfileUpdateMutation()
-  const queryClient = useQueryClient()
-
-  const onSubmit = (formValues: VendorTradeFormValues) => {
-    const vendorProfilePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData)
-    updateVendorProfile(vendorProfilePayload, {
-      onSuccess() {
-        queryClient.invalidateQueries('vendorProfile')
-        toast({
-          title: t('updateTrades'),
-          description: t('updateTradesSuccess'),
-          status: 'success',
-          isClosable: true,
-        })
-      },
-    })
-  }
 
   return (
     <Box>
       {isLoading ? (
         <BlankSlate />
       ) : (
-        <TradeForm submitForm={onSubmit} vendorProfileData={vendorProfileData} trades={trades} onClose={onClose} />
+        <TradeForm isActive={isActive} vendorProfileData={vendorProfileData} trades={trades} onClose={onClose} />
       )}
     </Box>
   )
 }
 
-export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tradesFormProps) => {
-  // const { t } = useTranslation()
+export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: tradesFormProps) => {
+  const { control } = useFormContext<VendorTradeFormValues>()
 
-  const { handleSubmit, control } = useForm<VendorTradeFormValues>({
-    defaultValues: {
-      trades: [],
-    },
-  })
-
-  const { fields: tradeCheckboxes, replace } = useFieldArray({
-    control,
-    name: 'trades',
-  })
-
-  useEffect(() => {
-    if (trades?.length) {
-      const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
-
-      replace(tradeFormValues.trades)
-    }
-  }, [trades, vendorProfileData, replace])
-
+  const tradeCheckboxes = useWatch({ control, name: 'trades' })
   return (
-    <form onSubmit={handleSubmit(submitForm)} id="trade">
+    <>
       <Box h="510px" overflow="auto">
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
-          {tradeCheckboxes.map((checkbox, index) => {
+          {tradeCheckboxes?.map((checkbox, index) => {
             return (
               <Controller
                 name={`trades.${index}`}
@@ -109,17 +68,22 @@ export const TradeForm = ({ submitForm, vendorProfileData, trades, onClose }: tr
           })}
         </Flex>
       </Box>
-      <Flex alignItems="center" w="100%" pt="12px" justifyContent="end" borderTop="2px solid #E2E8F0">
+      <Flex alignItems="center" w="100%" height="72px" pt="8px" justifyContent="end" borderTop="2px solid #E2E8F0">
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveVendorSkills">
-          {t('save')}
+        <Button
+          disabled={!validateTrade(tradeCheckboxes)}
+          type="submit"
+          variant="solid"
+          colorScheme="brand"
+          data-testid="saveVendorSkills"
+        >
+          {vendorProfileData?.id ? t('save') : t('next')}
         </Button>
       </Flex>
-      <DevTool control={control} />
-    </form>
+    </>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Container, Flex, Stack, useColorModeValue as mode, VStack } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Stack, useColorModeValue as mode } from '@chakra-ui/react'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
@@ -13,7 +13,7 @@ export const Layout: React.FC = props => {
   const menu = useRoleBasedMenu()
 
   return (
-    <VStack width="100%">
+    <Box width="100%">
       <Box position="fixed" top="0" left="0" right="0" zIndex="sticky">
         <Header toggleMenu={toggle} />
       </Box>
@@ -87,6 +87,6 @@ export const Layout: React.FC = props => {
           {props.children}
         </Box>
       </Container>
-    </VStack>
+    </Box>
   )
 }

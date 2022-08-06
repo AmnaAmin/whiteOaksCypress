@@ -21,10 +21,9 @@ import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
 import { LienWaiverTab } from './lien-waiver-tab'
 import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
 import Status from '../status'
 import { WorkOrderNotes } from './work-order-notes'
@@ -43,7 +42,7 @@ export const WorkOrderDetails = ({
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
-  projectData: ProjectType
+  projectData: Project
   transactions: Array<TransactionType>
 }) => {
   const { t } = useTranslation()

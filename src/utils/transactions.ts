@@ -23,6 +23,8 @@ import differenceInDays from 'date-fns/differenceInDays'
 import { convertImageToDataURL } from 'components/table/util'
 import { createForm } from './lien-waiver'
 import { Document } from 'types/vendor.types'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -559,11 +561,14 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -586,11 +591,15 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -617,26 +626,3 @@ export const useTransaction = (transactionId?: number) => {
     ...rest,
   }
 }
-
-export const PAYMENT_TERMS_OPTIONS = [
-  {
-    value: '7',
-    label: '7',
-  },
-  {
-    value: '10',
-    label: '10',
-  },
-  {
-    value: '14',
-    label: '14',
-  },
-  {
-    value: '20',
-    label: '20',
-  },
-  {
-    value: '30',
-    label: '30',
-  },
-]
