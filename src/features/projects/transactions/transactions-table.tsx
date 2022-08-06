@@ -1,17 +1,19 @@
 import React, { useCallback, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Button, Icon, Divider } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { TableWrapper } from 'components/table/table'
 import { useTransactions } from 'utils/transactions'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
+import { TableNames } from 'types/table-column.types'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from '../status'
 import { BiExport } from 'react-icons/bi'
-import { FaAtom } from 'react-icons/fa'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -53,10 +55,11 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
+  const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
   const { transactions = [], isLoading } = useTransactions(projectId)
   const { t } = useTranslation()
-
-  const { columns } = useColumnWidthResize(
+  const { tableColumns, settingColumns } = useTableColumnSettings(
     [
       {
         Header: 'ID',
@@ -95,7 +98,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         accessor: 'approvedBy',
       },
     ],
-    ref,
+    TableNames.transaction,
   )
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
@@ -115,42 +118,56 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )
+  const onSave = columns => {
+    postGridColumn(columns)
+  }
 
   return (
-    <Box h="100%">
-      <ReactTable
-        isLoading={isLoading}
-        columns={columns}
-        data={transactions}
-        TableRow={TransactionRow}
-        tableHeight="calc(100vh - 400px)"
-        name="transaction-table"
-        onRowClick={onRowClick}
-      />
-
+    <>
+      <Box>
+        <Box h="100%" overflow={'auto'}>
+          <TableWrapper
+            isLoading={isLoading}
+            columns={tableColumns}
+            data={transactions}
+            TableRow={TransactionRow}
+            tableHeight="calc(100vh - 300px)"
+            setTableInstance={setTransactionTableInstance}
+            name="transaction-table"
+            onRowClick={onRowClick}
+          />
+        </Box>
+        <Flex justifyContent="flex-end">
+          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+            <Button
+              variant="ghost"
+              colorScheme="brand"
+              m={0}
+              onClick={() => {
+                if (transactionTableInstance) {
+                  transactionTableInstance?.exportData('xlsx', false)
+                }
+              }}
+            >
+              <Icon as={BiExport} fontSize="18px" mr={1} />
+              {t('export')}
+            </Button>
+            <Divider orientation="vertical" border="1px solid" h="20px" />
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </HStack>
+        </Flex>
+      </Box>
       <UpdateTransactionModal
         isOpen={isOpenEditModal}
         onClose={onEditModalClose}
         selectedTransactionId={selectedTransactionId as number}
+        projectId={projectId as string}
       />
       <TransactionDetailsModal
         isOpen={isOpenTransactionDetailsModal}
         onClose={onTransactionDetailsModalClose}
         selectedTransactionId={selectedTransactionId as number}
       />
-      <Flex justifyContent="end">
-        <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-          <Button variant="ghost" colorScheme="brand" m={0}>
-            <Icon as={BiExport} fontSize="18px" mr={1} />
-            {t('export')}
-          </Button>
-          <Divider orientation="vertical" border="1px solid" h="20px" />
-          <Button variant="ghost" colorScheme="brand" m={0}>
-            <Icon as={FaAtom} fontSize="18px" mr={1} />
-            {t('settings')}
-          </Button>
-        </HStack>
-      </Flex>
-    </Box>
+    </>
   )
 })

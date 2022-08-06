@@ -1,16 +1,21 @@
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
-
+import { useQueryClient } from 'react-query'
+import orderBy from 'lodash/orderBy'
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
 
-  const { data: projectData, ...rest } = useQuery<ProjectType>(['project', projectId], async () => {
-    const response = await client(`projects/${projectId}`, {})
+  const { data: projectData, ...rest } = useQuery<Project>(
+    ['project', projectId],
+    async () => {
+      const response = await client(`projects/${projectId}`, {})
 
-    return response?.data
-  })
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     projectData,
@@ -52,6 +57,7 @@ export const useProjectDetails = (projectId?: string) => {
 
 export const useSaveProjectDetails = () => {
   const client = useClient()
+  const queryClient = useQueryClient()
   // const toast = useToast()
 
   return useMutation(
@@ -62,7 +68,9 @@ export const useSaveProjectDetails = () => {
       })
     },
     {
-      onSuccess() {},
+      onSuccess() {
+        queryClient.invalidateQueries('projects')
+      },
     },
   )
 }
@@ -176,9 +184,37 @@ export const useVendor = () => {
   const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
     const response = await client(`view-vendors`, {})
 
-    return response?.data
+    return orderBy(response?.data || [], ['id', 'desc'])
   })
 
+  return {
+    vendors: data,
+    ...rest,
+  }
+}
+
+export const useFilteredVendors = vendorSkillId => {
+  const status_active = 12
+  const capacity = 1 // sfor new workorder capacity is fixed
+  const client = useClient()
+  const requestUrl =
+    'view-vendors?generalLabor.equals=' +
+    false +
+    '&vendorSkillId.equals=' +
+    vendorSkillId +
+    '&capacity.greaterThanOrEqual=' +
+    capacity +
+    '&status.equals=' +
+    status_active
+  const { data, ...rest } = useQuery<Array<Vendors>>(
+    ['FETCH_FILTERED_VENDORS', vendorSkillId],
+    async () => {
+      const response = await client(requestUrl, {})
+
+      return response?.data
+    },
+    { enabled: !!vendorSkillId },
+  )
   return {
     vendors: data,
     ...rest,

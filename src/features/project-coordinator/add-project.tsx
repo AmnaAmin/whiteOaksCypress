@@ -27,6 +27,7 @@ import { readFileContent } from 'utils/vendor-details'
 import { useToast } from '@chakra-ui/react'
 import { useSaveProjectDetails } from 'utils/pc-projects'
 import { dateISOFormat } from 'utils/date-time-utils'
+import { useNavigate } from 'react-router-dom'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -55,11 +56,12 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
   const [projectinfoBtn, setProjectinfoBtn] = useState(false)
   const [propertyinfoBtn, setpropertyinfoBtn] = useState(false)
   const [manageProjBtn, setmanageProjBtn] = useState(false)
+  const navigate = useNavigate()
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
-  
+
   const methods = useForm<ProjectFormValues>({
     defaultValues: {
       acknowledgeCheck: false,
@@ -125,16 +127,16 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
         sowDocumentFile: fileContents,
         streetAddress: values.streetAddress,
         city: values.city,
-        state: values.state,
+        state: values.state.value,
         zipCode: values.zipCode,
-        newMarketId: values.market,
+        newMarketId: values.newMarketId.value,
         gateCode: values.gateCode,
         lockBoxCode: values.lockBoxCode,
         hoaPhone: values.hoaPhone,
         hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
         hoaEmailAddress: values.hoaEmailAddress,
         projectManagerId: values.projectManagerId,
-        projectCoordinator: values.projectCoordinator,
+        projectCordinatorId: values.projectCoordinatorId,
         clientName: values.clientName,
         clientId: values.clientId,
         superLastName: values.superLastName,
@@ -145,15 +147,17 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
       }
 
       saveProjectDetails(newProjectPayload, {
-        onSuccess() {
+        onSuccess(response: any) {
+          const projectId = response?.data?.id
           toast({
             title: 'Project Details',
-            description: 'New Project has been created successfully.',
+            description: `New project has been created successfully with project id: ${projectId}`,
             status: 'success',
             duration: 9000,
             isClosable: true,
           })
           onClose()
+          navigate(`/project-details/${projectId}`)
         },
         onError(error: any) {
           toast({

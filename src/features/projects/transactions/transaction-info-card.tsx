@@ -2,9 +2,8 @@ import React from 'react'
 import { Box, Center, CenterProps, Flex, Text } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from '../status'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
@@ -19,7 +18,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
 }
 
 export const TransactionInfoCard: React.FC<{
-  projectData: ProjectType
+  projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
   const { t } = useTranslation()

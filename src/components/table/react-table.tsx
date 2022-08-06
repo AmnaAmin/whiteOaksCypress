@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React from 'react'
 import {
   Column,
   Row as RTRow,
@@ -27,7 +27,7 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 // We can also add a loading state to let our table know it's loading new data
 // Define a default UI for filtering
 
-function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
+function DefaultColumnFilter({ column: { filterValue, setFilter } }) {
   return (
     <Input
       bg="white"
@@ -49,13 +49,29 @@ type SortBy = {
   desc?: boolean
 }
 
-interface Props {
+export interface TableProps {
   columns: Array<Column<object>>
   data: Array<object>
+  enablePagination?: boolean
   sortBy?: SortBy
 }
 
-export function useCustomTable(props: Props) {
+export type TableExtraProps = {
+  disableFilter?: boolean
+  headerGroups?: any
+  name?: string
+  TableRow?: React.ElementType
+  TableBody?: React.ElementType
+  TableHead?: React.ElementType
+  tableHeight: string | number
+  setTableInstance?: (i) => void
+  onRowClick?: (e, row) => void
+  isLoading?: boolean
+  defaultFlexStyle?: boolean
+  enablePagination?: boolean
+}
+
+export function useCustomTable(props: TableProps, ...rest) {
   const { columns, data: tableData } = props
 
   const defaultColumn: any = React.useMemo(
@@ -78,13 +94,14 @@ export function useCustomTable(props: Props) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [{ id: 'type', desc: false, ...props.sortBy }],
+        sortBy: [{ id: 'id', desc: true, ...props.sortBy }],
       },
     },
     useBlockLayout,
     useFilters,
     useSortBy,
     useExportData,
+    ...rest,
   )
 
   return tableInstance
@@ -117,7 +134,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
-export const TableHeader = ({ headerGroups }) => {
+export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) => {
   const { t } = useTranslation()
 
   return (
@@ -148,15 +165,12 @@ export const TableHeader = ({ headerGroups }) => {
                   >
                     {t(title)}
                   </Text>
-                  {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <AiOutlineArrowUp fontSize="17px" />
-                    ) : (
+                  {column.isSorted &&
+                    (column.isSortedDesc ? (
                       <AiOutlineArrowDown fontSize="17px" />
-                    )
-                  ) : (
-                    ''
-                  )}
+                    ) : (
+                      <AiOutlineArrowUp fontSize="17px" />
+                    ))}
                 </Flex>
               </Th>
             )
@@ -164,15 +178,17 @@ export const TableHeader = ({ headerGroups }) => {
         </Tr>
       ))}
 
-      {headerGroups.map(headerGroup => (
-        <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map(column => (
-            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
-              {column.canFilter ? column.render('Filter') : null}
-            </Th>
-          ))}
-        </Tr>
-      ))}
+      {!disableFilter
+        ? headerGroups.map(headerGroup => (
+            <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
+                  {column.canFilter ? column.render('Filter') : null}
+                </Th>
+              ))}
+            </Tr>
+          ))
+        : null}
     </Thead>
   )
 }
@@ -216,7 +232,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   )
 }
 
-const TableLoadingState: React.FC<TableInstance> = ({ rows, prepareRow }) => {
+export const TableLoadingState: React.FC<TableInstance> = ({ rows, prepareRow }) => {
   return (
     <Tbody>
       {rows.map(row => {
@@ -237,36 +253,13 @@ const TableLoadingState: React.FC<TableInstance> = ({ rows, prepareRow }) => {
   )
 }
 
-type TableExtraProps = {
-  name?: string
-  TableRow?: React.ElementType
-  TableBody?: React.ElementType
-  TableHead?: React.ElementType
-  tableHeight: string | number
-  setTableInstance?: (i) => void
-  onRowClick?: (e, row) => void
-  isLoading?: boolean
-  defaultFlexStyle?: boolean
-}
+export const Table: React.FC<{ tableInstance: any; tableHeight: string | number }> = ({
+  tableInstance,
+  tableHeight,
+  children,
+}) => {
+  const { defaultFlexStyle } = tableInstance
 
-const emptyRows = [{}, {}, {}]
-export function Table(props: Props & TableExtraProps): ReactElement {
-  const {
-    TableRow,
-    TableBody = TBody,
-    TableHead = TableHeader,
-    tableHeight,
-    onRowClick,
-    setTableInstance,
-    isLoading,
-    defaultFlexStyle = true,
-    ...restProps
-  } = props
-  const tableInstance = useCustomTable({ ...restProps, data: isLoading ? emptyRows : restProps.data })
-
-  useEffect(() => {
-    setTableInstance?.(tableInstance)
-  }, [tableInstance, setTableInstance])
   const defaultStyles = () => {
     if (defaultFlexStyle)
       return {
@@ -274,6 +267,7 @@ export function Table(props: Props & TableExtraProps): ReactElement {
         flexFlow: 'column',
       }
   }
+
   return (
     <ChakraTable
       {...defaultStyles()}
@@ -284,12 +278,7 @@ export function Table(props: Props & TableExtraProps): ReactElement {
       rounded="md"
       {...tableInstance.getTableProps()}
     >
-      <TableHead {...tableInstance} />
-      {isLoading ? (
-        <TableLoadingState {...tableInstance} />
-      ) : (
-        <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
-      )}
+      {children}
     </ChakraTable>
   )
 }

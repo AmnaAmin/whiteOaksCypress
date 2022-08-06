@@ -1,7 +1,8 @@
 import { useToast } from '@chakra-ui/toast'
-import { useClient } from 'utils/auth-context'
 import _ from 'lodash'
-import { useMutation, useQuery } from 'react-query'
+import { useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   License,
   Market,
@@ -12,8 +13,8 @@ import {
   VendorProfilePayload,
   VendorTradeFormValues,
 } from 'types/vendor.types'
-import { convertDateTimeFromServer, customFormat } from './date-time-utils'
-import { useTranslation } from 'react-i18next'
+import { useClient } from 'utils/auth-context'
+import { convertDateTimeFromServer, convertDateTimeToServer, customFormat } from './date-time-utils'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -24,14 +25,35 @@ export const licenseTypes = [
   { value: '6', label: 'Mechanical' },
 ]
 
+export const requiredField = {
+  detailErrors: [
+    'businessEmailAddress',
+    'businessPhoneNumber',
+    'capacity',
+    'city',
+    'companyName',
+    'ownerName',
+    'paymentTerm',
+    'state',
+    'streetAddress',
+    'zipCode',
+    'einNumber',
+    'ssnNumber',
+  ],
+  documentErrors: ['w9Document'],
+  licenseErrors: ['licenses'],
+}
 export const useVendorProfile = (vendorId: number) => {
   const client = useClient()
 
-  return useQuery<VendorProfile>('vendorProfile', async () => {
-    const response = await client(`vendors/${vendorId}`, {})
-
-    return response?.data
-  })
+  return useQuery<VendorProfile>(
+    'vendorProfile',
+    async () => {
+      const response = await client(`vendors/${vendorId}`, {})
+      return response?.data
+    },
+    { enabled: !!vendorId },
+  )
 }
 
 export const useAccountDetails = () => {
@@ -48,10 +70,30 @@ export const useAccountDetails = () => {
   )
 }
 
-export const useVendorProfileUpdateMutation = () => {
+export const useCreateVendorMutation = () => {
   const client = useClient()
-
-  return useMutation((payload: Partial<VendorProfilePayload>) => client(`vendors`, { data: payload, method: 'PUT' }))
+  const { t } = useTranslation()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  return useMutation((payload: any) => client(`vendors`, { data: payload, method: 'POST' }), {
+    onSuccess() {
+      queryClient.invalidateQueries('vendor')
+      toast({
+        title: 'Create Vendor',
+        description: t('createVendorSuccess'),
+        status: 'success',
+        isClosable: true,
+      })
+    },
+    onError(error: any) {
+      toast({
+        title: 'Create Vendor',
+        description: (error.title as string) ?? 'Unable to create project.',
+        status: 'error',
+        isClosable: true,
+      })
+    },
+  })
 }
 
 export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
@@ -82,6 +124,72 @@ export const parseFormDataToAPIData = (
     businessEmailAddress: formValues.primaryEmail,
     secondEmailAddress: formValues.secondaryEmail,
     documents: [],
+  }
+}
+
+export const parseVendorFormDataToAPIData = (
+  formValues: VendorProfileDetailsFormData,
+  paymentsMethods,
+  vendorProfileData?: VendorProfile,
+): VendorProfilePayload => {
+  return {
+    ...vendorProfileData!,
+    ownerName: formValues.ownerName!,
+    secondName: formValues.secondName!,
+    businessPhoneNumber: formValues.businessPhoneNumber,
+    businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
+    secondPhoneNumber: formValues.secondPhoneNumber!,
+    secondPhoneNumberExtension: formValues.secondPhoneNumberExtension!,
+    businessEmailAddress: formValues.businessEmailAddress!,
+    companyName: formValues.companyName!,
+    streetAddress: formValues.streetAddress!,
+    city: formValues.city!,
+    zipCode: formValues.zipCode!,
+    capacity: formValues.capacity!,
+    einNumber: formValues.einNumber!,
+    ssnNumber: formValues.ssnNumber!,
+    secondEmailAddress: formValues.secondEmailAddress!,
+    score: formValues.score?.value,
+    status: formValues.status?.value,
+    state: formValues.state?.value,
+    isSsn: false,
+    paymentTerm: formValues.paymentTerm?.value,
+    documents: [],
+    vendorSkills: vendorProfileData?.vendorSkills || [],
+    markets: vendorProfileData?.markets || [],
+    licenseDocuments: vendorProfileData?.licenseDocuments || [],
+    paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
+  }
+}
+
+export const parseCreateVendorFormToAPIData = async (
+  formValues,
+  paymentsMethods,
+  vendorProfileData?: VendorProfile,
+) => {
+  const profilePayload = parseVendorFormDataToAPIData(formValues, paymentsMethods, vendorProfileData)
+  const documentsPayload = await parseDocumentCardsValues(formValues)
+  const updatedObject = prepareVendorDocumentObject(documentsPayload, formValues)
+  const licensePayload = await parseLicenseValues(formValues, vendorProfileData?.licenseDocuments)
+  const tradePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData!)
+  const marketsPayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData!)
+  return {
+    ...profilePayload,
+    licenseDocuments: licensePayload,
+    ...tradePayload,
+    ...marketsPayload,
+    ...updatedObject,
+  }
+}
+
+export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDetailsFormData => {
+  return {
+    ...vendorProfileData,
+    ...vendorProfileData.paymentOptions.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
+    ...documentCardsDefaultValues(vendorProfileData),
+    licenses: licenseDefaultFormValues(vendorProfileData),
+    trades: [],
+    markets: [],
   }
 }
 
@@ -119,7 +227,7 @@ export const parseTradeAPIDataToFormValues = (trades: Trade[], vendorData: Vendo
 }
 
 export const parseTradeFormValuesToAPIPayload = (
-  formValues: VendorTradeFormValues,
+  formValues,
   vendorData: VendorProfile | {},
 ): Partial<VendorProfilePayload> => {
   return {
@@ -148,7 +256,7 @@ export const parseMarketAPIDataToFormValues = (
 }
 
 export const parseMarketFormValuesToAPIPayload = (
-  formValues: VendorMarketFormValues,
+  formValues,
   vendorData: VendorProfile | {},
 ): Partial<VendorProfilePayload> => {
   return {
@@ -169,27 +277,38 @@ export const DOCUMENTS_TYPES = {
   COI_WC: { value: 'Certificate Of Insurance-Worker Comp', id: 20 },
   AGREEMENT_SIGNED_DOCUMENT: { value: 'Signed Agreement', id: 40 },
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
-  W9_DOCUMENT: { value: 'W9 DOCUMENT', id: 99 },
+  W9_DOCUMENT: { value: 'W9 Document', id: 99 },
 }
 
 export const useSaveVendorDetails = (name: string) => {
   const client = useClient()
   const toast = useToast()
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
 
   return useMutation(
-    (licenses: any) => {
+    (payload: any) => {
       return client('vendors', {
-        data: licenses,
+        data: payload,
         method: 'PUT',
       })
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries('vendorProfile')
+        queryClient.invalidateQueries('vendor')
         toast({
-          title: t(`update${name}Details`),
-          description: t(`update${name}DetailsSuccess`),
+          title: t(`update${name}`),
+          description: t(`update${name}Success`),
           status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: t(`update${name}`),
+          description: (error.title as string) ?? 'Unable to update vendor.',
+          status: 'error',
           isClosable: true,
         })
       },
@@ -232,7 +351,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
 export const parseLicenseValues = async (values: any, licensesDocuments: any) => {
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
-      let existingLicense = licensesDocuments.find(l => l.id === license.id)
+      let existingLicense = licensesDocuments?.find(l => l.id === license.id)
       let doc = {}
       let fileContents
       if (existingLicense) {
@@ -302,6 +421,15 @@ export const documentCardsDefaultValues = (vendor: any) => {
   return documentCards
 }
 
+export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
+  return {
+    documents: vendorProfilePayload,
+    agreementSignedDate: convertDateTimeToServer(formData.agreementSignedDate!),
+    autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
+    coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
+    coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
+  }
+}
 export const parseDocumentCardsValues = async (values: any) => {
   const documentsList: any[] = []
   values.agreement &&
@@ -402,4 +530,38 @@ export const useSaveLanguage = () => {
       onSuccess() {},
     },
   )
+}
+
+export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
+  const [ein, ssn, ...detailfields] = useWatch({
+    control,
+    name: [
+      'einNumber',
+      'ssnNumber',
+      'businessEmailAddress',
+      'businessPhoneNumber',
+      'capacity',
+      'city',
+      'companyName',
+      'ownerName',
+      'paymentTerm',
+      'state',
+      'streetAddress',
+      'zipCode',
+    ],
+  })
+  const documentFields = useWatch({
+    control,
+    name: ['w9Document'],
+  })
+  const licenseField = useWatch({
+    control,
+    name: ['licenses'],
+  })
+  const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
+  return {
+    disableDetailsNext: detailfields.some(n => !n) || !(ein || ssn),
+    disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl),
+    disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
+  }
 }

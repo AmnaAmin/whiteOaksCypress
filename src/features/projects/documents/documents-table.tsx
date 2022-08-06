@@ -1,16 +1,17 @@
 import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Link, Spacer, HStack } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Icon, Divider, Spacer, HStack } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { RowProps } from 'components/table/react-table'
 import { useDocuments } from 'utils/vendor-projects'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Button } from 'components/button/button'
 import { FaAtom } from 'react-icons/fa'
+import { downloadFile } from 'utils/file-utils'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
@@ -22,6 +23,11 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
       {...row.getRowProps({
         style,
       })}
+      cursor="pointer"
+      onClick={() => {
+        // @ts-ignore
+        window.open(row.original?.s3Url, '_blank')
+      }}
     >
       {row.cells.map(cell => {
         return (
@@ -100,9 +106,14 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
             <Flex>
               <Box mr={2}>{dateFormat(value)}</Box>
               <Spacer w="90px" />
-              <Link href={s3Url} target="_blank" onClick={e => e.stopPropagation()}>
-                <Icon as={BiDownArrowCircle} color="#4E87F8" fontSize={24} />
-              </Link>
+              <Icon
+                as={BiDownArrowCircle}
+                color="#4E87F8"
+                fontSize={24}
+                onClick={() => {
+                  downloadFile(s3Url)
+                }}
+              />
             </Flex>
           )
         },
@@ -113,7 +124,8 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
 
   return (
     <Box>
-      <ReactTable
+      <TableWrapper
+        disableFilter={true}
         columns={columns}
         data={documents}
         TableRow={vendorDocumentRow}

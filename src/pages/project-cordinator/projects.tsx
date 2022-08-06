@@ -12,6 +12,7 @@ import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, 
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import { exportBtnIcon } from 'theme/common-style'
 
 export const Projects = () => {
   const {
@@ -47,13 +48,14 @@ export const Projects = () => {
 
   useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
-  const clearSelected = () => {
-    setSelectedCard('')    
+  const clearAll = () => {
+    setSelectedCard('')
+    setSelectedDay('')
   }
 
   return (
     <>
-      <VStack w="100%" h="calc(100vh - 160px)">
+      <VStack w={{ base: '971px', xl: '100%' }}  h="calc(100vh - 160px)">
         <Box mb={2} w="100%" border="10 px solid red">
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
         </Box>
@@ -65,9 +67,8 @@ export const Projects = () => {
           </Box>{' '}
         </Stack>
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <Box onClick={clearSelected}>
-            <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-          </Box>
+          <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+
           <Button
             alignContent="right"
             onClick={onNewProjectModalOpen}
@@ -99,9 +100,9 @@ export const Projects = () => {
               ) : (
                 <>
                   <Button
-                    bg="none"
-                    color="#4E87F8"
-                    _hover={{ bg: 'none' }}
+                    m={0}
+                    variant="ghost"
+                    colorScheme="brand"
                     _focus={{ border: 'none' }}
                     fontSize="12px"
                     fontStyle="normal"
@@ -112,9 +113,7 @@ export const Projects = () => {
                       }
                     }}
                   >
-                    <Box pos="relative" right="6px" fontWeight="bold" pb="3.3px">
-                      <BsBoxArrowUp />
-                    </Box>
+                    <Icon as={BsBoxArrowUp} style={exportBtnIcon} mr={1} />
                     {'Export'}
                   </Button>
                   <Center>

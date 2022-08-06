@@ -28,3 +28,39 @@ export const PROJECT_FILTER_CARDS = [
     count: 3,
   },
 ]
+
+export const monDayValue = 0
+export const tueDayValue = 0
+export const wedDayValue = 0
+export const allValue = 0
+
+export const WEEKDAY_FILTER = [
+  {
+    dayName: 'Mon',
+    count: monDayValue,
+  },
+  {
+    dayName: 'Tue',
+    count: tueDayValue,
+  },
+  {
+    dayName: 'Wed',
+    count: wedDayValue,
+  },
+  {
+    dayName: 'Thu',
+    count: 1,
+  },
+  {
+    dayName: 'Fri',
+    count: 0,
+  },
+  {
+    dayName: 'Sat',
+    count: 0,
+  },
+  {
+    dayName: 'Sun',
+    count: 0,
+  },
+]

@@ -8,7 +8,10 @@ import {
   FormLabel,
   Grid,
   GridItem,
+  Heading,
   Input,
+  InputGroup,
+  InputLeftElement,
   VStack,
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
@@ -17,6 +20,7 @@ import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiDownload } from 'react-icons/bi'
+import { t } from 'i18next'
 
 type InfoProps = {
   setNextTab: () => void
@@ -81,7 +85,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   return (
     <>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'}>
         <GridItem>
           <FormControl>
             <FormInput
@@ -140,7 +144,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
         <GridItem style={{ textAlign: 'left' }}>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
@@ -183,21 +187,19 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           </FormControl>
         </GridItem>
       </Grid>
-      <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" mt={3}>
+      <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3" mt={3}>
         <GridItem>
           <FormControl>
-            <FormInput
-              errorMessage={errors.sowOriginalContractAmount && errors.sowOriginalContractAmount?.message}
-              label={'Original SOW Amount'}
-              placeholder="$0"
-              register={register}
-              elementStyle={{ bg: 'white', borderLeft: '2.5px solid #4E87F8' }}
-              rules={{ required: 'This is required field' }}
-              name={`sowOriginalContractAmount`}
-            />
+            <Heading color="gray.600" fontSize="14px" fontWeight={500} isTruncated>
+              {t('Original SOW Amount')}
+            </Heading>
+            <InputGroup p={0} mt={3}>
+              <InputLeftElement color="gray.500" children="$" />
+              <Input {...register('sowOriginalContractAmount')} variant="required-field" m={0} pl={5} />
+            </InputGroup>
           </FormControl>
         </GridItem>
-        <GridItem>
+        <GridItem mb={10}>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
               Upload Project SOW

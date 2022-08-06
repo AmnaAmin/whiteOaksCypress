@@ -3,7 +3,7 @@ import { Box, Button, FormControl, FormLabel, HStack, Icon, Input } from '@chakr
 import ReactSelect from 'components/form/react-select'
 import { FormFileInput } from 'components/react-hook-form-fields/file-input'
 import { t } from 'i18next'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 

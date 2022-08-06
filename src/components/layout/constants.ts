@@ -1,4 +1,4 @@
-import { BiCreditCard, BiDollarCircle, BiError, BiGroup, BiUser, BiUserPin } from 'react-icons/bi'
+import { BiCreditCard, BiDollarCircle, BiGroup, BiUser, BiUserPin } from 'react-icons/bi'
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
@@ -36,12 +36,12 @@ export const MENU_ROLE_BASED: Menus = {
     },
   ],
   [UserTypes.pc]: [
-    {
-      pathTo: '/pcDashboard',
-      title: 'Dashboard',
-      Icon: FaHome,
-      color: '#ED8936',
-    },
+    // {
+    //   pathTo: '/pcDashboard',
+    //   title: 'Dashboard',
+    //   Icon: FaHome,
+    //   color: '#ED8936',
+    // },
     {
       pathTo: '/projects',
       title: 'Projects',
@@ -66,12 +66,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
-    {
-      pathTo: '/alerts',
-      title: 'Alerts',
-      Icon: BiError,
-      color: '#ED64A6',
-    },
+    // {
+    //   pathTo: '/alerts',
+    //   title: 'Alerts',
+    //   Icon: BiError,
+    //   color: '#ED64A6',
+    // },
     {
       pathTo: '/clients',
       title: 'Clients',
@@ -79,12 +79,19 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#0BC5EA',
     },
   ],
+  [UserTypes.vendorManager]: [
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+  ],
 }
 
 export const useRoleBasedMenu = (): Array<Menu> => {
   const { data } = useAuth()
   const { userTypeLabel } = data?.user as Account
-
   return MENU_ROLE_BASED[userTypeLabel] || []
 }
 

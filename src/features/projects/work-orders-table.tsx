@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { TableWrapper } from 'components/table/table'
 import { useTransactions } from 'utils/transactions'
-import ReactTable, { RowProps } from 'components/table/react-table'
+import { RowProps } from 'components/table/react-table'
 import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from './modals/work-order-details'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import Status from './status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -54,7 +55,7 @@ const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 interface PropType {
   onTabChange?: any
-  projectData: ProjectType
+  projectData: Project
 }
 export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -129,7 +130,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
         </Center>
       )}
       {workOrders && (
-        <ReactTable
+        <TableWrapper
           columns={columns}
           data={workOrders}
           TableRow={WorkOrderRow}
