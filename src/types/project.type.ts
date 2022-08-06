@@ -226,3 +226,30 @@ export type Market = {
   stateId: number
   stateName: string
 }
+
+export type ProjectFinancialOverview = {
+  changeOrderId: number
+  workOrderId: number | null
+  projectId: number
+  vendorId: number
+  vendorName: string | null
+  projectManagerId: number
+  projectCoordinatorId: number
+  skillName: string
+  originalAmount: number
+  newAmount: number
+  partialPayment: number
+  workOrderOriginalAmount: number
+  workOrderNewAmount: number
+  profit: number
+  changeOrder: number
+  draw: number
+  material: number
+  adjustment: number
+  accountPayable: number
+  noCoAdjustment: number
+  coAdjustment: number
+  revisedVendorWorkOrder: number
+  revisedChangeOrder: number
+  finalVendorWorkOrder: number
+}

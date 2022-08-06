@@ -24,6 +24,7 @@ import { convertImageToDataURL } from 'components/table/util'
 import { createForm } from './lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -591,6 +592,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
 
         toast({
           title: 'Update Transaction.',
