@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { TableWrapper } from 'components/table/table'
@@ -61,7 +61,13 @@ type ReceivableProps = {
   loading?: boolean
 }
 
-export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, loading, register, ref }) => {
+export const ReceivableTable: React.FC<ReceivableProps> = ({
+  setTableInstance,
+  loading,
+  register,
+  ref,
+  selectedCard,
+}) => {
   const { columns } = useColumnWidthResize(
     [
       {
@@ -160,6 +166,19 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
   const { receivableData, isLoading } = usePCRecievable()
   const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
   const rowSelectedData = receivableDataa?.data
+  const receivable = receivableData?.arList
+
+  const [receivableFilterData, setFilterReceivableData] = useState(receivable)
+
+  useEffect(() => {
+    setFilterReceivableData(
+      receivable?.filter(receivable => {
+        return (
+          !selectedCard || receivable.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase()
+        )
+      }),
+    )
+  }, [selectedCard, receivable])
 
   return (
     <Box overflow="auto" width="100%">
@@ -167,7 +186,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, l
         onRowClick={onRowClick}
         columns={columns}
         setTableInstance={setTableInstance}
-        data={receivableData?.arList || []}
+        data={receivableFilterData || []}
         isLoading={isLoading}
         TableRow={receivableRow}
         tableHeight="calc(100vh - 300px)"
