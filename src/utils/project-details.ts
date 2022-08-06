@@ -154,10 +154,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
 
     if (!projectStatus) return []
 
-    const projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatus].map(status => ({
-      value: status.toUpperCase(),
-      label: status.toUpperCase(),
-    }))
+    const projectStatusSelectOptions =
+      PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatus]?.map(status => ({
+        value: status.toUpperCase(),
+        label: status.toUpperCase(),
+      })) || []
 
     const selectOptionWithDisableEnabled = projectStatusSelectOptions.map((selectOption: SelectOption) => {
       const optionLabel = selectOption?.label?.toLowerCase()

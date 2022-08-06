@@ -9,4 +9,5 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   [STATUS.ClientPaid]: [STATUS.ClientPaid, STATUS.Paid],
   [STATUS.Overpayment]: [STATUS.Overpayment, STATUS.Paid],
   [STATUS.Paid]: [STATUS.Paid],
+  [STATUS.Cancelled]: [STATUS.Cancelled],
 }
