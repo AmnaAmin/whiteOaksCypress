@@ -170,7 +170,11 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
 
-        <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+        <AddNewTransactionModal
+          isOpen={isOpenTransactionModal}
+          onClose={onTransactionModalClose}
+          projectId={projectId as string}
+        />
         <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
