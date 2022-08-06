@@ -15,19 +15,6 @@ import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
 
-export const getProjectDetailsAPIKey = (projectId?: string) => ['project-details', projectId]
-
-export const useProjectDetails = (projectId?: string) => {
-  const client = useClient()
-  const projectDetailsGetAPIKey = getProjectDetailsAPIKey(projectId)
-
-  return useQuery<Project>(projectDetailsGetAPIKey, async () => {
-    const response = await client(`projects/${projectId}`, { projectId })
-
-    return response?.data
-  })
-}
-
 export const useGetStateSelectOptions = () => {
   const client = useClient()
 
@@ -133,8 +120,7 @@ export const useProjectDetailsUpdateMutation = () => {
       })
     },
     {
-      onSuccess: data => {
-        console.log('onSuccess', data)
+      onSuccess: () => {
         toast({
           title: 'Project Details Updated',
           description: 'Project details updated successfully',
