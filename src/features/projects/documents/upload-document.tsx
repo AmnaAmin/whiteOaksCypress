@@ -18,7 +18,6 @@ import {
 
 import { MdOutlineCancel } from 'react-icons/md'
 import { useDocumentTypes, useUploadDocument } from 'utils/vendor-projects'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'

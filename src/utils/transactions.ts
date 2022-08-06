@@ -560,11 +560,14 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -587,11 +590,14 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },

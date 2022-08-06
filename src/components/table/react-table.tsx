@@ -94,7 +94,7 @@ export function useCustomTable(props: TableProps, ...rest) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [],
+        sortBy: [{ id: 'id', desc: true, ...props.sortBy }],
       },
     },
     useBlockLayout,
@@ -165,7 +165,12 @@ export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) =>
                   >
                     {t(title)}
                   </Text>
-                  {column.isSortedDesc ? <AiOutlineArrowDown fontSize="17px" /> : <AiOutlineArrowUp fontSize="17px" />}
+                  {column.isSorted &&
+                    (column.isSortedDesc ? (
+                      <AiOutlineArrowDown fontSize="17px" />
+                    ) : (
+                      <AiOutlineArrowUp fontSize="17px" />
+                    ))}
                 </Flex>
               </Th>
             )

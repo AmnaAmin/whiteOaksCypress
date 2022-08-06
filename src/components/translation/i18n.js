@@ -261,6 +261,7 @@ i18n.use(initReactI18next).init({
         secondaryPhoneNo: 'Secondary Phone No',
         city: 'City',
         sin: 'SSN',
+        ein: 'EIN',
         zip: 'Zipcode',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
@@ -315,6 +316,7 @@ i18n.use(initReactI18next).init({
         updateMarketsSuccess: 'Vendor profile markets have been saved successfully.',
         updateTrades: 'Update Vendor Profile Trades',
         updateTradesSuccess: 'Vendor profile trades have been saved successfully.',
+        createVendorSuccess: 'Vendor has been created successfully.',
 
         // Settings Page
         settings: 'Settings',
@@ -420,7 +422,7 @@ i18n.use(initReactI18next).init({
         sowOriginalContractAmount: 'SOW Original Contract Amount',
         clientName: 'Client Name',
         zipCode: 'Zip Code',
-        
+        projectTypeLabel: 'Type',
       },
     },
     es: {
@@ -733,6 +735,7 @@ i18n.use(initReactI18next).init({
         secondaryPhoneNo: 'Número de teléfono secundario',
         city: 'Ciudad',
         sin: 'PECADO',
+        ein: 'EIN',
         zip: 'Cremallera postal',
         primaryContact: 'Contacto Primario',
         secondaryContact: 'Contacto Secundario',
@@ -788,6 +791,8 @@ i18n.use(initReactI18next).init({
         updateMarketsSuccess: 'Los mercados de perfiles de proveedores se han guardado correctamente.',
         updateTrades: 'Actualizar intercambios de perfiles de proveedores',
         updateTradesSuccess: 'Las transacciones del perfil del proveedor se han guardado correctamente.',
+        createVendorSuccess: 'El proveedor se ha creado correctamente.',
+
         // Settings Page
         settings: 'Ajustes',
         firstName: 'Primer Nombre',

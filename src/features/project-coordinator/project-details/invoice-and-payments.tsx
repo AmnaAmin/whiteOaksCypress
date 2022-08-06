@@ -134,14 +134,7 @@ const InvoiceAndPayments: React.FC = () => {
             <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
               {t('invoiceNo')}
             </FormLabel>
-            <Input
-              id="invoiceNo"
-              placeholder="1212"
-              variant={isStatusInvoiced ? 'required-field' : 'outline'}
-              {...register('invoiceNumber', {
-                required: isStatusInvoiced ? 'This is required' : false,
-              })}
-            />
+            <Input id="invoiceNo" {...register('invoiceNumber')} />
             <FormErrorMessage>{errors?.invoiceNumber?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -218,7 +211,7 @@ const InvoiceAndPayments: React.FC = () => {
                     {...field}
                     isDisabled={isPaymentTermsDisabled}
                     options={PAYMENT_TERMS_OPTIONS}
-                    selectProps={{ isBorderLeft: isStatusInvoiced }}
+                    selectProps={{ isBorderLeft: !isPaymentTermsDisabled }}
                     onChange={(option: SelectOption) => {
                       onPaymentTermChange(option)
                       field.onChange(option)
@@ -308,7 +301,6 @@ const InvoiceAndPayments: React.FC = () => {
               id="payment"
               type="number"
               {...register('payment', {
-                required: isPaymentDisabled ? false : 'This is required',
                 onChange: onPaymentChange,
               })}
               placeholder="$0"

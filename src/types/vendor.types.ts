@@ -212,6 +212,12 @@ export type VendorProfileDetailsFormData = {
   creditCard?: boolean
   check?: boolean
   ach?: boolean
+  agreementSignedDate?: Date
+  autoInsuranceExpDate?: Date
+  coiGlExpDate?: Date
+  coiWcExpDate?: Date
+  trades?: any[]
+  markets?: any[]
 }
 
 export type VendorTrade = {

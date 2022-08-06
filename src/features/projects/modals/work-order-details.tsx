@@ -21,7 +21,6 @@ import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetailTab from './work-order-detail-tab'
 import { LienWaiverTab } from './lien-waiver-tab'
 import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { InvoiceTab } from './invoice-tab'
 import { Project } from 'types/project.type'

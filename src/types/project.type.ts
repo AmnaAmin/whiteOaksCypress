@@ -12,7 +12,7 @@ export type Project = {
   code: string | null
   createdBy: string | null
   createdDate: string | null
-  dueDateVariance: string | null
+  dueDateVariance: number | null
   expectedPaymentDate: string | null
   finalInvoiceAmount: number | null
   firstWorkOrderDate: string | null
@@ -89,12 +89,12 @@ export type Project = {
   newPartialPayment: number | null
   overrideProjectStatus: string | null
   projectStartDate: string | null
-  punchDate: string | null
-  closedDate: string | null
-  disputedDate: string | null
-  payDateVariance: string | null
-  payVariance: string | null
-  collectionDate: string | null
+  punchDate?: string | null
+  closedDate?: string | null
+  disputedDate?: string | null
+  payDateVariance?: number | null
+  payVariance?: number | null
+  collectionDate?: string | null
   documents: any[] | null
 }
 
@@ -191,9 +191,9 @@ export type ProjectFormValues = {
   sowLink: string
   streetAddress?: string
   city?: string
-  state?: string
+  state?: any
   zipCode?: any
-  newMarketId?: string
+  newMarketId?: any
   gateCode?: string
   lockBoxCode?: string
   hoaEmailAddress?: string | null

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Icon, Link, Stack } from '@chakra-ui/react'
+import { Box, Button, Divider, Icon, Stack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import Location from './location'
@@ -23,6 +23,7 @@ import {
   useProjectStatusSelectOptions,
 } from 'utils/project-details'
 import { DevTool } from '@hookform/devtools'
+import { Link } from 'react-router-dom'
 
 type tabProps = {
   projectData: Project
@@ -33,6 +34,8 @@ type tabProps = {
 
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData } = props
+  console.log('ProjectID', projectData?.id)
+
   const [tabIndex, setTabIndex] = useState<number>(0)
 
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
@@ -158,6 +161,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                       <Button
                         mt="8px"
                         ml="32px"
+                        as={Link}
+                        to={`/project-details/${projectData?.id}`}
                         variant="outline"
                         colorScheme="brand"
                         leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -207,7 +212,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                         mt="8px"
                         ml="32px"
                         as={Link}
-                        to={`/project-details/${props.projectData?.id}`}
+                        to={`/project-details/${projectData?.id}`}
                         variant="outline"
                         colorScheme="brand"
                         leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
@@ -252,7 +257,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                       </Button>
                       <Button
                         as={Link}
-                        to={`/project-details/${props.projectData?.id}`}
+                        to={`/project-details/${projectData?.id}`}
                         mt="8px"
                         ml="32px"
                         variant="outline"
@@ -299,7 +304,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                       </Button>
                       <Button
                         as={Link}
-                        to={`/project-details/${props.projectData?.id}`}
+                        to={`/project-details/${projectData?.id}`}
                         mt="8px"
                         ml="32px"
                         variant="outline"
@@ -346,7 +351,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                       </Button>
                       <Button
                         as={Link}
-                        to={`/project-details/${props.projectData?.id}`}
+                        to={`/project-details/${projectData?.id}`}
                         mt="8px"
                         ml="32px"
                         variant="outline"

@@ -1,23 +1,19 @@
+import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
 import { useMemo } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { Client, ProjectType, State, User } from 'types/common.types'
-import { ProjectDetailsAPIPayload, ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.types'
+import {
+  DocumentPayload,
+  ProjectDetailsAPIPayload,
+  ProjectDetailsFormValues,
+  ProjectStatus,
+} from 'types/project-details.types'
 import { Market, Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
-
-export const useProjectDetails = (projectId?: string) => {
-  const client = useClient()
-
-  return useQuery<Project>(['project-details', projectId], async () => {
-    const response = await client(`projects/${projectId}`, { projectId })
-
-    return response?.data
-  })
-}
 
 export const useGetStateSelectOptions = () => {
   const client = useClient()
@@ -114,6 +110,7 @@ export const useGetClientSelectOptions = () => {
 
 export const useProjectDetailsUpdateMutation = () => {
   const client = useClient()
+  const toast = useToast()
 
   return useMutation(
     (payload: ProjectDetailsAPIPayload) => {
@@ -123,8 +120,15 @@ export const useProjectDetailsUpdateMutation = () => {
       })
     },
     {
-      onSuccess: data => {
-        console.log('onSuccess', data)
+      onSuccess: () => {
+        toast({
+          title: 'Project Details Updated',
+          description: 'Project details updated successfully',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
       },
     },
   )
@@ -142,7 +146,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
     if (!project) return []
 
     const projectStatus = project.projectStatus?.toLocaleLowerCase()
-    const numberOfWorkOrders = project.numberOfActiveWorkOrders
+    const numberOfWorkOrders = project.numberOfWorkOrders
     const numberOfCompletedWorkOrders = project.numberOfCompletedWorkOrders
     const numberOfPaidWorkOrders = project.numberOfPaidWorkOrders
     const sowNewAmount = project.sowNewAmount || 0
@@ -262,7 +266,7 @@ export const parseFormValuesFromAPIData = ({
   const sowNewAmount = project.sowNewAmount ?? 0
   const partialPayment = project.partialPayment ?? 0
   const overPayment = partialPayment - sowNewAmount
-  const remainingPayment = sowNewAmount - partialPayment
+  const remainingPayment = project.accountRecievable || 0
 
   return {
     // Project Management form values
@@ -308,9 +312,9 @@ export const parseFormValuesFromAPIData = ({
     // Location Form values
     address: project.streetAddress,
     city: project.city,
-    state: findOptionByValue(stateSelectOptions, project.state),
+    state: project.state,
     zip: project.zipCode,
-    market: findOptionByValue(marketSelectOptions, project.market),
+    market: project.market,
     gateCode: project.gateCode,
     lockBoxCode: project.lockBoxCode,
     hoaContactEmail: project.hoaEmailAddress,
@@ -338,7 +342,7 @@ const removePropertiesFromObject = (obj: Project, properties: string[]): Project
   return newObj
 }
 
-const createDocumentPayload = (file: File) => {
+const createDocumentPayload = (file: File): Promise<DocumentPayload> => {
   return new Promise((res, rej) => {
     const reader = new FileReader()
     let filetype = 'text/plain'
@@ -363,13 +367,13 @@ export const parseProjectDetailsPayloadFromFormData = async (
   project: Project,
 ): Promise<ProjectDetailsAPIPayload> => {
   const projectPayload = removePropertiesFromObject(project, ['projectManager'])
-  let attachment
+  let documents: Array<DocumentPayload> = []
 
   if (formValues?.invoiceAttachment) {
-    attachment = await createDocumentPayload(formValues.invoiceAttachment)
+    documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
 
-  console.log('attachment', attachment)
+  console.log('attachment', documents)
   return {
     ...projectPayload,
     // Project Management payload
@@ -388,9 +392,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,
     invoiceNumber: formValues?.invoiceNumber,
-    documents: attachment ? [attachment] : null,
+    documents,
     woaBackdatedInvoiceDate: dateISOFormat(formValues?.invoiceBackDate),
-    paymentTerm: formValues?.paymentTerms?.value,
+    paymentTerm: formValues?.paymentTerms?.value || null,
     woaInvoiceDate: dateISOFormat(formValues?.woaInvoiceDate),
     expectedPaymentDate: dateISOFormat(formValues?.woaExpectedPayDate),
     overPayment: formValues?.overPayment,
@@ -414,9 +418,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     // Location
     streetAddress: formValues?.address,
     city: formValues?.city,
-    state: formValues?.state?.value,
+    state: formValues?.state,
     zipCode: formValues?.zip,
-    market: formValues?.market?.value,
+    market: formValues?.market,
     gateCode: formValues?.gateCode,
     lockBoxCode: formValues?.lockBoxCode,
     hoaPhone: formValues?.hoaContactPhoneNumber,
@@ -426,20 +430,11 @@ export const parseProjectDetailsPayloadFromFormData = async (
     property: {
       streetAddress: formValues?.address,
       city: formValues?.city,
-      state: formValues?.state?.value,
+      state: formValues?.state,
       zipCode: formValues?.zip,
     },
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
-    activeDate: dateISOFormat(formValues?.activeDate),
-    punchDate: dateISOFormat(formValues?.punchDate),
-    closedDate: dateISOFormat(formValues?.closedDate),
-    clientPaidDate: dateISOFormat(formValues?.clientPaidDate),
-    disputedDate: dateISOFormat(formValues?.disputedDate),
-    collectionDate: dateISOFormat(formValues?.collectionDate),
-    woaPaidDate: dateISOFormat(formValues?.woaPaidDate),
-    dueDateVariance: formValues?.dueDateVariance,
-    payDateVariance: formValues?.payDateVariance,
   }
 }
