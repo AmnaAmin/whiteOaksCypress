@@ -27,4 +27,5 @@ export enum TableNames {
   alerts = 'alerts',
   pcproject = 'pc-project',
   vendors = 'vendors',
+  projectFinancialOverview = 'project-financial-overview',
 }
