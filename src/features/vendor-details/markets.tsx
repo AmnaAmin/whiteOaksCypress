@@ -42,17 +42,19 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
       <Box h="502px" overflow="auto">
         <Flex maxW="800px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
+            console.log('checkbox', checkbox, index)
             return (
               <Controller
                 name={`markets.${index}`}
                 control={control}
-                key={checkbox.id}
+                key={checkbox.market.id}
                 render={({ field: { name, onChange, value } }) => {
+                  console.log('value.checked', value.checked, name)
                   return (
                     <CheckboxButton
                       name={name}
-                      key={name}
-                      isChecked={value.checked}
+                      key={value.market.id}
+                      isChecked={checkbox.checked}
                       data-testid={`marketChecks.${value.market?.id}`}
                       onChange={event => {
                         const checked = event.target.checked
