@@ -29,6 +29,7 @@ import { currencyFormatter } from 'utils/stringFormatters'
 import { useTrades } from 'utils/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
 import NumberFormat from 'react-number-format'
+import { CustomRequiredInput } from 'components/input/input'
 
 const CalenderCard = props => {
   return (
@@ -71,10 +72,6 @@ const InformationCard = props => {
       </Box>
     </Flex>
   )
-}
-
-const CustomRequiredInput = props => {
-  return <Input {...props} variant="required-field" />
 }
 
 const NewWorkOrder: React.FC<{

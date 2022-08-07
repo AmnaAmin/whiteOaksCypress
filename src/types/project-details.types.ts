@@ -71,9 +71,9 @@ type ContactsFormValues = {
 type ProjectDetailsLocationFormValues = {
   address: string | null
   city: string | null
-  state: SelectOption | null
+  state: string | null
   zip: string | null
-  market: SelectOption | null
+  market: string | null
   gateCode: string | null
   lockBoxCode: string | null
   hoaContactPhoneNumber: string | null
@@ -102,6 +102,12 @@ export type ProjectDetailsFormValues = ProjectManagementValues &
   ProjectDetailsLocationFormValues &
   ProjectDetailsMiscFormValues
 
+export type DocumentPayload = {
+  fileType: string
+  fileObjectContentType: string
+  fileObject: string
+  documentType: number
+}
 export type ProjectDetailsAPIPayload = {
   id: number | null
 
@@ -121,7 +127,7 @@ export type ProjectDetailsAPIPayload = {
   sowOriginalContractAmount: number | null
   sowNewAmount: number | null
   invoiceNumber: string | null
-  documents?: any[] | null
+  documents?: DocumentPayload[] | null
   woaBackdatedInvoiceDate: string | null
   paymentTerm: string | null
   woaInvoiceDate: string | null
@@ -158,15 +164,15 @@ export type ProjectDetailsAPIPayload = {
 
   // Misc payload
   createdDate: string | null
-  activeDate: string | null
-  punchDate: string | null
-  closedDate: string | null
-  clientPaidDate: string | null
-  collectionDate: string | null
-  woaPaidDate: string | null
-  dueDateVariance: number | null
-  payDateVariance: number | null
-  payVariance: number | null
+  activeDate?: string | null
+  punchDate?: string | null
+  closedDate?: string | null
+  clientPaidDate?: string | null
+  collectionDate?: string | null
+  woaPaidDate?: string | null
+  dueDateVariance?: number | null
+  payDateVariance?: number | null
+  payVariance?: number | null
 
   // Other project Details payload
   signoffDateVariance: string | null
@@ -191,7 +197,7 @@ export type ProjectDetailsAPIPayload = {
   clientSignoffDate: string | null
   createdBy: string | null
   modifiedBy: string | null
-  disputedDate: string | null
+  disputedDate?: string | null
   modifiedDate: string | null
   partialPayment: number | null
   projectTypeLabel: string | null

@@ -27,23 +27,21 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 type LicenseProps = {
   vendor: VendorProfile
   onClose?: () => void
+  isActive: boolean
 }
 type licenseFormProps = {
   vendor: VendorProfile
   onClose?: () => void
+  isActive: boolean
 }
 export const License = React.forwardRef((props: LicenseProps, ref) => {
   return (
     <Box>
-      <LicenseForm vendor={props.vendor} onClose={props.onClose} />
+      <LicenseForm isActive={props.isActive} vendor={props.vendor} onClose={props.onClose} />
     </Box>
   )
 })
-export const LicenseForm = ({
-  vendor,
-
-  onClose,
-}: licenseFormProps) => {
+export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
 
@@ -129,7 +127,7 @@ export const LicenseForm = ({
                 name={`licenses.${index}.licenseType`}
                 control={control}
                 options={licenseTypes}
-                rules={{ required: 'This is required field' }}
+                rules={{ required: isActive && 'This is required field' }}
                 controlStyle={{ maxW: '215px' }}
                 elementStyle={{
                   bg: 'white',
@@ -146,7 +144,7 @@ export const LicenseForm = ({
                 elementStyle={{
                   bg: 'white',
                 }}
-                rules={{ required: 'This is required field' }}
+                rules={{ required: isActive && 'This is required field' }}
                 name={`licenses.${index}.licenseNumber`}
                 testId={`licenseNumber-` + index}
                 variant="required-field"
@@ -158,7 +156,7 @@ export const LicenseForm = ({
                 label={t('expiryDate')}
                 name={`licenses.${index}.expiryDate`}
                 control={control}
-                rules={{ required: 'This is required field' }}
+                rules={{ required: isActive && 'This is required field' }}
                 style={{ maxW: '215px', h: '92px' }}
                 defaultValue={startDate}
                 testId={`expiryDate-` + index}
@@ -171,7 +169,9 @@ export const LicenseForm = ({
                   <Controller
                     name={`licenses.${index}.expirationFile`}
                     control={control}
-                    rules={vendor?.licenseDocuments[index]?.s3Url ? {} : { required: 'This is required field' }}
+                    rules={
+                      vendor?.licenseDocuments[index]?.s3Url ? {} : { required: isActive && 'This is required field' }
+                    }
                     render={({ field, fieldState }) => {
                       return (
                         <VStack alignItems="baseline">

@@ -109,7 +109,7 @@ export const AddPropertyInfo: React.FC<{
         // Set State and Market w.r.t Address
         props?.markets.map(m => {
           if (m?.id === property?.marketId) {
-            setValue('newMarketId', {label: m?.metropolitanServiceArea, value: m?.id,})
+            setValue('newMarketId', { label: m?.metropolitanServiceArea, value: m?.id })
             setValue('state', { label: m?.stateName, value: m?.state })
           }
           return props?.markets
@@ -291,7 +291,7 @@ export const AddPropertyInfo: React.FC<{
               rules={{ required: 'This is required field' }}
               render={({ field, fieldState }) => (
                 <>
-                <Select
+                  <Select
                     {...field}
                     options={market}
                     size="md"
@@ -354,7 +354,7 @@ export const AddPropertyInfo: React.FC<{
             />
           </FormControl>
         </GridItem>
-        <GridItem  pb={1}>
+        <GridItem pb={1}>
           <FormControl>
             <FormInput
               errorMessage={errors?.hoaEmailAddress && errors?.hoaEmailAddress?.message}

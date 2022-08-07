@@ -26,6 +26,7 @@ import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
+import { FinancialOverviewTable } from 'features/project-coordinator/financial-overview-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -55,6 +56,7 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
@@ -64,7 +66,8 @@ export const ProjectDetails: React.FC = props => {
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
-        <AmountDetailsCard projectData={projectData as Project} isLoading={isLoading} />
+
+        {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
         {tabIndex === 1}
 
@@ -114,7 +117,11 @@ export const ProjectDetails: React.FC = props => {
                         <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
                           View Details
                         </FormLabel>
-                        <Switch size="sm" id="view-details" />
+                        <Switch
+                          size="sm"
+                          id="view-details"
+                          onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
+                        />
                       </FormControl>
                     </Box>
 
@@ -135,6 +142,11 @@ export const ProjectDetails: React.FC = props => {
             <TabPanels h="100%">
               <TabPanel p="0px" h="100%" mt="7px">
                 <Box h="100%">
+                  {isShowProjectFinancialOverview && (
+                    <Flex overflow={'auto'} mb="5" h="135px">
+                      <FinancialOverviewTable ref={tabsContainerRef} />
+                    </Flex>
+                  )}
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
@@ -169,7 +181,11 @@ export const ProjectDetails: React.FC = props => {
           </Tabs>
         </Stack>
 
-        <AddNewTransactionModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+        <AddNewTransactionModal
+          isOpen={isOpenTransactionModal}
+          onClose={onTransactionModalClose}
+          projectId={projectId as string}
+        />
         <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>

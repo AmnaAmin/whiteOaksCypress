@@ -49,7 +49,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients, onC
             </HStack>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-          <ModalBody justifyContent="center" >
+          <ModalBody justifyContent="center">
             <Box mt="18px">
               <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} onClose={onClose} />
             </Box>

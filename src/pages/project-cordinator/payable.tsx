@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
-import { useBatchProcessing, useCheckBatch } from 'utils/account-receivable'
+import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
 
 export const Payable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -36,7 +36,7 @@ export const Payable = () => {
   }
   const { handleSubmit, register } = useForm()
 
-  const { mutate: batchCall } = useBatchProcessing()
+  const { mutate: batchCall } = useBatchProcessingMutation()
 
   const Submit = e => {
     setLoading(true)
