@@ -1,7 +1,8 @@
 import { FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 
 import React from 'react'
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 
@@ -96,8 +97,25 @@ const Location: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber">
               HOA Contact Phone
             </FormLabel>
-            <Input border=" 1px solid #E2E8F0" id="hoaContactPhoneNumber" {...register('hoaContactPhoneNumber')} />
-            <FormErrorMessage>{errors?.hoaContactPhoneNumber?.message}</FormErrorMessage>
+            <Controller
+              control={control}
+              name="hoaContactPhoneNumber"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                      customInput={Input}
+                      value={field.value}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
           </FormControl>
         </GridItem>
         <GridItem>

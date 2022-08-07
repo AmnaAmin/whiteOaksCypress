@@ -12,6 +12,7 @@ import {
   VStack,
   Text,
 } from '@chakra-ui/react'
+import NumberFormat, { NumberFormatValues } from 'react-number-format'
 import addDays from 'date-fns/addDays'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
@@ -72,10 +73,12 @@ const InvoiceAndPayments: React.FC = () => {
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
 
-  const onPaymentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const payment = Number(e.target.value)
+  const onPaymentValueChange = (values: NumberFormatValues) => {
+    console.log(values)
+    const payment = Number(values.value)
     const overyPayment = payment - getValues().finalSOWAmount
 
+    console.log('payment', payment)
     setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
   }
 
@@ -88,15 +91,24 @@ const InvoiceAndPayments: React.FC = () => {
               <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
                 {t('originalSowAmount')}
               </FormLabel>
-              <Input
-                isDisabled={isOriginalSOWAmountDisabled}
-                id="originSowAmount"
-                {...register('originalSOWAmount', {
-                  required: 'This is required',
-                })}
-                placeholder="$3000.00"
+              <Controller
+                control={control}
+                name="originalSOWAmount"
+                render={({ field, fieldState }) => {
+                  return (
+                    <NumberFormat
+                      value={field.value}
+                      onChange={event => {
+                        field.onChange(event)
+                      }}
+                      disabled={isOriginalSOWAmountDisabled}
+                      customInput={Input}
+                      thousandSeparator={true}
+                      prefix={'$'}
+                    />
+                  )
+                }}
               />
-              <FormErrorMessage>{errors?.originalSOWAmount?.message}</FormErrorMessage>
             </FormControl>
             <Link
               download
@@ -118,7 +130,7 @@ const InvoiceAndPayments: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
               {t('finalSowAmount')}
             </FormLabel>
-            <Input
+            {/* <Input
               isDisabled={isFinalSOWAmountDisabled}
               id="finalSowAmount"
               {...register('finalSOWAmount', {
@@ -126,7 +138,25 @@ const InvoiceAndPayments: React.FC = () => {
               })}
               placeholder="$3000.00"
             />
-            <FormErrorMessage>{errors?.finalSOWAmount?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors?.finalSOWAmount?.message}</FormErrorMessage> */}
+            <Controller
+              control={control}
+              name="finalSOWAmount"
+              render={({ field, fieldState }) => {
+                return (
+                  <NumberFormat
+                    value={field.value}
+                    onChange={event => {
+                      field.onChange(event)
+                    }}
+                    disabled={isFinalSOWAmountDisabled}
+                    customInput={Input}
+                    thousandSeparator={true}
+                    prefix={'$'}
+                  />
+                )
+              }}
+            />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -156,19 +186,15 @@ const InvoiceAndPayments: React.FC = () => {
                       <ChooseFileField
                         name={field.name}
                         value={fileName}
+                        isRequired={isStatusInvoiced}
                         isError={!!fieldState.error?.message}
                         onChange={(file: any) => {
-                          // onFileChange(file)
                           field.onChange(file)
                         }}
-                        // onClear={() => setValue(field.name, null)}
-                      ></ChooseFileField>
+                      />
 
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </Box>
-                    {/* {field.value && (
-                      // <Box>{downloadDocument(document, field.value ? field.value?.name : 'doc.png')}</Box>
-                    )} */}
                   </VStack>
                 )
               }}
@@ -263,15 +289,23 @@ const InvoiceAndPayments: React.FC = () => {
             <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
               {t('overpayment')}
             </FormLabel>
-            <Input
-              isDisabled={isOverPaymentDisalbed}
-              id="overPayment"
-              {...register('overPayment')}
-              type="text"
-              w="215px"
-              size="md"
+
+            <Controller
+              control={control}
+              name="overPayment"
+              render={({ field }) => {
+                return (
+                  <NumberFormat
+                    value={field.value}
+                    onChange={e => field.onChange(e.target.value)}
+                    disabled={isOverPaymentDisalbed}
+                    customInput={Input}
+                    thousandSeparator={true}
+                    prefix={'$'}
+                  />
+                )
+              }}
             />
-            <FormErrorMessage>{errors.overPayment && errors.overPayment.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
@@ -279,16 +313,23 @@ const InvoiceAndPayments: React.FC = () => {
             <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
               {t('remainingPayment')}
             </FormLabel>
-            <Input
-              isDisabled={isRemainingPaymentDisabled}
-              id="remainingPayment"
-              // value={currencyFormatter(accountRecievable)}
-              {...register('remainingPayment')}
-              placeholder="$1200"
-              w="215px"
-              size="md"
+
+            <Controller
+              control={control}
+              name="remainingPayment"
+              render={({ field }) => {
+                return (
+                  <NumberFormat
+                    value={field.value}
+                    onChange={e => field.onChange(e.target.value)}
+                    disabled={isRemainingPaymentDisabled}
+                    customInput={Input}
+                    thousandSeparator={true}
+                    prefix={'$'}
+                  />
+                )
+              }}
             />
-            <FormErrorMessage>{errors.remainingPayment && errors.remainingPayment.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
@@ -296,18 +337,25 @@ const InvoiceAndPayments: React.FC = () => {
             <FormLabel htmlFor="payment" variant="strong-label" size="md">
               {t('payment')}
             </FormLabel>
-            <Input
-              isDisabled={isPaymentDisabled}
-              id="payment"
-              type="number"
-              {...register('payment', {
-                onChange: onPaymentChange,
-              })}
-              placeholder="$0"
-              w="215px"
-              size="md"
+            <Controller
+              control={control}
+              name="payment"
+              render={({ field, fieldState }) => {
+                return (
+                  <NumberFormat
+                    value={field.value}
+                    onValueChange={(values: NumberFormatValues) => {
+                      onPaymentValueChange(values)
+                      field.onChange(values.value)
+                    }}
+                    disabled={isPaymentDisabled}
+                    customInput={Input}
+                    thousandSeparator={true}
+                    prefix={'$'}
+                  />
+                )
+              }}
             />
-            <FormErrorMessage>{errors.payment && errors.payment.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
       </Grid>
