@@ -60,8 +60,22 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
     return response?.data
   })
 
-  const settingColumns = savedColumns?.length
-    ? savedColumns.map((col, index) => {
+  let settingColumns: TableColumnSetting[] = []
+
+  if ((savedColumns?.length || 0) < columns.length) {
+    settingColumns = columns.map((col, index) => {
+      return generateSettingColumn({
+        field: col.Header as string,
+        contentKey: col.accessor as string,
+        order: index,
+        userId: email,
+        type: tableName,
+        hide: false,
+      })
+    })
+  } else {
+    settingColumns =
+      savedColumns?.map((col, index) => {
         return generateSettingColumn({
           field: t(col.colId),
           contentKey: col.contentKey as string,
@@ -70,17 +84,8 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
           type: tableName,
           hide: col.hide,
         })
-      })
-    : columns.map((col, index) => {
-        return generateSettingColumn({
-          field: col.Header as string,
-          contentKey: col.accessor as string,
-          order: index,
-          userId: email,
-          type: tableName,
-          hide: false,
-        })
-      })
+      }) || []
+  }
 
   const filteredColumns = columns.filter(col => {
     return !settingColumns?.find(pCol => {
