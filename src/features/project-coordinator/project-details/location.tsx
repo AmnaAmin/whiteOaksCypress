@@ -1,7 +1,8 @@
 import { FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
-import ReactSelect from 'components/form/react-select'
+
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 
@@ -15,7 +16,6 @@ const Location: React.FC = () => {
   const {
     isAddressDisabled,
     isCityDisabled,
-    isStateDisabled,
     isZipDisabled,
     isGateCodeDisabled,
     isMarketDisabled,
@@ -48,17 +48,7 @@ const Location: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="state">
               State
             </FormLabel>
-            <Controller
-              control={control}
-              name="state"
-              // rules={{ required: 'This is required' }}
-              render={({ field, fieldState }) => (
-                <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} isDisabled={isStateDisabled} />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
+            <Input isDisabled={isCityDisabled} id="state" {...register('state')} />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -75,16 +65,7 @@ const Location: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="market">
               Market
             </FormLabel>
-            <Controller
-              control={control}
-              name="market"
-              render={({ field, fieldState }) => (
-                <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} isDisabled={isMarketDisabled} />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
+            <Input isDisabled={isMarketDisabled} id="market" {...register('market')} />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -116,8 +97,25 @@ const Location: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber">
               HOA Contact Phone
             </FormLabel>
-            <Input border=" 1px solid #E2E8F0" id="hoaContactPhoneNumber" {...register('hoaContactPhoneNumber')} />
-            <FormErrorMessage>{errors?.hoaContactPhoneNumber?.message}</FormErrorMessage>
+            <Controller
+              control={control}
+              name="hoaContactPhoneNumber"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                      customInput={Input}
+                      value={field.value}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
           </FormControl>
         </GridItem>
         <GridItem>

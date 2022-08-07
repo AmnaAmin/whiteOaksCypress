@@ -14,147 +14,44 @@ import {
   Flex,
   FormErrorMessage,
   Spacer,
-  useToast,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import React, { useEffect, useMemo } from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useQueryClient } from 'react-query'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useStates } from 'utils/pc-projects'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
+  parseMarketAPIDataToFormValues,
+  parseTradeAPIDataToFormValues,
   parseVendorAPIDataToFormData,
-  parseVendorFormDataToAPIData,
-  useCreateVendorMutation,
+  useMarkets,
   usePaymentMethods,
-  useVendorProfileUpdateMutation,
+  useTrades,
+  useVendorNext,
 } from 'utils/vendor-details'
 import { documentStatus, documentScore } from 'utils/vendor-projects'
 import first from 'lodash/first'
+import NumberFormat from 'react-number-format'
+import { CustomInput, CustomRequiredInput } from 'components/input/input'
 const PcDetails: React.FC<{
   onClose?: () => void
-  VendorType?: string
-  updateVendorId?: (number) => void
-
   vendorProfileData: VendorProfile
-}> = ({ onClose, VendorType, vendorProfileData, updateVendorId }) => {
-  const toast = useToast()
+  isActive: boolean
+}> = ({ onClose, vendorProfileData, isActive }) => {
   const { t } = useTranslation()
-  const { mutate: updateVendorProfileDetails } = useVendorProfileUpdateMutation()
-  const { mutate: createVendorProfileDetails } = useCreateVendorMutation()
-  const queryClient = useQueryClient()
+
   const { data: paymentsMethods } = usePaymentMethods()
   const { data: statesData } = useStates()
-
-  const submitForm = useCallback(
-    (formData: VendorProfileDetailsFormData) => {
-      const payload = parseVendorFormDataToAPIData(vendorProfileData, formData, paymentsMethods)
-      if (vendorProfileData?.id) {
-        updateVendorProfileDetails(payload, {
-          onSuccess() {
-            queryClient.invalidateQueries('vendorProfile')
-            toast({
-              title: t('updateProfile'),
-              description: t('updateProfileSuccess'),
-              status: 'success',
-              isClosable: true,
-            })
-          },
-          onError(error: any) {
-            toast({
-              title: 'Update Vendor',
-              description: (error.title as string) ?? 'Unable to save project.',
-              status: 'error',
-              isClosable: true,
-            })
-          },
-        })
-      } else {
-        createVendorProfileDetails(payload, {
-          onSuccess(res: any) {
-            updateVendorId?.(res?.data?.id)
-            toast({
-              title: 'Create Vendor',
-              description: t('updateProfileSuccess'),
-              status: 'success',
-              isClosable: true,
-            })
-          },
-          onError(error: any) {
-            toast({
-              title: 'Create Vendor',
-              description: (error.title as string) ?? 'Unable to create project.',
-              status: 'error',
-              isClosable: true,
-            })
-          },
-        })
-      }
-    },
-    [toast, updateVendorProfileDetails, vendorProfileData, paymentsMethods],
-  )
   const {
-    register,
-    control,
-    handleSubmit,
     formState: { errors },
-    setValue,
-    reset,
-  } = useForm<VendorProfileDetailsFormData>({
-    defaultValues: {
-      ownerName: '',
-      secondName: '',
-      businessPhoneNumber: '',
-      businessPhoneNumberExtension: '',
-      secondPhoneNumber: '',
-      secondPhoneNumberExtension: '',
-      businessEmailAddress: '',
-      secondEmailAddress: '',
-      companyName: '',
-      score: undefined,
-      status: undefined,
-      state: undefined,
-      paymentTerm: undefined,
-      streetAddress: '',
-      city: '',
-      zipCode: '',
-      capacity: null,
-      einNumber: '',
-      ssnNumber: '',
-    },
-  })
+    control,
+    register,
+  } = useFormContext<VendorProfileDetailsFormData>()
+  const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
-
-  useEffect(() => {
-    if (!vendorProfileData) {
-      setValue('score', first(documentScore))
-      setValue('status', first(documentStatus))
-      return
-    }
-  }, [vendorProfileData])
-
-  useEffect(() => {
-    if (!vendorProfileData) return
-    reset(parseVendorAPIDataToFormData(vendorProfileData))
-    const state = statesData?.find(s => s.code === vendorProfileData.state)
-    setValue(
-      'score',
-      documentScore.find(s => s.value === vendorProfileData.score),
-    )
-    setValue(
-      'status',
-      documentStatus.find(s => s.value === vendorProfileData.status),
-    )
-    setValue('state', { label: state?.name, value: state?.code })
-    setValue(
-      'paymentTerm',
-      PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),
-    )
-  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS])
-
   const states = useMemo(
     () =>
       statesData?.map(state => ({
@@ -166,7 +63,7 @@ const PcDetails: React.FC<{
 
   return (
     <Stack spacing={3}>
-      <form onSubmit={handleSubmit(submitForm)}>
+      <Box height="498px" overflow="auto">
         <HStack spacing="16px">
           <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
@@ -177,7 +74,7 @@ const PcDetails: React.FC<{
               id="companyName"
               variant="required-field"
               {...register('companyName', {
-                required: 'This is required',
+                required: isActive && 'This is required',
               })}
               size="md"
             />
@@ -190,7 +87,7 @@ const PcDetails: React.FC<{
             <Controller
               control={control}
               name="score"
-              rules={{ required: 'This is required' }}
+              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect options={documentScore} {...field} selectProps={{ isBorderLeft: true }} />
@@ -206,7 +103,7 @@ const PcDetails: React.FC<{
             <Controller
               control={control}
               name="status"
-              rules={{ required: 'This is required' }}
+              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
@@ -224,7 +121,7 @@ const PcDetails: React.FC<{
             <Input
               type="text"
               {...register('ownerName', {
-                required: 'This is required',
+                required: isActive && 'This is required',
               })}
               variant="required-field"
               size="md"
@@ -238,7 +135,7 @@ const PcDetails: React.FC<{
             <Input
               type="email"
               {...register('businessEmailAddress', {
-                required: 'This is required',
+                required: isActive && 'This is required',
               })}
               variant="required-field"
               size="md"
@@ -269,30 +166,26 @@ const PcDetails: React.FC<{
                 {t('businessPhoneNo')}
               </FormLabel>
               <Controller
-                name="businessPhoneNumber"
                 control={control}
-                render={({ field }) => {
+                rules={{ required: isActive && 'This is required' }}
+                name="businessPhoneNumber"
+                render={({ field, fieldState }) => {
                   return (
-                    <Input
-                      {...field}
-                      // {...register('businessPhoneNumber')}
-                      w="215px"
-                      variant="outline"
-                      size="md"
-                      onChange={event => {
-                        const value = event.currentTarget.value
-                        const denormarlizedValue = value.split('-').join('')
-
-                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
-                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
-                          maskValue?.[3] || '____'
-                        }`
-                        field.onChange(actualValue)
-                      }}
-                    />
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomRequiredInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
                   )
                 }}
-              />
+              ></Controller>
             </FormControl>
           </Box>
           <Flex>
@@ -311,29 +204,25 @@ const PcDetails: React.FC<{
                 {t('secondaryPhoneNo')}
               </FormLabel>
               <Controller
-                name="secondPhoneNumber"
                 control={control}
-                render={({ field }) => {
+                name="secondPhoneNumber"
+                render={({ field, fieldState }) => {
                   return (
-                    <Input
-                      {...field}
-                      w="215px"
-                      variant="outline"
-                      size="md"
-                      onChange={event => {
-                        const value = event.currentTarget.value
-                        const denormarlizedValue = value.split('-').join('')
-
-                        const maskValue = denormarlizedValue?.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/)
-                        const actualValue = `(${maskValue?.[1] || '___'})-${maskValue?.[2] || '___'}-${
-                          maskValue?.[3] || '____'
-                        }`
-                        field.onChange(actualValue)
-                      }}
-                    />
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
                   )
                 }}
-              />
+              ></Controller>
             </FormControl>
           </Box>
           <Box w="109px">
@@ -356,7 +245,7 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('streetAddress', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -373,7 +262,7 @@ const PcDetails: React.FC<{
               <Input
                 type="text"
                 {...register('city', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -390,10 +279,15 @@ const PcDetails: React.FC<{
               <Controller
                 control={control}
                 name="state"
-                rules={{ required: 'This is required' }}
+                rules={{ required: isActive && 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect options={states} {...field} />
+                    <ReactSelect
+                      menuPosition="fixed"
+                      options={states}
+                      {...field}
+                      selectProps={{ isBorderLeft: true }}
+                    />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
@@ -408,7 +302,7 @@ const PcDetails: React.FC<{
               <Input
                 type="number"
                 {...register('zipCode', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -425,7 +319,7 @@ const PcDetails: React.FC<{
               <Input
                 type="number"
                 {...register('capacity', {
-                  required: 'This is required',
+                  required: isActive && 'This is required',
                 })}
                 w="215px"
                 variant="required-field"
@@ -437,17 +331,29 @@ const PcDetails: React.FC<{
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
-                EIN
+                {t('ein')}
               </FormLabel>
-              <Input
-                type="string"
-                {...register('einNumber', {
-                  required: ssnNumber ? '' : 'This is required',
-                })}
-                w="215px"
-                variant={ssnNumber ? 'outline' : 'required-field'}
-                size="md"
-              />
+              <Controller
+                control={control}
+                name="einNumber"
+                rules={{ required: ssnNumber ? '' : isActive && 'This is required' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={ssnNumber ? CustomInput : CustomRequiredInput}
+                        format="##-#######"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
               <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -456,15 +362,27 @@ const PcDetails: React.FC<{
               <FormLabel variant="strong-label" size="md">
                 {t('sin')}
               </FormLabel>
-              <Input
-                type="text"
-                {...register('ssnNumber', {
-                  required: einNumber ? '' : 'This is required',
-                })}
-                w="215px"
-                variant={einNumber ? 'outline' : 'required-field'}
-                size="md"
-              />
+              <Controller
+                control={control}
+                name="ssnNumber"
+                rules={{ required: einNumber ? '' : isActive && 'This is required' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={einNumber ? CustomInput : CustomRequiredInput}
+                        format="###-##-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
               <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -481,10 +399,15 @@ const PcDetails: React.FC<{
                 <Controller
                   control={control}
                   name="paymentTerm"
-                  rules={{ required: 'This is required' }}
+                  rules={{ required: isActive && 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
-                      <ReactSelect options={PAYMENT_TERMS_OPTIONS} {...field} selectProps={{ isBorderLeft: true }} />
+                      <ReactSelect
+                        options={PAYMENT_TERMS_OPTIONS}
+                        menuPosition="fixed"
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                      />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )}
@@ -503,27 +426,85 @@ const PcDetails: React.FC<{
             </VStack>
           </Stack>
         </Box>
-        <HStack
-          height="72px"
-          pt="8px"
-          mt="30px"
-          id="footer"
-          borderTop="2px solid #E2E8F0"
-          justifyContent="end"
-          spacing="16px"
-        >
-          {onClose && (
-            <Button variant="outline" colorScheme="brand" onClick={onClose}>
-              {t('cancel')}
-            </Button>
-          )}
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-            {t('save')}
+      </Box>
+
+      <HStack
+        height="72px"
+        pt="8px"
+        mt="30px"
+        id="footer"
+        borderTop="2px solid #E2E8F0"
+        justifyContent="end"
+        spacing="16px"
+      >
+        {onClose && (
+          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+            {t('cancel')}
           </Button>
-        </HStack>
-      </form>
+        )}
+        <Button
+          disabled={disableDetailsNext}
+          type="submit"
+          data-testid="saveDocumentCards"
+          variant="solid"
+          colorScheme="brand"
+        >
+          {vendorProfileData?.id ? t('save') : t('next')}
+        </Button>
+      </HStack>
     </Stack>
   )
+}
+
+export const useVendorDetails = ({ form, vendorProfileData }) => {
+  const { data: statesData } = useStates()
+  const { setValue, reset } = form
+  const { markets } = useMarkets()
+  const { data: trades } = useTrades()
+
+  useEffect(() => {
+    if (!vendorProfileData) {
+      setValue('score', first(documentScore))
+      setValue('status', first(documentStatus))
+      if (markets?.length) {
+        const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
+        setValue('markets', tradeFormValues.markets)
+      }
+
+      if (trades?.length) {
+        const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
+        setValue('trades', tradeFormValues.trades)
+      }
+    }
+  }, [vendorProfileData, markets, trades])
+
+  useEffect(() => {
+    if (!vendorProfileData) return
+    reset(parseVendorAPIDataToFormData(vendorProfileData))
+    const state = statesData?.find(s => s.code === vendorProfileData.state)
+    setValue(
+      'score',
+      documentScore.find(s => s.value === vendorProfileData.score),
+    )
+    setValue(
+      'status',
+      documentStatus.find(s => s.value === vendorProfileData.status),
+    )
+    setValue('state', { label: state?.name, value: state?.code })
+    setValue(
+      'paymentTerm',
+      PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),
+    )
+    if (markets?.length && vendorProfileData) {
+      const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
+      setValue('markets', tradeFormValues.markets)
+    }
+
+    if (trades?.length) {
+      const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
+      setValue('trades', tradeFormValues.trades)
+    }
+  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS, markets, trades])
 }
 
 export default PcDetails

@@ -24,6 +24,8 @@ import { convertImageToDataURL } from 'components/table/util'
 import { createForm } from './lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
+import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -560,11 +562,14 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -587,11 +592,16 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },

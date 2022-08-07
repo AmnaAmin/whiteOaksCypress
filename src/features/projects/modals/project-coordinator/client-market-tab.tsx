@@ -12,13 +12,6 @@ type clientDetailProps = {
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { data: markets } = useMarkets()
 
-  // const clientMarket = props?.clientDetails?.markets
-  //   ? props?.clientDetails?.markets?.map(market => ({
-  //       label: market?.metropolitanServiceArea,
-  //       value: market?.id,
-  //     }))
-  //   : null
-
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
@@ -30,17 +23,12 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
       <Box h="400px" overflow="auto">
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {markets?.map(m => {
-            // clientMarket?.map(cm => {
-            //   if (m?.metropolitanServiceArea === cm?.label){
-            //      return <CheckboxButton isChecked>{cm?.label}</CheckboxButton>
-            //  }
-            // })
-            return <CheckboxButton>{m?.metropolitanServiceArea}</CheckboxButton>
+            return (
+              <CheckboxButton isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}>
+                {m?.metropolitanServiceArea}
+              </CheckboxButton>
+            )
           })}
-
-          {/* {clientMarket?.map(cm => {
-                  return <CheckboxButton isChecked>{cm?.label}</CheckboxButton>
-            })} */}
         </Flex>
       </Box>
       <Flex style={btnStyle} py={4} pt={5}>
