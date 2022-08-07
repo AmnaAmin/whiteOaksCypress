@@ -401,7 +401,9 @@ i18n.use(initReactI18next).init({
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
 
-        //PC projectDetails
+        // **** PROJECT COORDINATOR ****//
+        
+        // PC projectDetails
         projectCoordinator: 'Project Coordinator',
         fieldProjectManager: 'Field Project Manager',
         superName: 'Super Name',
@@ -423,6 +425,16 @@ i18n.use(initReactI18next).init({
         clientName: 'Client Name',
         zipCode: 'Zip Code',
         projectTypeLabel: 'Type',
+
+        // PC Clients
+        clientOverview:'Client Overview',
+        // businessName: 'Business Name',
+        // accountPayable: 'Account Payable',
+        paymentMethod: 'Payment Method',
+        accPayConInfo:'Accounts Payable contact details',
+        creditCard: 'Credit Card',
+        ach: 'ACH',
+        comment: 'Comment',
       },
     },
     es: {
@@ -465,22 +477,22 @@ i18n.use(initReactI18next).init({
         clientOriginalAmount: 'Importe original del cliente',
         clientFinalApprovedAmount: 'Cantidad final aprobada por el cliente',
 
-        // work order details
+        // Work order details
         vendorName: 'nombre del vendedor',
         vendorType: 'tipo de vendedor',
-        phoneNo: 'telefono no',
-        woIssued: 'wo emitido',
+        phoneNo: 'Telefono no',
+        woIssued: 'WO emitido',
         lwSubmitted: 'LW Submitted',
-        permittedPulled: 'permitido tirado',
+        permittedPulled: 'Permitido tirado',
         completionVariance: 'Variación de finalización',
-        cancelWorkOrder: 'cancelar orden de trabajo',
+        cancelWorkOrder: 'Cancelar orden de trabajo',
         // Project details
         originalSowAmount: 'Importe de la SOW original',
         finalSowAmount: 'Importe de la SOW final',
         paymentsTerms: 'Condiciones de pago',
         woaExpectedPay: 'Pago esperado de WOA',
         downloadOriginalSow: 'Descargar SOW original',
-        overpayment: 'sobrepago',
+        overpayment: 'Sobrepago',
         remainingPayment: 'pago restante',
         payment: 'Pago',
         invoiceBackDate: 'Reembolso de factura',
@@ -821,7 +833,17 @@ i18n.use(initReactI18next).init({
         support: 'Apoyo',
         signOut: 'Desconectar',
 
-        // -- PROJECT COORDINATOR -- //
+        // **** PROJECT COORDINATOR ****//
+
+        // PC Clients
+        clientOverview:'Descripción general del cliente',
+        // businessName: 'Nombre del Negocio',
+        accountPayable: 'Cuenta por pagar',
+        paymentMethod: 'Método de pago',
+        accPayConInfo:'Datos de contacto de cuentas por pagar',
+        creditCard: 'Crédito',
+        ach: 'ACH',
+        comment: 'Comentario',
 
         // Alerts
         triggeredAlerts: 'Alertas activadas',
