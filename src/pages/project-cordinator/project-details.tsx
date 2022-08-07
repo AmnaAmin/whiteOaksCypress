@@ -22,8 +22,8 @@ import AddNewTransactionModal from 'features/projects/transactions/add-transacti
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
-import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
+// import { AlertStatusModal } from 'features/projects/alerts/alert-status'
+// import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 import { FinancialOverviewTable } from 'features/project-coordinator/financial-overview-table'
@@ -37,7 +37,7 @@ export const ProjectDetails: React.FC = props => {
   const [tabIndex, setTabIndex] = useState(0)
   const [notesCount, setNotesCount] = useState(0)
 
-  const [alertRow, selectedAlertRow] = useState(true)
+  // const [alertRow, selectedAlertRow] = useState(true)
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -55,7 +55,7 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  // const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
@@ -164,7 +164,7 @@ export const ProjectDetails: React.FC = props => {
                 <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
 
-              <TabPanel px="0">
+              {/* <TabPanel px="0">
                 <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
@@ -172,7 +172,7 @@ export const ProjectDetails: React.FC = props => {
                   }}
                   ref={tabsContainerRef}
                 />
-              </TabPanel>
+              </TabPanel> */}
 
               <TabPanel px="0">
                 <ProjectNotes projectId={projectId} setNotesCount={setNotesCount} />
@@ -186,7 +186,7 @@ export const ProjectDetails: React.FC = props => {
           onClose={onTransactionModalClose}
           projectId={projectId as string}
         />
-        <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
+        {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
     </>
