@@ -6,9 +6,18 @@ type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   onClear?: () => void
   isError?: boolean
   testId?: string
+  isRequired?: boolean
 }
 
-const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, onClear, isError, ...inputProps }) => {
+const ChooseFileField: React.FC<ChooseFileProps> = ({
+  children,
+  value,
+  testId,
+  onClear,
+  isError,
+  isRequired,
+  ...inputProps
+}) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const onFileChange = event => {
     const file = event.currentTarget.files?.[0]
@@ -33,8 +42,10 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       rounded="6"
       onClick={onFileClear}
       bg="white"
+      borderLeft={isRequired ? '2px solid #4e87f8' : '1px solid #E2E8F0'}
       _hover={{
         borderColor: 'gray.300',
+        borderLeft: isRequired ? '2px solid #4e87f8' : '1px solid #E2E8F0',
       }}
     >
       <input
