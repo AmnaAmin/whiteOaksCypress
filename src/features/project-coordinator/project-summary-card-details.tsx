@@ -20,7 +20,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
   )
 }
 
-export const TransactionInfoCardDetails: React.FC<{
+export const ProjectSummaryCardDetails: React.FC<{
   projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
@@ -79,7 +79,7 @@ export const TransactionInfoCardDetails: React.FC<{
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={'Project Coordinator Contact'} isLoading={isLoading}>
+        <InfoStructureCard title={'Project Coordinator Contact'} isLoading={isLoading} borderRight="1px solid white">
           <FormLabel variant="light-label" size="md" width="100px">
             {account?.telephoneNumber}
           </FormLabel>

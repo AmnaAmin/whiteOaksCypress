@@ -3,7 +3,7 @@ import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } fro
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
+import { ProjectSummaryCard } from 'features/project-coordinator/project-summary-card'
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
 // import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
@@ -65,7 +65,7 @@ export const ProjectDetails: React.FC = props => {
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
+        <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
 
         {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
