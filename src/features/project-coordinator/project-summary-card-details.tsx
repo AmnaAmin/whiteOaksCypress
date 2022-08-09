@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, HStack, VStack, Tooltip, FormLabel } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, Tooltip, FormLabel } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
