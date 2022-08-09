@@ -60,7 +60,9 @@ export const LienWaiverTab: React.FC<any> = props => {
       ],
       ['desc'],
     )
-    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
+    const signatureDoc = orderDocs.find(
+      doc => parseInt(doc.documentType, 10) === 108 && lienWaiverData.id === doc.workOrderId,
+    )
 
     setClaimantsSignature(signatureDoc?.s3Url ?? '')
   }, [documentsData, setValue, lienWaiverData])
