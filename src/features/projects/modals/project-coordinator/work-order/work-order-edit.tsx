@@ -61,6 +61,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     if (workOrder) {
       onOpen()
       setRejectInvoice(workOrder.status === 111)
+      if (workOrder.leanWaiverSubmitted) {
+        setRejectLW(!workOrder.lienWaiverAccepted)
+      }
       if (!projId) {
         setProjId(workOrder?.projectId?.toString())
       }
@@ -120,9 +123,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   </Tab>
                   {tabIndex === 1 && (
                     <Center w="100%" justifyContent="end">
-                      {workOrder?.claimantTitle && (
+                      {workOrder?.leanWaiverSubmitted && workOrder.dateLeanWaiverSubmitted && (
                         <Checkbox
                           onChange={() => setRejectLW(!rejectLW)}
+                          isChecked={rejectLW}
+                          disabled={!workOrder.lienWaiverAccepted}
                           color="#4A5568"
                           fontSize="14px"
                           fontWeight={500}

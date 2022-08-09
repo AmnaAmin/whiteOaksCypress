@@ -137,14 +137,18 @@ export const LienWaiverTab: React.FC<any> = props => {
                     controlStyle={{ w: '207px' }}
                     label="Date of signature"
                     InputElem={
-                      <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
+                      <>
+                        {lienWaiverData.lienWaiverAccepted && lienWaiverData.dateOfSignature
+                          ? dateFormatter(lienWaiverData.dateOfSignature)
+                          : 'mm/dd/yy'}
+                      </>
                     }
                   />
                   <InputView
                     controlStyle={{ w: '207px' }}
                     label="Claimant Signature"
                     InputElem={
-                      claimantsSignature ? (
+                      lienWaiverData.lienWaiverAccepted && claimantsSignature ? (
                         <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                       ) : (
                         <></>
