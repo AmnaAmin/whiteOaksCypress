@@ -12,7 +12,7 @@ import {
   ModalBody,
   HStack,
 } from '@chakra-ui/react'
-import { BiCalendar } from 'react-icons/bi'
+import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'utils/vendor-projects'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -56,7 +56,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave } = props
+  const { workOrder, onSave, navigateToProjectDetails } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -293,7 +293,20 @@ const PaymentInfoTab = props => {
           </Box>
         </ModalBody>
         <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
-          <HStack spacing="16px" justifyContent="end">
+          <HStack justifyContent="start" w="100%">
+            {navigateToProjectDetails && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={navigateToProjectDetails}
+                leftIcon={<BiSpreadsheet />}
+              >
+                {t('seeProjectDetails')}
+              </Button>
+            )}
+          </HStack>
+          <HStack justifyContent="end">
             <Button variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('close')}
             </Button>
