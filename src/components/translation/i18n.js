@@ -402,7 +402,7 @@ i18n.use(initReactI18next).init({
         recipientPhoneNo: 'Recipient Phone No',
 
         // **** PROJECT COORDINATOR ****//
-        
+
         // PC projectDetails
         projectCoordinator: 'Project Coordinator',
         fieldProjectManager: 'Field Project Manager',
@@ -427,11 +427,11 @@ i18n.use(initReactI18next).init({
         projectTypeLabel: 'Type',
 
         // PC Clients
-        clientOverview:'Client Overview',
+        clientOverview: 'Client Overview',
         // businessName: 'Business Name',
         // accountPayable: 'Account Payable',
         paymentMethod: 'Payment Method',
-        accPayConInfo:'Accounts Payable contact details',
+        accPayConInfo: 'Accounts Payable contact details',
         creditCard: 'Credit Card',
         ach: 'ACH',
         comment: 'Comment',
@@ -836,11 +836,11 @@ i18n.use(initReactI18next).init({
         // **** PROJECT COORDINATOR ****//
 
         // PC Clients
-        clientOverview:'Descripción general del cliente',
+        clientOverview: 'Descripción general del cliente',
         // businessName: 'Nombre del Negocio',
         accountPayable: 'Cuenta por pagar',
         paymentMethod: 'Método de pago',
-        accPayConInfo:'Datos de contacto de cuentas por pagar',
+        accPayConInfo: 'Datos de contacto de cuentas por pagar',
         creditCard: 'Crédito',
         ach: 'ACH',
         comment: 'Comentario',
