@@ -94,7 +94,7 @@ export function useCustomTable(props: TableProps, ...rest) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [{ id: 'id', desc: true, ...props.sortBy }],
+        sortBy: [],
       },
     },
     useBlockLayout,
