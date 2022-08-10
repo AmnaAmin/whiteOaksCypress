@@ -32,7 +32,7 @@ const CalenderCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date}
         </Text>
       </Box>
@@ -47,7 +47,7 @@ const InformationCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -59,7 +59,7 @@ const PaymentInfoTab = props => {
   const { workOrder, onSave } = props
 
   const { t } = useTranslation()
-  const { leanWaiverSubmitted, paymentTermDate, durationCategory } = props.workOrder
+  const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
 
   interface FormValues {
     dateInvoiceSubmitted: string | null
@@ -100,10 +100,13 @@ const PaymentInfoTab = props => {
           <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
             <CalenderCard
               title={t('lwDate')}
-              date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'}
+              date={dateLeanWaiverSubmitted ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
             />
-            <CalenderCard title={t('permitDate')} date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-            <InformationCard title={t('payDateVariance')} date={durationCategory} />
+            <CalenderCard
+              title={t('permitDate')}
+              date={datePermitsPulled ? dateFormat(datePermitsPulled) : 'mm/dd/yyyy'}
+            />
+            <InformationCard title={t('payDateVariance')} date={workOrderPayDateVariance} />
           </SimpleGrid>
 
           <Box mt={10}>

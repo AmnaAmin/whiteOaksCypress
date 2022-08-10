@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form'
 import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useTranslation } from 'react-i18next'
-import { dateFormatter } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { defaultValuesLienWaiver } from 'utils/work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
@@ -141,7 +141,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     InputElem={
                       <>
                         {lienWaiverData.lienWaiverAccepted && lienWaiverData.dateOfSignature
-                          ? dateFormatter(lienWaiverData.dateOfSignature)
+                          ? dateFormat(lienWaiverData.dateOfSignature)
                           : 'mm/dd/yy'}
                       </>
                     }

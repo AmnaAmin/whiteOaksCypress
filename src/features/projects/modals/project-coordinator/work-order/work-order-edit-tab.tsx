@@ -151,7 +151,7 @@ const WorkOrderDetailTab = props => {
     workOrderIssueDate,
     dateLeanWaiverSubmitted,
     datePermitsPulled,
-    durationCategory,
+    workOrderCompletionDateVariance,
   } = props.workOrder
 
   const onSubmit = values => {
@@ -177,7 +177,7 @@ const WorkOrderDetailTab = props => {
               <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
               <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
               <CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />
-              <CalenderCard title=" Completion Variance" date={durationCategory} />
+              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
