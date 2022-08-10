@@ -125,8 +125,6 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
       title: option?.label,
     })) || []
 
-  console.log('optionsMapped', optionsMapped)
-
   return (
     <ReactSelect
       {...props}
@@ -135,7 +133,6 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
       components={{
         IndicatorSeparator: false,
         SingleValue: option => {
-          console.log('option', option)
           return (
             <Flex title={option.children as string} position="absolute">
               <Text isTruncated whiteSpace="nowrap" maxW="148px">
