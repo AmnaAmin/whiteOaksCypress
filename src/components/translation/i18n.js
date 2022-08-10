@@ -52,7 +52,6 @@ i18n.use(initReactI18next).init({
         completed: 'Completed',
         pendingTransaction: 'Pending Transaction',
         pastDueWO: 'Past Due WO',
-        id: 'ID',
         type: 'Type',
         status: 'Status',
         newVendor: 'New Vendor',
@@ -77,6 +76,13 @@ i18n.use(initReactI18next).init({
         woNo: 'WO Po',
         checkbox: 'Checkbox',
         clearFilter: 'Clear Filter',
+
+        // Payable
+        propertyAddress: 'Property Address',
+        vendorAddress: 'Vendor Address',
+        wOCompletedDate: 'WO Completed Date',
+        wOIssueDate: 'WO Issue Date',
+        id: 'ID',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',
@@ -532,7 +538,6 @@ i18n.use(initReactI18next).init({
         completed: 'Terminado',
         pendingTransaction: 'Transacción Pendiente',
         pastDueWO: 'Atrasado WO',
-        id: 'ID',
         type: 'Escribe',
         WOstatus: 'Estado WO',
         address: 'Habla a',
@@ -553,6 +558,13 @@ i18n.use(initReactI18next).init({
         woNo: 'OT No',
         checkbox: 'Caja',
         clearFilter: 'Filtro claro',
+
+        // Payable
+        propertyAddress: 'Dirección de Propiedad',
+        vendorAddress: 'Dirección del proveedor',
+        wOCompletedDate: 'Fecha de finalización de la OT',
+        wOIssueDate: 'Fecha de emisión de OT',
+        id: 'IDENTIFICACIÓN',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Escribe',

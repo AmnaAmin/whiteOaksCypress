@@ -59,70 +59,68 @@ export const Payable = () => {
     setIsBatchClick(false)
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const PAYABLE_COLUMNS = [
     {
-      Header: 'ID',
+      Header: t('id'),
       accessor: 'projectId',
     },
     {
-      Header: 'Vendor Name',
+      Header: t('vendorName'),
       accessor: 'claimantName',
     },
     {
-      Header: 'Property Address',
+      Header: t('propertyAddress'),
       accessor: 'propertyAddress',
     },
     {
-      Header: 'Vendor Address',
+      Header: t('vendorAddress'),
       accessor: 'vendorAddress',
     },
     {
-      Header: 'Payment Terms',
+      Header: t('paymentTerms'),
       accessor: 'paymentTerm',
     },
     {
-      Header: 'Expected pay date',
+      Header: t('expectedPayDate'),
       accessor: 'expectedPaymentDate',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
     },
     {
-      Header: 'Final Invoice',
+      Header: t('finalInvoice'),
       accessor: 'finalInvoiceAmount',
       Cell: ({ value }) => {
         return numeral(value).format('$0,0.00')
       },
     },
     {
-      Header: 'Markets',
+      Header: t('markets'),
       accessor: 'marketName',
     },
     {
-      Header: 'WO Start Date',
+      Header: t('wOStartDate'),
       accessor: 'workOrderStartDate',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
     },
     {
-      Header: 'WO Completed Date',
+      Header: t('wOCompletedDate'),
       accessor: 'workOrderDateCompleted',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
     },
     {
-      Header: 'WO Issue Date',
+      Header: t('wOIssueDate'),
       accessor: 'workOrderIssueDate',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
     },
     {
-      Header: 'Checkbox',
+      Header: t('checkbox'),
       accessor: 'checkbox',
       Cell: ({ row }) => {
         return (
