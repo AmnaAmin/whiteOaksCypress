@@ -37,7 +37,7 @@ export const ProjectSummaryCardDetails: React.FC<{
         borderRadius="4px"
         box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
       >
-        <InfoStructureCard title={'Project Name'} isLoading={isLoading} w={'250px'}>
+        <InfoStructureCard title={'Project Name'} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {projectData?.name}
           </FormLabel>
@@ -50,37 +50,37 @@ export const ProjectSummaryCardDetails: React.FC<{
         </InfoStructureCard>
 
         <InfoStructureCard title={'Client Start Date'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" width="90px">
+          <FormLabel variant="light-label" size="md">
             {dateFormat(projectData?.clientStartDate as string)}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'Client End Date'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" width="90px" ml={1}>
+          <FormLabel variant="light-label" size="md">
             {dateFormat(projectData?.clientDueDate as string)}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'WOA Start Date'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" width="100px">
+          <FormLabel variant="light-label" size="md">
             {dateFormat(projectData?.woaStartDate as string)}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'WOA End Date'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" width="100px" ml={1}>
-            {projectData?.woaCompletionDate ? dateFormat(projectData?.woaCompletionDate as string) : '....'}
+          <FormLabel variant="light-label" size="md">
+            {projectData?.woaCompletionDate ? dateFormat(projectData?.woaCompletionDate as string) : '-----------'}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'Project Coordinator Name'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" width="100px">
+          <FormLabel variant="light-label" size="md">
             {projectData?.projectCoordinator}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'Project Coordinator Contact'} isLoading={isLoading} borderRight="1px solid white">
-          <FormLabel variant="light-label" size="md" width="100px">
+          <FormLabel variant="light-label" size="md" noOfLines={1}>
             {account?.telephoneNumber}
           </FormLabel>
         </InfoStructureCard>
