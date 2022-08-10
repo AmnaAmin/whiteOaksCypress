@@ -158,9 +158,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       {
         ...updatedWorkOrder,
         documents: [
-          ...documentsData,
           {
             documentType: 48,
+            workOrderId: workOrder.id,
             fileObject: pdfUri.split(',')[1],
             fileObjectContentType: 'application/pdf',
             fileType: 'Invoice.pdf',

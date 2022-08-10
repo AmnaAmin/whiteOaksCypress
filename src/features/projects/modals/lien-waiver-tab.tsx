@@ -94,6 +94,7 @@ export const LienWaiverTab: React.FC<any> = props => {
         ...documents,
         {
           documentType: 26,
+          workOrderId: lienWaiverData.id,
           fileObject: pdfUri.split(',')[1],
           fileObjectContentType: 'application/pdf',
           fileType: `LW${lienWaiverData?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.pdf`,
@@ -120,7 +121,6 @@ export const LienWaiverTab: React.FC<any> = props => {
 
   useEffect(() => {
     if (!documentsData?.length) return
-    setDocuments(documentsData)
     if (lienWaiverData.lienWaiverAccepted) {
       const orderDocs = orderBy(
         documentsData,
@@ -132,8 +132,12 @@ export const LienWaiverTab: React.FC<any> = props => {
         ],
         ['desc'],
       )
-      const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
-      const recentLW = orderDocs.find(doc => parseInt(doc.documentType, 10) === 26)
+      const signatureDoc = orderDocs.find(
+        doc => parseInt(doc.documentType, 10) === 108 && doc.workOrderId === lienWaiverData.id,
+      )
+      const recentLW = orderDocs.find(
+        doc => parseInt(doc.documentType, 10) === 26 && doc.workOrderId === lienWaiverData.id,
+      )
       setRecentLWFile(recentLW)
       setValue('claimantsSignature', signatureDoc?.s3Url)
       setClaimantsSignature(signatureDoc?.s3Url ?? '')
@@ -146,6 +150,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       ...doc,
       {
         documentType: 108,
+        workOrderId: lienWaiverData.id,
         fileObject: uri?.split(',')[1],
         fileObjectContentType: 'image/png',
         fileType: 'Claimants-Signature.png',
