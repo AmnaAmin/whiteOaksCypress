@@ -34,7 +34,6 @@ type tabProps = {
 
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData } = props
-  console.log('ProjectID', projectData?.id)
 
   const [tabIndex, setTabIndex] = useState<number>(0)
 
@@ -63,8 +62,6 @@ const ProjectDetailsTab = (props: tabProps) => {
       stateSelectOptions,
     })
 
-    console.log('formValues', formValues)
-
     formReturn.reset(formValues)
   }, [
     projectData,
@@ -78,8 +75,6 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
-    console.log('formValues', formValues)
-    console.log('payload', payload)
     updateProjectDetails(payload)
   }
 

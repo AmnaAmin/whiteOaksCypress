@@ -4,11 +4,12 @@ import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/receivable/account-receivable-modal'
-import { usePCRecievable, useReveviableRowData } from 'utils/account-receivable'
-import { FieldValues, UseFormRegister } from 'react-hook-form'
+import { usePCRecievable } from 'utils/account-receivable'
+import { UseFormRegister } from 'react-hook-form'
 import { t } from 'i18next'
 import { dateFormat } from 'utils/date-time-utils'
 import numeral from 'numeral'
+import UpdateTransactionModal from 'features/projects/transactions/update-transaction-modal'
 
 const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -57,7 +58,7 @@ type ReceivableProps = {
   resizeElementRef?: any
   ref?: any
   setTableInstance: (tableInstance: any) => void
-  register: UseFormRegister<FieldValues>
+  register: UseFormRegister<any>
   loading?: boolean
 }
 
@@ -141,7 +142,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
             <Checkbox
               isDisabled={loading}
               value={(row.original as any).projectId}
-              {...register('id', { required: true })}
+              {...register(`projects.${row.index}`, { required: true })}
             />
           </Box>
         ),
@@ -150,22 +151,33 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     ref,
   )
 
+  const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const {
     isOpen: isAccountReceivableModal,
     onOpen: onAccountReceivableModalOpen,
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
+  const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
+
+  // const { receivableData, isLoading } = usePCRecievable()
 
   const onRowClick = useCallback(
     (_, row) => {
-      rowData(row.values.projectId)
-      onAccountReceivableModalOpen()
+      if (row.original.type === 'draw') {
+        setSelectedTransactionId(row.original.changeOrderId)
+        setSelectedProjectId(row.original.projectId)
+        onEditModalOpen()
+      } else {
+        setSelectedProjectId(row.original.projectId)
+        onAccountReceivableModalOpen()
+      }
     },
     [onAccountReceivableModalOpen],
   )
   const { receivableData, isLoading } = usePCRecievable()
-  const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
-  const rowSelectedData = receivableDataa?.data
+  // const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
+  // const rowSelectedData = receivableDataa?.data
   const receivable = receivableData?.arList
 
   const [receivableFilterData, setFilterReceivableData] = useState(receivable)
@@ -194,9 +206,15 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         defaultFlexStyle={false}
       />
       <AccountReceivableModal
-        rowData={rowSelectedData}
+        projectId={selectedProjectId}
         isOpen={isAccountReceivableModal}
         onClose={onAccountReceivableModalClose}
+      />
+      <UpdateTransactionModal
+        isOpen={isOpenTransactionModal}
+        onClose={onTransactionModalClose}
+        selectedTransactionId={selectedTransactionId as number}
+        projectId={selectedProjectId as string}
       />
     </Box>
   )
