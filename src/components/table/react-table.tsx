@@ -11,7 +11,7 @@ import {
 } from 'react-table'
 import { getFileBlob } from './util'
 import { useExportData } from 'react-table-plugins'
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Box, FormLabel } from '@chakra-ui/react'
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Box, FormLabel, Center } from '@chakra-ui/react'
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
@@ -216,7 +216,11 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
 
   const NoRowsRenderer = () => {
     return (
-        <Box p={5}><FormLabel variant="light-label">{'No data returned for this view.'} </FormLabel></Box>
+      <Box p={5} width={1100}>
+        <Center>
+          <FormLabel variant="light-label">{'No data returned for this view.'} </FormLabel>
+        </Center>
+      </Box>
     )
   }
 
