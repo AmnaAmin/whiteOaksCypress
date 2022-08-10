@@ -55,7 +55,7 @@ export const Projects = () => {
 
   return (
     <>
-      <VStack w={{ base: '971px', xl: '100%' }}  h="calc(100vh - 160px)">
+      <VStack w={{ base: '971px', xl: '100%' }} h="calc(100vh - 160px)">
         <Box mb={2} w="100%" border="10 px solid red">
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
         </Box>

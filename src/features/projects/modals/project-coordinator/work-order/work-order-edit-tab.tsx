@@ -1,40 +1,40 @@
+import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
-  Text,
-  Flex,
-  SimpleGrid,
   Button,
+  chakra,
+  Checkbox,
+  Divider,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
   HStack,
-  Stack,
-  Divider,
   Icon,
-  Checkbox,
-  Thead,
-  TableContainer,
-  Table,
-  Tr,
-  Th,
-  Td,
-  Tbody,
-  useCheckbox,
-  chakra,
-  useDisclosure,
+  Input,
   ModalBody,
   ModalFooter,
+  SimpleGrid,
+  Stack,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useCheckbox,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { useState } from 'react'
-import { BiCalendar, BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
-import { useTranslation } from 'react-i18next'
-import { dateFormat } from 'utils/date-time-utils'
-import { AddIcon, CheckIcon } from '@chakra-ui/icons'
-import { useForm, useFieldArray } from 'react-hook-form'
-import RemainingItemsModal from './remaining-items-modal'
-import { calendarIcon } from 'theme/common-style'
 import { STATUS } from 'features/projects/status'
+import { useState } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { BiCalendar, BiDownload, BiSpreadsheet, BiUpload, BiXCircle } from 'react-icons/bi'
+import { calendarIcon } from 'theme/common-style'
+import { dateFormat } from 'utils/date-time-utils'
 import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'utils/work-order'
+import RemainingItemsModal from './remaining-items-modal'
 
 const CalenderCard = props => {
   return (
@@ -120,7 +120,7 @@ interface FormValues {
 }
 
 const WorkOrderDetailTab = props => {
-  const { workOrder, onSave } = props
+  const { workOrder, onSave, navigateToProjectDetails } = props
   const [showLineItems] = useState(false)
 
   const {
@@ -151,7 +151,7 @@ const WorkOrderDetailTab = props => {
     workOrderIssueDate,
     dateLeanWaiverSubmitted,
     datePermitsPulled,
-    durationCategory,
+    workOrderCompletionDateVariance,
   } = props.workOrder
 
   const onSubmit = values => {
@@ -177,7 +177,7 @@ const WorkOrderDetailTab = props => {
               <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
               <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
               <CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />
-              <CalenderCard title=" Completion Variance" date={durationCategory} />
+              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
@@ -397,6 +397,19 @@ const WorkOrderDetailTab = props => {
           <RemainingItemsModal isOpen={isOpenRemainingItemsModal} onClose={onCloseRemainingItemsModal} />
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+          <HStack justifyContent="start" w="100%">
+            {navigateToProjectDetails && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={navigateToProjectDetails}
+                leftIcon={<BiSpreadsheet />}
+              >
+                {t('seeProjectDetails')}
+              </Button>
+            )}
+          </HStack>
           <HStack spacing="16px" w="100%" justifyContent="end">
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}

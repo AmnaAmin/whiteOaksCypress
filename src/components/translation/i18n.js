@@ -52,7 +52,6 @@ i18n.use(initReactI18next).init({
         completed: 'Completed',
         pendingTransaction: 'Pending Transaction',
         pastDueWO: 'Past Due WO',
-        id: 'ID',
         type: 'Type',
         status: 'Status',
         newVendor: 'New Vendor',
@@ -77,6 +76,13 @@ i18n.use(initReactI18next).init({
         woNo: 'WO Po',
         checkbox: 'Checkbox',
         clearFilter: 'Clear Filter',
+
+        // Payable
+        propertyAddress: 'Property Address',
+        vendorAddress: 'Vendor Address',
+        wOCompletedDate: 'WO Completed Date',
+        wOIssueDate: 'WO Issue Date',
+        id: 'ID',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',
@@ -402,7 +408,7 @@ i18n.use(initReactI18next).init({
         recipientPhoneNo: 'Recipient Phone No',
 
         // **** PROJECT COORDINATOR ****//
-        
+
         // PC projectDetails
         projectCoordinator: 'Project Coordinator',
         fieldProjectManager: 'Field Project Manager',
@@ -427,11 +433,11 @@ i18n.use(initReactI18next).init({
         projectTypeLabel: 'Type',
 
         // PC Clients
-        clientOverview:'Client Overview',
+        clientOverview: 'Client Overview',
         // businessName: 'Business Name',
         // accountPayable: 'Account Payable',
         paymentMethod: 'Payment Method',
-        accPayConInfo:'Accounts Payable contact details',
+        accPayConInfo: 'Accounts Payable contact details',
         creditCard: 'Credit Card',
         ach: 'ACH',
         comment: 'Comment',
@@ -544,7 +550,6 @@ i18n.use(initReactI18next).init({
         completed: 'Terminado',
         pendingTransaction: 'Transacción Pendiente',
         pastDueWO: 'Atrasado WO',
-        id: 'ID',
         type: 'Escribe',
         WOstatus: 'Estado WO',
         address: 'Habla a',
@@ -565,6 +570,13 @@ i18n.use(initReactI18next).init({
         woNo: 'OT No',
         checkbox: 'Caja',
         clearFilter: 'Filtro claro',
+
+        // Payable
+        propertyAddress: 'Dirección de Propiedad',
+        vendorAddress: 'Dirección del proveedor',
+        wOCompletedDate: 'Fecha de finalización de la OT',
+        wOIssueDate: 'Fecha de emisión de OT',
+        id: 'IDENTIFICACIÓN',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Escribe',
@@ -836,11 +848,11 @@ i18n.use(initReactI18next).init({
         // **** PROJECT COORDINATOR ****//
 
         // PC Clients
-        clientOverview:'Descripción general del cliente',
+        clientOverview: 'Descripción general del cliente',
         // businessName: 'Nombre del Negocio',
         accountPayable: 'Cuenta por pagar',
         paymentMethod: 'Método de pago',
-        accPayConInfo:'Datos de contacto de cuentas por pagar',
+        accPayConInfo: 'Datos de contacto de cuentas por pagar',
         creditCard: 'Crédito',
         ach: 'ACH',
         comment: 'Comentario',

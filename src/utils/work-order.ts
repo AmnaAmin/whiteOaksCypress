@@ -281,17 +281,17 @@ export const defaultValuesWODetails = workOrder => {
 
 export const defaultValuesLienWaiver = lienWaiverData => {
   const defaultValues = {
-    claimantName: lienWaiverData.claimantName,
-    customerName: lienWaiverData.customerName,
-    propertyAddress: lienWaiverData.propertyAddress,
-    owner: lienWaiverData.owner,
-    makerOfCheck: lienWaiverData.makerOfCheck,
-    amountOfCheck: lienWaiverData.amountOfCheck,
-    checkPayableTo: lienWaiverData.claimantName,
-    claimantsSignature: lienWaiverData.claimantsSignature,
-    claimantTitle: lienWaiverData.claimantTitle,
-    dateOfSignature: lienWaiverData.dateOfSignature,
-    lienWaiverAccepted: !lienWaiverData.lienWaiverAccepted,
+    claimantName: lienWaiverData?.claimantName,
+    customerName: lienWaiverData?.customerName,
+    propertyAddress: lienWaiverData?.propertyAddress,
+    owner: lienWaiverData?.owner,
+    makerOfCheck: lienWaiverData?.makerOfCheck,
+    amountOfCheck: lienWaiverData?.amountOfCheck,
+    checkPayableTo: lienWaiverData?.claimantName,
+    claimantsSignature: lienWaiverData?.claimantsSignature,
+    claimantTitle: lienWaiverData?.claimantTitle,
+    dateOfSignature: lienWaiverData?.dateOfSignature,
+    lienWaiverAccepted: !lienWaiverData?.lienWaiverAccepted,
   }
   return defaultValues
 }
