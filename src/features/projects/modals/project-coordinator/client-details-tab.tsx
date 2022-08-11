@@ -14,7 +14,7 @@ import {
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMarkets, useStates } from 'utils/pc-projects'
+import { useStates } from 'utils/pc-projects'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -23,26 +23,22 @@ type clientDetailProps = {
 
 export const Details = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
-  const { data: markets } = useMarkets()
+  // const { data: markets } = useMarkets()
   const { data: statesData } = useStates()
 
   // To get Contact Market
-  const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
-  const clientMarketArr = markets?.find(market => {
-    if (market?.id === clientSelectedMarket) return { markets }
-    return markets
-  })
-  const clientMarket = { label: clientMarketArr?.stateName, value: clientMarketArr?.id }
+
+  // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
+  // const clientMarketArr = markets?.find(market => {
+  //   if (market?.id === clientSelectedMarket) return { markets }
+  //   return markets
+  // })
+  // const clientMarket = { label: clientMarketArr?.stateName, value: clientMarketArr?.id }
 
   // To get Client State
-  const clientSelectedState = props?.clientDetails?.state
   const clientState = statesData?.map(state => {
-    if (state?.id === clientSelectedState) return { label: state?.name, value: state?.id }
-    return statesData
-  })
-
-  // No Market
-  const noMarket = { label: 'Georgia', value: '11' }
+    if (state?.id === props?.clientDetails?.state) return { label: state?.name, value: state?.id }
+  }) 
 
   const btnStyle = {
     alignItems: 'center',
@@ -191,19 +187,19 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <Input variant="required-field" style={textStyle} value={contact?.emailAddress} isDisabled />
                 </FormControl>
               </GridItem>
-              <GridItem>
+              {/* <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
                     {t('market')}
                   </FormLabel>
                   <ReactSelect
-                    option={clientMarketArr ? clientMarket : noMarket} 
-                    value={clientMarketArr  ? clientMarket : noMarket}
+                    option={clientMarket} 
+                    value={clientMarket}
                     selectProps={{ isBorderLeft: true }}
                     isDisabled
                   />
                 </FormControl>
-              </GridItem>
+              </GridItem> */}
             </Grid>
           )
         })}

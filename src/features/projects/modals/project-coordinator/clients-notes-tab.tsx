@@ -20,8 +20,6 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
     clientId: clientDetails?.id,
   })
 
-  console.log('notes', notes)
-
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
@@ -41,7 +39,6 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
           )
         ) : (
           <Box width="100%">
-            {' '}
             <Center>
               <FormLabel variant={'light-label'}>No Notes to show for this client.</FormLabel>
             </Center>
