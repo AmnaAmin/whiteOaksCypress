@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { MessagesTypes } from 'features/common/notes-tab'
 import { useNotes } from 'utils/clients'
-import { Box, Button, Flex } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, FormLabel } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'utils/vendor-details'
 
@@ -20,21 +20,31 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
     clientId: clientDetails?.id,
   })
 
+  console.log('notes', notes)
+
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
     borderTop: '1px solid #CBD5E0',
   }
-
   return (
     <>
       <Box p={0} height="400px" overflow={'auto'}>
-        {notes && notes.length > 0 && (
-          <Box>
-            {notes.map(note => {
-              return note === account.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
-            })}
-            <div ref={messagesEndRef} />
+        {notes.length > 0 ? (
+          notes && (
+            <Box>
+              {notes.map(note => {
+                return note === account.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
+              })}
+              <div ref={messagesEndRef} />
+            </Box>
+          )
+        ) : (
+          <Box width="100%">
+            {' '}
+            <Center>
+              <FormLabel variant={'light-label'}>No Notes to show for this client.</FormLabel>
+            </Center>
           </Box>
         )}
       </Box>
