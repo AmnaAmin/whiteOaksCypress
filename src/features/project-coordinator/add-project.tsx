@@ -108,67 +108,75 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
 
   const { watch, handleSubmit } = methods
 
+  const saveProject = async values => {
+    let fileContents: any = null
+    const doc = values.documents
+    if (doc) {
+      fileContents = await readFileContent(doc)
+    }
+
+    const newProjectPayload = {
+      name: values.name,
+      projectType: values.projectType,
+      woNumber: values.woNumber,
+      poNumber: values.poNumber,
+      clientStartDate: dateISOFormat(values.clientStartDate),
+      clientDueDate: dateISOFormat(values.clientDueDate),
+      woaStartDate: dateISOFormat(values.woaStartDate),
+      sowOriginalContractAmount: values.sowOriginalContractAmount,
+      sowDocumentFile: fileContents,
+      streetAddress: values.streetAddress,
+      city: values.city,
+      state: values.state.value,
+      zipCode: values.zipCode,
+      newMarketId: values.newMarketId.value,
+      gateCode: values.gateCode,
+      lockBoxCode: values.lockBoxCode,
+      hoaPhone: values.hoaPhone,
+      hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
+      hoaEmailAddress: values.hoaEmailAddress,
+      projectManagerId: values.projectManagerId,
+      projectCordinatorId: values.projectCoordinatorId,
+      clientName: values.clientName,
+      clientId: values.clientId,
+      superLastName: values.superLastName,
+      superEmailAddress: values.superEmailAddress,
+      superPhoneNumber: values.superPhoneNumber,
+      superPhoneNumberExtension: values.superPhoneNumberExtension,
+      propertyId: values.propertyId,
+    }
+
+    saveProjectDetails(newProjectPayload, {
+      onSuccess(response: any) {
+        const projectId = response?.data?.id
+        toast({
+          title: 'Project Details',
+          description: `New project has been created successfully with project id: ${projectId}`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        onClose()
+        navigate(`/project-details/${projectId}`)
+      },
+      onError(error: any) {
+        toast({
+          title: 'Project Details',
+          description: (error.title as string) ?? 'Unable to save project.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      },
+    })
+  }
+
   const onSubmit = useCallback(
     async values => {
-      let fileContents: any = null
-      const doc = values.documents
-      if (doc) {
-        fileContents = await readFileContent(doc)
+      if (values.property) {
+        saveProject(values)
+      } else {
       }
-      const newProjectPayload = {
-        name: values.name,
-        projectType: values.projectType,
-        woNumber: values.woNumber,
-        poNumber: values.poNumber,
-        clientStartDate: dateISOFormat(values.clientStartDate),
-        clientDueDate: dateISOFormat(values.clientDueDate),
-        woaStartDate: dateISOFormat(values.woaStartDate),
-        sowOriginalContractAmount: values.sowOriginalContractAmount,
-        sowDocumentFile: fileContents,
-        streetAddress: values.streetAddress,
-        city: values.city,
-        state: values.state.value,
-        zipCode: values.zipCode,
-        newMarketId: values.newMarketId.value,
-        gateCode: values.gateCode,
-        lockBoxCode: values.lockBoxCode,
-        hoaPhone: values.hoaPhone,
-        hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
-        hoaEmailAddress: values.hoaEmailAddress,
-        projectManagerId: values.projectManagerId,
-        projectCordinatorId: values.projectCoordinatorId,
-        clientName: values.clientName,
-        clientId: values.clientId,
-        superLastName: values.superLastName,
-        superEmailAddress: values.superEmailAddress,
-        superPhoneNumber: values.superPhoneNumber,
-        superPhoneNumberExtension: values.superPhoneNumberExtension,
-        propertyId: values.propertyId,
-      }
-
-      saveProjectDetails(newProjectPayload, {
-        onSuccess(response: any) {
-          const projectId = response?.data?.id
-          toast({
-            title: 'Project Details',
-            description: `New project has been created successfully with project id: ${projectId}`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-          })
-          onClose()
-          navigate(`/project-details/${projectId}`)
-        },
-        onError(error: any) {
-          toast({
-            title: 'Project Details',
-            description: (error.title as string) ?? 'Unable to save project.',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
-        },
-      })
     },
     [saveProjectDetails],
   )
