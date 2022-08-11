@@ -16,7 +16,7 @@ import { ClientDetailsTabs } from 'pages/project-cordinator/client-details'
 import { useCallback, useEffect } from 'react'
 import { Clients } from 'types/client.type'
 
-const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients, onClose: () => void }) => {
+const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {

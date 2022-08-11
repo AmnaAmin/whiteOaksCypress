@@ -8,7 +8,7 @@ import {
   GridItem,
   useDisclosure,
   FormErrorMessage,
-  Box,
+  Text,
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -19,9 +19,9 @@ import xml2js from 'xml2js'
 import { ModalVerifyAddress } from 'features/project-coordinator/modal-verify-address'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
-import ReactSelect from 'components/form/react-select'
 import { useProjects } from 'utils/projects'
 import Select from 'components/form/react-select'
+import { CreatableSelect } from 'components/form/react-select'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -73,6 +73,7 @@ export const AddPropertyInfo: React.FC<{
     ? props?.properties?.map(property => ({
         label: property?.streetAddress,
         value: property?.id,
+        property: property,
       }))
     : null
 
@@ -91,44 +92,40 @@ export const AddPropertyInfo: React.FC<{
   } = useFormContext<ProjectFormValues>()
 
   // On Street Address change, set values of City, State and Zip
-  const setAddressValues = e => {
+  const setAddressValues = option => {
+    const property = option?.property
+
     setIsDuplicateAddress(false)
 
-    props?.properties.map(property => {
-      if (e.label === property?.streetAddress) {
-        setValue('streetAddress', property.streetAddress)
-        setValue('city', property.city)
-        setValue('zipCode', property.zipCode)
-        setValue('propertyId', property.id)
-        setValue('property', property)
-        setStreetAddress(property.streetAddress)
-        setCity(property.city)
-        setZipCode(property.zipCode)
-        setState(property.state)
+    setValue('streetAddress', property?.streetAddress)
+    setValue('city', property?.city)
+    setValue('zipCode', property?.zipCode)
+    setValue('propertyId', property?.id)
+    setValue('property', property)
+    setStreetAddress(property?.streetAddress)
+    setCity(property?.city)
+    setZipCode(property?.zipCode)
+    setState(property?.state)
 
-        // Set State and Market w.r.t Address
-        props?.markets.map(m => {
-          if (m?.id === property?.marketId) {
-            setValue('newMarketId', { label: m?.metropolitanServiceArea, value: m?.id })
-            setValue('state', { label: m?.stateName, value: m?.state })
-          }
-          return props?.markets
-        })
+    props?.markets.map(m => {
+      if (m?.id === property?.marketId) {
+        setValue('newMarketId', { label: m?.metropolitanServiceArea, value: m?.id })
+        setValue('state', { label: m?.stateName, value: m?.state })
+      }
+      return props?.markets
+    })
 
-        // Check for duplicate address
-        projects?.map(p => {
-          if (p.propertyId === property.id) {
-            setExistProperty(existProperty)
-            existProperty?.push({ id: p.id as number, status: p.projectStatus as string })
-            delete existProperty[0]
-            if (existProperty) {
-              setIsDuplicateAddress(true)
-            } else {
-              setIsDuplicateAddress(false)
-            }
-          }
-          return property
-        })
+    // Check for duplicate address
+    projects?.map(p => {
+      if (p.propertyId === property?.id) {
+        setExistProperty(existProperty)
+        existProperty?.push({ id: p.id as number, status: p.projectStatus as string })
+        delete existProperty[0]
+        if (existProperty) {
+          setIsDuplicateAddress(true)
+        } else {
+          setIsDuplicateAddress(false)
+        }
       }
       return property
     })
@@ -177,12 +174,12 @@ export const AddPropertyInfo: React.FC<{
         <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
           <AlertIcon />
           <AlertDescription>
-            <Box color="red">
+            <Text color="red" fontSize="sm">
               {existProperty &&
                 existProperty?.map(
                   p => 'Project ID ' + p.id + ' using this address already exist & is in ' + p.status + ' state. ',
                 )}
-            </Box>
+            </Text>
           </AlertDescription>
           <Divider orientation="vertical" h={6} marginLeft={6} />
           <Checkbox
@@ -209,7 +206,7 @@ export const AddPropertyInfo: React.FC<{
               rules={{ required: 'This is required field' }}
               render={({ field: { value }, fieldState }) => (
                 <>
-                  <ReactSelect
+                  <CreatableSelect
                     id="streetAddress"
                     options={addressOptions}
                     selected={value}
