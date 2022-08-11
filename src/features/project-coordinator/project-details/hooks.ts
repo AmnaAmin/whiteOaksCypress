@@ -6,7 +6,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
 
-  const projectStatus = status?.value?.toLocaleLowerCase()
+  const projectStatus = status?.value
 
   const isAllTimeDisabled = true
   const isStatusNew = projectStatus === STATUS.New

@@ -514,6 +514,9 @@ export const parseTransactionToFormValues = (
       ? workOrderOptions[0]
       : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
 
+  const isMaterialRefunded =
+    transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
+
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
@@ -536,7 +539,7 @@ export const parseTransactionToFormValues = (
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
     paymentRecieved: null,
-    refundMaterial: false,
+    refundMaterial: isMaterialRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
