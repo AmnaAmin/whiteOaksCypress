@@ -12,8 +12,9 @@ import {
   GridItem,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMarkets, useStates } from 'utils/pc-projects'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -22,25 +23,29 @@ type clientDetailProps = {
 
 export const Details = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
+  const { data: markets } = useMarkets()
+  const { data: statesData } = useStates()
 
-  const market = props?.clientDetails?.markets
-    ? props?.clientDetails?.markets?.map(market => ({
-        label: market?.metropolitanServiceArea,
-        value: market?.id,
-      }))
-    : null
+  // To get Market
+  const clientSelectedMarket = props?.clientDetails?.contacts?.map(m => m?.market)
+  const clientMarket = markets?.map(market => {
+    if (market?.id == clientSelectedMarket) return { label: market?.stateName, value: market?.id }
+  })
 
-  const state = props?.clientDetails?.markets
-    ? props?.clientDetails?.markets?.map(market => ({
-        label: market?.state?.name,
-        value: market?.state?.id,
-      }))
-    : null
+  // To get State
+  const clientSelectedState = props?.clientDetails?.state
+  const clientState = statesData?.map(state => {
+    if (state?.id == clientSelectedState) return { label: state?.name, value: state?.id }
+  })
 
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
     borderTop: '1px solid #CBD5E0',
+  }
+
+  const textStyle = {
+    color:'gray.500',
   }
 
   return (
@@ -52,7 +57,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('name')}
               </FormLabel>
-              <Input width="215px" variant="required-field" value={props?.clientDetails?.companyName} isDisabled />
+              <Input width="215px" variant="required-field" style={textStyle} value={props?.clientDetails?.companyName} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
@@ -60,7 +65,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('paymentTerms')}
               </FormLabel>
-              <Input width="215px" variant="required-field" value={props?.clientDetails?.paymentTerm} isDisabled />
+              <Input width="215px" variant="required-field" style={textStyle} value={props?.clientDetails?.paymentTerm} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
@@ -108,7 +113,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('address')}
               </FormLabel>
-              <Input variant="required-field" value={props?.clientDetails?.streetAddress} isDisabled />
+              <Input variant="required-field" style={textStyle} value={props?.clientDetails?.streetAddress} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
@@ -116,7 +121,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('city')}
               </FormLabel>
-              <Input variant="required-field" value={props?.clientDetails?.city} isDisabled />
+              <Input variant="required-field" style={textStyle} value={props?.clientDetails?.city} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
@@ -124,7 +129,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('state')}
               </FormLabel>
-              <ReactSelect options={state} value={state} selectProps={{ isBorderLeft: true }} isDisabled />
+              <ReactSelect options={clientState} value={clientState} selectProps={{ isBorderLeft: true }} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
@@ -132,7 +137,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('zipCode')}
               </FormLabel>
-              <Input variant="required-field" value={props?.clientDetails?.zipCode} isDisabled />
+              <Input variant="required-field" style={textStyle} value={props?.clientDetails?.zipCode} isDisabled />
             </FormControl>
           </GridItem>
         </Grid>
@@ -144,7 +149,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('contact')}
                   </FormLabel>
-                  <Input variant="required-field" value={contact?.contact} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={contact?.contact} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -152,7 +157,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('phoneNo')}
                   </FormLabel>
-                  <Input variant="required-field" value={contact?.phoneNumber} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={contact?.phoneNumber} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -160,7 +165,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('email')}
                   </FormLabel>
-                  <Input variant="required-field" value={contact?.emailAddress} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={contact?.emailAddress} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -168,7 +173,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('market')}
                   </FormLabel>
-                  <ReactSelect options={market} value={market} selectProps={{ isBorderLeft: true }} isDisabled />
+                  <ReactSelect option={clientMarket} value={clientMarket} selectProps={{ isBorderLeft: true }} isDisabled />
                 </FormControl>
               </GridItem>
             </Grid>
@@ -188,7 +193,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('contact')}
                   </FormLabel>
-                  <Input variant="required-field" value={accPayConInfo?.contact} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={accPayConInfo?.contact} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -196,7 +201,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('phoneNo')}
                   </FormLabel>
-                  <Input variant="required-field" value={accPayConInfo?.phoneNumber} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={accPayConInfo?.phoneNumber} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -204,7 +209,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('city')}
                   </FormLabel>
-                  <Input variant="required-field" value={props?.clientDetails?.city} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={props?.clientDetails?.city} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -212,7 +217,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('comment')}
                   </FormLabel>
-                  <Input variant="required-field" value={accPayConInfo?.comments} isDisabled />
+                  <Input variant="required-field" style={textStyle} value={accPayConInfo?.comments} isDisabled />
                 </FormControl>
               </GridItem>
             </Grid>
