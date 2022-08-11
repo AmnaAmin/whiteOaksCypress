@@ -255,7 +255,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
       </Grid>
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8" onClick={props.onClose}>
+        <Button variant="outline" colorScheme="brand" onClick={props.onClose}>
           {'Cancel'}
         </Button>
         <Button
