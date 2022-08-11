@@ -28,15 +28,21 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
 
   // To get Contact Market
   const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
-  const clientMarket = markets?.map(market => {
-    if (market?.id === clientSelectedMarket) return { label: market?.stateName, value: market?.id }
+  const clientMarketArr = markets?.find(market => {
+    if (market?.id === clientSelectedMarket) return { markets }
+    return markets
   })
+  const clientMarket = { label: clientMarketArr?.stateName, value: clientMarketArr?.id }
 
   // To get Client State
   const clientSelectedState = props?.clientDetails?.state
   const clientState = statesData?.map(state => {
     if (state?.id === clientSelectedState) return { label: state?.name, value: state?.id }
+    return statesData
   })
+
+  // No Market
+  const noMarket = { label: 'Georgia', value: '11' }
 
   const btnStyle = {
     alignItems: 'center',
@@ -88,7 +94,6 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <Flex dir="row">
                 <Checkbox
                   variant="required-field"
-                  // readOnly
                   pr={1}
                   mt={4}
                   isChecked={props?.clientDetails?.paymentCreditCard}
@@ -99,7 +104,6 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                 </Checkbox>
                 <Checkbox
                   variant="required-field"
-                  // readOnly
                   pr={1}
                   mt={4}
                   isChecked={props?.clientDetails?.paymentCheck}
@@ -110,7 +114,6 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                 </Checkbox>
                 <Checkbox
                   variant="required-field"
-                  // readOnly
                   mt={4}
                   isChecked={props?.clientDetails?.paymentACH}
                   style={textStyle}
@@ -194,8 +197,8 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                     {t('market')}
                   </FormLabel>
                   <ReactSelect
-                    option={clientMarket}
-                    value={clientMarket}
+                    option={clientMarketArr ? clientMarket : noMarket} 
+                    value={clientMarketArr  ? clientMarket : noMarket}
                     selectProps={{ isBorderLeft: true }}
                     isDisabled
                   />
