@@ -216,7 +216,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
 
   const NoRowsRenderer = () => {
     return (
-      <Box p={5} width={'16%'}>
+      <Box p={5} width={'calc(100vw - var(--sidebar-width))'}>
         <Center>
           <FormLabel variant="light-label">{'No data returned for this view.'} </FormLabel>
         </Center>
