@@ -2,6 +2,7 @@ import { forwardRef } from 'react'
 import { Select as ReactSelect, CreatableSelect as RSCreatableSelect } from 'chakra-react-select'
 import { inputBorderLeftStyle, inputFocusStateStyle } from 'theme/common-style'
 import { AnyCnameRecord } from 'dns'
+import { Text, Flex } from '@chakra-ui/react'
 import { List } from 'react-virtualized'
 
 const fontSizes = {
@@ -118,17 +119,35 @@ type SelectProps = any & {
   }
 }
 
-const Select = forwardRef((props: SelectProps, ref: any) => (
-  <ReactSelect
-    ref={ref}
-    chakraStyles={chakraStyles}
-    components={{
-      IndicatorSeparator: false,
-    }}
-    {...props}
-    placeholder={'Select'}
-  />
-))
+const Select = forwardRef((props: SelectProps, ref: any) => {
+  const optionsMapped =
+    props?.options?.map(option => ({
+      ...option,
+      title: option?.label,
+    })) || []
+
+  return (
+    <ReactSelect
+      {...props}
+      ref={ref}
+      chakraStyles={chakraStyles}
+      components={{
+        IndicatorSeparator: false,
+        SingleValue: option => {
+          return (
+            <Flex title={option.children as string} position="absolute">
+              <Text isTruncated whiteSpace="nowrap" maxW="148px">
+                {option.children}
+              </Text>
+            </Flex>
+          )
+        },
+      }}
+      options={optionsMapped}
+      placeholder={'Select'}
+    />
+  )
+})
 
 const MenuList: React.FC<any> = props => {
   const { children } = props
