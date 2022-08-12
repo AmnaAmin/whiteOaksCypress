@@ -141,7 +141,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('state')}
               </FormLabel>
-              <ReactSelect options={clientState} value={clientState} selectProps={{ isBorderLeft: true }} isDisabled />
+              <ReactSelect value={clientState} selectProps={{ isBorderLeft: true }} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
