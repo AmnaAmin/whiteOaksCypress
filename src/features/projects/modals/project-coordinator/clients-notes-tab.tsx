@@ -38,7 +38,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             </Box>
           )
         ) : (
-          <Box width="100%">
+          <Box width="100%" p={5}>
             <Center>
               <FormLabel variant={'light-label'}>No Notes to show for this client.</FormLabel>
             </Center>

@@ -37,8 +37,12 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
 
   // To get Client State
   const clientState = statesData?.map(state => {
-    if (state?.id === props?.clientDetails?.state) return { label: state?.name, value: state?.id }
-  }) 
+    if (state?.id === props?.clientDetails?.state) {
+      return { label: state?.name, value: state?.id }
+    } else {
+      return //statesData
+    }
+  })
 
   const btnStyle = {
     alignItems: 'center',
