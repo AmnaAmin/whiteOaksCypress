@@ -19,21 +19,21 @@ import InputView from 'components/input-view/input-view'
 import { orderBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiCaretDown, BiCaretUp, BiDownload } from 'react-icons/bi'
+import { BiCaretDown, BiCaretUp, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useTranslation } from 'react-i18next'
-import { dateFormatter } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { defaultValuesLienWaiver } from 'utils/work-order'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { lienWaiverData, onClose, documentsData, onSave } = props
+  const { workOrder, onClose, documentsData, onSave, navigateToProjectDetails } = props
   const [documents, setDocuments] = useState<any[]>([])
 
   const { register, handleSubmit, setValue } = useForm({
-    defaultValues: defaultValuesLienWaiver(lienWaiverData),
+    defaultValues: defaultValuesLienWaiver(workOrder),
   })
-  const { leanwieverLink } = props.lienWaiverData
+  const { leanwieverLink } = props.workOrder
 
   const onSubmit = formValues => {
     onSave({
@@ -60,10 +60,12 @@ export const LienWaiverTab: React.FC<any> = props => {
       ],
       ['desc'],
     )
-    const signatureDoc = orderDocs.find(doc => parseInt(doc.documentType, 10) === 108)
+    const signatureDoc = orderDocs.find(
+      doc => parseInt(doc.documentType, 10) === 108 && workOrder.id === doc.workOrderId,
+    )
 
     setClaimantsSignature(signatureDoc?.s3Url ?? '')
-  }, [documentsData, setValue, lienWaiverData])
+  }, [documentsData, setValue, workOrder])
 
   return (
     <Box>
@@ -82,13 +84,13 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <InputView
                     controlStyle={{ w: '207px' }}
                     label={t('nameofClaimant')}
-                    InputElem={lienWaiverData.claimantName.toString()}
+                    InputElem={workOrder?.claimantName?.toString()}
                   />
 
                   <InputView
                     controlStyle={{ w: '207px' }}
                     label={t('jobLocation')}
-                    InputElem={lienWaiverData.propertyAddress}
+                    InputElem={workOrder?.propertyAddress}
                   />
                 </HStack>
 
@@ -96,7 +98,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <InputView
                     controlStyle={{ w: '207px' }}
                     label={t('makerOfCheck')}
-                    InputElem={lienWaiverData.makerOfCheck}
+                    InputElem={workOrder?.makerOfCheck}
                   />
 
                   <Stack pt={6}>
@@ -137,14 +139,18 @@ export const LienWaiverTab: React.FC<any> = props => {
                     controlStyle={{ w: '207px' }}
                     label="Date of signature"
                     InputElem={
-                      <>{lienWaiverData.dateOfSignature ? dateFormatter(lienWaiverData.dateOfSignature) : 'mm/dd/yy'}</>
+                      <>
+                        {workOrder?.lienWaiverAccepted && workOrder?.dateOfSignature
+                          ? dateFormat(workOrder?.dateOfSignature)
+                          : 'mm/dd/yy'}
+                      </>
                     }
                   />
                   <InputView
                     controlStyle={{ w: '207px' }}
                     label="Claimant Signature"
                     InputElem={
-                      claimantsSignature ? (
+                      workOrder?.lienWaiverAccepted && claimantsSignature ? (
                         <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                       ) : (
                         <></>
@@ -157,24 +163,36 @@ export const LienWaiverTab: React.FC<any> = props => {
           </FormControl>
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-          <Flex justifyContent="start" w="100%">
-            {lienWaiverData.lienWaiverAccepted && (
+          <HStack justifyContent="start" w="100%">
+            {workOrder?.lienWaiverAccepted && (
               <Box>
                 <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
                   <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
-                    See LW{`${lienWaiverData.id}`}
+                    See LW{`${workOrder?.id}`}
                   </Button>
                 </Link>
               </Box>
             )}
-          </Flex>
-          <HStack spacing="16px" justifyContent="end">
-            {!lienWaiverData.lienWaiverAccepted && (
+            {navigateToProjectDetails && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={navigateToProjectDetails}
+                leftIcon={<BiSpreadsheet />}
+              >
+                {t('seeProjectDetails')}
+              </Button>
+            )}
+          </HStack>
+
+          <HStack justifyContent="end">
+            {!workOrder?.lienWaiverAccepted && (
               <Button onClick={onClose} colorScheme="brand">
                 {t('cancel')}
               </Button>
             )}
-            {lienWaiverData.lienWaiverAccepted && (
+            {workOrder?.lienWaiverAccepted && (
               <>
                 <Button onClick={onClose} colorScheme="brand" variant="outline">
                   {t('cancel')}

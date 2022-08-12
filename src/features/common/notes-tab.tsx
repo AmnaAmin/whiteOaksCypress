@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'utils/vendor-details'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
+import { BiSpreadsheet } from 'react-icons/bi'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
@@ -47,6 +48,7 @@ type NotesProps = {
   textAreaStyle?: any
   contentStyle?: any
   hideFooter?: boolean
+  navigateToProjectDetails?: any
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -61,6 +63,7 @@ export const NotesTab = (props: NotesProps) => {
     textAreaStyle,
     contentStyle,
     hideFooter,
+    navigateToProjectDetails,
   } = props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -109,6 +112,19 @@ export const NotesTab = (props: NotesProps) => {
         </Box>
         {!hideFooter && (
           <HStack borderTop="1px solid #CBD5E0" bg="white">
+            <HStack padding={5} justifyContent="start" w="100%">
+              {navigateToProjectDetails && (
+                <Button
+                  variant="outline"
+                  colorScheme="brand"
+                  size="md"
+                  onClick={navigateToProjectDetails}
+                  leftIcon={<BiSpreadsheet />}
+                >
+                  {t('seeProjectDetails')}
+                </Button>
+              )}
+            </HStack>
             <HStack padding={5} spacing="16px" w="100%" justifyContent="end">
               {onClose && (
                 <Button variant="outline" colorScheme="brand" onClick={onClose}>

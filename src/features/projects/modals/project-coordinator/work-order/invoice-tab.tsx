@@ -19,7 +19,7 @@ import {
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 
-import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
+import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
@@ -45,7 +45,15 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, rejectInvoiceCheck, onSave }) => {
+export const InvoiceTabPC = ({
+  onClose,
+  workOrder,
+  transactions,
+  documentsData,
+  rejectInvoiceCheck,
+  onSave,
+  navigateToProjectDetails,
+}) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
@@ -190,6 +198,17 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
               leftIcon={<BiDownload />}
             >
               {t('see')} {t('invoice')}
+            </Button>
+          )}
+          {navigateToProjectDetails && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              onClick={navigateToProjectDetails}
+              leftIcon={<BiSpreadsheet />}
+            >
+              {t('seeProjectDetails')}
             </Button>
           )}
         </HStack>

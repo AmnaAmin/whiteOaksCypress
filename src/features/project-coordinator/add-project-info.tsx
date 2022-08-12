@@ -15,12 +15,13 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiDownload } from 'react-icons/bi'
 import { t } from 'i18next'
+import { useProjectTypes } from 'utils/projects'
 
 type InfoProps = {
   setNextTab: () => void
@@ -29,11 +30,16 @@ type InfoProps = {
   projectTypes?: any
 }
 
-export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
-  // const { data: projectTypes } = useProjectTypes()
+const useClientDueMinDate = (control: any) => {
+  const startDate = useWatch({ control, name: 'clientStartDate' }) || new Date()
+  return new Date(startDate).toISOString()?.split('T')[0]
+}
 
-  const types = props?.projectTypes
-    ? props?.projectTypes?.map(type => ({
+export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
+  const { data: projectTypes } = useProjectTypes()
+
+  const types = projectTypes
+    ? projectTypes?.map(type => ({
         label: type?.value,
         value: type?.id,
       }))
@@ -82,6 +88,8 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     bg: 'white',
     borderLeft: '2.5px solid #4E87F8',
   }
+
+  const clientDueMinDate = useClientDueMinDate(control)
 
   return (
     <>
@@ -173,6 +181,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               placeholder={'mm/dd/yyyy'}
               sx={inputStyle}
               required
+              min={clientDueMinDate}
             />
             <FormErrorMessage>{errors.clientDueDate && errors.clientDueDate?.message}</FormErrorMessage>
           </FormControl>
@@ -246,7 +255,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </GridItem>
       </Grid>
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8" onClick={props.onClose}>
+        <Button variant="outline" colorScheme="brand" onClick={props.onClose}>
           {'Cancel'}
         </Button>
         <Button

@@ -24,7 +24,6 @@ const InputView = ({ label, InputElem, showDivider = true, controlStyle = {} }: 
           color="gray.500"
           {...controlStyle}
           isTruncated
-          title={InputElem}
         >
           {InputElem}
         </Text>
