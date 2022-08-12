@@ -39,6 +39,8 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
   const selectedClientState = statesData?.find(state => state?.id === props?.clientDetails?.state)
   const clientState = { label: selectedClientState?.name, value: selectedClientState?.id }
 
+  console.log('clientState', clientState)
+
   const disabledTextStyle = {
     color: '#2D3748',
   }
@@ -141,7 +143,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('state')}
               </FormLabel>
-              <ReactSelect options={clientState} value={clientState} selectProps={{ isBorderLeft: true }} isDisabled />
+              <ReactSelect value={clientState} selectProps={{ isBorderLeft: true }} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
