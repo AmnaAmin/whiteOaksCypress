@@ -36,21 +36,10 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
   // const clientMarket = { label: clientMarketArr?.stateName, value: clientMarketArr?.id }
 
   // To get Client State
-  const clientState = statesData?.map(state => {
-    if (state?.id === props?.clientDetails?.state) {
-      return { label: state?.name, value: state?.id }
-    } else {
-      return //statesData
-    }
-  })
+  const clientStateArr = statesData?.find(state => state?.id === props?.clientDetails?.state)
+  const clientState = { label: clientStateArr?.name, value: clientStateArr?.id }
 
-  const btnStyle = {
-    alignItems: 'center',
-    justifyContent: 'end',
-    borderTop: '1px solid #CBD5E0',
-  }
-
-  const textStyle = {
+  const disabledTextStyle = {
     color: '#2D3748',
   }
 
@@ -66,7 +55,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <Input
                 width="215px"
                 variant="required-field"
-                style={textStyle}
+                style={disabledTextStyle}
                 value={props?.clientDetails?.companyName}
                 isDisabled
               />
@@ -80,7 +69,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <Input
                 width="215px"
                 variant="required-field"
-                style={textStyle}
+                style={disabledTextStyle}
                 value={props?.clientDetails?.paymentTerm}
                 isDisabled
               />
@@ -97,7 +86,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   pr={1}
                   mt={4}
                   isChecked={props?.clientDetails?.paymentCreditCard}
-                  style={textStyle}
+                  style={disabledTextStyle}
                   isDisabled
                 >
                   {t('creditCard')}
@@ -107,7 +96,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   pr={1}
                   mt={4}
                   isChecked={props?.clientDetails?.paymentCheck}
-                  style={textStyle}
+                  style={disabledTextStyle}
                   isDisabled
                 >
                   {t('check')}
@@ -116,7 +105,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   variant="required-field"
                   mt={4}
                   isChecked={props?.clientDetails?.paymentACH}
-                  style={textStyle}
+                  style={disabledTextStyle}
                   isDisabled
                 >
                   {t('ach')}
@@ -133,7 +122,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               </FormLabel>
               <Input
                 variant="required-field"
-                style={textStyle}
+                style={disabledTextStyle}
                 value={props?.clientDetails?.streetAddress}
                 isDisabled
               />
@@ -144,7 +133,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('city')}
               </FormLabel>
-              <Input variant="required-field" style={textStyle} value={props?.clientDetails?.city} isDisabled />
+              <Input variant="required-field" style={disabledTextStyle} value={props?.clientDetails?.city} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
@@ -160,7 +149,12 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <FormLabel variant="strong-label" size="md">
                 {t('zipCode')}
               </FormLabel>
-              <Input variant="required-field" style={textStyle} value={props?.clientDetails?.zipCode} isDisabled />
+              <Input
+                variant="required-field"
+                style={disabledTextStyle}
+                value={props?.clientDetails?.zipCode}
+                isDisabled
+              />
             </FormControl>
           </GridItem>
         </Grid>
@@ -172,7 +166,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('contact')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={contact?.contact} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={contact?.contact} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -180,7 +174,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('phoneNo')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={contact?.phoneNumber} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={contact?.phoneNumber} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -188,7 +182,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('email')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={contact?.emailAddress} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={contact?.emailAddress} isDisabled />
                 </FormControl>
               </GridItem>
               {/* <GridItem>
@@ -221,7 +215,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('contact')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={accPayConInfo?.contact} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={accPayConInfo?.contact} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -229,7 +223,12 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('phoneNo')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={accPayConInfo?.phoneNumber} isDisabled />
+                  <Input
+                    variant="required-field"
+                    style={disabledTextStyle}
+                    value={accPayConInfo?.phoneNumber}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -237,7 +236,12 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('city')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={props?.clientDetails?.city} isDisabled />
+                  <Input
+                    variant="required-field"
+                    style={disabledTextStyle}
+                    value={props?.clientDetails?.city}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -245,14 +249,19 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                   <FormLabel variant="strong-label" size="md">
                     {t('comment')}
                   </FormLabel>
-                  <Input variant="required-field" style={textStyle} value={accPayConInfo?.comments} isDisabled />
+                  <Input
+                    variant="required-field"
+                    style={disabledTextStyle}
+                    value={accPayConInfo?.comments}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
             </Grid>
           )
         })}
       </Box>
-      <Flex style={btnStyle} py="4" pt={5}>
+      <Flex justifyContent={'end'} borderTop="1px solid #CBD5E0" py="4" pt={5}>
         <Button colorScheme="brand" onClick={props?.onClose}>
           {t('cancel')}
         </Button>
