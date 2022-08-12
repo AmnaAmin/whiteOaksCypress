@@ -36,8 +36,8 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
   // const clientMarket = { label: clientMarketArr?.stateName, value: clientMarketArr?.id }
 
   // To get Client State
-  const clientStateArr = statesData?.find(state => state?.id === props?.clientDetails?.state)
-  const clientState = { label: clientStateArr?.name, value: clientStateArr?.id }
+  const selectedClientState = statesData?.find(state => state?.id === props?.clientDetails?.state)
+  const clientState = { label: selectedClientState?.name, value: selectedClientState?.id }
 
   const disabledTextStyle = {
     color: '#2D3748',
