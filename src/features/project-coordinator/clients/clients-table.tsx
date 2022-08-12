@@ -98,7 +98,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         columns={columns}
         data={clients || []}
         TableRow={clientsTableRow}
-        tableHeight="calc(100vh - 300px)"
+        tableHeight="calc(100vh - 225px)"
         name="clients-table"
         onRowClick={(e, row) => setSelectedClient(row.original)}
       />

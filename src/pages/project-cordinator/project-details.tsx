@@ -3,7 +3,7 @@ import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } fro
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
+import { ProjectSummaryCard } from 'features/project-coordinator/project-summary-card'
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
 // import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
@@ -27,6 +27,7 @@ import { Card } from 'components/card/card'
 import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 import { FinancialOverviewTable } from 'features/project-coordinator/financial-overview-table'
+import { STATUS } from 'features/projects/status'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -65,7 +66,7 @@ export const ProjectDetails: React.FC = props => {
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
+        <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
 
         {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
@@ -87,18 +88,21 @@ export const ProjectDetails: React.FC = props => {
               </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
-                {tabIndex === 2 && (
-                  <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
-                    <Flex alignItems="center" fontSize="14px" fontWeight={500}>
-                      <Text mr={1}>
-                        <BiAddToQueue size={14} />
-                      </Text>
-                      <Text>{t('newWorkOrder')}</Text>
-                    </Flex>
+                {tabIndex === 2 &&
+                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
+                    projectStatus as STATUS,
+                  ) && (
+                    <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
+                      <Flex alignItems="center" fontSize="14px" fontWeight={500}>
+                        <Text mr={1}>
+                          <BiAddToQueue size={14} />
+                        </Text>
+                        <Text>{t('newWorkOrder')}</Text>
+                      </Flex>
 
-                    <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
-                  </Button>
-                )}
+                      <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
+                    </Button>
+                  )}
                 {tabIndex === 3 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
                     Upload
