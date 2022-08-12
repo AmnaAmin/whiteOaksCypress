@@ -5,6 +5,8 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
+        //TODO - Add a comment on usage point once clear from Product
+        EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "Expected Completion Date cannot be more than 1 year of Expected Start Date",
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -445,6 +447,8 @@ i18n.use(initReactI18next).init({
     },
     es: {
       translation: {
+        //TODO - Add a comment on usage point once clear from Product
+        EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada",
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
         fieldProjectManager: 'Gerente de Proyectos de Campo',

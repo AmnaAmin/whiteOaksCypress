@@ -1,4 +1,5 @@
 {
   "welcome text": "مرحبًا بك في البرنامج التعليمي react-i18next",
-  "WOAstatusGraph": "WOA Status ABCD"
+  "WOAstatusGraph": "WOA Status ABCD",
+  "EXPECTED_AND_COMPLETION_1_YEAR_ERROR": "La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada",
 }
