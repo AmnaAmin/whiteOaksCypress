@@ -183,7 +183,7 @@ export const ManageProject: React.FC<{
         </GridItem>
       </Grid>
       <Grid display="flex" position={'absolute'} right={10} bottom={5}>
-        <Button onClick={props.onClose} variant="outline" size="md" color="#4E87F8" border="2px solid #4E87F8">
+        <Button onClick={props.onClose} variant="outline" colorScheme="brand">
           {'Cancel'}
         </Button>
         <Button
