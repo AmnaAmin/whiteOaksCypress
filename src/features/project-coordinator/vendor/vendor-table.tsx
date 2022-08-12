@@ -152,23 +152,17 @@ export const VendorTable: React.FC<ProjectProps> = ({
         />
       )}
 
-      {isLoading ? (
-        <Center>
-          <Spinner size="xl" />
-        </Center>
-      ) : (
-        <TableWrapper
-          isLoading={isLoading}
-          columns={projectColumns}
-          data={filterVendors ? filterVendors : []}
-          TableRow={VendorRow}
-          name="vendor-table"
-          tableHeight="calc(100vh - 350px)"
-          setTableInstance={setTableInstance}
-          onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
-          sortBy={{ id: 'id', desc: true }}
-        />
-      )}
+      <TableWrapper
+        isLoading={isLoading}
+        columns={projectColumns}
+        data={filterVendors ? filterVendors : []}
+        TableRow={VendorRow}
+        name="vendor-table"
+        tableHeight="calc(100vh - 350px)"
+        setTableInstance={setTableInstance}
+        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+        sortBy={{ id: 'id', desc: true }}
+      />
     </Box>
   )
 }

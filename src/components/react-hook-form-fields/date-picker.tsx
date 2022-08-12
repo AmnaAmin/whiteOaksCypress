@@ -75,6 +75,7 @@ export const DatePickerInput = React.forwardRef((props: any | boolean, ref: Lega
       bg="white"
       size="md"
       color="#718096"
+      cursor="pointer"
       onChange={props.onChange}
       onClick={props.onClick}
       placeholder={props.placeholder}
@@ -88,7 +89,7 @@ export const DatePickerInput = React.forwardRef((props: any | boolean, ref: Lega
 
     <InputRightElement className="InputLeft" pointerEvents="none">
       <Box color="gray.400" fontSize="14px">
-        <BiCalendar size={20} cursor="pointer" color="#A0AEC0" />
+        <BiCalendar size={20} color="#A0AEC0" />
       </Box>
     </InputRightElement>
   </InputGroup>
