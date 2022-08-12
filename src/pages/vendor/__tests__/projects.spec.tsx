@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from 'utils/test-utils'
+import { fireEvent, render, screen } from 'utils/test-utils'
 import App from 'App'
 import userEvent from '@testing-library/user-event'
 // import { FIRST_PROJECT_ID } from '../../mocks/api/projects/data'

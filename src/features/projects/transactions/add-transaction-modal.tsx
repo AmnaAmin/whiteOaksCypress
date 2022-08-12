@@ -3,9 +3,11 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, Modal
 import { useTranslation } from 'react-i18next'
 import { TransactionForm } from './transaction-form'
 
-type Props = Pick<ModalProps, 'isOpen' | 'onClose'>
+type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
+  projectId: string
+}
 
-const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
@@ -15,7 +17,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose }) => {
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
-          <TransactionForm onClose={onClose} />
+          <TransactionForm onClose={onClose} projectId={projectId} />
         </ModalBody>
       </ModalContent>
     </Modal>

@@ -15,19 +15,6 @@ import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
 
-export const getProjectDetailsAPIKey = (projectId?: string) => ['project-details', projectId]
-
-export const useProjectDetails = (projectId?: string) => {
-  const client = useClient()
-  const projectDetailsGetAPIKey = getProjectDetailsAPIKey(projectId)
-
-  return useQuery<Project>(projectDetailsGetAPIKey, async () => {
-    const response = await client(`projects/${projectId}`, { projectId })
-
-    return response?.data
-  })
-}
-
 export const useGetStateSelectOptions = () => {
   const client = useClient()
 
@@ -133,8 +120,7 @@ export const useProjectDetailsUpdateMutation = () => {
       })
     },
     {
-      onSuccess: data => {
-        console.log('onSuccess', data)
+      onSuccess: () => {
         toast({
           title: 'Project Details Updated',
           description: 'Project details updated successfully',
@@ -150,8 +136,8 @@ export const useProjectDetailsUpdateMutation = () => {
 
 export const getProjectStatusSelectOptions = () => {
   return Object.entries(ProjectStatus).map(([key, value]) => ({
-    value: value.toUpperCase(),
-    label: value.toUpperCase(),
+    value: value,
+    label: key.toUpperCase(),
   }))
 }
 
@@ -159,26 +145,23 @@ export const useProjectStatusSelectOptions = (project: Project) => {
   return useMemo(() => {
     if (!project) return []
 
-    const projectStatus = project.projectStatus?.toLocaleLowerCase()
+    const projectStatusId = project.projectStatusId
     const numberOfWorkOrders = project.numberOfWorkOrders
     const numberOfCompletedWorkOrders = project.numberOfCompletedWorkOrders
     const numberOfPaidWorkOrders = project.numberOfPaidWorkOrders
     const sowNewAmount = project.sowNewAmount || 0
     const partialPayment = project.partialPayment || 0
 
-    if (!projectStatus) return []
+    if (!projectStatusId) return []
 
-    const projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatus].map(status => ({
-      value: status.toUpperCase(),
-      label: status.toUpperCase(),
-    }))
+    const projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatusId] || []
 
     const selectOptionWithDisableEnabled = projectStatusSelectOptions.map((selectOption: SelectOption) => {
-      const optionLabel = selectOption?.label?.toLowerCase()
+      const optionValue = selectOption?.value
 
       // if project in new status and there are zero work orders then
       // active status should be disabled
-      if (numberOfWorkOrders === 0 && projectStatus === ProjectStatus.New && optionLabel === ProjectStatus.Active) {
+      if (numberOfWorkOrders === 0 && projectStatusId === ProjectStatus.New && optionValue === ProjectStatus.Active) {
         return {
           ...selectOption,
           label: `${selectOption.label} (Minimum 1 Workorder Required)`,
@@ -190,8 +173,8 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // Project punch status should be disabled
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
-        projectStatus === ProjectStatus.Active &&
-        optionLabel === ProjectStatus.Punch
+        projectStatusId === ProjectStatus.Active &&
+        optionValue === ProjectStatus.Punch
       ) {
         return {
           ...selectOption,
@@ -204,8 +187,8 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // project status Paid should be disabled
       if (
         numberOfPaidWorkOrders === numberOfWorkOrders &&
-        projectStatus === ProjectStatus.ClientPaid &&
-        optionLabel === ProjectStatus.Paid
+        projectStatusId === ProjectStatus.ClientPaid &&
+        optionValue === ProjectStatus.Paid
       ) {
         return {
           ...selectOption,
@@ -218,8 +201,8 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // project status Paid should be disabled
       if (
         sowNewAmount - partialPayment > 0 &&
-        projectStatus === ProjectStatus.Invoiced &&
-        optionLabel === ProjectStatus.ClientPaid
+        projectStatusId === ProjectStatus.Invoiced &&
+        optionValue === ProjectStatus.ClientPaid
       ) {
         return {
           ...selectOption,
@@ -284,7 +267,7 @@ export const parseFormValuesFromAPIData = ({
 
   return {
     // Project Management form values
-    status: findOptionByValue(projectStatusSelectOptions, project.projectStatus),
+    status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
     type: findOptionByValue(projectTypeSelectOptions, project.projectType),
     woNumber: project.woNumber,
     poNumber: project.poNumber,
@@ -391,7 +374,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
   return {
     ...projectPayload,
     // Project Management payload
-    projectStatus: formValues?.status?.value || null,
+    projectStatusId: formValues?.status?.value || null,
     projectType: formValues?.type?.value ?? null,
     woNumber: formValues.woNumber,
     poNumber: formValues.poNumber,

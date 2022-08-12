@@ -24,7 +24,8 @@ import { convertImageToDataURL } from 'components/table/util'
 import { createForm } from './lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
-import { getProjectDetailsAPIKey } from 'utils/project-details'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
+import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -513,6 +514,9 @@ export const parseTransactionToFormValues = (
       ? workOrderOptions[0]
       : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
 
+  const isMaterialRefunded =
+    transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
+
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
@@ -535,7 +539,7 @@ export const parseTransactionToFormValues = (
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
     paymentRecieved: null,
-    refundMaterial: false,
+    refundMaterial: isMaterialRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
@@ -561,12 +565,14 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries(getProjectDetailsAPIKey(projectId))
+        queryClient.invalidateQueries(['project', projectId])
+
         toast({
           title: 'New Transaction.',
           description: 'Transaction has been created successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -589,13 +595,16 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries(getProjectDetailsAPIKey(projectId))
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
 
         toast({
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },

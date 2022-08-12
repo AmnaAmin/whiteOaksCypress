@@ -1,8 +1,9 @@
 import { forwardRef } from 'react'
-import { Select as ReactSelect } from 'chakra-react-select'
+import { Select as ReactSelect, CreatableSelect as RSCreatableSelect } from 'chakra-react-select'
 import { inputBorderLeftStyle, inputFocusStateStyle } from 'theme/common-style'
 import { AnyCnameRecord } from 'dns'
 import { Text, Flex } from '@chakra-ui/react'
+import { List } from 'react-virtualized'
 
 const fontSizes = {
   sm: '13px',
@@ -147,5 +148,36 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     />
   )
 })
+
+const MenuList: React.FC<any> = props => {
+  const { children } = props
+
+  function rowRenderer({
+    key, // Unique key within array of rows
+    index, // Index of row within collection
+    style, // Style object to be applied to row (to position it)
+  }) {
+    return (
+      <div key={key} style={style}>
+        {children[index]}
+      </div>
+    )
+  }
+
+  return <List width={300} height={300} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
+}
+
+export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
+  <RSCreatableSelect
+    {...props}
+    ref={ref}
+    chakraStyles={chakraStyles}
+    placeholder="Select"
+    components={{
+      IndicatorSeparator: false,
+      MenuList,
+    }}
+  />
+))
 
 export { Select as default }
