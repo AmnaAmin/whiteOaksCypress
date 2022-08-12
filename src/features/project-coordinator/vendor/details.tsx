@@ -428,17 +428,17 @@ const PcDetails: React.FC<{
         </Box>
       </Box>
 
-      <HStack
+      <Flex
         height="72px"
         pt="8px"
         mt="30px"
         id="footer"
         borderTop="2px solid #E2E8F0"
+        alignItems="center"
         justifyContent="end"
-        spacing="16px"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
@@ -451,7 +451,7 @@ const PcDetails: React.FC<{
         >
           {vendorProfileData?.id ? t('save') : t('next')}
         </Button>
-      </HStack>
+      </Flex>
     </Stack>
   )
 }
