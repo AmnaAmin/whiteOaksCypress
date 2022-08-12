@@ -51,6 +51,7 @@ export const WorkOrderDetails = ({
   const { documents: documentsData = [], isLoading } = useDocuments({
     projectId,
   })
+  const [tabIndex, setTabIndex] = useState(0)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -88,7 +89,13 @@ export const WorkOrderDetails = ({
 
           <Divider mb={3} />
           <Stack spacing={5}>
-            <Tabs variant="enclosed" colorScheme="brand" size="md">
+            <Tabs
+              variant="enclosed"
+              colorScheme="brand"
+              size="md"
+              index={tabIndex}
+              onChange={index => setTabIndex(index)}
+            >
               <TabList mr="30px" ml="30px" color="gray.500">
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
@@ -127,6 +134,7 @@ export const WorkOrderDetails = ({
                       workOrder={workOrder}
                       transactions={transactions}
                       onClose={onClose}
+                      setTabIndex={setTabIndex}
                     />
                   )}
                 </TabPanel>

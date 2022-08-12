@@ -128,7 +128,8 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       {notesCount}
                     </Box>
                   </Tab>
-                  {tabIndex === 1 && (
+                  {/* commenting till requirements are clear
+                  tabIndex === 1 && (
                     <Center w="100%" justifyContent="end">
                       {workOrder?.leanWaiverSubmitted && workOrder.dateLeanWaiverSubmitted && (
                         <Checkbox
@@ -143,7 +144,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                         </Checkbox>
                       )}
                     </Center>
-                  )}
+                      )*/}
                   {tabIndex === 2 &&
                     [STATUS.Invoiced, STATUS.Declined].includes(
                       workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,

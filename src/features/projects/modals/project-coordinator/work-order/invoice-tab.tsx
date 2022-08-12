@@ -112,6 +112,7 @@ export const InvoiceTabPC = ({
   const rejectInvoice = () => {
     onSave({
       status: STATUS_CODE.DECLINED,
+      lienWaiverAccepted: false,
     })
   }
   return (
@@ -213,14 +214,20 @@ export const InvoiceTabPC = ({
           )}
         </HStack>
         <HStack justifyContent="end">
-          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && (
-            <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
-              {t('save')}
+          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced ? (
+            <>
+              <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
+                {t('save')}
+              </Button>
+              <Button onClick={onClose} colorScheme="brand" variant="outline">
+                {t('cancel')}
+              </Button>
+            </>
+          ) : (
+            <Button onClick={onClose} colorScheme="brand">
+              {t('cancel')}
             </Button>
           )}
-          <Button onClick={onClose} colorScheme="brand" variant="outline">
-            {t('cancel')}
-          </Button>
         </HStack>
       </ModalFooter>
     </Box>

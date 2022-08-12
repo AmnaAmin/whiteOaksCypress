@@ -17,6 +17,7 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
         onClose={onClose}
         projectData={null}
         transactions={transactions}
+        setTabIndex={null}
       />
     </Modal>,
     {
