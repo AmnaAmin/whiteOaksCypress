@@ -78,6 +78,16 @@ export const useProjectNotes = ({ projectId }: { projectId: number | undefined }
   }
 }
 
+export const useProjectTypes = () => {
+  const client = useClient()
+
+  return useQuery('projectTypes', async () => {
+    const response = await client(`project_type?page=&size=&sort=value,asc`, {})
+
+    return response?.data
+  })
+}
+
 export const PROJECT_FINANCIAL_OVERVIEW_API_KEY = 'projectFinancialOverview'
 
 export const useGetProjectFinancialOverview = (projectId?: string) => {
@@ -127,6 +137,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const profitMargin = originalSOWAmount === 0 ? 0 : (originalSOWAmount - projectTotalCost) / originalSOWAmount
 
+  console.log('restProjectFinancialOverviews', restProjectFinancialOverviews)
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),
     accountPayable: numeral(vendorAccountPayable).format('$0,0.00'),
@@ -134,6 +145,14 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     revenue: numeral(finalSOWAmount).format('$0,0.00'),
     profits: numeral(finalSOWAmount - projectTotalCost).format('$0,0.00'),
     profitMargin: numeral(profitMargin).format('0.00%'),
+    financialOveriewTableData:
+      [firstFinancialRecord]?.map(fo => ({
+        ...fo,
+        revisedSOWAmount: (fo?.originalAmount || 0) + (fo?.noCoAdjustment || 0),
+        revisedChangeOrderAmount: (fo?.changeOrder || 0) + (fo?.coAdjustment || 0),
+        finalSOWAmount: fo?.newAmount || 0,
+        accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - (fo?.partialPayment || 0),
+      })) || [],
     ...rest,
   }
 }

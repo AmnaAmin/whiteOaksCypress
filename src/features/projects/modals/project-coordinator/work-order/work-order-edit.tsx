@@ -29,7 +29,7 @@ import Status, { STATUS } from 'features/projects/status'
 import WorkOrderNotes from '../../work-order-notes'
 import { countInCircle } from 'theme/common-style'
 import WorkOrderDetailTab from './work-order-edit-tab'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'utils/pc-projects'
 import { useDocuments } from 'utils/vendor-projects'
@@ -49,8 +49,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
   })
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
   const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
+  const navigate = useNavigate()
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -61,6 +64,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     if (workOrder) {
       onOpen()
       setRejectInvoice(workOrder.status === 111)
+      if (workOrder.leanWaiverSubmitted) {
+        setRejectLW(!workOrder.lienWaiverAccepted)
+      }
       if (!projId) {
         setProjId(workOrder?.projectId?.toString())
       }
@@ -74,6 +80,10 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
   const onSave = values => {
     const payload = { ...workOrder, ...values }
     updateWorkOrder(payload)
+  }
+
+  const navigateToProjectDetails = () => {
+    navigate(`/project-details/${workOrder.projectId}`)
   }
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
@@ -120,9 +130,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   </Tab>
                   {tabIndex === 1 && (
                     <Center w="100%" justifyContent="end">
-                      {workOrder?.claimantTitle && (
+                      {workOrder?.leanWaiverSubmitted && workOrder.dateLeanWaiverSubmitted && (
                         <Checkbox
                           onChange={() => setRejectLW(!rejectLW)}
+                          isChecked={rejectLW}
+                          disabled={!workOrder.lienWaiverAccepted}
                           color="#4A5568"
                           fontSize="14px"
                           fontWeight={500}
@@ -153,15 +165,21 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
                 <TabPanels>
                   <TabPanel p={0}>
-                    <WorkOrderDetailTab workOrder={workOrder} onClose={onClose} onSave={onSave} />
+                    <WorkOrderDetailTab
+                      navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                      workOrder={workOrder}
+                      onClose={onClose}
+                      onSave={onSave}
+                    />
                   </TabPanel>
                   <TabPanel p={0}>
                     {isDocumentsLoading ? (
                       <BlankSlate />
                     ) : (
                       <LienWaiverTab
+                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         documentsData={documentsData}
-                        lienWaiverData={workOrder}
+                        workOrder={workOrder}
                         onClose={onClose}
                         rejectChecked={!rejectLW}
                         onSave={onSave}
@@ -173,6 +191,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       <BlankSlate />
                     ) : (
                       <InvoiceTabPC
+                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         rejectInvoiceCheck={rejectInvoice}
                         transactions={transactions}
                         documentsData={documentsData}
@@ -187,6 +206,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       <BlankSlate />
                     ) : (
                       <PaymentInfoTab
+                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         projectData={projectData}
                         workOrder={workOrder}
                         onClose={onClose}
@@ -197,6 +217,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
                   <TabPanel p={0}>
                     <WorkOrderNotes
+                      navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                       workOrder={workOrder}
                       onClose={onClose}
                       setNotesCount={setNotesCount}

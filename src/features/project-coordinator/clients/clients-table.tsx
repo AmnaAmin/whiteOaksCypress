@@ -6,6 +6,7 @@ import { useClients } from 'utils/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/projects/modals/project-coordinator/client-modal'
 import { TableWrapper } from 'components/table/table'
+import { useTranslation } from 'react-i18next'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -41,41 +42,42 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
+  const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: 'Name',
+        Header: t('name' as string),
         accessor: 'companyName',
       },
       {
-        Header: 'Contact',
+        Header: t('contact'),
         accessor: 'contacts[0].contact',
       },
       {
-        Header: 'Address',
+        Header: t('address'),
         accessor: 'streetAddress',
       },
       {
-        Header: 'Phone',
+        Header: t('phone'),
         accessor: 'contacts[0].phoneNumber',
       },
       {
-        Header: 'Email',
+        Header: t('email'),
         accessor: 'contacts[0].emailAddress',
         // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
-        Header: 'Contact',
+        Header: t('contact'),
         accessor: 'accountPayableContactInfos[0].contact',
       },
       {
-        Header: 'Email',
+        Header: t('email'),
         accessor: 'accountPayableContactInfos[0].emailAddress',
       },
 
       {
-        Header: 'Phone',
+        Header: t('phone'),
         accessor: 'accountPayableContactInfos[0].phoneNumber',
         // Cell: ({ value }) => dateFormat(value),
       },

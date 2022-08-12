@@ -86,7 +86,7 @@ export const TransactionInfoCard: React.FC<{
         <InfoStructureCard isLoading={isLoading} title="" border="none">
           {isSeeMore && (
             <Button
-              color="blue"
+              color="#4E87F8"
               border="none"
               bg="none"
               _focus={{ border: 'none', bg: 'none' }}
@@ -102,7 +102,7 @@ export const TransactionInfoCard: React.FC<{
           )}
           {isSeeLess && (
             <Button
-              color="blue"
+              color="#4E87F8"
               border="none"
               bg="none"
               _focus={{ border: 'none', bg: 'none' }}
