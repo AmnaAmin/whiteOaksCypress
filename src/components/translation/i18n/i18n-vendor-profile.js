@@ -23,8 +23,7 @@ i18n.use(initReactI18next).init({
         ext: 'Ext',
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
-        secondaryEmail: 'Secondary Email',
-        EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "Expected Completion Date cannot be more than 1 year of Expected Start Date"
+        secondaryEmail: 'Secondary Email'
       },
     },
     es: {
@@ -47,9 +46,7 @@ i18n.use(initReactI18next).init({
         ext: 'Ext 2',
         secondaryNo: 'Secondary No 2',
         primaryEmail: 'Primary Email 2',
-        secondaryEmail: 'Secondary Email 2',
-        //TODO - Add a comment on usage point once clear from Product
-        EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada",
+        secondaryEmail: 'Secondary Email 2'
       },
     },
   },

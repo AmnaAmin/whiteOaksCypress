@@ -1,5 +1,4 @@
 {
   "welcome text": "Welcome to the react-i18next tutorial",
-  "WOAstatusGraph": "WOA Status Graph",
-  "EXPECTED_AND_COMPLETION_1_YEAR_ERROR": "Expected Completion Date cannot be more than 1 year of Expected Start Date"
+  "WOAstatusGraph": "WOA Status Graph"
 }
