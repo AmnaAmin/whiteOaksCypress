@@ -124,6 +124,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 type="date"
                 isDisabled={isClientDueDateDisabled}
                 required
+                min={minOfWoaStartDate}
                 {...register('clientDueDate')}
               />
               <FormErrorMessage>{errors?.clientDueDate?.message}</FormErrorMessage>

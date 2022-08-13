@@ -10,7 +10,7 @@ type clientDetailProps = {
 }
 
 export const Market = React.forwardRef((props: clientDetailProps) => {
-  const { data: markets } = useMarkets()
+  const { markets } = useMarkets()
 
   const btnStyle = {
     alignItems: 'center',
