@@ -51,19 +51,19 @@ export const ProjectSummaryCardDetails: React.FC<{
 
         <InfoStructureCard title={'Client Start Date'} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md">
-            {dateFormat(projectData?.clientStartDate as string)}
+            {projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate as string) : '-----------'}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'Client End Date'} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md">
-            {dateFormat(projectData?.clientDueDate as string)}
+            {projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate as string) : '-----------'}
           </FormLabel>
         </InfoStructureCard>
 
         <InfoStructureCard title={'WOA Start Date'} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md">
-            {dateFormat(projectData?.woaStartDate as string)}
+            {projectData?.woaStartDate ? dateFormat(projectData?.woaStartDate as string) : '-----------'}
           </FormLabel>
         </InfoStructureCard>
 
