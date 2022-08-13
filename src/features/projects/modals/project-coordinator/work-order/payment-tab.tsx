@@ -12,7 +12,7 @@ import {
   ModalBody,
   HStack,
 } from '@chakra-ui/react'
-import { BiCalendar } from 'react-icons/bi'
+import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'utils/vendor-projects'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -32,7 +32,7 @@ const CalenderCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date}
         </Text>
       </Box>
@@ -47,7 +47,7 @@ const InformationCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -56,10 +56,10 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave } = props
+  const { workOrder, onSave, navigateToProjectDetails } = props
 
   const { t } = useTranslation()
-  const { leanWaiverSubmitted, paymentTermDate, durationCategory } = props.workOrder
+  const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
 
   interface FormValues {
     dateInvoiceSubmitted: string | null
@@ -100,10 +100,13 @@ const PaymentInfoTab = props => {
           <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
             <CalenderCard
               title={t('lwDate')}
-              date={leanWaiverSubmitted ? dateFormat(leanWaiverSubmitted) : 'mm/dd/yyyy'}
+              date={dateLeanWaiverSubmitted ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
             />
-            <CalenderCard title={t('permitDate')} date={paymentTermDate ? dateFormat(paymentTermDate) : 'mm/dd/yyyy'} />
-            <InformationCard title={t('payDateVariance')} date={durationCategory} />
+            <CalenderCard
+              title={t('permitDate')}
+              date={datePermitsPulled ? dateFormat(datePermitsPulled) : 'mm/dd/yyyy'}
+            />
+            <InformationCard title={t('payDateVariance')} date={workOrderPayDateVariance} />
           </SimpleGrid>
 
           <Box mt={10}>
@@ -290,7 +293,20 @@ const PaymentInfoTab = props => {
           </Box>
         </ModalBody>
         <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
-          <HStack spacing="16px" justifyContent="end">
+          <HStack justifyContent="start" w="100%">
+            {navigateToProjectDetails && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={navigateToProjectDetails}
+                leftIcon={<BiSpreadsheet />}
+              >
+                {t('seeProjectDetails')}
+              </Button>
+            )}
+          </HStack>
+          <HStack justifyContent="end">
             <Button variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('close')}
             </Button>

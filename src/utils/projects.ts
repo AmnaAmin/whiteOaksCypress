@@ -78,6 +78,16 @@ export const useProjectNotes = ({ projectId }: { projectId: number | undefined }
   }
 }
 
+export const useProjectTypes = () => {
+  const client = useClient()
+
+  return useQuery('projectTypes', async () => {
+    const response = await client(`project_type?page=&size=&sort=value,asc`, {})
+
+    return response?.data
+  })
+}
+
 export const PROJECT_FINANCIAL_OVERVIEW_API_KEY = 'projectFinancialOverview'
 
 export const useGetProjectFinancialOverview = (projectId?: string) => {

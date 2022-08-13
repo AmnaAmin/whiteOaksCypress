@@ -11,12 +11,13 @@ import {
 } from 'react-table'
 import { getFileBlob } from './util'
 import { useExportData } from 'react-table-plugins'
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex } from '@chakra-ui/react'
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Box, FormLabel, Center } from '@chakra-ui/react'
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
+import compact from 'lodash/compact'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -94,9 +95,10 @@ export function useCustomTable(props: TableProps, ...rest) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [{ id: 'id', desc: true, ...props.sortBy }],
+        sortBy: compact([props.sortBy]),
       },
     },
+
     useBlockLayout,
     useFilters,
     useSortBy,
@@ -212,6 +214,16 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
     [prepareRow, rows, onRowClick, TableRow],
   )
 
+  const NoRowsRenderer = () => {
+    return (
+      <Box p={5} width={'calc(100vw - var(--sidebar-width))'}>
+        <Center>
+          <FormLabel variant="light-label">{'No data returned for this view.'} </FormLabel>
+        </Center>
+      </Box>
+    )
+  }
+
   return (
     <Tbody {...getTableBodyProps()} flex={1}>
       <AutoSizer>
@@ -222,6 +234,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
               height={height}
               rowCount={rows.length}
               rowHeight={60}
+              noRowsRenderer={NoRowsRenderer}
               rowRenderer={RenderRow}
               width={width}
             />

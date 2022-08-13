@@ -35,7 +35,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 fontSize="14px"
                 fontStyle="normal"
                 fontWeight={400}
-                noOfLines={2}
+                noOfLines={1}
                 title={cell.value}
                 mt="10px"
                 mb="10px"

@@ -56,7 +56,17 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
         onChange={onFileChange}
         data-testid={testId}
       />
-      <Box flex="1" position="relative" overflow="hidden">
+      <Button
+        type="button"
+        variant="ghost"
+        size="xl"
+        onClick={() => inputRef?.current?.click()}
+        _active={{ bg: 'none' }}
+        _hover={{ bg: 'none' }}
+        flex="1"
+        position="relative"
+        overflow="hidden"
+      >
         {value && (
           <Flex rounded="6px" alignItems="center" height="40px">
             <Text
@@ -73,19 +83,12 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
             >
               {value}
             </Text>
-            <Button
-              type="button"
-              variant="link"
-              size="xl"
-              colorScheme={isError ? 'red' : 'brand'}
-              onClick={() => inputRef?.current?.click()}
-              bg="white"
-            >
+            <Button type="button" variant="link" size="xl" colorScheme={isError ? 'red' : 'brand'} bg="white">
               <BiUpload />
             </Button>
           </Flex>
         )}
-      </Box>
+      </Button>
     </Box>
   )
 }

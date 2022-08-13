@@ -55,7 +55,6 @@ i18n.use(initReactI18next).init({
         completed: 'Completed',
         pendingTransaction: 'Pending Transaction',
         pastDueWO: 'Past Due WO',
-        id: 'ID',
         type: 'Type',
         status: 'Status',
         newVendor: 'New Vendor',
@@ -80,6 +79,13 @@ i18n.use(initReactI18next).init({
         woNo: 'WO Po',
         checkbox: 'Checkbox',
         clearFilter: 'Clear Filter',
+
+        // Payable
+        propertyAddress: 'Property Address',
+        vendorAddress: 'Vendor Address',
+        wOCompletedDate: 'WO Completed Date',
+        wOIssueDate: 'WO Issue Date',
+        id: 'ID',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',
@@ -155,6 +161,8 @@ i18n.use(initReactI18next).init({
         lienWaiver: 'Lien Waiver',
         lienWaiverRejectInfo: 'Admin made changes, you are required to generate LW again.',
         rejectLienWaiver: 'Reject Lien Waiver',
+        saveLWError: 'Please save Lien Waiver before generating Invoice',
+        updateLWError: 'Please update Lien Waiver before generating Invoice',
         rejectInvoice: 'Reject Invoice',
         reject: 'Reject',
         invoice: 'Invoice',
@@ -404,7 +412,9 @@ i18n.use(initReactI18next).init({
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
 
-        //PC projectDetails
+        // **** PROJECT COORDINATOR ****//
+
+        // PC projectDetails
         projectCoordinator: 'Project Coordinator',
         fieldProjectManager: 'Field Project Manager',
         superName: 'Super Name',
@@ -426,6 +436,16 @@ i18n.use(initReactI18next).init({
         clientName: 'Client Name',
         zipCode: 'Zip Code',
         projectTypeLabel: 'Type',
+
+        // PC Clients
+        clientOverview: 'Client Overview',
+        // businessName: 'Business Name',
+        // accountPayable: 'Account Payable',
+        paymentMethod: 'Payment Method',
+        accPayConInfo: 'Accounts Payable contact details',
+        creditCard: 'Credit Card',
+        ach: 'ACH',
+        comment: 'Comment',
       },
     },
     es: {
@@ -469,22 +489,22 @@ i18n.use(initReactI18next).init({
         clientOriginalAmount: 'Importe original del cliente',
         clientFinalApprovedAmount: 'Cantidad final aprobada por el cliente',
 
-        // work order details
+        // Work order details
         vendorName: 'nombre del vendedor',
         vendorType: 'tipo de vendedor',
-        phoneNo: 'telefono no',
-        woIssued: 'wo emitido',
+        phoneNo: 'Telefono no',
+        woIssued: 'WO emitido',
         lwSubmitted: 'LW Submitted',
-        permittedPulled: 'permitido tirado',
+        permittedPulled: 'Permitido tirado',
         completionVariance: 'Variación de finalización',
-        cancelWorkOrder: 'cancelar orden de trabajo',
+        cancelWorkOrder: 'Cancelar orden de trabajo',
         // Project details
         originalSowAmount: 'Importe de la SOW original',
         finalSowAmount: 'Importe de la SOW final',
         paymentsTerms: 'Condiciones de pago',
         woaExpectedPay: 'Pago esperado de WOA',
         downloadOriginalSow: 'Descargar SOW original',
-        overpayment: 'sobrepago',
+        overpayment: 'Sobrepago',
         remainingPayment: 'pago restante',
         payment: 'Pago',
         invoiceBackDate: 'Reembolso de factura',
@@ -536,7 +556,6 @@ i18n.use(initReactI18next).init({
         completed: 'Terminado',
         pendingTransaction: 'Transacción Pendiente',
         pastDueWO: 'Atrasado WO',
-        id: 'ID',
         type: 'Escribe',
         WOstatus: 'Estado WO',
         address: 'Habla a',
@@ -557,6 +576,13 @@ i18n.use(initReactI18next).init({
         woNo: 'OT No',
         checkbox: 'Caja',
         clearFilter: 'Filtro claro',
+
+        // Payable
+        propertyAddress: 'Dirección de Propiedad',
+        vendorAddress: 'Dirección del proveedor',
+        wOCompletedDate: 'Fecha de finalización de la OT',
+        wOIssueDate: 'Fecha de emisión de OT',
+        id: 'IDENTIFICACIÓN',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Escribe',
@@ -629,6 +655,8 @@ i18n.use(initReactI18next).init({
         phone: 'Teléfono',
         issue: 'Asunto',
         rejectLienWaiver: 'Rechazar exención de gravamen',
+        saveLWError: 'Guarde la exención de gravamen antes de generar la factura',
+        updateLWError: 'Actualice la exención de gravamen antes de generar la factura',
         rejectInvoice: 'Rechazar Factura',
         lienWaiver: 'Exención de gravamen',
         lienWaiverRejectInfo: 'El administrador realizó cambios, debe generar LW nuevamente.',
@@ -825,7 +853,17 @@ i18n.use(initReactI18next).init({
         support: 'Apoyo',
         signOut: 'Desconectar',
 
-        // -- PROJECT COORDINATOR -- //
+        // **** PROJECT COORDINATOR ****//
+
+        // PC Clients
+        clientOverview: 'Descripción general del cliente',
+        // businessName: 'Nombre del Negocio',
+        accountPayable: 'Cuenta por pagar',
+        paymentMethod: 'Método de pago',
+        accPayConInfo: 'Datos de contacto de cuentas por pagar',
+        creditCard: 'Crédito',
+        ach: 'ACH',
+        comment: 'Comentario',
 
         // Alerts
         triggeredAlerts: 'Alertas activadas',
