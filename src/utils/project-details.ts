@@ -339,7 +339,7 @@ const removePropertiesFromObject = (obj: Project, properties: string[]): Project
   return newObj
 }
 
-export const createDocumentPayload = (file: File): Promise<DocumentPayload> => {
+export const createDocumentPayload = (file: File, documentType = 42): Promise<DocumentPayload> => {
   return new Promise((res, rej) => {
     const reader = new FileReader()
     let filetype = 'text/plain'
@@ -351,7 +351,7 @@ export const createDocumentPayload = (file: File): Promise<DocumentPayload> => {
         fileType: file.name,
         fileObject: event?.target?.result?.split(',')[1],
         fileObjectContentType: filetype,
-        documentType: 42,
+        documentType,
       })
     })
 

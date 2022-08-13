@@ -101,11 +101,12 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       let fileContents: any = null
       const doc = values.documents
       if (doc) {
-        fileContents = await createDocumentPayload(doc)
+        fileContents = await createDocumentPayload(doc, 39)
       }
 
       const property = {
         streetAddress: values.streetAddress,
+        city: values.city,
         marketId: values.newMarket?.value,
         state: values.state?.value,
         zipCode: values.zipCode,
@@ -121,6 +122,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         woaStartDate: dateISOFormat(values.woaStartDate),
         sowOriginalContractAmount: values.sowOriginalContractAmount,
         documents: fileContents ? [fileContents] : [],
+        newProperty: property,
         property,
         streetAddress: values.streetAddress,
         city: values.city,
