@@ -4,7 +4,7 @@ import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 import { ReceivableFilter } from 'features/project-coordinator/payable-recievable/receivable-filter'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
-import { WeekDayFiltersAR } from 'features/project-coordinator/weekly-filter-accounts-details'
+import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -124,7 +124,7 @@ export const Receivable = () => {
             </FormLabel>
           </Box>
           <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
-            <WeekDayFiltersAR
+            <AccountWeekDayFilters
               monday={monday}
               tuesday={tuesday}
               wednesday={wednesday}
