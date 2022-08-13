@@ -117,8 +117,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                         w={2}
                         children="$"
                       />
+
                       <Input
-                        {...register('amountOfCheck')}
+                        {...register('finalInvoiceAmount')}
                         h="35px"
                         m={0}
                         pl={2}
@@ -126,7 +127,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                         fontStyle="normal"
                         fontWeight={400}
                         color="gray.500"
-                        isDisabled={props.rejectChecked}
+                        isDisabled={true} // {props.rejectChecked}
                         variant="flushed"
                         borderColor="gray.100"
                       />
@@ -187,7 +188,10 @@ export const LienWaiverTab: React.FC<any> = props => {
           </HStack>
 
           <HStack justifyContent="end">
-            {!workOrder?.lienWaiverAccepted && (
+            <Button onClick={onClose} colorScheme="brand">
+              {t('cancel')}
+            </Button>
+            {/*!workOrder?.lienWaiverAccepted && (
               <Button onClick={onClose} colorScheme="brand">
                 {t('cancel')}
               </Button>
@@ -201,7 +205,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   {t('save')}
                 </Button>
               </>
-            )}
+            )*/}
           </HStack>
         </ModalFooter>
       </form>
