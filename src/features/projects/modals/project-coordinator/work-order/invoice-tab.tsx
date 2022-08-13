@@ -190,7 +190,7 @@ export const InvoiceTabPC = ({
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
-          {recentInvoice && (
+          {recentInvoice && ![STATUS.Declined].includes(workOrder.statusLabel?.toLocaleLowerCase()) && (
             <Button
               variant="outline"
               colorScheme="brand"
