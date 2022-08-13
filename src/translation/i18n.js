@@ -1,10 +1,13 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { projects } from 'features/projects/projects.i18n'
+
 i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
+        ...projects.en.translation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -447,6 +450,7 @@ i18n.use(initReactI18next).init({
     },
     es: {
       translation: {
+        ...projects.es.translation,
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
         fieldProjectManager: 'Gerente de Proyectos de Campo',

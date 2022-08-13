@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, Button, Center, Divider, Flex, FormLabel, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -7,8 +7,7 @@ import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/pro
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { AddNewProjectModal } from 'features/project-coordinator/add-project'
-import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, useStates } from 'utils/pc-projects'
+import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -36,17 +35,6 @@ export const Projects = () => {
   const onSave = columns => {
     postProjectColumn(columns)
   }
-
-  // Calling all APIs
-  const { data: properties } = useProperties()
-  const { data: projectTypes } = useProjectTypes()
-  const { data: statesData } = useStates()
-  const { data: fieldProjectManager } = useFPM()
-  const { data: projectCoordinator } = usePC()
-  const { data: client } = useClients()
-  const { data: markets } = useMarkets()
-
-  useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
 
   const clearAll = () => {
     setSelectedCard('')
@@ -128,17 +116,7 @@ export const Projects = () => {
           </Stack>
         </Box>
       </VStack>
-      <AddNewProjectModal
-        markets={markets}
-        properties={properties}
-        projectTypes={projectTypes}
-        statesData={statesData}
-        fieldProjectManager={fieldProjectManager}
-        projectCoordinator={projectCoordinator}
-        client={client}
-        isOpen={isOpenNewProjectModal}
-        onClose={onNewProjectModalClose}
-      />
+      <AddNewProjectModal isOpen={isOpenNewProjectModal} onClose={onNewProjectModalClose} />
     </>
   )
 }

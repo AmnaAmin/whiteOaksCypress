@@ -25,7 +25,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
         alignContent="right"
         color={props.selectedDay === props.id ? 'white' : '#4A5568'}
         onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
-        style={{pointerEvents : props.count === 0 ? 'none' : 'auto'}}
+        style={{ pointerEvents: props.count === 0 ? 'none' : 'auto' }}
       >
         {props.dayName}
         <Center

@@ -24,7 +24,7 @@ type clientDetailProps = {
 export const Details = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
   // const { data: markets } = useMarkets()
-  const { data: statesData } = useStates()
+  const { states } = useStates()
 
   // To get Contact Market
 
@@ -36,7 +36,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
   // const clientMarket = { label: clientMarketArr?.stateName, value: clientMarketArr?.id }
 
   // To get Client State
-  const selectedClientState = statesData?.find(state => state?.id === props?.clientDetails?.state)
+  const selectedClientState = states?.find(state => state?.id === props?.clientDetails?.state)
   const clientState = { label: selectedClientState?.name, value: selectedClientState?.id }
 
   const disabledTextStyle = {
