@@ -8,7 +8,7 @@ import { ReceivableTable } from 'features/project-coordinator/payable-recievable
 import { WeekDayFiltersAR } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
@@ -112,85 +112,89 @@ export const Receivable = () => {
   const saturday = receivableWeeeklyCount(receivableData?.arList, 6)
   const sunday = receivableWeeeklyCount(receivableData?.arList, 0)
 
-  const RECEIVABLE_COLUMNS = [
-    {
-      Header: t('id'),
-      accessor: 'projectId',
-    },
-    {
-      Header: t('client'),
-      accessor: 'clientName',
-    },
-    {
-      Header: t('address'),
-      accessor: 'propertyAddress',
-    },
-    {
-      Header: t('terms'),
-      accessor: 'paymentTerm',
-    },
-    {
-      Header: t('paymentTypes'),
-      accessor: 'type',
-    },
-    {
-      Header: t('vendorWOExpectedPaymentDate'),
-      accessor: 'expectedPaymentDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+  const RECEIVABLE_COLUMNS = useMemo(
+    () => [
+      {
+        Header: t('id'),
+        accessor: 'projectId',
       },
-    },
-    {
-      Header: t('balance'),
-      accessor: 'amount',
-      Cell(cellInfo) {
-        return numeral(cellInfo.value).format('$0,0.00')
+      {
+        Header: t('client'),
+        accessor: 'clientName',
       },
-    },
-    {
-      Header: t('finalInvoice'),
-      accessor: 'finalInvoice',
-      Cell(cellInfo) {
-        return numeral(cellInfo.value).format('$0,0.00')
+      {
+        Header: t('address'),
+        accessor: 'propertyAddress',
       },
-    },
-    {
-      Header: t('markets'),
-      accessor: 'marketName',
-    },
-    {
-      Header: t('woInvoiceDate'),
-      accessor: 'woaInvoiceDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('terms'),
+        accessor: 'paymentTerm',
       },
-    },
-    {
-      Header: t('poNo'),
-      accessor: 'poNumber',
-    },
-    {
-      Header: t('woNo'),
-      accessor: 'woNumber',
-    },
-    {
-      Header: t('invoiceNo'),
-      accessor: 'invoiceNumber',
-    },
-    {
-      Header: t('checkbox'),
-      accessor: 'checkbox',
-      Cell: ({ row }) => (
-        <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-          <Checkbox
-            isDisabled={loading}
-            value={(row.original as any).projectId}
-            {...register(`projects.${row.index}`, { required: true })}
-          />
-        </Flex>
-      ),
-    },
-  ]
+      {
+        Header: t('paymentTypes'),
+        accessor: 'type',
+      },
+      {
+        Header: t('vendorWOExpectedPaymentDate'),
+        accessor: 'expectedPaymentDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+      },
+      {
+        Header: t('balance'),
+        accessor: 'amount',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+      },
+      {
+        Header: t('finalInvoice'),
+        accessor: 'finalInvoice',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+      },
+      {
+        Header: t('markets'),
+        accessor: 'marketName',
+      },
+      {
+        Header: t('woInvoiceDate'),
+        accessor: 'woaInvoiceDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+      },
+      {
+        Header: t('poNo'),
+        accessor: 'poNumber',
+      },
+      {
+        Header: t('woNo'),
+        accessor: 'woNumber',
+      },
+      {
+        Header: t('invoiceNo'),
+        accessor: 'invoiceNumber',
+      },
+      {
+        Header: t('checkbox'),
+        accessor: 'checkbox',
+        Cell: ({ row }) => (
+          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+            <Checkbox
+              isDisabled={loading}
+              value={(row.original as any).projectId}
+              {...register(`projects.${row.index}`, { required: true })}
+            />
+          </Flex>
+        ),
+      },
+    ],
+    [register, loading],
+  )
+
   const { mutate: postReceviableColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
   const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
     RECEIVABLE_COLUMNS,
@@ -244,8 +248,6 @@ export const Receivable = () => {
           <Divider border="2px solid #E2E8F0" />
           <Box mt={2}>
             <ReceivableTable
-              // loading={loading}
-              // register={register}
               receivableColumns={tableColumns}
               selectedCard={selectedCard as string}
               selectedDay={selectedDay as string}
