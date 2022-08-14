@@ -126,7 +126,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} padding="15px">
-            <Text noOfLines={2} title={cell.value} pl={0}>
+            <Text noOfLines={1} title={cell.value} pl={0}>
               {cell.render('Cell')}
             </Text>
           </Td>
@@ -202,6 +202,8 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   TableRow = Row,
   onRowClick,
 }) => {
+  // Note: this hack for firefox to set the table body height
+  var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
   const RenderRow = React.useCallback(
     ({ index, style }) => {
       const row = rows[index]
@@ -225,7 +227,12 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   }
 
   return (
-    <Tbody {...getTableBodyProps()} flex={1}>
+    <Tbody
+      {...getTableBodyProps()}
+      flex={1}
+      h={isFirefox ? '500px' : 'auto'}
+      overflowY={isFirefox ? 'hidden' : 'unset'}
+    >
       <AutoSizer>
         {({ width, height }) => {
           return (
