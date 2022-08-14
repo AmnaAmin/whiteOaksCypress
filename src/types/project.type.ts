@@ -26,6 +26,7 @@ export type Project = {
   hoaPhoneNumberExtension: string | null
   id: number | null
   invoiceNumber: string | null
+  invoiceLink: string | null
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
   market: string | null

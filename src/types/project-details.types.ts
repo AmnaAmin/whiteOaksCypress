@@ -29,6 +29,7 @@ type ProjectManagementValues = {
 type ProjectInvoicingAndPaymentFormValues = {
   originalSOWAmount: number
   sowLink: string | null
+  invoiceLink: string | null
   finalSOWAmount: number
   invoiceNumber: string | null
   invoiceAttachment: File | null

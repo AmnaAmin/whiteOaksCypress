@@ -300,6 +300,7 @@ export const parseFormValuesFromAPIData = ({
     invoiceNumber: project.invoiceNumber,
     invoiceAttachment: project.documents?.[0],
     invoiceBackDate: datePickerFormat(project.woaBackdatedInvoiceDate as string),
+    invoiceLink: project.invoiceLink,
     paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, project.paymentTerm),
     woaInvoiceDate: datePickerFormat(project.woaInvoiceDate as string),
     woaExpectedPayDate: datePickerFormat(project.expectedPaymentDate as string),
