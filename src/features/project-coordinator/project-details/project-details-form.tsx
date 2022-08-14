@@ -15,9 +15,8 @@ import {
   parseFormValuesFromAPIData,
   parseProjectDetailsPayloadFromFormData,
   useGetClientSelectOptions,
-  useGetMarketSelectOptions,
+  useGetOverpayment,
   useGetProjectTypeSelectOptions,
-  useGetStateSelectOptions,
   useGetUsersByType,
   useProjectDetailsUpdateMutation,
   useProjectStatusSelectOptions,
@@ -38,10 +37,9 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
-  const { marketSelectOptions } = useGetMarketSelectOptions()
   const { clientSelectOptions } = useGetClientSelectOptions()
-  const { stateSelectOptions } = useGetStateSelectOptions()
   const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
+  const { data: overPayment } = useGetOverpayment(projectData?.id)
 
   const { mutate: updateProjectDetails } = useProjectDetailsUpdateMutation()
 
@@ -52,12 +50,11 @@ const ProjectDetailsTab = (props: tabProps) => {
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
+      overPayment,
       projectTypeSelectOptions,
       projectManagerSelectOptions: fpmSelectOptions,
       projectCoordinatorSelectOptions,
-      marketSelectOptions,
       clientSelectOptions,
-      stateSelectOptions,
     })
 
     formReturn.reset(formValues)
@@ -65,10 +62,9 @@ const ProjectDetailsTab = (props: tabProps) => {
     projectData,
     fpmSelectOptions?.length,
     projectCoordinatorSelectOptions?.length,
-    marketSelectOptions?.length,
     projectTypeSelectOptions?.length,
     clientSelectOptions?.length,
-    stateSelectOptions?.length,
+    overPayment,
   ])
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
