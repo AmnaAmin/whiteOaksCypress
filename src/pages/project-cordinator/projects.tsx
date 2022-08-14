@@ -1,5 +1,17 @@
 import { useState } from 'react'
-import { Box, Button, Center, Divider, Flex, FormLabel, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  FormLabel,
+  Icon,
+  Stack,
+  useDisclosure,
+  VStack,
+  Spacer,
+} from '@chakra-ui/react'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ProjectFilters } from 'features/project-coordinator/project-filters'
@@ -43,33 +55,27 @@ export const Projects = () => {
 
   return (
     <>
-      <VStack w={{ base: '971px', xl: '100%' }} h="calc(100vh - 160px)">
-        <Box mb={2} w="100%" border="10 px solid red">
+      <VStack alignItems="start" h="calc(100vh - 160px)">
+        <Box w="100%">
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
         </Box>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
-          <Box mt={4}>
-            <FormLabel variant="strong-label" fontSize="18px">
+        <Flex w="100%" py="16px">
+          <Flex alignItems="center" pl={2}>
+            <FormLabel variant="strong-label" fontSize="18px" whiteSpace="nowrap" m="0">
               {t('Due Projects')}
             </FormLabel>
-          </Box>{' '}
-        </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+            <Box mx="2">
+              <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+            </Box>
 
-          <Button
-            alignContent="right"
-            onClick={onNewProjectModalOpen}
-            position="absolute"
-            right={8}
-            colorScheme="brand"
-            fontSize="14px"
-          >
+            <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          </Flex>
+          <Spacer />
+          <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px">
             <Icon as={BiBookAdd} fontSize="18px" mr={2} />
             {t('New Project')}
           </Button>
-        </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}></Stack>
+        </Flex>
         <Box w="100%" minH="500px" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
           <ProjectsTable
             selectedCard={selectedCard as string}
