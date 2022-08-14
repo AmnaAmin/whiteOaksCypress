@@ -140,6 +140,9 @@ export const Receivable = () => {
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
         },
+        getCellExportValue(row) {
+          return dateFormat(row.original.expectedPaymentDate)
+        },
       },
       {
         Header: t('balance'),
@@ -147,12 +150,18 @@ export const Receivable = () => {
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
         },
+        getCellExportValue(row) {
+          return numeral(row.original.amount).format('$0,0.00')
+        },
       },
       {
         Header: t('finalInvoice'),
         accessor: 'finalInvoice',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.finalInvoice).format('$0,0.00')
         },
       },
       {
@@ -164,6 +173,9 @@ export const Receivable = () => {
         accessor: 'woaInvoiceDate',
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.woaInvoiceDate)
         },
       },
       {
@@ -190,6 +202,7 @@ export const Receivable = () => {
             />
           </Flex>
         ),
+        disableExport: true,
       },
     ],
     [register, loading],

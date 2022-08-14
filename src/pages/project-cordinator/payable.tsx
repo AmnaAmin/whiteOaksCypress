@@ -86,12 +86,18 @@ export const Payable = () => {
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
+      getCellExportValue(row) {
+        return dateFormat(row.original.expectedPaymentDate)
+      },
     },
     {
       Header: t('finalInvoice'),
       accessor: 'finalInvoiceAmount',
       Cell: ({ value }) => {
         return numeral(value).format('$0,0.00')
+      },
+      getCellExportValue(row) {
+        return numeral(row.original.finalInvoiceAmount).format('$0,0.00')
       },
     },
     {
@@ -104,6 +110,9 @@ export const Payable = () => {
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
+      getCellExportValue(row) {
+        return dateFormat(row.original.workOrderStartDate)
+      },
     },
     {
       Header: t('wOCompletedDate'),
@@ -111,12 +120,18 @@ export const Payable = () => {
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
       },
+      getCellExportValue(row) {
+        return dateFormat(row.original.workOrderDateCompleted)
+      },
     },
     {
       Header: t('wOIssueDate'),
       accessor: 'workOrderIssueDate',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
+      },
+      getCellExportValue(row) {
+        return dateFormat(row.original.workOrderIssueDate)
       },
     },
     {
@@ -130,6 +145,7 @@ export const Payable = () => {
           </Flex>
         )
       },
+      disableExport: true,
     },
   ]
 
