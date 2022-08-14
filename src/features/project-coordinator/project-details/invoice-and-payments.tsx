@@ -74,11 +74,9 @@ const InvoiceAndPayments: React.FC = () => {
   }
 
   const onPaymentValueChange = (values: NumberFormatValues) => {
-    console.log(values)
     const payment = Number(values.value)
-    const overyPayment = payment - getValues().finalSOWAmount
+    const overyPayment = payment - (getValues().remainingPayment || 0)
 
-    console.log('payment', payment)
     setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
   }
 
