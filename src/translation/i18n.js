@@ -651,7 +651,7 @@ i18n.use(initReactI18next).init({
         profitPercentage: 'Porcentaje de beneficio',
         vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',
         name: 'Nombre',
-        email: 'Email',
+        email: 'Correo electrónico',
         phone: 'Teléfono',
         issue: 'Asunto',
         rejectLienWaiver: 'Rechazar exención de gravamen',

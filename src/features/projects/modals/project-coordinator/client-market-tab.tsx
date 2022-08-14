@@ -26,7 +26,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {markets?.map(m => {
             return (
-              <CheckboxButton isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}>
+              <CheckboxButton isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)} isDisabled>
                 {m?.metropolitanServiceArea}
               </CheckboxButton>
             )
