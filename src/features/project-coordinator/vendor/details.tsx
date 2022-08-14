@@ -60,7 +60,9 @@ const PcDetails: React.FC<{
       })) ?? [],
     [statesData],
   )
+  const formValues = useWatch({ control })
 
+  const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -417,13 +419,21 @@ const PcDetails: React.FC<{
             </Box>
             <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
               <Text>{t('paymentMethods')}</Text>
-              <HStack spacing="16px">
-                {paymentsMethods?.map(payment => (
-                  <Checkbox {...register(payment.name)} colorScheme="brand">
-                    {payment.name}
-                  </Checkbox>
-                ))}
-              </HStack>
+              <FormControl isInvalid={!!errors.Check?.message && !validatePayment?.length}>
+                <HStack spacing="16px">
+                  {paymentsMethods?.map(payment => (
+                    <Checkbox
+                      {...register(payment.name, {
+                        required: !validatePayment?.length && 'This is required',
+                      })}
+                      colorScheme="brand"
+                    >
+                      {payment.name}
+                    </Checkbox>
+                  ))}
+                </HStack>
+                <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+              </FormControl>
             </VStack>
           </Stack>
         </Box>
