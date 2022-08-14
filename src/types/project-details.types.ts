@@ -205,3 +205,9 @@ export type ProjectDetailsAPIPayload = {
   }
   projectStartDate: string | null
 }
+
+export type OverPaymentType = {
+  id: number
+  count: number
+  sum: number
+}
