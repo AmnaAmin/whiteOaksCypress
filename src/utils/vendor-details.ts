@@ -78,6 +78,7 @@ export const useCreateVendorMutation = () => {
   return useMutation((payload: any) => client(`vendors`, { data: payload, method: 'POST' }), {
     onSuccess() {
       queryClient.invalidateQueries('vendor')
+      queryClient.invalidateQueries('vendorsCards')
       toast({
         title: 'Create Vendor',
         description: t('createVendorSuccess'),
@@ -297,6 +298,7 @@ export const useSaveVendorDetails = (name: string) => {
       onSuccess() {
         queryClient.invalidateQueries('vendorProfile')
         queryClient.invalidateQueries('vendor')
+        queryClient.invalidateQueries('vendorsCards')
         toast({
           title: t(`update${name}`),
           description: t(`update${name}Success`),

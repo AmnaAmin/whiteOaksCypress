@@ -177,7 +177,7 @@ const WorkOrderDetailTab = props => {
               <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
               <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
               <CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />
-              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance} />
+              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />

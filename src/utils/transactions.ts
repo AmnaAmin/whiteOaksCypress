@@ -566,6 +566,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
 
         toast({
           title: 'New Transaction.',
@@ -596,6 +597,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
 

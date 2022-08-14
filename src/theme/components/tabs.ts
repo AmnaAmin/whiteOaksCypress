@@ -24,6 +24,12 @@ const tabsVariants = {
                 bg: `#2A61CE`,
               },
             },
+            _disabled: {
+              cursor: 'not-allowed',
+              _hover: {
+                bg: `transparent`,
+              },
+            },
           },
         }
       },

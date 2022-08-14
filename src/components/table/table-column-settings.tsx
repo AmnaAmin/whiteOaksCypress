@@ -21,7 +21,7 @@ import { BiGridVertical } from 'react-icons/bi'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useTranslation } from 'react-i18next'
-import 'components/translation/i18n'
+
 import { Button } from 'components/button/button'
 
 type ColumnType = {

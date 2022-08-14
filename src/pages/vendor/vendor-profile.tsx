@@ -1,7 +1,7 @@
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import 'components/translation/i18n'
+
 import { Card } from 'features/login-form-centered/Card'
 import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
 import { Details } from 'features/vendor-details/details'
