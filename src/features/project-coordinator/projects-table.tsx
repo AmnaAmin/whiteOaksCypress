@@ -271,7 +271,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, selectedDay, projects])
 
   return (
-    <Box overflowX={'auto'} height="100%">
+    <Box overflowX={'auto'} overflowY="hidden" height="100%">
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
