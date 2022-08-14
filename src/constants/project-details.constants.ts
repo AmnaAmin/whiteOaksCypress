@@ -33,6 +33,10 @@ const OPTIONS = {
     value: ProjectStatus.Cancelled,
     label: 'CANCELLED',
   },
+  [ProjectStatus.Paid]: {
+    value: ProjectStatus.Paid,
+    label: 'PAID',
+  },
 }
 
 export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
