@@ -3,14 +3,6 @@ import { t } from 'i18next'
 import { dateFormat } from './date-time-utils'
 import { useTranslation } from 'react-i18next'
 
-const headings = {
-  first: t('firstHeading'),
-  second: t('secondHeading'),
-  third: t('thirdHeading'),
-  fourth: t('fourthHeading'),
-  fifth: t('fifthHeading'),
-}
-
 const noticeText = () => {
   return t('noticeText')
 }
@@ -70,10 +62,17 @@ export const GetHelpText = () => {
 }
 
 export const createForm = (form, values, signatureDimention, imageUrl) => {
+  const headings = {
+    first: t('firstHeading'),
+    second: t('secondHeading'),
+    third: t('thirdHeading'),
+    fourth: t('fourthHeading'),
+    fifth: t('fifthHeading'),
+  }
   // main heading
   form.setFontSize(12)
   form.setFont(undefined, 'bold')
-  const xHeading1 = (form.internal.pageSize.getWidth() - form.getTextWidth(headings.first)) / 2
+  const xHeading1 = (form?.internal?.pageSize?.getWidth() - form?.getTextWidth(headings?.first)) / 2
   form.text(headings.first, xHeading1, 20)
 
   // notice;

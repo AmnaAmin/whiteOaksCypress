@@ -33,6 +33,30 @@ const checkbox = {
           },
         }
       },
+
+      error: props => {
+        return {
+          label: {
+            color: `red.400`,
+            fontWeight: '500',
+            _hover: {
+              color: `red.500`,
+            },
+          },
+          control: {
+            h: '20px',
+            w: '20px',
+            _checked: {
+              borderColor: `${props.colorScheme}.300`,
+              bg: `${props.colorScheme}.300`,
+              _hover: {
+                borderColor: `${props.colorScheme}.500`,
+                bg: `${props.colorScheme}.500`,
+              },
+            },
+          },
+        }
+      },
     },
 
     sizes: {

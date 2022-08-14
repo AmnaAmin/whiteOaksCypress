@@ -23,8 +23,8 @@ type clientDetailProps = {
 
 export const Details = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
-  const { data: markets } = useMarkets()
-  const { data: statesData } = useStates()
+  const { markets } = useMarkets()
+  const { states } = useStates()
 
   // To get Contact Market
   // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
@@ -32,7 +32,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
   // const clientMarket = { label: selectedClientMarket?.stateName, value: selectedClientMarket?.id }
 
   // To get Client State
-  const selectedClientState = statesData?.find(state => state?.id === props?.clientDetails?.state)
+  const selectedClientState = states?.find(state => state?.id === props?.clientDetails?.state)
   const clientState = { label: selectedClientState?.name, value: selectedClientState?.id }
 
   const disabledTextStyle = {
@@ -138,7 +138,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
                 {t('state')}
               </FormLabel>
               <ReactSelect
-                option={statesData}
+                option={states}
                 value={clientState}
                 selectProps={{ isBorderLeft: true }}
                 style={{ disabledTextStyle }}

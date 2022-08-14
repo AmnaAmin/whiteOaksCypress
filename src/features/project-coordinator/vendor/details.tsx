@@ -16,7 +16,7 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
@@ -43,7 +43,7 @@ const PcDetails: React.FC<{
   const { t } = useTranslation()
 
   const { data: paymentsMethods } = usePaymentMethods()
-  const { data: statesData } = useStates()
+  const { stateSelectOptions } = useStates()
   const {
     formState: { errors },
     control,
@@ -52,14 +52,6 @@ const PcDetails: React.FC<{
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
-  const states = useMemo(
-    () =>
-      statesData?.map(state => ({
-        label: state?.name,
-        value: state?.code,
-      })) ?? [],
-    [statesData],
-  )
 
   return (
     <Stack spacing={3}>
@@ -284,7 +276,7 @@ const PcDetails: React.FC<{
                   <>
                     <ReactSelect
                       menuPosition="fixed"
-                      options={states}
+                      options={stateSelectOptions}
                       {...field}
                       selectProps={{ isBorderLeft: true }}
                     />
@@ -458,7 +450,7 @@ const PcDetails: React.FC<{
 }
 
 export const useVendorDetails = ({ form, vendorProfileData }) => {
-  const { data: statesData } = useStates()
+  const { states } = useStates()
   const { setValue, reset } = form
   const { markets } = useMarkets()
   const { data: trades } = useTrades()
@@ -482,7 +474,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
   useEffect(() => {
     if (!vendorProfileData) return
     reset(parseVendorAPIDataToFormData(vendorProfileData))
-    const state = statesData?.find(s => s.code === vendorProfileData.state)
+    const state = states?.find(s => s.code === vendorProfileData.state)
     setValue(
       'score',
       documentScore.find(s => s.value === vendorProfileData.score),
@@ -505,7 +497,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
       const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
       setValue('trades', tradeFormValues.trades)
     }
-  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS, markets, trades])
+  }, [reset, vendorProfileData, documentScore, documentStatus, states, PAYMENT_TERMS_OPTIONS, markets, trades])
 }
 
 export default PcDetails
