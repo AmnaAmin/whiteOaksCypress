@@ -232,6 +232,20 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         }
       }
 
+      // If project status is Overpayment and there are some workorders not paid then
+      // project status Paid should be disabled
+      if (
+        numberOfWorkOrders !== numberOfCompletedWorkOrders &&
+        projectStatusId === ProjectStatus.Overpayment &&
+        optionValue === ProjectStatus.Paid
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (You have pending transactions)`,
+          disabled: true,
+        }
+      }
+
       return selectOption
     })
 
@@ -300,6 +314,7 @@ export const parseFormValuesFromAPIData = ({
     invoiceNumber: project.invoiceNumber,
     invoiceAttachment: project.documents?.[0],
     invoiceBackDate: datePickerFormat(project.woaBackdatedInvoiceDate as string),
+    invoiceLink: project.invoiceLink,
     paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, project.paymentTerm),
     woaInvoiceDate: datePickerFormat(project.woaInvoiceDate as string),
     woaExpectedPayDate: datePickerFormat(project.expectedPaymentDate as string),
