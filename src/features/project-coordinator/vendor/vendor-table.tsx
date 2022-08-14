@@ -35,6 +35,9 @@ export const VENDOR_COLUMNS = [
     Cell({ value }) {
       return dateFormat(value)
     },
+    getCellExportValue(row) {
+      return dateFormat(row.original.createdDate)
+    },
   },
   {
     Header: 'COI-GL Expiration Date',
@@ -42,12 +45,18 @@ export const VENDOR_COLUMNS = [
     Cell({ value }) {
       return dateFormat(value)
     },
+    getCellExportValue(row) {
+      return dateFormat(row.original.coiglExpirationDate)
+    },
   },
   {
     Header: 'COI-WC Expiration Date',
     accessor: 'coiWcExpirationDate',
     Cell({ value }) {
       return dateFormat(value)
+    },
+    getCellExportValue(row) {
+      return dateFormat(row.original.coiWcExpirationDate)
     },
   },
   {

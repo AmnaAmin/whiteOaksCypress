@@ -97,6 +97,9 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
         },
+        getCellExportValue(row) {
+          return dateFormat(row.original.expectedPaymentDate)
+        },
       },
       {
         Header: t('balance') as string,
@@ -104,12 +107,18 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
         },
+        getCellExportValue(row) {
+          return numeral(row.original.amount).format('$0,0.00')
+        },
       },
       {
         Header: t('finalInvoice') as string,
         accessor: 'finalInvoice',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.finalInvoice).format('$0,0.00')
         },
       },
       {
@@ -121,6 +130,9 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         accessor: 'woaInvoiceDate',
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.woaInvoiceDate)
         },
       },
       {
@@ -146,6 +158,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
             />
           </Box>
         ),
+        disableExport: true,
       },
     ],
     ref,
