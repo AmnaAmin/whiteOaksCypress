@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { Column } from 'react-table'
 import { useCaptureElementResize } from './useCaptureElementResize'
 
 /** @Hack: to capture the table container element width and based on that we decide to calculate the columns widths 
