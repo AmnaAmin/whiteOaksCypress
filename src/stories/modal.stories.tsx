@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   useDisclosure,
   Box,
@@ -10,7 +11,7 @@ import {
   ModalFooter,
   Button,
 } from '@chakra-ui/react'
-import React from 'react'
+
 export default {
   title: 'UI/Modal',
 }
@@ -58,3 +59,7 @@ export const ModalMedium = () => {
     </>
   )
 }
+
+// export const AddressVerfication = () => {
+//   return <AddressVerificationModal isOpen={true} onClose={() => {}} />
+// }

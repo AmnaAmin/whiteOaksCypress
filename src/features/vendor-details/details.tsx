@@ -22,7 +22,7 @@ import { HiOutlineLocationMarker, HiOutlineMap } from 'react-icons/hi'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { parseAPIDataToFormData } from 'utils/vendor-details'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import 'components/translation/i18n'
+
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'

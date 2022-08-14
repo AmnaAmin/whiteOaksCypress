@@ -33,7 +33,7 @@ const Vendors = () => {
     <Box mt="5">
       <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
 
-      <HStack mt="1" mb="1">
+      <HStack mb="10px">
         {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           {t('clearFilter')}
         </Button> */}

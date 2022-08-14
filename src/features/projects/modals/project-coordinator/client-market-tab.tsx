@@ -11,7 +11,7 @@ type clientDetailProps = {
 }
 
 export const Market = React.forwardRef((props: clientDetailProps) => {
-  const { data: markets } = useMarkets()
+  const { markets } = useMarkets()
   const { t } = useTranslation()
 
   const btnStyle = {
@@ -26,7 +26,10 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {markets?.map(m => {
             return (
-              <CheckboxButton isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}>
+              <CheckboxButton
+                isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}
+                isDisabled
+              >
                 {m?.metropolitanServiceArea}
               </CheckboxButton>
             )

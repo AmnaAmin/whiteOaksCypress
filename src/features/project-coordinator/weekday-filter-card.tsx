@@ -12,7 +12,7 @@ type weekdayCardTypes = {
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" cursor={props.count === 0 ? 'not-allowed' : ''}>
       <Button
         bg={props.selectedDay === props.id ? '#4E87F8' : 'none'}
         border="none"

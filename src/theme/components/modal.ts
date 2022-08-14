@@ -35,9 +35,19 @@ const modalVariants = {
           top: '4',
         },
       },
+
+      transparent: {
+        body: {
+          px: '0',
+          py: '0',
+        },
+      },
     },
 
     sizes: {
+      flexible: {
+        dialog: { maxWidth: 'auto', width: 'auto' },
+      },
       '3xl': {
         dialog: { minWidth: '770px' },
       },
