@@ -193,7 +193,7 @@ export const useVendor = () => {
   }
 }
 
-export const useGanttChart = (projectId?: string) => {
+export const useGanttChart = (projectId?: string):any=> {
   const client = useClient()
 
   const { data: ganttChartData, ...rest } = useQuery<ProjectType>(
@@ -211,3 +211,24 @@ export const useGanttChart = (projectId?: string) => {
     ...rest,
   }
 }
+
+/*
+
+    axios.get('/api/ganChartElastic/' + props.projectId).then(response => {
+      response.data.splice(0, 0, firstRecord);
+      response.data.forEach((element, index) => {
+        if (index === 0) setFirstDate(element.startDate);
+        element.start = dayjs(element.startDate);
+        element.end = dayjs(element.endDate);
+        element.moveable = true;
+        element.duration = element.end.diff(element.start);
+        element.label = element.workDescription;
+        element.style = {
+          base: {
+            fill: colorArray[index % colorArray.length],
+            stroke: '#7E349D',
+          },
+        };
+      });
+
+*/

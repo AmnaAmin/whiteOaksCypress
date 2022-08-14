@@ -7,12 +7,14 @@ import { useState } from 'react'
 import { Button } from 'components/button/button'
 import { Card } from 'components/card/card'
 import ProjectScheduleDetails from './project-schedule-details'
+import { Task } from "gantt-task-react";
+
 
 export const ProjectSchedule: React.FC<{
-  // projectData: ProjectType
+  data: Task[]
   isLoading: boolean
 }> = ({
-  // projectData,
+  data,
   isLoading,
 }) => {
   const [isSeeMore, setSeeMore] = useState(true)
@@ -36,21 +38,27 @@ export const ProjectSchedule: React.FC<{
   }
 
   return (
-    <>
+    <Flex
+      direction={"column"}
+      px="30px"
+      py={4}
+      gap={4}
+      w="100%"
+      h={{ base: 'unset', xl: '500px' }}
+      bg="white"
+      borderRadius="4px"
+      box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
+      marginBottom={isShowMoreDetails ? '-32px' : ''}
+      borderBottom={isShowMoreDetails ? '1px solid #E5E5E5' : 'none'}
+    >
       <Flex
-        py={3}
-        h={{ base: 'unset', xl: '97px' }}
-        w="100%"
-        bg="white"
-        borderRadius="4px"
-        box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-        marginBottom={isShowMoreDetails ? '-32px' : ''}
-        borderBottom={isShowMoreDetails ? '1px solid #E5E5E5' : 'none'}
+        alignItems={"center"}
+        justifyContent={"space-between"}
       >
-        <InfoStructureCard isLoading={isLoading} fontSize={'18px'}>
+        <InfoStructureCard isLoading={isLoading} justifyContent="start" fontSize={'18px'}>
           Project Details Schedule
         </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title="" border="none">
+        <InfoStructureCard isLoading={isLoading} justifyContent="end" border="none">
           {isSeeMore && (
             <Button
               color="blue"
@@ -86,11 +94,9 @@ export const ProjectSchedule: React.FC<{
         </InfoStructureCard>
       </Flex>
       {isShowMoreDetails && (
-        <Card>
-          <ProjectScheduleDetails />
-        </Card>
+        <ProjectScheduleDetails data={data}/>
       )}
-    </>
+    </Flex>
   )
 }
 

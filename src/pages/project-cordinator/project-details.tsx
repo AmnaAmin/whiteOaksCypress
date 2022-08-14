@@ -1,7 +1,7 @@
 import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
 import { useTranslation } from 'react-i18next'
@@ -30,6 +30,7 @@ import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from
 import 'gantt-task-react/dist/index.css'
 import ProjectSchedule from 'features/project-coordinator/project-schedule/project-schedule'
 import { useGanttChart } from 'utils/pc-projects'
+import { dateFormat, getFormattedDate } from 'utils/date-time-utils'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -39,6 +40,8 @@ export const ProjectDetails: React.FC = props => {
   const [tabIndex, setTabIndex] = useState(0)
   const { ganttChartData } = useGanttChart(projectId)
   const [alertRow, selectedAlertRow] = useState(true)
+  const [firstDate, setFirstDate] = useState(undefined);
+  const [formattedGanttData, setFormattedGanttData] = useState<any[]>([]);
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -63,13 +66,38 @@ export const ProjectDetails: React.FC = props => {
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
-  console.log("ganttChartData", ganttChartData)
+  useEffect(() => {
+    if(ganttChartData?.length > 0) {
+      const firstRecord = {
+        id: +new Date(),
+        name: 'Project',
+        type: 'task',
+        start: new Date(projectData?.clientStartDate as string),
+        end: new Date(projectData?.clientDueDate as string),
+        workDescription: 'Client',
+        progress: 100
+      };
+
+      const payload = [...ganttChartData];
+      
+      payload.forEach((row, index) => {
+        if (index === 0) setFirstDate(row.startDate);
+        row.name = row.workDescription;
+        row.id= row.id;
+        row.type= "task";
+        row.start = new Date(row.startDate as string);
+        row.end = new Date(row.endDate as string);
+        row.progress= Number(row.status)
+      });
+      setFormattedGanttData([firstRecord,...payload]);
+    }
+  }, [ganttChartData])
 
   return (
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as ProjectType} isLoading={isLoading} />
-        <ProjectSchedule isLoading={isLoading} />
+        <ProjectSchedule isLoading={isLoading} data={formattedGanttData}/>
         <AmountDetailsCard projectData={projectData as ProjectType} isLoading={isLoading} />
 
         {tabIndex === 1}

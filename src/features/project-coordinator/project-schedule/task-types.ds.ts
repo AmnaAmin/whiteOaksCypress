@@ -1,4 +1,5 @@
-/// <reference types="react" />
+/// <reference types="react" />  
+
 export declare enum ViewMode {
     Hour = "Hour",
     QuarterDay = "Quarter Day",
@@ -132,4 +133,13 @@ export interface StylingOption {
 }
 export interface GanttProps extends EventOption, DisplayOption, StylingOption {
     tasks: Task[];
+}
+
+export type GanttDataType = {
+    id: number
+    name: string
+    type: TaskType,
+    start: Date,
+    end: Date,
+    progress: number
 }

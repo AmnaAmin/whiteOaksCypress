@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Task, ViewMode, Gantt } from "gantt-task-react";
-import './gantt-task.css';
 import { ViewSwitcher } from "./view-switcher";
 import { getStartEndDateForProject, initTasks } from "./helper";
+import { Project_TaskList } from "./task-list-header";
+import { Project_TaskListTable } from "./task-list-table";
+import { GanttDataType } from "./task-types.ds";
+import './gantt-task.css';
 
 // Init
-const ProjectScheduleDetails = () => {
+const ProjectScheduleDetails:React.FC<{
+  data: Task[]
+}> = ({ data }) => {
   const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = React.useState<Task[]>(initTasks());
   const [isChecked, setIsChecked] = React.useState(true);
@@ -67,27 +72,39 @@ const ProjectScheduleDetails = () => {
     console.log("On expander click Id:" + task.id);
   };
 
+  useEffect(() => {
+    if(data.length > 0) {
+      setTasks(data)
+    }
+  }, [data])
+
   return (
-    <div className="Wrapper">
+    <div className="Wrapper ProjectDetails_Chart">
       <ViewSwitcher
         onViewModeChange={viewMode => setView(viewMode)}
         onViewListChange={setIsChecked}
         isChecked={isChecked}
       />
         <Gantt
-        tasks={tasks}
-        viewMode={view}
-        onDateChange={handleTaskChange}
-        onDelete={handleTaskDelete}
-        onProgressChange={handleProgressChange}
-        onDoubleClick={handleDblClick}
-        onClick={handleClick}
-        onSelect={handleSelect}
-        onExpanderClick={handleExpanderClick}
-        listCellWidth={isChecked ? "155px" : ""}
-     //   ganttHeight={250}
-        columnWidth={columnWidth}
-      />
+          tasks={tasks}
+          rowHeight={80}
+          viewMode={view}
+          onDateChange={handleTaskChange}
+          onDelete={handleTaskDelete}
+          onProgressChange={handleProgressChange}
+          onDoubleClick={handleDblClick}
+          onClick={handleClick}
+          onSelect={handleSelect}
+          onExpanderClick={handleExpanderClick}
+          listCellWidth={isChecked ? "155px" : ""}
+          TaskListHeader={Project_TaskList}
+          TaskListTable={Project_TaskListTable}
+          projectProgressSelectedColor="#4E87F8"
+          projectProgressColor="#4E87F8"
+          barProgressColor="#4E87F8"
+          barCornerRadius={32}
+          columnWidth={columnWidth}
+        />
     </div>
   );
 };

@@ -81,3 +81,15 @@
     transform: translateX(26px);
   }
   
+.ViewContainer button {
+  border-radius: 16px;
+  background-color: #f5f5f5;
+  color: #4A5568;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.ProjectDetails_Chart .ticks line:not(:first-child){
+  stroke: none;
+}
