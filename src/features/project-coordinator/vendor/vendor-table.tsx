@@ -24,7 +24,10 @@ export const VENDOR_COLUMNS = [
     Header: 'Region',
     accessor: 'region',
   },
-
+  {
+    Header: 'Primary Contact',
+    accessor: 'ownerName',
+  },
   {
     Header: 'State',
     accessor: 'state',
