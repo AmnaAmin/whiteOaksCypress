@@ -40,7 +40,7 @@ export const PROJECT_COLUMNS = [
     accessor: 'clientStartDate',
     Cell: ({ value }) => dateFormat(value),
     getCellExportValue(row) {
-      return dateFormat(row.values.clientStartDate)
+      return dateFormat(row.original.clientStartDate)
     },
   },
   {
@@ -48,7 +48,7 @@ export const PROJECT_COLUMNS = [
     accessor: 'clientDueDate',
     Cell: ({ value }) => dateFormat(value),
     getCellExportValue(row) {
-      return dateFormat(row.values.clientDueDate)
+      return dateFormat(row.original.clientDueDate)
     },
   },
   {
@@ -65,6 +65,9 @@ export const PROJECT_COLUMNS = [
     Cell(cellInfo) {
       return numeral(cellInfo.value).format('$0,0.00')
     },
+    getCellExportValue(row) {
+      return numeral(row.original.accountPayable).format('$0,0.00')
+    },
   },
   {
     Header: 'Zip',
@@ -80,6 +83,9 @@ export const PROJECT_COLUMNS = [
     Cell(cellInfo) {
       return numeral(cellInfo.value).format('$0,0.00')
     },
+    getCellExportValue(row) {
+      return numeral(row.original.sowOriginalContractAmount).format('$0,0.00')
+    },
   },
   {
     Header: 'Project Cost',
@@ -87,13 +93,16 @@ export const PROJECT_COLUMNS = [
     Cell(cellInfo) {
       return numeral(cellInfo.value).format('$0,0.00')
     },
+    getCellExportValue(row) {
+      return numeral(row.original.accountPayable).format('$0,0.00')
+    },
   },
   {
     Header: 'Paid Date',
     accessor: 'woaPaidDate',
     Cell: ({ value }) => dateFormat(value),
     getCellExportValue(row) {
-      return dateFormat(row.values.woaPaidDate)
+      return dateFormat(row.original.woaPaidDate)
     },
   },
   {
@@ -105,7 +114,7 @@ export const PROJECT_COLUMNS = [
     accessor: 'woaInvoiceDate',
     Cell: ({ value }) => dateFormat(value),
     getCellExportValue(row) {
-      return dateFormat(row.values.woaInvoiceDate)
+      return dateFormat(row.original.woaInvoiceDate)
     },
   },
   {
@@ -113,6 +122,9 @@ export const PROJECT_COLUMNS = [
     accessor: 'accountRecievable',
     Cell(cellInfo) {
       return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountRecievable).format('$0,0.00')
     },
   },
   {
@@ -128,7 +140,7 @@ export const PROJECT_COLUMNS = [
     accessor: 'woaCompletionDate',
     Cell: ({ value }) => dateFormat(value),
     getCellExportValue(row) {
-      return dateFormat(row.values.woaCompletionDate)
+      return dateFormat(row.original.woaCompletionDate)
     },
   },
   {
@@ -141,20 +153,26 @@ export const PROJECT_COLUMNS = [
     Cell(cellInfo) {
       return numeral(cellInfo.value).format('$0,0.00')
     },
+    getCellExportValue(row) {
+      return numeral(row.original.partialPayment).format('$0,0.00')
+    },
   },
   {
     Header: 'Expected Payment',
     accessor: 'expectedPaymentDate',
     Cell: ({ value }) => dateFormat(value),
     getCellExportValue(row) {
-      return dateFormat(row.values.expectedPaymentDate)
+      return dateFormat(row.original.expectedPaymentDate)
     },
   },
   {
     Header: 'Profit Margins',
     accessor: 'profitPercentage',
     Cell(cellInfo) {
-      return numeral(cellInfo.value).format('0.00%')
+      return numeral(cellInfo.value / 100).format('0,0.00%')
+    },
+    getCellExportValue(row) {
+      return `${row.original.profitPercentage}%`
     },
   },
   {
@@ -162,6 +180,9 @@ export const PROJECT_COLUMNS = [
     accessor: 'profitTotal',
     Cell(cellInfo) {
       return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.profitTotal).format('$0,0.00')
     },
   },
   {
@@ -271,7 +292,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, selectedDay, projects])
 
   return (
-    <Box overflow={'auto'} height="100%">
+    <Box overflowX={'auto'} overflowY="hidden" height="100%">
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}

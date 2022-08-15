@@ -19,7 +19,7 @@ import {
 import { currencyFormatter } from 'utils/stringFormatters'
 import { dateFormat } from 'utils/date-time-utils'
 
-import { BiCalendar, BiDollarCircle, BiDownload, BiFile } from 'react-icons/bi'
+import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
@@ -45,7 +45,15 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, rejectInvoiceCheck, onSave }) => {
+export const InvoiceTabPC = ({
+  onClose,
+  workOrder,
+  transactions,
+  documentsData,
+  rejectInvoiceCheck,
+  onSave,
+  navigateToProjectDetails,
+}) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
@@ -104,6 +112,7 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
   const rejectInvoice = () => {
     onSave({
       status: STATUS_CODE.DECLINED,
+      lienWaiverAccepted: false,
     })
   }
   return (
@@ -181,7 +190,7 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
-          {recentInvoice && (
+          {recentInvoice && ![STATUS.Declined].includes(workOrder.statusLabel?.toLocaleLowerCase()) && (
             <Button
               variant="outline"
               colorScheme="brand"
@@ -192,16 +201,33 @@ export const InvoiceTabPC = ({ onClose, workOrder, transactions, documentsData, 
               {t('see')} {t('invoice')}
             </Button>
           )}
-        </HStack>
-        <HStack justifyContent="end">
-          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && (
-            <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
-              {t('save')}
+          {navigateToProjectDetails && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              onClick={navigateToProjectDetails}
+              leftIcon={<BiSpreadsheet />}
+            >
+              {t('seeProjectDetails')}
             </Button>
           )}
-          <Button onClick={onClose} colorScheme="brand" variant="outline">
-            {t('cancel')}
-          </Button>
+        </HStack>
+        <HStack justifyContent="end">
+          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced ? (
+            <>
+              <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
+                {t('save')}
+              </Button>
+              <Button onClick={onClose} colorScheme="brand" variant="outline">
+                {t('cancel')}
+              </Button>
+            </>
+          ) : (
+            <Button onClick={onClose} colorScheme="brand">
+              {t('cancel')}
+            </Button>
+          )}
         </HStack>
       </ModalFooter>
     </Box>

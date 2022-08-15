@@ -7,6 +7,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { SelectOption } from 'types/transaction.type'
+import NumberFormat from 'react-number-format'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -162,8 +163,25 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumber}>
             <InputLabel title={'superPhone'} htmlFor={'superPhoneNumber'} />
-            <Input id="superPhoneNumber" {...register('superPhoneNumber')} w="215px" />
-            <FormErrorMessage>{errors?.superPhoneNumber?.message}</FormErrorMessage>
+            <Controller
+              control={control}
+              name="superPhoneNumber"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                      customInput={Input}
+                      value={field.value}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
           </FormControl>
         </Box>
         <Box h="40px">

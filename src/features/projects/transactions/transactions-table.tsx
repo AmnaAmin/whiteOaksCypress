@@ -35,7 +35,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
                 fontSize="14px"
                 fontStyle="normal"
                 fontWeight={400}
-                noOfLines={2}
+                noOfLines={1}
                 title={cell.value}
                 mt="10px"
                 mb="10px"
@@ -77,13 +77,15 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         Header: t('totalAmount') as string,
         accessor: 'transactionTotal',
         Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.transactionTotal).format('$0,0.00')
         },
       },
       {
         Header: t('transactionStatus') as string,
         accessor: 'status',
-        //@ts-ignore
         Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
       },
       {
@@ -91,6 +93,9 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         accessor: 'modifiedDate',
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.modifiedDate)
         },
       },
       {

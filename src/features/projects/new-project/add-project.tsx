@@ -23,39 +23,26 @@ import { AddPropertyInfo } from './add-property-info'
 import { ManageProject } from './manage-project'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
-import { readFileContent } from 'utils/vendor-details'
 import { useToast } from '@chakra-ui/react'
 import { useSaveProjectDetails } from 'utils/pc-projects'
 import { dateISOFormat } from 'utils/date-time-utils'
 import { useNavigate } from 'react-router-dom'
+import { DevTool } from '@hookform/devtools'
+import { useTranslation } from 'react-i18next'
+import { NEW_PROJECT } from 'features/projects/projects.i18n'
+import { useProjectInformationNextButtonDisabled, usePropertyInformationNextDisabled } from './hooks'
+import { createDocumentPayload } from 'utils/project-details'
 
 type AddProjectFormProps = {
   onClose: () => void
-  projectTypes?: any
-  properties?: any
-  markets?: any
-  fieldProjectManager?: any
-  statesData?: any
-  projectCoordinator?: any
-  client?: any
 }
 
-const AddProjectForm: React.FC<AddProjectFormProps> = ({
-  onClose,
-  projectTypes,
-  properties,
-  markets,
-  fieldProjectManager,
-  statesData,
-  projectCoordinator,
-  client,
-}) => {
+const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
+  const { t } = useTranslation()
   const toast = useToast()
+
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
   const [tabIndex, setTabIndex] = useState(0)
-  const [projectinfoBtn, setProjectinfoBtn] = useState(false)
-  const [propertyinfoBtn, setpropertyinfoBtn] = useState(false)
-  const [manageProjBtn, setmanageProjBtn] = useState(false)
   const navigate = useNavigate()
 
   const setNextTab = () => {
@@ -66,8 +53,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
     defaultValues: {
       acknowledgeCheck: false,
       name: '',
-      projectType: 0,
-      projectTypeLabel: '',
+      projectType: null,
       woNumber: '',
       poNumber: '',
       clientStartDate: '',
@@ -80,19 +66,18 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
       documents: null,
       streetAddress: '',
       city: '',
-      state: '',
+      state: null,
       zipCode: '',
-      newMarketId: '',
+      newMarket: null,
       gateCode: '',
       lockBoxCode: '',
       hoaPhone: '',
       hoaPhoneNumberExtension: '',
       hoaEmailAddress: '',
-      projectManagerId: 0,
-      projectCoordinator: '',
-      projectCoordinatorId: 0,
+      projectManager: null,
+      projectCoordinator: null,
       clientName: '',
-      clientId: 0,
+      client: null,
       superLastName: '',
       superEmailAddress: '',
       superPhoneNumber: '',
@@ -106,39 +91,53 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
     },
   })
 
-  const { watch, handleSubmit } = methods
+  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(methods.control)
+  const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(methods.control)
+
+  const { handleSubmit } = methods
 
   const onSubmit = useCallback(
     async values => {
       let fileContents: any = null
       const doc = values.documents
       if (doc) {
-        fileContents = await readFileContent(doc)
+        fileContents = await createDocumentPayload(doc, 39)
       }
+
+      const property = {
+        streetAddress: values.streetAddress,
+        city: values.city,
+        marketId: values.newMarket?.value,
+        state: values.state?.value,
+        zipCode: values.zipCode,
+      }
+
       const newProjectPayload = {
         name: values.name,
-        projectType: values.projectType,
+        projectType: `${values.projectType?.value}`,
         woNumber: values.woNumber,
         poNumber: values.poNumber,
         clientStartDate: dateISOFormat(values.clientStartDate),
         clientDueDate: dateISOFormat(values.clientDueDate),
         woaStartDate: dateISOFormat(values.woaStartDate),
         sowOriginalContractAmount: values.sowOriginalContractAmount,
-        sowDocumentFile: fileContents,
+        documents: fileContents ? [fileContents] : [],
+        newProperty: property,
+        property,
         streetAddress: values.streetAddress,
         city: values.city,
-        state: values.state.value,
+        state: values.state?.value,
         zipCode: values.zipCode,
-        newMarketId: values.newMarketId.value,
+        newMarketId: values.newMarket?.value,
         gateCode: values.gateCode,
         lockBoxCode: values.lockBoxCode,
         hoaPhone: values.hoaPhone,
         hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
         hoaEmailAddress: values.hoaEmailAddress,
-        projectManagerId: values.projectManagerId,
-        projectCordinatorId: values.projectCoordinatorId,
+        projectManagerId: values.projectManager?.value,
+        projectCordinatorId: values.projectCoordinator?.value,
         clientName: values.clientName,
-        clientId: values.clientId,
+        clientId: values.client?.value,
         superLastName: values.superLastName,
         superEmailAddress: values.superEmailAddress,
         superPhoneNumber: values.superPhoneNumber,
@@ -155,6 +154,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
             status: 'success',
             duration: 9000,
             isClosable: true,
+            position: 'top-left',
           })
           onClose()
           navigate(`/project-details/${projectId}`)
@@ -166,6 +166,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
             status: 'error',
             duration: 9000,
             isClosable: true,
+            position: 'top-left',
           })
         },
       })
@@ -173,60 +174,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
     [saveProjectDetails],
   )
 
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {
-      if (
-        value?.projectTypeLabel &&
-        value?.clientStartDate &&
-        value?.clientDueDate &&
-        value?.sowOriginalContractAmount &&
-        value?.documents
-      ) {
-        setProjectinfoBtn(true)
-      } else {
-        setProjectinfoBtn(false)
-      }
-
-      if (value?.streetAddress && value?.city && value?.zipCode && value?.newMarketId) {
-        setpropertyinfoBtn(true)
-      } else {
-        setpropertyinfoBtn(false)
-      }
-      if (
-        value?.projectCoordinator &&
-        value?.projectManagerId &&
-        value?.clientName &&
-        value?.streetAddress &&
-        value?.city &&
-        value?.zipCode &&
-        value?.newMarketId &&
-        value?.projectTypeLabel &&
-        value?.clientStartDate &&
-        value?.clientDueDate &&
-        value?.sowOriginalContractAmount &&
-        value?.documents
-      ) {
-        setmanageProjBtn(true)
-      } else {
-        setmanageProjBtn(false)
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
-
   return (
     <>
       <Flex>
-        <Grid
-          templateColumns="repeat(4, 1fr)"
-          gap={'1rem 0.5rem'}
-          borderBottom="2px solid"
-          borderColor="gray.200"
-          pb="3"
-          mb="5"
-        >
+        <Grid templateColumns="repeat(4, 1fr)" gap={'1rem 0.5rem'}>
           <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
@@ -238,43 +189,27 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({
                   mt="7"
                 >
                   <TabList color="#4A5568">
-                    <Tab>{'Project Information'}</Tab>
-                    <Tab>{'Property Information'}</Tab>
-                    <Tab>{'Managing Project'}</Tab>
+                    <Tab>{t(`${NEW_PROJECT}.projectInformation`)}</Tab>
+                    <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_PROJECT}.propertyInformation`)}</Tab>
+                    <Tab isDisabled={isPropertyInformationNextButtonDisabled}>
+                      {t(`${NEW_PROJECT}.projectManagement`)}
+                    </Tab>
                   </TabList>
                   <TabPanels mt="31px" h="100%">
                     <TabPanel p="0px" h="100%">
-                      <AddProjectInfo
-                        projectTypes={projectTypes}
-                        buttonCondition={projectinfoBtn}
-                        setNextTab={setNextTab}
-                        onClose={onClose}
-                      />
+                      <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <AddPropertyInfo
-                        properties={properties}
-                        markets={markets}
-                        statesData={statesData}
-                        buttonCondition={propertyinfoBtn}
-                        isLoading={false}
-                        setNextTab={setNextTab}
-                        onClose={onClose}
-                      />
+                      <AddPropertyInfo isLoading={false} setNextTab={setNextTab} onClose={onClose} />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <ManageProject
-                        fieldProjectManager={fieldProjectManager}
-                        projectCoordinator={projectCoordinator}
-                        client={client}
-                        buttonCondition={manageProjBtn}
-                        isLoading={false}
-                        onClose={onClose}
-                      />
+                      <ManageProject isLoading={false} onClose={onClose} />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
               </form>
+
+              <DevTool control={methods.control} />
             </FormProvider>
           </Stack>
         </Grid>
@@ -287,43 +222,18 @@ type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
 // type AddNewProjectProps = CustomModalProps
 type UpdateProjectProps = CustomModalProps & {
   selectedProjectId?: number
-  projectTypes: any
-  properties: any
-  markets: any
-  fieldProjectManager: any
-  projectCoordinator: any
-  client: any
-  statesData: any
 }
 
-export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({
-  isOpen,
-  onClose,
-  projectTypes,
-  statesData,
-  properties,
-  markets,
-  fieldProjectManager,
-  client,
-  projectCoordinator,
-}) => {
+export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation()
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="5xl" closeOnEsc={true} closeOnOverlayClick={true}>
+    <Modal isOpen={isOpen} onClose={onClose} size="5xl" closeOnEsc={true} closeOnOverlayClick={true} variant="custom">
       <ModalOverlay>
         <ModalContent minH="600px">
-          <ModalHeader borderBottom="1px solid #eee">{'New Project'}</ModalHeader>
+          <ModalHeader>{t(`${NEW_PROJECT}.title`)}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
           <ModalBody px="6">
-            <AddProjectForm
-              fieldProjectManager={fieldProjectManager}
-              statesData={statesData}
-              projectCoordinator={projectCoordinator}
-              client={client}
-              markets={markets}
-              properties={properties}
-              projectTypes={projectTypes}
-              onClose={onClose}
-            />
+            <AddProjectForm onClose={onClose} />
           </ModalBody>
         </ModalContent>
       </ModalOverlay>

@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Icon, Stack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import Location from './location'
 import Contact from './contact'
@@ -15,9 +15,8 @@ import {
   parseFormValuesFromAPIData,
   parseProjectDetailsPayloadFromFormData,
   useGetClientSelectOptions,
-  useGetMarketSelectOptions,
+  useGetOverpayment,
   useGetProjectTypeSelectOptions,
-  useGetStateSelectOptions,
   useGetUsersByType,
   useProjectDetailsUpdateMutation,
   useProjectStatusSelectOptions,
@@ -35,15 +34,12 @@ type tabProps = {
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData } = props
 
-  const [tabIndex, setTabIndex] = useState<number>(0)
-
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
-  const { marketSelectOptions } = useGetMarketSelectOptions()
   const { clientSelectOptions } = useGetClientSelectOptions()
-  const { stateSelectOptions } = useGetStateSelectOptions()
   const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
+  const { data: overPayment } = useGetOverpayment(projectData?.id)
 
   const { mutate: updateProjectDetails } = useProjectDetailsUpdateMutation()
 
@@ -54,12 +50,11 @@ const ProjectDetailsTab = (props: tabProps) => {
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
+      overPayment,
       projectTypeSelectOptions,
       projectManagerSelectOptions: fpmSelectOptions,
       projectCoordinatorSelectOptions,
-      marketSelectOptions,
       clientSelectOptions,
-      stateSelectOptions,
     })
 
     formReturn.reset(formValues)
@@ -67,10 +62,9 @@ const ProjectDetailsTab = (props: tabProps) => {
     projectData,
     fpmSelectOptions?.length,
     projectCoordinatorSelectOptions?.length,
-    marketSelectOptions?.length,
     projectTypeSelectOptions?.length,
     clientSelectOptions?.length,
-    stateSelectOptions?.length,
+    overPayment,
   ])
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
@@ -81,7 +75,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   return (
     <FormProvider {...formReturn}>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
-        <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={index => setTabIndex(index)}>
+        <Tabs variant={tabVariant || 'line'} colorScheme="brand">
           <TabList
             bg={style?.backgroundColor ? '' : '#F7FAFC'}
             rounded="6px 6px 0 0"
@@ -122,246 +116,53 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
               <Misc />
             </TabPanel>
-            {tabIndex === 0 && (
-              <Stack>
-                <Box mt="3">
-                  <Divider border="1px solid" />
-                </Box>
-                <Box h="70px" w="100%" pb="3">
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    form="project-details"
-                    fontSize="16px"
-                  >
-                    Save
-                  </Button>
-                  {onClose && (
-                    <>
-                      <Button
-                        fontSize="16px"
-                        onClick={onClose}
-                        mt="8px"
-                        mr="5"
-                        float={'right'}
-                        variant="outline"
-                        colorScheme="brand"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        mt="8px"
-                        ml="32px"
-                        as={Link}
-                        to={`/project-details/${projectData?.id}`}
-                        variant="outline"
-                        colorScheme="brand"
-                        leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                      >
-                        See Project Details
-                      </Button>
-                    </>
-                  )}
-                </Box>
-              </Stack>
-            )}
-            {tabIndex === 1 && (
-              <Stack>
-                <Box mt="3">
-                  <Divider border="1px solid" />
-                </Box>
-
-                <Box h="70px" w="100%" pb="3">
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    size="md"
-                    form="project-details"
-                    fontSize="16px"
-                  >
-                    Save
-                  </Button>
-                  {onClose && (
-                    <>
-                      <Button
-                        onClick={onClose}
-                        mt="8px"
-                        mr="5"
-                        float={'right'}
-                        variant="outline"
-                        colorScheme="brand"
-                        size="md"
-                        fontSize="16px"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        mt="8px"
-                        ml="32px"
-                        as={Link}
-                        to={`/project-details/${projectData?.id}`}
-                        variant="outline"
-                        colorScheme="brand"
-                        leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                      >
-                        See Project Details
-                      </Button>
-                    </>
-                  )}
-                </Box>
-              </Stack>
-            )}
-            {tabIndex === 2 && (
-              <Stack>
-                <Box mt="3">
-                  <Divider border="1px solid" />
-                </Box>
-                <Box h="70px" w="100%" pb="3">
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    form="project-details"
-                    fontSize="16px"
-                  >
-                    Save
-                  </Button>
-                  {onClose && (
-                    <>
-                      <Button
-                        fontSize="16px"
-                        onClick={onClose}
-                        mt="8px"
-                        mr="5"
-                        float={'right'}
-                        variant="outline"
-                        colorScheme="brand"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        as={Link}
-                        to={`/project-details/${projectData?.id}`}
-                        mt="8px"
-                        ml="32px"
-                        variant="outline"
-                        colorScheme="brand"
-                        leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                      >
-                        See Project Details
-                      </Button>
-                    </>
-                  )}
-                </Box>
-              </Stack>
-            )}
-            {tabIndex === 3 && (
-              <Stack>
-                <Box mt="3">
-                  <Divider border="1px solid" />
-                </Box>
-                <Box h="70px" w="100%" pb="3">
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    form="project-details"
-                    fontSize="16px"
-                  >
-                    Save
-                  </Button>
-                  {onClose && (
-                    <>
-                      <Button
-                        fontSize="16px"
-                        onClick={onClose}
-                        mt="8px"
-                        mr="5"
-                        float={'right'}
-                        variant="outline"
-                        colorScheme="brand"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        as={Link}
-                        to={`/project-details/${projectData?.id}`}
-                        mt="8px"
-                        ml="32px"
-                        variant="outline"
-                        colorScheme="brand"
-                        leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                      >
-                        See Project Details
-                      </Button>
-                    </>
-                  )}
-                </Box>
-              </Stack>
-            )}
-            {tabIndex === 4 && (
-              <Stack>
-                <Box mt="3">
-                  <Divider border="1px solid" />
-                </Box>
-                <Box h="69px" w="100%" pb="3">
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    form="project-details"
-                    fontSize="16px"
-                  >
-                    Save
-                  </Button>
-                  {onClose && (
-                    <>
-                      <Button
-                        fontSize="16px"
-                        onClick={onClose}
-                        mt="8px"
-                        mr="5"
-                        float={'right'}
-                        variant="outline"
-                        colorScheme="brand"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        as={Link}
-                        to={`/project-details/${projectData?.id}`}
-                        mt="8px"
-                        ml="32px"
-                        variant="outline"
-                        colorScheme="brand"
-                        leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                      >
-                        See Project Details
-                      </Button>
-                    </>
-                  )}
-                </Box>
-              </Stack>
-            )}
           </TabPanels>
         </Tabs>
+        <Stack>
+          <Box mt="3">
+            <Divider border="1px solid" />
+          </Box>
+          <Box h="70px" w="100%" pb="3">
+            <Button
+              mt="8px"
+              mr="32px"
+              float={'right'}
+              variant="solid"
+              colorScheme="brand"
+              type="submit"
+              form="project-details"
+              fontSize="16px"
+            >
+              Save
+            </Button>
+            {onClose && (
+              <>
+                <Button
+                  fontSize="16px"
+                  onClick={onClose}
+                  mt="8px"
+                  mr="5"
+                  float={'right'}
+                  variant="outline"
+                  colorScheme="brand"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  mt="8px"
+                  ml="32px"
+                  as={Link}
+                  to={`/project-details/${projectData?.id}`}
+                  variant="outline"
+                  colorScheme="brand"
+                  leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
+                >
+                  See Project Details
+                </Button>
+              </>
+            )}
+          </Box>
+        </Stack>
       </form>
       <DevTool control={control} />
     </FormProvider>

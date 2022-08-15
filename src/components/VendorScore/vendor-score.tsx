@@ -5,7 +5,7 @@ import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
 import { useVendorCards, useVendorEntity } from 'utils/vendor-dashboard'
 import { useTranslation } from 'react-i18next'
-import 'components/translation/i18n'
+
 import { LicenseDocument } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'

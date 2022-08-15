@@ -1,28 +1,15 @@
 import { SelectOption } from './transaction.type'
 
 export enum ProjectStatus {
-  Paid = 'paid',
-  Active = 'active',
-  Approved = 'approved',
-  Completed = 'completed',
-  PastDue = 'past due',
-  Pending = 'pending',
-  Denied = 'denied',
-  Cancelled = 'cancelled',
-  Invoiced = 'invoiced',
-  Punch = 'punch',
-  New = 'new',
-  Closed = 'closed',
-  ClientPaid = 'client paid',
-  Overpayment = 'overpayment',
-  Collection = 'collection',
-  Dispute = 'dispute',
-  Cancel = 'cancel',
-  Expired = 'expired',
-  Declined = 'declined',
-  Inactive = 'inactive',
-  DoNotUse = 'do not use',
-  Decline = 'decline',
+  New = 7,
+  Active = 8,
+  Punch = 9,
+  Closed = 10,
+  Invoiced = 11,
+  Cancelled = 33,
+  Paid = 41,
+  ClientPaid = 72,
+  Overpayment = 109,
 }
 
 type ProjectManagementValues = {
@@ -42,6 +29,7 @@ type ProjectManagementValues = {
 type ProjectInvoicingAndPaymentFormValues = {
   originalSOWAmount: number
   sowLink: string | null
+  invoiceLink: string | null
   finalSOWAmount: number
   invoiceNumber: string | null
   invoiceAttachment: File | null
@@ -217,4 +205,10 @@ export type ProjectDetailsAPIPayload = {
     zipCode: string | null
   }
   projectStartDate: string | null
+}
+
+export type OverPaymentType = {
+  id: number
+  count: number
+  sum: number
 }

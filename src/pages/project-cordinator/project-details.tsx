@@ -3,14 +3,11 @@ import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } fro
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { TransactionInfoCard } from 'features/project-coordinator/transaction-info-card'
+import { ProjectSummaryCard } from 'features/project-coordinator/project-summary-card'
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/projects/transactions/transactions-table'
-// import { TransactionsTable, COLUMNS } from 'features/project-coordinator/transactions-table'
 import { usePCProject } from 'utils/pc-projects'
 import { Project } from 'types/project.type'
-// import { useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
-// import { TableNames } from 'types/table-column.types'
 import { AmountDetailsCard } from 'features/project-coordinator/project-amount-detail'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
@@ -22,10 +19,10 @@ import AddNewTransactionModal from 'features/projects/transactions/add-transacti
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
-import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import { TriggeredAlertsTable } from 'features/projects/alerts/triggered-alerts-table'
 import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
+import { FinancialOverviewTable } from 'features/project-coordinator/financial-overview-table'
+import { STATUS } from 'features/projects/status'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -36,16 +33,6 @@ export const ProjectDetails: React.FC = props => {
   const [tabIndex, setTabIndex] = useState(0)
   const [notesCount, setNotesCount] = useState(0)
 
-  const [alertRow, selectedAlertRow] = useState(true)
-  // const [projectTableInstance, setInstance] = useState<any>(null)
-  // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
-  // const setProjectTableInstance = tableInstance => {
-  //   setInstance(tableInstance)
-  // }
-  // const onSave = columns => {
-  //   postProjectColumn(columns)
-  // }
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -54,7 +41,7 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
+  const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
@@ -63,7 +50,7 @@ export const ProjectDetails: React.FC = props => {
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
+        <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
 
         {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
@@ -85,18 +72,21 @@ export const ProjectDetails: React.FC = props => {
               </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
-                {tabIndex === 2 && (
-                  <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
-                    <Flex alignItems="center" fontSize="14px" fontWeight={500}>
-                      <Text mr={1}>
-                        <BiAddToQueue size={14} />
-                      </Text>
-                      <Text>{t('newWorkOrder')}</Text>
-                    </Flex>
+                {tabIndex === 2 &&
+                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
+                    projectStatus as STATUS,
+                  ) && (
+                    <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
+                      <Flex alignItems="center" fontSize="14px" fontWeight={500}>
+                        <Text mr={1}>
+                          <BiAddToQueue size={14} />
+                        </Text>
+                        <Text>{t('newWorkOrder')}</Text>
+                      </Flex>
 
-                    <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
-                  </Button>
-                )}
+                      <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
+                    </Button>
+                  )}
                 {tabIndex === 3 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
                     Upload
@@ -115,7 +105,11 @@ export const ProjectDetails: React.FC = props => {
                         <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
                           View Details
                         </FormLabel>
-                        <Switch size="sm" id="view-details" />
+                        <Switch
+                          size="sm"
+                          id="view-details"
+                          onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
+                        />
                       </FormControl>
                     </Box>
 
@@ -136,6 +130,11 @@ export const ProjectDetails: React.FC = props => {
             <TabPanels h="100%">
               <TabPanel p="0px" h="100%" mt="7px">
                 <Box h="100%">
+                  {isShowProjectFinancialOverview && (
+                    <Flex overflow={'auto'} mb="5" h="135px">
+                      <FinancialOverviewTable ref={tabsContainerRef} />
+                    </Flex>
+                  )}
                   <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
@@ -153,7 +152,7 @@ export const ProjectDetails: React.FC = props => {
                 <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
 
-              <TabPanel px="0">
+              {/* <TabPanel px="0">
                 <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
@@ -161,7 +160,7 @@ export const ProjectDetails: React.FC = props => {
                   }}
                   ref={tabsContainerRef}
                 />
-              </TabPanel>
+              </TabPanel> */}
 
               <TabPanel px="0">
                 <ProjectNotes projectId={projectId} setNotesCount={setNotesCount} />
@@ -175,7 +174,7 @@ export const ProjectDetails: React.FC = props => {
           onClose={onTransactionModalClose}
           projectId={projectId as string}
         />
-        <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
+        {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
     </>

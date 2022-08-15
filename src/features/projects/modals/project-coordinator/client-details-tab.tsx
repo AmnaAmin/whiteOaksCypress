@@ -13,6 +13,8 @@ import {
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMarkets, useStates } from 'utils/pc-projects'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -20,24 +22,21 @@ type clientDetailProps = {
 }
 
 export const Details = React.forwardRef((props: clientDetailProps) => {
-  const market = props?.clientDetails?.markets
-    ? props?.clientDetails?.markets?.map(market => ({
-        label: market?.metropolitanServiceArea,
-        value: market?.id,
-      }))
-    : null
+  const { t } = useTranslation()
+  const { markets } = useMarkets()
+  const { states } = useStates()
 
-  const state = props?.clientDetails?.markets
-    ? props?.clientDetails?.markets?.map(market => ({
-        label: market?.state?.name,
-        value: market?.state?.id,
-      }))
-    : null
+  // To get Contact Market
+  // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
+  // const selectedClientMarket = markets?.find(market => market?.id === clientSelectedMarket)
+  // const clientMarket = { label: selectedClientMarket?.stateName, value: selectedClientMarket?.id }
 
-  const btnStyle = {
-    alignItems: 'center',
-    justifyContent: 'end',
-    borderTop: '1px solid #CBD5E0',
+  // To get Client State
+  const selectedClientState = states?.find(state => state?.id === props?.clientDetails?.state)
+  const clientState = { label: selectedClientState?.name, value: selectedClientState?.id }
+
+  const disabledTextStyle = {
+    color: '#2D3748',
   }
 
   return (
@@ -47,53 +46,65 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Name
+                {t('name')}
               </FormLabel>
-              <Input width="215px" variant="required-field" value={props?.clientDetails?.companyName} isDisabled />
+              <Input
+                width="215px"
+                variant="required-field"
+                style={disabledTextStyle}
+                value={props?.clientDetails?.companyName}
+                isDisabled
+              />
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Payment Terms
+                {t('paymentTerms')}
               </FormLabel>
-              <Input width="215px" variant="required-field" value={props?.clientDetails?.paymentTerm} isDisabled />
+              <Input
+                width="215px"
+                variant="required-field"
+                style={disabledTextStyle}
+                value={props?.clientDetails?.paymentTerm}
+                isDisabled
+              />
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Payment Method
+                {t('paymentMethod')}
               </FormLabel>
               <Flex dir="row">
                 <Checkbox
                   variant="required-field"
-                  readOnly
                   pr={1}
                   mt={4}
                   isChecked={props?.clientDetails?.paymentCreditCard}
+                  style={disabledTextStyle}
                   isDisabled
                 >
-                  Credit Card
+                  {t('creditCard')}
                 </Checkbox>
                 <Checkbox
                   variant="required-field"
-                  readOnly
                   pr={1}
                   mt={4}
                   isChecked={props?.clientDetails?.paymentCheck}
+                  style={disabledTextStyle}
                   isDisabled
                 >
-                  Check
+                  {t('check')}
                 </Checkbox>
                 <Checkbox
                   variant="required-field"
-                  readOnly
                   mt={4}
                   isChecked={props?.clientDetails?.paymentACH}
+                  style={disabledTextStyle}
                   isDisabled
                 >
-                  ACH
+                  {t('ach')}
                 </Checkbox>
               </Flex>
             </FormControl>
@@ -103,33 +114,49 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
           <GridItem>
             <FormControl height="40px">
               <FormLabel variant="strong-label" size="md">
-                Address
+                {t('address')}
               </FormLabel>
-              <Input variant="required-field" value={props?.clientDetails?.streetAddress} isDisabled />
+              <Input
+                variant="required-field"
+                style={disabledTextStyle}
+                value={props?.clientDetails?.streetAddress}
+                isDisabled
+              />
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                City
+                {t('city')}
               </FormLabel>
-              <Input variant="required-field" value={props?.clientDetails?.city} isDisabled />
+              <Input variant="required-field" style={disabledTextStyle} value={props?.clientDetails?.city} isDisabled />
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                State
+                {t('state')}
               </FormLabel>
-              <ReactSelect options={state} value={state} selectProps={{ isBorderLeft: true }} isDisabled />
+              <ReactSelect
+                option={states}
+                value={clientState}
+                selectProps={{ isBorderLeft: true }}
+                style={{ disabledTextStyle }}
+                isDisabled
+              />
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                Zip Code
+                {t('zipCode')}
               </FormLabel>
-              <Input variant="required-field" value={props?.clientDetails?.zipCode} isDisabled />
+              <Input
+                variant="required-field"
+                style={disabledTextStyle}
+                value={props?.clientDetails?.zipCode}
+                isDisabled
+              />
             </FormControl>
           </GridItem>
         </Grid>
@@ -139,43 +166,52 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <GridItem>
                 <FormControl height="40px">
                   <FormLabel variant="strong-label" size="md">
-                    Contact
+                    {t('contact')}
                   </FormLabel>
-                  <Input variant="required-field" value={contact?.contact} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={contact?.contact} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    Phone No
+                    {t('phoneNo')}
                   </FormLabel>
-                  <Input variant="required-field" value={contact?.phoneNumber} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={contact?.phoneNumber} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    Email
+                    {t('email')}
                   </FormLabel>
-                  <Input variant="required-field" value={contact?.emailAddress} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={contact?.emailAddress} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    Market
+                    {t('market')}
                   </FormLabel>
-                  <ReactSelect options={market} value={market} selectProps={{ isBorderLeft: true }} isDisabled />
+                  <ReactSelect
+                    option={markets}
+                    value={markets?.map(market => {
+                      if (market?.id === parseInt(contact?.market))
+                        return { label: market?.stateName, value: market?.id }
+                      return null
+                    })}
+                    selectProps={{ isBorderLeft: true }}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
             </Grid>
           )
         })}
         <Flex alignItems="center" py="3">
-          <Text fontSize="16px" color="gray.600" fontWeight={500} w={'320px'}>
-            Accounts Payable contact details
+          <Text fontSize="16px" color="gray.600" fontWeight={500} w={'370px'}>
+            {t('accPayConInfo')}
           </Text>
-          <Divider border="1px solid #E2E8F0" />
+          <Divider border="1px solid #E2E8F0" mt={1} />
         </Flex>
         {props.clientDetails?.accountPayableContactInfos.map(accPayConInfo => {
           return (
@@ -183,42 +219,57 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
               <GridItem>
                 <FormControl height="40px">
                   <FormLabel variant="strong-label" size="md">
-                    Contact
+                    {t('contact')}
                   </FormLabel>
-                  <Input variant="required-field" value={accPayConInfo?.contact} isDisabled />
+                  <Input variant="required-field" style={disabledTextStyle} value={accPayConInfo?.contact} isDisabled />
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    Phone No
+                    {t('phoneNo')}
                   </FormLabel>
-                  <Input variant="required-field" value={accPayConInfo?.phoneNumber} isDisabled />
+                  <Input
+                    variant="required-field"
+                    style={disabledTextStyle}
+                    value={accPayConInfo?.phoneNumber}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    City
+                    {t('city')}
                   </FormLabel>
-                  <Input variant="required-field" value={props?.clientDetails?.city} isDisabled />
+                  <Input
+                    variant="required-field"
+                    style={disabledTextStyle}
+                    value={props?.clientDetails?.city}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    Comment
+                    {t('comment')}
                   </FormLabel>
-                  <Input variant="required-field" value={accPayConInfo?.comments} isDisabled />
+                  <Input
+                    variant="required-field"
+                    style={disabledTextStyle}
+                    value={accPayConInfo?.comments}
+                    isDisabled
+                  />
                 </FormControl>
               </GridItem>
             </Grid>
           )
         })}
       </Box>
-      <Flex style={btnStyle} py="4" pt={5}>
+      <Flex justifyContent={'end'} borderTop="1px solid #CBD5E0" py="4" pt={5}>
         <Button colorScheme="brand" onClick={props?.onClose}>
-          Cancel
+          {t('cancel')}
         </Button>
       </Flex>
     </Box>

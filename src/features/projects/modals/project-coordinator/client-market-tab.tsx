@@ -2,6 +2,7 @@ import { Box, Flex, Button } from '@chakra-ui/react'
 import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'utils/pc-projects'
+import { useTranslation } from 'react-i18next'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -10,7 +11,8 @@ type clientDetailProps = {
 }
 
 export const Market = React.forwardRef((props: clientDetailProps) => {
-  const { data: markets } = useMarkets()
+  const { markets } = useMarkets()
+  const { t } = useTranslation()
 
   const btnStyle = {
     alignItems: 'center',
@@ -24,7 +26,10 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
           {markets?.map(m => {
             return (
-              <CheckboxButton isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}>
+              <CheckboxButton
+                isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}
+                isDisabled
+              >
                 {m?.metropolitanServiceArea}
               </CheckboxButton>
             )
@@ -33,7 +38,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
       </Box>
       <Flex style={btnStyle} py={4} pt={5}>
         <Button colorScheme="brand" onClick={props.onClose}>
-          Cancel
+          {t('cancel')}
         </Button>
       </Flex>
     </>

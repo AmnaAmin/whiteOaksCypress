@@ -2,10 +2,11 @@ import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
 import { useMemo } from 'react'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Client, ProjectType, State, User } from 'types/common.types'
 import {
   DocumentPayload,
+  OverPaymentType,
   ProjectDetailsAPIPayload,
   ProjectDetailsFormValues,
   ProjectStatus,
@@ -14,6 +15,20 @@ import { Market, Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
+
+export const useGetOverpayment = (projectId: number | null) => {
+  const client = useClient()
+
+  return useQuery<OverPaymentType>(
+    ['overpayment', projectId],
+    async () => {
+      const response = await client(`change-orders/${projectId}/113/PENDING`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
+}
 
 export const useGetStateSelectOptions = () => {
   const client = useClient()
@@ -111,6 +126,7 @@ export const useGetClientSelectOptions = () => {
 export const useProjectDetailsUpdateMutation = () => {
   const client = useClient()
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation(
     (payload: ProjectDetailsAPIPayload) => {
@@ -120,7 +136,12 @@ export const useProjectDetailsUpdateMutation = () => {
       })
     },
     {
-      onSuccess: () => {
+      onSuccess: project => {
+        const projectId = `${project?.data?.id}`
+
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['overpayment', project?.data?.id])
+
         toast({
           title: 'Project Details Updated',
           description: 'Project details updated successfully',
@@ -136,8 +157,8 @@ export const useProjectDetailsUpdateMutation = () => {
 
 export const getProjectStatusSelectOptions = () => {
   return Object.entries(ProjectStatus).map(([key, value]) => ({
-    value: value.toUpperCase(),
-    label: value.toUpperCase(),
+    value: value,
+    label: key.toUpperCase(),
   }))
 }
 
@@ -145,26 +166,23 @@ export const useProjectStatusSelectOptions = (project: Project) => {
   return useMemo(() => {
     if (!project) return []
 
-    const projectStatus = project.projectStatus?.toLocaleLowerCase()
+    const projectStatusId = project.projectStatusId
     const numberOfWorkOrders = project.numberOfWorkOrders
     const numberOfCompletedWorkOrders = project.numberOfCompletedWorkOrders
     const numberOfPaidWorkOrders = project.numberOfPaidWorkOrders
     const sowNewAmount = project.sowNewAmount || 0
     const partialPayment = project.partialPayment || 0
 
-    if (!projectStatus) return []
+    if (!projectStatusId) return []
 
-    const projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatus].map(status => ({
-      value: status.toUpperCase(),
-      label: status.toUpperCase(),
-    }))
+    const projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatusId] || []
 
     const selectOptionWithDisableEnabled = projectStatusSelectOptions.map((selectOption: SelectOption) => {
-      const optionLabel = selectOption?.label?.toLowerCase()
+      const optionValue = selectOption?.value
 
       // if project in new status and there are zero work orders then
       // active status should be disabled
-      if (numberOfWorkOrders === 0 && projectStatus === ProjectStatus.New && optionLabel === ProjectStatus.Active) {
+      if (numberOfWorkOrders === 0 && projectStatusId === ProjectStatus.New && optionValue === ProjectStatus.Active) {
         return {
           ...selectOption,
           label: `${selectOption.label} (Minimum 1 Workorder Required)`,
@@ -176,8 +194,8 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // Project punch status should be disabled
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
-        projectStatus === ProjectStatus.Active &&
-        optionLabel === ProjectStatus.Punch
+        projectStatusId === ProjectStatus.Active &&
+        optionValue === ProjectStatus.Punch
       ) {
         return {
           ...selectOption,
@@ -190,8 +208,8 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // project status Paid should be disabled
       if (
         numberOfPaidWorkOrders === numberOfWorkOrders &&
-        projectStatus === ProjectStatus.ClientPaid &&
-        optionLabel === ProjectStatus.Paid
+        projectStatusId === ProjectStatus.ClientPaid &&
+        optionValue === ProjectStatus.Paid
       ) {
         return {
           ...selectOption,
@@ -204,12 +222,26 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // project status Paid should be disabled
       if (
         sowNewAmount - partialPayment > 0 &&
-        projectStatus === ProjectStatus.Invoiced &&
-        optionLabel === ProjectStatus.ClientPaid
+        projectStatusId === ProjectStatus.Invoiced &&
+        optionValue === ProjectStatus.ClientPaid
       ) {
         return {
           ...selectOption,
           label: `${selectOption.label} (Remaining Payment must be $0`,
+          disabled: true,
+        }
+      }
+
+      // If project status is Overpayment and there are some workorders not paid then
+      // project status Paid should be disabled
+      if (
+        numberOfWorkOrders !== numberOfCompletedWorkOrders &&
+        projectStatusId === ProjectStatus.Overpayment &&
+        optionValue === ProjectStatus.Paid
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (You have pending transactions)`,
           disabled: true,
         }
       }
@@ -236,25 +268,21 @@ export const parseFormValuesFromAPIData = ({
   projectCoordinatorSelectOptions,
   projectManagerSelectOptions,
   clientSelectOptions,
-  stateSelectOptions,
-  marketSelectOptions,
+  overPayment,
 }: {
   project?: Project
+  overPayment?: OverPaymentType
   projectTypeSelectOptions?: SelectOption[]
   projectCoordinatorSelectOptions?: SelectOption[]
   projectManagerSelectOptions?: SelectOption[]
   clientSelectOptions?: SelectOption[]
-  stateSelectOptions?: SelectOption[]
-  marketSelectOptions?: SelectOption[]
 }): ProjectDetailsFormValues | Object => {
   if (
     !project ||
     !projectTypeSelectOptions ||
     !projectCoordinatorSelectOptions ||
     !projectManagerSelectOptions ||
-    !clientSelectOptions ||
-    !stateSelectOptions ||
-    !marketSelectOptions
+    !clientSelectOptions
   ) {
     return {}
   }
@@ -263,14 +291,11 @@ export const parseFormValuesFromAPIData = ({
     options.find(option => option.value === value) || null
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
-  const sowNewAmount = project.sowNewAmount ?? 0
-  const partialPayment = project.partialPayment ?? 0
-  const overPayment = partialPayment - sowNewAmount
   const remainingPayment = project.accountRecievable || 0
 
   return {
     // Project Management form values
-    status: findOptionByValue(projectStatusSelectOptions, project.projectStatus),
+    status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
     type: findOptionByValue(projectTypeSelectOptions, project.projectType),
     woNumber: project.woNumber,
     poNumber: project.poNumber,
@@ -289,10 +314,11 @@ export const parseFormValuesFromAPIData = ({
     invoiceNumber: project.invoiceNumber,
     invoiceAttachment: project.documents?.[0],
     invoiceBackDate: datePickerFormat(project.woaBackdatedInvoiceDate as string),
+    invoiceLink: project.invoiceLink,
     paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, project.paymentTerm),
     woaInvoiceDate: datePickerFormat(project.woaInvoiceDate as string),
     woaExpectedPayDate: datePickerFormat(project.expectedPaymentDate as string),
-    overPayment: overPayment < 0 ? 0 : overPayment,
+    overPayment: overPayment?.sum,
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
     payment: '',
 
@@ -342,7 +368,7 @@ const removePropertiesFromObject = (obj: Project, properties: string[]): Project
   return newObj
 }
 
-const createDocumentPayload = (file: File): Promise<DocumentPayload> => {
+export const createDocumentPayload = (file: File, documentType = 42): Promise<DocumentPayload> => {
   return new Promise((res, rej) => {
     const reader = new FileReader()
     let filetype = 'text/plain'
@@ -354,7 +380,7 @@ const createDocumentPayload = (file: File): Promise<DocumentPayload> => {
         fileType: file.name,
         fileObject: event?.target?.result?.split(',')[1],
         fileObjectContentType: filetype,
-        documentType: 42,
+        documentType,
       })
     })
 
@@ -373,11 +399,10 @@ export const parseProjectDetailsPayloadFromFormData = async (
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
 
-  console.log('attachment', documents)
   return {
     ...projectPayload,
     // Project Management payload
-    projectStatus: formValues?.status?.value || null,
+    projectStatusId: formValues?.status?.value || null,
     projectType: formValues?.type?.value ?? null,
     woNumber: formValues.woNumber,
     poNumber: formValues.poNumber,
@@ -400,6 +425,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     overPayment: formValues?.overPayment,
     remainingPayment: formValues?.remainingPayment,
     payVariance: formValues?.payVariance,
+    newPartialPayment: formValues?.payment,
 
     // Contacts payload
     projectCordinatorId: formValues?.projectCoordinator?.value,
