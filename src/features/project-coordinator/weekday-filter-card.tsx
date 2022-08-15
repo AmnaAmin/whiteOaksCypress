@@ -1,4 +1,4 @@
-import { Button, Center, Stack } from '@chakra-ui/react'
+import { Box, Button, Center, Divider, Flex } from '@chakra-ui/react'
 type weekdayCardTypes = {
   id: number | string
   dayName: string
@@ -12,7 +12,7 @@ type weekdayCardTypes = {
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
   return (
-    <Stack direction="row" justify="left" marginTop={1} marginLeft={15} cursor={props.count === 0 ? 'not-allowed' : ''}>
+    <Flex alignItems="center" cursor={props.count === 0 ? 'not-allowed' : ''}>
       <Button
         bg={props.selectedDay === props.id ? '#4E87F8' : 'none'}
         border="none"
@@ -25,7 +25,8 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
         alignContent="right"
         color={props.selectedDay === props.id ? 'white' : '#4A5568'}
         onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
-        style={{ pointerEvents: props.count === 0 ? 'none' : 'auto' }}
+        disabled={props.count ? false : true}
+        mr="2"
       >
         {props.dayName}
         <Center
@@ -44,6 +45,9 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           {props.count}
         </Center>
       </Button>
-    </Stack>
+      <Box>
+        <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+      </Box>
+    </Flex>
   )
 }

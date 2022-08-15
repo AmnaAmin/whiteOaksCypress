@@ -50,7 +50,7 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
   })
 }
 
-export const useTableColumnSettings = (columns: Column[], tableName: TableNames) => {
+export const useTableColumnSettings = (columns: any, tableName: TableNames) => {
   const client = useClient()
   const { email } = useUserProfile() as Account
   const { t } = useTranslation()
