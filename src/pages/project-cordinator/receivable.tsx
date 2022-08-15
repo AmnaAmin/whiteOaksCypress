@@ -1,16 +1,20 @@
-import { Box, Center, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
+import TableColumnSettings from 'components/table/table-column-settings'
 import { ReceivableFilter } from 'features/project-coordinator/payable-recievable/receivable-filter'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
 import { WeekDayFiltersAR } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
-import { useState } from 'react'
+import numeral from 'numeral'
+import { useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
-import { FaAtom } from 'react-icons/fa'
+import { TableNames } from 'types/table-column.types'
 import { useBatchProcessingMutation, useCheckBatch, usePCRecievable } from 'utils/account-receivable'
+import { dateFormat } from 'utils/date-time-utils'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 
 export const Receivable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -108,6 +112,98 @@ export const Receivable = () => {
   const saturday = receivableWeeeklyCount(receivableData?.arList, 6)
   const sunday = receivableWeeeklyCount(receivableData?.arList, 0)
 
+  const RECEIVABLE_COLUMNS = useMemo(
+    () => [
+      {
+        Header: t('id'),
+        accessor: 'projectId',
+      },
+      {
+        Header: t('client'),
+        accessor: 'clientName',
+      },
+      {
+        Header: t('address'),
+        accessor: 'propertyAddress',
+      },
+      {
+        Header: t('terms'),
+        accessor: 'paymentTerm',
+      },
+      {
+        Header: t('paymentTypes'),
+        accessor: 'type',
+      },
+      {
+        Header: t('vendorWOExpectedPaymentDate'),
+        accessor: 'expectedPaymentDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+      },
+      {
+        Header: t('balance'),
+        accessor: 'amount',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+      },
+      {
+        Header: t('finalInvoice'),
+        accessor: 'finalInvoice',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+      },
+      {
+        Header: t('markets'),
+        accessor: 'marketName',
+      },
+      {
+        Header: t('woInvoiceDate'),
+        accessor: 'woaInvoiceDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+      },
+      {
+        Header: t('poNo'),
+        accessor: 'poNumber',
+      },
+      {
+        Header: t('woNo'),
+        accessor: 'woNumber',
+      },
+      {
+        Header: t('invoiceNo'),
+        accessor: 'invoiceNumber',
+      },
+      {
+        Header: t('checkbox'),
+        accessor: 'checkbox',
+        Cell: ({ row }) => (
+          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+            <Checkbox
+              isDisabled={loading}
+              value={(row.original as any).projectId}
+              {...register(`projects.${row.index}`, { required: true })}
+            />
+          </Flex>
+        ),
+      },
+    ],
+    [register, loading],
+  )
+
+  const { mutate: postReceviableColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
+  const { tableColumns, resizeElementRef, settingColumns, isLoading } = useTableColumnSettings(
+    RECEIVABLE_COLUMNS,
+    TableNames.receivable,
+  )
+  const onSave = columns => {
+    postReceviableColumn(columns)
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit(Submit)}>
@@ -152,11 +248,11 @@ export const Receivable = () => {
           <Divider border="2px solid #E2E8F0" />
           <Box mt={2}>
             <ReceivableTable
-              loading={loading}
-              register={register}
+              receivableColumns={tableColumns}
               selectedCard={selectedCard as string}
               selectedDay={selectedDay as string}
               setTableInstance={setProjectTableInstance}
+              resizeElementRef={resizeElementRef}
             />
           </Box>
 
@@ -178,10 +274,7 @@ export const Receivable = () => {
               <Center>
                 <Divider orientation="vertical" height="25px" border="1px solid" />
               </Center>
-              <Button colorScheme="brand" variant="ghost" m={0}>
-                <Icon as={FaAtom} fontSize="18px" mr={1} />
-                {t('setting')}
-              </Button>
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </Flex>
           </Stack>
         </Box>

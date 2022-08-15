@@ -13,7 +13,7 @@ import {
   useColorModeValue as mode,
   VStack,
 } from '@chakra-ui/react'
-import DropdownLanguage from 'components/translation/DropdownLanguage'
+import DropdownLanguage from 'translation/DropdownLanguage'
 // import { IRootState } from "app/shared/reducers";
 import React, { useMemo, useState } from 'react'
 // import { AiOutlineLoading3Quarters } from 'react-icons/ai'

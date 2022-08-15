@@ -1,17 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
 import AccountReceivableModal from 'features/projects/modals/project-coordinator/receivable/account-receivable-modal'
 import { usePCRecievable } from 'utils/account-receivable'
-import { UseFormRegister } from 'react-hook-form'
-import { t } from 'i18next'
-import { dateFormat } from 'utils/date-time-utils'
-import numeral from 'numeral'
 import UpdateTransactionModal from 'features/projects/transactions/update-transaction-modal'
+import { Column } from 'react-table'
 
-const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const ReceivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -29,10 +25,10 @@ const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} p="0">
             <Flex alignItems="center" h="60px">
               <Text
-                noOfLines={2}
+                noOfLines={1}
                 title={cell.value}
                 padding="0 15px"
                 color="gray.600"
@@ -56,101 +52,16 @@ type ReceivableProps = {
   selectedCard: string
   selectedDay: string
   resizeElementRef?: any
-  ref?: any
   setTableInstance: (tableInstance: any) => void
-  register: UseFormRegister<any>
-  loading?: boolean
+  receivableColumns: Column[]
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
   setTableInstance,
-  loading,
-  register,
-  ref,
   selectedCard,
+  resizeElementRef,
+  receivableColumns,
 }) => {
-  const { columns } = useColumnWidthResize(
-    [
-      {
-        Header: t('id') as string,
-        accessor: 'projectId',
-      },
-      {
-        Header: t('client') as string,
-        accessor: 'clientName',
-      },
-      {
-        Header: t('address') as string,
-        accessor: 'propertyAddress',
-      },
-      {
-        Header: t('terms') as string,
-        accessor: 'paymentTerm',
-      },
-      {
-        Header: t('paymentTypes') as string,
-        accessor: 'type',
-      },
-      {
-        Header: t('vendorWOExpectedPaymentDate') as string,
-        accessor: 'expectedPaymentDate',
-        Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
-        },
-      },
-      {
-        Header: t('balance') as string,
-        accessor: 'amount',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-      },
-      {
-        Header: t('finalInvoice') as string,
-        accessor: 'finalInvoice',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-      },
-      {
-        Header: t('markets') as string,
-        accessor: 'marketName',
-      },
-      {
-        Header: t('woInvoiceDate') as string,
-        accessor: 'woaInvoiceDate',
-        Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
-        },
-      },
-      {
-        Header: t('poNo') as string,
-        accessor: 'poNumber',
-      },
-      {
-        Header: t('woNo') as string,
-        accessor: 'woNumber',
-      },
-      {
-        Header: t('invoiceNo') as string,
-        accessor: 'invoiceNumber',
-      },
-      {
-        Header: t('checkbox') as string,
-        Cell: ({ value, row }) => (
-          <Box onClick={e => e.stopPropagation()}>
-            <Checkbox
-              isDisabled={loading}
-              value={(row.original as any).projectId}
-              {...register(`projects.${row.index}`, { required: true })}
-            />
-          </Box>
-        ),
-      },
-    ],
-    ref,
-  )
-
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const {
@@ -196,11 +107,11 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     <Box overflow="auto" width="100%">
       <TableWrapper
         onRowClick={onRowClick}
-        columns={columns}
+        columns={receivableColumns}
         setTableInstance={setTableInstance}
         data={receivableFilterData || []}
         isLoading={isLoading}
-        TableRow={receivableRow}
+        TableRow={ReceivableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"
         defaultFlexStyle={false}

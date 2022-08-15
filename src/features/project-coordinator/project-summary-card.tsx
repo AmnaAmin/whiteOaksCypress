@@ -6,13 +6,13 @@ import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useState } from 'react'
-import { TransactionInfoCardDetails } from './transaction-info-card-details'
+import { ProjectSummaryCardDetails } from './project-summary-card-details'
 import { Button } from 'components/button/button'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="14px" color="gray.500">
+      <Box fontSize="14px" color="gray.500" width={'100px'}>
         <FormLabel variant="strong-label" size="md">
           {title}
         </FormLabel>
@@ -22,7 +22,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
   )
 }
 
-export const TransactionInfoCard: React.FC<{
+export const ProjectSummaryCard: React.FC<{
   projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
@@ -118,7 +118,7 @@ export const TransactionInfoCard: React.FC<{
           )}
         </InfoStructureCard>
       </Flex>
-      {isShowMoreDetails && <TransactionInfoCardDetails projectData={projectData as Project} isLoading={isLoading} />}
+      {isShowMoreDetails && <ProjectSummaryCardDetails projectData={projectData as Project} isLoading={isLoading} />}
     </>
   )
 }
