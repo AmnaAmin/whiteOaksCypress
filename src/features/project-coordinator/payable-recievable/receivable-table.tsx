@@ -54,6 +54,7 @@ type ReceivableProps = {
   resizeElementRef?: any
   setTableInstance: (tableInstance: any) => void
   receivableColumns: Column[]
+  weeklyCount: { name: string; title: string; count: number; dates: Date }[]
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
@@ -61,6 +62,8 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   selectedCard,
   resizeElementRef,
   receivableColumns,
+  selectedDay,
+  weeklyCount,
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
@@ -70,8 +73,6 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
   const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
-
-  // const { receivableData, isLoading } = usePCRecievable()
 
   const onRowClick = useCallback(
     (_, row) => {
@@ -87,21 +88,40 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     [onAccountReceivableModalOpen],
   )
   const { receivableData, isLoading } = usePCRecievable()
-  // const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
-  // const rowSelectedData = receivableDataa?.data
   const receivable = receivableData?.arList
 
   const [receivableFilterData, setFilterReceivableData] = useState(receivable)
 
   useEffect(() => {
+    if (!selectedCard && !selectedDay) setFilterReceivableData(receivable)
     setFilterReceivableData(
-      receivable?.filter(receivable => {
-        return (
-          !selectedCard || receivable.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase()
-        )
-      }),
+      receivable?.filter(
+        project =>
+          !selectedCard || project.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+      ),
     )
-  }, [selectedCard, receivable])
+
+    // Due Project Weekly Filter
+    const getDates = weeklyCount?.filter(day => {
+      if (selectedDay === day.name) {
+        return true
+      }
+      return false
+    })
+
+    const clientDate = getDates?.map(dates => {
+      var date = dates?.dates
+      return date
+    })
+
+    if (selectedDay) {
+      setFilterReceivableData(
+        receivable?.filter(receivableValue => {
+          return clientDate.includes(receivableValue.expectedPaymentDate?.substr(0, 10))
+        }),
+      )
+    }
+  }, [selectedCard, selectedDay, receivable])
 
   return (
     <Box overflow="auto" width="100%">

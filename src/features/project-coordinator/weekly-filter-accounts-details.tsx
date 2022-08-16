@@ -1,5 +1,4 @@
-import { Button, Divider, Stack } from '@chakra-ui/react'
-import { t } from 'i18next'
+import { Flex } from '@chakra-ui/react'
 import { WeekdayCard } from './weekday-filter-card'
 
 export type WeekDayFiltersProps = {
@@ -72,14 +71,14 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
 
   const days = useWeekdayCardJson()
 
-  const allDays = () => {
-    onSelectDay('All')
-  }
+  // const allDays = () => {
+  //   onSelectDay('All')
+  // }
 
   return (
     <>
-      <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-        <Button
+      <Flex>
+        {/* <Button
           bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
           color={selectedDay === 'All' ? 'white' : 'black'}
           variant={'pill'}
@@ -87,8 +86,7 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
           p={0}
         >
           {t('All')}
-        </Button>
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
+        </Button> */}
         {days.map(day => {
           return (
             <WeekdayCard
@@ -101,11 +99,10 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
             />
           )
         })}
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
-        <Button variant="ghost" colorScheme="brand" onClick={clear}>
+        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
-        </Button>
-      </Stack>
+        </Button> */}
+      </Flex>
     </>
   )
 }

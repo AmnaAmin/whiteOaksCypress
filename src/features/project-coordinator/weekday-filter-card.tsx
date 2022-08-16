@@ -12,7 +12,7 @@ type weekdayCardTypes = {
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
   return (
-    <Flex alignItems="center" cursor={props.count === 0 ? 'not-allowed' : ''}>
+    <Flex alignItems="center" cursor={props.count === 0 ? 'not-allowed' : ''} m="0 !important">
       <Button
         bg={props.selectedDay === props.id ? '#4E87F8' : 'none'}
         border="none"
@@ -26,7 +26,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
         color={props.selectedDay === props.id ? 'white' : '#4A5568'}
         onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
         disabled={props.count ? false : true}
-        mr="2"
+        mx="2"
       >
         {props.dayName}
         <Center

@@ -1,4 +1,4 @@
-import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Spacer, Stack } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -112,6 +112,51 @@ export const Receivable = () => {
   const saturday = receivableWeeeklyCount(receivableData?.arList, 6)
   const sunday = receivableWeeeklyCount(receivableData?.arList, 0)
 
+  const weeklyCount = [
+    {
+      name: 'Monday',
+      title: 'Mon',
+      count: monday?.count,
+      dates: monday?.date,
+    },
+    {
+      name: 'Tuesday',
+      title: 'Tue',
+      count: tuesday?.count,
+      dates: tuesday?.date,
+    },
+    {
+      name: 'Wednesday',
+      title: 'Wed',
+      count: wednesday?.count,
+      dates: wednesday?.date,
+    },
+    {
+      name: 'Thursday',
+      title: 'Thu',
+      count: thursday?.count,
+      dates: thursday?.date,
+    },
+    {
+      name: 'Friday',
+      title: 'Fri',
+      count: friday?.count,
+      dates: friday?.date,
+    },
+    {
+      name: 'Saturday',
+      title: 'Sat',
+      count: saturday?.count,
+      dates: saturday?.date,
+    },
+    {
+      name: 'Sunday',
+      title: 'Sun',
+      count: sunday?.count,
+      dates: sunday?.date,
+    },
+  ]
+
   const RECEIVABLE_COLUMNS = useMemo(
     () => [
       {
@@ -224,15 +269,16 @@ export const Receivable = () => {
           <FormLabel variant="strong-label" size="lg">
             {t('Account Receivable')}
           </FormLabel>
-          <Box>
+          <Box mb={2}>
             <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
           </Box>
-          <Box mt={6}>
-            <FormLabel variant="strong-label" size="lg">
+          <Flex alignItems="center" py="16px">
+            <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
               {t('dueProjects')}
             </FormLabel>
-          </Box>
-          <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
+            <Box ml="2">
+              <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+            </Box>
             <WeekDayFiltersAR
               monday={monday}
               tuesday={tuesday}
@@ -245,19 +291,18 @@ export const Receivable = () => {
               selectedDay={selectedDay}
               clear={clearAll}
             />
+            <Spacer />
 
             <Button
               alignContent="right"
               // onClick={onNewProjectModalOpen}
-              position="absolute"
-              right={8}
               colorScheme="brand"
               type="submit"
             >
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? 'Batch Process' : 'Processing...'}
             </Button>
-          </Stack>
+          </Flex>
           <Divider border="2px solid #E2E8F0" />
           <Box mt={2}>
             <ReceivableTable
@@ -266,6 +311,7 @@ export const Receivable = () => {
               selectedDay={selectedDay as string}
               setTableInstance={setProjectTableInstance}
               resizeElementRef={resizeElementRef}
+              weeklyCount={weeklyCount}
             />
           </Box>
 
