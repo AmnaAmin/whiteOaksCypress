@@ -8,9 +8,10 @@ import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
+import { downloadFile } from 'utils/file-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useDocuments, useFetchDocument } from 'utils/vendor-projects'
+import { useDocuments } from 'utils/vendor-projects'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
@@ -61,17 +62,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { documents = [] } = useDocuments({
     projectId,
   })
-  const [documentUrl, setDocumentUrl] = useState<any>(null)
-  const { data: binaryFile, refetch } = useFetchDocument(documentUrl)
-
-  const download = s3Url => {
-    setDocumentUrl(s3Url)
-    refetch()
-  }
-
-  useEffect(() => {
-    console.log(binaryFile)
-  }, [binaryFile])
   const { columns } = useColumnWidthResize(
     [
       {
@@ -120,7 +110,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                 color="#4E87F8"
                 fontSize={24}
                 onClick={() => {
-                  download(s3Url)
+                  downloadFile(s3Url)
                 }}
               />
             </Flex>

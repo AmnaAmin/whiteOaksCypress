@@ -1,4 +1,4 @@
-import { useClient, useClientWithoutPrefix } from 'utils/auth-context'
+import { useClient } from 'utils/auth-context'
 import { Document } from 'types/vendor.types'
 import { useToast } from '@chakra-ui/toast'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -60,16 +60,6 @@ export const useDocuments = ({ projectId }: { projectId: string | number | undef
     documents,
     ...rest,
   }
-}
-
-export const useFetchDocument = s3Url => {
-  const client = useClientWithoutPrefix()
-
-  return useQuery('binaryDocument', async () => {
-    const response = await client(s3Url, { enabled: false })
-
-    return response?.data
-  })
 }
 
 export const useDocumentTypes = () => {
