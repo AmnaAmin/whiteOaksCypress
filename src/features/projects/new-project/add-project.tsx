@@ -43,6 +43,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
 
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
   const [tabIndex, setTabIndex] = useState(0)
+  const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const navigate = useNavigate()
 
   const setNextTab = () => {
@@ -92,7 +93,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   })
 
   const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(methods.control)
-  const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(methods.control)
+  const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(
+    methods.control,
+    isDuplicateAddress,
+  )
 
   const { handleSubmit } = methods
 
@@ -200,7 +204,13 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                       <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <AddPropertyInfo isLoading={false} setNextTab={setNextTab} onClose={onClose} />
+                      <AddPropertyInfo
+                        isLoading={false}
+                        setNextTab={setNextTab}
+                        onClose={onClose}
+                        isDuplicateAddress={isDuplicateAddress}
+                        setIsDuplicateAddress={setIsDuplicateAddress}
+                      />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
                       <ManageProject isLoading={false} onClose={onClose} />
