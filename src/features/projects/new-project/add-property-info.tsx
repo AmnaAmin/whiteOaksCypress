@@ -30,6 +30,8 @@ import { NEW_PROJECT } from 'features/projects/projects.i18n'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
+  isDuplicateAddress: boolean
+  setIsDuplicateAddress: (isDuplicate: boolean) => void
   setNextTab: () => void
   onClose: () => void
 }> = props => {
@@ -40,9 +42,8 @@ export const AddPropertyInfo: React.FC<{
     onOpen: onAddressVerificationModalOpen,
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
-
+  const { isDuplicateAddress, setIsDuplicateAddress } = props
   const [addressInfo, setAddressInfo] = useState<AddressInfo>({ address: '', city: '', state: '', zipCode: '' })
-  const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const [check, setCheck] = useState(false)
   const [existProperty, setExistProperty] = useState([{ id: 0, status: '' }])
 
@@ -61,7 +62,7 @@ export const AddPropertyInfo: React.FC<{
     setValue,
   } = useFormContext<ProjectFormValues>()
 
-  const isNextButtonDisabled = usePropertyInformationNextDisabled(control)
+  const isNextButtonDisabled = usePropertyInformationNextDisabled(control, isDuplicateAddress)
   const addressShouldBeVerified = useAddressShouldBeVerified(control)
 
   // Continue unverified Check
@@ -95,6 +96,7 @@ export const AddPropertyInfo: React.FC<{
     const duplicatedInProjects = projects?.filter(p => p.propertyId === property?.id) || []
 
     setIsDuplicateAddress(false)
+    setValue('acknowledgeCheck', false)
 
     if (duplicatedInProjects?.length > 0) {
       setIsDuplicateAddress(true)

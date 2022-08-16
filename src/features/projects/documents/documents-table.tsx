@@ -1,17 +1,17 @@
-import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Spacer, HStack } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { TableWrapper } from 'components/table/table'
+import { Box, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
 import { RowProps } from 'components/table/react-table'
-import { useDocuments } from 'utils/vendor-projects'
-import { useParams } from 'react-router'
-import { dateFormat } from 'utils/date-time-utils'
+import { TableWrapper } from 'components/table/table'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { Button } from 'components/button/button'
 import { FaAtom } from 'react-icons/fa'
+import { useParams } from 'react-router'
+import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
+import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useDocuments } from 'utils/vendor-projects'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
@@ -62,7 +62,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { documents = [] } = useDocuments({
     projectId,
   })
-
   const { columns } = useColumnWidthResize(
     [
       {
