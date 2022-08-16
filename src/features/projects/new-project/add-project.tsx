@@ -140,7 +140,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         hoaEmailAddress: values.hoaEmailAddress,
         projectManagerId: values.projectManager?.value,
         projectCordinatorId: values.projectCoordinator?.value,
-        clientName: values.clientName,
+        clientName: values.client?.label,
         clientId: values.client?.value,
         superLastName: values.superLastName,
         superEmailAddress: values.superEmailAddress,
