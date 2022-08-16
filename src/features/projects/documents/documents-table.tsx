@@ -2,7 +2,7 @@ import { Box, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-
 import { Button } from 'components/button/button'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
