@@ -136,6 +136,12 @@ function useClient(apiPrefix = '/api') {
   )
 }
 
+function useClientWithoutPrefix() {
+  const authToken = getToken()
+
+  return React.useCallback((endpoint, config) => client(`${endpoint}`, { ...config, token: authToken }), [authToken])
+}
+
 function useReminderClient() {
   const { data } = useAuth()
   const token = data?.token
@@ -145,4 +151,4 @@ function useReminderClient() {
   )
 }
 
-export { AuthProvider, useAuth, useClient, useReminderClient }
+export { AuthProvider, useAuth, useClient, useReminderClient, useClientWithoutPrefix }
