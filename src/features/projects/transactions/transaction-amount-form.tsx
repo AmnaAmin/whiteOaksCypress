@@ -179,7 +179,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         )}
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-        <HStack>
+        <HStack w={!isApproved ? 'auto' : '100%'} justifyContent="end">
           {isShowRefundMaterialCheckbox && (
             <Controller
               control={control}
@@ -242,7 +242,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   </Text>
                 </Flex>
               </a>
-              <Divider orientation="vertical" />
+              {!isApproved && <Divider orientation="vertical" />}
             </>
           )}
 
