@@ -247,7 +247,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     transaction,
-    againstOptions.length,
+    againstOptions?.length,
     setValue,
     isVendor,
     workOrderSelectOptions.length,
