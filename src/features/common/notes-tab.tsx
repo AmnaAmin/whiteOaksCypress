@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text, HStack, FormControl } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Textarea, WrapItem, FormLabel, Text, HStack, FormControl } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -11,15 +11,21 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
   return (
     <Flex mb={4}>
       {otherNote ? (
-        <Box mr={5} fontSize="12px" fontWeight={400}>
+        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
           <WrapItem justifyContent="center" mb={1}>
             <Avatar size="sm" bg="blackAlpha.200" />
           </WrapItem>
-          <Center color="gray.600">{otherNote.createdBy}</Center>
-          <Center color="gray.500">{convertDateTimeFromServer(otherNote.createdDate)}</Center>
-        </Box>
+          <Box display="flex" justifyContent="center" color="gray.600">
+            <Box maxW="150px" whiteSpace={'nowrap'} overflow="hidden" textOverflow={'ellipsis'}>
+              {otherNote.createdBy}
+            </Box>
+          </Box>
+          <Box display="flex" justifyContent="center" color="gray.500">
+            <span>{convertDateTimeFromServer(otherNote.createdDate)}</span>
+          </Box>
+        </Flex>
       ) : (
-        <Box w="113px" />
+        <Box w="150px" mr={5} />
       )}
       <Text
         whiteSpace="pre-wrap"
