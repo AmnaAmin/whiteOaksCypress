@@ -1,23 +1,24 @@
 import React from "react";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 import { Task } from "./task-types.ds";
 import { dateFormat } from "utils/date-time-utils";
+import { theme } from 'theme/theme'
 
 const styles = {"taskListWrapper":"_3ZbQT","taskListTableRow":"_34SS0","taskListCell":"_3lLk3","taskListNameWrapper":"_nI1Xw","taskListExpander":"_2QjE6","taskListEmptyExpander":"_2TfEi"};
 
 const titleCss = {
-  color: "#4A5568",
+  color: "gray.600",
   fontSize: 14,
   fontWeight: 500,
 }
 
 const valueCss = {
-  color: "#718096",
+  color: "gray.500",
   fontSize: 14,
   fontWeight: 400,
 }
 
-export const Project_TaskListTable:React.FC<{
+export const ProjectTaskListTable:React.FC<{
   rowHeight: number;
   rowWidth: string;
   fontFamily: string;
@@ -37,57 +38,60 @@ export const Project_TaskListTable:React.FC<{
   tasks = props.tasks;
   
   return (
-    <div
+    <Box
       className={styles.taskListWrapper}
     >
       {tasks.length > 0 ? (
         <>
           {tasks.map((task,index) => (
-            <div
+            <Box
               key={task.id+"-"+index}
               className={styles.taskListTableRow}
-              style={{
-                height: rowHeight
-              }}
+              height={rowHeight}
             >
-              <div
+              <Box
                 className={styles.taskListCell}
-                style= {{
-                  minWidth: rowWidth,
-                  maxWidth: rowWidth
-                }}
+                minW={rowWidth}
+                maxW={rowWidth}
               >
                 <Flex
-                  justifyContent={"space-between"}
-                  padding={"5px 15px"}
+                  justifyContent="space-between"
+                  padding="5px 15px"
                 >
                   <Flex
-                    direction={"column"}
+                    direction="column"
                     gap={4}
                   >
-                    <span style={titleCss}>{index === 0 ? 'Project' : 'White Oaks Aligned'}</span>
-                    <span style={valueCss}>{task.name}</span>
+                    <Text
+                    >
+                      {index === 0 ? 'Project' : 'White Oaks Aligned'}
+                    </Text>
+                    <Text>
+                      {task.name}
+                    </Text>
+                    <Text style={titleCss}></Text>
+                    <Text style={valueCss}>{task.name}</Text>
                   </Flex>
                   <Flex
                     direction={"column"}
                     gap={4}
                   >
-                    <span>Start ***************** End</span>
+                    <Text>Start ***************** End</Text>
                     <Flex
-                      justifyContent={"space-between"}
+                      justifyContent="space-between"
                     >
-                      <span style={valueCss}>{dateFormat(task?.start as Date)}</span>
-                      <span style={valueCss}>{dateFormat(task?.end as Date)}</span>
+                      <Text style={valueCss}>{dateFormat(task?.start as Date)}</Text>
+                      <Text style={valueCss}>{dateFormat(task?.end as Date)}</Text>
                     </Flex>
                   </Flex>
 
                 </Flex>
-              </div>
-            </div>
+              </Box>
+            </Box>
           ))}
         </>
       ): null}
-    </div>
+    </Box>
   )
 };
   

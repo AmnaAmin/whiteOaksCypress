@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Flex } from "@chakra-ui/react";
 
-const styles = {"ganttTable":"_3_ygE","ganttTable_Header":"_1nBOt","ganttTable_HeaderSeparator":"_2eZzQ","ganttTable_HeaderItem":"_WuQ0f"};
+const styles = {"ganttTable":"_3_ygE"};
 
 /**
  * A component taken out of react-gantt-task lib's codebase (originally called 'TaskListHeaderDefault')
@@ -9,7 +9,7 @@ const styles = {"ganttTable":"_3_ygE","ganttTable_Header":"_1nBOt","ganttTable_H
  * @param props Tasl List props [headerHeight, rowWidth, fontFamily, fontSize]
  * @returns React Component
  */
-export const Project_TaskList:FC<{
+export const ProjectTaskList:FC<{
   headerHeight: number;
   rowWidth: string;
   fontFamily: string;

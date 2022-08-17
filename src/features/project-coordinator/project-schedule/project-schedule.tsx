@@ -61,11 +61,8 @@ export const ProjectSchedule: React.FC<{
         <InfoStructureCard isLoading={isLoading} justifyContent="end" border="none">
           {isSeeMore && (
             <Button
-              color="blue"
-              border="none"
-              bg="none"
-              _focus={{ border: 'none', bg: 'none' }}
-              _hover={{ border: 'none', bg: 'none' }}
+              variant="solid"
+              colorScheme="brand"
               onClick={() => {
                 setSeeMore(false)
                 setSeeLess(true)
@@ -77,11 +74,8 @@ export const ProjectSchedule: React.FC<{
           )}
           {isSeeLess && (
             <Button
-              color="blue"
-              border="none"
-              bg="none"
-              _focus={{ border: 'none', bg: 'none' }}
-              _hover={{ border: 'none', bg: 'none' }}
+              variant="solid"
+              colorScheme="brand"
               onClick={() => {
                 setSeeMore(true)
                 setSeeLess(false)
