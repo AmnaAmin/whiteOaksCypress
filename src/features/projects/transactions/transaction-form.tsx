@@ -84,7 +84,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t('contact')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput label={t('createdBy')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
       </GridItem>
 
       <GridItem>
@@ -299,7 +299,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
-                      {t('paymentType')}
+                      {t('transactionType')}
                     </FormLabel>
                     <Controller
                       rules={{ required: 'This is required field' }}
@@ -629,7 +629,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
           </Button>
         ) : (
           <Button onClick={onModalClose} variant="outline" colorScheme="brand" data-testid="close-transaction-form">
-            {t('close')}
+            {t('Cancel')}
           </Button>
         )}
 
