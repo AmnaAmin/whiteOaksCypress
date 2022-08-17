@@ -628,7 +628,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onModalClose} variant="outline" colorScheme="brand" data-testid="close-transaction-form">
+          <Button onClick={onModalClose} variant="solid" colorScheme="brand" data-testid="close-transaction-form">
             {t('Cancel')}
           </Button>
         )}
