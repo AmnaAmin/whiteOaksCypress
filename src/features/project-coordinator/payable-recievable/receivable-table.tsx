@@ -54,7 +54,8 @@ type ReceivableProps = {
   resizeElementRef?: any
   setTableInstance: (tableInstance: any) => void
   receivableColumns: Column[]
-  weeklyCount: { name: string; title: string; count: number; dates: Date }[]
+  weeklyCount?: { name: string; title: string; count: number; dates: Date }[]
+  weekDayFilters: any[]
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
@@ -63,7 +64,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   resizeElementRef,
   receivableColumns,
   selectedDay,
-  weeklyCount,
+  weekDayFilters,
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
@@ -102,16 +103,10 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     )
 
     // Due Project Weekly Filter
-    const getDates = weeklyCount?.filter(day => {
-      if (selectedDay === day.name) {
-        return true
-      }
-      return false
-    })
+    const getDates = weekDayFilters?.filter(day => selectedDay === day.id)
 
-    const clientDate = getDates?.map(dates => {
-      var date = dates?.dates
-      return date
+    const clientDate = getDates?.map(date => {
+      return date?.date
     })
 
     if (selectedDay) {
