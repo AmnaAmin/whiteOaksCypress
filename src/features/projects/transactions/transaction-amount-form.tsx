@@ -137,7 +137,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     })
   }
 
-  const isShowCheckboxes = transactionFields?.length > 1
+  const isShowCheckboxes = !isApproved && transactionFields?.length > 1
 
   return (
     <>
