@@ -83,7 +83,7 @@ export const ProjectSummaryCard: React.FC<{
             variant="light-label"
             size="md"
             noOfLines={1}
-            title={`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
+            title={`${projectData?.streetAddress}, ${projectData?.city}`}
           >
             {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
           </FormLabel>
