@@ -74,11 +74,9 @@ const InvoiceAndPayments: React.FC = () => {
   }
 
   const onPaymentValueChange = (values: NumberFormatValues) => {
-    console.log(values)
     const payment = Number(values.value)
-    const overyPayment = payment - getValues().finalSOWAmount
+    const overyPayment = payment - (getValues().remainingPayment || 0)
 
-    console.log('payment', payment)
     setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
   }
 
@@ -110,19 +108,21 @@ const InvoiceAndPayments: React.FC = () => {
                 }}
               />
             </FormControl>
-            <Link
-              download
-              href={formValues.sowLink || ''}
-              target="_blank"
-              color="#4E87F8"
-              display={'flex'}
-              fontSize="xs"
-              alignItems={'center'}
-              mt="2"
-            >
-              <Icon as={BiDownload} fontSize="14px" />
-              <Text ml="1">Original SOW</Text>
-            </Link>
+            {formValues.sowLink && (
+              <Link
+                download
+                href={formValues.sowLink || ''}
+                target="_blank"
+                color="#4E87F8"
+                display={'flex'}
+                fontSize="xs"
+                alignItems={'center'}
+                mt="2"
+              >
+                <Icon as={BiDownload} fontSize="14px" />
+                <Text ml="1">Original SOW</Text>
+              </Link>
+            )}
           </VStack>
         </GridItem>
         <GridItem>
@@ -130,19 +130,10 @@ const InvoiceAndPayments: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
               {t('finalSowAmount')}
             </FormLabel>
-            {/* <Input
-              isDisabled={isFinalSOWAmountDisabled}
-              id="finalSowAmount"
-              {...register('finalSOWAmount', {
-                required: 'This is required',
-              })}
-              placeholder="$3000.00"
-            />
-            <FormErrorMessage>{errors?.finalSOWAmount?.message}</FormErrorMessage> */}
             <Controller
               control={control}
               name="finalSOWAmount"
-              render={({ field, fieldState }) => {
+              render={({ field }) => {
                 return (
                   <NumberFormat
                     value={field.value}
@@ -169,37 +160,55 @@ const InvoiceAndPayments: React.FC = () => {
           </FormControl>
         </GridItem>
         <GridItem>
-          <FormControl>
-            <FormLabel variant="strong-label" size="md">
-              {t('uploadInvoice')}
-            </FormLabel>
-            <Controller
-              name="invoiceAttachment"
-              control={control}
-              rules={{ required: isStatusInvoiced ? 'This is required field' : false }}
-              render={({ field, fieldState }) => {
-                const fileName = field?.value?.name ?? (t('chooseFile') as string)
+          <VStack alignItems="end" spacing="0px" position="relative">
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('uploadInvoice')}
+              </FormLabel>
+              <Controller
+                name="invoiceAttachment"
+                control={control}
+                rules={{ required: isStatusInvoiced ? 'This is required field' : false }}
+                render={({ field, fieldState }) => {
+                  const fileName = field?.value?.name ?? (t('chooseFile') as string)
 
-                return (
-                  <VStack alignItems="baseline">
-                    <Box h="0px">
-                      <ChooseFileField
-                        name={field.name}
-                        value={fileName}
-                        isRequired={isStatusInvoiced}
-                        isError={!!fieldState.error?.message}
-                        onChange={(file: any) => {
-                          field.onChange(file)
-                        }}
-                      />
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box>
+                        <ChooseFileField
+                          name={field.name}
+                          value={fileName}
+                          isRequired={isStatusInvoiced}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            field.onChange(file)
+                          }}
+                        />
 
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </Box>
-                  </VStack>
-                )
-              }}
-            />
-          </FormControl>
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
+
+            {formValues.invoiceLink && (
+              <Link
+                href={formValues.invoiceLink || ''}
+                download
+                display={'flex'}
+                target="_blank"
+                color="#4E87F8"
+                fontSize="xs"
+                alignItems={'center'}
+                mt="2"
+              >
+                <Icon as={BiDownload} fontSize="14px" />
+                <Text ml="1">Invoice</Text>
+              </Link>
+            )}
+          </VStack>
         </GridItem>
         <GridItem>
           <FormControl>

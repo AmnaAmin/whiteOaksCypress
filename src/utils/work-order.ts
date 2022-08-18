@@ -8,7 +8,7 @@ import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
 
-export const useUpdateWorkOrderMutation = () => {
+export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -27,12 +27,14 @@ export const useUpdateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries('accountPayable')
-        toast({
-          title: 'Work Order',
-          description: 'Work Order has been saved successfully.',
-          status: 'success',
-          isClosable: true,
-        })
+        if (!hideToast) {
+          toast({
+            title: 'Work Order',
+            description: 'Work Order has been saved successfully.',
+            status: 'success',
+            isClosable: true,
+          })
+        }
       },
       onError(error: any) {
         toast({
@@ -286,7 +288,7 @@ export const defaultValuesLienWaiver = lienWaiverData => {
     propertyAddress: lienWaiverData?.propertyAddress,
     owner: lienWaiverData?.owner,
     makerOfCheck: lienWaiverData?.makerOfCheck,
-    amountOfCheck: lienWaiverData?.amountOfCheck,
+    finalInvoiceAmount: lienWaiverData?.finalInvoiceAmount,
     checkPayableTo: lienWaiverData?.claimantName,
     claimantsSignature: lienWaiverData?.claimantsSignature,
     claimantTitle: lienWaiverData?.claimantTitle,

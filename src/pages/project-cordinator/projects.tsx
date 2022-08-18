@@ -1,5 +1,17 @@
-import { useEffect, useState } from 'react'
-import { Box, Button, Center, Divider, Flex, FormLabel, Icon, Stack, useDisclosure, VStack } from '@chakra-ui/react'
+import { useState } from 'react'
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  FormLabel,
+  Icon,
+  Stack,
+  useDisclosure,
+  VStack,
+  Spacer,
+} from '@chakra-ui/react'
 import { BsBoxArrowUp } from 'react-icons/bs'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ProjectFilters } from 'features/project-coordinator/project-filters'
@@ -7,8 +19,7 @@ import { ProjectsTable, PROJECT_COLUMNS } from 'features/project-coordinator/pro
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { AddNewProjectModal } from 'features/project-coordinator/add-project'
-import { useClients, useFPM, useMarkets, usePC, useProjectTypes, useProperties, useStates } from 'utils/pc-projects'
+import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -37,17 +48,6 @@ export const Projects = () => {
     postProjectColumn(columns)
   }
 
-  // Calling all APIs
-  const { data: properties } = useProperties()
-  const { data: projectTypes } = useProjectTypes()
-  const { data: statesData } = useStates()
-  const { data: fieldProjectManager } = useFPM()
-  const { data: projectCoordinator } = usePC()
-  const { data: client } = useClients()
-  const { data: markets } = useMarkets()
-
-  useEffect(() => {}, [properties, projectTypes, statesData, fieldProjectManager, projectCoordinator, client, markets])
-
   const clearAll = () => {
     setSelectedCard('')
     setSelectedDay('')
@@ -55,33 +55,27 @@ export const Projects = () => {
 
   return (
     <>
-      <VStack w={{ base: '971px', xl: '100%' }} h="calc(100vh - 160px)">
-        <Box mb={2} w="100%" border="10 px solid red">
+      <VStack alignItems="start" h="calc(100vh - 160px)">
+        <Box w="100%">
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
         </Box>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="left" marginTop={10}>
-          <Box mt={4}>
-            <FormLabel variant="strong-label" fontSize="18px">
+        <Flex w="100%" py="16px">
+          <Flex alignItems="center" pl={2}>
+            <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
               {t('Due Projects')}
             </FormLabel>
-          </Box>{' '}
-        </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" marginTop={1} paddingLeft={2}>
-          <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+            <Box ml="2">
+              <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+            </Box>
 
-          <Button
-            alignContent="right"
-            onClick={onNewProjectModalOpen}
-            position="absolute"
-            right={8}
-            colorScheme="brand"
-            fontSize="14px"
-          >
+            <WeekDayFilters clear={clearAll} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          </Flex>
+          <Spacer />
+          <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px">
             <Icon as={BiBookAdd} fontSize="18px" mr={2} />
             {t('New Project')}
           </Button>
-        </Stack>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}></Stack>
+        </Flex>
         <Box w="100%" minH="500px" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
           <ProjectsTable
             selectedCard={selectedCard as string}
@@ -128,17 +122,7 @@ export const Projects = () => {
           </Stack>
         </Box>
       </VStack>
-      <AddNewProjectModal
-        markets={markets}
-        properties={properties}
-        projectTypes={projectTypes}
-        statesData={statesData}
-        fieldProjectManager={fieldProjectManager}
-        projectCoordinator={projectCoordinator}
-        client={client}
-        isOpen={isOpenNewProjectModal}
-        onClose={onNewProjectModalClose}
-      />
+      <AddNewProjectModal isOpen={isOpenNewProjectModal} onClose={onNewProjectModalClose} />
     </>
   )
 }

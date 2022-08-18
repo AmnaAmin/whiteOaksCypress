@@ -1,3 +1,5 @@
+import { SelectOption } from './transaction.type'
+
 export type Project = {
   accountRecievable: number | null
   accountPayable: number | null
@@ -24,6 +26,7 @@ export type Project = {
   hoaPhoneNumberExtension: string | null
   id: number | null
   invoiceNumber: string | null
+  invoiceLink: string | null
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
   market: string | null
@@ -176,8 +179,7 @@ export type ProjectAlertType = {
 export type ProjectFormValues = {
   acknowledgeCheck?: boolean
   name?: string
-  projectType?: number
-  projectTypeLabel: string
+  projectType?: SelectOption | null
   woNumber?: string
   poNumber?: string
   clientStartDate?: string
@@ -191,19 +193,18 @@ export type ProjectFormValues = {
   sowLink: string
   streetAddress?: string
   city?: string
-  state?: any
+  state?: SelectOption | null
   zipCode?: any
-  newMarketId?: any
+  newMarket?: SelectOption | null
   gateCode?: string
   lockBoxCode?: string
   hoaEmailAddress?: string | null
   hoaPhone?: string | null
   hoaPhoneNumberExtension?: string
-  projectManagerId?: number
-  projectCoordinator?: string
-  projectCoordinatorId?: number
+  projectManager?: SelectOption | null
+  projectCoordinator?: SelectOption | null
   clientName?: string
-  clientId?: number
+  client?: SelectOption | null
   superLastName?: string | null
   superPhoneNumber?: string
   superPhoneNumberExtension?: string
@@ -253,3 +254,5 @@ export type ProjectFinancialOverview = {
   revisedChangeOrder: number
   finalVendorWorkOrder: number
 }
+
+export type AddressInfo = { address: string; city: string; state: string; zipCode: string }

@@ -1,12 +1,15 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { projects } from 'features/projects/projects.i18n'
+
 i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
         //GLOBAL ERRORS
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "Expected Completion Date cannot be more than 1 year of Expected Start Date",
+        ...projects.en.translation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -120,6 +123,7 @@ i18n.use(initReactI18next).init({
         submit: 'Submit',
         approvedBy: 'Approved By',
         paymentType: 'Payment Type',
+        transactionType: 'Transaction Type',
         against: 'Against',
         changeOrder: 'Change Order',
         workOrder: 'Work Order',
@@ -160,6 +164,8 @@ i18n.use(initReactI18next).init({
         lienWaiver: 'Lien Waiver',
         lienWaiverRejectInfo: 'Admin made changes, you are required to generate LW again.',
         rejectLienWaiver: 'Reject Lien Waiver',
+        saveLWError: 'Please save Lien Waiver before generating Invoice',
+        updateLWError: 'Please update Lien Waiver before generating Invoice',
         rejectInvoice: 'Reject Invoice',
         reject: 'Reject',
         invoice: 'Invoice',
@@ -449,6 +455,7 @@ i18n.use(initReactI18next).init({
       translation: {
         //GLOBAL ERRORS
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada",
+        ...projects.es.translation,
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
         fieldProjectManager: 'Gerente de Proyectos de Campo',
@@ -621,6 +628,7 @@ i18n.use(initReactI18next).init({
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
         paymentType: 'Tipo de Pago',
+        transactionType: 'Tipo de transacción',
         against: 'Estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',
@@ -649,10 +657,12 @@ i18n.use(initReactI18next).init({
         profitPercentage: 'Porcentaje de beneficio',
         vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',
         name: 'Nombre',
-        email: 'Email',
+        email: 'Correo electrónico',
         phone: 'Teléfono',
         issue: 'Asunto',
         rejectLienWaiver: 'Rechazar exención de gravamen',
+        saveLWError: 'Guarde la exención de gravamen antes de generar la factura',
+        updateLWError: 'Actualice la exención de gravamen antes de generar la factura',
         rejectInvoice: 'Rechazar Factura',
         lienWaiver: 'Exención de gravamen',
         lienWaiverRejectInfo: 'El administrador realizó cambios, debe generar LW nuevamente.',

@@ -6,9 +6,10 @@ import { useTranslation } from 'react-i18next'
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedTransactionId: number
   projectId: string
+  heading?: string
 }
 
-const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, selectedTransactionId, projectId }) => {
+const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, heading, selectedTransactionId, projectId }) => {
   // const { transaction } = useTransaction(selectedTransactionIdd);
   const { t } = useTranslation()
 
@@ -16,7 +17,7 @@ const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, selectedTran
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader data-testid="update-transaction">{t('updateTransaction')}</ModalHeader>
+        <ModalHeader data-testid="update-transaction">{heading}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
         <ModalBody>
           <TransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} projectId={projectId} />

@@ -6,6 +6,7 @@ import { useColumnWidthResize } from './hooks/useColumnsWidthResize'
 import { useUserProfile } from './redux-common-selectors'
 import { Account } from 'types/account.types'
 import { useTranslation } from 'react-i18next'
+import { useMemo } from 'react'
 
 type generateSettingColumnProps = {
   field: string
@@ -49,7 +50,7 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
   })
 }
 
-export const useTableColumnSettings = (columns: Column[], tableName: TableNames) => {
+export const useTableColumnSettings = (columns: any, tableName: TableNames) => {
   const client = useClient()
   const { email } = useUserProfile() as Account
   const { t } = useTranslation()
@@ -60,32 +61,35 @@ export const useTableColumnSettings = (columns: Column[], tableName: TableNames)
     return response?.data
   })
 
-  let settingColumns: TableColumnSetting[] = []
+  // let settingColumns: TableColumnSetting[] = []
 
-  if ((savedColumns?.length || 0) < columns.length) {
-    settingColumns = columns.map((col, index) => {
-      return generateSettingColumn({
-        field: col.Header as string,
-        contentKey: col.accessor as string,
-        order: index,
-        userId: email,
-        type: tableName,
-        hide: false,
-      })
-    })
-  } else {
-    settingColumns =
-      savedColumns?.map((col, index) => {
+  const settingColumns = useMemo(() => {
+    if ((savedColumns?.length || 0) < columns.length) {
+      return columns.map((col, index) => {
         return generateSettingColumn({
-          field: t(col.colId),
-          contentKey: col.contentKey as string,
+          field: col.Header as string,
+          contentKey: col.accessor as string,
           order: index,
           userId: email,
           type: tableName,
-          hide: col.hide,
+          hide: false,
         })
-      }) || []
-  }
+      })
+    } else {
+      return (
+        savedColumns?.map((col, index) => {
+          return generateSettingColumn({
+            field: t(col.colId),
+            contentKey: col.contentKey as string,
+            order: index,
+            userId: email,
+            type: tableName,
+            hide: col.hide,
+          })
+        }) || []
+      )
+    }
+  }, [columns.length, savedColumns])
 
   const filteredColumns = columns.filter(col => {
     return !settingColumns?.find(pCol => {

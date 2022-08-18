@@ -16,7 +16,7 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
@@ -43,7 +43,7 @@ const PcDetails: React.FC<{
   const { t } = useTranslation()
 
   const { data: paymentsMethods } = usePaymentMethods()
-  const { data: statesData } = useStates()
+  const { stateSelectOptions } = useStates()
   const {
     formState: { errors },
     control,
@@ -52,15 +52,9 @@ const PcDetails: React.FC<{
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
-  const states = useMemo(
-    () =>
-      statesData?.map(state => ({
-        label: state?.name,
-        value: state?.code,
-      })) ?? [],
-    [statesData],
-  )
+  const formValues = useWatch({ control })
 
+  const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -284,7 +278,7 @@ const PcDetails: React.FC<{
                   <>
                     <ReactSelect
                       menuPosition="fixed"
-                      options={states}
+                      options={stateSelectOptions}
                       {...field}
                       selectProps={{ isBorderLeft: true }}
                     />
@@ -405,6 +399,7 @@ const PcDetails: React.FC<{
                       <ReactSelect
                         options={PAYMENT_TERMS_OPTIONS}
                         menuPosition="fixed"
+                        maxMenuHeight={80}
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                       />
@@ -416,29 +411,37 @@ const PcDetails: React.FC<{
             </Box>
             <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
               <Text>{t('paymentMethods')}</Text>
-              <HStack spacing="16px">
-                {paymentsMethods?.map(payment => (
-                  <Checkbox {...register(payment.name)} colorScheme="brand">
-                    {payment.name}
-                  </Checkbox>
-                ))}
-              </HStack>
+              <FormControl isInvalid={!!errors.Check?.message && !validatePayment?.length}>
+                <HStack spacing="16px">
+                  {paymentsMethods?.map(payment => (
+                    <Checkbox
+                      {...register(payment.name, {
+                        required: !validatePayment?.length && 'This is required',
+                      })}
+                      colorScheme="brand"
+                    >
+                      {payment.name}
+                    </Checkbox>
+                  ))}
+                </HStack>
+                <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+              </FormControl>
             </VStack>
           </Stack>
         </Box>
       </Box>
 
-      <HStack
+      <Flex
         height="72px"
         pt="8px"
         mt="30px"
         id="footer"
         borderTop="2px solid #E2E8F0"
+        alignItems="center"
         justifyContent="end"
-        spacing="16px"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
@@ -451,13 +454,13 @@ const PcDetails: React.FC<{
         >
           {vendorProfileData?.id ? t('save') : t('next')}
         </Button>
-      </HStack>
+      </Flex>
     </Stack>
   )
 }
 
 export const useVendorDetails = ({ form, vendorProfileData }) => {
-  const { data: statesData } = useStates()
+  const { states } = useStates()
   const { setValue, reset } = form
   const { markets } = useMarkets()
   const { data: trades } = useTrades()
@@ -481,7 +484,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
   useEffect(() => {
     if (!vendorProfileData) return
     reset(parseVendorAPIDataToFormData(vendorProfileData))
-    const state = statesData?.find(s => s.code === vendorProfileData.state)
+    const state = states?.find(s => s.code === vendorProfileData.state)
     setValue(
       'score',
       documentScore.find(s => s.value === vendorProfileData.score),
@@ -504,7 +507,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
       const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
       setValue('trades', tradeFormValues.trades)
     }
-  }, [reset, vendorProfileData, documentScore, documentStatus, statesData, PAYMENT_TERMS_OPTIONS, markets, trades])
+  }, [reset, vendorProfileData, documentScore, documentStatus, states, PAYMENT_TERMS_OPTIONS, markets, trades])
 }
 
 export default PcDetails
