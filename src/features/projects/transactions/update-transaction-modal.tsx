@@ -12,7 +12,7 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
 const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, heading, selectedTransactionId, projectId }) => {
   // const { transaction } = useTransaction(selectedTransactionIdd);
   const { t } = useTranslation()
-  console.log('selectedTransactionId - ',selectedTransactionId,'__projectId',projectId)
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
