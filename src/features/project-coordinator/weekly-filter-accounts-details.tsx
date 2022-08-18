@@ -1,18 +1,11 @@
-import { Button, Divider, Stack } from '@chakra-ui/react'
-import { t } from 'i18next'
+import { Flex } from '@chakra-ui/react'
 import { WeekdayCard } from './weekday-filter-card'
 
 export type WeekDayFiltersProps = {
   onSelectDay: (string) => void
   selectedDay: string
   clear?: () => void
-  monday?: any
-  tuesday?: any
-  wednesday?: any
-  thursday?: any
-  friday?: any
-  saturday?: any
-  sunday?: any
+  weekDayFilters: any[]
 }
 
 // temporarly making this component for now to fullfill RFT for integration of due filter, it will be refactored.
@@ -21,65 +14,16 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
   onSelectDay,
   selectedDay,
   clear,
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday,
+  weekDayFilters,
 }) => {
-  const useWeekdayCardJson = () => {
-    return [
-      {
-        id: 'Monday',
-        title: 'Mon',
-        number: monday?.count,
-        // date: days?.find(c => c.dayName === 'Monday')?.dueDate,
-      },
-      {
-        id: 'Tuesday',
-        title: 'Tue',
-        number: tuesday?.count,
-      },
-      {
-        id: 'Wednesday',
-        title: 'Wed',
-        number: wednesday?.count,
-      },
-      {
-        id: 'Thursday',
-        title: 'Thu',
-        number: thursday?.count,
-      },
-      {
-        id: 'Friday',
-        title: 'Fri',
-        number: friday?.count,
-      },
-      {
-        id: 'Saturday',
-        title: 'Sat',
-        number: saturday?.count,
-      },
-      {
-        id: 'Sunday',
-        title: 'Sun',
-        number: sunday?.count,
-      },
-    ]
-  }
-
-  const days = useWeekdayCardJson()
-
-  const allDays = () => {
-    onSelectDay('All')
-  }
+  // const allDays = () => {
+  //   onSelectDay('All')
+  // }
 
   return (
     <>
-      <Stack direction="row" justify="left" marginTop={1} alignItems="center">
-        <Button
+      <Flex>
+        {/* <Button
           bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
           color={selectedDay === 'All' ? 'white' : 'black'}
           variant={'pill'}
@@ -87,13 +31,12 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
           p={0}
         >
           {t('All')}
-        </Button>
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
-        {days.map(day => {
+        </Button> */}
+        {weekDayFilters.map(day => {
           return (
             <WeekdayCard
               dayName={day.title}
-              count={day.number ? day.number : 0}
+              count={day.count ? day.count : 0}
               key={day.id}
               {...day}
               onSelectDay={onSelectDay}
@@ -101,11 +44,10 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
             />
           )
         })}
-        <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
-        <Button variant="ghost" colorScheme="brand" onClick={clear}>
+        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
-        </Button>
-      </Stack>
+        </Button> */}
+      </Flex>
     </>
   )
 }
