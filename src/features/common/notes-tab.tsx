@@ -15,14 +15,14 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
           <WrapItem justifyContent="center" mb={1}>
             <Avatar size="sm" bg="blackAlpha.200" />
           </WrapItem>
-          <Box display="flex" justifyContent="center" color="gray.600">
+          <Flex justifyContent="center" color="gray.600">
             <Box maxW="150px" whiteSpace={'nowrap'} overflow="hidden" textOverflow={'ellipsis'}>
               {otherNote.createdBy}
             </Box>
-          </Box>
-          <Box display="flex" justifyContent="center" color="gray.500">
+          </Flex>
+          <Flex justifyContent="center" color="gray.500">
             <span>{convertDateTimeFromServer(otherNote.createdDate)}</span>
-          </Box>
+          </Flex>
         </Flex>
       ) : (
         <Box w="150px" mr={5} />
@@ -94,7 +94,7 @@ export const NotesTab = (props: NotesProps) => {
   return (
     <Box {...pageLayoutStyle}>
       <form onSubmit={handleSubmit(Submit)}>
-        <Box display="flex" flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
+        <Flex flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
           <Box {...chatListStyle} overflow="auto">
             {notes && notes.length > 0 && (
               <Box>
@@ -115,7 +115,7 @@ export const NotesTab = (props: NotesProps) => {
             </FormLabel>
             <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
           </FormControl>
-        </Box>
+        </Flex>
         {!hideFooter && (
           <HStack borderTop="1px solid #CBD5E0" bg="white">
             <HStack padding={5} justifyContent="start" w="100%">
