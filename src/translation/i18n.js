@@ -7,6 +7,8 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
+        //GLOBAL ERRORS
+        EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "Expected Completion Date cannot be more than 1 year of Expected Start Date",
         ...projects.en.translation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -121,6 +123,7 @@ i18n.use(initReactI18next).init({
         submit: 'Submit',
         approvedBy: 'Approved By',
         paymentType: 'Payment Type',
+        transactionType: 'Transaction Type',
         against: 'Against',
         changeOrder: 'Change Order',
         workOrder: 'Work Order',
@@ -450,6 +453,8 @@ i18n.use(initReactI18next).init({
     },
     es: {
       translation: {
+        //GLOBAL ERRORS
+        EXPECTED_AND_COMPLETION_1_YEAR_ERROR: "La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada",
         ...projects.es.translation,
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -623,6 +628,7 @@ i18n.use(initReactI18next).init({
         submit: 'Entregar',
         approvedBy: 'Aprobado Por',
         paymentType: 'Tipo de Pago',
+        transactionType: 'Tipo de transacción',
         against: 'Estatuto',
         changeOrder: 'Cambia el Orden',
         workOrder: 'Orden de Trabajo',

@@ -55,6 +55,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
   const { transactions = [], isLoading } = useTransactions(projectId)
@@ -116,7 +117,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row
-
+      setSelectedTransactionName(original.name)
       setSelectedTransactionId(original.id)
 
       onEditModalOpen()
@@ -165,6 +166,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
       <UpdateTransactionModal
         isOpen={isOpenEditModal}
         onClose={onEditModalClose}
+        heading={selectedTransactionName as string}
         selectedTransactionId={selectedTransactionId as number}
         projectId={projectId as string}
       />
