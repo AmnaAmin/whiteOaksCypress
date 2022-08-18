@@ -1,7 +1,6 @@
 import { ModalProps } from '@chakra-ui/react'
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/modal'
 import { TransactionForm } from './transaction-form'
-import { useTranslation } from 'react-i18next'
 
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedTransactionId: number
@@ -10,9 +9,6 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
 }
 
 const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, heading, selectedTransactionId, projectId }) => {
-  // const { transaction } = useTransaction(selectedTransactionIdd);
-  const { t } = useTranslation()
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />

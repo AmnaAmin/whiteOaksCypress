@@ -85,7 +85,7 @@
     "lint-staged": "lint-staged --config lint-staged.js",
     "husky-install": "husky install",
     "lint": "eslint src --color",
-    "ci:lint": "eslint --max-warnings=0",
+    "ci:lint": "eslint src --max-warnings=0",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
