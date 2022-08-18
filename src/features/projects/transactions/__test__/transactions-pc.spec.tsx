@@ -36,12 +36,12 @@ const workOrder = WORK_ORDERS[0]
 const changeOrder = CHANGE_ORDERS[0]
 
 describe('Given Project Coordinator create new transaction', () => {
-  describe('When the user create transaction of transaction type Change Order', () => {
+  describe('When the user create transaction of payment type Change Order', () => {
     test('Then User should create Change Order transaction against vendor successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('Against', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw', 'Payment', 'Material']
@@ -194,7 +194,7 @@ describe('Given Project Coordinator create new transaction', () => {
     })
   })
 
-  describe('When the user create transaction of transaction type Draw', () => {
+  describe('When the user create transaction of payment type Draw', () => {
     test('Then User should create Draw transaction against vendor successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
@@ -321,8 +321,8 @@ describe('Given Project Coordinator create new transaction', () => {
     })
   })
 
-  // Write test suite for when the user create transaction of transaction type Material
-  describe('When the user create transaction of transaction type Material', () => {
+  // Write test suite for when the user create transaction of payment type Material
+  describe('When the user create transaction of payment type Material', () => {
     test('Then User should create Material transaction against vendor successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
@@ -413,8 +413,8 @@ describe('Given Project Coordinator create new transaction', () => {
     })
   })
 
-  // write test suite for when the user create transaction of transaction type Payment
-  describe('When the user create transaction of transaction type Payment', () => {
+  // write test suite for when the user create transaction of payment type Payment
+  describe('When the user create transaction of payment type Payment', () => {
     test('Then User should create Payment transaction against vendor successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
