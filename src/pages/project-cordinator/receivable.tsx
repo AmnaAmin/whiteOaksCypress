@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
-import { useBatchProcessingMutation, useCheckBatch, usePCRecievable } from 'utils/account-receivable'
+import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
 
 export const Receivable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -56,58 +56,6 @@ export const Receivable = () => {
     setIsBatchClick(false)
   }
 
-  const getWeekDates = () => {
-    const now = new Date()
-    const dayOfWeek = now.getDay() // 0-6
-    const numDay = now.getDate()
-
-    const start = new Date(now) // copy
-    start.setDate(numDay - dayOfWeek)
-    start.setHours(0, 0, 0, 0)
-
-    const end = new Date(now) // copy
-    end.setDate(numDay + (7 - dayOfWeek))
-    end.setHours(0, 0, 0, 0)
-
-    return [start, end]
-  }
-
-  const filterDatesByCurrentWeek = d => {
-    const [start, end] = getWeekDates()
-    if (d >= start && d <= end) {
-      return true
-    }
-    return false
-  }
-
-  const receivableWeeeklyCount = (list, number) => {
-    if (list) {
-      const res = list.filter(
-        w =>
-          w.expectedPaymentDate !== null &&
-          filterDatesByCurrentWeek(new Date(w.expectedPaymentDate)) &&
-          new Date(w.expectedPaymentDate).getDay() === number,
-      )
-      return {
-        count: res.length,
-        date: res[0]?.expectedPaymentDate?.split('T')[0],
-      }
-    } else
-      return {
-        count: 0,
-        date: null,
-      }
-  }
-  const { receivableData } = usePCRecievable()
-
-  const monday = receivableWeeeklyCount(receivableData?.arList, 1)
-  const tuesday = receivableWeeeklyCount(receivableData?.arList, 2)
-  const wednesday = receivableWeeeklyCount(receivableData?.arList, 3)
-  const thursday = receivableWeeeklyCount(receivableData?.arList, 4)
-  const friday = receivableWeeeklyCount(receivableData?.arList, 5)
-  const saturday = receivableWeeeklyCount(receivableData?.arList, 6)
-  const sunday = receivableWeeeklyCount(receivableData?.arList, 0)
-
   return (
     <>
       <form onSubmit={handleSubmit(Submit)}>
@@ -124,18 +72,7 @@ export const Receivable = () => {
             </FormLabel>
           </Box>
           <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
-            <AccountWeekDayFilters
-              monday={monday}
-              tuesday={tuesday}
-              wednesday={wednesday}
-              thursday={thursday}
-              friday={friday}
-              saturday={saturday}
-              sunday={sunday}
-              onSelectDay={setSelectedDay}
-              selectedDay={selectedDay}
-              clear={clearAll}
-            />
+            <AccountWeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} clear={clearAll} />
 
             <Button
               alignContent="right"

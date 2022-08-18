@@ -47,10 +47,11 @@ type PayablePropsTyep = {
   payableColumns: Column[]
   selectedCard: string
   selectedDay: string
+  weekDayFilters: any[]
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
-  ({ setTableInstance, payableColumns, selectedCard, selectedDay }) => {
+  ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
     const { data: PayableData, isLoading } = useAccountPayable()
 
     useEffect(() => {
@@ -67,43 +68,27 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     }, [PayableData])
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-
     const [filterProjects, setFilterPayable] = useState(PayableData?.workOrders)
 
-    // const { data: days } = useWeekDayProjectsDue()
-
     useEffect(() => {
-      // To get pastDue Ids
-      const pastDueIds = PayableData?.workOrders?.filter(payable => payable?.pastDue)
-      const idPastDue = pastDueIds?.map(payable => payable?.projectId)
-
       if (!selectedCard && !selectedDay) setFilterPayable(PayableData?.workOrders)
       setFilterPayable(
         PayableData?.workOrders?.filter(
           payable =>
-            !selectedCard ||
-            payable.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
-            (selectedCard === 'pastDue' && idPastDue?.includes(payable?.projectId)),
+            !selectedCard || payable.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
         ),
       )
 
       // Due payable Weekly Filter
-      const getDates = PayableData?.workOrders?.filter(day => {
-        if (selectedDay === 'All' || selectedDay === day.dayName) {
-          return true
-        }
-        return false
-      })
+      const getDates = weekDayFilters.filter(day => selectedDay === day.id)
 
-      const clientDate = getDates?.map(dates => {
-        var date = dates?.dueDate
-        return date?.substr(0, 10)
+      const clientDate = getDates?.map(date => {
+        return date?.date
       })
 
       if (selectedDay) {
         setFilterPayable(
-          PayableData?.workOrders?.filter(payable => clientDate.includes(payable?.clientDueDate?.substr(0, 10))),
+          PayableData?.workOrders?.filter(payable => clientDate.includes(payable?.expectedPaymentDate?.substr(0, 10))),
         )
       }
     }, [selectedCard, selectedDay, PayableData?.workOrders])
