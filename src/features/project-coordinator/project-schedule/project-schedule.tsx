@@ -15,25 +15,6 @@ export const ProjectSchedule: React.FC<{
   data,
   isLoading,
 }) => {
-  const [isSeeMore, setSeeMore] = useState(true)
-  const [isSeeLess, setSeeLess] = useState(false)
-  const [isShowMoreDetails, setShowMoreDetails] = useState(false)
-
-  const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
-    children,
-    isLoading,
-    title,
-    ...rest
-  }) => {
-    return (
-      <Center flexDir="row" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
-        <Box color="black" fontWeight={500}>
-          <FormLabel variant="strong-label">{title}</FormLabel>
-          {isLoading ? <BlankSlate size="sm" /> : children}
-        </Box>
-      </Center>
-    )
-  }
 
   return (
     <Flex
@@ -46,46 +27,8 @@ export const ProjectSchedule: React.FC<{
       bg="white"
       borderRadius="4px"
       box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-      marginBottom={isShowMoreDetails ? '-32px' : ''}
-      borderBottom={isShowMoreDetails ? '1px solid #E5E5E5' : 'none'}
     >
-      <Flex
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <InfoStructureCard isLoading={isLoading} justifyContent="start" fontSize={'18px'}>
-          Project Details Schedule
-        </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} justifyContent="end" border="none">
-          {isSeeMore && (
-            <Button
-              variant="solid"
-              colorScheme="brand"
-              onClick={() => {
-                setSeeMore(false)
-                setSeeLess(true)
-                setShowMoreDetails(true)
-              }}
-            >
-              See more <BiCaretDown />
-            </Button>
-          )}
-          {isSeeLess && (
-            <Button
-              variant="solid"
-              colorScheme="brand"
-              onClick={() => {
-                setSeeMore(true)
-                setSeeLess(false)
-                setShowMoreDetails(false)
-              }}
-            >
-              See less <BiCaretUp />
-            </Button>
-          )}
-        </InfoStructureCard>
-      </Flex>
-      {isShowMoreDetails && (
+      {!isLoading && data && (
         <ProjectScheduleDetails data={data}/>
       )}
     </Flex>
