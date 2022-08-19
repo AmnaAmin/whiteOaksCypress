@@ -61,10 +61,10 @@ export const Projects = () => {
         </Box>
         <Flex w="100%" py="16px">
           <Flex alignItems="center" pl={2}>
-            <FormLabel variant="strong-label" fontSize="18px" whiteSpace="nowrap" m="0">
+            <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
               {t('Due Projects')}
             </FormLabel>
-            <Box mx="2">
+            <Box ml="2">
               <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
             </Box>
 
