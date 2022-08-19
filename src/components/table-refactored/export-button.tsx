@@ -6,14 +6,14 @@ import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
 import XLSX from 'xlsx'
 
-type ExportButtonProps = ButtonProps & { columns: ColumnDef<any>[]; data: any; fileName?: string }
-export const ExportButton: React.FC<ExportButtonProps> = ({ data, children, fileName, ...rest }) => {
+type ExportButtonProps = ButtonProps & { columns: ColumnDef<any>[]; data: any; fileName?: string; header?: any }
+export const ExportButton: React.FC<ExportButtonProps> = ({ data, header, children, fileName, ...rest }) => {
   const handleExport = () => {
     const wb = XLSX.utils.book_new()
-    const ws = XLSX.utils.json_to_sheet(data)
+    const ws = XLSX.utils.json_to_sheet(data, { header })
 
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1')
-    XLSX.writeFile(wb, fileName ?? 'export.xlsx')
+    XLSX.writeFile(wb, fileName ?? 'export.csv')
   }
 
   return (

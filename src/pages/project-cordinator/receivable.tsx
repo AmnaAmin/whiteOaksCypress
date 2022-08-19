@@ -33,11 +33,7 @@ export const Receivable = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register, control } = useForm<{ projects: boolean[] }>({
-    defaultValues: {
-      projects: [],
-    },
-  })
+  const { handleSubmit, register, control, reset } = useForm()
 
   const { mutate: batchCall } = useBatchProcessingMutation()
 
@@ -45,12 +41,14 @@ export const Receivable = () => {
     setLoading(true)
     setIsBatchClick(true)
 
-    const payloadData = formValues.projects.map(projectId => ({ id: parseInt(projectId), type: 'Remaining Payments' }))
+    const payloadData = formValues.id.map(projectId => ({ id: parseInt(projectId), type: 'Remaining Payments' }))
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
     }
-    batchCall(obj as any)
+    console.log('batch call submit...', formValues)
+    reset()
+    // batchCall(obj as any)
     // batchCall?.(obj) not working
   }
 
@@ -193,15 +191,18 @@ export const Receivable = () => {
       {
         Header: t('checkbox'),
         accessor: 'checkbox',
-        Cell: ({ row }) => (
-          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-            <Checkbox
-              isDisabled={loading}
-              value={(row.original as any).projectId}
-              {...register(`projects.${row.index}`, { required: true })}
-            />
-          </Flex>
-        ),
+        Cell: ({ row }) => {
+          console.log('row', row)
+          return (
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Checkbox
+                isDisabled={loading}
+                value={(row.original as any).projectId}
+                {...register('id', { required: true })}
+              />
+            </Flex>
+          )
+        },
         disableExport: true,
       },
     ],
