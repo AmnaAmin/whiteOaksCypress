@@ -1,4 +1,4 @@
-import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Spacer, Stack } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -7,9 +7,10 @@ import { ReceivableFilter } from 'features/project-coordinator/payable-recievabl
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
 import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
+import { compact } from 'lodash'
 import numeral from 'numeral'
 import { useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
 import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
@@ -34,25 +35,29 @@ export const Receivable = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register, control } = useForm<{ projects: boolean[] }>({
-    defaultValues: {
-      projects: [],
-    },
-  })
+  const { handleSubmit, register, control, reset } = useForm()
 
+  const formValues = useWatch({ control })
   const { mutate: batchCall } = useBatchProcessingMutation()
 
   const Submit = formValues => {
     setLoading(true)
     setIsBatchClick(true)
+    const payloadData = compact(formValues.id).map(id => ({
+      id: parseInt(id as string),
+      type: 'Remaining Payments',
+    }))
 
-    const payloadData = formValues.projects.map(projectId => ({ id: parseInt(projectId), type: 'Remaining Payments' }))
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
     }
-    batchCall(obj as any)
-    // batchCall?.(obj) not working
+
+    batchCall(obj as any, {
+      onSuccess: () => {
+        reset()
+      },
+    })
   }
 
   useCheckBatch(setLoading, 2)
@@ -148,15 +153,16 @@ export const Receivable = () => {
           <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
             <Checkbox
               isDisabled={loading}
-              value={(row.original as any).projectId}
-              {...register(`projects.${row.index}`, { required: true })}
+              value={row.original?.projectId}
+              {...register(`id.${row.index}`)}
+              isChecked={!!formValues?.id?.[row.index]}
             />
           </Flex>
         ),
         disableExport: true,
       },
     ],
-    [register, loading],
+    [register, loading, formValues],
   )
 
   const { mutate: postReceviableColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)

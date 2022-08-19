@@ -61,8 +61,7 @@ export const useCheckBatch = (setLoading, apiNumber) => {
           }, 60000)
         } else {
           clearTimeout(window.batchTimer)
-          queryClient.invalidateQueries('receivable')
-          queryClient.invalidateQueries('accountPayable')
+          queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
     },
