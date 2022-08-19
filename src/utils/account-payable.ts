@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
+import { ProjectWorkOrderType } from 'types/project.type'
 import { useClient } from './auth-context'
-
+import { orderBy } from 'lodash'
 declare global {
   interface Window {
     batchTimer?: any
@@ -12,7 +13,8 @@ export const useAccountPayable = () => {
 
   return useQuery('accountPayable', async () => {
     const response = await client(`all_workorders`, {})
-
-    return response?.data
+    const workOrders = orderBy(response?.data?.workOrders || [], ['id', 'asc'])
+    console.log('workOrders', workOrders)
+    return { ...response?.data, workOrders }
   })
 }

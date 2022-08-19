@@ -47,11 +47,11 @@ type PayablePropsTyep = {
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setTableInstance, payableColumns }) => {
-  const { data: PayableData, isLoading, refetch } = useAccountPayable()
+  const { data: payableData, isLoading, refetch } = useAccountPayable()
 
   useEffect(() => {
-    if (PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
-      const updatedWorkOrder = PayableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+    if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+      const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
       if (updatedWorkOrder) {
         setSelectedWorkOrder({ ...updatedWorkOrder })
       } else {
@@ -60,7 +60,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setT
     } else {
       setSelectedWorkOrder(undefined)
     }
-  }, [PayableData])
+  }, [payableData])
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   return (
     <Box overflow="auto" width="100%">
@@ -78,7 +78,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setT
           <TableWrapper
             columns={payableColumns}
             setTableInstance={setTableInstance}
-            data={PayableData?.workOrders || []}
+            data={payableData?.workOrders || []}
             isLoading={isLoading}
             TableRow={payableRow}
             tableHeight="calc(100vh - 300px)"
