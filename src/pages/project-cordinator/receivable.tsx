@@ -5,7 +5,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ReceivableFilter } from 'features/project-coordinator/payable-recievable/receivable-filter'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
-import { WeekDayFiltersAR } from 'features/project-coordinator/weekly-filter-accounts-details'
+import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
 import { useMemo, useState } from 'react'
@@ -182,17 +182,13 @@ export const Receivable = () => {
             <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
               {t('dueProjects')}
             </FormLabel>
-            <Box ml="2">
-              <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
-            </Box>
-            <WeekDayFiltersAR
+            <AccountWeekDayFilters
               weekDayFilters={weekDayFilters}
               onSelectDay={setSelectedDay}
               selectedDay={selectedDay}
               clear={clearAll}
             />
             <Spacer />
-
             <Button
               alignContent="right"
               // onClick={onNewProjectModalOpen}

@@ -23,7 +23,7 @@ i18n.use(initReactI18next).init({
         ext: 'Ext',
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
-        secondaryEmail: 'Secondary Email'
+        secondaryEmail: 'Secondary Email',
       },
     },
     es: {
@@ -46,7 +46,7 @@ i18n.use(initReactI18next).init({
         ext: 'Ext 2',
         secondaryNo: 'Secondary No 2',
         primaryEmail: 'Primary Email 2',
-        secondaryEmail: 'Secondary Email 2'
+        secondaryEmail: 'Secondary Email 2',
       },
     },
   },
