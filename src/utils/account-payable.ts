@@ -1,5 +1,4 @@
 import { useQuery } from 'react-query'
-import { ProjectWorkOrderType } from 'types/project.type'
 import { useClient } from './auth-context'
 import { orderBy } from 'lodash'
 declare global {
