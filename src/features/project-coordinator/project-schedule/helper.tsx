@@ -6,29 +6,13 @@ export function initTasks() {
     {
       start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
       end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
-      name: "Some Project",
-      id: "ProjectSample",
+      name: "",
+      id: "=1",
       progress: 100,
       type: "task",
       hideChildren: false,
       displayOrder: 1,
-    },
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      end: new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        2,
-        12,
-        28
-      ),
-      name: "Idea",
-      id: "Task 0",
-      progress: 100,
-      type: "task",
-      project: "ProjectSample",
-      displayOrder: 2,
-    },
+    }
   ];
   return tasks;
 }
