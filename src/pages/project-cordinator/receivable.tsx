@@ -1,4 +1,4 @@
-import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack, useDisclosure } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -8,7 +8,7 @@ import { ReceivableTable } from 'features/project-coordinator/payable-recievable
 import { WeekDayFiltersAR } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
@@ -17,10 +17,11 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 
 export const Receivable = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [projectTableInstance, setInstance] = useState<any>(null)
 
   const [loading, setLoading] = useState(false)
-  const [isBatchClick, setIsBatchClick] = useState(false)
+  // const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
   // const [cardSelected, setCardSelected] = useState(false)
@@ -33,32 +34,26 @@ export const Receivable = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register, control } = useForm<{ projects: boolean[] }>({
-    defaultValues: {
-      projects: [],
-    },
-  })
+  const { handleSubmit, register, control, reset } = useForm()
 
-  const { mutate: batchCall } = useBatchProcessingMutation()
+  const { mutate: batchCall, isSuccess, isLoading: isBatchProcessingLoading } = useBatchProcessingMutation()
 
   const Submit = formValues => {
-    setLoading(true)
-    setIsBatchClick(true)
+    const payloadData = formValues.id.map(projectId => ({ id: parseInt(projectId), type: 'Remaining Payments' }))
 
-    const payloadData = formValues.projects.map(projectId => ({ id: parseInt(projectId), type: 'Remaining Payments' }))
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
     }
-    batchCall(obj as any)
-    // batchCall?.(obj) not working
+
+    batchCall(obj as any, {
+      onSuccess: () => {
+        reset()
+      },
+    })
   }
 
   useCheckBatch(setLoading, 2)
-
-  const onNotificationClose = () => {
-    setIsBatchClick(false)
-  }
 
   const getWeekDates = () => {
     const now = new Date()
@@ -193,15 +188,18 @@ export const Receivable = () => {
       {
         Header: t('checkbox'),
         accessor: 'checkbox',
-        Cell: ({ row }) => (
-          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-            <Checkbox
-              isDisabled={loading}
-              value={(row.original as any).projectId}
-              {...register(`projects.${row.index}`, { required: true })}
-            />
-          </Flex>
-        ),
+        Cell: ({ row }) => {
+          console.log('Row', row.original.type)
+          return (
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Checkbox
+                isDisabled={loading}
+                value={(row.original as any).projectId}
+                {...register('id', { required: true })}
+              />
+            </Flex>
+          )
+        },
         disableExport: true,
       },
     ],
@@ -216,6 +214,10 @@ export const Receivable = () => {
   const onSave = columns => {
     postReceviableColumn(columns)
   }
+
+  useEffect(() => {
+    if (isSuccess) onOpen()
+  }, [isSuccess])
 
   return (
     <>
@@ -255,7 +257,7 @@ export const Receivable = () => {
               type="submit"
             >
               <Icon as={BiSync} fontSize="18px" mr={2} />
-              {!loading ? 'Batch Process' : 'Processing...'}
+              {!isBatchProcessingLoading ? 'Batch Process' : 'Processing...'}
             </Button>
           </Stack>
           <Divider border="2px solid #E2E8F0" />
@@ -294,9 +296,9 @@ export const Receivable = () => {
         <ConfirmationBox
           title="Batch processing"
           content="Batch Process has been completed successfully."
-          isOpen={!loading && isBatchClick}
-          onClose={onNotificationClose}
-          onConfirm={onNotificationClose}
+          isOpen={isOpen}
+          onClose={onClose}
+          onConfirm={onClose}
           yesButtonText="Cancel"
           showNoButton={false}
         />
