@@ -12,9 +12,8 @@ import './gantt-task.css'
 const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
-  const [view, setView] = React.useState<ViewMode>(ViewMode.Day)
   const [tasks, setTasks] = React.useState<Task[]>(initTasks())
-  const columnWidth = useColumnWidth(view);
+  const columnWidth = useColumnWidth(ViewMode.QuarterDay);
 
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map(t => (t.id === task.id ? task : t))
@@ -45,13 +44,10 @@ const ProjectScheduleDetails: React.FC<{
 
   return (
     <Box className="Wrapper ProjectDetails_Chart">
-      <ViewSwitcher
-        onViewModeChange={viewMode => setView(viewMode)}
-      />
       <Gantt
         tasks={tasks}
         rowHeight={80}
-        viewMode={view}
+        viewMode={ViewMode.QuarterDay}
         ganttHeight={tasks.length === 2 ? 160 : 255}
         onDateChange={handleTaskChange}
         onProgressChange={handleProgressChange}

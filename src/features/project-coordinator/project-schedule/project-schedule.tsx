@@ -1,11 +1,7 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, FormLabel } from '@chakra-ui/react'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
-import { useState } from 'react'
-import { Button } from 'components/button/button'
-import ProjectScheduleDetails from './project-schedule-details'
 import { Task } from "gantt-task-react";
+import { Flex } from '@chakra-ui/react'
+import ProjectScheduleDetails from './project-schedule-details'
 
 
 export const ProjectSchedule: React.FC<{

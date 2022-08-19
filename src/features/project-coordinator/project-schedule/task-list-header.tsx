@@ -30,8 +30,6 @@ export const ProjectTaskList:FC<{
       style={{
         height: headerHeight
       }}
-    >
-      February 2022
-    </Flex>
+    />
   )
 };
