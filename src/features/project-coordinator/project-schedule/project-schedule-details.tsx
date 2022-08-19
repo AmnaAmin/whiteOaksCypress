@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { Box } from '@chakra-ui/react'
 import { Task, ViewMode, Gantt } from 'gantt-task-react'
-import { ViewSwitcher } from './view-switcher'
 import { getStartEndDateForProject, initTasks } from './helper'
 import { ProjectTaskList } from './task-list-header'
 import { ProjectTaskListTable } from './task-list-table'
