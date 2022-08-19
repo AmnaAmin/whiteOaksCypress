@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'utils/account-payable'
-import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
+// import WorkOrderDetails from 'features/PayableData.workOrders/modals/project-coordinator/work-order/work-order-edit'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { TableWrapper } from 'components/table/table'
 import { Column } from 'react-table'
+import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -44,6 +45,9 @@ type PayablePropsTyep = {
   ref?: any
   setTableInstance: (tableInstance: any) => void
   payableColumns: Column[]
+  selectedCard: string
+  selectedDay: string
+  weekDayFilters: any[]
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setTableInstance, payableColumns }) => {

@@ -10,7 +10,7 @@ export type WeekDayFiltersProps = {
 
 // temporarly making this component for now to fullfill RFT for integration of due filter, it will be refactored.
 
-export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
+export const AccountWeekDayFilters: React.FC<WeekDayFiltersProps> = ({
   onSelectDay,
   selectedDay,
   clear,
@@ -44,6 +44,7 @@ export const WeekDayFiltersAR: React.FC<WeekDayFiltersProps> = ({
             />
           )
         })}
+
         {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
         </Button> */}
