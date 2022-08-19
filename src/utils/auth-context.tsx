@@ -145,4 +145,10 @@ function useReminderClient() {
   )
 }
 
-export { AuthProvider, useAuth, useClient, useReminderClient }
+function useSmartWOClient() {
+  const { data } = useAuth()
+  const token = data?.token
+  return React.useCallback((endpoint, config) => client(`/smartwo/api/${endpoint}`, { ...config, token }), [token])
+}
+
+export { AuthProvider, useAuth, useClient, useReminderClient, useSmartWOClient }

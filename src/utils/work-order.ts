@@ -1,4 +1,4 @@
-import { useClient } from 'utils/auth-context'
+import { useClient, useSmartWOClient } from 'utils/auth-context'
 import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useToast } from '@chakra-ui/toast'
 import { useParams } from 'react-router-dom'
@@ -274,7 +274,21 @@ export const defaultValuesWODetails = workOrder => {
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
-    assignedItems: workOrder?.assignedItems,
+    assignedItems:
+      workOrder?.assignedItems?.length > 0
+        ? workOrder?.assignedItems
+        : [
+            {
+              sku: '123',
+              productName: 'Product A',
+              details: 'Solid product',
+              quantity: 12,
+              price: '123',
+              status: true,
+              images: null,
+              verification: true,
+            },
+          ],
   }
   return defaultValues
 }
@@ -316,4 +330,61 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     status: 34,
     projectId: projectId,
   }
+}
+
+export const useRmainingLineItems = (projectId?: string) => {
+  const client = useSmartWOClient()
+
+  const { data: remainingItems, ...rest } = useQuery<any>(
+    ['remainingItems', projectId],
+    async () => {
+      const response = await client(`unassigned_lineitem/${projectId}`, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!projectId,
+    },
+  )
+
+  return {
+    remainingItems,
+    ...rest,
+  }
+}
+
+export const useAssignLineItems = projectId => {
+  const client = useSmartWOClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (lineIds: any) => {
+      return client(`lineitem_link_update/${lineIds}`, {
+        data: lineIds,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries('accountPayable')
+        toast({
+          title: 'Assigned Line Items',
+          description: 'Assigned Line Items have  been linked successfully.',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Assigned Line Items',
+          description: (error.title as string) ?? 'Unable to assign line items.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
 }
