@@ -11,12 +11,13 @@ import {
 } from 'react-table'
 import { getFileBlob } from './util'
 import { useExportData } from 'react-table-plugins'
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex } from '@chakra-ui/react'
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Box, FormLabel, Center } from '@chakra-ui/react'
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
+import compact from 'lodash/compact'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -57,6 +58,8 @@ export interface TableProps {
 }
 
 export type TableExtraProps = {
+  disableFilter?: boolean
+  headerGroups?: any
   name?: string
   TableRow?: React.ElementType
   TableBody?: React.ElementType
@@ -92,9 +95,10 @@ export function useCustomTable(props: TableProps, ...rest) {
       getExportFileBlob,
       initialState: {
         // @ts-ignore
-        sortBy: [],
+        sortBy: compact([props.sortBy]),
       },
     },
+
     useBlockLayout,
     useFilters,
     useSortBy,
@@ -122,7 +126,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
       {row.cells.map(cell => {
         return (
           <Td {...cell.getCellProps()} key={`row_${cell.value}`} padding="15px">
-            <Text noOfLines={2} title={cell.value} pl={0}>
+            <Text noOfLines={1} title={cell.value} pl={0}>
               {cell.render('Cell')}
             </Text>
           </Td>
@@ -132,7 +136,7 @@ export const Row: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
-export const TableHeader = ({ headerGroups }) => {
+export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) => {
   const { t } = useTranslation()
 
   return (
@@ -163,15 +167,12 @@ export const TableHeader = ({ headerGroups }) => {
                   >
                     {t(title)}
                   </Text>
-                  {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <AiOutlineArrowUp fontSize="17px" />
-                    ) : (
+                  {column.isSorted &&
+                    (column.isSortedDesc ? (
                       <AiOutlineArrowDown fontSize="17px" />
-                    )
-                  ) : (
-                    ''
-                  )}
+                    ) : (
+                      <AiOutlineArrowUp fontSize="17px" />
+                    ))}
                 </Flex>
               </Th>
             )
@@ -179,15 +180,17 @@ export const TableHeader = ({ headerGroups }) => {
         </Tr>
       ))}
 
-      {headerGroups.map(headerGroup => (
-        <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map(column => (
-            <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
-              {column.canFilter ? column.render('Filter') : null}
-            </Th>
-          ))}
-        </Tr>
-      ))}
+      {!disableFilter
+        ? headerGroups.map(headerGroup => (
+            <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
+                  {column.canFilter ? column.render('Filter') : null}
+                </Th>
+              ))}
+            </Tr>
+          ))
+        : null}
     </Thead>
   )
 }
@@ -199,6 +202,8 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   TableRow = Row,
   onRowClick,
 }) => {
+  // Note: this hack for firefox to set the table body height
+  var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
   const RenderRow = React.useCallback(
     ({ index, style }) => {
       const row = rows[index]
@@ -211,8 +216,23 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
     [prepareRow, rows, onRowClick, TableRow],
   )
 
+  const NoRowsRenderer = () => {
+    return (
+      <Box p={5} width={'calc(100vw - var(--sidebar-width))'}>
+        <Center>
+          <FormLabel variant="light-label">{'No data returned for this view.'} </FormLabel>
+        </Center>
+      </Box>
+    )
+  }
+
   return (
-    <Tbody {...getTableBodyProps()} flex={1}>
+    <Tbody
+      {...getTableBodyProps()}
+      flex={1}
+      h={isFirefox ? '500px' : 'auto'}
+      overflowY={isFirefox ? 'hidden' : 'unset'}
+    >
       <AutoSizer>
         {({ width, height }) => {
           return (
@@ -221,6 +241,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
               height={height}
               rowCount={rows.length}
               rowHeight={60}
+              noRowsRenderer={NoRowsRenderer}
               rowRenderer={RenderRow}
               width={width}
             />

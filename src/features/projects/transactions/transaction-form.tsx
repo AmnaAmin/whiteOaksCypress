@@ -20,13 +20,12 @@ import { DevTool } from '@hookform/devtools'
 
 // import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
-import { useParams } from 'react-router'
+
 import {
   AGAINST_DEFAULT_VALUE,
   parseChangeOrderAPIPayload,
   parseChangeOrderUpdateAPIPayload,
   parseTransactionToFormValues,
-  PAYMENT_TERMS_OPTIONS,
   transactionDefaultFormValues,
   useChangeOrderMutation,
   useChangeOrderUpdateMutation,
@@ -59,6 +58,7 @@ import { ReadOnlyInput } from 'components/input-view/input-view'
 import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -84,7 +84,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t('contact')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput label={t('createdBy')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
       </GridItem>
 
       <GridItem>
@@ -110,13 +110,13 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 export type TransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
+  projectId: string
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
   const { t } = useTranslation()
   const { isVendor, isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
-  const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
@@ -247,7 +247,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     transaction,
-    againstOptions.length,
+    againstOptions?.length,
     setValue,
     isVendor,
     workOrderSelectOptions.length,
@@ -299,7 +299,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
-                      {t('paymentType')}
+                      {t('transactionType')}
                     </FormLabel>
                     <Controller
                       rules={{ required: 'This is required field' }}
@@ -628,8 +628,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onModalClose} variant="outline" colorScheme="brand" data-testid="close-transaction-form">
-            {t('close')}
+          <Button onClick={onModalClose} variant="solid" colorScheme="brand" data-testid="close-transaction-form">
+            {t('Cancel')}
           </Button>
         )}
 

@@ -8,6 +8,8 @@ import {
   HStack,
   Icon,
   Input,
+  ModalBody,
+  ModalFooter,
   Table,
   Tbody,
   Td,
@@ -15,26 +17,25 @@ import {
   Tfoot,
   Thead,
   Tr,
-  VStack,
-  ModalFooter,
-  ModalBody,
   useDisclosure,
+  useToast,
+  VStack,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
-import { currencyFormatter } from 'utils/stringFormatters'
-import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
-import { useState, useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { BiCalendar, BiDollarCircle, BiFile, BiXCircle, BiDownload, BiSpreadsheet } from 'react-icons/bi'
-import { jsPDF } from 'jspdf'
-import { createInvoice } from 'utils/vendor-projects'
-import { downloadFile } from 'utils/file-utils'
-import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { useTranslation } from 'react-i18next'
-import { STATUS as WOstatus } from '../status'
-import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
 import { addDays, nextFriday } from 'date-fns'
+import { jsPDF } from 'jspdf'
+import { useCallback, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet, BiXCircle } from 'react-icons/bi'
+import { TransactionStatusValues as TSV, TransactionType, TransactionTypeValues } from 'types/transaction.type'
+import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
+import { downloadFile } from 'utils/file-utils'
+import { currencyFormatter } from 'utils/stringFormatters'
+import { createInvoice } from 'utils/vendor-projects'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
+import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../status'
 
 import * as _ from 'lodash'
 
@@ -63,15 +64,17 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData }) => {
+export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData, setTabIndex }) => {
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
-  const { mutate: updateInvoice } = useUpdateWorkOrderMutation()
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
+  const { mutate: rejectLW } = useUpdateWorkOrderMutation(true)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)
   const [amountPaid, setAmountPaid] = useState(0)
-  const [isPdfGenerated, setPdfGenerated] = useState(false)
+  const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
+  const toast = useToast()
 
   const {
     isOpen: isGenerateInvoiceOpen,
@@ -141,9 +144,36 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     }
   }, [documentsData])
 
-  const generatePdf = useCallback(async () => {
-    setPdfGenerated(true)
-    let form = new jsPDF()
+  const redirectToLienWaiver = (description?) => {
+    setWorkOrderUpdating(false)
+    toast({
+      title: 'Work Order',
+      description: description ?? t('saveLWError'),
+      status: 'error',
+      isClosable: true,
+    })
+    setTabIndex(1)
+    onGenerateInvoiceClose()
+  }
+  const rejectLienWaiver = () => {
+    const desc = t('updateLWError')
+    rejectLW(
+      {
+        ...workOrder,
+        lienWaiverAccepted: false,
+      },
+      {
+        onError() {
+          setWorkOrderUpdating(false)
+        },
+        onSuccess() {
+          redirectToLienWaiver(desc)
+        },
+      },
+    )
+  }
+
+  const prepareInvoicePayload = () => {
     const invoiceSubmittedDate = new Date()
     const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
     const updatedWorkOrder = {
@@ -152,15 +182,24 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
       paymentTermDate: convertDateTimeToServer(paymentTermDate),
     }
+    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
+      updatedWorkOrder.status = STATUS_CODE.INVOICED
+    }
+    return updatedWorkOrder
+  }
+
+  const generateInvoice = async () => {
+    let form = new jsPDF()
+    const updatedWorkOrder = prepareInvoicePayload()
     form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
     const pdfUri = form.output('datauristring')
-    updateInvoice(
+    updateWorkOrder(
       {
         ...updatedWorkOrder,
         documents: [
-          ...documentsData,
           {
             documentType: 48,
+            workOrderId: workOrder.id,
             fileObject: pdfUri.split(',')[1],
             fileObjectContentType: 'application/pdf',
             fileType: 'Invoice.pdf',
@@ -169,20 +208,30 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       },
       {
         onError() {
-          setPdfGenerated(false)
+          setWorkOrderUpdating(false)
         },
         onSuccess() {
-          setPdfGenerated(false)
+          setWorkOrderUpdating(false)
           onGenerateInvoiceClose()
         },
       },
     )
+  }
+
+  const generatePdf = useCallback(async () => {
+    setWorkOrderUpdating(true)
+    if (!workOrder.lienWaiverAccepted) {
+      redirectToLienWaiver()
+    } else if (Math.abs(workOrder?.amountOfCheck - workOrder?.finalInvoiceAmount) !== 0) {
+      rejectLienWaiver()
+    } else {
+      generateInvoice()
+    }
   }, [items, workOrder, projectData])
 
   const DeleteItems = Id => {
     const deleteValue = items.filter((value, id) => id !== Id)
     setItems(deleteValue)
-    // console.log('deleteValue', deleteValue)
   }
 
   return (
@@ -399,7 +448,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
         isOpen={isGenerateInvoiceOpen}
         onClose={onGenerateInvoiceClose}
         onConfirm={generatePdf}
-        isLoading={isPdfGenerated}
+        isLoading={isWorkOrderUpdated}
       />
     </Box>
   )

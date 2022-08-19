@@ -6,9 +6,18 @@ type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   onClear?: () => void
   isError?: boolean
   testId?: string
+  isRequired?: boolean
 }
 
-const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, onClear, isError, ...inputProps }) => {
+const ChooseFileField: React.FC<ChooseFileProps> = ({
+  children,
+  value,
+  testId,
+  onClear,
+  isError,
+  isRequired,
+  ...inputProps
+}) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const onFileChange = event => {
     const file = event.currentTarget.files?.[0]
@@ -20,6 +29,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
 
     onClear?.()
   }
+
   return (
     <Box
       cursor="pointer"
@@ -30,10 +40,12 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
       borderStyle="solid"
       borderColor={isError ? 'red' : '#E2E8F0'}
       rounded="6"
-      onClick={() => inputRef?.current?.click()}
+      onClick={onFileClear}
       bg="white"
+      borderLeft={isRequired ? '2px solid #4e87f8' : '1px solid #E2E8F0'}
       _hover={{
         borderColor: 'gray.300',
+        borderLeft: isRequired ? '2px solid #4e87f8' : '1px solid #E2E8F0',
       }}
     >
       <input
@@ -44,7 +56,17 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
         onChange={onFileChange}
         data-testid={testId}
       />
-      <Box flex="1" position="relative" overflow="hidden">
+      <Button
+        type="button"
+        variant="ghost"
+        size="xl"
+        onClick={() => inputRef?.current?.click()}
+        _active={{ bg: 'none' }}
+        _hover={{ bg: 'none' }}
+        flex="1"
+        position="relative"
+        overflow="hidden"
+      >
         {value && (
           <Flex rounded="6px" alignItems="center" height="40px">
             <Text
@@ -61,19 +83,12 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({ children, value, testId, o
             >
               {value}
             </Text>
-            <Button
-              type="button"
-              variant="link"
-              size="xl"
-              colorScheme={isError ? 'red' : 'brand'}
-              onClick={onFileClear}
-              bg="white"
-            >
+            <Button type="button" variant="link" size="xl" colorScheme={isError ? 'red' : 'brand'} bg="white">
               <BiUpload />
             </Button>
           </Flex>
         )}
-      </Box>
+      </Button>
     </Box>
   )
 }

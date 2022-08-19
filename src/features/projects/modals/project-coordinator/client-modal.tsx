@@ -10,13 +10,14 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 import { ClientDetailsTabs } from 'pages/project-cordinator/client-details'
 import { useCallback, useEffect } from 'react'
 import { Clients } from 'types/client.type'
 
 const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
+  const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -39,10 +40,10 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500} h="32px">
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
-                  {t('Details')}
+                  {t('details')}
                 </Text>
                 <Text lineHeight="22px" h="22px">
-                {clientDetails?.companyName}                
+                  {clientDetails?.companyName}
                 </Text>
               </HStack>
             </HStack>
@@ -50,7 +51,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} />
+              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} onClose={onClose} />
             </Box>
           </ModalBody>
         </ModalContent>

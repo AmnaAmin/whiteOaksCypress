@@ -24,7 +24,6 @@ const InputView = ({ label, InputElem, showDivider = true, controlStyle = {} }: 
           color="gray.500"
           {...controlStyle}
           isTruncated
-          title={InputElem}
         >
           {InputElem}
         </Text>
@@ -51,17 +50,27 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
         <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
           {label}
         </FormLabel>
-        <Input
-          {...inputProps}
-          whiteSpace="nowrap"
-          id={name}
-          name={name}
-          data-testid={testId}
-          variant="unstyled"
-          disabled
-          color="gray.500"
+        <Text
+          noOfLines={1}
+          title={inputProps.value as string}
+          color="gray.600"
           fontSize="14px"
-        />
+          fontStyle="normal"
+          fontWeight="400"
+        >
+          <Input
+            {...inputProps}
+            whiteSpace="nowrap"
+            id={name}
+            name={name}
+            data-testid={testId}
+            variant="unstyled"
+            disabled
+            color="gray.500"
+            fontSize="14px"
+            isTruncated
+          />
+        </Text>
       </FormControl>
     </Flex>
   )

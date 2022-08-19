@@ -2,10 +2,13 @@ import { useClient } from 'utils/auth-context'
 import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useToast } from '@chakra-ui/toast'
 import { useParams } from 'react-router-dom'
-import { convertDateTimeFromServer } from 'utils/date-time-utils'
+import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
+import { ProjectWorkOrder } from 'types/transaction.type'
+import { STATUS } from 'features/projects/status'
+import { currencyFormatter } from './stringFormatters'
 
-export const useUpdateWorkOrderMutation = () => {
+export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -24,12 +27,14 @@ export const useUpdateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries('accountPayable')
-        toast({
-          title: 'Work Order',
-          description: 'Work Order has been saved successfully.',
-          status: 'success',
-          isClosable: true,
-        })
+        if (!hideToast) {
+          toast({
+            title: 'Work Order',
+            description: 'Work Order has been saved successfully.',
+            status: 'success',
+            isClosable: true,
+          })
+        }
       },
       onError(error: any) {
         toast({
@@ -42,6 +47,43 @@ export const useUpdateWorkOrderMutation = () => {
     },
   )
 }
+
+export const useCreateWorkOrderMutation = () => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const { projectId } = useParams<'projectId'>()
+
+  return useMutation(
+    payload => {
+      return client('work-orders', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+
+        toast({
+          title: 'Work Order',
+          description: 'Work Order created successfully',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Work Order',
+          description: (error.title as string) ?? 'Unable to create workorder.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
 export const useNoteMutation = projectId => {
   const client = useClient()
   const toast = useToast()
@@ -88,6 +130,8 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
     ...rest,
   }
 }
+
+/* WorkOrder Invoice */
 export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
   const invoiceInfo = [
     { label: 'Property Address:', value: workOrder.propertyAddress },
@@ -167,4 +211,109 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
   doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
   doc.text('Total Award:', summaryX, tableEndsY + 7)
   return doc
+}
+
+/* WorkOrder Payments */
+export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
+  const defaultStatus = false
+  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  return {
+    dateInvoiceSubmittedEnabled: defaultStatus || invoicedState,
+    paymentTermEnabled: defaultStatus || invoicedState,
+    paymentTermDateEnabled: defaultStatus,
+    expectedPaymentDateEnabled: defaultStatus || completedState || invoicedState,
+    datePaymentProcessedEnabled: defaultStatus || completedState,
+    datePaidEnabled: defaultStatus || completedState || invoicedState,
+    clientApprovedAmountEnabled: defaultStatus,
+    clientOriginalApprovedAmountEnabled: defaultStatus,
+    finalInvoiceAmountEnabled: defaultStatus,
+  }
+}
+
+export const parsePaymentValuesToPayload = formValues => {
+  return {
+    dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
+    paymentTerm: formValues?.paymenTerm?.value,
+    paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
+    expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
+    datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
+    datePaid: dateISOFormat(formValues?.datePaid),
+  }
+}
+
+export const defaultValuesPayment = (workOrder, paymentsTerms) => {
+  const defaultValues = {
+    dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
+    paymentTerm: workOrder?.paymentTerm
+      ? paymentsTerms.find(p => p.value === workOrder?.paymentTerm)
+      : paymentsTerms.find(p => p.value === '20'),
+    paymentTermDate: datePickerFormat(workOrder?.paymentTermDate),
+    expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
+    datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
+    datePaid: datePickerFormat(workOrder?.datePaid),
+    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
+    finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
+  }
+  return defaultValues
+}
+
+/* WorkOrder Details */
+
+export const parseWODetailValuesToPayload = formValues => {
+  return {
+    workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
+    workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
+    workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
+  }
+}
+
+export const defaultValuesWODetails = workOrder => {
+  const defaultValues = {
+    workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
+    workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
+    workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
+    assignedItems: workOrder?.assignedItems,
+  }
+  return defaultValues
+}
+
+/* WorkOrder LienWaiver */
+
+export const defaultValuesLienWaiver = lienWaiverData => {
+  const defaultValues = {
+    claimantName: lienWaiverData?.claimantName,
+    customerName: lienWaiverData?.customerName,
+    propertyAddress: lienWaiverData?.propertyAddress,
+    owner: lienWaiverData?.owner,
+    makerOfCheck: lienWaiverData?.makerOfCheck,
+    finalInvoiceAmount: lienWaiverData?.finalInvoiceAmount,
+    checkPayableTo: lienWaiverData?.claimantName,
+    claimantsSignature: lienWaiverData?.claimantsSignature,
+    claimantTitle: lienWaiverData?.claimantTitle,
+    dateOfSignature: lienWaiverData?.dateOfSignature,
+    lienWaiverAccepted: !lienWaiverData?.lienWaiverAccepted,
+  }
+  return defaultValues
+}
+/* New Work Order */
+
+export const parseNewWoValuesToPayload = (formValues, projectId) => {
+  const selectedCapacity = 1
+  const arr = [] as any
+  return {
+    workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
+    workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
+    invoiceAmount: formValues.invoiceAmount,
+    clientApprovedAmount: formValues.clientApprovedAmount,
+    percentage: formValues.percentage,
+    vendorId: formValues.vendorId?.value,
+    vendorSkillId: formValues.vendorSkillId?.value,
+    // new work-order have hardcoded capacity
+    capacity: selectedCapacity,
+    documents: arr,
+    status: 34,
+    projectId: projectId,
+  }
 }

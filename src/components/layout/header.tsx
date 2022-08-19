@@ -13,7 +13,7 @@ import {
   useColorModeValue as mode,
   VStack,
 } from '@chakra-ui/react'
-import DropdownLanguage from 'components/translation/DropdownLanguage'
+import DropdownLanguage from 'translation/DropdownLanguage'
 // import { IRootState } from "app/shared/reducers";
 import React, { useMemo, useState } from 'react'
 // import { AiOutlineLoading3Quarters } from 'react-icons/ai'
@@ -140,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                     fontWeight={400}
                     fontSize="14px"
                     target="_blank"
-                    href="https://13.212.88.107/"
+                    href="https://docs.woaharvest.com/"
                     title="help"
                     _hover={{ textDecorationLine: 'none' }}
                   >

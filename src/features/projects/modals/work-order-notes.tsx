@@ -4,7 +4,7 @@ import { NotesTab } from '../../common/notes-tab'
 import { useAccountDetails } from 'utils/vendor-details'
 
 export const WorkOrderNotes: React.FC<any> = props => {
-  const { workOrder, onClose, setNotesCount } = props
+  const { workOrder, onClose, setNotesCount, navigateToProjectDetails } = props
   const { mutate: createNotes } = useNoteMutation(workOrder?.id)
   const { data: account } = useAccountDetails()
 
@@ -26,14 +26,16 @@ export const WorkOrderNotes: React.FC<any> = props => {
     }
     createNotes(payload)
   }
+
   return (
     <NotesTab
       saveNote={saveNote}
       notes={notes}
       onClose={onClose}
-      messageBoxStyle={{ height: '120px', resize: 'none' }}
-      chatListStyle={{ height: '200px' }}
-      pageLayoutStyle={{ height: '400px', padding: '25px' }}
+      navigateToProjectDetails={navigateToProjectDetails}
+      messageBoxStyle={{ resize: 'none' }}
+      contentStyle={{ padding: '25px', maxHeight: '400px' }}
+      pageLayoutStyle={{ overflow: 'hidden', borderRadius: '3px' }}
     />
   )
 }

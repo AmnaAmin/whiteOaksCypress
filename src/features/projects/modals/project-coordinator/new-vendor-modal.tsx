@@ -10,10 +10,22 @@ import {
 } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
-import React from 'react'
+import React, { useState } from 'react'
+import { useVendorProfile } from 'utils/vendor-details'
 
 export const NewVendorTabs: React.FC<{ onClose: () => void }> = props => {
-  return <VendorProfileTabs onClose={props.onClose} />
+  const [vendorId, setVendorId] = useState(0)
+  const { data: vendorProfileData, refetch } = useVendorProfile(vendorId)
+
+  return (
+    <VendorProfileTabs
+      vendorModalType="editVendor"
+      vendorProfileData={vendorId ? vendorProfileData : undefined}
+      refetch={refetch}
+      onClose={props.onClose}
+      updateVendorId={setVendorId}
+    />
+  )
 }
 
 type NewVendorModalType = {

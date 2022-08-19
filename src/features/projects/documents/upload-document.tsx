@@ -18,7 +18,6 @@ import {
 
 import { MdOutlineCancel } from 'react-icons/md'
 import { useDocumentTypes, useUploadDocument } from 'utils/vendor-projects'
-// import { t } from 'i18next';
 import { useTranslation } from 'react-i18next'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
@@ -135,7 +134,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
           {isDocumentTypesLoading ? (
             <ViewLoader />
           ) : (
-            <FormControl mt="35px" isInvalid={isError} data-testid="document-type">
+            <FormControl mt="20px" isInvalid={isError} data-testid="document-type">
               <VStack align="start">
                 <FormLabel fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600" htmlFor="documentType">
                   {t('documentType')}{' '}
@@ -208,7 +207,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               }}
               colorScheme="brand"
             >
-              {t('close')}
+              {t('cancel')}
             </Button>
             <Button isDisabled={isLoading} onClick={uploadDocument} colorScheme="brand" type="submit">
               {t('save')}

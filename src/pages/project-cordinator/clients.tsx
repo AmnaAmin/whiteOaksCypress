@@ -1,14 +1,17 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { ClientsTable } from 'features/project-coordinator/clients/clients-table'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const Clients = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
+
   return (
     <Box>
       <Flex h="52px" alignItems="center" justifyContent="space-between" px={2}>
         <Text fontSize="18px" fontWeight={500} color="gray.600">
-          Clients Overview
+          {t('clientOverview')}
         </Text>
       </Flex>
       <Flex
@@ -22,10 +25,10 @@ const Clients = () => {
         fontWeight={500}
         color="gray.600"
       >
-        <Text flex={1}>Business Name</Text>
+        <Text flex={1}>{t('businessName')}</Text>
         <Divider orientation="vertical" border="1px solid" />
         <Text pl={5} flex={1}>
-          Accounts Payable{' '}
+          {t('accountPayable')}
         </Text>
       </Flex>
       <Box>

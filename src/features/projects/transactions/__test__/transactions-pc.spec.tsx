@@ -39,9 +39,9 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Change Order', () => {
     test('Then User should create Change Order transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('Against', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw', 'Payment', 'Material']
@@ -92,7 +92,7 @@ describe('Given Project Coordinator create new transaction', () => {
     test('Then User should create Change Order transaction against Project SOW of Vendor WorkOrder successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
@@ -144,7 +144,7 @@ describe('Given Project Coordinator create new transaction', () => {
     test('Then user should create Change Order transaction against Project SOW of work order ignore (not applicable)', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
@@ -197,9 +197,9 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Draw', () => {
     test('Then User should create Draw transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Draw')
@@ -274,9 +274,9 @@ describe('Given Project Coordinator create new transaction', () => {
 
     test('Then User should create Draw transaction against Project SOW successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Draw')
@@ -325,9 +325,9 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Material', () => {
     test('Then User should create Material transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Material')
@@ -369,9 +369,9 @@ describe('Given Project Coordinator create new transaction', () => {
 
     test('Then User should create Material transaction against Vendor with refund material checkbox checked successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Material')
@@ -417,9 +417,9 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Payment', () => {
     test('Then User should create Payment transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Payment')
@@ -459,9 +459,13 @@ describe('Given update transaction', () => {
     test('Then open transaction against Vendor in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: CHANGE_ORDER_AGAINST_VENDOR_TRANSACTION_ID })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: CHANGE_ORDER_AGAINST_VENDOR_TRANSACTION_ID,
+        projectId: '1212',
+      })
 
-      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
 
@@ -503,9 +507,13 @@ describe('Given update transaction', () => {
     test('Then open transaction against Project SOW in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: CHANGE_ORDER_AGAINST_PROJECT_SOW_TRANSACTION_ID })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: CHANGE_ORDER_AGAINST_PROJECT_SOW_TRANSACTION_ID,
+        projectId: '1212',
+      })
 
-      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
 
@@ -550,9 +558,10 @@ describe('Given update transaction', () => {
       await renderTransactionForm({
         onClose,
         selectedTransactionId: TRANSACTION_OF_CHANGE_ORDER_AGAINST_PROJECT_SOW_NOT_APPLICABLE_WORK_ORDER_ID,
+        projectId: '1212',
       })
 
-      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
 
@@ -600,9 +609,13 @@ describe('Given update transaction', () => {
     test('Then open transaction against Vendor in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: DRAW_TRANSACTION_AGAINST_VENDOR_ID })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: DRAW_TRANSACTION_AGAINST_VENDOR_ID,
+        projectId: '1212',
+      })
 
-      // Check Payment Type select field is prepopulated with 'Draw' and disabled
+      // Check Transaction Type select field is prepopulated with 'Draw' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
 
@@ -665,9 +678,13 @@ describe('Given update transaction', () => {
     test('Then open transaction against Project SOW in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
+        projectId: '1212',
+      })
 
-      // Check Payment Type select field is prepopulated with 'Draw' and disabled
+      // Check Transaction Type select field is prepopulated with 'Draw' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
 
@@ -724,9 +741,9 @@ describe('Given update transaction', () => {
     test('Then open Material transaction in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: MATERIAL_TRANSACTION_ID })
+      await renderTransactionForm({ onClose, selectedTransactionId: MATERIAL_TRANSACTION_ID, projectId: '1212' })
 
-      // Check Payment Type select field is prepopulated with 'Material' and disabled
+      // Check Transaction Type select field is prepopulated with 'Material' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Material')).toBeInTheDocument()
 
@@ -773,9 +790,9 @@ describe('Given update transaction', () => {
     test('Then open Payment transaction in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: PAYMENT_TRANSACTION_ID })
+      await renderTransactionForm({ onClose, selectedTransactionId: PAYMENT_TRANSACTION_ID, projectId: '1212' })
 
-      // Check Payment Type select field is prepopulated with 'Payment' and disabled
+      // Check Transaction Type select field is prepopulated with 'Payment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Payment')).toBeInTheDocument()
 
@@ -818,9 +835,9 @@ describe('Given update transaction', () => {
     test('Then user can see all transaction form fields as disabled', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: APPROVED_TRANSACTION_ID })
+      await renderTransactionForm({ onClose, selectedTransactionId: APPROVED_TRANSACTION_ID, projectId: '1212' })
 
-      // Check Payment Type select field is disabled
+      // Check Transaction Type select field is disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
 
       // Check Against select field is disabled

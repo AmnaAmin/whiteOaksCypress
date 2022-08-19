@@ -137,7 +137,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     })
   }
 
-  const isShowCheckboxes = transactionFields?.length > 1
+  const isShowCheckboxes = !isApproved && transactionFields?.length > 1
 
   return (
     <>
@@ -162,6 +162,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               ml="10px"
               borderColor="#4E87F8"
               color="#4E87F8"
+              _disabled={{
+                bg: '#EBF8FF',
+                color: '#4E87F8',
+                _hover: {
+                  bg: '#EBF8FF'
+                }
+              }}
               leftIcon={<RiDeleteBinLine color="#4E87F8" />}
               onClick={onDeleteConfirmationModalOpen}
               isDisabled={!someChecked}
@@ -172,7 +179,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         )}
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-        <HStack>
+        <HStack w={!isApproved ? 'auto' : '100%'} justifyContent="end">
           {isShowRefundMaterialCheckbox && (
             <Controller
               control={control}
@@ -235,7 +242,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   </Text>
                 </Flex>
               </a>
-              <Divider orientation="vertical" />
+              {!isApproved && <Divider orientation="vertical" />}
             </>
           )}
 

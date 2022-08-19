@@ -7,6 +7,7 @@ import { useProjects, useWeekDayProjectsDue } from 'utils/projects'
 import Status from '../projects/status'
 import { Column } from 'react-table'
 import { dateFormat } from 'utils/date-time-utils'
+import numeral from 'numeral'
 
 export const PROJECT_COLUMNS = [
   {
@@ -14,20 +15,20 @@ export const PROJECT_COLUMNS = [
     accessor: 'id',
   },
   {
+    Header: 'General Labor',
+    accessor: 'generalLabourName',
+  },
+  {
     Header: 'FPM',
     accessor: 'projectManager',
   },
   {
-    Header: 'generalLabor',
-    accessor: 'generalLabourName',
-  },
-  {
-    Header: 'status',
+    Header: 'Status',
     accessor: 'projectStatus',
     Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
   },
   {
-    Header: 'address',
+    Header: 'Address',
     accessor: 'streetAddress',
   },
   {
@@ -38,11 +39,159 @@ export const PROJECT_COLUMNS = [
     Header: 'Client Start Date',
     accessor: 'clientStartDate',
     Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.clientStartDate)
+    },
   },
   {
     Header: 'Client Due Date',
     accessor: 'clientDueDate',
     Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.clientDueDate)
+    },
+  },
+  {
+    Header: 'Type',
+    accessor: 'projectTypeLabel',
+  },
+  {
+    Header: 'Project Coordinator',
+    accessor: 'projectCoordinator',
+  },
+  {
+    Header: 'Account Payable',
+    accessor: 'accountPayable',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountPayable).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Zip',
+    accessor: 'zipCode',
+  },
+  {
+    Header: 'Client',
+    accessor: 'clientName',
+  },
+  {
+    Header: 'SOW Final Amount',
+    accessor: 'sowOriginalContractAmount',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.sowOriginalContractAmount).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Project Cost',
+    accessor: 'projectRelatedCost',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountPayable).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Paid Date',
+    accessor: 'woaPaidDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.woaPaidDate)
+    },
+  },
+  {
+    Header: 'Invoice Number',
+    accessor: 'invoiceNumber',
+  },
+  {
+    Header: 'Invoice Date',
+    accessor: 'woaInvoiceDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.woaInvoiceDate)
+    },
+  },
+  {
+    Header: 'Account Receivable',
+    accessor: 'accountRecievable',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountRecievable).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Market',
+    accessor: 'market',
+  },
+  {
+    Header: 'State',
+    accessor: 'state',
+  },
+  {
+    Header: 'WOA Finish',
+    accessor: 'woaCompletionDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.woaCompletionDate)
+    },
+  },
+  {
+    Header: 'Region',
+    accessor: 'region',
+  },
+  {
+    Header: 'Partial Payment',
+    accessor: 'partialPayment',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.partialPayment).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Expected Payment',
+    accessor: 'expectedPaymentDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.expectedPaymentDate)
+    },
+  },
+  {
+    Header: 'Profit Margins',
+    accessor: 'profitPercentage',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value / 100).format('0,0.00%')
+    },
+    getCellExportValue(row) {
+      return `${row.original.profitPercentage}%`
+    },
+  },
+  {
+    Header: 'Profits',
+    accessor: 'profitTotal',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.profitTotal).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'WO Number',
+    accessor: 'woNumber',
+  },
+  {
+    Header: 'PO Number',
+    accessor: 'poNumber',
   },
 ]
 
@@ -143,7 +292,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, selectedDay, projects])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box overflowX={'auto'} overflowY="hidden" height="100%">
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
@@ -154,6 +303,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         tableHeight={'inherit'}
         enablePagination={true}
         sortBy={{ id: 'id', desc: true }}
+        defaultFlexStyle={false}
       />
     </Box>
   )

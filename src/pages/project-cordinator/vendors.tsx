@@ -1,4 +1,3 @@
-import { AddIcon } from '@chakra-ui/icons'
 import { HStack, Box, Icon, Button, Spacer, Flex, Stack, useDisclosure, Center, Divider } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -7,7 +6,7 @@ import { VendorTable, VENDOR_COLUMNS } from 'features/project-coordinator/vendor
 import NewVendorModal from 'features/projects/modals/project-coordinator/new-vendor-modal'
 import { t } from 'i18next'
 import { useState } from 'react'
-import { BiExport } from 'react-icons/bi'
+import { BiBookAdd, BiExport } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 
@@ -34,21 +33,13 @@ const Vendors = () => {
     <Box mt="5">
       <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
 
-      <HStack mt="1" mb="1">
-        <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
+      <HStack mb="10px">
+        {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           {t('clearFilter')}
-        </Button>
+        </Button> */}
         <Spacer />
         <Box pt="4">
-          <Button
-            onClick={onNewVendorModalOpen}
-            _focus={{ outline: 'none' }}
-            variant="ghost"
-            color="#4E87F8"
-            leftIcon={<Icon boxSize={3} as={AddIcon} />}
-            fontSize="14px"
-            fontWeight={600}
-          >
+          <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
             {t('newVendor')}
           </Button>
         </Box>

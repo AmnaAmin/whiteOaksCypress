@@ -1,7 +1,9 @@
 import { forwardRef } from 'react'
-import { Select as ReactSelect } from 'chakra-react-select'
+import { Select as ReactSelect, CreatableSelect as RSCreatableSelect } from 'chakra-react-select'
 import { inputBorderLeftStyle, inputFocusStateStyle } from 'theme/common-style'
 import { AnyCnameRecord } from 'dns'
+import { Text, Flex } from '@chakra-ui/react'
+import { List } from 'react-virtualized'
 
 const fontSizes = {
   sm: '13px',
@@ -27,6 +29,14 @@ export const chakraStyles = {
       // background: '#F7FAFC',
     }
   },
+
+  placeholder: provider => ({
+    ...provider,
+    fontSize: '14px',
+    color: 'gray.600',
+    fontWeight: 400,
+  }),
+
   singleValue: (provider: any) => ({
     ...provider,
     color: '#2D3748',
@@ -73,7 +83,7 @@ export const chakraStyles = {
     ...provided,
     backgroundColor: 'transparent',
     '&>svg': {
-      color: 'gray.500',
+      color: 'gray.600',
     },
   }),
   control: (provider: any, state) => {
@@ -109,14 +119,64 @@ type SelectProps = any & {
   }
 }
 
-const Select = forwardRef((props: SelectProps, ref: any) => (
-  <ReactSelect
+const Select = forwardRef((props: SelectProps, ref: any) => {
+  const optionsMapped =
+    props?.options?.map(option => ({
+      ...option,
+      title: option?.label,
+    })) || []
+
+  return (
+    <ReactSelect
+      {...props}
+      ref={ref}
+      chakraStyles={chakraStyles}
+      components={{
+        IndicatorSeparator: false,
+        SingleValue: option => {
+          return (
+            <Flex title={option.children as string} position="absolute">
+              <Text isTruncated whiteSpace="nowrap" maxW="148px">
+                {option.children}
+              </Text>
+            </Flex>
+          )
+        },
+      }}
+      options={optionsMapped}
+      placeholder={'Select'}
+    />
+  )
+})
+
+const MenuList: React.FC<any> = props => {
+  const { children } = props
+
+  function rowRenderer({
+    key, // Unique key within array of rows
+    index, // Index of row within collection
+    style, // Style object to be applied to row (to position it)
+  }) {
+    return (
+      <div key={key} style={style}>
+        {children[index]}
+      </div>
+    )
+  }
+
+  return <List width={300} height={300} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
+}
+
+export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
+  <RSCreatableSelect
+    {...props}
     ref={ref}
     chakraStyles={chakraStyles}
+    placeholder="Select"
     components={{
       IndicatorSeparator: false,
+      MenuList,
     }}
-    {...props}
   />
 ))
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -13,101 +13,49 @@ import {
 } from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
-import {
-  parseDocumentCardsValues,
-  useSaveVendorDetails,
-  documentCardsDefaultValues,
-  createVendorPayload,
-} from 'utils/vendor-details'
-import { convertDateTimeToServer } from 'utils/date-time-utils'
 import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
+import { useVendorNext } from 'utils/vendor-details'
 
 type DocumentsProps = {
-  setNextTab: () => void
   vendor: VendorProfile
   onClose?: () => void
   VendorType: string
+  isActive: boolean
 }
 type DocumentFormProps = {
   vendor: VendorProfile
-  onSubmit: (values: any) => void
   onClose?: () => void
-  VendorType?: string
+  isActive: boolean
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
-  const { vendor = {}, setNextTab } = props
-  // const { mutate: saveDocuments } = useSaveVendorDetails()
-  const { mutate: saveDocuments } = useSaveVendorDetails('Document')
-  const onSubmit = useCallback(
-    async values => {
-      const results = await parseDocumentCardsValues(values)
-      const updatedObject = {
-        documents: results,
-        agreementSignedDate: convertDateTimeToServer(values.agreementSignedDate),
-        autoInsuranceExpirationDate: convertDateTimeToServer(values.autoInsuranceExpDate),
-        coiglExpirationDate: convertDateTimeToServer(values.coiGlExpDate),
-        coiWcExpirationDate: convertDateTimeToServer(values.coiWcExpDate),
-      }
-      const vendorPayload = createVendorPayload(updatedObject, vendor)
-      saveDocuments(vendorPayload, {
-        onSuccess() {
-          setNextTab()
-        },
-      })
-    },
-    [vendor, setNextTab, saveDocuments],
-  )
   return (
     <Box w="100%">
-      <DocumentsForm
-        VendorType={props.VendorType}
-        vendor={props.vendor}
-        onSubmit={onSubmit}
-        onClose={props.onClose}
-      ></DocumentsForm>
+      <DocumentsForm isActive={props.isActive} vendor={props.vendor} onClose={props.onClose}></DocumentsForm>
     </Box>
   )
 })
-export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: DocumentFormProps) => {
+export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
-  const defaultValue = vendor => {
-    return documentCardsDefaultValues(vendor)
-  }
-  const defaultValues: DocumentsCardFormValues = useMemo(() => {
-    if (vendor) {
-      return defaultValue(vendor)
-    }
-    setChangeDateFields([])
-    return {}
-  }, [vendor])
+
   const {
     formState: { errors },
-    handleSubmit,
     control,
-    watch,
     setValue,
     getValues,
-    reset,
-  } = useForm<DocumentsCardFormValues>({ defaultValues })
+  } = useFormContext<DocumentsCardFormValues>()
+  const documents = getValues()
+  const { disableDocumentsNext } = useVendorNext({ control, documents })
   useEffect(() => {
-    reset(defaultValues)
-  }, [defaultValues, vendor, reset])
+    if (!vendor) {
+      setChangeDateFields([])
+    }
+  }, [vendor])
 
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {})
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
-  const [
-    ,
-    // fileBlob
-    setFileBlob,
-  ] = React.useState<Blob>()
+  const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -129,10 +77,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       </a>
     )
   }
-  const documents = getValues()
   return (
-    <form className="Documents Form" id="documentForm" data-testid="documentForm" onSubmit={handleSubmit(onSubmit)}>
-      <Box h="600px" overflow="auto">
+    <>
+      <Box h="502px" overflow="auto">
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
@@ -164,7 +111,7 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
               <Controller
                 name="w9Document"
                 control={control}
-                rules={{ required: documents.w9DocumentUrl ? '' : 'This is required field' }}
+                rules={{ required: documents.w9DocumentUrl ? '' : isActive && 'This is required field' }}
                 render={({ field, fieldState }) => {
                   return (
                     <VStack alignItems="baseline">
@@ -223,7 +170,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                   name="agreement"
                   control={control}
                   rules={{
-                    required: changedDateFields.includes('agreementSignedDate') ? 'This is required field' : '',
+                    required: changedDateFields.includes('agreementSignedDate')
+                      ? isActive && 'This is required field'
+                      : '',
                   }}
                   render={({ field, fieldState }) => {
                     return (
@@ -292,7 +241,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                   name="insurance"
                   control={control}
                   rules={{
-                    required: changedDateFields.includes('autoInsuranceExpDate') ? 'This is required field' : '',
+                    required: changedDateFields.includes('autoInsuranceExpDate')
+                      ? isActive && 'This is required field'
+                      : '',
                   }}
                   render={({ field, fieldState }) => {
                     return (
@@ -352,7 +303,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 <Controller
                   name="coiGlExpFile"
                   control={control}
-                  rules={{ required: changedDateFields.includes('COIGLExpDate') ? 'This is required field' : '' }}
+                  rules={{
+                    required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : '',
+                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -411,7 +364,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
                 <Controller
                   name="coiWcExpFile"
                   control={control}
-                  rules={{ required: changedDateFields.includes('coiWcExpDate') ? 'This is required field' : '' }}
+                  rules={{
+                    required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
+                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -446,9 +401,9 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
       <Flex
         id="footer"
         mt={2}
-        pt="12px"
+        height="72px"
+        pt="8px"
         w="100%"
-        // minH="60px"
         borderTop="2px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"
@@ -458,10 +413,16 @@ export const DocumentsForm = ({ vendor, VendorType, onSubmit, onClose }: Documen
             Cancel
           </Button>
         )}
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-          {t('save')}
+        <Button
+          disabled={disableDocumentsNext}
+          type="submit"
+          data-testid="saveDocumentCards"
+          variant="solid"
+          colorScheme="brand"
+        >
+          {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>
-    </form>
+    </>
   )
 }

@@ -2,17 +2,17 @@ import React from 'react'
 import { Box, Center, CenterProps, Flex, FormLabel } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from '../projects/status'
-import { ProjectType } from 'types/project.type'
+import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useState } from 'react'
-import { TransactionInfoCardDetails } from './transaction-info-card-details'
+import { ProjectSummaryCardDetails } from './project-summary-card-details'
 import { Button } from 'components/button/button'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="14px" color="gray.500">
+      <Box fontSize="14px" color="gray.500" width={'100px'}>
         <FormLabel variant="strong-label" size="md">
           {title}
         </FormLabel>
@@ -22,8 +22,8 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
   )
 }
 
-export const TransactionInfoCard: React.FC<{
-  projectData: ProjectType
+export const ProjectSummaryCard: React.FC<{
+  projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
   const [isSeeMore, setSeeMore] = useState(true)
@@ -59,7 +59,7 @@ export const TransactionInfoCard: React.FC<{
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'Client'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
             {projectData?.clientName}
           </FormLabel>
         </InfoStructureCard>
@@ -69,24 +69,29 @@ export const TransactionInfoCard: React.FC<{
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'FPM Name'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
             {projectData?.projectManager}
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'FPM Contact'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManagerPhoneNumber}`}>
             {projectData?.projectManagerPhoneNumber}
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'Address'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel
+            variant="light-label"
+            size="md"
+            noOfLines={1}
+            title={`${projectData?.streetAddress}, ${projectData?.city}`}
+          >
             {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard isLoading={isLoading} title="" border="none">
           {isSeeMore && (
             <Button
-              color="blue"
+              color="#4E87F8"
               border="none"
               bg="none"
               _focus={{ border: 'none', bg: 'none' }}
@@ -102,7 +107,7 @@ export const TransactionInfoCard: React.FC<{
           )}
           {isSeeLess && (
             <Button
-              color="blue"
+              color="#4E87F8"
               border="none"
               bg="none"
               _focus={{ border: 'none', bg: 'none' }}
@@ -118,9 +123,7 @@ export const TransactionInfoCard: React.FC<{
           )}
         </InfoStructureCard>
       </Flex>
-      {isShowMoreDetails && (
-        <TransactionInfoCardDetails projectData={projectData as ProjectType} isLoading={isLoading} />
-      )}
+      {isShowMoreDetails && <ProjectSummaryCardDetails projectData={projectData as Project} isLoading={isLoading} />}
     </>
   )
 }

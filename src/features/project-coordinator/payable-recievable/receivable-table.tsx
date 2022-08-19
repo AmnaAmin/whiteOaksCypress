@@ -1,16 +1,13 @@
-import React, { useCallback } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, Checkbox } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
-import AccountReceivableModal from 'features/projects/modals/project-coordinator/recevialbe/account-receivable-modal'
-import { usePCRecievable, useReveviableRowData } from 'utils/account-receivable'
-import { FieldValues, UseFormRegister } from 'react-hook-form'
-import { t } from 'i18next'
-import { dateFormat } from 'utils/date-time-utils'
-import numeral from 'numeral'
+import AccountReceivableModal from 'features/projects/modals/project-coordinator/receivable/account-receivable-modal'
+import { usePCRecievable } from 'utils/account-receivable'
+import UpdateTransactionModal from 'features/projects/transactions/update-transaction-modal'
+import { Column } from 'react-table'
 
-const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const ReceivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -28,10 +25,10 @@ const receivableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} p="0">
             <Flex alignItems="center" h="60px">
               <Text
-                noOfLines={2}
+                noOfLines={1}
                 title={cell.value}
                 padding="0 15px"
                 color="gray.600"
@@ -55,129 +52,95 @@ type ReceivableProps = {
   selectedCard: string
   selectedDay: string
   resizeElementRef?: any
-  ref?: any
   setTableInstance: (tableInstance: any) => void
-  register: UseFormRegister<FieldValues>
-  loading?: boolean
+  receivableColumns: Column[]
+  weeklyCount?: { name: string; title: string; count: number; dates: Date }[]
+  weekDayFilters: any[]
 }
 
-export const ReceivableTable: React.FC<ReceivableProps> = ({ setTableInstance, loading, register, ref }) => {
-  const { columns } = useColumnWidthResize(
-    [
-      {
-        Header: t('id') as string,
-        accessor: 'projectId',
-      },
-      {
-        Header: t('client') as string,
-        accessor: 'clientName',
-      },
-      {
-        Header: t('address') as string,
-        accessor: 'propertyAddress',
-      },
-      {
-        Header: t('terms') as string,
-        accessor: 'paymentTerm',
-      },
-      {
-        Header: t('paymentTypes') as string,
-        accessor: 'type',
-      },
-      {
-        Header: t('vendorWOExpectedPaymentDate') as string,
-        accessor: 'expectedPaymentDate',
-        Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
-        },
-      },
-      {
-        Header: t('balance') as string,
-        accessor: 'amount',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
-        },
-      },
-      {
-        Header: t('finalInvoice') as string,
-        accessor: 'finalInvoice',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0[.]00')
-        },
-      },
-      {
-        Header: t('markets') as string,
-        accessor: 'marketName',
-      },
-      {
-        Header: t('woInvoiceDate') as string,
-        accessor: 'woaInvoiceDate',
-        Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
-        },
-      },
-      {
-        Header: t('poNo') as string,
-        accessor: 'poNumber',
-      },
-      {
-        Header: t('woNo') as string,
-        accessor: 'woNumber',
-      },
-      {
-        Header: t('invoiceNo') as string,
-        accessor: 'invoiceNumber',
-      },
-      {
-        Header: t('checkbox') as string,
-        Cell: ({ value, row }) => (
-          <Box onClick={e => e.stopPropagation()}>
-            <Checkbox
-              isDisabled={loading}
-              value={(row.original as any).projectId}
-              {...register('id', { required: true })}
-            />
-          </Box>
-        ),
-      },
-    ],
-    ref,
-  )
-
+export const ReceivableTable: React.FC<ReceivableProps> = ({
+  setTableInstance,
+  selectedCard,
+  resizeElementRef,
+  receivableColumns,
+  selectedDay,
+  weekDayFilters,
+}) => {
+  const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const {
     isOpen: isAccountReceivableModal,
     onOpen: onAccountReceivableModalOpen,
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
+  const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
 
   const onRowClick = useCallback(
     (_, row) => {
-      rowData(row.values.projectId)
-      onAccountReceivableModalOpen()
+      if (row.original.type === 'draw') {
+        setSelectedTransactionId(row.original.changeOrderId)
+        setSelectedProjectId(row.original.projectId)
+        onEditModalOpen()
+      } else {
+        setSelectedProjectId(row.original.projectId)
+        onAccountReceivableModalOpen()
+      }
     },
     [onAccountReceivableModalOpen],
   )
   const { receivableData, isLoading } = usePCRecievable()
-  const { mutate: rowData, data: receivableDataa } = useReveviableRowData()
-  const rowSelectedData = receivableDataa?.data
+  const receivable = receivableData?.arList
+
+  const [receivableFilterData, setFilterReceivableData] = useState(receivable)
+
+  useEffect(() => {
+    if (!selectedCard && !selectedDay) setFilterReceivableData(receivable)
+    setFilterReceivableData(
+      receivable?.filter(
+        project =>
+          !selectedCard || project.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+      ),
+    )
+
+    // Due Project Weekly Filter
+    const getDates = weekDayFilters?.filter(day => selectedDay === day.id)
+
+    const clientDate = getDates?.map(date => {
+      return date?.date
+    })
+
+    if (selectedDay) {
+      setFilterReceivableData(
+        receivable?.filter(receivableValue => {
+          return clientDate.includes(receivableValue.expectedPaymentDate?.substr(0, 10))
+        }),
+      )
+    }
+  }, [selectedCard, selectedDay, receivable])
 
   return (
     <Box overflow="auto" width="100%">
       <TableWrapper
         onRowClick={onRowClick}
-        columns={columns}
+        columns={receivableColumns}
         setTableInstance={setTableInstance}
-        data={receivableData?.arList || []}
+        data={receivableFilterData || []}
         isLoading={isLoading}
-        TableRow={receivableRow}
+        TableRow={ReceivableRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"
         defaultFlexStyle={false}
       />
       <AccountReceivableModal
-        rowData={rowSelectedData}
+        projectId={selectedProjectId}
         isOpen={isAccountReceivableModal}
         onClose={onAccountReceivableModalClose}
+      />
+      <UpdateTransactionModal
+        isOpen={isOpenTransactionModal}
+        onClose={onTransactionModalClose}
+        selectedTransactionId={selectedTransactionId as number}
+        projectId={selectedProjectId as string}
       />
     </Box>
   )

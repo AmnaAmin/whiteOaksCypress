@@ -6,7 +6,7 @@ import { theme } from 'theme/theme'
 import { Global } from '@emotion/react'
 import { GlobalStyles } from 'theme/global-css'
 import { I18nextProvider } from 'react-i18next'
-import i18n from 'components/translation/i18n'
+import i18n from 'translation/i18n'
 
 let queryConfig = {}
 

@@ -1,37 +1,35 @@
-import React, { useCallback, useEffect, useState } from 'react'
 import {
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Stack,
+  Box,
   Divider,
   HStack,
-  Box,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { ProjectWorkOrderType } from 'types/project.type'
-import WorkOrderDetailTab from './work-order-detail-tab'
-import { LienWaiverTab } from './lien-waiver-tab'
-import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
-// import { t } from 'i18next';
-import { useTranslation } from 'react-i18next'
-import { InvoiceTab } from './invoice-tab'
-import { ProjectType } from 'types/project.type'
-import { TransactionType } from 'types/transaction.type'
-import Status from '../status'
-import { WorkOrderNotes } from './work-order-notes'
-import { countInCircle } from 'theme/common-style'
-import { useDocuments } from 'utils/vendor-projects'
-import { useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import { countInCircle } from 'theme/common-style'
+import { Project, ProjectWorkOrderType } from 'types/project.type'
+import { TransactionType } from 'types/transaction.type'
+import { useDocuments } from 'utils/vendor-projects'
+import Status from '../status'
+import { InvoiceTab } from './invoice-tab'
+import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
+import { LienWaiverTab } from './lien-waiver-tab'
+import WorkOrderDetailTab from './work-order-detail-tab'
+import { WorkOrderNotes } from './work-order-notes'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -43,7 +41,7 @@ export const WorkOrderDetails = ({
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
-  projectData: ProjectType
+  projectData: Project
   transactions: Array<TransactionType>
 }) => {
   const { t } = useTranslation()
@@ -53,6 +51,7 @@ export const WorkOrderDetails = ({
   const { documents: documentsData = [], isLoading } = useDocuments({
     projectId,
   })
+  const [tabIndex, setTabIndex] = useState(0)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -90,7 +89,13 @@ export const WorkOrderDetails = ({
 
           <Divider mb={3} />
           <Stack spacing={5}>
-            <Tabs variant="enclosed" colorScheme="brand" size="md">
+            <Tabs
+              variant="enclosed"
+              colorScheme="brand"
+              size="md"
+              index={tabIndex}
+              onChange={index => setTabIndex(index)}
+            >
               <TabList mr="30px" ml="30px" color="gray.500">
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
@@ -129,6 +134,7 @@ export const WorkOrderDetails = ({
                       workOrder={workOrder}
                       transactions={transactions}
                       onClose={onClose}
+                      setTabIndex={setTabIndex}
                     />
                   )}
                 </TabPanel>
