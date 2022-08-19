@@ -2,6 +2,7 @@ import { Project, ProjectWorkOrderType, ProjectAlertType, ProjectFinancialOvervi
 import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
+import { orderBy } from 'lodash'
 
 const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = () => {
@@ -40,7 +41,17 @@ export const useProjectWorkOrders = projectId => {
   return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
     const response = await client(`project/${projectId}/workorders`, {})
 
-    return response?.data
+    return orderBy(
+      response?.data
+      ,
+      [
+        item => {
+          const createdDate = new Date(item.createdDate)
+          return createdDate
+        },
+      ],
+      ['asc'],
+    )
   })
 }
 
