@@ -14,7 +14,6 @@ export const useAccountPayable = () => {
   return useQuery('accountPayable', async () => {
     const response = await client(`all_workorders`, {})
     const workOrders = orderBy(response?.data?.workOrders || [], ['id', 'asc'])
-    console.log('workOrders', workOrders)
     return { ...response?.data, workOrders }
   })
 }
