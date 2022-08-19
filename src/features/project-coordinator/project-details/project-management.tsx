@@ -18,7 +18,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   } = useFormContext<ProjectDetailsFormValues>()
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
-
+  
   const {
     isWOAStartDisabled,
     isWOACompletionDisabled,
