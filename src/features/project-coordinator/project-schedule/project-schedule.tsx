@@ -1,11 +1,9 @@
 import React from 'react'
 import { Box, Center, CenterProps, Flex, FormLabel } from '@chakra-ui/react'
-import { ProjectType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useState } from 'react'
 import { Button } from 'components/button/button'
-import { Card } from 'components/card/card'
 import ProjectScheduleDetails from './project-schedule-details'
 import { Task } from "gantt-task-react";
 

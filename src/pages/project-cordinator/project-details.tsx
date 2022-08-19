@@ -68,11 +68,10 @@ export const ProjectDetails: React.FC = props => {
     if(ganttChartData?.length > 0) {
       const firstRecord = {
         id: +new Date(),
-        name: 'Project',
+        name: 'Client',
         type: 'task',
         start: new Date(projectData?.clientStartDate as string),
         end: new Date(projectData?.clientDueDate as string),
-        workDescription: 'Client',
         progress: 100
       };
 

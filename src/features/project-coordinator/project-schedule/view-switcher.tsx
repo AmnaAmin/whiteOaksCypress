@@ -1,19 +1,16 @@
 import React from "react";
 import { ViewMode } from "gantt-task-react";
+import { Box } from "@chakra-ui/react";
 
 type ViewSwitcherProps = {
-  isChecked: boolean;
-  onViewListChange: (isChecked: boolean) => void;
   onViewModeChange: (viewMode: ViewMode) => void;
 };
 
 export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
-  onViewModeChange,
-  onViewListChange,
-  isChecked,
+  onViewModeChange
 }) => {
   return (
-    <div className="ViewContainer">
+    <Box className="ViewContainer">
       <button
         className="Button"
         onClick={() => onViewModeChange(ViewMode.Hour)}
@@ -53,6 +50,6 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
       >
         Year
       </button>
-    </div>
+    </Box>
   );
 };

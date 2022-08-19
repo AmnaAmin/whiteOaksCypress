@@ -62,14 +62,9 @@ export const ProjectTaskListTable:React.FC<{
                     direction="column"
                     gap={4}
                   >
-                    <Text
-                    >
+                    <Text style={titleCss}>
                       {index === 0 ? 'Project' : 'White Oaks Aligned'}
                     </Text>
-                    <Text>
-                      {task.name}
-                    </Text>
-                    <Text style={titleCss}></Text>
                     <Text style={valueCss}>{task.name}</Text>
                   </Flex>
                   <Flex
