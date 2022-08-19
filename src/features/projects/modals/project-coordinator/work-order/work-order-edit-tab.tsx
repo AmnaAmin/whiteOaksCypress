@@ -1,36 +1,22 @@
-import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
-  chakra,
-  Checkbox,
   Divider,
   Flex,
   FormControl,
   FormLabel,
   HStack,
-  Icon,
   Input,
   ModalBody,
   ModalFooter,
   SimpleGrid,
   Stack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
-  useCheckbox,
-  useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/projects/status'
-import { useState } from 'react'
-import { FormProvider, useFieldArray, useForm, useWatch } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDownload, BiSpreadsheet, BiUpload, BiXCircle } from 'react-icons/bi'
+import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
 import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'utils/work-order'

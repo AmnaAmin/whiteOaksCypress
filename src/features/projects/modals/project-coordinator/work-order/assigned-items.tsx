@@ -2,7 +2,6 @@ import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
-  Center,
   chakra,
   Checkbox,
   Divider,
@@ -25,8 +24,8 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
+import { useAssignLineItems } from 'utils/work-order'
 import RemainingItemsModal from './remaining-items-modal'
 
 export const CustomCheckBox = props => {
@@ -40,7 +39,7 @@ export const CustomCheckBox = props => {
       maxW="125px"
       h="34px"
       rounded="8px"
-      bg="green.50"
+      bg={state.isChecked ? 'green.50' : '#F2F3F4'}
       cursor="pointer"
       {...htmlProps}
     >
@@ -48,7 +47,7 @@ export const CustomCheckBox = props => {
       <HStack
         ml="2"
         justifyContent="center"
-        border="1px solid #2AB450"
+        border={state.isChecked ? '1px solid #2AB450' : '1px solid #A0AEC0'}
         rounded="full"
         w={4}
         id={props.id}
@@ -56,9 +55,9 @@ export const CustomCheckBox = props => {
         {...getCheckboxProps()}
         onChange={() => {}}
       >
-        {state.isChecked && <Icon as={CheckIcon} boxSize="2" color="#2AB450" />}
+        {state.isChecked && <Icon as={CheckIcon} boxSize="2" color={state.isChecked ? '#2AB450' : '#A0AEC0'} />}
       </HStack>
-      <Text mr="2" color="#2AB450" {...getLabelProps()}>
+      <Text mr="2" color={state.isChecked ? '#2AB450' : '#A0AEC0'} {...getLabelProps()}>
         {props.text}
       </Text>
     </chakra.label>
@@ -69,12 +68,9 @@ const AssignedItems = props => {
   const { workOrder } = props
   const [showLineItems] = useState(true)
 
-  const {
-    formState: { errors },
-    control,
-    register,
-    getValues,
-  } = useFormContext<any>()
+  const { mutate: unAssignLineItem } = useAssignLineItems(props?.workOrder?.projectId)
+
+  const { control, register, getValues } = useFormContext<any>()
 
   const {
     fields: manualItems,
@@ -89,8 +85,6 @@ const AssignedItems = props => {
     control,
     name: 'assignedItems',
   })
-
-  const { t } = useTranslation()
 
   const {
     onClose: onCloseRemainingItemsModal,
@@ -161,7 +155,18 @@ const AssignedItems = props => {
                     {assignedItems.map((items, index) => {
                       return (
                         <Tr>
-                          <Td>{getValues(`assignedItems.${index}.sku`)}</Td>
+                          <Td>
+                            <HStack position="relative" right="16px">
+                              <Icon
+                                as={BiXCircle}
+                                boxSize={5}
+                                color="#4E87F8"
+                                onClick={() => unAssignLineItem(getValues(`assignedItems.${index}.sku`))}
+                                cursor="pointer"
+                              ></Icon>
+                              <span>{getValues(`assignedItems.${index}.sku`)}</span>
+                            </HStack>
+                          </Td>
                           <Td>{getValues(`assignedItems.${index}.productName`)}</Td>
                           <Td>{getValues(`assignedItems.${index}.details`)}</Td>
                           <Td>{getValues(`assignedItems.${index}.quantity`)}</Td>

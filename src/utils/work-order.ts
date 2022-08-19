@@ -371,8 +371,8 @@ export const useAssignLineItems = projectId => {
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries('accountPayable')
         toast({
-          title: 'Assigned Line Items',
-          description: 'Assigned Line Items have  been linked successfully.',
+          title: 'Line Items Assignment',
+          description: 'Line Items Assignment updated successfully.',
           status: 'success',
           isClosable: true,
         })
@@ -380,7 +380,7 @@ export const useAssignLineItems = projectId => {
       onError(error: any) {
         toast({
           title: 'Assigned Line Items',
-          description: (error.title as string) ?? 'Unable to assign line items.',
+          description: (error.title as string) ?? 'Unable to update line items assignment.',
           status: 'error',
           isClosable: true,
         })

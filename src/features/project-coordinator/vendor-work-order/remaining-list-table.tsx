@@ -1,10 +1,9 @@
-import { Box, Table, Thead, Tbody, Tr, Td, Text, Flex, Checkbox } from '@chakra-ui/react'
+import { Box, Checkbox, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { t } from 'i18next'
-import { values } from 'lodash'
 import numeral from 'numeral'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useRmainingLineItems } from 'utils/work-order'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {

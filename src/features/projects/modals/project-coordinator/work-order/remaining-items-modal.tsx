@@ -11,12 +11,13 @@ import {
   Button,
 } from '@chakra-ui/react'
 import RemainingListTable from 'features/project-coordinator/vendor-work-order/remaining-list-table'
+import { t } from 'i18next'
 import React, { useState } from 'react'
 import { useAssignLineItems } from 'utils/work-order'
 
 const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; workOrder: any }> = props => {
   const [selectedLineItems, setSelectedLineItems] = useState<Array<any>>([])
-  const { mutate: updateWorkOrder } = useAssignLineItems(props?.workOrder?.projectId)
+  const { mutate: assignLineItems } = useAssignLineItems(props?.workOrder?.projectId)
 
   return (
     <Box>
@@ -37,16 +38,16 @@ const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; work
           <ModalFooter p="0">
             <HStack w="100%" justifyContent="end" my="16px" mr="32px" spacing="16px">
               <Button variant="outline" colorScheme="brand" onClick={props.onClose}>
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 variant="solid"
                 colorScheme="brand"
                 onClick={() => {
-                  updateWorkOrder(selectedLineItems.join(','))
+                  assignLineItems(selectedLineItems.join(','))
                 }}
               >
-                Save
+                {t('save')}
               </Button>
             </HStack>
           </ModalFooter>
