@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Textarea, WrapItem, Center, FormLabel, Text, HStack, FormControl } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Textarea, WrapItem, FormLabel, Text, HStack, FormControl } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -11,15 +11,21 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
   return (
     <Flex mb={4}>
       {otherNote ? (
-        <Box mr={5} fontSize="12px" fontWeight={400}>
+        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
           <WrapItem justifyContent="center" mb={1}>
             <Avatar size="sm" bg="blackAlpha.200" />
           </WrapItem>
-          <Center color="gray.600">{otherNote.createdBy}</Center>
-          <Center color="gray.500">{convertDateTimeFromServer(otherNote.createdDate)}</Center>
-        </Box>
+          <Flex justifyContent="center" color="gray.600">
+            <Box maxW="150px" whiteSpace={'nowrap'} overflow="hidden" textOverflow={'ellipsis'}>
+              {otherNote.createdBy}
+            </Box>
+          </Flex>
+          <Flex justifyContent="center" color="gray.500">
+            <span>{convertDateTimeFromServer(otherNote.createdDate)}</span>
+          </Flex>
+        </Flex>
       ) : (
-        <Box w="113px" />
+        <Box w="150px" mr={5} />
       )}
       <Text
         whiteSpace="pre-wrap"
@@ -88,7 +94,7 @@ export const NotesTab = (props: NotesProps) => {
   return (
     <Box {...pageLayoutStyle}>
       <form onSubmit={handleSubmit(Submit)}>
-        <Box display="flex" flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
+        <Flex flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
           <Box {...chatListStyle} overflow="auto">
             {notes && notes.length > 0 && (
               <Box>
@@ -109,7 +115,7 @@ export const NotesTab = (props: NotesProps) => {
             </FormLabel>
             <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
           </FormControl>
-        </Box>
+        </Flex>
         {!hideFooter && (
           <HStack borderTop="1px solid #CBD5E0" bg="white">
             <HStack padding={5} justifyContent="start" w="100%">
