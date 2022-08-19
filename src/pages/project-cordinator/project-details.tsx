@@ -19,7 +19,7 @@ import AddNewTransactionModal from 'features/projects/transactions/add-transacti
 import { VendorDocumentsTable } from 'features/projects/documents/documents-table'
 import { UploadDocumentModal } from 'features/projects/documents/upload-document'
 import { Card } from 'components/card/card'
-import { AlertsTable } from 'features/projects/alerts/alerts-table'
+// import { AlertsTable } from 'features/projects/alerts/alerts-table'
 // import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import ProjectSchedule from 'features/project-coordinator/project-schedule/project-schedule'
 import { useGanttChart } from 'utils/pc-projects'
@@ -77,16 +77,17 @@ export const ProjectDetails: React.FC = props => {
 
       const payload = [...ganttChartData];
       
-      payload.forEach((row, index) => {
-        // if (index === 0) setFirstDate(row.startDate);
-        row.name = row.workDescription;
-        row.id= row.id;
-        row.type= "task";
-        row.start = new Date(row.startDate as string);
-        row.end = new Date(row.endDate as string);
-        row.progress= Number(row.status)
-      });
-      setFormattedGanttData([firstRecord,...payload]);
+      setFormattedGanttData([
+        firstRecord,
+        ...payload.map((row) => ({
+          id: row.id,
+          type: "task",
+          name: row.workDescription,
+          progress: Number(row.status),
+          start: new Date(row.startDate as string),
+          end: new Date(row.endDate as string)
+        })
+      )]);
     }
   }, [ganttChartData])
 

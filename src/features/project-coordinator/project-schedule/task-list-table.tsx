@@ -2,7 +2,6 @@ import React from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
 import { Task } from "./task-types.ds";
 import { dateFormat } from "utils/date-time-utils";
-import { theme } from 'theme/theme'
 
 const styles = {"taskListWrapper":"_3ZbQT","taskListTableRow":"_34SS0","taskListCell":"_3lLk3","taskListNameWrapper":"_nI1Xw","taskListExpander":"_2QjE6","taskListEmptyExpander":"_2TfEi"};
 
