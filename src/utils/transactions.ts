@@ -17,7 +17,7 @@ import { useClient } from 'utils/auth-context'
 import { dateFormat, dateISOFormat, datePickerFormat } from './date-time-utils'
 import { useUserRolesSelector } from './redux-common-selectors'
 import { readFileContent } from './vendor-details'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import addDays from 'date-fns/addDays'
 import differenceInDays from 'date-fns/differenceInDays'
 import { convertImageToDataURL } from 'components/table/util'
@@ -26,6 +26,7 @@ import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
+import numeral from 'numeral'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -630,6 +631,53 @@ export const useTransaction = (transactionId?: number) => {
 
   return {
     transaction: changeOrder,
+    ...rest,
+  }
+}
+
+export const useTransactionExport = projectId => {
+  const client = useClient()
+  const [exportData, setExport] = useState([])
+  const { data, ...rest } = useQuery(['changeOrder', projectId], async () => {
+    const response = await client(`changeOrder/project/${projectId}`, {})
+    return response?.data
+  })
+  const numberFormatter = value => numeral(value).format('$0,0.00')
+  useEffect(() => {
+    if (!data) return
+    let exportData: any = []
+    data.forEach(item => {
+      exportData.push({
+        name: item.name ?? '',
+        transactionTypeLabel: item.transactionTypeLabel ?? '',
+        skillName: item.skillName ?? '',
+        projectName: item.vendor || item.transactionOf || '',
+        details: 'Total' + ' ',
+        changeOrderAmount: item.changeOrderAmount ? numberFormatter(item.changeOrderAmount) : '',
+        createdDate: dateFormat(item.createdDate) ?? '',
+        approvedDate: dateFormat(item.approvedDate) ?? '',
+        approvedBy: item.approvedBy ?? '',
+      })
+      item.lineItems?.map(lineItem => {
+        exportData.push({
+          name: '',
+          transactionTypeLabel: '',
+          skillName: '',
+          projectName: '',
+          details: lineItem.description ?? '',
+          changeOrderAmount: lineItem.whiteoaksCost ? numberFormatter(lineItem.whiteoaksCost) : '',
+          createdDate: dateFormat(item.createdDate) ?? '',
+          approvedDate: dateFormat(item.approvedDate) ?? '',
+          approvedBy: item.approvedBy ?? '',
+        })
+      })
+    })
+    setExport(exportData)
+    // csvExporter.generateCsv(exprotData)
+  }, [data])
+  return {
+    data,
+    exportData,
     ...rest,
   }
 }
