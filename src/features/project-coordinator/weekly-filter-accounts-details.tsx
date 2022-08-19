@@ -5,8 +5,7 @@ export type WeekDayFiltersProps = {
   onSelectDay: (string) => void
   selectedDay: string
   clear?: () => void
-
-  weekDayFilters?: any[]
+  weekDayFilters: any[]
 }
 
 // temporarly making this component for now to fullfill RFT for integration of due filter, it will be refactored.
@@ -33,7 +32,7 @@ export const AccountWeekDayFilters: React.FC<WeekDayFiltersProps> = ({
         >
           {t('All')}
         </Button> */}
-        {weekDayFilters?.map(day => {
+        {weekDayFilters.map(day => {
           return (
             <WeekdayCard
               dayName={day.title}
@@ -45,8 +44,8 @@ export const AccountWeekDayFilters: React.FC<WeekDayFiltersProps> = ({
             />
           )
         })}
-        {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" />
-        <Button variant="ghost" colorScheme="brand" onClick={clear}>
+
+        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
         </Button> */}
       </Flex>

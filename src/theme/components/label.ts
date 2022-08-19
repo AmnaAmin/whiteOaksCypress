@@ -4,6 +4,7 @@ const label = {
   FormLabel: {
     baseStyle: {
       ...chakraTheme.components.FormLabel.baseStyle,
+      color: 'gray.600',
     },
     variants: {
       'strong-label': {

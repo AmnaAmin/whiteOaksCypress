@@ -137,7 +137,6 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const profitMargin = originalSOWAmount === 0 ? 0 : (originalSOWAmount - projectTotalCost) / originalSOWAmount
 
-  console.log('restProjectFinancialOverviews', restProjectFinancialOverviews)
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),
     accountPayable: numeral(vendorAccountPayable).format('$0,0.00'),

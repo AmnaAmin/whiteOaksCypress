@@ -61,7 +61,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       propertyAddress: lienWaiverData.propertyAddress,
       owner: 'White Oaks Aligned, LLC',
       makerOfCheck: lienWaiverData.makerOfCheck,
-      amountOfCheck: lienWaiverData.amountOfCheck,
+      finalInvoiceAmount: lienWaiverData.finalInvoiceAmount,
       checkPayableTo: lienWaiverData.claimantName,
       claimantsSignature: lienWaiverData.lienWaiverAccepted ? lienWaiverData.claimantsSignature : null,
       claimantTitle: lienWaiverData.lienWaiverAccepted ? lienWaiverData.claimantTitle : '',
@@ -75,6 +75,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       ...lienWaiverData,
       ...formValues,
       lienWaiverAccepted: true,
+      amountOfCheck: formValues.finalInvoiceAmount,
       documents,
     }
   }
@@ -87,7 +88,7 @@ export const LienWaiverTab: React.FC<any> = props => {
     }
     const [first, last] = lienWaiverData?.companyName?.split(' ') || []
     convertImageToDataURL(claimantsSignature, (dataUrl: string) => {
-      const formattedAmountOfCheck = formValues.amountOfCheck ? '$' + formValues.amountOfCheck : '$0.00'
+      const formattedAmountOfCheck = formValues.finalInvoiceAmount ? '$' + formValues.finalInvoiceAmount : '$0.00'
       form = createForm(form, { ...formValues, amountOfCheck: formattedAmountOfCheck }, dimention, dataUrl)
       const pdfUri = form.output('datauristring')
       const docs = [
@@ -141,6 +142,13 @@ export const LienWaiverTab: React.FC<any> = props => {
       setRecentLWFile(recentLW)
       setValue('claimantsSignature', signatureDoc?.s3Url)
       setClaimantsSignature(signatureDoc?.s3Url ?? '')
+      setValue('claimantTitle', lienWaiverData.claimantName)
+    } else {
+      setRecentLWFile(null)
+      setValue('claimantsSignature', null)
+      setValue('claimantTitle', '')
+      setValue('dateOfSignature', '')
+      setClaimantsSignature('')
     }
   }, [documentsData, setValue, lienWaiverData])
 
@@ -212,7 +220,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('amountOfCheck')}
-                    InputElem={<Text data-testid="amountOfCheck">${lienWaiverData.amountOfCheck}</Text>}
+                    InputElem={<Text data-testid="amountOfCheck">${lienWaiverData.finalInvoiceAmount}</Text>}
                   />
                 </HStack>
 
@@ -224,7 +232,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                     register={register}
                     controlStyle={{ w: '16em' }}
                     disabled={
-                      [STATUS.Paid, STATUS.Cancelled].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) ||
+                      ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+                        lienWaiverData?.statusLabel?.toLocaleLowerCase(),
+                      ) ||
                       (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
                     }
                     elementStyle={{
@@ -262,7 +272,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                         _active: { bg: 'gray.100' },
                       }}
                       disabled={
-                        [STATUS.Paid, STATUS.Cancelled].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) ||
+                        ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+                          lienWaiverData?.statusLabel?.toLocaleLowerCase(),
+                        ) ||
                         (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
                       }
                     >
@@ -286,7 +298,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                           height="auto"
                           _hover={{ bg: 'inherit' }}
                           disabled={
-                            [STATUS.Paid, STATUS.Cancelled].includes(
+                            ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
                               lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                             ) ||
                             (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
@@ -304,7 +316,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                             height="auto"
                             _hover={{ bg: 'inherit' }}
                             disabled={
-                              [STATUS.Paid, STATUS.Cancelled].includes(
+                              ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
                                 lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                               ) ||
                               (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
@@ -367,7 +379,9 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button variant="outline" colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
-          {![STATUS.Cancelled, STATUS.Paid].includes(lienWaiverData?.statusLabel?.toLocaleLowerCase()) &&
+          {[STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+            lienWaiverData?.statusLabel?.toLocaleLowerCase(),
+          ) &&
             !(lienWaiverData.leanWaiverSubmitted && lienWaiverData.lienWaiverAccepted) && (
               <Button colorScheme="brand" type="submit" data-testid="save-lien-waiver">
                 {t('save')}

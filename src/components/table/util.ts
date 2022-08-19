@@ -17,7 +17,7 @@ export const getFileBlob = ({ columns, data, fileType, fileName }) => {
     header,
   })
   XLSX.utils.book_append_sheet(wb, ws1, 'Projects')
-  XLSX.writeFile(wb, `${fileName}.xlsx`)
+  XLSX.writeFile(wb, `${fileName}.csv`)
 
   // Returning false as downloading of file is already taken care of
   return false

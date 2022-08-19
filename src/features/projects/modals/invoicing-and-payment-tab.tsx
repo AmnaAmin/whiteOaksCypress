@@ -55,7 +55,7 @@ const InvoicingAndPaymentTab = ({
                 invoiceAndPaymentData.workOrderPayDateVariance ? (
                   <Text>{invoiceAndPaymentData?.workOrderPayDateVariance}</Text>
                 ) : (
-                  <Text>mm/dd/yy</Text>
+                  <Text>0</Text>
                 )
               }
             />

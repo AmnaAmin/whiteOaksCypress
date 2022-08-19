@@ -20,7 +20,7 @@ import { FormInput } from 'components/react-hook-form-fields/input'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
-import 'components/translation/i18n'
+
 import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiAddToQueue, BiDownload } from 'react-icons/bi'

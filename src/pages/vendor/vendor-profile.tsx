@@ -1,7 +1,7 @@
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import 'components/translation/i18n'
+
 import { Card } from 'features/login-form-centered/Card'
 import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
 import { Details } from 'features/vendor-details/details'
@@ -9,7 +9,7 @@ import { DocumentsCard } from 'features/vendor-details/documents-card'
 import { License } from 'features/vendor-details/license'
 import { MarketList } from 'features/vendor-details/markets'
 import { TradeList } from 'features/vendor-details/trades'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
@@ -66,7 +66,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState(0)
-
+  const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { control } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
@@ -77,6 +77,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       isClosable: true,
     })
   }
+  useEffect(() => {
+    setReachTabIndex(index => (tabIndex > index ? tabIndex : index))
+  }, [tabIndex])
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
       if (vendorProfileData?.id) {
@@ -167,28 +170,28 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             <Tab>{t('details')}</Tab>
             <Tab
               _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={tabIndex <= 0 && !vendorProfileData?.id}
+              isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
               data-testid="documents"
             >
               {t('documents')}
             </Tab>
             <Tab
               _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={tabIndex <= 1 && !vendorProfileData?.id}
+              isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
               data-testid="license"
             >
               {t('license')}
             </Tab>
             <Tab
               _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={tabIndex <= 2 && !vendorProfileData?.id}
+              isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
               data-testid="tradetab"
             >
               {t('trade')}
             </Tab>
             <Tab
               _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={tabIndex <= 3 && !vendorProfileData?.id}
+              isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
               data-testid="markettab"
             >
               {t('market')}

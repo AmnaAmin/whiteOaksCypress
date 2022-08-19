@@ -1,7 +1,7 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import 'components/translation/i18n'
+
 import DetailsTab from 'features/projects/modals/project-coordinator/client-details-tab'
 import { Market } from 'features/projects/modals/project-coordinator/client-market-tab'
 import ClientNotes from 'features/projects/modals/project-coordinator/clients-notes-tab'
