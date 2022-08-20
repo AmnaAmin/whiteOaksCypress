@@ -12,7 +12,7 @@ export const useAccountPayable = () => {
 
   return useQuery('accountPayable', async () => {
     const response = await client(`all_workorders`, {})
-    const workOrders = orderBy(response?.data?.workOrders || [], ['id', 'asc'])
+    const workOrders = orderBy(response?.data?.workOrders || [], ['expectedPaymentDate', 'asc'])
     return { ...response?.data, workOrders }
   })
 }
