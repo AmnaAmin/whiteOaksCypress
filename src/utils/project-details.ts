@@ -412,6 +412,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientStartDate: dateISOFormat(formValues.clientStartDate),
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
+    clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
