@@ -19,7 +19,7 @@ export const ProjectSchedule: React.FC<{
       borderRadius="4px"
       box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
     >
-      {!isLoading && data && <ProjectScheduleDetails data={data} />}
+      {!isLoading && data.length > 0 ? <ProjectScheduleDetails data={data} /> : null}
     </Flex>
   )
 }
