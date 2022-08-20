@@ -28,7 +28,7 @@ import {
 } from '@chakra-ui/react'
 import { STATUS } from 'features/projects/status'
 import { useState } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet, BiUpload, BiXCircle } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
@@ -132,6 +132,7 @@ const WorkOrderDetailTab = props => {
   const { register, handleSubmit, control } = useForm<FormValues>({
     defaultValues: defaultValuesWODetails(workOrder),
   })
+  const woStartDate = useWatch({ name: 'workOrderStartDate', control })
 
   const {
     fields: assignedItems,
@@ -212,6 +213,7 @@ const WorkOrderDetailTab = props => {
                     id="workOrderExpectedCompletionDate"
                     type="date"
                     size="md"
+                    min={woStartDate as string}
                     css={calendarIcon}
                     isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
                     variant="required-field"
