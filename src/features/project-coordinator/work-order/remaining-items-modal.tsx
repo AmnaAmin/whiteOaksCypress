@@ -10,10 +10,11 @@ import {
   HStack,
   Button,
 } from '@chakra-ui/react'
-import RemainingListTable from 'features/project-coordinator/vendor-work-order/remaining-list-table'
+import RemainingListTable from 'features/project-coordinator/work-order/remaining-list-table'
 import { t } from 'i18next'
 import React, { useState } from 'react'
 import { useAssignLineItems } from 'utils/work-order'
+import { WORK_ORDER } from './workOrder.i18n'
 
 const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; workOrder: any }> = props => {
   const [selectedLineItems, setSelectedLineItems] = useState<Array<any>>([])
@@ -25,7 +26,7 @@ const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; work
         <ModalOverlay />
         <ModalContent>
           <ModalHeader fontSize="16px" fontWeight={500} color="gray.600">
-            Remaining List
+            {t(`${WORK_ORDER}.remainingList`)}
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody>

@@ -274,6 +274,7 @@ export const defaultValuesWODetails = workOrder => {
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
+    showPrice: false,
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems
@@ -285,6 +286,16 @@ export const defaultValuesWODetails = workOrder => {
               quantity: 12,
               price: '123',
               status: true,
+              images: null,
+              verification: false,
+            },
+            {
+              sku: '123',
+              productName: 'Product A',
+              details: 'Solid product',
+              quantity: 12,
+              price: '123',
+              status: false,
               images: null,
               verification: true,
             },

@@ -29,7 +29,7 @@ import { InvoiceTab } from './invoice-tab'
 import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
 import { LienWaiverTab } from './lien-waiver-tab'
 import WorkOrderDetailTab from './work-order-detail-tab'
-import { WorkOrderNotes } from './work-order-notes'
+import { WorkOrderNotes } from '../../project-coordinator/work-order/work-order-notes'
 
 export const WorkOrderDetails = ({
   workOrder,

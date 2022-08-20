@@ -1,10 +1,11 @@
 import { Box, Checkbox, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
-import React, { useState } from 'react'
+import React from 'react'
 import { useRmainingLineItems } from 'utils/work-order'
+import { WORK_ORDER } from './workOrder.i18n'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -48,13 +49,13 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 const RemainingListTable = props => {
-  const [tableInstance, setInstance] = useState<any>(null)
   const { workOrder, selectedLineItems, setSelectedLineItems } = props
   const { remainingItems, isLoading } = useRmainingLineItems(workOrder?.projectId)
+  const { t } = useTranslation()
   const REMAINING_ITEMS_COLUMNS = [
     {
-      Header: t('checkbox'),
-      accessor: 'checkbox',
+      Header: 'Check',
+      accessor: 'assigned',
       Cell: ({ row }) => (
         <Flex justifyContent="end">
           <Checkbox
@@ -75,23 +76,23 @@ const RemainingListTable = props => {
       disableExport: true,
     },
     {
-      Header: t('sku'),
+      Header: t(`${WORK_ORDER}.sku`),
       accessor: 'sku',
     },
     {
-      Header: t('productName'),
+      Header: t(`${WORK_ORDER}.sku`),
       accessor: 'productName',
     },
     {
-      Header: t('details'),
+      Header: t(`${WORK_ORDER}.details`),
       accessor: 'details',
     },
     {
-      Header: t('quantity'),
+      Header: t(`${WORK_ORDER}.quantity`),
       accessor: 'quantity',
     },
     {
-      Header: t('price'),
+      Header: t(`${WORK_ORDER}.price`),
       accessor: 'price',
       Cell(cellInfo) {
         return numeral(cellInfo.value).format('$0,0.00')
@@ -101,7 +102,7 @@ const RemainingListTable = props => {
       },
     },
     {
-      Header: t('total'),
+      Header: t(`${WORK_ORDER}.total`),
       accessor: 'total',
       Cell(cellInfo) {
         return numeral(cellInfo.value).format('$0,0.00')
@@ -112,14 +113,10 @@ const RemainingListTable = props => {
     },
   ]
 
-  const setTableInstance = tableInstance => {
-    setInstance(tableInstance)
-  }
   return (
     <Box overflow="auto" width="100%">
       <TableWrapper
         columns={REMAINING_ITEMS_COLUMNS}
-        setTableInstance={setTableInstance}
         data={
           remainingItems ?? [
             {
