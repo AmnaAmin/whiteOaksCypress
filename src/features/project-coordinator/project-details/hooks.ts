@@ -30,6 +30,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isStatusCancelled,
 
     // Project Management form fields states
+    isWOAStartDateRequired: isStatusActive,
     isWOAStartDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isWOACompletionDisabled:
       isStatusNew || isStatusActive || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,

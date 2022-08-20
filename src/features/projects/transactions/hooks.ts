@@ -35,6 +35,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowRefundMaterialCheckbox,
+    isShowPaymentRecievedDateField: selectedTransactionTypeId === TransactionTypeValues.payment,
   }
 }
 

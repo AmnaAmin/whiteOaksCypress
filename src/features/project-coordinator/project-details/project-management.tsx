@@ -28,6 +28,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     isClientDueDateDisabled,
     isClientSignOffDisabled,
     isClientStartDateDisabled,
+    isWOAStartDateRequired,
   } = useFieldsDisabled(control)
 
   return (
@@ -142,8 +143,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 type="date"
                 isDisabled={isWOAStartDisabled}
                 min={minOfWoaStartDate}
-                variant="required-field"
-                {...register('woaStartDate', { required: 'This is required' })}
+                {...register('woaStartDate', { required: isWOAStartDateRequired ? 'This is required' : false })}
               />
               <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
