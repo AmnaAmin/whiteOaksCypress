@@ -48,6 +48,7 @@ const InvoiceAndPayments: React.FC = () => {
   } = useFieldsDisabled(control)
 
   const formValues = getValues()
+  const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value
@@ -168,7 +169,7 @@ const InvoiceAndPayments: React.FC = () => {
               <Controller
                 name="invoiceAttachment"
                 control={control}
-                rules={{ required: isStatusInvoiced ? 'This is required field' : false }}
+                rules={{ required: isUploadInvoiceRequired ? 'This is required field' : false }}
                 render={({ field, fieldState }) => {
                   const fileName = field?.value?.name ?? (t('chooseFile') as string)
 
@@ -178,7 +179,7 @@ const InvoiceAndPayments: React.FC = () => {
                         <ChooseFileField
                           name={field.name}
                           value={fileName}
-                          isRequired={isStatusInvoiced}
+                          isRequired={isUploadInvoiceRequired}
                           isError={!!fieldState.error?.message}
                           onChange={(file: any) => {
                             field.onChange(file)
@@ -221,9 +222,7 @@ const InvoiceAndPayments: React.FC = () => {
               size="md"
               type="date"
               id="invoiceBackDate"
-              variant={isStatusInvoiced ? 'required-field' : 'outline'}
               {...register('invoiceBackDate', {
-                required: isStatusInvoiced ? 'This is required' : false,
                 onChange: onInvoiceBackDateChange,
               })}
             />
