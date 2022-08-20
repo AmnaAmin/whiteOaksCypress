@@ -293,7 +293,7 @@ export const useVendor = () => {
   }
 }
 
-export const useGanttChart = (projectId?: string):any=> {
+export const useGanttChart = (projectId?: string): any => {
   const client = useClient()
 
   const { data: ganttChartData, ...rest } = useQuery<ProjectType>(

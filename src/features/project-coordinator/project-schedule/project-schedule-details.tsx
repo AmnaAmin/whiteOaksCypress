@@ -12,7 +12,7 @@ const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
   const [tasks, setTasks] = React.useState<Task[]>(initTasks())
-  const columnWidth = useColumnWidth(ViewMode.QuarterDay);
+  const columnWidth = useColumnWidth(ViewMode.QuarterDay)
 
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map(t => (t.id === task.id ? task : t))

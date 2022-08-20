@@ -99,7 +99,7 @@ const NewWorkOrder: React.FC<{
     formState: { errors },
   } = useForm()
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
-  
+
   const onSubmit = values => {
     const payload = parseNewWoValuesToPayload(values, projectData.id)
     createWorkOrder(payload as any)
