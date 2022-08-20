@@ -118,6 +118,8 @@ const InvoiceAndPayments: React.FC = () => {
                 fontSize="xs"
                 alignItems={'center'}
                 mt="2"
+                position={'absolute'}
+                top="76px"
               >
                 <Icon as={BiDownload} fontSize="14px" />
                 <Text ml="1">Original SOW</Text>
@@ -161,7 +163,7 @@ const InvoiceAndPayments: React.FC = () => {
         </GridItem>
         <GridItem>
           <VStack alignItems="end" spacing="0px" position="relative">
-            <FormControl>
+            <FormControl isInvalid={!!errors?.invoiceAttachment}>
               <FormLabel variant="strong-label" size="md">
                 {t('uploadInvoice')}
               </FormLabel>
@@ -203,6 +205,8 @@ const InvoiceAndPayments: React.FC = () => {
                 fontSize="xs"
                 alignItems={'center'}
                 mt="2"
+                position={'absolute'}
+                top={'76px'}
               >
                 <Icon as={BiDownload} fontSize="14px" />
                 <Text ml="1">Invoice</Text>
@@ -211,7 +215,7 @@ const InvoiceAndPayments: React.FC = () => {
           </VStack>
         </GridItem>
         <GridItem>
-          <FormControl>
+          <FormControl isInvalid={!!errors?.invoiceBackDate}>
             <FormLabel variant="strong-label" size="md">
               {t('invoiceBackDate')}
             </FormLabel>
@@ -223,12 +227,12 @@ const InvoiceAndPayments: React.FC = () => {
               id="invoiceBackDate"
               variant={isStatusInvoiced ? 'required-field' : 'outline'}
               {...register('invoiceBackDate', {
-                required: isStatusInvoiced ? 'This is required' : false,
+                required: isStatusInvoiced ? 'This is required field.' : false,
                 onChange: onInvoiceBackDateChange,
               })}
             />
 
-            <FormErrorMessage></FormErrorMessage>
+            <FormErrorMessage>{errors?.invoiceBackDate?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
         <GridItem>
@@ -239,7 +243,7 @@ const InvoiceAndPayments: React.FC = () => {
             <Controller
               control={control}
               name="paymentTerms"
-              rules={{ required: !isPaymentTermsDisabled ? 'This is required' : false }}
+              rules={{ required: !isPaymentTermsDisabled ? 'This is required field.' : false }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
@@ -268,7 +272,7 @@ const InvoiceAndPayments: React.FC = () => {
               isDisabled={isWOAInvoiceDateDisabled}
               id="woaInvoiceDate"
               {...register('woaInvoiceDate', {
-                required: isWOAInvoiceDateDisabled ? false : 'This is required',
+                required: isWOAInvoiceDateDisabled ? false : 'This is required field.',
               })}
               type="date"
               w="215px"

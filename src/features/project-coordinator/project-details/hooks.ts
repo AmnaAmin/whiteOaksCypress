@@ -1,5 +1,5 @@
 import { ProjectStatus as STATUS } from 'types/project-details.types'
-import { Control, useWatch } from 'react-hook-form'
+import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) => {
@@ -71,6 +71,21 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isMarketDisabled: isAllTimeDisabled,
     isGateCodeDisabled: isAllTimeDisabled,
     isLockBoxCodeDisabled: isAllTimeDisabled,
+  }
+}
+
+/**
+ * @description - useSubFormErrors returns object of booleans indicating form errors.
+ * @param errors - errors object of react hook form errors of all fields
+ * @returns - isInvoiceAndPaymentFormErrors for showing error indicator on Invoice & Payment form tab
+ * isProjectDetailsFormErrors for showing error indicator on Project Management form tab
+ */
+export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) => {
+  return {
+    isInvoiceAndPaymentFormErrors:
+      !!errors.invoiceAttachment?.message || !!errors.paymentTerms || !!errors.invoiceBackDate,
+    isProjectManagementFormErrors:
+      !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate,
   }
 }
 
