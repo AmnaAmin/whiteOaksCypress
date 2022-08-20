@@ -5,6 +5,7 @@ import { Vendors } from 'types/vendor.types'
 import { useQueryClient } from 'react-query'
 import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
+import { ProjectType } from 'types/common.types'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -288,6 +289,25 @@ export const useVendor = () => {
 
   return {
     vendors: data,
+    ...rest,
+  }
+}
+
+export const useGanttChart = (projectId?: string):any=> {
+  const client = useClient()
+
+  const { data: ganttChartData, ...rest } = useQuery<ProjectType>(
+    ['projectSchedule', projectId],
+    async () => {
+      const response = await client(`ganChartElastic/${projectId}`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
+
+  return {
+    ganttChartData,
     ...rest,
   }
 }
