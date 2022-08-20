@@ -597,7 +597,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         {t('paymentReceivedDate')}
                       </FormLabel>
                       <Input
-                        data-testid="expected-completion-date"
+                        data-testid="payment-received-date"
                         id="paymentRecievedDate"
                         size="md"
                         type="date"
