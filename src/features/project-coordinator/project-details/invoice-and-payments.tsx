@@ -222,9 +222,7 @@ const InvoiceAndPayments: React.FC = () => {
               size="md"
               type="date"
               id="invoiceBackDate"
-              variant={isStatusInvoiced ? 'required-field' : 'outline'}
               {...register('invoiceBackDate', {
-                required: isStatusInvoiced ? 'This is required' : false,
                 onChange: onInvoiceBackDateChange,
               })}
             />
