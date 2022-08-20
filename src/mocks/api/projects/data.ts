@@ -433,6 +433,7 @@ export const TRANSACTIONS = [
     vendorId: null,
     paymentTerm: null,
     clientApprovedDate: null,
+    paymentReceived: '2022-07-02T16:10:37Z',
     paidDate: null,
     lineItems: [
       {
@@ -445,7 +446,6 @@ export const TRANSACTIONS = [
         notes: null,
       },
     ],
-    paymentReceived: null,
     markAsRevenue: null,
     documents: [],
     lwClaimantTitle: null,

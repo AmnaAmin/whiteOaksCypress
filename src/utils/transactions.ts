@@ -361,6 +361,7 @@ export const parseChangeOrderAPIPayload = async (
     paidDate: dateISOFormat(formValues.paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
     payDateVariance: formValues.payDateVariance || '',
+    paymentReceived: dateISOFormat(formValues.paymentRecievedDate as string),
     lineItems,
     documents,
     projectId: projectId ?? '',
@@ -424,7 +425,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     attachment: null,
     lienWaiverDocument: null,
     lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
-    paymentRecieved: null,
+    paymentRecievedDate: null,
     invoicedDate: null,
     paymentTerm: null,
     paidDate: null,
@@ -538,7 +539,7 @@ export const parseTransactionToFormValues = (
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
-    paymentRecieved: null,
+    paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refundMaterial: isMaterialRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
