@@ -11,6 +11,8 @@ type ProjectManagerProps = {
   projectTypeSelectOptions: SelectOption[]
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
+  const dateToday = new Date().toISOString().split('T')[0]
+
   const {
     formState: { errors },
     control,
@@ -147,27 +149,54 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.woaCompletionDate}>
               <FormLabel variant="strong-label" size="md">
                 WOA Completion
               </FormLabel>
-              <Input type="date" isDisabled={isWOACompletionDisabled} {...register('woaCompletionDate')} />
+              <Input
+                type="date"
+                isDisabled={isWOACompletionDisabled}
+                variant={isWOACompletionDisabled ? 'outline' : 'required-field'}
+                max={dateToday}
+                {...register('woaCompletionDate', {
+                  required: !isWOACompletionDisabled ? 'This is required field.' : false,
+                })}
+              />
+              <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                 Client Walkthrough
               </FormLabel>
-              <Input type="date" isDisabled={isClientWalkthroughDisabled} {...register('clientWalkthroughDate')} />
+              <Input
+                type="date"
+                isDisabled={isClientWalkthroughDisabled}
+                variant={isClientWalkthroughDisabled ? 'outline' : 'required-field'}
+                max={dateToday}
+                {...register('clientWalkthroughDate', {
+                  required: !isClientWalkthroughDisabled ? 'This is required field.' : false,
+                })}
+              />
+              <FormErrorMessage>{errors?.clientWalkthroughDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.clientSignOffDate}>
               <FormLabel variant="strong-label" size="md">
                 Client Sign Off
               </FormLabel>
-              <Input type="date" isDisabled={isClientSignOffDisabled} {...register('clientSignOffDate')} />
+              <Input
+                type="date"
+                isDisabled={isClientSignOffDisabled}
+                variant={isClientSignOffDisabled ? 'outline' : 'required-field'}
+                max={dateToday}
+                {...register('clientSignOffDate', {
+                  required: !isClientSignOffDisabled ? 'This is required field.' : false,
+                })}
+              />
+              <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
