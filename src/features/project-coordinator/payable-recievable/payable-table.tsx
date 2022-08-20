@@ -50,74 +50,48 @@ type PayablePropsTyep = {
   weekDayFilters: any[]
 }
 
-export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
-  ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
-    const { data: PayableData, isLoading } = useAccountPayable()
+export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setTableInstance, payableColumns }) => {
+  const { data: payableData, isLoading, refetch } = useAccountPayable()
 
-    useEffect(() => {
-      if (PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
-        const updatedWorkOrder = PayableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
-        if (updatedWorkOrder) {
-          setSelectedWorkOrder({ ...updatedWorkOrder })
-        } else {
-          setSelectedWorkOrder(undefined)
-        }
+  useEffect(() => {
+    if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+      const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+      if (updatedWorkOrder) {
+        setSelectedWorkOrder({ ...updatedWorkOrder })
       } else {
         setSelectedWorkOrder(undefined)
       }
-    }, [PayableData])
-    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-
-    const [filterProjects, setFilterPayable] = useState(PayableData?.workOrders)
-
-    useEffect(() => {
-      if (!selectedCard && !selectedDay) setFilterPayable(PayableData?.workOrders)
-      setFilterPayable(
-        PayableData?.workOrders?.filter(
-          payable =>
-            !selectedCard || payable.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
-        ),
-      )
-
-      // Due payable Weekly Filter
-      const getDates = weekDayFilters.filter(day => selectedDay === day.id)
-
-      const clientDate = getDates?.map(date => {
-        return date?.date
-      })
-
-      if (selectedDay) {
-        setFilterPayable(
-          PayableData?.workOrders?.filter(payable => clientDate.includes(payable?.expectedPaymentDate?.substr(0, 10))),
-        )
-      }
-    }, [selectedCard, selectedDay, PayableData?.workOrders])
-    return (
-      <Box overflow="auto" width="100%">
-        {isLoading ? (
-          <BlankSlate />
-        ) : (
-          <>
-            <WorkOrderDetails
-              workOrder={selectedWorkOrder as ProjectWorkOrderType}
-              onClose={() => {
-                setSelectedWorkOrder(undefined)
-              }}
-            />
-            <TableWrapper
-              columns={payableColumns}
-              setTableInstance={setTableInstance}
-              data={filterProjects || []}
-              isLoading={isLoading}
-              TableRow={payableRow}
-              tableHeight="calc(100vh - 300px)"
-              name="payable-table"
-              defaultFlexStyle={false}
-              onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
-            />
-          </>
-        )}
-      </Box>
-    )
-  },
-)
+    } else {
+      setSelectedWorkOrder(undefined)
+    }
+  }, [payableData])
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+  return (
+    <Box overflow="auto" width="100%">
+      {isLoading ? (
+        <BlankSlate />
+      ) : (
+        <>
+          <WorkOrderDetails
+            workOrder={selectedWorkOrder as ProjectWorkOrderType}
+            onClose={() => {
+              setSelectedWorkOrder(undefined)
+              refetch()
+            }}
+          />
+          <TableWrapper
+            columns={payableColumns}
+            setTableInstance={setTableInstance}
+            data={payableData?.workOrders || []}
+            isLoading={isLoading}
+            TableRow={payableRow}
+            tableHeight="calc(100vh - 300px)"
+            name="payable-table"
+            defaultFlexStyle={false}
+            onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+          />
+        </>
+      )}
+    </Box>
+  )
+})
