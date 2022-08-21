@@ -8,6 +8,7 @@ import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
+import { t } from 'i18next'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
@@ -40,9 +41,13 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         }
       },
       onError(error: any) {
+        let description = error.title ?? 'Unable to save workorder.';
+        if(error.errorKey === "EXPECTED_AND_COMPLETION_1_YEAR_ERROR") {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR') 
+        }
         toast({
           title: 'Work Order',
-          description: (error.title as string) ?? 'Unable to save workorder.',
+          description,
           status: 'error',
           isClosable: true,
         })
@@ -80,9 +85,13 @@ export const useCreateWorkOrderMutation = () => {
         })
       },
       onError(error: any) {
+        let description = error.title ?? 'Unable to save workorder.';
+        if(error.errorKey === "EXPECTED_AND_COMPLETION_1_YEAR_ERROR") {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR') 
+        }
         toast({
           title: 'Work Order',
-          description: (error.title as string) ?? 'Unable to create workorder.',
+          description,
           status: 'error',
           isClosable: true,
         })
