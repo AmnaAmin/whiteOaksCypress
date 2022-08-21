@@ -1,22 +1,5 @@
 import { Task } from './task-types.ds'
 
-export function initTasks() {
-  const currentDate = new Date()
-  const tasks: Task[] = [
-    {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
-      name: '',
-      id: '=1',
-      progress: 100,
-      type: 'task',
-      hideChildren: false,
-      displayOrder: 1,
-    },
-  ]
-  return tasks
-}
-
 export function getStartEndDateForProject(tasks: Task[], projectId: string) {
   const projectTasks = tasks.filter(t => t.project === projectId)
   let start = projectTasks[0].start
