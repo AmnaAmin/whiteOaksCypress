@@ -1,5 +1,20 @@
 import trimCanvas from 'trim-canvas'
 
+export const downloadFileOnly = doc => {
+  fetch(doc.s3Url)
+    .then( res => res.blob() )
+    .then( blob => {
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob);
+      a.download = URL.createObjectURL(blob)
+      a.click();
+      setTimeout(() => {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(blob as any); 
+    }, 100);
+  });
+}
+
 export const downloadFile = url => {
   const a = document.createElement('a')
   a.href = url

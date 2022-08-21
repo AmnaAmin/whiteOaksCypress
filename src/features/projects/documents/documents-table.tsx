@@ -8,7 +8,7 @@ import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
 import { FaAtom } from 'react-icons/fa'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
-import { downloadFile } from 'utils/file-utils'
+import { downloadFile, downloadFileOnly } from 'utils/file-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useDocuments } from 'utils/vendor-projects'
@@ -55,6 +55,15 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
+const withPreviewCell = ({value, row}) => {
+  const s3Url = row.original?.s3Url
+  return (
+    <Text onClick={() => downloadFile(s3Url)}>
+      {value}
+    </Text>
+  )
+}
+
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { isProjectCoordinator } = useUserRolesSelector()
   const { t } = useTranslation()
@@ -68,31 +77,37 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         id: 'fileType',
         Header: t('document') || '',
         accessor: 'fileType',
+        Cell: withPreviewCell,
       },
       {
         id: 'documentType',
         Header: t('documentType') || '',
         accessor: 'documentTypelabel',
+        Cell: withPreviewCell,
       },
       {
         id: 'fileObjectContentType',
         Header: t('fileType') || '',
         accessor: 'fileObjectContentType',
+        Cell: withPreviewCell,
       },
       {
         id: 'vendorName',
         Header: t('vendorGL') || '',
         accessor: 'vendorName',
+        Cell: withPreviewCell,
       },
       {
         Header: t('trade') || '',
         accessor: 'workOrderName',
         id: 'workOrderName',
+        Cell: withPreviewCell,
       },
       {
         Header: t('createdBy') || '',
         accessor: 'createdBy',
         id: 'createdBy',
+        Cell: withPreviewCell,
       },
       {
         Header: t('createdDate') || '',
@@ -110,7 +125,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                 color="#4E87F8"
                 fontSize={24}
                 onClick={() => {
-                  downloadFile(s3Url)
+                  downloadFileOnly(row.original)
                 }}
               />
             </Flex>
