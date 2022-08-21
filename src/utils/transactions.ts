@@ -17,7 +17,7 @@ import { useClient } from 'utils/auth-context'
 import { dateFormat, dateISOFormat, datePickerFormat } from './date-time-utils'
 import { useUserRolesSelector } from './redux-common-selectors'
 import { readFileContent } from './vendor-details'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import addDays from 'date-fns/addDays'
 import differenceInDays from 'date-fns/differenceInDays'
 import { convertImageToDataURL } from 'components/table/util'
@@ -26,6 +26,7 @@ import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
+import numeral from 'numeral'
 import { ErrorType } from 'types/common.types'
 
 export const useTransactions = (projectId?: string) => {
@@ -650,6 +651,52 @@ export const useTransaction = (transactionId?: number) => {
 
   return {
     transaction: changeOrder,
+    ...rest,
+  }
+}
+
+export const useTransactionExport = projectId => {
+  const client = useClient()
+  const [exportData, setExport] = useState([])
+  const { data, ...rest } = useQuery(['changeOrder', projectId], async () => {
+    const response = await client(`changeOrder/project/${projectId}`, {})
+    return response?.data
+  })
+  const numberFormatter = value => numeral(value).format('$0,0.00')
+  useEffect(() => {
+    if (!data) return
+    let exportData: any = []
+    data.forEach(item => {
+      exportData.push({
+        ID: item.name ?? '',
+        Type: item.transactionTypeLabel ?? '',
+        Trade: item.skillName ?? '',
+        Name: item.vendor || item.transactionOf || '',
+        Details: 'Total ',
+        Amount: item.changeOrderAmount ? numberFormatter(item.changeOrderAmount) : '',
+        'Date submitted': dateFormat(item.createdDate) ?? '',
+        'Date Approved': dateFormat(item.approvedDate) ?? '',
+        'Approved by': item.approvedBy ?? '',
+      })
+      item.lineItems?.forEach(lineItem => {
+        exportData.push({
+          ID: '',
+          Type: '',
+          Trade: '',
+          Name: '',
+          Details: lineItem.description ?? '',
+          Amount: lineItem.whiteoaksCost ? numberFormatter(lineItem.whiteoaksCost) : '',
+          'Date submitted': dateFormat(item.createdDate) ?? '',
+          'Date Approved': dateFormat(item.approvedDate) ?? '',
+          'Approved by': item.approvedBy ?? '',
+        })
+      })
+    })
+    setExport(exportData)
+  }, [data])
+  return {
+    data,
+    exportData,
     ...rest,
   }
 }
