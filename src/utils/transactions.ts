@@ -672,13 +672,13 @@ export const useTransactionExport = projectId => {
         Type: item.transactionTypeLabel ?? '',
         Trade: item.skillName ?? '',
         Name: item.vendor || item.transactionOf || '',
-        Details: 'Total' + ' ',
+        Details: 'Total ',
         Amount: item.changeOrderAmount ? numberFormatter(item.changeOrderAmount) : '',
         'Date submitted': dateFormat(item.createdDate) ?? '',
         'Date Approved': dateFormat(item.approvedDate) ?? '',
         'Approved by': item.approvedBy ?? '',
       })
-      item.lineItems?.map(lineItem => {
+      item.lineItems?.forEach(lineItem => {
         exportData.push({
           ID: '',
           Type: '',

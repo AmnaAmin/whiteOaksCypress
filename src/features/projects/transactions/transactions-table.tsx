@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Button, Icon, Divider } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Divider } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableWrapper } from 'components/table/table'
@@ -57,7 +57,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
+  // const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
   const { transactions = [], isLoading } = useTransactions(projectId)
   const { t } = useTranslation()
   const { tableColumns, settingColumns } = useTableColumnSettings(
@@ -138,7 +138,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
             data={transactions}
             TableRow={TransactionRow}
             tableHeight="calc(100vh - 300px)"
-            setTableInstance={setTransactionTableInstance}
+            setTableInstance={() => {}}
             name="transaction-table"
             onRowClick={onRowClick}
           />
