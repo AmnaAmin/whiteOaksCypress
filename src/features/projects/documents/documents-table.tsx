@@ -115,7 +115,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         id: 'createdDate',
         Cell({ value, row }) {
           // @ts-ignore
-          const s3Url = row.original?.s3Url
           return (
             <Flex>
               <Box mr={2}>{dateFormat(value)}</Box>
