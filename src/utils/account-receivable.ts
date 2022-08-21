@@ -26,20 +26,12 @@ export const usePCRecievable = () => {
 
 export const useBatchProcessingMutation = () => {
   const client = useClient()
-  // const queryClient = useQueryClient()
-  return useMutation(
-    id => {
-      return client(`batches/run`, {
-        method: 'POST',
-        data: id,
-      })
-    },
-    {
-      onSuccess() {
-        // queryClient.invalidateQueries('batchCheck')
-      },
-    },
-  )
+  return useMutation(id => {
+    return client(`batches/run`, {
+      method: 'POST',
+      data: id,
+    })
+  }, {})
 }
 
 export const useCheckBatch = (setLoading, apiNumber) => {

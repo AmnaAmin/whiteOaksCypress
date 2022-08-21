@@ -25,7 +25,6 @@ export const Receivable = () => {
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-  // const [cardSelected, setCardSelected] = useState(false)
 
   const clearAll = () => {
     setSelectedCard('')
