@@ -79,7 +79,8 @@ i18n.use(initReactI18next).init({
         markets: 'Markets',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
-        woNo: 'WO Po',
+        woNo: 'WO No',
+        marketName: 'Markets',
         checkbox: 'Checkbox',
         clearFilter: 'Clear Filter',
 
@@ -582,6 +583,7 @@ i18n.use(initReactI18next).init({
         woInvoiceDate: 'Fecha de factura de OT',
         poNo: 'Número de orden de compra',
         woNo: 'OT No',
+        marketName: 'Mercados',
         checkbox: 'Caja',
         clearFilter: 'Filtro claro',
 
