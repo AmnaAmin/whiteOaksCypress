@@ -31,6 +31,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
 
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
+    isWOACompletionDateRequired: isStatusClosed,
+    isClientWalkthroughDateRequired: isStatusClosed,
+    isClientSignOffDateRequired: isStatusClosed,
+
     isWOAStartDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isWOACompletionDisabled:
       isStatusNew || isStatusActive || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
@@ -72,6 +76,23 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isMarketDisabled: isAllTimeDisabled,
     isGateCodeDisabled: isAllTimeDisabled,
     isLockBoxCodeDisabled: isAllTimeDisabled,
+  }
+}
+
+export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) => {
+  const status = useWatch({ name: 'status', control })
+
+  const projectStatus = status?.value
+
+  const isStatusActive = projectStatus === STATUS.Active
+  const isStatusClosed = projectStatus === STATUS.Closed
+
+  return {
+    // Project Management form fields states
+    isWOAStartDateRequired: isStatusActive,
+    isWOACompletionDateRequired: isStatusClosed,
+    isClientWalkthroughDateRequired: isStatusClosed,
+    isClientSignOffDateRequired: isStatusClosed,
   }
 }
 

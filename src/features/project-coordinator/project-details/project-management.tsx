@@ -4,7 +4,7 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { SelectOption } from 'types/transaction.type'
-import { useFieldsDisabled, useWOAStartDateMin } from './hooks'
+import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -28,8 +28,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     isClientDueDateDisabled,
     isClientSignOffDisabled,
     isClientStartDateDisabled,
-    isWOAStartDateRequired,
   } = useFieldsDisabled(control)
+
+  const {
+    isWOACompletionDateRequired,
+    isClientWalkthroughDateRequired,
+    isWOAStartDateRequired,
+    isClientSignOffDateRequired,
+  } = useFieldsRequired(control)
 
   return (
     <Box>
@@ -156,10 +162,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <Input
                 type="date"
                 isDisabled={isWOACompletionDisabled}
-                variant={isWOACompletionDisabled ? 'outline' : 'required-field'}
+                variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
                 max={dateToday}
                 {...register('woaCompletionDate', {
-                  required: !isWOACompletionDisabled ? 'This is required field.' : false,
+                  required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
               />
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
@@ -173,10 +179,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <Input
                 type="date"
                 isDisabled={isClientWalkthroughDisabled}
-                variant={isClientWalkthroughDisabled ? 'outline' : 'required-field'}
+                variant={isClientWalkthroughDateRequired ? 'required-field' : 'outline'}
                 max={dateToday}
                 {...register('clientWalkthroughDate', {
-                  required: !isClientWalkthroughDisabled ? 'This is required field.' : false,
+                  required: isClientWalkthroughDateRequired ? 'This is required field.' : false,
                 })}
               />
               <FormErrorMessage>{errors?.clientWalkthroughDate?.message}</FormErrorMessage>
@@ -190,10 +196,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <Input
                 type="date"
                 isDisabled={isClientSignOffDisabled}
-                variant={isClientSignOffDisabled ? 'outline' : 'required-field'}
+                variant={isClientSignOffDateRequired ? 'required-field' : 'outline'}
                 max={dateToday}
                 {...register('clientSignOffDate', {
-                  required: !isClientSignOffDisabled ? 'This is required field.' : false,
+                  required: isClientSignOffDateRequired ? 'This is required field.' : false,
                 })}
               />
               <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
