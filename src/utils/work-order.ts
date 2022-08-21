@@ -7,6 +7,7 @@ import autoTable from 'jspdf-autotable'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
@@ -23,6 +24,8 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
@@ -64,6 +67,10 @@ export const useCreateWorkOrderMutation = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['documents', projectId])
 
         toast({
           title: 'Work Order',
