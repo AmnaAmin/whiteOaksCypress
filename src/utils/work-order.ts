@@ -8,13 +8,14 @@ import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
 
   return useMutation(
     payload => {
@@ -61,6 +62,7 @@ export const useCreateWorkOrderMutation = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
 
   return useMutation(
     payload => {
