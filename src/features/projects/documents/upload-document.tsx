@@ -165,7 +165,14 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       fontSize="14px"
                     >
                       <HStack spacing="5px" h="37px" padding="10px" align="center">
-                        <Box as="span" maxWidth="400px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+                        <Box
+                          title={document.name}
+                          as="span"
+                          width="120px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                        >
                           {document.name}
                         </Box>
                         <MdOutlineCancel

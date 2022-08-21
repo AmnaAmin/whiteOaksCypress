@@ -23,7 +23,6 @@ import { Card } from 'components/card/card'
 // import { AlertStatusModal } from 'features/projects/alerts/alert-status'
 import ProjectSchedule from 'features/project-coordinator/project-schedule/project-schedule'
 import { useGanttChart } from 'utils/pc-projects'
-import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
 import { FinancialOverviewTable } from 'features/project-coordinator/financial-overview-table'
 import { STATUS } from 'features/projects/status'
@@ -48,7 +47,7 @@ export const ProjectDetails: React.FC = props => {
   // const onSave = columns => {
   //   postProjectColumn(columns)
   // }
-  const [notesCount, setNotesCount] = useState(0)
+  // const [notesCount, setNotesCount] = useState(0)
 
   const {
     isOpen: isOpenTransactionModal,
@@ -110,9 +109,13 @@ export const ProjectDetails: React.FC = props => {
               {/* <Tab>{t('alerts')}</Tab> */}
               <Tab>
                 {t('notes')}
-                <Box ml="5px" style={countInCircle}>
+                {/* Figma update */}
+
+                {/* <Box ml="5px" style={countInCircle}>
                   {notesCount}
-                </Box>
+                </Box> */}
+
+                {/* Figma update */}
               </Tab>
 
               <Box w="100%" display="flex" justifyContent="end" position="relative">
@@ -207,7 +210,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel> */}
 
               <TabPanel px="0">
-                <ProjectNotes projectId={projectId} setNotesCount={setNotesCount} />
+                <ProjectNotes projectId={projectId} />
               </TabPanel>
             </TabPanels>
           </Tabs>
