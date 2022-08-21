@@ -11,7 +11,6 @@ import './gantt-task.css'
 const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
-
   const [tasks, setTasks] = React.useState<Task[]>(data)
   const columnWidth = useColumnWidth(ViewMode.QuarterDay)
 

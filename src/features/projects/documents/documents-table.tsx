@@ -55,13 +55,9 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
-const withPreviewCell = ({value, row}) => {
+const withPreviewCell = ({ value, row }) => {
   const s3Url = row.original?.s3Url
-  return (
-    <Text onClick={() => downloadFile(s3Url)}>
-      {value}
-    </Text>
-  )
+  return <Text onClick={() => downloadFile(s3Url)}>{value}</Text>
 }
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
