@@ -38,16 +38,18 @@ export const Receivable = () => {
   const { handleSubmit, register, control, reset } = useForm()
 
   const formValues = useWatch({ control })
+
+  const { refetch } = useCheckBatch(setLoading, 2)
   const { mutate: batchCall } = useBatchProcessingMutation()
 
   const Submit = formValues => {
     setLoading(true)
     setIsBatchClick(true)
+
     const payloadData = compact(formValues.id).map(id => ({
       id: parseInt(id as string),
       type: 'Remaining Payments',
     }))
-
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
@@ -55,12 +57,12 @@ export const Receivable = () => {
 
     batchCall(obj as any, {
       onSuccess: () => {
-        reset()
+        refetch().then(() => {
+          reset()
+        })
       },
     })
   }
-
-  useCheckBatch(setLoading, 2)
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
@@ -149,16 +151,19 @@ export const Receivable = () => {
       {
         Header: t('checkbox'),
         accessor: 'checkbox',
-        Cell: ({ row }) => (
-          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-            <Checkbox
-              isDisabled={loading}
-              value={row.original?.projectId}
-              {...register(`id.${row.index}`)}
-              isChecked={!!formValues?.id?.[row.index]}
-            />
-          </Flex>
-        ),
+        Cell: ({ row }) => {
+          return (
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Checkbox
+                // isDisabled={loading}
+                variant="link"
+                value={row.original?.projectId}
+                {...register(`id.${row.index}`)}
+                isChecked={!!formValues?.id?.[row.index]}
+              />
+            </Flex>
+          )
+        },
         disableExport: true,
       },
     ],

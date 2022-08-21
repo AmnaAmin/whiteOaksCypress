@@ -26,7 +26,7 @@ export const usePCRecievable = () => {
 
 export const useBatchProcessingMutation = () => {
   const client = useClient()
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
   return useMutation(
     id => {
       return client(`batches/run`, {
@@ -36,7 +36,7 @@ export const useBatchProcessingMutation = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('batchCheck')
+        // queryClient.invalidateQueries('batchCheck')
       },
     },
   )
@@ -46,7 +46,7 @@ export const useCheckBatch = (setLoading, apiNumber) => {
   const client = useClient()
   const queryClient = useQueryClient()
 
-  const { isLoading } = useQuery(
+  return useQuery(
     'batchCheck',
     async () => {
       const response = await client(`batches/progress/${apiNumber}`, {})
@@ -64,10 +64,7 @@ export const useCheckBatch = (setLoading, apiNumber) => {
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
+      enabled: false,
     },
   )
-
-  return {
-    isLoading,
-  }
 }
