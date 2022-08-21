@@ -142,6 +142,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       setRecentLWFile(recentLW)
       setValue('claimantsSignature', signatureDoc?.s3Url)
       setClaimantsSignature(signatureDoc?.s3Url ?? '')
+      setValue('claimantTitle', lienWaiverData.claimantName)
     } else {
       setRecentLWFile(null)
       setValue('claimantsSignature', null)

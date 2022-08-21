@@ -13,18 +13,21 @@ export const useProjectInformationNextButtonDisabled = (control: Control<Project
   )
 }
 
-export const usePropertyInformationNextDisabled = (control: Control<ProjectFormValues>): boolean => {
+export const usePropertyInformationNextDisabled = (
+  control: Control<ProjectFormValues>,
+  isDuplicateAddress: boolean,
+): boolean => {
   const formValues = useWatch({ control })
 
-  console.log('formValues', formValues)
   // Acknowledge check appears based on address selected from saved address list so here we also check that in case user has entered new address
-  const isAcknowledgeCheck = formValues?.property ? formValues?.acknowledgeCheck : true
+  const isAcknowledgeCheck = formValues?.property && isDuplicateAddress ? formValues?.acknowledgeCheck : true
 
   return (
     !formValues.streetAddress ||
     !formValues.city ||
     !formValues.state?.value ||
     !formValues.zipCode ||
+    !formValues.newMarket?.value ||
     !isAcknowledgeCheck
   )
 }
@@ -33,12 +36,6 @@ export const useProjectManagementSaveButtonDisabled = (control: Control<ProjectF
   const formValues = useWatch({ control })
 
   return !formValues?.projectManager?.value || !formValues?.projectCoordinator?.value || !formValues?.client?.value
-}
-
-export const useAddressShouldBeVerified = (control: Control<ProjectFormValues>): boolean => {
-  const property = useWatch({ name: 'property', control })
-
-  return !property
 }
 
 export const useWOStartDateMin = (control: Control<ProjectFormValues>): string => {

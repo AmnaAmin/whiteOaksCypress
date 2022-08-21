@@ -27,6 +27,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
 import numeral from 'numeral'
+import { ErrorType } from 'types/common.types'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -362,6 +363,7 @@ export const parseChangeOrderAPIPayload = async (
     paidDate: dateISOFormat(formValues.paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
     payDateVariance: formValues.payDateVariance || '',
+    paymentReceived: dateISOFormat(formValues.paymentRecievedDate as string),
     lineItems,
     documents,
     projectId: projectId ?? '',
@@ -425,7 +427,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     attachment: null,
     lienWaiverDocument: null,
     lienWaiver: LIEN_WAIVER_DEFAULT_VALUES,
-    paymentRecieved: null,
+    paymentRecievedDate: null,
     invoicedDate: null,
     paymentTerm: null,
     paidDate: null,
@@ -539,7 +541,7 @@ export const parseTransactionToFormValues = (
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
-    paymentRecieved: null,
+    paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refundMaterial: isMaterialRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
@@ -577,6 +579,15 @@ export const useChangeOrderMutation = (projectId?: string) => {
           position: 'top-left',
         })
       },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while creating transaction.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
     },
   )
 }
@@ -606,6 +617,15 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while updating transaction.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
           isClosable: true,
           position: 'top-left',
         })

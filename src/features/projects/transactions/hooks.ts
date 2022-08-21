@@ -10,6 +10,7 @@ import { AGAINST_DEFAULT_VALUE, calculatePayDateVariance, parseLienWaiverFormVal
 import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const useFieldShowHideDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
@@ -34,6 +35,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowRefundMaterialCheckbox,
+    isShowPaymentRecievedDateField: selectedTransactionTypeId === TransactionTypeValues.payment,
   }
 }
 
@@ -122,10 +124,13 @@ export const useLienWaiverFormValues = (
 }
 
 export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>) => {
+  const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
   return useMemo(() => {
-    if (transactionType?.value === TransactionTypeValues.material) {
+    // In case of other users than vendors the first option of againstOptions is the
+    // Project SOW which should be hide in case transactionType is material
+    if (transactionType?.value === TransactionTypeValues.material && !isVendor) {
       return againstOptions.slice(1)
     }
 

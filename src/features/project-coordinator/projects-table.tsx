@@ -169,10 +169,10 @@ export const PROJECT_COLUMNS = [
     Header: 'Profit Margins',
     accessor: 'profitPercentage',
     Cell(cellInfo) {
-      return numeral(cellInfo.value).format('0.00%')
+      return numeral(cellInfo.value / 100).format('0,0.00%')
     },
     getCellExportValue(row) {
-      return numeral(row.original.profitPercentage).format('0.00%')
+      return `${row.original.profitPercentage}%`
     },
   },
   {
@@ -292,7 +292,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, selectedDay, projects])
 
   return (
-    <Box overflowX={'auto'} height="100%">
+    <Box overflowX={'auto'} overflowY="hidden" height="100%">
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}

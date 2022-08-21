@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'utils/account-payable'
-import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
+// import WorkOrderDetails from 'features/PayableData.workOrders/modals/project-coordinator/work-order/work-order-edit'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { TableWrapper } from 'components/table/table'
 import { Column } from 'react-table'
+import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -44,14 +45,17 @@ type PayablePropsTyep = {
   ref?: any
   setTableInstance: (tableInstance: any) => void
   payableColumns: Column[]
+  selectedCard: string
+  selectedDay: string
+  weekDayFilters: any[]
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setTableInstance, payableColumns }) => {
-  const { data: PayableData, isLoading, refetch } = useAccountPayable()
+  const { data: payableData, isLoading, refetch } = useAccountPayable()
 
   useEffect(() => {
-    if (PayableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
-      const updatedWorkOrder = PayableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+    if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+      const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
       if (updatedWorkOrder) {
         setSelectedWorkOrder({ ...updatedWorkOrder })
       } else {
@@ -60,7 +64,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setT
     } else {
       setSelectedWorkOrder(undefined)
     }
-  }, [PayableData])
+  }, [payableData])
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   return (
     <Box overflow="auto" width="100%">
@@ -78,7 +82,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setT
           <TableWrapper
             columns={payableColumns}
             setTableInstance={setTableInstance}
-            data={PayableData?.workOrders || []}
+            data={payableData?.workOrders || []}
             isLoading={isLoading}
             TableRow={payableRow}
             tableHeight="calc(100vh - 300px)"

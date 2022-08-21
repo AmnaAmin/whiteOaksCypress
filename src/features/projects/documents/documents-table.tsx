@@ -1,17 +1,17 @@
-import React from 'react'
-import { Box, Td, Tr, Text, Flex, Icon, Divider, Spacer, HStack } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { TableWrapper } from 'components/table/table'
+import { Box, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-ui/react'
+import { Button } from 'components/button/button'
 import { RowProps } from 'components/table/react-table'
-import { useDocuments } from 'utils/vendor-projects'
-import { useParams } from 'react-router'
-import { dateFormat } from 'utils/date-time-utils'
+import { TableWrapper } from 'components/table/table'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { Button } from 'components/button/button'
 import { FaAtom } from 'react-icons/fa'
-import { downloadFile } from 'utils/file-utils'
+import { useParams } from 'react-router'
+import { dateFormat } from 'utils/date-time-utils'
+import { downloadFile, downloadFileOnly } from 'utils/file-utils'
+import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useDocuments } from 'utils/vendor-projects'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   return (
@@ -55,6 +55,11 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
   )
 }
 
+const withPreviewCell = ({ value, row }) => {
+  const s3Url = row.original?.s3Url
+  return <Text onClick={() => downloadFile(s3Url)}>{value}</Text>
+}
+
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { isProjectCoordinator } = useUserRolesSelector()
   const { t } = useTranslation()
@@ -62,38 +67,43 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { documents = [] } = useDocuments({
     projectId,
   })
-
   const { columns } = useColumnWidthResize(
     [
       {
         id: 'fileType',
         Header: t('document') || '',
         accessor: 'fileType',
+        Cell: withPreviewCell,
       },
       {
         id: 'documentType',
         Header: t('documentType') || '',
         accessor: 'documentTypelabel',
+        Cell: withPreviewCell,
       },
       {
         id: 'fileObjectContentType',
         Header: t('fileType') || '',
         accessor: 'fileObjectContentType',
+        Cell: withPreviewCell,
       },
       {
         id: 'vendorName',
         Header: t('vendorGL') || '',
         accessor: 'vendorName',
+        Cell: withPreviewCell,
       },
       {
         Header: t('trade') || '',
         accessor: 'workOrderName',
         id: 'workOrderName',
+        Cell: withPreviewCell,
       },
       {
         Header: t('createdBy') || '',
         accessor: 'createdBy',
         id: 'createdBy',
+        Cell: withPreviewCell,
       },
       {
         Header: t('createdDate') || '',
@@ -101,7 +111,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         id: 'createdDate',
         Cell({ value, row }) {
           // @ts-ignore
-          const s3Url = row.original?.s3Url
           return (
             <Flex>
               <Box mr={2}>{dateFormat(value)}</Box>
@@ -111,7 +120,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                 color="#4E87F8"
                 fontSize={24}
                 onClick={() => {
-                  downloadFile(s3Url)
+                  downloadFileOnly(row.original)
                 }}
               />
             </Flex>
