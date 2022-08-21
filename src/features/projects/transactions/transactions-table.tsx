@@ -114,7 +114,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
   const { exportData } = useTransactionExport(projectId)
-  console.log('exportData', exportData)
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row
@@ -128,7 +127,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const onSave = columns => {
     postGridColumn(columns)
   }
-  const handleExportCsv = () => {}
 
   return (
     <>
@@ -164,20 +162,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
               colorScheme="brand"
             />
 
-            {/* <Button
-              variant="ghost"
-              colorScheme="brand"
-              m={0}
-              onClick={handleExportCsv}
-              // onClick={() => {
-              //   if (transactionTableInstance) {
-              //     transactionTableInstance?.exportData('xlsx', false)
-              //   }
-              // }}
-            >
-              <Icon as={BiExport} fontSize="18px" mr={1} />
-              {t('export')}
-            </Button> */}
             <Divider orientation="vertical" border="1px solid" h="20px" />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </HStack>

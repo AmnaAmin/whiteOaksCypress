@@ -648,27 +648,27 @@ export const useTransactionExport = projectId => {
     let exportData: any = []
     data.forEach(item => {
       exportData.push({
-        name: item.name ?? '',
-        transactionTypeLabel: item.transactionTypeLabel ?? '',
-        skillName: item.skillName ?? '',
-        projectName: item.vendor || item.transactionOf || '',
-        details: 'Total' + ' ',
-        changeOrderAmount: item.changeOrderAmount ? numberFormatter(item.changeOrderAmount) : '',
-        createdDate: dateFormat(item.createdDate) ?? '',
-        approvedDate: dateFormat(item.approvedDate) ?? '',
-        approvedBy: item.approvedBy ?? '',
+        ID: item.name ?? '',
+        Type: item.transactionTypeLabel ?? '',
+        Trade: item.skillName ?? '',
+        Name: item.vendor || item.transactionOf || '',
+        Details: 'Total' + ' ',
+        Amount: item.changeOrderAmount ? numberFormatter(item.changeOrderAmount) : '',
+        'Date submitted': dateFormat(item.createdDate) ?? '',
+        'Date Approved': dateFormat(item.approvedDate) ?? '',
+        'Approved by': item.approvedBy ?? '',
       })
       item.lineItems?.map(lineItem => {
         exportData.push({
-          name: '',
-          transactionTypeLabel: '',
-          skillName: '',
-          projectName: '',
-          details: lineItem.description ?? '',
-          changeOrderAmount: lineItem.whiteoaksCost ? numberFormatter(lineItem.whiteoaksCost) : '',
-          createdDate: dateFormat(item.createdDate) ?? '',
-          approvedDate: dateFormat(item.approvedDate) ?? '',
-          approvedBy: item.approvedBy ?? '',
+          ID: '',
+          Type: '',
+          Trade: '',
+          Name: '',
+          Details: lineItem.description ?? '',
+          Amount: lineItem.whiteoaksCost ? numberFormatter(lineItem.whiteoaksCost) : '',
+          'Date submitted': dateFormat(item.createdDate) ?? '',
+          'Date Approved': dateFormat(item.approvedDate) ?? '',
+          'Approved by': item.approvedBy ?? '',
         })
       })
     })
