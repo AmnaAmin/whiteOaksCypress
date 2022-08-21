@@ -28,20 +28,6 @@ const Misc: React.FC = () => {
     status,
   } = getValues()
 
-  console.log({
-    dateCreated,
-    activeDate,
-    punchDate,
-    closedDate,
-    clientPaidDate,
-    collectionDate,
-    disputedDate,
-    woaPaidDate,
-    dueDateVariance,
-    payDateVariance,
-    payVariance,
-    status,
-  })
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
