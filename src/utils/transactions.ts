@@ -673,7 +673,6 @@ export const useTransactionExport = projectId => {
       })
     })
     setExport(exportData)
-    // csvExporter.generateCsv(exprotData)
   }, [data])
   return {
     data,

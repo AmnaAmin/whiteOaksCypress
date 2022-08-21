@@ -13,7 +13,6 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from '../status'
-import { BiExport } from 'react-icons/bi'
 import { ExportButton } from 'components/table-refactored/export-button'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -145,23 +144,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         </Box>
         <Flex justifyContent="flex-end">
           <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <ExportButton
-              columns={[]}
-              header={[
-                'ID',
-                'Type',
-                'Trade',
-                'Name',
-                'Details',
-                'Amount',
-                'Date submitted',
-                'Date Approved',
-                'Approved by',
-              ]}
-              data={exportData}
-              colorScheme="brand"
-            />
-
+            <ExportButton columns={[]} data={exportData} colorScheme="brand" />
             <Divider orientation="vertical" border="1px solid" h="20px" />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </HStack>

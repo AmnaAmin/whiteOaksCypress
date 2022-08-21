@@ -6,7 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
 import XLSX from 'xlsx'
 
-type ExportButtonProps = ButtonProps & { columns: ColumnDef<any>[]; data: any; fileName?: string; header?: any }
+type ExportButtonProps = ButtonProps & { columns: ColumnDef<any>[]; data: any; fileName?: string }
 export const ExportButton: React.FC<ExportButtonProps> = ({ data, children, fileName, ...rest }) => {
   const handleExport = () => {
     const wb = XLSX.utils.book_new()
@@ -20,7 +20,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ data, children, file
     <Button variant="ghost" onClick={handleExport} {...rest}>
       {children ?? (
         <Flex justifyContent="center">
-          <BiExport fontSize={'14px'} />
+          <BiExport fontSize={'18px'} />
           <Text ml="2.88">Export</Text>
         </Flex>
       )}
