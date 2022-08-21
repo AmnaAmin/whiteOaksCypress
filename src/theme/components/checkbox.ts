@@ -50,8 +50,8 @@ const checkbox = {
               borderColor: `${props.colorScheme}.300`,
               bg: `${props.colorScheme}.300`,
               _hover: {
-                borderColor: `${props.colorScheme}.500`,
-                bg: `${props.colorScheme}.500`,
+                borderColor: `${props.colorScheme}.400`,
+                bg: `${props.colorScheme}.400`,
               },
             },
           },
