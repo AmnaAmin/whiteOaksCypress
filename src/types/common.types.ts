@@ -1,5 +1,14 @@
 import { Market } from './project.type'
 
+export type ErrorType = {
+  errorKey: string
+  message: string
+  params: any
+  status: number
+  title: string
+  type: string
+}
+
 export type GenericObjectType = { [key: string]: any }
 
 export type State = {
