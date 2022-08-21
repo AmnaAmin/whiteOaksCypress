@@ -6,7 +6,7 @@ export const downloadFileOnly = doc => {
     .then( blob => {
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob);
-      a.download = URL.createObjectURL(blob)
+      a.download = doc.fileType
       a.click();
       setTimeout(() => {
         // For Firefox it is necessary to delay revoking the ObjectURL
