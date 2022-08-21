@@ -78,6 +78,20 @@ export const useSaveProjectDetails = () => {
   )
 }
 
+const parseXmlResponse = async (response: any) => {
+  const parser = new xml2js.Parser()
+
+  return parser
+    .parseStringPromise(response?.data)
+    .then(function (result) {
+      return !result?.AddressValidateResponse?.Address?.[0]?.Error
+    })
+    .catch(() => {
+      // Failed
+      return false
+    })
+}
+
 export const useGetAddressVerification = (addressInfo: AddressInfo) => {
   const { address, city, state, zipCode } = addressInfo || { address: '', city: '', state: '', zipCode: '' }
   const client = useClient()
@@ -89,24 +103,9 @@ export const useGetAddressVerification = (addressInfo: AddressInfo) => {
         `addressVerification?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`,
         {},
       )
+      const parsed = await parseXmlResponse(response)
 
-      const parser = new xml2js.Parser()
-
-      return parser
-        .parseStringPromise(response?.data)
-        .then(function (result) {
-          result.AddressValidateResponse.Address.forEach(record => {
-            if (record.Error !== undefined) {
-              return false
-            } else {
-              return true
-            }
-          })
-        })
-        .catch(function (err) {
-          // Failed
-          return false
-        })
+      return parsed
     },
     {
       enabled: false,
