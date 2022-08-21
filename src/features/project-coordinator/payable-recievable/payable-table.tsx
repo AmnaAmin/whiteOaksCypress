@@ -50,48 +50,80 @@ type PayablePropsTyep = {
   weekDayFilters: any[]
 }
 
-export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(({ setTableInstance, payableColumns }) => {
-  const { data: payableData, isLoading, refetch } = useAccountPayable()
+export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
+  ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
+    const { data: payableData, isLoading, refetch } = useAccountPayable()
 
-  useEffect(() => {
-    if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
-      const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
-      if (updatedWorkOrder) {
-        setSelectedWorkOrder({ ...updatedWorkOrder })
+    useEffect(() => {
+      if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
+        const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+        if (updatedWorkOrder) {
+          setSelectedWorkOrder({ ...updatedWorkOrder })
+        } else {
+          setSelectedWorkOrder(undefined)
+        }
       } else {
         setSelectedWorkOrder(undefined)
       }
-    } else {
-      setSelectedWorkOrder(undefined)
-    }
-  }, [payableData])
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-  return (
-    <Box overflow="auto" width="100%">
-      {isLoading ? (
-        <BlankSlate />
-      ) : (
-        <>
-          <WorkOrderDetails
-            workOrder={selectedWorkOrder as ProjectWorkOrderType}
-            onClose={() => {
-              setSelectedWorkOrder(undefined)
-              refetch()
-            }}
-          />
-          <TableWrapper
-            columns={payableColumns}
-            setTableInstance={setTableInstance}
-            data={payableData?.workOrders || []}
-            isLoading={isLoading}
-            TableRow={payableRow}
-            tableHeight="calc(100vh - 300px)"
-            name="payable-table"
-            defaultFlexStyle={false}
-            onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
-          />
-        </>
-      )}
-    </Box>
-  )
-})
+    }, [payableData])
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const payable = payableData?.workOrders
+
+    const [payableFilterData, setFilterPayableData] = useState(payable)
+
+    useEffect(() => {
+      if (!selectedCard && !selectedDay) setFilterPayableData(payable)
+      setFilterPayableData(
+        payable?.filter(
+          project =>
+            !selectedCard || project.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+        ),
+      )
+
+      // Due Project Weekly Filter
+      const getDates = weekDayFilters?.filter(day => selectedDay === day.id)
+
+      const clientDate = getDates?.map(date => {
+        return date?.date
+      })
+
+      if (selectedDay) {
+        setFilterPayableData(
+          payable?.filter(payableValue => {
+            return clientDate.includes(payableValue.expectedPaymentDate?.substr(0, 10))
+          }),
+        )
+      }
+    }, [selectedCard, selectedDay, payable])
+    return (
+      <Box overflow="auto" width="100%">
+        {isLoading ? (
+          <BlankSlate />
+        ) : (
+          <>
+            <WorkOrderDetails
+              workOrder={selectedWorkOrder as ProjectWorkOrderType}
+              onClose={() => {
+                setSelectedWorkOrder(undefined)
+                refetch()
+              }}
+            />
+            <TableWrapper
+              columns={payableColumns}
+              setTableInstance={setTableInstance}
+              data={payableFilterData || []}
+              isLoading={isLoading}
+              TableRow={payableRow}
+              tableHeight="calc(100vh - 300px)"
+              name="payable-table"
+              defaultFlexStyle={false}
+              onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+            />
+          </>
+        )}
+      </Box>
+    )
+  },
+)

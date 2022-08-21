@@ -150,57 +150,6 @@ export const Payable = () => {
     postProjectColumn(columns)
   }
 
-  // const getWeekDates = () => {
-  //   const now = new Date()
-  //   const dayOfWeek = now.getDay() // 0-6
-  //   const numDay = now.getDate()
-
-  //   const start = new Date(now) // copy
-  //   start.setDate(numDay - dayOfWeek)
-  //   start.setHours(0, 0, 0, 0)
-
-  //   const end = new Date(now) // copy
-  //   end.setDate(numDay + (7 - dayOfWeek))
-  //   end.setHours(0, 0, 0, 0)
-
-  //   return [start, end]
-  // }
-
-  // const filterDatesByCurrentWeek = d => {
-  //   const [start, end] = getWeekDates()
-  //   if (d >= start && d <= end) {
-  //     return true
-  //   }
-  //   return false
-  // }
-
-  // const payableWeeeklyCount = (list, number) => {
-  //   if (list) {
-  //     const res = list.filter(
-  //       w =>
-  //         w.expectedPaymentDate !== null &&
-  //         filterDatesByCurrentWeek(new Date(w.expectedPaymentDate)) &&
-  //         new Date(w.expectedPaymentDate).getDay() === number,
-  //     )
-  //     return {
-  //       count: res.length,
-  //       date: res[0]?.expectedPaymentDate?.split('T')[0],
-  //     }
-  //   } else
-  //     return {
-  //       count: 0,
-  //       date: null,
-  //     }
-  // }
-  // const { data: PayableData } = useAccountPayable()
-
-  // const monday = payableWeeeklyCount(PayableData?.workOrders, 1)
-  // const tuesday = payableWeeeklyCount(PayableData?.workOrders, 2)
-  // const wednesday = payableWeeeklyCount(PayableData?.workOrders, 3)
-  // const thursday = payableWeeeklyCount(PayableData?.workOrders, 4)
-  // const friday = payableWeeeklyCount(PayableData?.workOrders, 5)
-  // const saturday = payableWeeeklyCount(PayableData?.workOrders, 6)
-  // const sunday = payableWeeeklyCount(PayableData?.workOrders, 0)
   const { weekDayFilters } = usePayableWeeklyCount()
   console.log('WeekDay', weekDayFilters)
 
