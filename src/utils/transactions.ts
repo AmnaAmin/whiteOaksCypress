@@ -26,6 +26,7 @@ import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { ACCONT_RECEIVABLE_API_KEY } from './account-receivable'
+import { ErrorType } from 'types/common.types'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
@@ -577,6 +578,15 @@ export const useChangeOrderMutation = (projectId?: string) => {
           position: 'top-left',
         })
       },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while creating transaction.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
     },
   )
 }
@@ -606,6 +616,15 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
           title: 'Update Transaction.',
           description: 'Transaction has been updated successfully.',
           status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while updating transaction.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
           isClosable: true,
           position: 'top-left',
         })
