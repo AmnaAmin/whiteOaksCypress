@@ -28,6 +28,20 @@ const Misc: React.FC = () => {
     status,
   } = getValues()
 
+  console.log({
+    dateCreated,
+    activeDate,
+    punchDate,
+    closedDate,
+    clientPaidDate,
+    collectionDate,
+    disputedDate,
+    woaPaidDate,
+    dueDateVariance,
+    payDateVariance,
+    payVariance,
+    status,
+  })
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
@@ -37,7 +51,7 @@ const Misc: React.FC = () => {
               Created
             </FormLabel>
 
-            <DatePickerInput value={dateCreated !== null ? dateFormat(dateCreated) : 'mm/dd/yyyy'} disable />
+            <DatePickerInput value={dateCreated ? dateFormat(dateCreated) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
@@ -48,7 +62,7 @@ const Misc: React.FC = () => {
               Active
             </FormLabel>
 
-            <DatePickerInput value={activeDate !== null ? dateFormat(activeDate) : 'mm/dd/yyyy'} disable />
+            <DatePickerInput value={activeDate ? dateFormat(activeDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
@@ -59,7 +73,7 @@ const Misc: React.FC = () => {
               Punch
             </FormLabel>
 
-            <DatePickerInput value={punchDate !== null ? dateFormat(punchDate) : 'mm/dd/yyyy'} disable />
+            <DatePickerInput value={punchDate ? dateFormat(punchDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
@@ -70,7 +84,7 @@ const Misc: React.FC = () => {
               Closed
             </FormLabel>
 
-            <DatePickerInput value={closedDate !== null ? dateFormat(closedDate) : 'mm/dd/yyyy'} disable />
+            <DatePickerInput value={closedDate ? dateFormat(closedDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
@@ -81,7 +95,7 @@ const Misc: React.FC = () => {
               Client Paid
             </FormLabel>
 
-            <DatePickerInput value={clientPaidDate !== null ? dateFormat(clientPaidDate) : 'mm/dd/yyyy'} disable />
+            <DatePickerInput value={clientPaidDate ? dateFormat(clientPaidDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
@@ -93,11 +107,7 @@ const Misc: React.FC = () => {
             </FormLabel>
 
             <DatePickerInput
-              value={
-                collectionDate !== null && status?.value === STATUS.Collection
-                  ? dateFormat(collectionDate)
-                  : 'mm/dd/yyyy'
-              }
+              value={collectionDate && status?.value === STATUS.Collection ? dateFormat(collectionDate) : 'mm/dd/yyyy'}
               disable
             />
 
@@ -111,9 +121,7 @@ const Misc: React.FC = () => {
             </FormLabel>
 
             <DatePickerInput
-              value={
-                disputedDate !== null && status?.value === STATUS.Dispute ? dateFormat(disputedDate) : 'mm/dd/yyyy'
-              }
+              value={disputedDate && status?.value === STATUS.Dispute ? dateFormat(disputedDate) : 'mm/dd/yyyy'}
               disable
             />
 
@@ -127,7 +135,7 @@ const Misc: React.FC = () => {
               WOA Paid
             </FormLabel>
 
-            <DatePickerInput value={woaPaidDate !== null ? dateFormat(woaPaidDate) : 'mm/dd/yyyy'} disable />
+            <DatePickerInput value={woaPaidDate ? dateFormat(woaPaidDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
