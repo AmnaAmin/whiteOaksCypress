@@ -24,6 +24,7 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { Link } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
+import { useProjectExtraAttributes } from 'utils/pc-projects'
 
 type tabProps = {
   projectData: Project
@@ -37,6 +38,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const [tabIndex, setTabIndex] = useState(0)
 
+  const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
@@ -57,6 +59,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
+      projectExtraAttributes,
       overPayment,
       projectTypeSelectOptions,
       projectManagerSelectOptions: fpmSelectOptions,
@@ -67,6 +70,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     formReturn.reset(formValues)
   }, [
     projectData,
+    projectExtraAttributes,
     fpmSelectOptions?.length,
     projectCoordinatorSelectOptions?.length,
     projectTypeSelectOptions?.length,

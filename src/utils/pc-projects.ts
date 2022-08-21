@@ -1,4 +1,4 @@
-import { AddressInfo, Project } from 'types/project.type'
+import { AddressInfo, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
@@ -24,6 +24,21 @@ export const usePCProject = (projectId?: string) => {
     projectData,
     ...rest,
   }
+}
+
+// fetch project extra attributes
+export const useProjectExtraAttributes = (projectId?: number) => {
+  const client = useClient()
+
+  return useQuery<ProjectExtraAttributesType>(
+    'project-extra-attributes',
+    async () => {
+      const response = await client(`projects/${projectId}/attribute`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
 }
 
 export const useCall = () => {
