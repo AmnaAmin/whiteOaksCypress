@@ -432,6 +432,10 @@ describe('Given Project Coordinator create new transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Payment')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // add payment received date
+      fireEvent.change(screen.getByTestId('payment-received-date'), { target: { value: '2022-10-01' } })
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')

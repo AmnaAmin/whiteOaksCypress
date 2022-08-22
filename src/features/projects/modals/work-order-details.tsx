@@ -103,6 +103,7 @@ export const WorkOrderDetails = ({
                 <Tab data-testid="payments">{t('payments')}</Tab>
                 <Tab data-testid="notes">
                   {t('notes')}
+
                   <Box ml="5px" style={countInCircle}>
                     {notesCount}
                   </Box>

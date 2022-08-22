@@ -81,7 +81,8 @@ i18n.use(initReactI18next).init({
         markets: 'Markets',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
-        woNo: 'WO Po',
+        woNo: 'WO No',
+        marketName: 'Markets',
         checkbox: 'Checkbox',
         clearFilter: 'Clear Filter',
 
@@ -132,6 +133,7 @@ i18n.use(initReactI18next).init({
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
         newExpectedCompletionDate: 'New Expected Completion',
+        paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
         addNewRow: 'Add New Row',
@@ -584,6 +586,7 @@ i18n.use(initReactI18next).init({
         woInvoiceDate: 'Fecha de factura de OT',
         poNo: 'Número de orden de compra',
         woNo: 'OT No',
+        marketName: 'Mercados',
         checkbox: 'Caja',
         clearFilter: 'Filtro claro',
 
@@ -639,6 +642,7 @@ i18n.use(initReactI18next).init({
         workOrder: 'Orden de Trabajo',
         paymentTerm: 'Plazo de Pago',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
+        paymentReceivedDate: 'Pago Recibido',
         invoicedDate: 'Fecha Facturada',
         paidDate: 'Fecha de Pago',
         paidDateVariance: 'Variación de La Fecha de Pago',

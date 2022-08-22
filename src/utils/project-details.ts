@@ -11,7 +11,7 @@ import {
   ProjectDetailsFormValues,
   ProjectStatus,
 } from 'types/project-details.types'
-import { Market, Project } from 'types/project.type'
+import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
@@ -264,6 +264,7 @@ export const getPaymentTermsSelectOptions = () => {
 
 export const parseFormValuesFromAPIData = ({
   project,
+  projectExtraAttributes,
   projectTypeSelectOptions,
   projectCoordinatorSelectOptions,
   projectManagerSelectOptions,
@@ -271,6 +272,7 @@ export const parseFormValuesFromAPIData = ({
   overPayment,
 }: {
   project?: Project
+  projectExtraAttributes?: ProjectExtraAttributesType
   overPayment?: OverPaymentType
   projectTypeSelectOptions?: SelectOption[]
   projectCoordinatorSelectOptions?: SelectOption[]
@@ -349,8 +351,8 @@ export const parseFormValuesFromAPIData = ({
 
     // Misc form values
     dateCreated: datePickerFormat(project.createdDate as string),
-    activeDate: datePickerFormat(project.modifiedDate as string),
-    punchDate: datePickerFormat(project.punchDate as string),
+    activeDate: datePickerFormat(projectExtraAttributes?.activeDate as string),
+    punchDate: datePickerFormat(projectExtraAttributes?.punchDate as string),
     closedDate: datePickerFormat(project.closedDate as string),
     clientPaidDate: datePickerFormat(project.clientPaidDate as string),
     collectionDate: datePickerFormat(project.collectionDate as string),
@@ -412,6 +414,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientStartDate: dateISOFormat(formValues.clientStartDate),
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
+    clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

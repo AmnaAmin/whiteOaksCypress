@@ -20,7 +20,7 @@ import {
 import Select from 'components/form/react-select'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
@@ -99,8 +99,7 @@ const NewWorkOrder: React.FC<{
     reset,
     formState: { errors },
   } = useForm()
-
-  // const watchVendorId = watch('vendorId')
+  const woStartDate = useWatch({ name: 'workOrderStartDate', control })
 
   const onSubmit = values => {
     const payload = parseNewWoValuesToPayload(values, projectData.id)
@@ -369,6 +368,7 @@ const NewWorkOrder: React.FC<{
                         type="date"
                         height="40px"
                         borderLeft="2px solid #4E87F8"
+                        min={woStartDate}
                         focusBorderColor="none"
                         {...register('workOrderExpectedCompletionDate', {
                           required: 'This field is required.',

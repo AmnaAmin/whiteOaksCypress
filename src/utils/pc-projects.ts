@@ -1,10 +1,11 @@
-import { AddressInfo, Project } from 'types/project.type'
+import { AddressInfo, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
 import { useQueryClient } from 'react-query'
 import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
+import { ProjectType } from 'types/common.types'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -23,6 +24,21 @@ export const usePCProject = (projectId?: string) => {
     projectData,
     ...rest,
   }
+}
+
+// fetch project extra attributes
+export const useProjectExtraAttributes = (projectId?: number) => {
+  const client = useClient()
+
+  return useQuery<ProjectExtraAttributesType>(
+    'project-extra-attributes',
+    async () => {
+      const response = await client(`projects/${projectId}/attribute`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
 }
 
 export const useCall = () => {
@@ -77,6 +93,20 @@ export const useSaveProjectDetails = () => {
   )
 }
 
+const parseXmlResponse = async (response: any) => {
+  const parser = new xml2js.Parser()
+
+  return parser
+    .parseStringPromise(response?.data)
+    .then(function (result) {
+      return !result?.AddressValidateResponse?.Address?.[0]?.Error
+    })
+    .catch(() => {
+      // Failed
+      return false
+    })
+}
+
 export const useGetAddressVerification = (addressInfo: AddressInfo) => {
   const { address, city, state, zipCode } = addressInfo || { address: '', city: '', state: '', zipCode: '' }
   const client = useClient()
@@ -88,24 +118,9 @@ export const useGetAddressVerification = (addressInfo: AddressInfo) => {
         `addressVerification?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`,
         {},
       )
+      const parsed = await parseXmlResponse(response)
 
-      const parser = new xml2js.Parser()
-
-      return parser
-        .parseStringPromise(response?.data)
-        .then(function (result) {
-          result.AddressValidateResponse.Address.forEach(record => {
-            if (record.Error !== undefined) {
-              return false
-            } else {
-              return true
-            }
-          })
-        })
-        .catch(function (err) {
-          // Failed
-          return false
-        })
+      return parsed
     },
     {
       enabled: false,
@@ -288,6 +303,25 @@ export const useVendor = () => {
 
   return {
     vendors: data,
+    ...rest,
+  }
+}
+
+export const useGanttChart = (projectId?: string): any => {
+  const client = useClient()
+
+  const { data: ganttChartData, ...rest } = useQuery<ProjectType>(
+    ['projectSchedule', projectId],
+    async () => {
+      const response = await client(`ganChartElastic/${projectId}`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
+
+  return {
+    ganttChartData,
     ...rest,
   }
 }

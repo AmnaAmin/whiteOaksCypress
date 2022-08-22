@@ -139,7 +139,7 @@ export const NotesTab = (props: NotesProps) => {
               )}
               {!hideSave && (
                 <Button type="submit" colorScheme="brand" isDisabled={!message}>
-                  {t('save')}
+                  {t('submit')}
                 </Button>
               )}
             </HStack>

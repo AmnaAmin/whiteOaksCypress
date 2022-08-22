@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { useClient } from './auth-context'
-
+import { orderBy } from 'lodash'
 declare global {
   interface Window {
     batchTimer?: any
@@ -12,7 +12,7 @@ export const useAccountPayable = () => {
 
   return useQuery('accountPayable', async () => {
     const response = await client(`all_workorders`, {})
-
-    return response?.data
+    const workOrders = orderBy(response?.data?.workOrders || [], ['expectedPaymentDate', 'asc'])
+    return { ...response?.data, workOrders }
   })
 }

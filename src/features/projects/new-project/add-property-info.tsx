@@ -151,7 +151,7 @@ export const AddPropertyInfo: React.FC<{
                         placeholder="Type address here.."
                         onChange={setAddressValues}
                         selectProps={{ isBorderLeft: true }}
-                        autoComplete="off"
+                        inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>

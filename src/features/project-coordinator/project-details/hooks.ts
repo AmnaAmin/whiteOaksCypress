@@ -1,5 +1,5 @@
 import { ProjectStatus as STATUS } from 'types/project-details.types'
-import { Control, useWatch } from 'react-hook-form'
+import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) => {
@@ -30,6 +30,11 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isStatusCancelled,
 
     // Project Management form fields states
+    isWOAStartDateRequired: isStatusActive,
+    isWOACompletionDateRequired: isStatusClosed,
+    isClientWalkthroughDateRequired: isStatusClosed,
+    isClientSignOffDateRequired: isStatusClosed,
+
     isWOAStartDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isWOACompletionDisabled:
       isStatusNew || isStatusActive || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
@@ -71,6 +76,38 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isMarketDisabled: isAllTimeDisabled,
     isGateCodeDisabled: isAllTimeDisabled,
     isLockBoxCodeDisabled: isAllTimeDisabled,
+  }
+}
+
+export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) => {
+  const status = useWatch({ name: 'status', control })
+
+  const projectStatus = status?.value
+
+  const isStatusActive = projectStatus === STATUS.Active
+  const isStatusClosed = projectStatus === STATUS.Closed
+
+  return {
+    // Project Management form fields states
+    isWOAStartDateRequired: isStatusActive,
+    isWOACompletionDateRequired: isStatusClosed,
+    isClientWalkthroughDateRequired: isStatusClosed,
+    isClientSignOffDateRequired: isStatusClosed,
+  }
+}
+
+/**
+ * @description - useSubFormErrors returns object of booleans indicating form errors.
+ * @param errors - errors object of react hook form errors of all fields
+ * @returns - isInvoiceAndPaymentFormErrors for showing error indicator on Invoice & Payment form tab
+ * isProjectDetailsFormErrors for showing error indicator on Project Management form tab
+ */
+export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) => {
+  return {
+    isInvoiceAndPaymentFormErrors:
+      !!errors.invoiceAttachment?.message || !!errors.paymentTerms || !!errors.invoiceBackDate,
+    isProjectManagementFormErrors:
+      !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate,
   }
 }
 

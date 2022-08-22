@@ -2,9 +2,10 @@ import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Spacer, Stack } 
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { PayableFilter } from 'features/project-coordinator/payable-recievable/payable-filter'
+import { usePayableWeeklyCount } from 'features/project-coordinator/payable-recievable/hook'
+import { PayableCardsFilter } from 'features/project-coordinator/payable-recievable/payable-cards-filter'
 import { PayableTable } from 'features/project-coordinator/payable-recievable/payable-table'
-import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
+import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
 import { useState } from 'react'
@@ -18,21 +19,14 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 export const Payable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
-  const [isClicked, setIsClicked] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-  // const [cardSelected, setCardSelected] = useState(false)
 
   const clearAll = () => {
     setSelectedCard('')
-    setIsClicked(false)
-  }
-
-  const allDays = () => {
-    setSelectedCard('All')
-    setIsClicked(true)
+    setSelectedDay('')
   }
 
   const setProjectTableInstance = tableInstance => {
@@ -156,6 +150,9 @@ export const Payable = () => {
     postProjectColumn(columns)
   }
 
+  const { weekDayFilters } = usePayableWeeklyCount()
+  console.log('WeekDay', weekDayFilters)
+
   return (
     <form onSubmit={handleSubmit(Submit)}>
       <Box>
@@ -163,44 +160,41 @@ export const Payable = () => {
           {t('Account Payable')}
         </FormLabel>
         <Box>
-          <PayableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
+          <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
         </Box>
-        <Box mt={6}>
-          <FormLabel variant="strong-label" size="lg">
+        <Flex alignItems="center" py="16px">
+          <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
             {t('dueProjects')}
           </FormLabel>
-        </Box>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
-          <Button
-            colorScheme={isClicked ? 'brand' : 'none'}
-            color={isClicked ? 'white' : 'black'}
-            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
-            alignContent="right"
-            onClick={allDays}
-            rounded={20}
-            m={0}
-          >
-            All
-          </Button>
-          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-          <Button variant="ghost" colorScheme="brand" alignContent="right" onClick={clearAll}>
-            {t('clearFilter')}
-          </Button>
+          <Box ml="2">
+            <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+          </Box>
+          <AccountWeekDayFilters
+            weekDayFilters={weekDayFilters}
+            onSelectDay={setSelectedDay}
+            selectedDay={selectedDay}
+            clear={clearAll}
+          />
+          <Spacer />
           <Button
             alignContent="right"
             // onClick={onNewProjectModalOpen}
-            position="absolute"
-            right={8}
             colorScheme="brand"
             type="submit"
           >
             <Icon as={BiSync} fontSize="18px" mr={2} />
             {!loading ? 'Batch Process' : 'Processing...'}
           </Button>
-        </Stack>
+        </Flex>
         <Divider border="2px solid #E2E8F0" />
         <Box mt={2}>
-          <PayableTable payableColumns={tableColumns} setTableInstance={setProjectTableInstance} />
+          <PayableTable
+            selectedCard={selectedCard as string}
+            selectedDay={selectedDay as string}
+            payableColumns={tableColumns}
+            setTableInstance={setProjectTableInstance}
+            weekDayFilters={weekDayFilters}
+          />
         </Box>
 
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={4}>
