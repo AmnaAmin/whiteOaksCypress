@@ -8,7 +8,7 @@ import { PayableTable } from 'features/project-coordinator/payable-recievable/pa
 import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
@@ -17,6 +17,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { compact } from 'lodash'
 import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-payable'
+import { ViewLoader } from 'components/page-level-loader'
 
 export const Payable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -37,25 +38,15 @@ export const Payable = () => {
   const { handleSubmit, register, reset, control } = useForm()
 
   const { mutate: batchCall } = useBatchProcessingMutation()
-  const { refetch } = useCheckBatch(setLoading)
+  const { refetch } = useCheckBatch(setLoading, loading)
   const formValues = useWatch({ control })
 
-  // const Submit = e => {
-  //   setLoading(true)
-  //   setIsBatchClick(true)
-  //   const payloadData = e.id.map(n => ({ id: parseInt(n), type: '' }))
-  //   const obj = {
-  //     typeCode: 'AP',
-  //     entities: payloadData,
-  //   }
-  //   batchCall(obj as any)
-  //   // batchCall?.(obj) not working
-  // }
-  // useCheckBatch(setLoading, 1)
+  useEffect(() => {
+    if (!loading) {
+      reset()
+    }
+  }, [loading])
 
-  // const onNotificationClose = () => {
-  //   setIsBatchClick(false)
-  // }
   const Submit = formValues => {
     setLoading(true)
     setIsBatchClick(true)
@@ -71,9 +62,7 @@ export const Payable = () => {
 
     batchCall(obj as any, {
       onSuccess: () => {
-        refetch().then(() => {
-          reset()
-        })
+        refetch()
       },
     })
   }
@@ -230,6 +219,7 @@ export const Payable = () => {
         </Flex>
         <Divider border="2px solid #E2E8F0" />
         <Box mt={2}>
+          {loading && <ViewLoader />}
           <PayableTable
             selectedCard={selectedCard as string}
             selectedDay={selectedDay as string}

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from './auth-context'
 import { orderBy } from 'lodash'
+import { useState } from 'react'
 declare global {
   interface Window {
     batchTimer?: any
@@ -29,29 +30,29 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = setLoading => {
+export const useCheckBatch = (setLoading, loading) => {
+  const [isAPIEnabled, setAPIEnabled] = useState(false)
   const client = useClient()
   const queryClient = useQueryClient()
 
   return useQuery(
-    'batchCheck',
-    async () => {
+    ['accountPayableBatchCheck'],
+    async data => {
+      setAPIEnabled(true)
       const response = await client(`batches/progress/1`, {})
       return response?.data
     },
     {
-      onSuccess(e) {
-        setLoading(e)
-        if (e) {
-          window.batchTimer = setTimeout(() => {
-            queryClient.invalidateQueries('batchCheck')
-          }, 6000)
-        } else {
-          clearTimeout(window.batchTimer)
+      onSuccess(isBatchProcessingInProgress) {
+        if (!isBatchProcessingInProgress) {
+          setLoading(false)
+          setAPIEnabled(false)
+
           queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         }
       },
-      enabled: false,
+      enabled: loading && isAPIEnabled,
+      refetchInterval: 10000,
     },
   )
 }
