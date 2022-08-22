@@ -35,7 +35,7 @@ import { downloadFile } from 'utils/file-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { createInvoice } from 'utils/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../status'
+import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../../status'
 
 import * as _ from 'lodash'
 

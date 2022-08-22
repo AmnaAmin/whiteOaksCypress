@@ -24,12 +24,12 @@ import { countInCircle } from 'theme/common-style'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
 import { useDocuments } from 'utils/vendor-projects'
-import Status from '../status'
-import { InvoiceTab } from './invoice-tab'
-import InvoicingAndPaymentTab from './invoicing-and-payment-tab'
-import { LienWaiverTab } from './lien-waiver-tab'
-import WorkOrderDetailTab from './work-order-detail-tab'
-import { WorkOrderNotes } from '../../project-coordinator/work-order/work-order-notes'
+import Status from '../work-order-status'
+import { InvoiceTab } from './invoice/invoice-tab'
+import InvoicingAndPaymentTab from './payment/invoicing-and-payment-tab'
+import { LienWaiverTab } from './lien-waiver/lien-waiver-tab'
+import WorkOrderDetailTab from './details/work-order-detail-tab'
+import { WorkOrderNotes } from 'features/project-coordinator/work-order/notes/work-order-notes'
 
 export const WorkOrderDetails = ({
   workOrder,

@@ -1,29 +1,31 @@
 import {
   Box,
+  Button,
+  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  ModalFooter,
-  HStack,
-  Button,
 } from '@chakra-ui/react'
-import RemainingListTable from 'features/project-coordinator/work-order/remaining-list-table'
+import RemainingListTable from 'features/project-coordinator/work-order/details/remaining-list-table'
 import { t } from 'i18next'
 import React, { useState } from 'react'
 import { useAssignLineItems } from 'utils/work-order'
-import { WORK_ORDER } from './workOrder.i18n'
+import { WORK_ORDER } from '../workOrder.i18n'
 
 const RemainingItemsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
-  swoProjectId: any
+  swoProject: any
   workOrder: any
+  setAssignedItems?: (items) => void
 }> = props => {
   const [selectedLineItems, setSelectedLineItems] = useState<Array<any>>([])
-  const { mutate: assignLineItems } = useAssignLineItems(props.swoProjectId?.id, props?.workOrder)
+  const { swoProject, workOrder } = props
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder })
 
   return (
     <Box>
@@ -36,7 +38,7 @@ const RemainingItemsModal: React.FC<{
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody>
             <RemainingListTable
-              swoProjectId={props.swoProjectId}
+              swoProject={props.swoProject}
               selectedLineItems={selectedLineItems}
               setSelectedLineItems={setSelectedLineItems}
             />
@@ -57,8 +59,9 @@ const RemainingItemsModal: React.FC<{
                       }),
                     ],
                     {
-                      onSuccess: () => {
+                      onSuccess: res => {
                         props.onClose()
+                        if (props?.setAssignedItems) props.setAssignedItems(res?.data)
                       },
                     },
                   )

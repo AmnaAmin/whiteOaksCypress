@@ -75,9 +75,9 @@ const WorkOrderDetailTab = props => {
   const { workOrder, onSave, navigateToProjectDetails } = props
 
   const formReturn = useForm<FormValues>({ defaultValues: defaultValuesWODetails(workOrder) })
-  const { swoProjectId } = useFetchProjectId(workOrder?.projectId)
+  const { swoProject } = useFetchProjectId(workOrder?.projectId)
   const { register, control } = formReturn
-
+  const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const { t } = useTranslation()
   const {
     skillName,
@@ -154,6 +154,7 @@ const WorkOrderDetailTab = props => {
                       type="date"
                       size="md"
                       css={calendarIcon}
+                      min={woStartDate as string}
                       isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
                       variant="required-field"
                       {...register('workOrderExpectedCompletionDate', {
@@ -180,7 +181,9 @@ const WorkOrderDetailTab = props => {
                 </Box>
               </HStack>
             </Box>
-            <AssignedItems workOrder={workOrder} swoProjectId={swoProjectId} />
+            <Box mx="32px">
+              <AssignedItems workOrder={workOrder} swoProject={swoProject} />
+            </Box>
           </ModalBody>
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
             <HStack justifyContent="start" w="100%">

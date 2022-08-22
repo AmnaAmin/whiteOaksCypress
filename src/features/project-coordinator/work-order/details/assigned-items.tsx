@@ -23,7 +23,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { WORK_ORDER } from 'features/project-coordinator/work-order/workOrder.i18n'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiUpload, BiXCircle } from 'react-icons/bi'
@@ -69,23 +69,19 @@ export const CustomCheckBox = props => {
 }
 
 const AssignedItems = props => {
-  const { swoProjectId, workOrder } = props
+  const { swoProject, workOrder } = props
   const [showLineItems] = useState(true)
   const { t } = useTranslation()
 
-  const { mutate: unAssignLineItem } = useAssignLineItems(swoProjectId, workOrder)
+  const { mutate: unAssignLineItem } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder })
   const { control, register, getValues, setValue } = useFormContext<any>()
 
-  const {
-    fields: manualItems,
-    remove,
-    append,
-  } = useFieldArray({
+  const { fields: manualItems, remove } = useFieldArray({
     control,
     name: 'manualItems',
   })
 
-  const { fields: assignedItems } = useFieldArray({
+  const { fields: assignedItems, append } = useFieldArray({
     control,
     name: 'assignedItems',
   })
@@ -96,11 +92,17 @@ const AssignedItems = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
+  const setAssignedItems = useCallback(
+    items => {
+      append(items)
+    },
+    [assignedItems],
+  )
   return (
     <Box>
       {showLineItems && (
         <>
-          <Stack direction="row" mt="32px" justifyContent="space-between" mx="32px">
+          <Stack direction="row" mt="32px" justifyContent="space-between">
             <HStack>
               <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>
               <Box pl="2" pr="1">
@@ -154,7 +156,7 @@ const AssignedItems = props => {
             </HStack>
           </Stack>
 
-          <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md" mx="32px">
+          <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md">
             <TableContainer>
               <Box>
                 <Table>
@@ -171,6 +173,13 @@ const AssignedItems = props => {
                     </Tr>
                   </Thead>
                   <Tbody>
+                    {assignedItems?.length < 1 && manualItems?.length < 1 && (
+                      <Tr>
+                        <Td colSpan={7} textAlign="center">
+                          No data returned for this view
+                        </Td>
+                      </Tr>
+                    )}
                     {assignedItems.map((items, index) => {
                       return (
                         <Tr>
@@ -187,9 +196,9 @@ const AssignedItems = props => {
                             </HStack>
                           </Td>
                           <Td>{getValues(`assignedItems.${index}.productName`)}</Td>
-                          <Td>{getValues(`assignedItems.${index}.details`)}</Td>
+                          <Td>{getValues(`assignedItems.${index}.description`)}</Td>
                           <Td>{getValues(`assignedItems.${index}.quantity`)}</Td>
-                          <Td>{getValues(`assignedItems.${index}.price`)}</Td>
+                          <Td>{getValues(`assignedItems.${index}.unitPrice`)}</Td>
                           <Td>
                             <CustomCheckBox
                               text="Completed"
@@ -312,10 +321,11 @@ const AssignedItems = props => {
         </>
       )}
       <RemainingItemsModal
-        swoProjectId={swoProjectId}
+        swoProject={swoProject}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
         workOrder={workOrder}
+        setAssignedItems={setAssignedItems}
       />
     </Box>
   )

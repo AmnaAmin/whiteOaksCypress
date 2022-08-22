@@ -320,6 +320,7 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     vendorSkillId: formValues.vendorSkillId?.value,
     // new work-order have hardcoded capacity
     capacity: selectedCapacity,
+    assignedItems: formValues.assignedItems,
     documents: arr,
     status: 34,
     projectId: projectId,
@@ -347,10 +348,10 @@ export const useRemainingLineItems = (swoProjectId?: string) => {
   }
 }
 
-export const useFetchProjectId = (projectId?: string) => {
+export const useFetchProjectId = (projectId?: string | number | null) => {
   const client = useSmartWOClient()
 
-  const { data: swoProjectId, ...rest } = useQuery<any>(
+  const { data: swoProject, ...rest } = useQuery<any>(
     ['fetchProjectId', projectId],
     async () => {
       const response = await client(`projects?projectId.equals=` + projectId, {})
@@ -363,11 +364,11 @@ export const useFetchProjectId = (projectId?: string) => {
   )
 
   return {
-    swoProjectId: swoProjectId?.find(p => p.projectId?.toString() === projectId?.toString()),
+    swoProject: swoProject?.length > 0 ? swoProject[0] : null,
     ...rest,
   }
 }
-export const useAssignLineItems = (swoProjectId, workOrder) => {
+export const useAssignLineItems = ({ swoProjectId, workOrder }) => {
   const client = useSmartWOClient()
   const toast = useToast()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation(true)
@@ -381,7 +382,9 @@ export const useAssignLineItems = (swoProjectId, workOrder) => {
     },
     {
       onSuccess(res) {
-        updateWorkOrder({ ...workOrder, assignedItems: res?.data })
+        if (workOrder) {
+          updateWorkOrder({ ...workOrder, assignedItems: res?.data })
+        }
         toast({
           title: 'Line Items Assignment',
           description: 'Line Items Assignment updated successfully.',

@@ -20,17 +20,22 @@ import {
 import Select from 'components/form/react-select'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors } from 'utils/pc-projects'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useTrades } from 'utils/vendor-details'
-import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
+import {
+  parseNewWoValuesToPayload,
+  useAssignLineItems,
+  useCreateWorkOrderMutation,
+  useFetchProjectId,
+} from 'utils/work-order'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
-import AssignedItems from './assigned-items'
+import AssignedItems from './details/assigned-items'
 
 const CalenderCard = props => {
   return (
@@ -91,15 +96,19 @@ const NewWorkOrder: React.FC<{
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
+  const { swoProject } = useFetchProjectId(projectData?.id)
+  const formReturn = useForm()
   const {
     register,
     handleSubmit,
     control,
     setValue,
     reset,
+    getValues,
     formState: { errors },
-  } = useForm()
+  } = formReturn
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const { mutate: unAssignLineItem } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder: null })
 
   const onSubmit = values => {
     const payload = parseNewWoValuesToPayload(values, projectData.id)
@@ -166,243 +175,259 @@ const NewWorkOrder: React.FC<{
       }}
     >
       <ModalOverlay />
-      <form
-        onSubmit={handleSubmit(values => {
-          onSubmit(values)
-        })}
-      >
-        <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
-          <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
-            {t('newWorkOrder')}
-          </ModalHeader>
-          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+      <FormProvider {...formReturn}>
+        <form
+          onSubmit={handleSubmit(values => {
+            onSubmit(values)
+          })}
+        >
+          <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
+            <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
+              {t('newWorkOrder')}
+            </ModalHeader>
+            <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
-          <ModalBody justifyContent="center">
-            <Box>
-              <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
-                <CalenderCard
-                  title="Client Start"
-                  date={projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy'}
-                />
-                <CalenderCard
-                  title="Client End "
-                  date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
-                />
-                <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
+            <ModalBody justifyContent="center">
+              <Box>
+                <SimpleGrid
+                  columns={6}
+                  spacing={1}
+                  borderBottom="1px solid  #E2E8F0"
+                  minH="110px"
+                  alignItems={'center'}
+                >
+                  <CalenderCard
+                    title="Client Start"
+                    date={projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy'}
+                  />
+                  <CalenderCard
+                    title="Client End "
+                    date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
+                  />
+                  <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
 
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
-                {/*<InformationCard title=" Email" date={vendorEmail} />
+                  <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
+                  {/*<InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
-              </SimpleGrid>
-              <Box mt={10}>
-                <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
-                  <Box>
-                    <FormControl height="40px" isInvalid={errors.vendorSkillId}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('type')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="vendorSkillId"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <Select
-                                {...field}
-                                options={tradeOptions}
-                                size="md"
-                                value={field.value}
-                                onChange={option => {
-                                  setVendorSkillId(option.value)
-                                  setValue('vendorId', null)
-                                  field.onChange(option)
-                                }}
-                                selectProps={{ isBorderLeft: true }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl isInvalid={errors.vendorSkillId}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('companyName')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="vendorId"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <Select
-                                {...field}
-                                options={vendorOptions}
-                                size="md"
-                                selectProps={{ isBorderLeft: true }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl isInvalid={errors?.clientApprovedAmount}>
-                      <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('clientApprovedAmount')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="clientApprovedAmount"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <NumberFormat
-                                value={field.value}
-                                thousandSeparator
-                                customInput={CustomRequiredInput}
-                                prefix={'$'}
-                                onValueChange={e => {
-                                  field.onChange(e.floatValue)
-                                  setApprovedAmount(e.floatValue)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl isInvalid={errors?.percentage}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('profitPercentage')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="percentage"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <NumberFormat
-                                value={field.value}
-                                customInput={CustomRequiredInput}
-                                suffix={'%'}
-                                onValueChange={e => {
-                                  field.onChange(e.floatValue)
-                                  setPercentageField(e.floatValue)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-
-                  <Box height="80px">
-                    <FormControl isInvalid={errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('vendorWorkOrderAmount')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="invoiceAmount"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <NumberFormat
-                                value={field.value}
-                                customInput={CustomRequiredInput}
-                                thousandSeparator
-                                prefix={'$'}
-                                onValueChnge={e => {
-                                  field.onChange(e.floatValue)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl isInvalid={errors?.workOrderStartDate}>
-                      <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('expectedStartDate')}
-                      </FormLabel>
-                      <Input
-                        id="workOrderStartDate"
-                        type="date"
-                        height="40px"
-                        borderLeft="2px solid #4E87F8"
-                        focusBorderColor="none"
-                        {...register('workOrderStartDate', {
-                          required: 'This field is required.',
-                        })}
-                      />
-                      <FormErrorMessage>
-                        {errors.workOrderStartDate && errors.workOrderStartDate.message}
-                      </FormErrorMessage>
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl isInvalid={errors?.workOrderExpectedCompletionDate}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('expectedCompletionDate')}
-                      </FormLabel>
-                      <Input
-                        id="workOrderExpectedCompletionDate"
-                        type="date"
-                        height="40px"
-                        borderLeft="2px solid #4E87F8"
-                        min={woStartDate}
-                        focusBorderColor="none"
-                        {...register('workOrderExpectedCompletionDate', {
-                          required: 'This field is required.',
-                        })}
-                      />
-                      <FormErrorMessage>
-                        {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
-                      </FormErrorMessage>
-                    </FormControl>
-                  </Box>
                 </SimpleGrid>
-              </Box>
-            </Box>
-          </ModalBody>
+                <Box mt={10}>
+                  <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
+                    <Box>
+                      <FormControl height="40px" isInvalid={errors.vendorSkillId}>
+                        <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('type')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          rules={{ required: 'This is required' }}
+                          name="vendorSkillId"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <Select
+                                  {...field}
+                                  options={tradeOptions}
+                                  size="md"
+                                  value={field.value}
+                                  onChange={option => {
+                                    setVendorSkillId(option.value)
+                                    setValue('vendorId', null)
+                                    field.onChange(option)
+                                  }}
+                                  selectProps={{ isBorderLeft: true }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl isInvalid={errors.vendorSkillId}>
+                        <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('companyName')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          rules={{ required: 'This is required' }}
+                          name="vendorId"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <Select
+                                  {...field}
+                                  options={vendorOptions}
+                                  size="md"
+                                  selectProps={{ isBorderLeft: true }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl isInvalid={errors?.clientApprovedAmount}>
+                        <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('clientApprovedAmount')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          rules={{ required: 'This is required' }}
+                          name="clientApprovedAmount"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <NumberFormat
+                                  value={field.value}
+                                  thousandSeparator
+                                  customInput={CustomRequiredInput}
+                                  prefix={'$'}
+                                  onValueChange={e => {
+                                    field.onChange(e.floatValue)
+                                    setApprovedAmount(e.floatValue)
+                                  }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl isInvalid={errors?.percentage}>
+                        <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('profitPercentage')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          rules={{ required: 'This is required' }}
+                          name="percentage"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <NumberFormat
+                                  value={field.value}
+                                  customInput={CustomRequiredInput}
+                                  suffix={'%'}
+                                  onValueChange={e => {
+                                    field.onChange(e.floatValue)
+                                    setPercentageField(e.floatValue)
+                                  }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </Box>
 
-          <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-            <HStack spacing="16px">
-              <Button
-                onClick={() => {
-                  onClose()
-                  reset()
-                }}
-                colorScheme="brand"
-                variant="outline"
-              >
-                {t('cancel')}
-              </Button>
-              <Button type="submit" colorScheme="brand">
-                {t('save')}
-              </Button>
-            </HStack>
-          </ModalFooter>
-        </ModalContent>
-      </form>
+                    <Box height="80px">
+                      <FormControl isInvalid={errors?.invoiceAmount}>
+                        <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('vendorWorkOrderAmount')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          rules={{ required: 'This is required' }}
+                          name="invoiceAmount"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <NumberFormat
+                                  value={field.value}
+                                  customInput={CustomRequiredInput}
+                                  thousandSeparator
+                                  prefix={'$'}
+                                  onValueChnge={e => {
+                                    field.onChange(e.floatValue)
+                                  }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl isInvalid={errors?.workOrderStartDate}>
+                        <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('expectedStartDate')}
+                        </FormLabel>
+                        <Input
+                          id="workOrderStartDate"
+                          type="date"
+                          height="40px"
+                          borderLeft="2px solid #4E87F8"
+                          focusBorderColor="none"
+                          {...register('workOrderStartDate', {
+                            required: 'This field is required.',
+                          })}
+                        />
+                        <FormErrorMessage>
+                          {errors.workOrderStartDate && errors.workOrderStartDate.message}
+                        </FormErrorMessage>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <FormControl isInvalid={errors?.workOrderExpectedCompletionDate}>
+                        <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                          {t('expectedCompletionDate')}
+                        </FormLabel>
+                        <Input
+                          id="workOrderExpectedCompletionDate"
+                          type="date"
+                          height="40px"
+                          borderLeft="2px solid #4E87F8"
+                          min={woStartDate}
+                          focusBorderColor="none"
+                          {...register('workOrderExpectedCompletionDate', {
+                            required: 'This field is required.',
+                          })}
+                        />
+                        <FormErrorMessage>
+                          {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
+                        </FormErrorMessage>
+                      </FormControl>
+                    </Box>
+                  </SimpleGrid>
+                  <AssignedItems swoProject={swoProject} workOrder={null} project={projectData} />
+                </Box>
+              </Box>
+            </ModalBody>
+
+            <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+              <HStack spacing="16px">
+                <Button
+                  onClick={() => {
+                    if (getValues()?.assignedItems?.length > 0) {
+                      unAssignLineItem([
+                        ...getValues()?.assignedItems.map(s => {
+                          return { ...s, isAssigned: false }
+                        }),
+                      ])
+                    }
+                    onClose()
+                    reset()
+                  }}
+                  colorScheme="brand"
+                  variant="outline"
+                >
+                  {t('cancel')}
+                </Button>
+                <Button type="submit" colorScheme="brand">
+                  {t('save')}
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </ModalContent>
+        </form>
+      </FormProvider>
     </Modal>
   )
 }

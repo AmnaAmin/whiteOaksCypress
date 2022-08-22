@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import React from 'react'
 import { useRemainingLineItems } from 'utils/work-order'
-import { WORK_ORDER } from './workOrder.i18n'
+import { WORK_ORDER } from '../workOrder.i18n'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -49,8 +49,8 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 const RemainingListTable = props => {
-  const { swoProjectId, selectedLineItems, setSelectedLineItems } = props
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProjectId?.id)
+  const { swoProject, selectedLineItems, setSelectedLineItems } = props
+  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const { t } = useTranslation()
   const REMAINING_ITEMS_COLUMNS = [
     {
@@ -80,12 +80,12 @@ const RemainingListTable = props => {
       accessor: 'sku',
     },
     {
-      Header: t(`${WORK_ORDER}.sku`),
+      Header: t(`${WORK_ORDER}.productName`),
       accessor: 'productName',
     },
     {
       Header: t(`${WORK_ORDER}.details`),
-      accessor: 'details',
+      accessor: 'description',
     },
     {
       Header: t(`${WORK_ORDER}.quantity`),
@@ -93,7 +93,7 @@ const RemainingListTable = props => {
     },
     {
       Header: t(`${WORK_ORDER}.price`),
-      accessor: 'price',
+      accessor: 'unitPrice',
       Cell(cellInfo) {
         return numeral(cellInfo.value).format('$0,0.00')
       },
@@ -103,7 +103,7 @@ const RemainingListTable = props => {
     },
     {
       Header: t(`${WORK_ORDER}.total`),
-      accessor: 'total',
+      accessor: 'totalPrice',
       Cell(cellInfo) {
         return numeral(cellInfo.value).format('$0,0.00')
       },

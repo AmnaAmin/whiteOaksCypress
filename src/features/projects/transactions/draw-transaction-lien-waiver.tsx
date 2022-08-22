@@ -27,7 +27,7 @@ import { BiBookAdd, BiCalendar, BiCaretDown, BiCaretUp, BiTrash } from 'react-ic
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { GetHelpText } from 'utils/lien-waiver'
 
-import SignatureModal from 'features/projects/modals/signature-modal'
+import SignatureModal from 'features/projects/vendor-work-order/lien-waiver/signature-modal'
 import { useTranslation } from 'react-i18next'
 
 type LienWaiverProps = {
