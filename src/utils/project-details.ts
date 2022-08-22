@@ -367,12 +367,12 @@ export const parseFormValuesFromAPIData = ({
     punchDate: datePickerFormat(projectExtraAttributes?.punchDate as string),
     closedDate: datePickerFormat(project.projectClosedDate as string),
     clientPaidDate: datePickerFormat(project.clientPaidDate as string),
-    collectionDate: datePickerFormat(project.collectionDate as string),
-    disputedDate: datePickerFormat(project.disputedDate as string),
+    collectionDate: datePickerFormat(projectExtraAttributes?.collectionDate as string),
+    disputedDate: datePickerFormat(projectExtraAttributes?.disputedDate as string),
     woaPaidDate: datePickerFormat(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
-    payDateVariance: project.payDateVariance,
-    payVariance: project.payVariance,
+    payDateVariance: project.signoffDateVariance,
+    payVariance: project.woaPayVariance,
   }
 }
 
