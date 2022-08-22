@@ -8,13 +8,15 @@ import { PayableTable } from 'features/project-coordinator/payable-recievable/pa
 import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
-import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
+// import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+import { compact } from 'lodash'
+import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-payable'
 
 export const Payable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -32,116 +34,157 @@ export const Payable = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register } = useForm()
+  const { handleSubmit, register, reset, control } = useForm()
 
   const { mutate: batchCall } = useBatchProcessingMutation()
+  const { refetch } = useCheckBatch(setLoading)
+  const formValues = useWatch({ control })
 
-  const Submit = e => {
+  // const Submit = e => {
+  //   setLoading(true)
+  //   setIsBatchClick(true)
+  //   const payloadData = e.id.map(n => ({ id: parseInt(n), type: '' }))
+  //   const obj = {
+  //     typeCode: 'AP',
+  //     entities: payloadData,
+  //   }
+  //   batchCall(obj as any)
+  //   // batchCall?.(obj) not working
+  // }
+  // useCheckBatch(setLoading, 1)
+
+  // const onNotificationClose = () => {
+  //   setIsBatchClick(false)
+  // }
+  const Submit = formValues => {
     setLoading(true)
     setIsBatchClick(true)
-    const payloadData = e.id.map(n => ({ id: parseInt(n), type: '' }))
+
+    const payloadData = compact(formValues.id).map(id => ({
+      id: parseInt(id as string),
+      type: '',
+    }))
     const obj = {
       typeCode: 'AP',
       entities: payloadData,
     }
-    batchCall(obj as any)
-    // batchCall?.(obj) not working
-  }
-  useCheckBatch(setLoading, 1)
 
+    batchCall(obj as any, {
+      onSuccess: () => {
+        refetch().then(() => {
+          reset()
+        })
+      },
+    })
+  }
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
 
-  const PAYABLE_COLUMNS = [
-    {
-      Header: t('id'),
-      accessor: 'projectId',
-    },
-    {
-      Header: t('vendorName'),
-      accessor: 'claimantName',
-    },
-    {
-      Header: t('propertyAddress'),
-      accessor: 'propertyAddress',
-    },
-    {
-      Header: t('vendorAddress'),
-      accessor: 'vendorAddress',
-    },
-    {
-      Header: t('paymentTerms'),
-      accessor: 'paymentTerm',
-    },
-    {
-      Header: t('expectedPayDate'),
-      accessor: 'expectedPaymentDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+  const PAYABLE_COLUMNS = useMemo(
+    () => [
+      {
+        Header: t('id'),
+        accessor: 'projectId',
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.expectedPaymentDate)
+      {
+        Header: t('vendorName'),
+        accessor: 'claimantName',
       },
-    },
-    {
-      Header: t('finalInvoice'),
-      accessor: 'finalInvoiceAmount',
-      Cell: ({ value }) => {
-        return numeral(value).format('$0,0.00')
+      {
+        Header: t('propertyAddress'),
+        accessor: 'propertyAddress',
       },
-      getCellExportValue(row) {
-        return numeral(row.original.finalInvoiceAmount).format('$0,0.00')
+      {
+        Header: t('vendorAddress'),
+        accessor: 'vendorAddress',
       },
-    },
-    {
-      Header: t('markets'),
-      accessor: 'marketName',
-    },
-    {
-      Header: t('woStartDate'),
-      accessor: 'workOrderStartDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('paymentTerms'),
+        accessor: 'paymentTerm',
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.workOrderStartDate)
+      {
+        Header: t('expectedPayDate'),
+        accessor: 'expectedPaymentDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.expectedPaymentDate)
+        },
       },
-    },
-    {
-      Header: t('wOCompletedDate'),
-      accessor: 'workOrderDateCompleted',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('finalInvoice'),
+        accessor: 'finalInvoiceAmount',
+        Cell: ({ value }) => {
+          return numeral(value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.finalInvoiceAmount).format('$0,0.00')
+        },
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.workOrderDateCompleted)
+      {
+        Header: t('markets'),
+        accessor: 'marketName',
       },
-    },
-    {
-      Header: t('wOIssueDate'),
-      accessor: 'workOrderIssueDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('woStartDate'),
+        accessor: 'workOrderStartDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.workOrderStartDate)
+        },
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.workOrderIssueDate)
+      {
+        Header: t('wOCompletedDate'),
+        accessor: 'workOrderDateCompleted',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.workOrderDateCompleted)
+        },
       },
-    },
-    {
-      Header: t('checkbox'),
-      accessor: 'checkbox',
-      Cell: ({ row }) => {
-        return (
-          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-            <Spacer w="20px" />
-            <Checkbox isDisabled={loading} value={(row.original as any).id} {...register('id', { required: true })} />
-          </Flex>
-        )
+      {
+        Header: t('wOIssueDate'),
+        accessor: 'workOrderIssueDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.workOrderIssueDate)
+        },
       },
-      disableExport: true,
-    },
-  ]
+      {
+        Header: t('checkbox'),
+        accessor: 'checkbox',
+        Cell: ({ row }) => {
+          return (
+            //   <Checkbox
+            //   // isDisabled={loading}
+            //   variant="link"
+            //   value={row.original?.projectId}
+            //   {...register(`id.${row.index}`)}
+            //   isChecked={!!formValues?.id?.[row.index]}
+            // />
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Spacer w="20px" />
+              <Checkbox
+                // isDisabled={loading}
+                value={row.original?.id}
+                {...register(`id.${row.index}`)}
+                isChecked={!!formValues?.id?.[row.index]}
+              />
+            </Flex>
+          )
+        },
+        disableExport: true,
+      },
+    ],
+    [register, loading, formValues],
+  )
 
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.payable)
   const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(PAYABLE_COLUMNS, TableNames.payable)
@@ -151,7 +194,6 @@ export const Payable = () => {
   }
 
   const { weekDayFilters } = usePayableWeeklyCount()
-  console.log('WeekDay', weekDayFilters)
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
