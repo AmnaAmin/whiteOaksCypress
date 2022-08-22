@@ -67,7 +67,6 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       }
     }, [payableData])
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const payable = payableData?.workOrders
 
