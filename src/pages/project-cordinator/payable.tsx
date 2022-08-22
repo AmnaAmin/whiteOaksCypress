@@ -99,7 +99,7 @@ export const Payable = () => {
       accessor: 'marketName',
     },
     {
-      Header: t('wOStartDate'),
+      Header: t('woStartDate'),
       accessor: 'workOrderStartDate',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>

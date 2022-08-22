@@ -92,6 +92,7 @@ i18n.use(initReactI18next).init({
         wOCompletedDate: 'WO Completed Date',
         wOIssueDate: 'WO Issue Date',
         id: 'ID',
+        woStartDate: 'WO Start Date',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',
@@ -596,6 +597,7 @@ i18n.use(initReactI18next).init({
         wOCompletedDate: 'Fecha de finalización de la OT',
         wOIssueDate: 'Fecha de emisión de OT',
         id: 'IDENTIFICACIÓN',
+        woStartDate: 'DOS Fecha de inicio',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Escribe',
