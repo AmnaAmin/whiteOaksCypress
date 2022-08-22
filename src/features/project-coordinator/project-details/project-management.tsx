@@ -17,6 +17,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     formState: { errors },
     control,
     register,
+    clearErrors,
   } = useFormContext<ProjectDetailsFormValues>()
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
@@ -56,6 +57,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                       {...field}
                       options={projectStatusSelectOptions}
                       isOptionDisabled={option => option.disabled}
+                      onChange={option => {
+                        clearErrors()
+                        field.onChange(option)
+                      }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
