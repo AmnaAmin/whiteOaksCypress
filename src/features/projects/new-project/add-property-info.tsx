@@ -24,7 +24,7 @@ import { CreatableSelect } from 'components/form/react-select'
 import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'utils/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { AddressVerificationModal } from './address-verification-modal'
-import { usePropertyInformationNextDisabled } from './hooks'
+import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/projects/projects.i18n'
 
@@ -63,6 +63,7 @@ export const AddPropertyInfo: React.FC<{
   } = useFormContext<ProjectFormValues>()
 
   const isNextButtonDisabled = usePropertyInformationNextDisabled(control, isDuplicateAddress)
+  const addressShouldBeVerified = useAddressShouldBeVerified(control)
 
   // Continue unverified Check
   const handleCheck = () => {
@@ -150,7 +151,7 @@ export const AddPropertyInfo: React.FC<{
                         placeholder="Type address here.."
                         onChange={setAddressValues}
                         selectProps={{ isBorderLeft: true }}
-                        autoComplete="off"
+                        inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -327,8 +328,12 @@ export const AddPropertyInfo: React.FC<{
             size="md"
             disabled={isNextButtonDisabled}
             onClick={() => {
-              refetch()
-              onAddressVerificationModalOpen()
+              if (addressShouldBeVerified) {
+                refetch()
+                onAddressVerificationModalOpen()
+              } else {
+                props.setNextTab()
+              }
             }}
           >
             {t('next')}

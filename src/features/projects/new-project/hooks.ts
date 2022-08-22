@@ -32,6 +32,12 @@ export const usePropertyInformationNextDisabled = (
   )
 }
 
+export const useAddressShouldBeVerified = (control: Control<ProjectFormValues>): boolean => {
+  const property = useWatch({ name: 'property', control })
+
+  return !property
+}
+
 export const useProjectManagementSaveButtonDisabled = (control: Control<ProjectFormValues>): boolean => {
   const formValues = useWatch({ control })
 
