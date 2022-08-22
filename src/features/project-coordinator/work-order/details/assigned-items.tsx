@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react'
 import { WORK_ORDER } from 'features/project-coordinator/work-order/workOrder.i18n'
 import { useCallback, useState } from 'react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiUpload, BiXCircle } from 'react-icons/bi'
 import { useAssignLineItems } from 'utils/work-order'
@@ -94,7 +94,11 @@ const AssignedItems = props => {
 
   const setAssignedItems = useCallback(
     items => {
-      append(items)
+      append([
+        ...items.map(s => {
+          return { ...s, verification: false, status: false }
+        }),
+      ])
     },
     [assignedItems],
   )
@@ -133,14 +137,8 @@ const AssignedItems = props => {
               </Checkbox>
               <Checkbox
                 size="lg"
-                isChecked={
-                  getValues('assignedItems')?.length > 0 &&
-                  getValues('assignedItems').every(e => {
-                    return e.verification
-                  })
-                }
                 onChange={e => {
-                  getValues('assignedItems').forEach((item, index) => {
+                  assignedItems.forEach((item, index) => {
                     setValue(`assignedItems.${index}.verification`, e.currentTarget.checked)
                   })
                 }}
@@ -189,7 +187,7 @@ const AssignedItems = props => {
                                 as={BiXCircle}
                                 boxSize={5}
                                 color="#4E87F8"
-                                onClick={() => unAssignLineItem(getValues(`assignedItems.${index}.sku`))}
+                                onClick={() => unAssignLineItem([{ ...assignedItems[index], isAssigned: false }])}
                                 cursor="pointer"
                               ></Icon>
                               <span>{getValues(`assignedItems.${index}.sku`)}</span>
@@ -200,25 +198,36 @@ const AssignedItems = props => {
                           <Td>{getValues(`assignedItems.${index}.quantity`)}</Td>
                           <Td>{getValues(`assignedItems.${index}.unitPrice`)}</Td>
                           <Td>
-                            <CustomCheckBox
-                              text="Completed"
-                              isChecked={getValues(`assignedItems.${index}.status`)}
-                              onChange={() => {
-                                setValue(`assignedItems.${index}.status`, !getValues(`assignedItems.${index}.status`))
-                              }}
-                            />
+                            <Controller
+                              control={props.control}
+                              name={`assignedItems.${index}.status`}
+                              rules={props.rules}
+                              render={({ field, fieldState }) => (
+                                <CustomCheckBox
+                                  text="Completed"
+                                  isChecked={field.value}
+                                  onChange={e => {
+                                    field.onChange(e.currentTarget.checked)
+                                  }}
+                                ></CustomCheckBox>
+                              )}
+                            ></Controller>
                           </Td>
                           <Td>
-                            <CustomCheckBox
-                              text="Verified"
-                              isChecked={getValues(`assignedItems.${index}.verification`)}
-                              onChange={() => {
-                                setValue(
-                                  `assignedItems.${index}.verification`,
-                                  !getValues(`assignedItems.${index}.verification`),
-                                )
-                              }}
-                            />
+                            <Controller
+                              control={props.control}
+                              name={`assignedItems.${index}.verification`}
+                              rules={props.rules}
+                              render={({ field, fieldState }) => (
+                                <CustomCheckBox
+                                  text="Verified"
+                                  isChecked={field.value}
+                                  onChange={e => {
+                                    field.onChange(e.currentTarget.checked)
+                                  }}
+                                ></CustomCheckBox>
+                              )}
+                            ></Controller>
                           </Td>
                         </Tr>
                       )

@@ -66,7 +66,7 @@ const RemainingListTable = props => {
                   setSelectedLineItems([...selectedLineItems, row?.original])
                 }
               } else {
-                setSelectedLineItems([...selectedLineItems.map(s => s.id).filter(id => id !== row?.original?.id)])
+                setSelectedLineItems([...selectedLineItems.filter(s => s.id !== row?.original?.id)])
               }
             }}
             value={(row.original as any).sku}

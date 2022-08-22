@@ -59,9 +59,15 @@ const RemainingItemsModal: React.FC<{
                       }),
                     ],
                     {
-                      onSuccess: res => {
+                      onSuccess: () => {
                         props.onClose()
-                        if (props?.setAssignedItems) props.setAssignedItems(res?.data)
+                        if (props?.setAssignedItems)
+                          props.setAssignedItems([
+                            ...selectedLineItems.map(s => {
+                              return { ...s, isAssigned: true }
+                            }),
+                          ])
+                        setSelectedLineItems([])
                       },
                     },
                   )

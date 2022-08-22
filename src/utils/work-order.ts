@@ -381,7 +381,7 @@ export const useAssignLineItems = ({ swoProjectId, workOrder }) => {
       })
     },
     {
-      onSuccess(res) {
+      onSuccess(res: any) {
         if (workOrder) {
           updateWorkOrder({ ...workOrder, assignedItems: res?.data })
         }
