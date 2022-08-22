@@ -26,12 +26,13 @@ export const usePCProject = (projectId?: string) => {
   }
 }
 
+export const PROJECT_EXTRA_ATTRIBUTES = 'projectExtraAttributes'
 // fetch project extra attributes
 export const useProjectExtraAttributes = (projectId?: number) => {
   const client = useClient()
 
   return useQuery<ProjectExtraAttributesType>(
-    'project-extra-attributes',
+    [PROJECT_EXTRA_ATTRIBUTES, projectId],
     async () => {
       const response = await client(`projects/${projectId}/attribute`, {})
 

@@ -15,6 +15,7 @@ import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
+import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -141,6 +142,7 @@ export const useProjectDetailsUpdateMutation = () => {
 
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['overpayment', project?.data?.id])
+        queryClient.invalidateQueries([PROJECT_EXTRA_ATTRIBUTES, project?.data?.id])
 
         toast({
           title: 'Project Details Updated',
@@ -363,7 +365,7 @@ export const parseFormValuesFromAPIData = ({
     dateCreated: datePickerFormat(project.createdDate as string),
     activeDate: datePickerFormat(projectExtraAttributes?.activeDate as string),
     punchDate: datePickerFormat(projectExtraAttributes?.punchDate as string),
-    closedDate: datePickerFormat(project.closedDate as string),
+    closedDate: datePickerFormat(project.projectClosedDate as string),
     clientPaidDate: datePickerFormat(project.clientPaidDate as string),
     collectionDate: datePickerFormat(project.collectionDate as string),
     disputedDate: datePickerFormat(project.disputedDate as string),
