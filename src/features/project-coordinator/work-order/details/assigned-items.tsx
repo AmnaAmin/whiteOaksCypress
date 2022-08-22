@@ -71,6 +71,7 @@ export const CustomCheckBox = props => {
 const AssignedItems = props => {
   const { swoProject, workOrder } = props
   const [showLineItems] = useState(true)
+
   const { t } = useTranslation()
 
   const { mutate: unAssignLineItem } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder })
@@ -187,7 +188,9 @@ const AssignedItems = props => {
                                 as={BiXCircle}
                                 boxSize={5}
                                 color="#4E87F8"
-                                onClick={() => unAssignLineItem([{ ...assignedItems[index], isAssigned: false }])}
+                                onClick={() => {
+                                  unAssignLineItem([{ ...getValues(`assignedItems.${index}`), isAssigned: false }])
+                                }}
                                 cursor="pointer"
                               ></Icon>
                               <span>{getValues(`assignedItems.${index}.sku`)}</span>
