@@ -3,7 +3,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
 import { useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { Client, ProjectType, State, User } from 'types/common.types'
+import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
 import {
   DocumentPayload,
   OverPaymentType,
@@ -146,6 +146,16 @@ export const useProjectDetailsUpdateMutation = () => {
           title: 'Project Details Updated',
           description: 'Project details updated successfully',
           status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Something went wrong',
+          description: error?.message || 'Something went wrong in project details update',
+          status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
