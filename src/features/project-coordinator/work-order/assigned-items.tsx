@@ -69,14 +69,18 @@ export const CustomCheckBox = props => {
 }
 
 const AssignedItems = props => {
-  const { workOrder } = props
+  const { swoProjectId, workOrder } = props
   const [showLineItems] = useState(true)
   const { t } = useTranslation()
 
-  const { mutate: unAssignLineItem } = useAssignLineItems(props?.workOrder?.projectId)
+  const { mutate: unAssignLineItem } = useAssignLineItems(swoProjectId, workOrder)
   const { control, register, getValues, setValue } = useFormContext<any>()
 
-  const { fields: manualItems, remove } = useFieldArray({
+  const {
+    fields: manualItems,
+    remove,
+    append,
+  } = useFieldArray({
     control,
     name: 'manualItems',
   })
@@ -102,13 +106,13 @@ const AssignedItems = props => {
               <Box pl="2" pr="1">
                 <Divider orientation="vertical" h="20px" />
               </Box>
-              {/* <Button
+              {/*<Button
                 type="button"
                 variant="ghost"
                 colorScheme="brand"
                 leftIcon={<Icon as={AddIcon} boxSize={3} />}
                 onClick={() =>
-                   append({
+                  append({
                     sku: '',
                     productName: '',
                     details: '',
@@ -119,7 +123,7 @@ const AssignedItems = props => {
                 }
               >
                 {t(`${WORK_ORDER}.addNewItem`)}
-              </Button> */}
+              </Button>*/}
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -127,9 +131,12 @@ const AssignedItems = props => {
               </Checkbox>
               <Checkbox
                 size="lg"
-                isChecked={getValues('assignedItems').every(e => {
-                  return e.verification
-                })}
+                isChecked={
+                  getValues('assignedItems')?.length > 0 &&
+                  getValues('assignedItems').every(e => {
+                    return e.verification
+                  })
+                }
                 onChange={e => {
                   getValues('assignedItems').forEach((item, index) => {
                     setValue(`assignedItems.${index}.verification`, e.currentTarget.checked)
@@ -305,9 +312,10 @@ const AssignedItems = props => {
         </>
       )}
       <RemainingItemsModal
-        workOrder={workOrder}
+        swoProjectId={swoProjectId}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
+        workOrder={workOrder}
       />
     </Box>
   )

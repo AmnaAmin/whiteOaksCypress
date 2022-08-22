@@ -30,6 +30,7 @@ import { useTrades } from 'utils/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
+import AssignedItems from './assigned-items'
 
 const CalenderCard = props => {
   return (

@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
-import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'utils/work-order'
+import { defaultValuesWODetails, parseWODetailValuesToPayload, useFetchProjectId } from 'utils/work-order'
 import AssignedItems from './assigned-items'
 
 const CalenderCard = props => {
@@ -75,6 +75,7 @@ const WorkOrderDetailTab = props => {
   const { workOrder, onSave, navigateToProjectDetails } = props
 
   const formReturn = useForm<FormValues>({ defaultValues: defaultValuesWODetails(workOrder) })
+  const { swoProjectId } = useFetchProjectId(workOrder?.projectId)
   const { register, control } = formReturn
 
   const { t } = useTranslation()
@@ -179,7 +180,7 @@ const WorkOrderDetailTab = props => {
                 </Box>
               </HStack>
             </Box>
-            <AssignedItems workOrder={workOrder} />
+            <AssignedItems workOrder={workOrder} swoProjectId={swoProjectId} />
           </ModalBody>
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
             <HStack justifyContent="start" w="100%">

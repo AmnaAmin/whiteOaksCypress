@@ -275,31 +275,7 @@ export const defaultValuesWODetails = workOrder => {
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: false,
-    assignedItems:
-      workOrder?.assignedItems?.length > 0
-        ? workOrder?.assignedItems
-        : [
-            {
-              sku: '123',
-              productName: 'Product A',
-              details: 'Solid product',
-              quantity: 12,
-              price: '123',
-              status: true,
-              images: null,
-              verification: false,
-            },
-            {
-              sku: '123',
-              productName: 'Product A',
-              details: 'Solid product',
-              quantity: 12,
-              price: '123',
-              status: false,
-              images: null,
-              verification: true,
-            },
-          ],
+    assignedItems: workOrder?.assignedItems?.length > 0 ? workOrder?.assignedItems : [],
   }
   return defaultValues
 }
@@ -343,18 +319,18 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
   }
 }
 
-export const useRmainingLineItems = (projectId?: string) => {
+export const useRemainingLineItems = (swoProjectId?: string) => {
   const client = useSmartWOClient()
 
   const { data: remainingItems, ...rest } = useQuery<any>(
-    ['remainingItems', projectId],
+    ['remainingItems', swoProjectId],
     async () => {
-      const response = await client(`unassigned_lineitem/${projectId}`, {})
+      const response = await client(`line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}`, {})
 
       return response?.data
     },
     {
-      enabled: !!projectId,
+      enabled: !!swoProjectId,
     },
   )
 
@@ -364,23 +340,41 @@ export const useRmainingLineItems = (projectId?: string) => {
   }
 }
 
-export const useAssignLineItems = projectId => {
+export const useFetchProjectId = (projectId?: string) => {
+  const client = useSmartWOClient()
+
+  const { data: swoProjectId, ...rest } = useQuery<any>(
+    ['fetchProjectId', projectId],
+    async () => {
+      const response = await client(`projects?projectId.equals=` + projectId, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!projectId,
+    },
+  )
+
+  return {
+    swoProjectId: swoProjectId?.find(p => p.projectId?.toString() === projectId?.toString()),
+    ...rest,
+  }
+}
+export const useAssignLineItems = (swoProjectId, workOrder) => {
   const client = useSmartWOClient()
   const toast = useToast()
-  const queryClient = useQueryClient()
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation(true)
 
   return useMutation(
-    (lineIds: any) => {
-      return client(`lineitem_link_update/${lineIds}`, {
-        data: lineIds,
+    (lineItems: any) => {
+      return client(`line-items/list?projectId.equals=${swoProjectId}`, {
+        data: lineItems,
+        method: 'PUT',
       })
     },
     {
-      onSuccess() {
-        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
-        queryClient.invalidateQueries(['project', projectId])
-        queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries('accountPayable')
+      onSuccess(res) {
+        updateWorkOrder({ ...workOrder, assignedItems: res?.data })
         toast({
           title: 'Line Items Assignment',
           description: 'Line Items Assignment updated successfully.',

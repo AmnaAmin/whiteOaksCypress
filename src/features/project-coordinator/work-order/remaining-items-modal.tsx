@@ -16,9 +16,14 @@ import React, { useState } from 'react'
 import { useAssignLineItems } from 'utils/work-order'
 import { WORK_ORDER } from './workOrder.i18n'
 
-const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; workOrder: any }> = props => {
+const RemainingItemsModal: React.FC<{
+  isOpen: boolean
+  onClose: () => void
+  swoProjectId: any
+  workOrder: any
+}> = props => {
   const [selectedLineItems, setSelectedLineItems] = useState<Array<any>>([])
-  const { mutate: assignLineItems } = useAssignLineItems(props?.workOrder?.projectId)
+  const { mutate: assignLineItems } = useAssignLineItems(props.swoProjectId?.id, props?.workOrder)
 
   return (
     <Box>
@@ -31,7 +36,7 @@ const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; work
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody>
             <RemainingListTable
-              workOrder={props.workOrder}
+              swoProjectId={props.swoProjectId}
               selectedLineItems={selectedLineItems}
               setSelectedLineItems={setSelectedLineItems}
             />
@@ -45,7 +50,18 @@ const RemainingItemsModal: React.FC<{ isOpen: boolean; onClose: () => void; work
                 variant="solid"
                 colorScheme="brand"
                 onClick={() => {
-                  assignLineItems(selectedLineItems.join(','))
+                  assignLineItems(
+                    [
+                      ...selectedLineItems.map(s => {
+                        return { ...s, isAssigned: true }
+                      }),
+                    ],
+                    {
+                      onSuccess: () => {
+                        props.onClose()
+                      },
+                    },
+                  )
                 }}
               >
                 {t('save')}

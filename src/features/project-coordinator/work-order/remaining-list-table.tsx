@@ -4,7 +4,7 @@ import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import React from 'react'
-import { useRmainingLineItems } from 'utils/work-order'
+import { useRemainingLineItems } from 'utils/work-order'
 import { WORK_ORDER } from './workOrder.i18n'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -49,8 +49,8 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 const RemainingListTable = props => {
-  const { workOrder, selectedLineItems, setSelectedLineItems } = props
-  const { remainingItems, isLoading } = useRmainingLineItems(workOrder?.projectId)
+  const { swoProjectId, selectedLineItems, setSelectedLineItems } = props
+  const { remainingItems, isLoading } = useRemainingLineItems(swoProjectId?.id)
   const { t } = useTranslation()
   const REMAINING_ITEMS_COLUMNS = [
     {
@@ -59,14 +59,14 @@ const RemainingListTable = props => {
       Cell: ({ row }) => (
         <Flex justifyContent="end">
           <Checkbox
-            isChecked={selectedLineItems.includes(row?.original?.sku)}
+            isChecked={selectedLineItems.map(s => s.id).includes(row?.original?.id)}
             onChange={e => {
               if (e.currentTarget?.checked) {
-                if (!selectedLineItems.includes(row?.original?.sku)) {
-                  setSelectedLineItems([...selectedLineItems, row?.original?.sku])
+                if (!selectedLineItems.map(s => s.id).includes(row?.original?.id)) {
+                  setSelectedLineItems([...selectedLineItems, row?.original])
                 }
               } else {
-                setSelectedLineItems([...selectedLineItems.filter(sku => sku !== row?.original?.sku)])
+                setSelectedLineItems([...selectedLineItems.map(s => s.id).filter(id => id !== row?.original?.id)])
               }
             }}
             value={(row.original as any).sku}
@@ -117,30 +117,7 @@ const RemainingListTable = props => {
     <Box overflow="auto" width="100%">
       <TableWrapper
         columns={REMAINING_ITEMS_COLUMNS}
-        data={
-          remainingItems ?? [
-            {
-              sku: '123',
-              productName: 'Product A',
-              details: 'Solid product',
-              quantity: 12,
-              price: '123',
-              status: true,
-              images: null,
-              verification: true,
-            },
-            {
-              sku: '456',
-              productName: 'Product B',
-              details: 'Solid product',
-              quantity: 12,
-              price: '123',
-              status: true,
-              images: null,
-              verification: true,
-            },
-          ]
-        }
+        data={remainingItems ?? []}
         isLoading={isLoading}
         TableRow={RemainingItemsRow}
         tableHeight="calc(100vh - 300px)"
