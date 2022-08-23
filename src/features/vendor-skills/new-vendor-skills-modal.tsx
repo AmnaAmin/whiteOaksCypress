@@ -17,7 +17,6 @@ import {
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
-// import { usePasswordUpdateMutation } from 'utils/user-account'
 import { useAccountDetails } from 'utils/vendor-details'
 import { useVendorSkillsMutation } from 'utils/vendor-skills-api'
 
@@ -34,9 +33,6 @@ const InformationCard: React.FC<{ Icon: React.ElementType; label: string; value:
         <FormLabel variant="strong-lable" size="md" m="0">
           {label}
         </FormLabel>
-        {/* <FormLabel variant="light-label" size="md" m="0">
-          {value}
-        </FormLabel> */}
         <Input
           readOnly
           variant="unstyled"
@@ -63,14 +59,12 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
 
   const { control, register, handleSubmit } = useForm()
   const onSubmit = data => {
-    console.log('Skills', data)
     createVendorSkills(data as any)
   }
   const watchvalue = useWatch({
     control,
     name: 'skills',
   })
-  // const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>

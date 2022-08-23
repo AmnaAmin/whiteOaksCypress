@@ -2,9 +2,7 @@ import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from '../../utils/hooks/useColumnsWidthResize'
 import { RowProps } from '../../components/table/react-table'
-// import { Clients } from '../../types/client.type'
 import { TableWrapper } from '../../components/table/table'
-// import { useTranslation } from 'react-i18next'
 import { useVendorSkills } from 'utils/vendor-skills-api'
 
 const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -40,31 +38,27 @@ const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 
 export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
   const { data: VendorSkills } = useVendorSkills()
-  // const [selectedClient, setSelectedClient] = useState<Clients>()
-  console.log('vendorSkills', VendorSkills)
-
-  // const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: 'Skills',
+        Header: 'skills',
         accessor: 'skill',
       },
       {
-        Header: 'Created by',
+        Header: 'createdby',
         accessor: 'createdBy',
       },
       {
-        Header: 'Created date',
+        Header: 'createdDate',
         accessor: 'createdDate',
       },
       {
-        Header: 'Modified by',
+        Header: 'modifiedby',
         accessor: 'modifiedBy',
       },
       {
-        Header: 'Modified date',
+        Header: 'modifiedDate',
         accessor: 'modifiedDate',
       },
     ],
@@ -73,20 +67,12 @@ export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      {/* <Client
-        clientDetails={selectedClient as Clients}
-        onClose={() => {
-          setSelectedClient(undefined)
-        }}
-      /> */}
-
       <TableWrapper
         columns={columns}
         data={VendorSkills || []}
         TableRow={vendorSkillsRow}
         tableHeight="calc(100vh - 225px)"
         name="clients-table"
-        // onRowClick={(e, row) => setSelectedClient(row.original)}
       />
     </Box>
   )
