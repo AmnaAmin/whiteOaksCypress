@@ -219,7 +219,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // If project status is Client Paid and there are some workorders not paid then
       // project status Paid should be disabled
       if (
-        numberOfPaidWorkOrders === numberOfWorkOrders &&
+        numberOfPaidWorkOrders !== numberOfWorkOrders && //AM || WOA-4187
         projectStatusId === ProjectStatus.ClientPaid &&
         optionValue === ProjectStatus.Paid
       ) {
