@@ -104,15 +104,26 @@ const NewWorkOrder: React.FC<{
     control,
     setValue,
     reset,
-    getValues,
     formState: { errors },
   } = formReturn
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
-  const { mutate: unAssignLineItem } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder: null })
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
 
   const onSubmit = values => {
-    const payload = parseNewWoValuesToPayload(values, projectData.id)
-    createWorkOrder(payload as any)
+    const newAssignedItems = [...values.assignedItems.filter(a => !a.isAssigned)]
+    assignLineItems(
+      [
+        ...newAssignedItems.map(a => {
+          return { ...a, isAssigned: true }
+        }),
+      ],
+      {
+        onSuccess: () => {
+          const payload = parseNewWoValuesToPayload(values, projectData.id)
+          createWorkOrder(payload as any)
+        },
+      },
+    )
   }
 
   useEffect(() => {
@@ -405,13 +416,6 @@ const NewWorkOrder: React.FC<{
               <HStack spacing="16px">
                 <Button
                   onClick={() => {
-                    if (getValues()?.assignedItems?.length > 0) {
-                      unAssignLineItem([
-                        ...getValues()?.assignedItems.map(s => {
-                          return { ...s, isAssigned: false }
-                        }),
-                      ])
-                    }
                     onClose()
                     reset()
                   }}

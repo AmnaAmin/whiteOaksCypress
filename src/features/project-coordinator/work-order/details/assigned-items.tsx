@@ -23,11 +23,11 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { WORK_ORDER } from 'features/project-coordinator/work-order/workOrder.i18n'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiUpload, BiXCircle } from 'react-icons/bi'
-import { useAssignLineItems } from 'utils/work-order'
+import { useRemainingLineItems } from 'utils/work-order'
 import RemainingItemsModal from './remaining-items-modal'
 
 export const CustomCheckBox = props => {
@@ -69,20 +69,25 @@ export const CustomCheckBox = props => {
 }
 
 const AssignedItems = props => {
-  const { swoProject, workOrder } = props
+  const { swoProject } = props
   const [showLineItems] = useState(true)
-
+  const [unassignedItems, setUnAssignedItems] = useState<any[]>([])
   const { t } = useTranslation()
 
-  const { mutate: unAssignLineItem } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder })
+  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const { control, register, getValues, setValue } = useFormContext<any>()
+  const values = getValues()
 
   const { fields: manualItems, remove } = useFieldArray({
     control,
     name: 'manualItems',
   })
 
-  const { fields: assignedItems, append } = useFieldArray({
+  const {
+    fields: assignedItems,
+    append,
+    remove: removeAssigned,
+  } = useFieldArray({
     control,
     name: 'assignedItems',
   })
@@ -93,15 +98,22 @@ const AssignedItems = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
+  useEffect(() => {
+    setUnAssignedItems(remainingItems ?? [])
+  }, [remainingItems])
+
   const setAssignedItems = useCallback(
     items => {
-      append([
+      const selectedIds = items.map(i => i.id)
+      const assigned = [
         ...items.map(s => {
           return { ...s, verification: false, status: false }
         }),
-      ])
+      ]
+      append(assigned)
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
     },
-    [assignedItems],
+    [unassignedItems, setUnAssignedItems],
   )
   return (
     <Box>
@@ -159,7 +171,7 @@ const AssignedItems = props => {
             <TableContainer>
               <Box>
                 <Table>
-                  <Thead h="72px" zIndex="1" position="sticky" top="0">
+                  <Thead h="72px" position="sticky" top="0">
                     <Tr whiteSpace="nowrap">
                       <Th>{t(`${WORK_ORDER}.sku`)}</Th>
                       <Th>{t(`${WORK_ORDER}.productName`)}</Th>
@@ -189,17 +201,18 @@ const AssignedItems = props => {
                                 boxSize={5}
                                 color="#4E87F8"
                                 onClick={() => {
-                                  unAssignLineItem([{ ...getValues(`assignedItems.${index}`), isAssigned: false }])
+                                  setUnAssignedItems([...unassignedItems, values?.assignedItems[index]])
+                                  removeAssigned(index)
                                 }}
                                 cursor="pointer"
                               ></Icon>
-                              <span>{getValues(`assignedItems.${index}.sku`)}</span>
+                              <span>{values?.assignedItems[index]?.sku}</span>
                             </HStack>
                           </Td>
-                          <Td>{getValues(`assignedItems.${index}.productName`)}</Td>
-                          <Td>{getValues(`assignedItems.${index}.description`)}</Td>
-                          <Td>{getValues(`assignedItems.${index}.quantity`)}</Td>
-                          <Td>{getValues(`assignedItems.${index}.unitPrice`)}</Td>
+                          <Td>{values?.assignedItems[index]?.productName}</Td>
+                          <Td>{values?.assignedItems[index]?.description}</Td>
+                          <Td>{values?.assignedItems[index]?.quantity}</Td>
+                          <Td>{values?.assignedItems[index]?.unitPrice}</Td>
                           <Td>
                             <Controller
                               control={props.control}
@@ -333,11 +346,11 @@ const AssignedItems = props => {
         </>
       )}
       <RemainingItemsModal
-        swoProject={swoProject}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
-        workOrder={workOrder}
         setAssignedItems={setAssignedItems}
+        remainingItems={unassignedItems}
+        isLoading={isLoading}
       />
     </Box>
   )

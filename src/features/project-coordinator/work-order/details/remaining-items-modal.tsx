@@ -13,19 +13,17 @@ import {
 import RemainingListTable from 'features/project-coordinator/work-order/details/remaining-list-table'
 import { t } from 'i18next'
 import React, { useState } from 'react'
-import { useAssignLineItems } from 'utils/work-order'
 import { WORK_ORDER } from '../workOrder.i18n'
 
 const RemainingItemsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
-  swoProject: any
-  workOrder: any
-  setAssignedItems?: (items) => void
+  setAssignedItems: (items) => void
+  remainingItems: any[]
+  isLoading: boolean
 }> = props => {
-  const [selectedLineItems, setSelectedLineItems] = useState<Array<any>>([])
-  const { swoProject, workOrder } = props
-  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, workOrder })
+  const { remainingItems, isLoading, setAssignedItems, onClose } = props
+  const [selectedItems, setSelectedItems] = useState<any[]>([])
 
   return (
     <Box>
@@ -38,39 +36,31 @@ const RemainingItemsModal: React.FC<{
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody>
             <RemainingListTable
-              swoProject={props.swoProject}
-              selectedLineItems={selectedLineItems}
-              setSelectedLineItems={setSelectedLineItems}
+              remainingItems={remainingItems}
+              isLoading={isLoading}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
             />
           </ModalBody>
           <ModalFooter p="0">
             <HStack w="100%" justifyContent="end" my="16px" mr="32px" spacing="16px">
-              <Button variant="outline" colorScheme="brand" onClick={props.onClose}>
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                onClick={() => {
+                  setSelectedItems([])
+                  props.onClose()
+                }}
+              >
                 {t('cancel')}
               </Button>
               <Button
                 variant="solid"
                 colorScheme="brand"
                 onClick={() => {
-                  assignLineItems(
-                    [
-                      ...selectedLineItems.map(s => {
-                        return { ...s, isAssigned: true }
-                      }),
-                    ],
-                    {
-                      onSuccess: () => {
-                        props.onClose()
-                        if (props?.setAssignedItems)
-                          props.setAssignedItems([
-                            ...selectedLineItems.map(s => {
-                              return { ...s, isAssigned: true }
-                            }),
-                          ])
-                        setSelectedLineItems([])
-                      },
-                    },
-                  )
+                  setAssignedItems(selectedItems)
+                  setSelectedItems([])
+                  onClose()
                 }}
               >
                 {t('save')}

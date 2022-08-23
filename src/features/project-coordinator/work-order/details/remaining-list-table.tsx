@@ -4,7 +4,6 @@ import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import React from 'react'
-import { useRemainingLineItems } from 'utils/work-order'
 import { WORK_ORDER } from '../workOrder.i18n'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -47,10 +46,15 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     </Tr>
   )
 }
+type RemainingListType = {
+  setSelectedItems: (items) => void
+  selectedItems: any[]
+  remainingItems: any[]
+  isLoading?: boolean
+}
+const RemainingListTable = (props: RemainingListType) => {
+  const { selectedItems, setSelectedItems, isLoading, remainingItems } = props
 
-const RemainingListTable = props => {
-  const { swoProject, selectedLineItems, setSelectedLineItems } = props
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const { t } = useTranslation()
   const REMAINING_ITEMS_COLUMNS = [
     {
@@ -59,14 +63,14 @@ const RemainingListTable = props => {
       Cell: ({ row }) => (
         <Flex justifyContent="end">
           <Checkbox
-            isChecked={selectedLineItems.map(s => s.id).includes(row?.original?.id)}
+            isChecked={selectedItems.map(s => s.id).includes(row?.original?.id)}
             onChange={e => {
               if (e.currentTarget?.checked) {
-                if (!selectedLineItems.map(s => s.id).includes(row?.original?.id)) {
-                  setSelectedLineItems([...selectedLineItems, row?.original])
+                if (!selectedItems.map(s => s.id).includes(row?.original?.id)) {
+                  setSelectedItems([...selectedItems, row?.original])
                 }
               } else {
-                setSelectedLineItems([...selectedLineItems.filter(s => s.id !== row?.original?.id)])
+                setSelectedItems([...selectedItems.filter(s => s.id !== row?.original?.id)])
               }
             }}
             value={(row.original as any).sku}

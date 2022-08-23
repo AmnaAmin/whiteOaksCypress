@@ -1,13 +1,13 @@
-import { useClient, useSmartWOClient } from 'utils/auth-context'
-import { useMutation, useQueryClient, useQuery } from 'react-query'
 import { useToast } from '@chakra-ui/toast'
-import { useParams } from 'react-router-dom'
-import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
-import autoTable from 'jspdf-autotable'
-import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
-import { currencyFormatter } from './stringFormatters'
+import autoTable from 'jspdf-autotable'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useParams } from 'react-router-dom'
+import { ProjectWorkOrder } from 'types/transaction.type'
+import { useClient, useSmartWOClient } from 'utils/auth-context'
+import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
+import { currencyFormatter } from './stringFormatters'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
@@ -273,6 +273,11 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
+    assignedItems: [
+      ...formValues?.assignedItems?.map(a => {
+        return { ...a, isAssigned: true }
+      }),
+    ],
   }
 }
 
@@ -320,7 +325,11 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     vendorSkillId: formValues.vendorSkillId?.value,
     // new work-order have hardcoded capacity
     capacity: selectedCapacity,
-    assignedItems: formValues.assignedItems,
+    assignedItems: [
+      ...formValues?.assignedItems?.map(a => {
+        return { ...a, isAssigned: true }
+      }),
+    ],
     documents: arr,
     status: 34,
     projectId: projectId,
@@ -368,10 +377,16 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
     ...rest,
   }
 }
-export const useAssignLineItems = ({ swoProjectId, workOrder }) => {
+
+type AssignArgumentType = {
+  swoProjectId: string | number | null
+  showToast?: boolean
+}
+
+export const useAssignLineItems = (props: AssignArgumentType) => {
+  const { swoProjectId, showToast } = props
   const client = useSmartWOClient()
   const toast = useToast()
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation(true)
 
   return useMutation(
     (lineItems: any) => {
@@ -382,15 +397,14 @@ export const useAssignLineItems = ({ swoProjectId, workOrder }) => {
     },
     {
       onSuccess(res: any) {
-        if (workOrder) {
-          updateWorkOrder({ ...workOrder, assignedItems: res?.data })
+        if (showToast) {
+          toast({
+            title: 'Line Items Assignment',
+            description: 'Line Items Assignment updated successfully.',
+            status: 'success',
+            isClosable: true,
+          })
         }
-        toast({
-          title: 'Line Items Assignment',
-          description: 'Line Items Assignment updated successfully.',
-          status: 'success',
-          isClosable: true,
-        })
       },
       onError(error: any) {
         toast({

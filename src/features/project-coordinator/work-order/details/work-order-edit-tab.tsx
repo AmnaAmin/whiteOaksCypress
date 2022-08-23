@@ -19,7 +19,12 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
-import { defaultValuesWODetails, parseWODetailValuesToPayload, useFetchProjectId } from 'utils/work-order'
+import {
+  defaultValuesWODetails,
+  parseWODetailValuesToPayload,
+  useAssignLineItems,
+  useFetchProjectId,
+} from 'utils/work-order'
 import AssignedItems from './assigned-items'
 
 const CalenderCard = props => {
@@ -78,7 +83,9 @@ const WorkOrderDetailTab = props => {
   const { swoProject } = useFetchProjectId(workOrder?.projectId)
   const { register, control } = formReturn
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
   const { t } = useTranslation()
+
   const {
     skillName,
     companyName,
@@ -90,13 +97,35 @@ const WorkOrderDetailTab = props => {
     workOrderCompletionDateVariance,
   } = props.workOrder
 
-  const onSubmit = values => {
-    onSave(parseWODetailValuesToPayload(values))
-  }
-
   const formValues = useWatch({ control })
 
-  console.log('formValues', formValues)
+  const getUnAssignedItems = () => {
+    const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
+    const unAssignedItems = [
+      ...workOrder?.assignedItems?.map(s => s.id)?.filter(i => !formAssignedItemsIds?.includes(i)),
+    ]
+    return unAssignedItems
+  }
+
+  const onSubmit = values => {
+    const newAssignedItems = [...values.assignedItems.filter(a => !a.isAssigned)]
+    const newUnAssignedItems = getUnAssignedItems()
+    assignLineItems(
+      [
+        ...newAssignedItems.map(a => {
+          return { ...a, isAssigned: true }
+        }),
+        ...newUnAssignedItems.map(a => {
+          return { ...a, isAssigned: false }
+        }),
+      ],
+      {
+        onSuccess: () => {
+          onSave(parseWODetailValuesToPayload(values))
+        },
+      },
+    )
+  }
 
   return (
     <Box>
