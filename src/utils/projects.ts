@@ -42,8 +42,7 @@ export const useProjectWorkOrders = projectId => {
     const response = await client(`project/${projectId}/workorders`, {})
 
     return orderBy(
-      response?.data
-      ,
+      response?.data,
       [
         item => {
           const createdDate = new Date(item.createdDate)
@@ -62,6 +61,16 @@ export const useProjectAlerts = (projectId, login) => {
     const response = await client(`alert-histories/project/${projectId}`, {})
 
     return response?.data.filter(alert => alert.login === login)
+  })
+}
+
+export const useMarketsData = () => {
+  const client = useClient()
+
+  return useQuery('marketsData', async () => {
+    const response = await client(`markets?page=0&size=10000000&sort=id,asc&cacheBuster=1661242027206`, {})
+
+    return response?.data
   })
 }
 
