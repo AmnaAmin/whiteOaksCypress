@@ -8,12 +8,14 @@ import { useClient, useSmartWOClient } from 'utils/auth-context'
 import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from './stringFormatters'
+import { useTranslation } from 'react-i18next'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
 
   return useMutation(
     payload => {
@@ -40,9 +42,13 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         }
       },
       onError(error: any) {
+        let description = error.title ?? 'Unable to save workorder.'
+        if (error.errorKey === 'EXPECTED_AND_COMPLETION_1_YEAR_ERROR') {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR')
+        }
         toast({
           title: 'Work Order',
-          description: (error.title as string) ?? 'Unable to save workorder.',
+          description,
           status: 'error',
           isClosable: true,
         })
@@ -56,6 +62,7 @@ export const useCreateWorkOrderMutation = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
 
   return useMutation(
     payload => {
@@ -80,9 +87,13 @@ export const useCreateWorkOrderMutation = () => {
         })
       },
       onError(error: any) {
+        let description = error.title ?? 'Unable to save workorder.'
+        if (error.errorKey === 'EXPECTED_AND_COMPLETION_1_YEAR_ERROR') {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR')
+        }
         toast({
           title: 'Work Order',
-          description: (error.title as string) ?? 'Unable to create workorder.',
+          description,
           status: 'error',
           isClosable: true,
         })

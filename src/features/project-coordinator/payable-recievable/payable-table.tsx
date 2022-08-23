@@ -3,7 +3,6 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'utils/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { TableWrapper } from 'components/table/table'
 import { Column } from 'react-table'
 import WorkOrderDetails from 'features/project-coordinator/work-order/work-order-edit'
@@ -66,7 +65,6 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       }
     }, [payableData])
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const payable = payableData?.workOrders
 
@@ -98,30 +96,26 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     }, [selectedCard, selectedDay, payable])
     return (
       <Box overflow="auto" width="100%">
-        {isLoading ? (
-          <BlankSlate />
-        ) : (
-          <>
-            <WorkOrderDetails
-              workOrder={selectedWorkOrder as ProjectWorkOrderType}
-              onClose={() => {
-                setSelectedWorkOrder(undefined)
-                refetch()
-              }}
-            />
-            <TableWrapper
-              columns={payableColumns}
-              setTableInstance={setTableInstance}
-              data={payableFilterData || []}
-              isLoading={isLoading}
-              TableRow={payableRow}
-              tableHeight="calc(100vh - 300px)"
-              name="payable-table"
-              defaultFlexStyle={false}
-              onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
-            />
-          </>
-        )}
+        <>
+          <WorkOrderDetails
+            workOrder={selectedWorkOrder as ProjectWorkOrderType}
+            onClose={() => {
+              setSelectedWorkOrder(undefined)
+              refetch()
+            }}
+          />
+          <TableWrapper
+            columns={payableColumns}
+            setTableInstance={setTableInstance}
+            data={payableFilterData || []}
+            isLoading={isLoading}
+            TableRow={payableRow}
+            tableHeight="calc(100vh - 300px)"
+            name="payable-table"
+            defaultFlexStyle={false}
+            onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+          />
+        </>
       </Box>
     )
   },

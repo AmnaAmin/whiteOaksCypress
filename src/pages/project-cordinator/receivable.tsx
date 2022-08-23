@@ -2,6 +2,7 @@ import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack, Spacer } 
 import { DevTool } from '@hookform/devtools'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
+import { ViewLoader } from 'components/page-level-loader'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ReceivableFilter } from 'features/project-coordinator/payable-recievable/receivable-filter'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
@@ -9,7 +10,7 @@ import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filte
 import { t } from 'i18next'
 import { compact } from 'lodash'
 import numeral from 'numeral'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
@@ -38,8 +39,14 @@ export const Receivable = () => {
 
   const formValues = useWatch({ control })
 
-  const { refetch } = useCheckBatch(setLoading, 2)
+  const { refetch } = useCheckBatch(2, setLoading, loading)
   const { mutate: batchCall } = useBatchProcessingMutation()
+
+  useEffect(() => {
+    if (!loading) {
+      reset()
+    }
+  }, [loading])
 
   const Submit = formValues => {
     setLoading(true)
@@ -49,6 +56,7 @@ export const Receivable = () => {
       id: parseInt(id as string),
       type: 'Remaining Payments',
     }))
+
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
@@ -56,9 +64,7 @@ export const Receivable = () => {
 
     batchCall(obj as any, {
       onSuccess: () => {
-        refetch().then(() => {
-          reset()
-        })
+        refetch()
       },
     })
   }
@@ -211,6 +217,7 @@ export const Receivable = () => {
           </Flex>
           <Divider border="2px solid #E2E8F0" />
           <Box mt={2}>
+            {loading && <ViewLoader />}
             <ReceivableTable
               receivableColumns={tableColumns}
               selectedCard={selectedCard as string}

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from './auth-context'
 
@@ -34,29 +35,28 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, apiNumber) => {
+export const useCheckBatch = (apiNumber, setLoading, loading) => {
+  const [isAPIEnabled, setAPIEnabled] = useState(false)
   const client = useClient()
   const queryClient = useQueryClient()
 
   return useQuery(
-    'batchCheck',
-    async () => {
+    ['batchCheck'],
+    async data => {
+      setAPIEnabled(true)
       const response = await client(`batches/progress/${apiNumber}`, {})
       return response?.data
     },
     {
-      onSuccess(e) {
-        setLoading(e)
-        if (e) {
-          window.batchTimer = setTimeout(() => {
-            queryClient.invalidateQueries('batchCheck')
-          }, 60000)
-        } else {
-          clearTimeout(window.batchTimer)
+      onSuccess(isBatchProcessingInProgress) {
+        if (!isBatchProcessingInProgress) {
+          setLoading(false)
+          setAPIEnabled(false)
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
-      enabled: false,
+      enabled: loading && isAPIEnabled,
+      refetchInterval: 10000,
     },
   )
 }

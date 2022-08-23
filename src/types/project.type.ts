@@ -105,6 +105,8 @@ export type ProjectExtraAttributesType = {
   id: number
   projectId: number
   punchDate: string | null
+  collectionDate: string | null
+  disputedDate: string | null
   activeDate: string | null
   createdDate: string | null
   createdBy: string | null
