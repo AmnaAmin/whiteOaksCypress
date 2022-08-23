@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react'
 import { WORK_ORDER } from 'features/project-coordinator/work-order/workOrder.i18n'
 import { useCallback, useEffect, useState } from 'react'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiUpload, BiXCircle } from 'react-icons/bi'
 import { useRemainingLineItems } from 'utils/work-order'
@@ -91,6 +91,7 @@ const AssignedItems = props => {
     control,
     name: 'assignedItems',
   })
+  const lineItems = useWatch({ name: 'assignedItems', control })
 
   const {
     onClose: onCloseRemainingItemsModal,
@@ -150,6 +151,7 @@ const AssignedItems = props => {
               </Checkbox>
               <Checkbox
                 size="lg"
+                isChecked={lineItems?.length > 0 && lineItems.every(l => l.verification)}
                 onChange={e => {
                   assignedItems.forEach((item, index) => {
                     setValue(`assignedItems.${index}.verification`, e.currentTarget.checked)
