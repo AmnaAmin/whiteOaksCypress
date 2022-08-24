@@ -100,28 +100,29 @@ const WorkOrderDetailTab = props => {
   const formValues = useWatch({ control })
 
   const getUnAssignedItems = () => {
-    const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
+    const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.swoId)
     const unAssignedItems = [
-      ...workOrder?.assignedItems?.map(s => s.id)?.filter(i => !formAssignedItemsIds?.includes(i)),
+      ...workOrder?.assignedItems?.map(s => s.swoId)?.filter(i => !formAssignedItemsIds?.includes(i)),
     ]
     return unAssignedItems
   }
 
   const onSubmit = values => {
-    const newAssignedItems = [...values.assignedItems.filter(a => !a.isAssigned)]
-    const newUnAssignedItems = getUnAssignedItems()
+    const addedItems = [...values.assignedItems.filter(a => !a.isAssigned)]
+    const removedItems = getUnAssignedItems()
+    const payload = parseWODetailValuesToPayload(values, { add: addedItems, delete: removedItems })
     assignLineItems(
       [
-        ...newAssignedItems.map(a => {
+        ...addedItems.map(a => {
           return { ...a, isAssigned: true }
         }),
-        ...newUnAssignedItems.map(a => {
+        ...removedItems.map(a => {
           return { ...a, isAssigned: false }
         }),
       ],
       {
         onSuccess: () => {
-          onSave(parseWODetailValuesToPayload(values))
+          onSave(payload)
         },
       },
     )

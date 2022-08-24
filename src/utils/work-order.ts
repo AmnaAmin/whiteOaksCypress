@@ -279,16 +279,22 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 
 /* WorkOrder Details */
 
-export const parseWODetailValuesToPayload = formValues => {
+export const parseWODetailValuesToPayload = (formValues, assignedItems) => {
+  const addedItems = [
+    ...assignedItems?.add?.map(a => {
+      return { ...a, isAssigned: true, action: 'add', id: '', swoId: a.id }
+    }),
+  ]
+  const removedItems = [
+    ...assignedItems?.delete?.map(a => {
+      return { ...a, action: 'delete' }
+    }),
+  ]
   return {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
-    assignedItems: [
-      ...formValues?.assignedItems?.map(a => {
-        return { ...a, isAssigned: true }
-      }),
-    ],
+    assignedItems: [...addedItems, ...removedItems],
   }
 }
 
@@ -338,7 +344,7 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     capacity: selectedCapacity,
     assignedItems: [
       ...formValues?.assignedItems?.map(a => {
-        return { ...a, isAssigned: true }
+        return { ...a, isAssigned: true, action: 'add', id: '', swoId: a.id }
       }),
     ],
     documents: arr,
