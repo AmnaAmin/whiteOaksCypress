@@ -282,7 +282,7 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 export const parseWODetailValuesToPayload = (formValues, assignedItems) => {
   const addedItems = [
     ...assignedItems?.add?.map(a => {
-      return { ...a, isAssigned: true, action: 'add', id: '', swoId: a.id }
+      return { ...a, isAssigned: true, action: 'add', id: '', smartLineItemId: a.id }
     }),
   ]
   const removedItems = [
@@ -344,7 +344,7 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     capacity: selectedCapacity,
     assignedItems: [
       ...formValues?.assignedItems?.map(a => {
-        return { ...a, isAssigned: true, action: 'add', id: '', swoId: a.id }
+        return { ...a, isAssigned: true, action: 'add', id: '', smartLineItemId: a.id }
       }),
     ],
     documents: arr,
