@@ -102,7 +102,7 @@ const WorkOrderDetailTab = props => {
   const getUnAssignedItems = () => {
     const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
     const unAssignedItems = [
-      ...workOrder?.assignedItems?.map(s => s.smartLineItemId)?.filter(i => !formAssignedItemsIds?.includes(i)),
+      ...workOrder?.assignedItems?.filter(items => !formAssignedItemsIds?.includes(items.smartLineItemId)),
     ]
     return unAssignedItems
   }
