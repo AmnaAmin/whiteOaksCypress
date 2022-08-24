@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Button, Icon, Divider } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Divider } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableWrapper } from 'components/table/table'
-import { useTransactions } from 'utils/transactions'
+import { useTransactionExport, useTransactions } from 'utils/transactions'
 import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
@@ -13,7 +13,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ut
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from '../status'
-import { BiExport } from 'react-icons/bi'
+import { ExportButton } from 'components/table-refactored/export-button'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -55,8 +55,9 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
+  // const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
   const { transactions = [], isLoading } = useTransactions(projectId)
   const { t } = useTranslation()
   const { tableColumns, settingColumns } = useTableColumnSettings(
@@ -112,11 +113,11 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
-
+  const { exportData } = useTransactionExport(projectId)
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row
-
+      setSelectedTransactionName(original.name)
       setSelectedTransactionId(original.id)
 
       onEditModalOpen()
@@ -137,26 +138,14 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
             data={transactions}
             TableRow={TransactionRow}
             tableHeight="calc(100vh - 300px)"
-            setTableInstance={setTransactionTableInstance}
+            setTableInstance={() => {}}
             name="transaction-table"
             onRowClick={onRowClick}
           />
         </Box>
         <Flex justifyContent="flex-end">
           <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <Button
-              variant="ghost"
-              colorScheme="brand"
-              m={0}
-              onClick={() => {
-                if (transactionTableInstance) {
-                  transactionTableInstance?.exportData('xlsx', false)
-                }
-              }}
-            >
-              <Icon as={BiExport} fontSize="18px" mr={1} />
-              {t('export')}
-            </Button>
+            <ExportButton columns={[]} data={exportData} colorScheme="brand" />
             <Divider orientation="vertical" border="1px solid" h="20px" />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </HStack>
@@ -165,6 +154,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
       <UpdateTransactionModal
         isOpen={isOpenEditModal}
         onClose={onEditModalClose}
+        heading={selectedTransactionName as string}
         selectedTransactionId={selectedTransactionId as number}
         projectId={projectId as string}
       />

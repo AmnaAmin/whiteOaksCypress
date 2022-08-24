@@ -1,12 +1,12 @@
-import { Box, Button, Divider, Icon, Stack } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Icon, Stack } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react'
 import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
 import Misc from './misc'
 import InvoiceAndPayments from './invoice-and-payments'
-import { BiSpreadsheet } from 'react-icons/bi'
+import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -23,6 +23,8 @@ import {
 } from 'utils/project-details'
 import { DevTool } from '@hookform/devtools'
 import { Link } from 'react-router-dom'
+import { useSubFormErrors } from './hooks'
+import { useProjectExtraAttributes } from 'utils/pc-projects'
 
 type tabProps = {
   projectData: Project
@@ -34,6 +36,9 @@ type tabProps = {
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData } = props
 
+  const [tabIndex, setTabIndex] = useState(0)
+
+  const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
@@ -45,11 +50,16 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const formReturn = useForm<ProjectDetailsFormValues>()
 
-  const { control } = formReturn
+  const {
+    control,
+    formState: { errors },
+  } = formReturn
+  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors } = useSubFormErrors(errors)
 
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
+      projectExtraAttributes,
       overPayment,
       projectTypeSelectOptions,
       projectManagerSelectOptions: fpmSelectOptions,
@@ -60,6 +70,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     formReturn.reset(formValues)
   }, [
     projectData,
+    projectExtraAttributes,
     fpmSelectOptions?.length,
     projectCoordinatorSelectOptions?.length,
     projectTypeSelectOptions?.length,
@@ -72,10 +83,14 @@ const ProjectDetailsTab = (props: tabProps) => {
     updateProjectDetails(payload)
   }
 
+  const handleTabsChange = index => {
+    setTabIndex(index)
+  }
+
   return (
     <FormProvider {...formReturn}>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
-        <Tabs variant={tabVariant || 'line'} colorScheme="brand">
+        <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
           <TabList
             bg={style?.backgroundColor ? '' : '#F7FAFC'}
             rounded="6px 6px 0 0"
@@ -83,11 +98,11 @@ const ProjectDetailsTab = (props: tabProps) => {
             ml={style?.marginLeft || ''}
             mr={style?.marginRight || ''}
           >
-            <Tab>Project Management</Tab>
-            <Tab>Invoicing & payment</Tab>
-            <Tab>Contacts</Tab>
-            <Tab>Location</Tab>
-            <Tab>Misc</Tab>
+            <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>Project Management</TabCustom>
+            <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>Invoicing & payment</TabCustom>
+            <TabCustom>Contacts</TabCustom>
+            <TabCustom>Location</TabCustom>
+            <TabCustom>Misc</TabCustom>
           </TabList>
 
           <TabPanels mt="31px">
@@ -166,6 +181,21 @@ const ProjectDetailsTab = (props: tabProps) => {
       </form>
       <DevTool control={control} />
     </FormProvider>
+  )
+}
+
+const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
+  return (
+    <Tab>
+      {isError ? (
+        <Flex alignItems="center">
+          <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
+          <Text color="red.400">{children}</Text>
+        </Flex>
+      ) : (
+        children
+      )}
+    </Tab>
   )
 }
 

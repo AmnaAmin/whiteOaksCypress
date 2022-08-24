@@ -3,6 +3,8 @@ import { useVendorsPerMonth } from 'utils/vendor-dashboard'
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { GenericObjectType } from 'types/common.types'
+import { values } from 'lodash'
+import { WORK_ORDER_STATUS } from 'features/projects/work-order-status'
 
 export const months = [
   'January',
@@ -35,14 +37,18 @@ export const monthsShort: GenericObjectType = {
 
 const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const { data: vendorEntity } = useVendorsPerMonth(vendorId)
-  const vendorData = months.map(key => ({
-    name: monthsShort[key],
-    Active: vendorEntity?.[key]?.Active || 0,
-    Completed: vendorEntity?.[key]?.Completed || 0,
-    Paid: vendorEntity?.[key]?.Paid || 0,
-    Canceled: vendorEntity?.[key]?.Cancelled || 0,
-  }))
 
+  const vendors = values(vendorEntity).reduce((a, v) => ({ ...a, ...v }), {})
+  const vendorData = months.map(key => {
+    const entityList = vendors[key] || []
+    return {
+      name: monthsShort[key],
+      Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
+      Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
+      Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
+      Cancelled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+    }
+  })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
 }
 
@@ -94,7 +100,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Cancelled" fill="#F7685B" radius={[10, 10, 0, 0]} />
           <Legend
             wrapperStyle={{
               lineHeight: '31px',

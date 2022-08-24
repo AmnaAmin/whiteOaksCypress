@@ -7,6 +7,9 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
+        //GLOBAL ERRORS
+        EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
+          'Expected Completion Date cannot be more than 1 year of Expected Start Date',
         ...projects.en.translation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -76,7 +79,8 @@ i18n.use(initReactI18next).init({
         markets: 'Markets',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
-        woNo: 'WO Po',
+        woNo: 'WO No',
+        marketName: 'Markets',
         checkbox: 'Checkbox',
         clearFilter: 'Clear Filter',
 
@@ -86,6 +90,7 @@ i18n.use(initReactI18next).init({
         wOCompletedDate: 'WO Completed Date',
         wOIssueDate: 'WO Issue Date',
         id: 'ID',
+        woStartDate: 'WO Start Date',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',
@@ -127,6 +132,7 @@ i18n.use(initReactI18next).init({
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
         newExpectedCompletionDate: 'New Expected Completion',
+        paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
         addNewRow: 'Add New Row',
@@ -451,6 +457,9 @@ i18n.use(initReactI18next).init({
     },
     es: {
       translation: {
+        //GLOBAL ERRORS
+        EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
+          'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
         ...projects.es.translation,
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -575,6 +584,7 @@ i18n.use(initReactI18next).init({
         woInvoiceDate: 'Fecha de factura de OT',
         poNo: 'Número de orden de compra',
         woNo: 'OT No',
+        marketName: 'Mercados',
         checkbox: 'Caja',
         clearFilter: 'Filtro claro',
 
@@ -584,6 +594,7 @@ i18n.use(initReactI18next).init({
         wOCompletedDate: 'Fecha de finalización de la OT',
         wOIssueDate: 'Fecha de emisión de OT',
         id: 'IDENTIFICACIÓN',
+        woStartDate: 'DOS Fecha de inicio',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Escribe',
@@ -630,6 +641,7 @@ i18n.use(initReactI18next).init({
         workOrder: 'Orden de Trabajo',
         paymentTerm: 'Plazo de Pago',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
+        paymentReceivedDate: 'Pago Recibido',
         invoicedDate: 'Fecha Facturada',
         paidDate: 'Fecha de Pago',
         paidDateVariance: 'Variación de La Fecha de Pago',

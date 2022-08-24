@@ -101,6 +101,19 @@ export type Project = {
   documents: any[] | null
 }
 
+export type ProjectExtraAttributesType = {
+  id: number
+  projectId: number
+  punchDate: string | null
+  collectionDate: string | null
+  disputedDate: string | null
+  activeDate: string | null
+  createdDate: string | null
+  createdBy: string | null
+  lastModifiedBy: string | null
+  lastModifiedDate: string | null
+}
+
 export type ProjectColumnType = {
   id: number
   flex?: number

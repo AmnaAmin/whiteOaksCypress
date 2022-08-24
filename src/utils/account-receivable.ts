@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from './auth-context'
 
@@ -26,49 +27,36 @@ export const usePCRecievable = () => {
 
 export const useBatchProcessingMutation = () => {
   const client = useClient()
-  const queryClient = useQueryClient()
-  return useMutation(
-    id => {
-      return client(`batches/run`, {
-        method: 'POST',
-        data: id,
-      })
-    },
-    {
-      onSuccess() {
-        queryClient.invalidateQueries('batchCheck')
-      },
-    },
-  )
+  return useMutation(id => {
+    return client(`batches/run`, {
+      method: 'POST',
+      data: id,
+    })
+  }, {})
 }
 
-export const useCheckBatch = (setLoading, apiNumber) => {
+export const useCheckBatch = (apiNumber, setLoading, loading) => {
+  const [isAPIEnabled, setAPIEnabled] = useState(false)
   const client = useClient()
   const queryClient = useQueryClient()
 
-  const { isLoading } = useQuery(
-    'batchCheck',
-    async () => {
+  return useQuery(
+    ['batchCheck'],
+    async data => {
+      setAPIEnabled(true)
       const response = await client(`batches/progress/${apiNumber}`, {})
       return response?.data
     },
     {
-      onSuccess(e) {
-        setLoading(e)
-        if (e) {
-          window.batchTimer = setTimeout(() => {
-            queryClient.invalidateQueries('batchCheck')
-          }, 60000)
-        } else {
-          clearTimeout(window.batchTimer)
-          queryClient.invalidateQueries('receivable')
-          queryClient.invalidateQueries('accountPayable')
+      onSuccess(isBatchProcessingInProgress) {
+        if (!isBatchProcessingInProgress) {
+          setLoading(false)
+          setAPIEnabled(false)
+          queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
+      enabled: loading && isAPIEnabled,
+      refetchInterval: 10000,
     },
   )
-
-  return {
-    isLoading,
-  }
 }

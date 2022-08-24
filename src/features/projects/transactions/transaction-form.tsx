@@ -166,6 +166,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     isShowExpectedCompletionDateField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
+    isShowPaymentRecievedDateField,
   } = useFieldShowHideDecision(control, transaction)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
@@ -247,7 +248,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     transaction,
-    againstOptions.length,
+    againstOptions?.length,
     setValue,
     isVendor,
     workOrderSelectOptions.length,
@@ -387,6 +388,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                     </FormControl>
                   </GridItem>
                 )}
+
                 {isShowChangeOrderSelectField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
@@ -442,6 +444,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                     </FormControl>
                   </GridItem>
                 )}
+
                 {isShowNewExpectedCompletionDateField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.newExpectedCompletionDate}>
@@ -580,6 +583,33 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                   </>
                 )}
 
+                {isShowPaymentRecievedDateField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.paymentRecievedDate}>
+                      <FormLabel
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={500}
+                        color="gray.600"
+                        htmlFor="paymentRecievedDate"
+                        whiteSpace="nowrap"
+                      >
+                        {t('paymentReceivedDate')}
+                      </FormLabel>
+                      <Input
+                        data-testid="payment-received-date"
+                        id="paymentRecievedDate"
+                        size="md"
+                        type="date"
+                        variant="required-field"
+                        isDisabled={isApproved}
+                        {...register('paymentRecievedDate', { required: 'This is required field.' })}
+                      />
+                      <FormErrorMessage>{errors?.paymentRecievedDate?.message}</FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                )}
+
                 {isShowStatusField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
@@ -628,7 +658,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onModalClose} variant="outline" colorScheme="brand" data-testid="close-transaction-form">
+          <Button onClick={onModalClose} variant="solid" colorScheme="brand" data-testid="close-transaction-form">
             {t('Cancel')}
           </Button>
         )}

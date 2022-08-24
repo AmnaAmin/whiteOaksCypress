@@ -3,7 +3,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
 import { useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { Client, ProjectType, State, User } from 'types/common.types'
+import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
 import {
   DocumentPayload,
   OverPaymentType,
@@ -11,10 +11,11 @@ import {
   ProjectDetailsFormValues,
   ProjectStatus,
 } from 'types/project-details.types'
-import { Market, Project } from 'types/project.type'
+import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
+import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -141,11 +142,22 @@ export const useProjectDetailsUpdateMutation = () => {
 
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['overpayment', project?.data?.id])
+        queryClient.invalidateQueries([PROJECT_EXTRA_ATTRIBUTES, project?.data?.id])
 
         toast({
           title: 'Project Details Updated',
           description: 'Project details updated successfully',
           status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Something went wrong',
+          description: error?.message || 'Something went wrong in project details update',
+          status: 'error',
           duration: 9000,
           isClosable: true,
           position: 'top-left',
@@ -207,7 +219,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       // If project status is Client Paid and there are some workorders not paid then
       // project status Paid should be disabled
       if (
-        numberOfPaidWorkOrders === numberOfWorkOrders &&
+        numberOfPaidWorkOrders !== numberOfWorkOrders && //AM || WOA-4187
         projectStatusId === ProjectStatus.ClientPaid &&
         optionValue === ProjectStatus.Paid
       ) {
@@ -264,6 +276,7 @@ export const getPaymentTermsSelectOptions = () => {
 
 export const parseFormValuesFromAPIData = ({
   project,
+  projectExtraAttributes,
   projectTypeSelectOptions,
   projectCoordinatorSelectOptions,
   projectManagerSelectOptions,
@@ -271,6 +284,7 @@ export const parseFormValuesFromAPIData = ({
   overPayment,
 }: {
   project?: Project
+  projectExtraAttributes?: ProjectExtraAttributesType
   overPayment?: OverPaymentType
   projectTypeSelectOptions?: SelectOption[]
   projectCoordinatorSelectOptions?: SelectOption[]
@@ -349,16 +363,16 @@ export const parseFormValuesFromAPIData = ({
 
     // Misc form values
     dateCreated: datePickerFormat(project.createdDate as string),
-    activeDate: datePickerFormat(project.modifiedDate as string),
-    punchDate: datePickerFormat(project.punchDate as string),
-    closedDate: datePickerFormat(project.closedDate as string),
+    activeDate: datePickerFormat(projectExtraAttributes?.activeDate as string),
+    punchDate: datePickerFormat(projectExtraAttributes?.punchDate as string),
+    closedDate: datePickerFormat(project.projectClosedDate as string),
     clientPaidDate: datePickerFormat(project.clientPaidDate as string),
-    collectionDate: datePickerFormat(project.collectionDate as string),
-    disputedDate: datePickerFormat(project.disputedDate as string),
+    collectionDate: datePickerFormat(projectExtraAttributes?.collectionDate as string),
+    disputedDate: datePickerFormat(projectExtraAttributes?.disputedDate as string),
     woaPaidDate: datePickerFormat(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
-    payDateVariance: project.payDateVariance,
-    payVariance: project.payVariance,
+    payDateVariance: project.signoffDateVariance,
+    payVariance: project.woaPayVariance,
   }
 }
 
@@ -412,6 +426,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientStartDate: dateISOFormat(formValues.clientStartDate),
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
+    clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

@@ -150,7 +150,7 @@ export const InvoiceTabPC = ({
                 <Tr>
                   <Td>{t('item')}</Td>
                   <Td>{t('description')}</Td>
-                  <Td>Total</Td>
+                  <Td isNumeric>Total</Td>
                 </Tr>
               </Thead>
               <Tbody>
@@ -159,17 +159,15 @@ export const InvoiceTabPC = ({
                     <Tr h="72px">
                       <Td>{item.id}</Td>
                       <Td>{item.name}</Td>
-                      <Td>
-                        <Flex justifyContent="space-between" alignItems="center">
-                          <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
-                        </Flex>
+                      <Td isNumeric>
+                        <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
                       </Td>
                     </Tr>
                   )
                 })}
               </Tbody>
             </Table>
-            <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
+            <VStack alignItems="end" w="98%" fontSize="14px" fontWeight={500} color="gray.600">
               <Box>
                 <HStack w={300} height="60px" justifyContent="space-between">
                   <Text>{t('subTotal')}:</Text>
