@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -9,14 +9,13 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Box,
   FormErrorMessage,
-  VStack,
   ModalCloseButton,
   Progress,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react'
 
-import { MdOutlineCancel } from 'react-icons/md'
 import { useDocumentTypes, useUploadDocument } from 'utils/vendor-projects'
 import { useTranslation } from 'react-i18next'
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -27,13 +26,13 @@ import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
+import { Controller, useForm } from 'react-hook-form'
+import ChooseFileField from 'components/choose-file/choose-file'
+import { createDocumentPayload } from 'utils/file-utils'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [document, setDocument] = useState<File | null>(null)
-  const [documentType, setDocumentType] = useState<SelectOption | undefined>()
-  const [isError, setError] = useState(false)
+  const [documentType] = useState<SelectOption | undefined>()
   const { vendorId } = useUserProfile() as Account
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
@@ -45,81 +44,38 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       }))
     : null
 
-  const onFileChange = useCallback(
-    e => {
-      const files = e.target.files
-      if (files[0]) {
-        setDocument(files[0])
-      }
-    },
-    [setDocument],
-  )
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm()
 
-  const resetUpload = useCallback(() => {
-    setDocument(null)
-    setDocumentType(undefined)
-    setError(false)
-    if (inputRef.current) {
-      inputRef.current.value = ''
-    }
-  }, [setDocument, setDocumentType, setError, inputRef])
+  const onSubmit = async formValues => {
+    const documentPayload = await createDocumentPayload(
+      formValues.chooseFile,
+      formValues?.documentType?.value?.string(),
+    )
 
-  const onDocumentTypeChange = useCallback(
-    option => {
-      if (option) {
-        setError(false)
-      } else {
-        setError(true)
-      }
-      setDocumentType(option)
-    },
-    [setError, setDocumentType],
-  )
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function readFile(event: any) {
-    const blob = event.target.result.split(',')[1]
     const doc: Document = {
-      documentType: documentType?.value?.toString() || '',
-      fileObject: blob,
-      fileObjectContentType: document?.type || '',
-      fileType: document?.name || '',
-      path: document?.name,
+      ...documentPayload,
       projectId,
       vendorId,
     }
 
     saveDocument(doc, {
       onSuccess() {
-        resetUpload()
         onClose()
+        reset()
       },
     })
   }
-
-  const uploadDocument = useCallback(
-    e => {
-      if (!documentType) {
-        setError(true)
-        return
-      }
-      if (document) {
-        const reader = new FileReader()
-        reader.addEventListener('load', readFile)
-        reader.readAsDataURL(document)
-      } else {
-        return
-      }
-    },
-    [documentType, document, setError, readFile],
-  )
 
   return (
     <Modal
       isCentered
       isOpen={isOpen}
       onClose={() => {
-        resetUpload()
         onClose()
       }}
       size="3xl"
@@ -131,92 +87,90 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
-          {isDocumentTypesLoading ? (
-            <ViewLoader />
-          ) : (
-            <FormControl mt="20px" isInvalid={isError} data-testid="document-type">
-              <VStack align="start">
-                <FormLabel fontSize="14px" fontStyle="normal" fontWeight={500} color="gray.600" htmlFor="documentType">
-                  {t('documentType')}{' '}
-                </FormLabel>
-                <HStack spacing="20px" w="100%">
-                  <Box w={215}>
-                    <ReactSelect
-                      options={states}
-                      selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
-                      value={documentType}
-                      onChange={onDocumentTypeChange}
-                    />
-                  </Box>
+          <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
+            {isDocumentTypesLoading ? (
+              <ViewLoader />
+            ) : (
+              <HStack h="130px">
+                <Grid gridTemplateColumns={'215px 215px'} gap="15px">
+                  <GridItem>
+                    <FormControl isInvalid={!!errors?.documnetType} data-testid="document-type">
+                      <FormLabel htmlFor="documentType" variant="strong-label">
+                        {t('documentType')}{' '}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="documnetType"
+                        rules={{ required: 'Document type is required' }}
+                        render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                          return (
+                            <>
+                              <ReactSelect
+                                options={states}
+                                selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                                value={documentType}
+                                onChange={onChange}
+                              />
 
-                  <input
-                    aria-labelledby="upload-document-field"
-                    type="file"
-                    ref={inputRef}
-                    style={{ display: 'none' }}
-                    onChange={onFileChange}
-                  ></input>
-                  {document ? (
-                    <Box
-                      color="barColor.100"
-                      border="1px solid #4E87F8"
-                      // a
-                      borderRadius="6px"
-                      fontSize="14px"
-                    >
-                      <HStack spacing="5px" h="37px" padding="10px" align="center">
-                        <Box
-                          title={document.name}
-                          as="span"
-                          width="120px"
-                          overflow="hidden"
-                          textOverflow="ellipsis"
-                          whiteSpace="nowrap"
-                        >
-                          {document.name}
-                        </Box>
-                        <MdOutlineCancel
-                          cursor="pointer"
-                          onClick={() => {
-                            setDocument(null)
-                            if (inputRef.current) inputRef.current.value = ''
-                          }}
-                        />
-                      </HStack>
-                    </Box>
-                  ) : (
-                    <Button
-                      id="upload-document-field"
-                      onClick={e => {
-                        if (inputRef.current) {
-                          inputRef.current.click()
-                        }
-                      }}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
-                      {t('chooseFile')}
-                    </Button>
-                  )}
-                </HStack>
-                {isError && <FormErrorMessage>Document type is required</FormErrorMessage>}
-              </VStack>
-            </FormControl>
-          )}
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+
+                  <GridItem>
+                    <FormControl isInvalid={!!errors?.chooseFile}>
+                      <FormLabel htmlFor="chooseFile" variant="strong-label">
+                        {t('uploadFile')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="chooseFile"
+                        rules={{
+                          validate: file => {
+                            return file?.name?.length > 30 ? 'File name length should be less than 30' : true
+                          },
+                          required: 'Document file is required',
+                        }}
+                        render={({ field, fieldState }) => {
+                          const fileName = field?.value?.name ?? (t('chooseFile') as string)
+                          return (
+                            <>
+                              <ChooseFileField
+                                name={field.name}
+                                value={fileName}
+                                isRequired={true}
+                                isError={!!fieldState.error?.message}
+                                onChange={(file: any) => {
+                                  field.onChange(file)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                </Grid>
+              </HStack>
+            )}
+          </form>
         </ModalBody>
         <ModalFooter>
           <HStack spacing="16px">
             <Button
               variant="outline"
               onClick={() => {
-                resetUpload()
                 onClose()
               }}
               colorScheme="brand"
             >
               {t('cancel')}
             </Button>
-            <Button isDisabled={isLoading} onClick={uploadDocument} colorScheme="brand" type="submit">
+            <Button type="submit" isDisabled={isLoading} colorScheme="brand" form="ReactHookFrom">
               {t('save')}
             </Button>
           </HStack>
