@@ -316,7 +316,8 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
     assignedItems: [
       ...formValues?.assignedItems?.map(a => {
-        return { ...a, id: a.id ?? '', smartLineItemId: a.id }
+        const isNew = !a.smartLineItemId
+        return { ...a, id: isNew ? '' : a.id, smartLineItemId: isNew ? a.id : a.smartLineItemId }
       }),
     ],
   }

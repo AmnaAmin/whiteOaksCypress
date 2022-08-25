@@ -217,7 +217,10 @@ const AssignedItems = props => {
                                     boxSize={5}
                                     color="#4E87F8"
                                     onClick={() => {
-                                      setUnAssignedItems([...unassignedItems, values?.assignedItems[index]])
+                                      setUnAssignedItems([
+                                        ...unassignedItems,
+                                        { ...values?.assignedItems[index], smartLineItemId: null },
+                                      ])
                                       removeAssigned(index)
                                     }}
                                     cursor="pointer"
