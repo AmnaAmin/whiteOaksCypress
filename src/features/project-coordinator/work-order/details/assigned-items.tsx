@@ -1,4 +1,4 @@
-import { AddIcon, CheckIcon } from '@chakra-ui/icons'
+import { CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -80,11 +80,7 @@ const AssignedItems = props => {
   const { control, register, getValues, setValue } = useFormContext<any>()
   const values = getValues()
 
-  const {
-    fields: manualItems,
-    remove,
-    append: appendManual,
-  } = useFieldArray({
+  const { fields: manualItems, remove } = useFieldArray({
     control,
     name: 'manualItems',
   })
