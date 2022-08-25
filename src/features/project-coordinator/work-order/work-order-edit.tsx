@@ -83,6 +83,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
       onSuccess: () => {
         setWorkOrderUpdating(false)
       },
+      onError: () => {
+        setWorkOrderUpdating(false)
+      },
     })
   }
 

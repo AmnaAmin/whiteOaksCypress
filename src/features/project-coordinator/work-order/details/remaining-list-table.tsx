@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import React from 'react'
 import { WORK_ORDER } from '../workOrder.i18n'
+import { LineItems } from 'utils/work-order'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -48,8 +49,8 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 type RemainingListType = {
   setSelectedItems: (items) => void
-  selectedItems: any[]
-  remainingItems: any[]
+  selectedItems: LineItems[]
+  remainingItems: LineItems[]
   isLoading?: boolean
 }
 const RemainingListTable = (props: RemainingListType) => {

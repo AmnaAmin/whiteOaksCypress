@@ -28,7 +28,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
-import { useRemainingLineItems } from 'utils/work-order'
+import { LineItems, useRemainingLineItems } from 'utils/work-order'
 import RemainingItemsModal from './remaining-items-modal'
 
 export const CustomCheckBox = props => {
@@ -72,7 +72,7 @@ export const CustomCheckBox = props => {
 const AssignedItems = props => {
   const { swoProject, isLoadingLineItems } = props
   const [showLineItems] = useState(true)
-  const [unassignedItems, setUnAssignedItems] = useState<any[]>([])
+  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { t } = useTranslation()
 
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)

@@ -22,6 +22,7 @@ import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
 import {
   defaultValuesWODetails,
+  LineItems,
   parseWODetailValuesToPayload,
   useAssignLineItems,
   useDeleteLineIds,
@@ -73,7 +74,7 @@ interface FormValues {
   workOrderStartDate: string | null
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
-  assignedItems: any[]
+  assignedItems: LineItems[]
   manualItems: any[]
 }
 
@@ -101,39 +102,47 @@ const WorkOrderDetailTab = props => {
 
   const formValues = useWatch({ control })
 
-  const getUnAssignedItems = () => {
-    const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
-    const unAssignedItems = [
-      ...workOrder?.assignedItems?.filter(items => !formAssignedItemsIds?.includes(items.smartLineItemId)),
-    ]
-    return unAssignedItems
-  }
+  /* -If we have new Smart work Order items added, they will be assigned in SWO.
+     -If some smart work order items are deleted, they will be unassigned in SWO.
+     -Deleted items will be send as a comma separated list to delete api of work order
+     -Updated line items will be saved in workorder 
+     -If no new swo items are added or delete, assign/unassign call will not be made
+     -If no new swo item is deleted, delete api will not be called
+     -Save workorder will be called in all cases in the end. It will trigger refreshing workorder items and other necessary calls.
+  */
 
-  const updateLineItems = (addedItems, removedItems, payload) => {
-    if (addedItems?.length > 0 || removedItems?.length > 0) {
+  const updateLineItems = (assignedItems, unassignedItems, payload) => {
+    setWorkOrderUpdating(true)
+    if (assignedItems?.length > 0 || unassignedItems?.length > 0) {
       assignLineItems(
         [
-          ...addedItems.map(a => {
+          ...assignedItems.map(a => {
             return { id: a.id, isAssigned: true }
           }),
-          ...removedItems.map(a => {
+          ...unassignedItems.map(a => {
             return { id: a.smartLineItemId, isAssigned: false }
           }),
         ],
         {
           onSuccess: () => {
-            if (removedItems?.length > 0) {
+            if (unassignedItems?.length > 0) {
               deleteLineItems(
-                { deletedIds: [...removedItems.map(a => a.id)].join(',') },
+                { deletedIds: [...unassignedItems.map(a => a.id)].join(',') },
                 {
                   onSuccess: () => {
                     onSave(payload)
+                  },
+                  onError: () => {
+                    setWorkOrderUpdating(false)
                   },
                 },
               )
             } else {
               onSave(payload)
             }
+          },
+          onError: () => {
+            setWorkOrderUpdating(false)
           },
         },
       )
@@ -142,12 +151,22 @@ const WorkOrderDetailTab = props => {
     }
   }
 
+  const getUnAssignedItems = () => {
+    /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
+    const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
+    const unAssignedItems = [
+      ...workOrder?.assignedItems?.filter(items => !formAssignedItemsIds?.includes(items.smartLineItemId)),
+    ]
+    return unAssignedItems
+  }
+
   const onSubmit = values => {
-    const addedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
-    const removedItems = getUnAssignedItems()
+    /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
+    const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+    /* Finding out items that will be unassigned*/
+    const unAssignedItems = getUnAssignedItems()
     const payload = parseWODetailValuesToPayload(values)
-    setWorkOrderUpdating(true)
-    updateLineItems(addedItems, removedItems, payload)
+    updateLineItems(assignedItems, unAssignedItems, payload)
   }
   useEffect(() => {
     if (workOrder?.id) {

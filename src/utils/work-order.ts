@@ -14,6 +14,24 @@ type UpdateWorkOrderProps = {
   hideToast?: boolean
   swoProjectId?: string | number | null
 }
+
+export type LineItems = {
+  id: number | string | null
+  sku: string
+  productName: string
+  description: string
+  unitPrice: string | number | null
+  quantity: number
+  totalPrice: string | number | null
+  isAssigned: boolean
+  projectId: string | number | null
+  createdBy: string
+  createdDate: string
+  modifiedBy: string
+  modifiedDate: string
+  smartLineItemId?: string | number | null
+}
+
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
   const { hideToast, swoProjectId } = props
   const client = useClient()
@@ -316,6 +334,8 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
     assignedItems: [
       ...formValues?.assignedItems?.map(a => {
+        /* id will be set when line item is saved in workorder
+        smartLineItem id is id of line item in swo */
         const isNew = !a.smartLineItemId
         return { ...a, id: isNew ? '' : a.id, smartLineItemId: isNew ? a.id : a.smartLineItemId }
       }),

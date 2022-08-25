@@ -13,17 +13,18 @@ import {
 import RemainingListTable from 'features/project-coordinator/work-order/details/remaining-list-table'
 import { t } from 'i18next'
 import React, { useState } from 'react'
+import { LineItems } from 'utils/work-order'
 import { WORK_ORDER } from '../workOrder.i18n'
 
 const RemainingItemsModal: React.FC<{
   isOpen: boolean
   onClose: () => void
   setAssignedItems: (items) => void
-  remainingItems: any[]
+  remainingItems: LineItems[]
   isLoading: boolean
 }> = props => {
   const { remainingItems, isLoading, setAssignedItems, onClose } = props
-  const [selectedItems, setSelectedItems] = useState<any[]>([])
+  const [selectedItems, setSelectedItems] = useState<LineItems[]>([])
 
   return (
     <Box>
