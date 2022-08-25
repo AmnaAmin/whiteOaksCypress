@@ -1,20 +1,23 @@
-import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack } from '@chakra-ui/react'
+import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Stack, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
+import { ViewLoader } from 'components/page-level-loader'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { ReceivableFilter } from 'features/project-coordinator/payable-recievable/receivable-filter'
 import { ReceivableTable } from 'features/project-coordinator/payable-recievable/receivable-table'
-import { WeekDayFiltersAR } from 'features/project-coordinator/weekly-filter-accounts-details'
+import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
+import { compact } from 'lodash'
 import numeral from 'numeral'
-import { useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
-import { useBatchProcessingMutation, useCheckBatch, usePCRecievable } from 'utils/account-receivable'
+import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+import { useWeeklyCount } from './hooks'
 
 export const Receivable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -23,7 +26,6 @@ export const Receivable = () => {
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-  // const [cardSelected, setCardSelected] = useState(false)
 
   const clearAll = () => {
     setSelectedCard('')
@@ -33,84 +35,45 @@ export const Receivable = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register, control } = useForm<{ projects: boolean[] }>({
-    defaultValues: {
-      projects: [],
-    },
-  })
+  const { handleSubmit, register, control, reset } = useForm()
 
+  const formValues = useWatch({ control })
+
+  const { refetch } = useCheckBatch(2, setLoading, loading)
   const { mutate: batchCall } = useBatchProcessingMutation()
+
+  useEffect(() => {
+    if (!loading) {
+      reset()
+    }
+  }, [loading])
 
   const Submit = formValues => {
     setLoading(true)
     setIsBatchClick(true)
 
-    const payloadData = formValues.projects.map(projectId => ({ id: parseInt(projectId), type: 'Remaining Payments' }))
+    const payloadData = compact(formValues.id).map(id => ({
+      id: parseInt(id as string),
+      type: 'Remaining Payments',
+    }))
+
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
     }
-    batchCall(obj as any)
-    // batchCall?.(obj) not working
-  }
 
-  useCheckBatch(setLoading, 2)
+    batchCall(obj as any, {
+      onSuccess: () => {
+        refetch()
+      },
+    })
+  }
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
 
-  const getWeekDates = () => {
-    const now = new Date()
-    const dayOfWeek = now.getDay() // 0-6
-    const numDay = now.getDate()
-
-    const start = new Date(now) // copy
-    start.setDate(numDay - dayOfWeek)
-    start.setHours(0, 0, 0, 0)
-
-    const end = new Date(now) // copy
-    end.setDate(numDay + (7 - dayOfWeek))
-    end.setHours(0, 0, 0, 0)
-
-    return [start, end]
-  }
-
-  const filterDatesByCurrentWeek = d => {
-    const [start, end] = getWeekDates()
-    if (d >= start && d <= end) {
-      return true
-    }
-    return false
-  }
-
-  const receivableWeeeklyCount = (list, number) => {
-    if (list) {
-      const res = list.filter(
-        w =>
-          w.expectedPaymentDate !== null &&
-          filterDatesByCurrentWeek(new Date(w.expectedPaymentDate)) &&
-          new Date(w.expectedPaymentDate).getDay() === number,
-      )
-      return {
-        count: res.length,
-        date: res[0]?.expectedPaymentDate?.split('T')[0],
-      }
-    } else
-      return {
-        count: 0,
-        date: null,
-      }
-  }
-  const { receivableData } = usePCRecievable()
-
-  const monday = receivableWeeeklyCount(receivableData?.arList, 1)
-  const tuesday = receivableWeeeklyCount(receivableData?.arList, 2)
-  const wednesday = receivableWeeeklyCount(receivableData?.arList, 3)
-  const thursday = receivableWeeeklyCount(receivableData?.arList, 4)
-  const friday = receivableWeeeklyCount(receivableData?.arList, 5)
-  const saturday = receivableWeeeklyCount(receivableData?.arList, 6)
-  const sunday = receivableWeeeklyCount(receivableData?.arList, 0)
+  const { weekDayFilters } = useWeeklyCount()
 
   const RECEIVABLE_COLUMNS = useMemo(
     () => [
@@ -193,19 +156,23 @@ export const Receivable = () => {
       {
         Header: t('checkbox'),
         accessor: 'checkbox',
-        Cell: ({ row }) => (
-          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-            <Checkbox
-              isDisabled={loading}
-              value={(row.original as any).projectId}
-              {...register(`projects.${row.index}`, { required: true })}
-            />
-          </Flex>
-        ),
+        Cell: ({ row }) => {
+          return (
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Checkbox
+                // isDisabled={loading}
+                variant="link"
+                value={row.original?.projectId}
+                {...register(`id.${row.index}`)}
+                isChecked={!!formValues?.id?.[row.index]}
+              />
+            </Flex>
+          )
+        },
         disableExport: true,
       },
     ],
-    [register, loading],
+    [register, loading, formValues],
   )
 
   const { mutate: postReceviableColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
@@ -224,48 +191,40 @@ export const Receivable = () => {
           <FormLabel variant="strong-label" size="lg">
             {t('Account Receivable')}
           </FormLabel>
-          <Box>
+          <Box mb={2}>
             <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
           </Box>
-          <Box mt={6}>
-            <FormLabel variant="strong-label" size="lg">
+          <Flex alignItems="center" py="16px">
+            <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
               {t('dueProjects')}
             </FormLabel>
-          </Box>
-          <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
-            <WeekDayFiltersAR
-              monday={monday}
-              tuesday={tuesday}
-              wednesday={wednesday}
-              thursday={thursday}
-              friday={friday}
-              saturday={saturday}
-              sunday={sunday}
+            <AccountWeekDayFilters
+              weekDayFilters={weekDayFilters}
               onSelectDay={setSelectedDay}
               selectedDay={selectedDay}
               clear={clearAll}
             />
-
+            <Spacer />
             <Button
               alignContent="right"
               // onClick={onNewProjectModalOpen}
-              position="absolute"
-              right={8}
               colorScheme="brand"
               type="submit"
             >
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? 'Batch Process' : 'Processing...'}
             </Button>
-          </Stack>
+          </Flex>
           <Divider border="2px solid #E2E8F0" />
           <Box mt={2}>
+            {loading && <ViewLoader />}
             <ReceivableTable
               receivableColumns={tableColumns}
               selectedCard={selectedCard as string}
               selectedDay={selectedDay as string}
               setTableInstance={setProjectTableInstance}
               resizeElementRef={resizeElementRef}
+              weekDayFilters={weekDayFilters}
             />
           </Box>
 

@@ -19,14 +19,15 @@ const StatusIconWrapper: React.FC<BoxProps> = ({ children }) => {
   return (
     <Box
       display="flex"
-      bg="brand.400"
+      bg="brand.300"
       alignContent="center"
       alignItems="center"
-      p="3"
+      py="3"
+      px="6"
       borderLeftRadius="6px"
       borderLeftWidth="1px"
       borderStyle="solid"
-      borderLeftColor="brand.400"
+      borderLeftColor="brand.300"
     >
       {children}
     </Box>
@@ -92,7 +93,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
                   Address Verification
                 </Heading>
                 <Text fontSize="14px">Address verification failed. Please fix the address & try again</Text>
-                <Flex justifyContent="end" alignItems="center" mt="10px">
+                <Flex justifyContent="end" alignItems="center" mt="15px">
                   <Button
                     variant="outline"
                     colorScheme="brand"
@@ -102,6 +103,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
                     onClick={() => {
                       onSave()
                       onClose()
+                      setIsContinue(false)
                     }}
                   >
                     Save

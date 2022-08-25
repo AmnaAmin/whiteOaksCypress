@@ -1,10 +1,15 @@
 import React from 'react'
 import { Tag, TagLabel } from '@chakra-ui/react'
 
-enum WORK_ORDER_STATUS {
+export enum WORK_ORDER_STATUS {
   Paid = 68,
   Active = 34,
   Completed = 36,
+  Cancelled = 35,
+  Inactive = 37,
+  Invoiced = 110,
+  Decline = 111,
+  PastDue = 114,
 }
 
 const WORK_ORDER_STATUS_COLOR = {

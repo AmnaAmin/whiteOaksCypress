@@ -41,7 +41,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('Against', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw', 'Payment', 'Material']
@@ -199,7 +199,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Draw')
@@ -276,7 +276,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Draw')
@@ -327,7 +327,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Material')
@@ -371,7 +371,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Material')
@@ -419,7 +419,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212' })
 
-      expect(screen.getByText('Payment Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Payment')
@@ -432,6 +432,10 @@ describe('Given Project Coordinator create new transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Payment')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // add payment received date
+      fireEvent.change(screen.getByTestId('payment-received-date'), { target: { value: '2022-10-01' } })
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -465,7 +469,7 @@ describe('Given update transaction', () => {
         projectId: '1212',
       })
 
-      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
 
@@ -513,7 +517,7 @@ describe('Given update transaction', () => {
         projectId: '1212',
       })
 
-      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
 
@@ -561,7 +565,7 @@ describe('Given update transaction', () => {
         projectId: '1212',
       })
 
-      // Check Payment Type select field is prepopulated with 'Change Order' and disabled
+      // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
 
@@ -615,7 +619,7 @@ describe('Given update transaction', () => {
         projectId: '1212',
       })
 
-      // Check Payment Type select field is prepopulated with 'Draw' and disabled
+      // Check Transaction Type select field is prepopulated with 'Draw' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
 
@@ -684,7 +688,7 @@ describe('Given update transaction', () => {
         projectId: '1212',
       })
 
-      // Check Payment Type select field is prepopulated with 'Draw' and disabled
+      // Check Transaction Type select field is prepopulated with 'Draw' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
 
@@ -743,7 +747,7 @@ describe('Given update transaction', () => {
 
       await renderTransactionForm({ onClose, selectedTransactionId: MATERIAL_TRANSACTION_ID, projectId: '1212' })
 
-      // Check Payment Type select field is prepopulated with 'Material' and disabled
+      // Check Transaction Type select field is prepopulated with 'Material' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Material')).toBeInTheDocument()
 
@@ -792,7 +796,7 @@ describe('Given update transaction', () => {
 
       await renderTransactionForm({ onClose, selectedTransactionId: PAYMENT_TRANSACTION_ID, projectId: '1212' })
 
-      // Check Payment Type select field is prepopulated with 'Payment' and disabled
+      // Check Transaction Type select field is prepopulated with 'Payment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
       expect(getByText(screen.getByTestId('transaction-type'), 'Payment')).toBeInTheDocument()
 
@@ -837,7 +841,7 @@ describe('Given update transaction', () => {
 
       await renderTransactionForm({ onClose, selectedTransactionId: APPROVED_TRANSACTION_ID, projectId: '1212' })
 
-      // Check Payment Type select field is disabled
+      // Check Transaction Type select field is disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
 
       // Check Against select field is disabled

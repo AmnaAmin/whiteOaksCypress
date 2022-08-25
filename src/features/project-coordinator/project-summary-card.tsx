@@ -59,7 +59,7 @@ export const ProjectSummaryCard: React.FC<{
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'Client'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
             {projectData?.clientName}
           </FormLabel>
         </InfoStructureCard>
@@ -69,17 +69,22 @@ export const ProjectSummaryCard: React.FC<{
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'FPM Name'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
             {projectData?.projectManager}
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'FPM Contact'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManagerPhoneNumber}`}>
             {projectData?.projectManagerPhoneNumber}
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard title={'Address'} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
+          <FormLabel
+            variant="light-label"
+            size="md"
+            noOfLines={1}
+            title={`${projectData?.streetAddress}, ${projectData?.city}`}
+          >
             {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
           </FormLabel>
         </InfoStructureCard>

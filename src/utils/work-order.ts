@@ -7,12 +7,15 @@ import autoTable from 'jspdf-autotable'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
+import { useTranslation } from 'react-i18next'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
 
   return useMutation(
     payload => {
@@ -23,6 +26,8 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
@@ -37,9 +42,13 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         }
       },
       onError(error: any) {
+        let description = error.title ?? 'Unable to save workorder.';
+        if(error.errorKey === "EXPECTED_AND_COMPLETION_1_YEAR_ERROR") {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR') 
+        }
         toast({
           title: 'Work Order',
-          description: (error.title as string) ?? 'Unable to save workorder.',
+          description,
           status: 'error',
           isClosable: true,
         })
@@ -53,6 +62,7 @@ export const useCreateWorkOrderMutation = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>()
+  const { t } = useTranslation()
 
   return useMutation(
     payload => {
@@ -64,6 +74,10 @@ export const useCreateWorkOrderMutation = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['documents', projectId])
 
         toast({
           title: 'Work Order',
@@ -73,9 +87,13 @@ export const useCreateWorkOrderMutation = () => {
         })
       },
       onError(error: any) {
+        let description = error.title ?? 'Unable to save workorder.';
+        if(error.errorKey === "EXPECTED_AND_COMPLETION_1_YEAR_ERROR") {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR') 
+        }
         toast({
           title: 'Work Order',
-          description: (error.title as string) ?? 'Unable to create workorder.',
+          description,
           status: 'error',
           isClosable: true,
         })

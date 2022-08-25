@@ -30,6 +30,16 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
     onClear?.()
   }
 
+  let leftBorder = '1px solid #E2E8F0'
+
+  if (isRequired) {
+    leftBorder = '2px solid #4e87f8'
+  }
+
+  if (isError) {
+    leftBorder = '2px solid red.400'
+  }
+
   return (
     <Box
       cursor="pointer"
@@ -42,10 +52,10 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
       rounded="6"
       onClick={onFileClear}
       bg="white"
-      borderLeft={isRequired ? '2px solid #4e87f8' : '1px solid #E2E8F0'}
+      borderLeft={leftBorder}
       _hover={{
         borderColor: 'gray.300',
-        borderLeft: isRequired ? '2px solid #4e87f8' : '1px solid #E2E8F0',
+        borderLeft: leftBorder,
       }}
     >
       <input

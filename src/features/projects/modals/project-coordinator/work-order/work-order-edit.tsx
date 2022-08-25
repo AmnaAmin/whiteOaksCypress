@@ -15,7 +15,6 @@ import {
   Stack,
   Divider,
   HStack,
-  Box,
   Checkbox,
   Center,
 } from '@chakra-ui/react'
@@ -27,7 +26,6 @@ import PaymentInfoTab from './payment-tab'
 import { InvoiceTabPC } from './invoice-tab'
 import Status, { STATUS } from 'features/projects/status'
 import WorkOrderNotes from '../../work-order-notes'
-import { countInCircle } from 'theme/common-style'
 import WorkOrderDetailTab from './work-order-edit-tab'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -40,7 +38,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
-  const [notesCount, setNotesCount] = useState(0)
+  // const [notesCount, setNotesCount] = useState(0)
   const [rejectLW, setRejectLW] = useState(false)
   const [rejectInvoice, setRejectInvoice] = useState(false)
   const { projectId } = useParams<{ projectId: string }>()
@@ -124,9 +122,13 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                   <Tab>{t('payments')}</Tab>
                   <Tab>
                     {t('notes')}
-                    <Box ml="5px" style={countInCircle}>
+                    {/* Update on figma */}
+
+                    {/* <Box ml="5px" style={countInCircle}>
                       {notesCount}
-                    </Box>
+                    </Box> */}
+
+                    {/* Update on figma */}
                   </Tab>
                   {/* commenting till requirements are clear
                   tabIndex === 1 && (
@@ -221,7 +223,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                       workOrder={workOrder}
                       onClose={onClose}
-                      setNotesCount={setNotesCount}
+                      // setNotesCount={setNotesCount}
                       onSave={onSave}
                     />
                   </TabPanel>

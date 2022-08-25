@@ -2,152 +2,178 @@ import { Box, Center, Checkbox, Divider, Flex, FormLabel, Icon, Spacer, Stack } 
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { PayableFilter } from 'features/project-coordinator/payable-recievable/payable-filter'
+import { usePayableWeeklyCount } from 'features/project-coordinator/payable-recievable/hook'
+import { PayableCardsFilter } from 'features/project-coordinator/payable-recievable/payable-cards-filter'
 import { PayableTable } from 'features/project-coordinator/payable-recievable/payable-table'
-import { WeekDayFilters } from 'features/project-coordinator/weekday-filters'
+import { AccountWeekDayFilters } from 'features/project-coordinator/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import numeral from 'numeral'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
-import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
+// import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
+import { compact } from 'lodash'
+import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-payable'
+import { ViewLoader } from 'components/page-level-loader'
 
 export const Payable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
 
-  const [isClicked, setIsClicked] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
-  // const [cardSelected, setCardSelected] = useState(false)
 
   const clearAll = () => {
     setSelectedCard('')
-    setIsClicked(false)
-  }
-
-  const allDays = () => {
-    setSelectedCard('All')
-    setIsClicked(true)
+    setSelectedDay('')
   }
 
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register } = useForm()
+  const { handleSubmit, register, reset, control } = useForm()
 
   const { mutate: batchCall } = useBatchProcessingMutation()
+  const { refetch } = useCheckBatch(setLoading, loading)
+  const formValues = useWatch({ control })
 
-  const Submit = e => {
+  useEffect(() => {
+    if (!loading) {
+      reset()
+    }
+  }, [loading])
+
+  const Submit = formValues => {
     setLoading(true)
     setIsBatchClick(true)
-    const payloadData = e.id.map(n => ({ id: parseInt(n), type: '' }))
+
+    const payloadData = compact(formValues.id).map(id => ({
+      id: parseInt(id as string),
+      type: '',
+    }))
     const obj = {
       typeCode: 'AP',
       entities: payloadData,
     }
-    batchCall(obj as any)
-    // batchCall?.(obj) not working
-  }
-  useCheckBatch(setLoading, 1)
 
+    batchCall(obj as any, {
+      onSuccess: () => {
+        refetch()
+      },
+    })
+  }
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
 
-  const PAYABLE_COLUMNS = [
-    {
-      Header: t('id'),
-      accessor: 'projectId',
-    },
-    {
-      Header: t('vendorName'),
-      accessor: 'claimantName',
-    },
-    {
-      Header: t('propertyAddress'),
-      accessor: 'propertyAddress',
-    },
-    {
-      Header: t('vendorAddress'),
-      accessor: 'vendorAddress',
-    },
-    {
-      Header: t('paymentTerms'),
-      accessor: 'paymentTerm',
-    },
-    {
-      Header: t('expectedPayDate'),
-      accessor: 'expectedPaymentDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+  const PAYABLE_COLUMNS = useMemo(
+    () => [
+      {
+        Header: t('id'),
+        accessor: 'projectId',
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.expectedPaymentDate)
+      {
+        Header: t('vendorName'),
+        accessor: 'claimantName',
       },
-    },
-    {
-      Header: t('finalInvoice'),
-      accessor: 'finalInvoiceAmount',
-      Cell: ({ value }) => {
-        return numeral(value).format('$0,0.00')
+      {
+        Header: t('propertyAddress'),
+        accessor: 'propertyAddress',
       },
-      getCellExportValue(row) {
-        return numeral(row.original.finalInvoiceAmount).format('$0,0.00')
+      {
+        Header: t('vendorAddress'),
+        accessor: 'vendorAddress',
       },
-    },
-    {
-      Header: t('markets'),
-      accessor: 'marketName',
-    },
-    {
-      Header: t('wOStartDate'),
-      accessor: 'workOrderStartDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('paymentTerms'),
+        accessor: 'paymentTerm',
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.workOrderStartDate)
+      {
+        Header: t('expectedPayDate'),
+        accessor: 'expectedPaymentDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.expectedPaymentDate)
+        },
       },
-    },
-    {
-      Header: t('wOCompletedDate'),
-      accessor: 'workOrderDateCompleted',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('finalInvoice'),
+        accessor: 'finalInvoiceAmount',
+        Cell: ({ value }) => {
+          return numeral(value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.finalInvoiceAmount).format('$0,0.00')
+        },
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.workOrderDateCompleted)
+      {
+        Header: t('markets'),
+        accessor: 'marketName',
       },
-    },
-    {
-      Header: t('wOIssueDate'),
-      accessor: 'workOrderIssueDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
+      {
+        Header: t('woStartDate'),
+        accessor: 'workOrderStartDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.workOrderStartDate)
+        },
       },
-      getCellExportValue(row) {
-        return dateFormat(row.original.workOrderIssueDate)
+      {
+        Header: t('wOCompletedDate'),
+        accessor: 'workOrderDateCompleted',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.workOrderDateCompleted)
+        },
       },
-    },
-    {
-      Header: t('checkbox'),
-      accessor: 'checkbox',
-      Cell: ({ row }) => {
-        return (
-          <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-            <Spacer w="20px" />
-            <Checkbox isDisabled={loading} value={(row.original as any).id} {...register('id', { required: true })} />
-          </Flex>
-        )
+      {
+        Header: t('wOIssueDate'),
+        accessor: 'workOrderIssueDate',
+        Cell({ value }) {
+          return <Box>{dateFormat(value)}</Box>
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.workOrderIssueDate)
+        },
       },
-      disableExport: true,
-    },
-  ]
+      {
+        Header: t('checkbox'),
+        accessor: 'checkbox',
+        Cell: ({ row }) => {
+          return (
+            //   <Checkbox
+            //   // isDisabled={loading}
+            //   variant="link"
+            //   value={row.original?.projectId}
+            //   {...register(`id.${row.index}`)}
+            //   isChecked={!!formValues?.id?.[row.index]}
+            // />
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Spacer w="20px" />
+              <Checkbox
+                // isDisabled={loading}
+                value={row.original?.id}
+                {...register(`id.${row.index}`)}
+                isChecked={!!formValues?.id?.[row.index]}
+              />
+            </Flex>
+          )
+        },
+        disableExport: true,
+      },
+    ],
+    [register, loading, formValues],
+  )
 
   const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.payable)
   const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(PAYABLE_COLUMNS, TableNames.payable)
@@ -156,6 +182,8 @@ export const Payable = () => {
     postProjectColumn(columns)
   }
 
+  const { weekDayFilters } = usePayableWeeklyCount()
+
   return (
     <form onSubmit={handleSubmit(Submit)}>
       <Box>
@@ -163,44 +191,42 @@ export const Payable = () => {
           {t('Account Payable')}
         </FormLabel>
         <Box>
-          <PayableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
+          <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
         </Box>
-        <Box mt={6}>
-          <FormLabel variant="strong-label" size="lg">
+        <Flex alignItems="center" py="16px">
+          <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
             {t('dueProjects')}
           </FormLabel>
-        </Box>
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" spacing={1} marginTop={1} mb={3}>
-          <Button
-            colorScheme={isClicked ? 'brand' : 'none'}
-            color={isClicked ? 'white' : 'black'}
-            _hover={{ bg: '#4E87F8', color: 'white', border: 'none' }}
-            alignContent="right"
-            onClick={allDays}
-            rounded={20}
-            m={0}
-          >
-            All
-          </Button>
-          <WeekDayFilters onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-          <Button variant="ghost" colorScheme="brand" alignContent="right" onClick={clearAll}>
-            {t('clearFilter')}
-          </Button>
+          <Box ml="2">
+            <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+          </Box>
+          <AccountWeekDayFilters
+            weekDayFilters={weekDayFilters}
+            onSelectDay={setSelectedDay}
+            selectedDay={selectedDay}
+            clear={clearAll}
+          />
+          <Spacer />
           <Button
             alignContent="right"
             // onClick={onNewProjectModalOpen}
-            position="absolute"
-            right={8}
             colorScheme="brand"
             type="submit"
           >
             <Icon as={BiSync} fontSize="18px" mr={2} />
             {!loading ? 'Batch Process' : 'Processing...'}
           </Button>
-        </Stack>
+        </Flex>
         <Divider border="2px solid #E2E8F0" />
         <Box mt={2}>
-          <PayableTable payableColumns={tableColumns} setTableInstance={setProjectTableInstance} />
+          {loading && <ViewLoader />}
+          <PayableTable
+            selectedCard={selectedCard as string}
+            selectedDay={selectedDay as string}
+            payableColumns={tableColumns}
+            setTableInstance={setProjectTableInstance}
+            weekDayFilters={weekDayFilters}
+          />
         </Box>
 
         <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={4}>
