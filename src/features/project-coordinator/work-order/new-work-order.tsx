@@ -110,10 +110,9 @@ const NewWorkOrder: React.FC<{
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
 
   const onSubmit = values => {
-    const newAssignedItems = [...values.assignedItems.filter(a => !a.isAssigned)]
     assignLineItems(
       [
-        ...newAssignedItems.map(a => {
+        ...values.assignedItems.map(a => {
           return { ...a, isAssigned: true }
         }),
       ],
