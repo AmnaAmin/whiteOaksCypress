@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import { LineItems, useRemainingLineItems } from 'utils/work-order'
 import RemainingItemsModal from './remaining-items-modal'
+import { STATUS } from 'features/projects/status'
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -70,7 +71,7 @@ export const CustomCheckBox = props => {
 }
 
 const AssignedItems = props => {
-  const { swoProject, isLoadingLineItems } = props
+  const { swoProject, isLoadingLineItems, workOrder } = props
   const [showLineItems] = useState(true)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { t } = useTranslation()
@@ -97,7 +98,7 @@ const AssignedItems = props => {
     name: 'assignedItems',
   })
   const lineItems = useWatch({ name: 'assignedItems', control })
-  console.log('Line Items', lineItems)
+
   const {
     onClose: onCloseRemainingItemsModal,
     isOpen: isOpenRemainingItemsModal,
@@ -131,6 +132,7 @@ const AssignedItems = props => {
               <Box pl="2" pr="1">
                 <Divider orientation="vertical" h="20px" />
               </Box>
+              {/*
               <Button
                 type="button"
                 variant="ghost"
@@ -150,6 +152,7 @@ const AssignedItems = props => {
               >
                 {t(`${WORK_ORDER}.addNewItem`)}
               </Button>
+              */}
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -169,9 +172,11 @@ const AssignedItems = props => {
               {/*<Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
                 {t(`${WORK_ORDER}.downloadPDF`)}
             </Button> */}
-              <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
-                {t(`${WORK_ORDER}.remainingItems`)}
-              </Button>
+              {[STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+                <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
+                  {t(`${WORK_ORDER}.remainingItems`)}
+                </Button>
+              )}
             </HStack>
           </Stack>
 
@@ -366,6 +371,7 @@ const AssignedItems = props => {
           </Box>
         </>
       )}
+
       <RemainingItemsModal
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
