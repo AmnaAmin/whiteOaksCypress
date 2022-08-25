@@ -368,7 +368,7 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     capacity: selectedCapacity,
     assignedItems: [
       ...formValues?.assignedItems?.map(a => {
-        return { ...a, isAssigned: true, action: 'add', id: '', smartLineItemId: a.id }
+        return { ...a, id: '', smartLineItemId: a.id }
       }),
     ],
     documents: arr,
