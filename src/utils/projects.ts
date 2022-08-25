@@ -64,16 +64,6 @@ export const useProjectAlerts = (projectId, login) => {
   })
 }
 
-export const useMarketsData = () => {
-  const client = useClient()
-
-  return useQuery('marketsData', async () => {
-    const response = await client(`markets?page=0&size=10000000&sort=id,asc&cacheBuster=1661242027206`, {})
-
-    return response?.data
-  })
-}
-
 export const useWeekDayProjectsDue = () => {
   const client = useClient()
 

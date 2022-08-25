@@ -1,15 +1,17 @@
 import { Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
+import { Market } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { useMarketsData } from 'utils/projects'
 
 type MarketsProps = {
-  setTableInstance: (tableInstance: any) => void
+  setTableInstance?: (tableInstance: any) => void
+  isLoading: boolean
+  markets?: Array<Market>
 }
 
-export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance }) => {
+export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoading, markets }) => {
   const marketsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     return (
       <Tr
@@ -50,14 +52,11 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance }) => {
       </Tr>
     )
   }
-  const { data, isLoading } = useMarketsData()
 
   const { columns } = useColumnWidthResize([
     {
-      Header: 'Metropolitan Service Area ',
+      Header: 'metroServiceArea',
       accessor: 'metropolitanServiceArea',
-      // @ts-ignore
-      //   Cell: ({ value, row }) => <Status value={value} id={row.original?.statusLabel} />,
     },
     {
       Header: 'createdBy',
@@ -85,14 +84,13 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance }) => {
   return (
     <TableWrapper
       columns={columns}
-      data={data || []}
+      data={markets || []}
       TableRow={marketsRow}
       tableHeight="calc(100vh - 300px)"
       name="work-orders-table"
       isLoading={isLoading}
       disableFilter={true}
       setTableInstance={setTableInstance}
-      // onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
     />
   )
 }
