@@ -67,8 +67,8 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData, setTabIndex }) => {
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
-  const { mutate: rejectLW } = useUpdateWorkOrderMutation(true)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)

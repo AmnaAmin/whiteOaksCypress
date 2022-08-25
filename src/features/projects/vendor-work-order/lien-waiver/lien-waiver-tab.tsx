@@ -38,7 +38,7 @@ import { orderBy } from 'lodash'
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose, onProjectTabChange, documentsData } = props
-  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({})
   const [documents, setDocuments] = useState<any[]>([])
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)

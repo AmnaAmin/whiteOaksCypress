@@ -10,7 +10,12 @@ import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from './stringFormatters'
 import { useTranslation } from 'react-i18next'
 
-export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
+type UpdateWorkOrderProps = {
+  hideToast?: boolean
+  swoProjectId?: string | number | null
+}
+export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
+  const { hideToast, swoProjectId } = props
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -32,6 +37,7 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries('accountPayable')
+        queryClient.invalidateQueries(['remainingItems', swoProjectId])
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -49,6 +55,30 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         toast({
           title: 'Work Order',
           description,
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+export const useDeleteLineIds = () => {
+  const client = useClient()
+  const toast = useToast()
+
+  return useMutation(
+    (payload: { deletedIds: string }) => {
+      return client('work-orders/line-items?ids=' + payload.deletedIds, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {},
+      onError(error: any) {
+        toast({
+          title: 'Work Order',
+          description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
         })
@@ -279,22 +309,16 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 
 /* WorkOrder Details */
 
-export const parseWODetailValuesToPayload = (formValues, assignedItems) => {
-  const addedItems = [
-    ...assignedItems?.add?.map(a => {
-      return { ...a, isAssigned: true, action: 'add', id: '', smartLineItemId: a.id }
-    }),
-  ]
-  const removedItems = [
-    ...assignedItems?.delete?.map(a => {
-      return { ...a, action: 'delete' }
-    }),
-  ]
+export const parseWODetailValuesToPayload = formValues => {
   return {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
-    assignedItems: [...addedItems, ...removedItems],
+    assignedItems: [
+      ...formValues?.assignedItems?.map(a => {
+        return { ...a, id: a.id ?? '', smartLineItemId: a.id }
+      }),
+    ],
   }
 }
 

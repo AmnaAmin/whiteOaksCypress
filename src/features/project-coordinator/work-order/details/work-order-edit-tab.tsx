@@ -14,6 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/projects/status'
+import { useEffect } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
@@ -23,7 +24,7 @@ import {
   defaultValuesWODetails,
   parseWODetailValuesToPayload,
   useAssignLineItems,
-  useFetchProjectId,
+  useDeleteLineIds,
 } from 'utils/work-order'
 import AssignedItems from './assigned-items'
 
@@ -77,13 +78,14 @@ interface FormValues {
 }
 
 const WorkOrderDetailTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, setWorkOrderUpdating, swoProject } = props
 
-  const formReturn = useForm<FormValues>({ defaultValues: defaultValuesWODetails(workOrder) })
-  const { swoProject } = useFetchProjectId(workOrder?.projectId)
-  const { register, control } = formReturn
+  const formReturn = useForm<FormValues>()
+
+  const { register, control, reset } = formReturn
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
+  const { mutate: deleteLineItems } = useDeleteLineIds()
   const { t } = useTranslation()
 
   const {
@@ -107,26 +109,51 @@ const WorkOrderDetailTab = props => {
     return unAssignedItems
   }
 
-  const onSubmit = values => {
-    const addedItems = [...values.assignedItems.filter(a => !a.isAssigned)]
-    const removedItems = getUnAssignedItems()
-    const payload = parseWODetailValuesToPayload(values, { add: addedItems, delete: removedItems })
-    assignLineItems(
-      [
-        ...addedItems.map(a => {
-          return { ...a, isAssigned: true }
-        }),
-        ...removedItems.map(a => {
-          return { ...a, isAssigned: false }
-        }),
-      ],
-      {
-        onSuccess: () => {
-          onSave(payload)
+  const updateLineItems = (addedItems, removedItems, payload) => {
+    if (addedItems?.length > 0 || removedItems?.length > 0) {
+      assignLineItems(
+        [
+          ...addedItems.map(a => {
+            return { id: a.id, isAssigned: true }
+          }),
+          ...removedItems.map(a => {
+            return { id: a.smartLineItemId, isAssigned: false }
+          }),
+        ],
+        {
+          onSuccess: () => {
+            if (removedItems?.length > 0) {
+              deleteLineItems(
+                { deletedIds: [...removedItems.map(a => a.id)].join(',') },
+                {
+                  onSuccess: () => {
+                    onSave(payload)
+                  },
+                },
+              )
+            } else {
+              onSave(payload)
+            }
+          },
         },
-      },
-    )
+      )
+    } else {
+      onSave(payload)
+    }
   }
+
+  const onSubmit = values => {
+    const addedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+    const removedItems = getUnAssignedItems()
+    const payload = parseWODetailValuesToPayload(values)
+    setWorkOrderUpdating(true)
+    updateLineItems(addedItems, removedItems, payload)
+  }
+  useEffect(() => {
+    if (workOrder?.id) {
+      reset(defaultValuesWODetails(workOrder))
+    }
+  }, [workOrder, reset])
 
   return (
     <Box>
@@ -212,7 +239,7 @@ const WorkOrderDetailTab = props => {
               </HStack>
             </Box>
             <Box mx="32px">
-              <AssignedItems workOrder={workOrder} swoProject={swoProject} />
+              <AssignedItems workOrder={workOrder} swoProject={swoProject} isLoadingLineItems={isWorkOrderUpdating} />
             </Box>
           </ModalBody>
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>

@@ -32,7 +32,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'utils/pc-projects'
 import { useDocuments } from 'utils/vendor-projects'
 import { useTransactions } from 'utils/transactions'
-import { useUpdateWorkOrderMutation } from 'utils/work-order'
+import { useFetchProjectId, useUpdateWorkOrderMutation } from 'utils/work-order'
 
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
   const { t } = useTranslation()
@@ -50,7 +50,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
   const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
+  const [isWorkOrderUpdating, setWorkOrderUpdating] = useState(false)
+  const { swoProject } = useFetchProjectId(workOrder?.projectId)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
   const navigate = useNavigate()
 
   const onClose = useCallback(() => {
@@ -77,7 +79,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }
-    updateWorkOrder(payload)
+    updateWorkOrder(payload, {
+      onSuccess: () => {
+        setWorkOrderUpdating(false)
+      },
+    })
   }
 
   const navigateToProjectDetails = () => {
@@ -173,6 +179,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       workOrder={workOrder}
                       onClose={onClose}
                       onSave={onSave}
+                      isWorkOrderUpdating={isWorkOrderUpdating}
+                      setWorkOrderUpdating={setWorkOrderUpdating}
+                      swoProject={swoProject}
                     />
                   </TabPanel>
                   <TabPanel p={0}>
