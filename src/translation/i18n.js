@@ -377,7 +377,7 @@ i18n.use(initReactI18next).init({
         overpayment: 'Overpayment',
         remainingPayment: 'Remaining Payment',
         payment: 'Payment',
-        invoiceBackDate: 'Invoice back bate',
+        invoiceBackDate: 'Invoice Back Date',
 
         // work order details
         cancelWorkOrder: 'cancel Work Order',
