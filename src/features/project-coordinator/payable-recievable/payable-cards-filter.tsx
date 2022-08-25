@@ -1,18 +1,22 @@
 import { Grid } from '@chakra-ui/react'
 import { useAccountPayable } from 'utils/account-payable'
 import { currencyFormatter } from 'utils/stringFormatters'
+import { useOverPaymentTransaction } from 'utils/transactions'
 import { AccountFilterCard } from './account-filter-card'
 
 export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
   const { data: PayableData, isLoading } = useAccountPayable()
   const data = PayableData?.workOrders
+  const overpaymentTransactionType = '113'
+  const { transactions = [] } = useOverPaymentTransaction(overpaymentTransactionType)
+  const overPaymentCard = transactions
+
   enum PayableCardTypes {
     PastDue = '1',
     SevenDays = '2',
     EightToTenDays = '3',
     TenToTwentyDays = '4',
     TwentyToThirdayDays = '5',
-    ThirtyToFourtyDays = '6',
   }
 
   const pastDue = data?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
@@ -20,7 +24,6 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
   const eightToTenDays = data?.filter(a => a.durationCategory === PayableCardTypes.EightToTenDays)
   const tenToTwentyDays = data?.filter(a => a.durationCategory === PayableCardTypes.TenToTwentyDays)
   const twentyToThirdayDays = data?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
-  const thirtyToFourtyDays = data?.filter(a => a.durationCategory === PayableCardTypes.ThirtyToFourtyDays)
 
   const pastDueSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
@@ -42,10 +45,7 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     ?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
     .map(a => a.invoiceAmount)
     .reduce((sum, current) => sum + current, 0)
-  const ThirtyToFourtyDaysSum = data
-    ?.filter(a => a.durationCategory === PayableCardTypes.ThirtyToFourtyDays)
-    .map(a => a.invoiceAmount)
-    .reduce((sum, current) => sum + current, 0)
+  const overpaymentSum = overPaymentCard.map(a => a.transactionTotal).reduce((sum, current) => sum + current, 0)
 
   const payableData = [
     {
@@ -86,8 +86,8 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     {
       id: '6',
       text: 'Overpayment',
-      value: currencyFormatter(ThirtyToFourtyDaysSum),
-      number: thirtyToFourtyDays?.length,
+      value: currencyFormatter(overpaymentSum),
+      number: overPaymentCard?.length,
       iconColor: '#FBB6CE',
     },
   ]
