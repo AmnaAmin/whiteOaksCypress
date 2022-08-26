@@ -2,6 +2,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 import { projects } from 'features/projects/projects.i18n'
+import { transactioni18n } from 'features/project-coordinator/transaction.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -11,6 +12,7 @@ i18n.use(initReactI18next).init({
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'Expected Completion Date cannot be more than 1 year of Expected Start Date',
         ...projects.en.translation,
+        ...transactioni18n.en.tranlation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -461,6 +463,8 @@ i18n.use(initReactI18next).init({
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
         ...projects.es.translation,
+        ...transactioni18n.es.tranlation,
+
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
         fieldProjectManager: 'Gerente de Proyectos de Campo',

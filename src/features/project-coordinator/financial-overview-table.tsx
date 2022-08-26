@@ -1,13 +1,14 @@
 import { TableWrapper } from 'components/table/table'
 import numeral from 'numeral'
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { TableNames } from 'types/table-column.types'
-import { useGetProjectFinancialOverview } from 'utils/projects'
 import { useTableColumnSettings } from 'utils/table-column-settings'
 
-export const FinancialOverviewTable = React.forwardRef((props, ref) => {
-  const { projectId } = useParams<'projectId'>()
+type FinancialOverviewTableProps = { financialOveriewTableData: any; isLoading: boolean }
+
+export const FinancialOverviewTable = React.forwardRef((props: FinancialOverviewTableProps, ref) => {
+  const { financialOveriewTableData, isLoading } = props
+
   const { tableColumns } = useTableColumnSettings(
     [
       {
@@ -87,9 +88,7 @@ export const FinancialOverviewTable = React.forwardRef((props, ref) => {
     ],
     TableNames.projectFinancialOverview,
   )
-  const { isLoading, financialOveriewTableData } = useGetProjectFinancialOverview(projectId)
 
-  console.log('financialOveriewTableData', financialOveriewTableData)
   return (
     <TableWrapper
       disableFilter

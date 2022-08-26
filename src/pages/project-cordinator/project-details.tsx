@@ -25,8 +25,8 @@ import { Card } from 'components/card/card'
 // import { useGanttChart } from 'utils/pc-projects'
 // import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/projects/modals/project-coordinator/project-notes-tab'
-import { FinancialOverviewTable } from 'features/project-coordinator/financial-overview-table'
 import { STATUS } from 'features/projects/status'
+import { TransactionDetails } from 'features/project-coordinator/transaction-details'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -178,12 +178,11 @@ export const ProjectDetails: React.FC = props => {
             <TabPanels h="100%">
               <TabPanel p="0px" h="100%" mt="7px">
                 <Box h="100%">
-                  {isShowProjectFinancialOverview && (
-                    <Flex overflow={'auto'} mb="5" h="135px">
-                      <FinancialOverviewTable ref={tabsContainerRef} />
-                    </Flex>
+                  {isShowProjectFinancialOverview ? (
+                    <TransactionDetails ref={tabsContainerRef} />
+                  ) : (
+                    <TransactionsTable ref={tabsContainerRef} />
                   )}
-                  <TransactionsTable ref={tabsContainerRef} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px" mt="7px">

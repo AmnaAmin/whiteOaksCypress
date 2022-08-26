@@ -11,7 +11,20 @@ import {
 } from 'react-table'
 import { getFileBlob } from './util'
 import { useExportData } from 'react-table-plugins'
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Box, FormLabel, Center } from '@chakra-ui/react'
+import {
+  Table as ChakraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Flex,
+  Box,
+  FormLabel,
+  Center,
+  Tfoot,
+} from '@chakra-ui/react'
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
@@ -70,6 +83,7 @@ export type TableExtraProps = {
   isLoading?: boolean
   defaultFlexStyle?: boolean
   enablePagination?: boolean
+  isShowFooter?: boolean
 }
 
 export function useCustomTable(props: TableProps, ...rest) {
@@ -249,6 +263,22 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
         }}
       </AutoSizer>
     </Tbody>
+  )
+}
+
+export const TFooter: React.FC<TableInstance> = ({ footerGroups }) => {
+  return (
+    <Tfoot bg="#F7FAFC" rounded="md" fontWeight="bold">
+      {footerGroups.map(group => (
+        <Tr {...group.getFooterGroupProps()}>
+          {group.headers.map(column => (
+            <Td {...column.getFooterProps()} padding="15px">
+              {column.render('Footer')}
+            </Td>
+          ))}
+        </Tr>
+      ))}
+    </Tfoot>
   )
 }
 
