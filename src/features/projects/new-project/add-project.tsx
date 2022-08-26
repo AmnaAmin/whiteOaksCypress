@@ -31,7 +31,7 @@ import { DevTool } from '@hookform/devtools'
 import { useTranslation } from 'react-i18next'
 import { NEW_PROJECT } from 'features/projects/projects.i18n'
 import { useProjectInformationNextButtonDisabled, usePropertyInformationNextDisabled } from './hooks'
-import { createDocumentPayload } from 'utils/project-details'
+import { createDocumentPayload } from 'utils/file-utils'
 
 type AddProjectFormProps = {
   onClose: () => void
