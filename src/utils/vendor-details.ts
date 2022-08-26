@@ -204,6 +204,33 @@ export const useTrades = () => {
   })
 }
 
+export const useVendorSkillsMutation = (onClose: () => void) => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (payload: any) => {
+      return client('vendor-skills', {
+        data: payload,
+        method: payload?.method,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('trades')
+        toast({
+          title: 'Vendor Skill Created',
+          description: 'Vendor Skill have been created/updated successfully.',
+          status: 'success',
+          isClosable: true,
+        })
+        onClose()
+      },
+    },
+  )
+}
+
 export const useMarkets = () => {
   const client = useClient()
 
