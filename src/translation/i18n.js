@@ -3,7 +3,6 @@ import { initReactI18next } from 'react-i18next'
 
 import { projects } from 'features/projects/projects.i18n'
 import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
-
 i18n.use(initReactI18next).init({
   resources: {
     en: {
@@ -78,7 +77,6 @@ i18n.use(initReactI18next).init({
         terms: 'Terms',
         paymentTypes: 'Payment Types',
         balance: 'Balance',
-        markets: 'Markets',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
         woNo: 'WO No',
@@ -586,7 +584,7 @@ i18n.use(initReactI18next).init({
         terms: 'Términos',
         paymentTypes: 'Formas De Pago',
         balance: 'Balance',
-        markets: 'Mercados',
+
         woInvoiceDate: 'Fecha de factura de OT',
         poNo: 'Número de orden de compra',
         woNo: 'OT No',

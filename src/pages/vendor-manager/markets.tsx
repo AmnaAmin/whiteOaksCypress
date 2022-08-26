@@ -1,6 +1,7 @@
 import { Box, Button, Flex, HStack, Icon, Text } from '@chakra-ui/react'
 import { ExportButton } from 'components/table-refactored/export-button'
 import { MarketsTable } from 'features/vendor-manager/markets-table'
+import { MARKETS } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
 import { BsPlus } from 'react-icons/bs'
 import { useMarkets } from 'utils/vendor-details'
@@ -12,7 +13,7 @@ export const Markets = () => {
     <Box>
       <HStack h="70px" justifyContent="space-between">
         <Text fontWeight={600} color="gray.600" fontSize="18px">
-          {t('markets')}
+          {t(`${MARKETS}.markets`)}
         </Text>
         <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BsPlus} />}>
           {t('newMarket')}

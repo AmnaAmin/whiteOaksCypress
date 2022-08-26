@@ -4,6 +4,7 @@ export const vendor_manager = {
   en: {
     translation: {
       [MARKETS]: {
+        markets: 'Markets',
         stateName: 'State Name',
         newMarket: 'New Market',
         modifiedDateSubmit: 'Modified Date',
@@ -17,6 +18,7 @@ export const vendor_manager = {
   es: {
     translation: {
       [MARKETS]: {
+        markets: 'Mercados',
         stateName: 'Nombre del Estado',
         newMarket: 'Nuevo mercado',
         metroServiceArea: 'Área de servicio metropolitano',

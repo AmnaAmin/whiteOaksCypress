@@ -4,6 +4,7 @@ import { TableWrapper } from 'components/table/table'
 import { Market } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { MARKETS } from './vendor-manager.i18n'
 
 type MarketsProps = {
   setTableInstance?: (tableInstance: any) => void
@@ -55,7 +56,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
 
   const { columns } = useColumnWidthResize([
     {
-      Header: 'metroServiceArea',
+      Header: `${MARKETS}.metroServiceArea`,
       accessor: 'metropolitanServiceArea',
     },
     {
