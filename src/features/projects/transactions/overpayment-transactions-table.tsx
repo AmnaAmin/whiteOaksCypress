@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from '../status'
 import { ExportButton } from 'components/table-refactored/export-button'
+import { TransactionTypeValues } from 'types/transaction.type'
 
 const OverpaymentTransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -57,8 +58,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const overpaymentTransactionType = '113'
-  const { transactions = [], isLoading } = useOverPaymentTransaction(overpaymentTransactionType)
+  const { transactions = [], isLoading } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
   const { t } = useTranslation()
   const { tableColumns, settingColumns } = useTableColumnSettings(
     [
@@ -67,15 +67,15 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
         accessor: 'name',
       },
       {
-        Header: t('type') as string,
+        Header: 'Type' as string,
         accessor: 'transactionTypeLabel',
       },
       {
-        Header: t('trade') as string,
+        Header: 'Trade' as string,
         accessor: 'skillName',
       },
       {
-        Header: t('totalAmount') as string,
+        Header: 'Total Amount' as string,
         accessor: 'transactionTotal',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -85,12 +85,12 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('transactionStatus') as string,
+        Header: 'Transaction Status' as string,
         accessor: 'status',
         Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
       },
       {
-        Header: t('submit') as string,
+        Header: 'Submit' as string,
         accessor: 'modifiedDate',
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
@@ -100,7 +100,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('approvedBy') as string,
+        Header: 'Approved By' as string,
         accessor: 'approvedBy',
       },
     ],

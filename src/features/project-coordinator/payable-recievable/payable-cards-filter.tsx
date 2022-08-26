@@ -1,4 +1,5 @@
 import { Grid } from '@chakra-ui/react'
+import { TransactionTypeValues } from 'types/transaction.type'
 import { useAccountPayable } from 'utils/account-payable'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useOverPaymentTransaction } from 'utils/transactions'
@@ -7,8 +8,7 @@ import { AccountFilterCard } from './account-filter-card'
 export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
   const { data: PayableData, isLoading } = useAccountPayable()
   const data = PayableData?.workOrders
-  const overpaymentTransactionType = '113'
-  const { transactions = [] } = useOverPaymentTransaction(overpaymentTransactionType)
+  const { transactions = [] } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
   const overPaymentCard = transactions
 
   enum PayableCardTypes {
@@ -45,7 +45,7 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     ?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
     .map(a => a.invoiceAmount)
     .reduce((sum, current) => sum + current, 0)
-  const overpaymentSum = overPaymentCard.map(a => a.transactionTotal).reduce((sum, current) => sum + current, 0)
+  const overpaymentSum = overPaymentCard?.map(a => a.transactionTotal)?.reduce((sum, current) => sum + current, 0)
 
   const payableData = [
     {

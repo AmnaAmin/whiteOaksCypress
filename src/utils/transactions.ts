@@ -701,7 +701,7 @@ export const useTransactionExport = projectId => {
   }
 }
 
-export const useOverPaymentTransaction = (transactionType?: string) => {
+export const useOverPaymentTransaction = (transactionType?: number) => {
   const client = useClient()
 
   const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
