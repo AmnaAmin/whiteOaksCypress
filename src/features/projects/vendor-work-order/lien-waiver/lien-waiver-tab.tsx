@@ -29,7 +29,7 @@ import { useUpdateWorkOrderMutation } from 'utils/work-order'
 import SignatureModal from './signature-modal'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
-import { STATUS } from '../status'
+import { STATUS } from '../../status'
 import { ConfirmationBox } from 'components/Confirmation'
 import { Alert, AlertDescription, AlertIcon } from '@chakra-ui/alert'
 import { CloseButton } from '@chakra-ui/react'
@@ -38,7 +38,7 @@ import { orderBy } from 'lodash'
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { lienWaiverData, onClose, onProjectTabChange, documentsData } = props
-  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation()
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({})
   const [documents, setDocuments] = useState<any[]>([])
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)

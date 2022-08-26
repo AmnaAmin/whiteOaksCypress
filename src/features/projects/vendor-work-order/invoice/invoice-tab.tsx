@@ -35,7 +35,7 @@ import { downloadFile } from 'utils/file-utils'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { createInvoice } from 'utils/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../status'
+import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../../status'
 
 import * as _ from 'lodash'
 
@@ -67,8 +67,8 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
 export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData, setTabIndex }) => {
   const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
-  const { mutate: rejectLW } = useUpdateWorkOrderMutation(true)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)

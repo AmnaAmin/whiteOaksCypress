@@ -8,7 +8,7 @@ import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
-import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
+import WorkOrderDetails from 'features/project-coordinator/work-order/work-order-edit'
 import Status from 'features/projects/status'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
