@@ -161,7 +161,7 @@ export type VendorEntity = Vendor & {
 }
 
 export type Document = {
-  documentType: string
+  documentType: number
   fileObject: string
   fileObjectContentType: string
   fileType: string
