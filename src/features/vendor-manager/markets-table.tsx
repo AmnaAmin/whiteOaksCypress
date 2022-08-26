@@ -60,25 +60,25 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
       accessor: 'metropolitanServiceArea',
     },
     {
-      Header: 'createdBy',
+      Header: `${MARKETS}.createdBy`,
       accessor: 'createdBy',
     },
     {
-      Header: 'createdDate',
+      Header: `${MARKETS}.createdDate`,
       accessor: 'createdDate',
       Cell: ({ value }) => dateFormat(value),
     },
     {
-      Header: 'modifiedBy',
+      Header: `${MARKETS}.modifiedBy`,
       accessor: 'modifiedBy',
     },
     {
-      Header: 'modifiedDateSubmit',
+      Header: `${MARKETS}.modifiedDateSubmit`,
       accessor: 'modifiedDate',
       Cell: ({ value }) => dateFormat(value),
     },
     {
-      Header: 'stateName',
+      Header: `${MARKETS}.stateName`,
       accessor: 'stateName',
     },
   ])

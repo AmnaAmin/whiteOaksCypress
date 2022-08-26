@@ -16,7 +16,7 @@ export const Markets = () => {
           {t(`${MARKETS}.markets`)}
         </Text>
         <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BsPlus} />}>
-          {t('newMarket')}
+          {t(`${MARKETS}.newMarket`)}
         </Button>
       </HStack>
       <MarketsTable isLoading={isLoading} markets={markets} />
