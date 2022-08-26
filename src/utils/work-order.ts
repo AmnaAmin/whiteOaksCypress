@@ -333,7 +333,15 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 
 /* WorkOrder Details */
 
-export const parseWODetailValuesToPayload = formValues => {
+export const parseWODetailValuesToPayload = (formValues, deletedItems) => {
+  const manualItems = [
+    ...deletedItems?.map(a => {
+      /* id will be set when line item is saved in workorder
+    smartLineItem id is id of line item in swo */
+      return { ...a, id: '', a: a.id, source: 'manual' }
+    }),
+  ]
+  console.log('manualItems', manualItems)
   return {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
@@ -345,6 +353,7 @@ export const parseWODetailValuesToPayload = formValues => {
         const isNew = !a.smartLineItemId
         return { ...a, id: isNew ? '' : a.id, smartLineItemId: isNew ? a.id : a.smartLineItemId }
       }),
+      ...manualItems,
     ],
   }
 }

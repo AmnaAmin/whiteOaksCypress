@@ -74,8 +74,8 @@ interface FormValues {
   workOrderStartDate: string | null
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
-  assignedItems: LineItems[]
-  manualItems: LineItems[]
+  assignedItems?: LineItems[]
+  manualItems?: LineItems[]
 }
 
 const WorkOrderDetailTab = props => {
@@ -111,7 +111,7 @@ const WorkOrderDetailTab = props => {
      -Save workorder will be called in all cases in the end. It will trigger refreshing workorder items and other necessary calls.
   */
 
-  const updateLineItems = (assignedItems, unassignedItems, payload) => {
+  const updateLineItems = (assignedItems, unassignedItems, deletedItems, payload) => {
     setWorkOrderUpdating(true)
     if (assignedItems?.length > 0 || unassignedItems?.length > 0) {
       assignLineItems(
@@ -125,9 +125,9 @@ const WorkOrderDetailTab = props => {
         ],
         {
           onSuccess: () => {
-            if (unassignedItems?.length > 0) {
+            if (deletedItems?.length > 0) {
               deleteLineItems(
-                { deletedIds: [...unassignedItems.map(a => a.id)].join(',') },
+                { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
                 {
                   onSuccess: () => {
                     onSave(payload)
@@ -147,7 +147,21 @@ const WorkOrderDetailTab = props => {
         },
       )
     } else {
-      onSave(payload)
+      if (deletedItems?.length > 0) {
+        deleteLineItems(
+          { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
+          {
+            onSuccess: () => {
+              onSave(payload)
+            },
+            onError: () => {
+              setWorkOrderUpdating(false)
+            },
+          },
+        )
+      } else {
+        onSave(payload)
+      }
     }
   }
 
@@ -155,9 +169,18 @@ const WorkOrderDetailTab = props => {
     /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
     const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
     const unAssignedItems = [
-      ...workOrder?.assignedItems?.filter(items => !formAssignedItemsIds?.includes(items.smartLineItemId)),
+      ...workOrder?.assignedItems?.filter(
+        items => !!items.smartLineItemId && !formAssignedItemsIds?.includes(items.smartLineItemId),
+      ),
     ]
     return unAssignedItems
+  }
+
+  const getDeletedItems = () => {
+    /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
+    const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
+    const deletedItems = [...workOrder?.assignedItems?.filter(items => !formAssignedItemsIds?.includes(items.id))]
+    return deletedItems
   }
 
   const onSubmit = values => {
@@ -165,8 +188,9 @@ const WorkOrderDetailTab = props => {
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems()
-    const payload = parseWODetailValuesToPayload(values)
-    updateLineItems(assignedItems, unAssignedItems, payload)
+    const deletedItems = getDeletedItems()
+    const payload = parseWODetailValuesToPayload(values, deletedItems)
+    updateLineItems(assignedItems, unAssignedItems, deletedItems, payload)
   }
   useEffect(() => {
     if (workOrder?.id) {
@@ -181,7 +205,7 @@ const WorkOrderDetailTab = props => {
           <ModalBody h="400px" overflow={'auto'}>
             <Stack pt="32px" spacing="32px" mx="32px">
               <SimpleGrid columns={5}>
-                <InformationCard title="Vendor Name" date={companyName} />
+                <InformationCard title="Company Name" date={companyName} />
                 <InformationCard title="Vendor Type" date={skillName} />
                 <InformationCard title="Email" date={businessEmailAddress} />
                 <InformationCard title=" Phone" date={businessPhoneNumber} />
@@ -193,7 +217,7 @@ const WorkOrderDetailTab = props => {
               <SimpleGrid columns={5}>
                 <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
                 <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
-                <CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />
+                {/* <CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} /> */}
                 <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
               </SimpleGrid>
               <Box>
