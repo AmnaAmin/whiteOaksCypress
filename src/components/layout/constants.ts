@@ -1,4 +1,5 @@
-import { BiAlignMiddle, BiCreditCard, BiDollarCircle, BiGroup, BiUser, BiUserPin } from 'react-icons/bi'
+import { BiAlignMiddle, BiCreditCard, BiDollarCircle, BiGroup, BiStats, BiUser, BiUserPin } from 'react-icons/bi'
+
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
@@ -91,6 +92,12 @@ export const MENU_ROLE_BASED: Menus = {
       title: 'Vendors Skills',
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+    },
+    {
+      pathTo: '/markets',
+      title: 'Markets',
+      Icon: BiStats,
+      color: '#68D391',
     },
   ],
 }

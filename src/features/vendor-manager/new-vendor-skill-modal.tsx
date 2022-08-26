@@ -13,12 +13,16 @@ import {
   HStack,
   Input,
   Divider,
+  useToast,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
 import { useAccountDetails, useVendorSkillsMutation } from 'utils/vendor-details'
 import { convertDateTimeToServerISO } from 'components/table/util'
+import { useQueryClient } from 'react-query'
+import { MARKETS } from './vendor-manager.i18n'
+import { t } from 'i18next'
 const InformationCard: React.FC<{
   Icon: React.ElementType
   label: string
@@ -53,8 +57,11 @@ type newVendorSkillsTypes = {
 }
 export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedWorkOrder }) => {
   const { data: account } = useAccountDetails()
-  const { mutate: createVendorSkills } = useVendorSkillsMutation(onClose)
+  const { mutate: createVendorSkills } = useVendorSkillsMutation()
   const { control, register, handleSubmit, reset } = useForm()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
   const onSubmit = data => {
     const arg = {
       createdBy: data?.createdBy,
@@ -66,8 +73,19 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
       method: selectedWorkOrder ? 'PUT' : 'POST',
     }
 
-    createVendorSkills(arg)
-    reset()
+    createVendorSkills(arg, {
+      onSuccess() {
+        queryClient.invalidateQueries('trades')
+        toast({
+          title: `Vendor Skill ${selectedWorkOrder?.id ? 'Updated' : ' Created'}`,
+          description: `Vendor Skill have been ${selectedWorkOrder?.id ? 'Updated' : ' Created'} Successfully.`,
+          status: 'success',
+          isClosable: true,
+        })
+        onClose()
+        reset()
+      },
+    })
   }
   const watchvalue = useWatch({
     control,
@@ -82,7 +100,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                New vendor skill
+                {t(`${MARKETS}.newVendorSkills`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -90,13 +108,13 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
               <HStack spacing="25px" mt="30px">
                 <InformationCard
                   Icon={BiDetail}
-                  label={'createdBy'}
+                  label={t(`${MARKETS}.createdBy`)}
                   value={selectedWorkOrder ? selectedWorkOrder?.createdBy : account?.firstName}
                   register={register('createdBy')}
                 />
                 <InformationCard
                   Icon={BiCalendar}
-                  label={'Created Date'}
+                  label={t(`${MARKETS}.createdDate`)}
                   value={dateFormat(new Date())}
                   register={register('createdDate')}
                 />
@@ -104,13 +122,13 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   <>
                     <InformationCard
                       Icon={BiDetail}
-                      label={'Modified by'}
+                      label={t(`${MARKETS}.modifiedBy`)}
                       value={selectedWorkOrder?.modifiedBy}
                       register={register('modifiedBy')}
                     />
                     <InformationCard
                       Icon={BiCalendar}
-                      label={'Modified date'}
+                      label={t(`${MARKETS}.modifiedDate`)}
                       value={dateFormat(selectedWorkOrder?.modifiedDate)}
                       register={register('modifiedDate')}
                     />
@@ -120,7 +138,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
               <Divider border="1px solid #E2E8F0 !important" my="30px" />
               <Box>
                 <FormLabel variant="strong-label" size="md">
-                  Skills
+                  {t(`${MARKETS}.skills`)}
                 </FormLabel>
                 <Input
                   {...register('skill')}
@@ -134,10 +152,10 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
               <HStack spacing="16px">
                 <Button variant="outline" colorScheme="brand" onClick={onClose}>
-                  Cancel
+                  {t(`${MARKETS}.cancel`)}
                 </Button>
                 <Button disabled={!watchvalue} type="submit" colorScheme="brand">
-                  Save
+                  {t(`${MARKETS}.save`)}
                 </Button>
               </HStack>
             </ModalFooter>

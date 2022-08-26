@@ -6,6 +6,7 @@ import { TableWrapper } from '../../components/table/table'
 import { useTrades } from 'utils/vendor-details'
 import { NewVendorSkillsModal } from './new-vendor-skill-modal'
 import { dateFormat } from 'utils/date-time-utils'
+import { MARKETS } from './vendor-manager.i18n'
 const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
@@ -42,24 +43,24 @@ export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: 'skills',
+        Header: `${MARKETS}.skills`,
         accessor: 'skill',
       },
       {
-        Header: 'createdby',
+        Header: `${MARKETS}.createdBy`,
         accessor: 'createdBy',
       },
       {
-        Header: 'createdDate',
+        Header: `${MARKETS}.createdDate`,
         accessor: 'createdDate',
         Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: 'modifiedby',
+        Header: `${MARKETS}.modifiedBy`,
         accessor: 'modifiedBy',
       },
       {
-        Header: 'modifiedDate',
+        Header: `${MARKETS}.modifiedDate`,
         accessor: 'modifiedDate',
         Cell: ({ value }) => dateFormat(value),
       },

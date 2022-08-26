@@ -204,10 +204,9 @@ export const useTrades = () => {
   })
 }
 
-export const useVendorSkillsMutation = (onClose: () => void) => {
+export const useVendorSkillsMutation = () => {
   const client = useClient()
   const toast = useToast()
-  const queryClient = useQueryClient()
 
   return useMutation(
     (payload: any) => {
@@ -217,15 +216,13 @@ export const useVendorSkillsMutation = (onClose: () => void) => {
       })
     },
     {
-      onSuccess() {
-        queryClient.invalidateQueries('trades')
+      onError(error: any) {
         toast({
-          title: 'Vendor Skill Created',
-          description: 'Vendor Skill have been created/updated successfully.',
-          status: 'success',
+          title: 'Note',
+          description: (error.title as string) ?? 'Vendor Skill Operation Failed.',
+          status: 'error',
           isClosable: true,
         })
-        onClose()
       },
     },
   )
