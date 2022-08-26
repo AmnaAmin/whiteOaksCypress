@@ -42,8 +42,7 @@ export const useProjectWorkOrders = projectId => {
     const response = await client(`project/${projectId}/workorders`, {})
 
     return orderBy(
-      response?.data
-      ,
+      response?.data,
       [
         item => {
           const createdDate = new Date(item.createdDate)
@@ -163,6 +162,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         finalSOWAmount: fo?.newAmount || 0,
         accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - (fo?.partialPayment || 0),
       })) || [],
+    workOrderFinancialOverviews: projectFinacialOverview,
     ...rest,
   }
 }
