@@ -156,6 +156,7 @@ export const ProjectDetails: React.FC = props => {
                         <Switch
                           size="sm"
                           id="view-details"
+                          isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
                         />
                       </FormControl>
