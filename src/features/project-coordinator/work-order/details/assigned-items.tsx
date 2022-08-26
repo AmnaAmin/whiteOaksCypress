@@ -140,6 +140,7 @@ const AssignedItems = props => {
                 <Divider orientation="vertical" h="20px" />
               </Box>
 
+              {/* Commented out will be used in upcoming tickets
               <Button
                 type="button"
                 variant="ghost"
@@ -158,7 +159,7 @@ const AssignedItems = props => {
                 }
               >
                 {t(`${WORK_ORDER}.addNewItem`)}
-              </Button>
+              </Button>*/}
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
