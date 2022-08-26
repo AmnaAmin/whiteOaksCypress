@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from '../../utils/hooks/useColumnsWidthResize'
 import { RowProps } from '../../components/table/react-table'
 import { TableWrapper } from '../../components/table/table'
-import { useTrades } from 'utils/vendor-details'
-import { NewVendorSkillsModal } from './new-vendor-skill-modal'
-import { dateFormat } from 'utils/date-time-utils'
-import { MARKETS } from './vendor-manager.i18n'
+import { useVendorSkills } from 'utils/vendor-skills-api'
+
 const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
@@ -37,56 +35,44 @@ const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     </Tr>
   )
 }
+
 export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
-  const { data: VendorSkills, isLoading } = useTrades()
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState()
+  const { data: VendorSkills } = useVendorSkills()
+
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: `${MARKETS}.skills`,
+        Header: 'skills',
         accessor: 'skill',
       },
       {
-        Header: `${MARKETS}.createdBy`,
+        Header: 'createdby',
         accessor: 'createdBy',
       },
       {
-        Header: `${MARKETS}.createdDate`,
+        Header: 'createdDate',
         accessor: 'createdDate',
-        Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: `${MARKETS}.modifiedBy`,
+        Header: 'modifiedby',
         accessor: 'modifiedBy',
       },
       {
-        Header: `${MARKETS}.modifiedDate`,
+        Header: 'modifiedDate',
         accessor: 'modifiedDate',
-        Cell: ({ value }) => dateFormat(value),
       },
     ],
     ref,
   )
+
   return (
     <Box ref={resizeElementRef}>
-      {selectedWorkOrder && (
-        <NewVendorSkillsModal
-          isOpen={selectedWorkOrder ? true : false}
-          onClose={() => {
-            setSelectedWorkOrder(undefined)
-          }}
-          selectedWorkOrder={selectedWorkOrder}
-        />
-      )}
       <TableWrapper
         columns={columns}
         data={VendorSkills || []}
         TableRow={vendorSkillsRow}
         tableHeight="calc(100vh - 225px)"
         name="clients-table"
-        isLoading={isLoading}
-        disableFilter={true}
-        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
       />
     </Box>
   )

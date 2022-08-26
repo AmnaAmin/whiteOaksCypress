@@ -18,6 +18,7 @@ export default function VendorManagerRoutes() {
       <Route path="/support" element={<CreateATicket />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="*" element={<Navigate to="/vendors" />} />
+      <Route path="/vendorSkills" element={<VendorSkills />} />
     </Routes>
   )
 }
