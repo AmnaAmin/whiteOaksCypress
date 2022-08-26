@@ -93,11 +93,11 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
     navigate(`/project-details/${workOrder.projectId}`)
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl" variant={'custom'}>
       <ModalOverlay />
       {workOrder && (
         <>
-          <ModalContent rounded={3} borderTop="2px solid #4E87F8">
+          <ModalContent>
             <ModalHeader>
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>

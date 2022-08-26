@@ -4,11 +4,12 @@ import autoTable from 'jspdf-autotable'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ProjectWorkOrder } from 'types/transaction.type'
-import { useClient, useSmartWOClient } from 'utils/auth-context'
+import { useClient } from 'utils/auth-context'
 import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from './stringFormatters'
 import { useTranslation } from 'react-i18next'
+import { ProjectWorkOrderType } from 'types/project.type'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -19,17 +20,22 @@ export type LineItems = {
   id: number | string | null
   sku: string
   productName: string
+  details: string
   description: string
+  price?: string | number | null
   unitPrice: string | number | null
-  quantity: number
+  quantity: number | string | null
   totalPrice: string | number | null
-  isAssigned: boolean
+  isAssigned?: boolean
   projectId: string | number | null
   createdBy: string
   createdDate: string
   modifiedBy: string
   modifiedDate: string
   smartLineItemId?: string | number | null
+  source?: string
+  isVerified?: boolean
+  isCompleted?: boolean
 }
 
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
@@ -398,8 +404,9 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
   }
 }
 
+const swoPrefix = '/smartwo/api'
 export const useRemainingLineItems = (swoProjectId?: string) => {
-  const client = useSmartWOClient()
+  const client = useClient(swoPrefix)
 
   const { data: remainingItems, ...rest } = useQuery<any>(
     ['remainingItems', swoProjectId],
@@ -420,7 +427,7 @@ export const useRemainingLineItems = (swoProjectId?: string) => {
 }
 
 export const useFetchProjectId = (projectId?: string | number | null) => {
-  const client = useSmartWOClient()
+  const client = useClient(swoPrefix)
 
   const { data: swoProject, ...rest } = useQuery<any>(
     ['fetchProjectId', projectId],
@@ -447,7 +454,7 @@ type AssignArgumentType = {
 
 export const useAssignLineItems = (props: AssignArgumentType) => {
   const { swoProjectId, showToast } = props
-  const client = useSmartWOClient()
+  const client = useClient(swoPrefix)
   const toast = useToast()
 
   return useMutation(
@@ -478,4 +485,10 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
       },
     },
   )
+}
+
+export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType) => {
+  const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  const isAssignmentAllowed = !workOrder || activePastDue
+  return { isAssignmentAllowed }
 }

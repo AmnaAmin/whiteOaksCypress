@@ -1,4 +1,4 @@
-import { CheckIcon } from '@chakra-ui/icons'
+import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -23,14 +23,13 @@ import {
   useCheckbox,
   useDisclosure,
 } from '@chakra-ui/react'
-import { WORK_ORDER } from 'features/project-coordinator/work-order/workOrder.i18n'
 import { useCallback, useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
-import { LineItems, useRemainingLineItems } from 'utils/work-order'
+import { LineItems, useAllowLineItemsAssignment, useRemainingLineItems } from 'utils/work-order'
+import { WORK_ORDER } from '../workOrder.i18n'
 import RemainingItemsModal from './remaining-items-modal'
-import { STATUS } from 'features/projects/status'
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -70,6 +69,12 @@ export const CustomCheckBox = props => {
   )
 }
 
+type AssignedItemType = {
+  assignedItems: LineItems[]
+  manualItems: LineItems[]
+  showPrice?: boolean
+}
+
 const AssignedItems = props => {
   const { swoProject, isLoadingLineItems, workOrder } = props
   const [showLineItems] = useState(true)
@@ -77,10 +82,15 @@ const AssignedItems = props => {
   const { t } = useTranslation()
 
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
-  const { control, register, getValues, setValue } = useFormContext<any>()
+  const { control, register, getValues, setValue } = useFormContext<AssignedItemType>()
   const values = getValues()
+  const { isAssignmentAllowed } = useAllowLineItemsAssignment(workOrder)
 
-  const { fields: manualItems, remove } = useFieldArray({
+  const {
+    fields: manualItems,
+    remove,
+    append: appendManual,
+  } = useFieldArray({
     control,
     name: 'manualItems',
   })
@@ -94,6 +104,7 @@ const AssignedItems = props => {
     name: 'assignedItems',
   })
   const lineItems = useWatch({ name: 'assignedItems', control })
+  const markAllChecked = lineItems?.length > 0 && lineItems.every(l => l.isVerified)
 
   const {
     onClose: onCloseRemainingItemsModal,
@@ -128,7 +139,7 @@ const AssignedItems = props => {
               <Box pl="2" pr="1">
                 <Divider orientation="vertical" h="20px" />
               </Box>
-              {/*
+
               <Button
                 type="button"
                 variant="ghost"
@@ -148,7 +159,6 @@ const AssignedItems = props => {
               >
                 {t(`${WORK_ORDER}.addNewItem`)}
               </Button>
-              */}
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -156,7 +166,7 @@ const AssignedItems = props => {
               </Checkbox>
               <Checkbox
                 size="lg"
-                isChecked={lineItems?.length > 0 && lineItems.every(l => l.isVerified)}
+                isChecked={markAllChecked}
                 onChange={e => {
                   assignedItems.forEach((item, index) => {
                     setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
@@ -165,10 +175,12 @@ const AssignedItems = props => {
               >
                 {t(`${WORK_ORDER}.markAllVerified`)}
               </Checkbox>
-              {/*<Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
+              {/* Commented this code. Will be working on this in up coming stories.
+              
+              <Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
                 {t(`${WORK_ORDER}.downloadPDF`)}
             </Button> */}
-              {[STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+              {isAssignmentAllowed && (
                 <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
                   {t(`${WORK_ORDER}.remainingItems`)}
                 </Button>
@@ -188,7 +200,8 @@ const AssignedItems = props => {
                       <Th>{t(`${WORK_ORDER}.quantity`)}</Th>
                       <Th>{t(`${WORK_ORDER}.price`)}</Th>
                       <Th textAlign={'center'}>{t(`${WORK_ORDER}.status`)}</Th>
-                      {/*<Th>{ t(`${WORK_ORDER}.images`)}</Th> */}
+                      {/* Will be working on this in upcoming stores:
+                      <Th>{ t(`${WORK_ORDER}.images`)}</Th> */}
                       <Th textAlign={'center'}>{t(`${WORK_ORDER}.verification`)}</Th>
                     </Tr>
                   </Thead>
@@ -216,12 +229,9 @@ const AssignedItems = props => {
                                   <Icon
                                     as={BiXCircle}
                                     boxSize={5}
-                                    color="#4E87F8"
+                                    color="brand.300"
                                     onClick={() => {
-                                      setUnAssignedItems([
-                                        ...unassignedItems,
-                                        { ...values?.assignedItems[index], smartLineItemId: null },
-                                      ])
+                                      setUnAssignedItems([...unassignedItems, { ...values?.assignedItems[index] }])
                                       removeAssigned(index)
                                     }}
                                     cursor="pointer"
@@ -338,18 +348,21 @@ const AssignedItems = props => {
                               <Td>
                                 <CustomCheckBox text="Completed" />
                               </Td>
-                              {/*<Td>
-                            <Box>
-                              <Button
-                                pt="1"
-                                variant="outline"
-                                colorScheme="brand"
-                                rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
-                                size="sm"
-                              >
-                                {t(`${WORK_ORDER}.upload`)}
-                              </Button>
-                            </Box>
+                              {/*
+                              
+                              Commented this code. Will be working on this in up coming stories.
+                              <Td>
+                                <Box>
+                                  <Button
+                                    pt="1"
+                                    variant="outline"
+                                    colorScheme="brand"
+                                    rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
+                                    size="sm"
+                                  >
+                                    {t(`${WORK_ORDER}.upload`)}
+                                  </Button>
+                                </Box>
                               </Td>*/}
 
                               <Td>

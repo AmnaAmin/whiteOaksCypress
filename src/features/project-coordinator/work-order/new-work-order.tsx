@@ -80,6 +80,16 @@ const InformationCard = props => {
   )
 }
 
+type NewWorkOrderType = {
+  vendorSkillId: number | string | null
+  vendorId: number | string | null
+  workOrderExpectedCompletionDate: string | Date | null
+  workOrderStartDate: string | undefined
+  invoiceAmount: string | number | null
+  clientApprovedAmount: string | number | null
+  percentage: string | number | null
+}
+
 const NewWorkOrder: React.FC<{
   projectData: Project
   isOpen: boolean
@@ -97,7 +107,7 @@ const NewWorkOrder: React.FC<{
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
   const { swoProject } = useFetchProjectId(projectData?.id)
-  const formReturn = useForm()
+  const formReturn = useForm<NewWorkOrderType>()
   const {
     register,
     handleSubmit,
@@ -134,9 +144,7 @@ const NewWorkOrder: React.FC<{
 
   useEffect(() => {
     if (approvedAmount && percentageField) {
-      const amount = approvedAmount
-      const percentage = percentageField
-      const vendorWoAmountResult = amount - amount * (percentage / 100)
+      const vendorWoAmountResult = approvedAmount - approvedAmount * (percentageField / 100)
       setValue('invoiceAmount', vendorWoAmountResult.toFixed(2))
     } else if (approvedAmount === 0) {
       setValue('invoiceAmount', 0)
@@ -167,7 +175,8 @@ const NewWorkOrder: React.FC<{
     setVendorOptions(option)
   }, [vendors])
 
-  /* useEffect(() => {
+  /*  commenting as requirement yet to be confirmed 
+  useEffect(() => {
     const subscription = watch(values => {
       setVendorPhone(vendors?.find(v => v?.id === values?.vendorId?.value)?.businessPhoneNumber ?? '')
       setVendorEmail(vendors?.find(v => v?.id === values?.vendorId?.value)?.businessEmailAddress ?? '')
@@ -177,12 +186,13 @@ const NewWorkOrder: React.FC<{
 
   return (
     <Modal
-      size="none"
       isOpen={isOpen}
       onClose={() => {
         onClose()
         reset()
       }}
+      size="6xl"
+      variant="custom"
     >
       <ModalOverlay />
       <FormProvider {...formReturn}>
@@ -191,13 +201,11 @@ const NewWorkOrder: React.FC<{
             onSubmit(values)
           })}
         >
-          <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
-            <ModalHeader h="63px" borderBottom="1px solid #CBD5E0" color="gray.600" fontSize={16} fontWeight={500}>
-              {t('newWorkOrder')}
-            </ModalHeader>
+          <ModalContent h="600px" overflow={'auto'}>
+            <ModalHeader>{t('newWorkOrder')}</ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
-            <ModalBody justifyContent="center">
+            <ModalBody overflow={'auto'} justifyContent="center">
               <Box>
                 <SimpleGrid
                   columns={6}
@@ -217,13 +225,14 @@ const NewWorkOrder: React.FC<{
                   <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
 
                   <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
-                  {/*<InformationCard title=" Email" date={vendorEmail} />
+                  {/*  commenting as requirement yet to be confirmed
+                  <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
                 </SimpleGrid>
                 <Box mt={10}>
                   <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
                     <Box>
-                      <FormControl height="40px" isInvalid={errors.vendorSkillId}>
+                      <FormControl height="40px" isInvalid={!!errors.vendorSkillId}>
                         <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                           {t('type')}
                         </FormLabel>
@@ -254,7 +263,7 @@ const NewWorkOrder: React.FC<{
                       </FormControl>
                     </Box>
                     <Box>
-                      <FormControl isInvalid={errors.vendorSkillId}>
+                      <FormControl isInvalid={!!errors.vendorSkillId}>
                         <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                           {t('companyName')}
                         </FormLabel>
@@ -279,7 +288,7 @@ const NewWorkOrder: React.FC<{
                       </FormControl>
                     </Box>
                     <Box>
-                      <FormControl isInvalid={errors?.clientApprovedAmount}>
+                      <FormControl isInvalid={!!errors?.clientApprovedAmount}>
                         <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                           {t('clientApprovedAmount')}
                         </FormLabel>
@@ -308,7 +317,7 @@ const NewWorkOrder: React.FC<{
                       </FormControl>
                     </Box>
                     <Box>
-                      <FormControl isInvalid={errors?.percentage}>
+                      <FormControl isInvalid={!!errors?.percentage}>
                         <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                           {t('profitPercentage')}
                         </FormLabel>
@@ -337,7 +346,7 @@ const NewWorkOrder: React.FC<{
                     </Box>
 
                     <Box height="80px">
-                      <FormControl isInvalid={errors?.invoiceAmount}>
+                      <FormControl isInvalid={!!errors?.invoiceAmount}>
                         <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                           {t('vendorWorkOrderAmount')}
                         </FormLabel>
@@ -365,7 +374,7 @@ const NewWorkOrder: React.FC<{
                       </FormControl>
                     </Box>
                     <Box>
-                      <FormControl isInvalid={errors?.workOrderStartDate}>
+                      <FormControl isInvalid={!!errors?.workOrderStartDate}>
                         <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                           {t('expectedStartDate')}
                         </FormLabel>
@@ -385,7 +394,7 @@ const NewWorkOrder: React.FC<{
                       </FormControl>
                     </Box>
                     <Box>
-                      <FormControl isInvalid={errors?.workOrderExpectedCompletionDate}>
+                      <FormControl isInvalid={!!errors?.workOrderExpectedCompletionDate}>
                         <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                           {t('expectedCompletionDate')}
                         </FormLabel>

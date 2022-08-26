@@ -1,7 +1,6 @@
 import { Box, Checkbox, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import React from 'react'
 import { WORK_ORDER } from '../workOrder.i18n'
@@ -56,7 +55,6 @@ type RemainingListType = {
 const RemainingListTable = (props: RemainingListType) => {
   const { selectedItems, setSelectedItems, isLoading, remainingItems } = props
 
-  const { t } = useTranslation()
   const REMAINING_ITEMS_COLUMNS = [
     {
       Header: 'Check',
@@ -81,23 +79,23 @@ const RemainingListTable = (props: RemainingListType) => {
       disableExport: true,
     },
     {
-      Header: t(`${WORK_ORDER}.sku`),
+      Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
     },
     {
-      Header: t(`${WORK_ORDER}.productName`),
+      Header: `${WORK_ORDER}.productName`,
       accessor: 'productName',
     },
     {
-      Header: t(`${WORK_ORDER}.details`),
+      Header: `${WORK_ORDER}.details`,
       accessor: 'description',
     },
     {
-      Header: t(`${WORK_ORDER}.quantity`),
+      Header: `${WORK_ORDER}.quantity`,
       accessor: 'quantity',
     },
     {
-      Header: t(`${WORK_ORDER}.price`),
+      Header: `${WORK_ORDER}.price`,
       accessor: 'unitPrice',
       Cell(cellInfo) {
         return numeral(cellInfo.value).format('$0,0.00')
@@ -107,7 +105,7 @@ const RemainingListTable = (props: RemainingListType) => {
       },
     },
     {
-      Header: t(`${WORK_ORDER}.total`),
+      Header: `${WORK_ORDER}.total`,
       accessor: 'totalPrice',
       Cell(cellInfo) {
         return numeral(cellInfo.value).format('$0,0.00')

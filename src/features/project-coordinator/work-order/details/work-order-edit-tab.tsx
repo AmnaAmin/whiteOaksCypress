@@ -75,7 +75,7 @@ interface FormValues {
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
   assignedItems: LineItems[]
-  manualItems: any[]
+  manualItems: LineItems[]
 }
 
 const WorkOrderDetailTab = props => {
