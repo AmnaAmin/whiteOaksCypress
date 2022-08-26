@@ -15,6 +15,7 @@ import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from './auth-context'
 import { dateISOFormat, datePickerFormat } from './date-time-utils'
+import { createDocumentPayload } from './file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 
 export const useGetOverpayment = (projectId: number | null) => {
@@ -380,26 +381,6 @@ const removePropertiesFromObject = (obj: Project, properties: string[]): Project
   const newObj = { ...obj }
   properties.forEach(property => delete newObj[property])
   return newObj
-}
-
-export const createDocumentPayload = (file: File, documentType = 42): Promise<DocumentPayload> => {
-  return new Promise((res, rej) => {
-    const reader = new FileReader()
-    let filetype = 'text/plain'
-
-    if (file.type !== '') filetype = file.type
-
-    reader.addEventListener('load', (event: any) => {
-      res({
-        fileType: file.name,
-        fileObject: event?.target?.result?.split(',')[1],
-        fileObjectContentType: filetype,
-        documentType,
-      })
-    })
-
-    reader.readAsDataURL(file)
-  })
 }
 
 export const parseProjectDetailsPayloadFromFormData = async (
