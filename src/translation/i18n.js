@@ -240,6 +240,7 @@ i18n.use(initReactI18next).init({
         vendorGL: 'Vendor/GL',
         createdDate: 'Created Date',
         createdBy: 'Created By',
+        uploadFile: 'Upload File',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -741,6 +742,7 @@ i18n.use(initReactI18next).init({
         vendorGL: 'Vendedor/GL',
         createdDate: 'Fecha de creación',
         createdBy: 'creado por',
+        uploadFile: 'Subir archivo',
         // Project - Alerts
         value: 'Valor',
         category: 'Categoría',
