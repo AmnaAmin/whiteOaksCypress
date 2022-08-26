@@ -10,7 +10,6 @@ import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
-import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from '../status'
 import { ExportButton } from 'components/table-refactored/export-button'
@@ -59,7 +58,6 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { transactions = [], isLoading } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
-  const { t } = useTranslation()
   const { tableColumns, settingColumns } = useTableColumnSettings(
     [
       {
