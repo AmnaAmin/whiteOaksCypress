@@ -286,7 +286,7 @@ const AssignedItems = props => {
                                   <Icon
                                     as={BiXCircle}
                                     boxSize={5}
-                                    color="#4E87F8"
+                                    color="brand.300"
                                     onClick={() => remove(index)}
                                     cursor="pointer"
                                     mt="2"
