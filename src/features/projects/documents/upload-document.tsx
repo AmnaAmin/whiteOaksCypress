@@ -139,6 +139,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                           return (
                             <>
                               <ChooseFileField
+                                testId="choose-document"
                                 name={field.name}
                                 value={fileName}
                                 isRequired={true}
