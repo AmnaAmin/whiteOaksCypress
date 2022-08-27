@@ -2,6 +2,9 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 import { projects } from 'features/projects/projects.i18n'
+
+import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
+
 import { workOrder } from 'features/project-coordinator/work-order/workOrder.i18n'
 
 i18n.use(initReactI18next).init({
@@ -12,7 +15,11 @@ i18n.use(initReactI18next).init({
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'Expected Completion Date cannot be more than 1 year of Expected Start Date',
         ...projects.en.translation,
+
+        ...vendor_manager.en.translation,
+
         ...workOrder.en.translation,
+
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -78,7 +85,6 @@ i18n.use(initReactI18next).init({
         terms: 'Terms',
         paymentTypes: 'Payment Types',
         balance: 'Balance',
-        markets: 'Markets',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
         woNo: 'WO No',
@@ -464,7 +470,11 @@ i18n.use(initReactI18next).init({
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
         ...projects.es.translation,
+
+        ...vendor_manager.es.translation,
+
         ...workOrder.es.translation,
+
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
         fieldProjectManager: 'Gerente de Proyectos de Campo',
@@ -584,7 +594,7 @@ i18n.use(initReactI18next).init({
         terms: 'Términos',
         paymentTypes: 'Formas De Pago',
         balance: 'Balance',
-        markets: 'Mercados',
+
         woInvoiceDate: 'Fecha de factura de OT',
         poNo: 'Número de orden de compra',
         woNo: 'OT No',
@@ -606,6 +616,7 @@ i18n.use(initReactI18next).init({
         transactionTypeLabel: 'Escribe',
         transactionTotal: 'Cantidad Total',
         modifiedDate: 'Entregar',
+
         skillName: 'Comercio',
         pastDueWorkorders: 'Vencido WO',
         vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
