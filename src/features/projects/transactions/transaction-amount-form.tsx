@@ -162,12 +162,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               ml="10px"
               borderColor="#4E87F8"
               color="#4E87F8"
+              _hover={{
+                _disabled: {
+                  bg: '#EBF8FF',
+                  color: '#4E87F8',
+                }
+              }}
               _disabled={{
                 bg: '#EBF8FF',
                 color: '#4E87F8',
-                _hover: {
-                  bg: '#EBF8FF',
-                },
               }}
               leftIcon={<RiDeleteBinLine color="#4E87F8" />}
               onClick={onDeleteConfirmationModalOpen}
