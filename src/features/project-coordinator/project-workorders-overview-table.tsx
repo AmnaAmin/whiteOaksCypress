@@ -16,7 +16,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
   const { tableColumns } = useTableColumnSettings(
     [
       {
-        Header: 'vendor',
+        Header: 'Vendor',
         Footer: '',
         accessor: 'vendorName',
       },
@@ -62,7 +62,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'revised Vendor WOs',
+        Header: 'Revised Vendor WOs',
         accessor: 'revisedVendorWorkOrder',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -147,12 +147,12 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
       },
       {
         Header: 'Invoiced Amount',
-        accessor: 'partialPayment',
+        accessor: 'accountPayable',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
         },
         Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('partialPayment', info.rows), [info.rows])
+          const total = React.useMemo(() => getTotalOfKey('accountPayable', info.rows), [info.rows])
 
           return numeral(total).format('$0,0.00')
         },
