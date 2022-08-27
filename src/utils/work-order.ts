@@ -42,9 +42,9 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         }
       },
       onError(error: any) {
-        let description = error.title ?? 'Unable to save workorder.';
-        if(error.errorKey === "EXPECTED_AND_COMPLETION_1_YEAR_ERROR") {
-          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR') 
+        let description = error.title ?? 'Unable to save workorder.'
+        if (error.errorKey === 'EXPECTED_AND_COMPLETION_1_YEAR_ERROR') {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR')
         }
         toast({
           title: 'Work Order',
@@ -87,9 +87,9 @@ export const useCreateWorkOrderMutation = () => {
         })
       },
       onError(error: any) {
-        let description = error.title ?? 'Unable to save workorder.';
-        if(error.errorKey === "EXPECTED_AND_COMPLETION_1_YEAR_ERROR") {
-          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR') 
+        let description = error.title ?? 'Unable to save workorder.'
+        if (error.errorKey === 'EXPECTED_AND_COMPLETION_1_YEAR_ERROR') {
+          description = t('EXPECTED_AND_COMPLETION_1_YEAR_ERROR')
         }
         toast({
           title: 'Work Order',
