@@ -174,10 +174,14 @@ const WorkOrderDetailTab = props => {
     }
   }, [workOrder, reset])
 
+  const checkKeyDown = e => {
+    if (e.code === 'Enter') e.preventDefault()
+  }
+
   return (
     <Box>
       <FormProvider {...formReturn}>
-        <form onSubmit={formReturn.handleSubmit(onSubmit)}>
+        <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
           <ModalBody h="400px" overflow={'auto'}>
             <Stack pt="32px" spacing="32px" mx="32px">
               <SimpleGrid columns={5}>

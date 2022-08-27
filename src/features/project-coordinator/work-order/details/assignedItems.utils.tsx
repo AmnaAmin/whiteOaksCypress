@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
+import { Input } from '@chakra-ui/react'
 
 const swoPrefix = '/smartwo/api'
 
@@ -159,4 +160,54 @@ export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType, swo
   const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const isAssignmentAllowed = (!workOrder || activePastDue) && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
+}
+
+export const PriceInput = props => {
+  return <Input {...props} variant="outline" size="sm" />
+}
+
+type EditableCellType = {
+  valueFormatter?: any
+  index: number
+  fieldName: string
+  formControl: any
+  inputType?: string
+}
+
+export const EditableCell = (props: EditableCellType) => {
+  const [selectedCell, setSelectedCell] = useState('')
+  const { index, fieldName, formControl, inputType, valueFormatter } = props
+  const { getValues, setValue } = formControl
+  const values = getValues()
+  return (
+    <>
+      {selectedCell !== index + '-' + fieldName ? (
+        <span
+          onClick={() => {
+            setSelectedCell(index + '-' + fieldName)
+          }}
+        >
+          {valueFormatter
+            ? valueFormatter(values?.assignedItems[index]?.[fieldName])
+            : values?.assignedItems[index]?.[fieldName]}
+        </span>
+      ) : (
+        <Input
+          size="sm"
+          id="sku"
+          type={inputType ?? 'text'}
+          defaultValue={values?.assignedItems[index]?.[fieldName]}
+          onChange={e => {
+            if (e.target.value === '') {
+              setSelectedCell('')
+            }
+          }}
+          onBlurCapture={e => {
+            setValue(`assignedItems.${index}.${fieldName}`, e.target.value)
+            setSelectedCell('')
+          }}
+        />
+      )}
+    </>
+  )
 }

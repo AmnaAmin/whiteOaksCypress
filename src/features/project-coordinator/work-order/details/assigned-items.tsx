@@ -30,13 +30,18 @@ import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
-import { LineItems, useAllowLineItemsAssignment, useRemainingLineItems } from './assignedItems.utils'
+import {
+  EditableCell,
+  LineItems,
+  PriceInput,
+  useAllowLineItemsAssignment,
+  useRemainingLineItems,
+} from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
 import RemainingItemsModal from './remaining-items-modal'
 
-export const PriceInput = props => {
-  return <Input {...props} variant="outline" size="sm" />
-}
+import { currencyFormatter } from 'utils/stringFormatters'
+
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
 
@@ -417,13 +422,27 @@ const AssignedLineItems = props => {
                   }}
                   cursor="pointer"
                 ></Icon>
-                <span>{values?.assignedItems[index]?.sku}</span>
+                <EditableCell index={index} fieldName="sku" formControl={props.formControl} inputType="text" />
               </HStack>
             </Td>
-            <Td>{values?.assignedItems[index]?.productName}</Td>
-            <Td>{values?.assignedItems[index]?.description}</Td>
-            <Td>{values?.assignedItems[index]?.quantity}</Td>
-            <Td>{values?.assignedItems[index]?.price}</Td>
+            <Td>
+              <EditableCell index={index} fieldName="productName" formControl={props.formControl} inputType="text" />
+            </Td>
+            <Td>
+              <EditableCell index={index} fieldName="description" formControl={props.formControl} inputType="text" />
+            </Td>
+            <Td>
+              <EditableCell index={index} fieldName="quantity" formControl={props.formControl} inputType="number" />
+            </Td>
+            <Td>
+              <EditableCell
+                index={index}
+                fieldName="price"
+                formControl={props.formControl}
+                inputType="number"
+                valueFormatter={currencyFormatter}
+              />
+            </Td>
             <Td>
               <Controller
                 control={control}
@@ -460,4 +479,5 @@ const AssignedLineItems = props => {
     </>
   )
 }
+
 export default AssignedItems
