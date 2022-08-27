@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next'
 
 import { projects } from 'features/projects/projects.i18n'
 import { transactioni18n } from 'features/project-coordinator/transaction.i18n'
+import { workOrder } from 'features/project-coordinator/work-order/workOrder.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -13,6 +14,7 @@ i18n.use(initReactI18next).init({
           'Expected Completion Date cannot be more than 1 year of Expected Start Date',
         ...projects.en.translation,
         ...transactioni18n.en.tranlation,
+        ...workOrder.en.translation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -242,6 +244,7 @@ i18n.use(initReactI18next).init({
         vendorGL: 'Vendor/GL',
         createdDate: 'Created Date',
         createdBy: 'Created By',
+        uploadFile: 'Upload File',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -379,7 +382,7 @@ i18n.use(initReactI18next).init({
         overpayment: 'Overpayment',
         remainingPayment: 'Remaining Payment',
         payment: 'Payment',
-        invoiceBackDate: 'Invoice back bate',
+        invoiceBackDate: 'Invoice Back Date',
 
         // work order details
         cancelWorkOrder: 'cancel Work Order',
@@ -464,7 +467,7 @@ i18n.use(initReactI18next).init({
           'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
         ...projects.es.translation,
         ...transactioni18n.es.tranlation,
-
+        ...workOrder.es.translation,
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
         fieldProjectManager: 'Gerente de Proyectos de Campo',
@@ -745,6 +748,7 @@ i18n.use(initReactI18next).init({
         vendorGL: 'Vendedor/GL',
         createdDate: 'Fecha de creación',
         createdBy: 'creado por',
+        uploadFile: 'Subir archivo',
         // Project - Alerts
         value: 'Valor',
         category: 'Categoría',

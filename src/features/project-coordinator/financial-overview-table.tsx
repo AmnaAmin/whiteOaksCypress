@@ -58,13 +58,6 @@ export const FinancialOverviewTable = React.forwardRef((props: FinancialOverview
         },
       },
       {
-        Header: 'Adjustment for COs',
-        accessor: 'coAdjustment',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-      },
-      {
         Header: 'Final SOW Amount',
         accessor: 'finalSOWAmount',
         Cell(cellInfo) {

@@ -93,7 +93,7 @@ const CheckboxStructure = ({ checked, id, onChange }) => {
 const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const { t } = useTranslation()
   const [assignedItems, setAssignedItems] = useState(workOrder.assignedItems ?? [])
-  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation()
+  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
 
   const onMarkCompleted = useCallback(
     value => {

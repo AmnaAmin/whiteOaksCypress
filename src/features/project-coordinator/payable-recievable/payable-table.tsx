@@ -5,7 +5,7 @@ import { useAccountPayable } from 'utils/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { TableWrapper } from 'components/table/table'
 import { Column } from 'react-table'
-import WorkOrderDetails from 'features/projects/modals/project-coordinator/work-order/work-order-edit'
+import WorkOrderDetails from 'features/project-coordinator/work-order/work-order-edit'
 
 const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (

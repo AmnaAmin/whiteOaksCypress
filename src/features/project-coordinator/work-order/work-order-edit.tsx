@@ -19,20 +19,20 @@ import {
   Center,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
-import { LienWaiverTab } from './lien-waiver-tab'
+import { LienWaiverTab } from './lien-waiver/lien-waiver-tab'
 import { useTranslation } from 'react-i18next'
 // import WorkOrderDetailTab from './work-order-edit-tab'
-import PaymentInfoTab from './payment-tab'
-import { InvoiceTabPC } from './invoice-tab'
+import PaymentInfoTab from './payment/payment-tab'
+import { InvoiceTabPC } from './invoice/invoice-tab'
 import Status, { STATUS } from 'features/projects/status'
-import WorkOrderNotes from '../../work-order-notes'
-import WorkOrderDetailTab from './work-order-edit-tab'
+import WorkOrderNotes from './notes/work-order-notes'
+import WorkOrderDetailTab from './details/work-order-edit-tab'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'utils/pc-projects'
 import { useDocuments } from 'utils/vendor-projects'
 import { useTransactions } from 'utils/transactions'
-import { useUpdateWorkOrderMutation } from 'utils/work-order'
+import { useFetchProjectId, useUpdateWorkOrderMutation } from 'utils/work-order'
 
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
   const { t } = useTranslation()
@@ -50,7 +50,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
   const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation()
+  const [isWorkOrderUpdating, setWorkOrderUpdating] = useState(false)
+  const { swoProject } = useFetchProjectId(workOrder?.projectId)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
   const navigate = useNavigate()
 
   const onClose = useCallback(() => {
@@ -77,18 +79,25 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }
-    updateWorkOrder(payload)
+    updateWorkOrder(payload, {
+      onSuccess: () => {
+        setWorkOrderUpdating(false)
+      },
+      onError: () => {
+        setWorkOrderUpdating(false)
+      },
+    })
   }
 
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrder.projectId}`)
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl" variant={'custom'}>
       <ModalOverlay />
       {workOrder && (
         <>
-          <ModalContent rounded={3} borderTop="2px solid #4E87F8">
+          <ModalContent>
             <ModalHeader>
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>
@@ -173,6 +182,9 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
                       workOrder={workOrder}
                       onClose={onClose}
                       onSave={onSave}
+                      isWorkOrderUpdating={isWorkOrderUpdating}
+                      setWorkOrderUpdating={setWorkOrderUpdating}
+                      swoProject={swoProject}
                     />
                   </TabPanel>
                   <TabPanel p={0}>
