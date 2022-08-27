@@ -32,7 +32,8 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'utils/pc-projects'
 import { useDocuments } from 'utils/vendor-projects'
 import { useTransactions } from 'utils/transactions'
-import { useFetchProjectId, useUpdateWorkOrderMutation } from 'utils/work-order'
+import { useUpdateWorkOrderMutation } from 'utils/work-order'
+import { useFetchProjectId } from './details/assignedItems.utils'
 
 const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
   const { t } = useTranslation()

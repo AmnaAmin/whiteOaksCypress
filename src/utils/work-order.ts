@@ -9,33 +9,10 @@ import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'util
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from './stringFormatters'
 import { useTranslation } from 'react-i18next'
-import { ProjectWorkOrderType } from 'types/project.type'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
   swoProjectId?: string | number | null
-}
-
-export type LineItems = {
-  id: number | string | null
-  sku: string
-  productName: string
-  details: string
-  description: string
-  price?: string | number | null
-  unitPrice: string | number | null
-  quantity: number | string | null
-  totalPrice: string | number | null
-  isAssigned?: boolean
-  projectId: string | number | null
-  createdBy: string
-  createdDate: string
-  modifiedBy: string
-  modifiedDate: string
-  smartLineItemId?: string | number | null
-  source?: string
-  isVerified?: boolean
-  isCompleted?: boolean
 }
 
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
@@ -79,30 +56,6 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         toast({
           title: 'Work Order',
           description,
-          status: 'error',
-          isClosable: true,
-        })
-      },
-    },
-  )
-}
-
-export const useDeleteLineIds = () => {
-  const client = useClient()
-  const toast = useToast()
-
-  return useMutation(
-    (payload: { deletedIds: string }) => {
-      return client('work-orders/line-items?ids=' + payload.deletedIds, {
-        method: 'DELETE',
-      })
-    },
-    {
-      onSuccess() {},
-      onError(error: any) {
-        toast({
-          title: 'Work Order',
-          description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
         })
@@ -333,28 +286,31 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 
 /* WorkOrder Details */
 
-export const parseWODetailValuesToPayload = (formValues, deletedItems) => {
+export const parseWODetailValuesToPayload = formValues => {
+  /*- id will be set when line item is saved in workorder
+    - smartLineItem id is id of line item in swo */
+
   const manualItems = [
-    ...deletedItems?.map(a => {
-      /* id will be set when line item is saved in workorder
-    smartLineItem id is id of line item in swo */
+    ...formValues?.manualItems?.map(a => {
       return { ...a, id: '', a: a.id, source: 'manual' }
     }),
   ]
-  console.log('manualItems', manualItems)
+
+  const assignedItems = [
+    ...formValues?.assignedItems?.map(a => {
+      const isNewSmartLineItem = !a.smartLineItemId && a.source !== 'manual'
+      return {
+        ...a,
+        id: isNewSmartLineItem ? '' : a.id,
+        smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
+      }
+    }),
+  ]
   return {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
-    assignedItems: [
-      ...formValues?.assignedItems?.map(a => {
-        /* id will be set when line item is saved in workorder
-        smartLineItem id is id of line item in swo */
-        const isNew = !a.smartLineItemId
-        return { ...a, id: isNew ? '' : a.id, smartLineItemId: isNew ? a.id : a.smartLineItemId }
-      }),
-      ...manualItems,
-    ],
+    assignedItems: [...assignedItems, ...manualItems],
   }
 }
 
@@ -365,6 +321,7 @@ export const defaultValuesWODetails = workOrder => {
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: false,
     assignedItems: workOrder?.assignedItems?.length > 0 ? workOrder?.assignedItems : [],
+    manualItems: [],
   }
   return defaultValues
 }
@@ -411,93 +368,4 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     status: 34,
     projectId: projectId,
   }
-}
-
-const swoPrefix = '/smartwo/api'
-export const useRemainingLineItems = (swoProjectId?: string) => {
-  const client = useClient(swoPrefix)
-
-  const { data: remainingItems, ...rest } = useQuery<any>(
-    ['remainingItems', swoProjectId],
-    async () => {
-      const response = await client(`line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}`, {})
-
-      return response?.data
-    },
-    {
-      enabled: !!swoProjectId,
-    },
-  )
-
-  return {
-    remainingItems,
-    ...rest,
-  }
-}
-
-export const useFetchProjectId = (projectId?: string | number | null) => {
-  const client = useClient(swoPrefix)
-
-  const { data: swoProject, ...rest } = useQuery<any>(
-    ['fetchProjectId', projectId],
-    async () => {
-      const response = await client(`projects?projectId.equals=` + projectId, {})
-
-      return response?.data
-    },
-    {
-      enabled: !!projectId,
-    },
-  )
-
-  return {
-    swoProject: swoProject?.length > 0 ? swoProject[0] : null,
-    ...rest,
-  }
-}
-
-type AssignArgumentType = {
-  swoProjectId: string | number | null
-  showToast?: boolean
-}
-
-export const useAssignLineItems = (props: AssignArgumentType) => {
-  const { swoProjectId, showToast } = props
-  const client = useClient(swoPrefix)
-  const toast = useToast()
-
-  return useMutation(
-    (lineItems: any) => {
-      return client(`line-items/list?projectId.equals=${swoProjectId}`, {
-        data: lineItems,
-        method: 'PUT',
-      })
-    },
-    {
-      onSuccess(res: any) {
-        if (showToast) {
-          toast({
-            title: 'Line Items Assignment',
-            description: 'Line Items Assignment updated successfully.',
-            status: 'success',
-            isClosable: true,
-          })
-        }
-      },
-      onError(error: any) {
-        toast({
-          title: 'Assigned Line Items',
-          description: (error.title as string) ?? 'Unable to update line items assignment.',
-          status: 'error',
-          isClosable: true,
-        })
-      },
-    },
-  )
-}
-
-export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType) => {
-  const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
-  const isAssignmentAllowed = !workOrder || activePastDue
-  return { isAssignmentAllowed }
 }
