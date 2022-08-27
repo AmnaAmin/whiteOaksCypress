@@ -1,9 +1,9 @@
-export const MARKETS = 'markets'
+export const VENDOR_MANAGER = 'vendorManager'
 
 export const vendor_manager = {
   en: {
     translation: {
-      [MARKETS]: {
+      [VENDOR_MANAGER]: {
         markets: 'Markets',
         stateName: 'State Name',
         newMarket: 'New Market',
@@ -25,7 +25,7 @@ export const vendor_manager = {
   },
   es: {
     translation: {
-      [MARKETS]: {
+      [VENDOR_MANAGER]: {
         markets: 'Mercados',
         stateName: 'Nombre del Estado',
         newMarket: 'Nuevo mercado',

@@ -9,7 +9,7 @@ import { useProjectWorkOrders } from 'utils/projects'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
-import WorkOrderDetails from './modals/work-order-details'
+import WorkOrderDetails from './vendor-work-order/work-order-details'
 import { Project } from 'types/project.type'
 import Status from './status'
 

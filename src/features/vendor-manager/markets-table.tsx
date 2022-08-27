@@ -5,7 +5,7 @@ import { t } from 'i18next'
 import { Market } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { MARKETS } from './vendor-manager.i18n'
+import { VENDOR_MANAGER } from './vendor-manager.i18n'
 
 type MarketsProps = {
   setTableInstance?: (tableInstance: any) => void
@@ -57,15 +57,15 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
 
   const { columns } = useColumnWidthResize([
     {
-      Header: t(`${MARKETS}.metroServiceArea`),
+      Header: t(`${VENDOR_MANAGER}.metroServiceArea`),
       accessor: 'metropolitanServiceArea',
     },
     {
-      Header: t(`${MARKETS}.createdBy`),
+      Header: t(`${VENDOR_MANAGER}.createdBy`),
       accessor: 'createdBy',
     },
     {
-      Header: t(`${MARKETS}.createdDate`),
+      Header: t(`${VENDOR_MANAGER}.createdDate`),
       accessor: 'createdDate',
       Cell: ({ value }) => dateFormat(value),
       getCellExportValue(row) {
@@ -73,12 +73,12 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
       },
     },
     {
-      Header: t(`${MARKETS}.modifiedBy`),
+      Header: t(`${VENDOR_MANAGER}.modifiedBy`),
       accessor: 'modifiedBy',
     },
 
     {
-      Header: t(`${MARKETS}.modifiedDateSubmit`),
+      Header: t(`${VENDOR_MANAGER}.modifiedDateSubmit`),
       accessor: 'modifiedDate',
       Cell({ value }) {
         return <Box>{dateFormat(value)}</Box>
@@ -89,7 +89,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
     },
 
     {
-      Header: t(`${MARKETS}.stateName`),
+      Header: t(`${VENDOR_MANAGER}.stateName`),
       accessor: 'stateName',
     },
   ])

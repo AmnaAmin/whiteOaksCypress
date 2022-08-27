@@ -21,7 +21,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useAccountDetails, useVendorSkillsMutation } from 'utils/vendor-details'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
-import { MARKETS } from './vendor-manager.i18n'
+import { VENDOR_MANAGER } from './vendor-manager.i18n'
 import { t } from 'i18next'
 const InformationCard: React.FC<{
   Icon: React.ElementType
@@ -100,7 +100,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                {t(`${MARKETS}.newVendorSkills`)}
+                {t(`${VENDOR_MANAGER}.newVendorSkills`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -108,13 +108,13 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
               <HStack spacing="25px" mt="30px">
                 <InformationCard
                   Icon={BiDetail}
-                  label={t(`${MARKETS}.createdBy`)}
+                  label={t(`${VENDOR_MANAGER}.createdBy`)}
                   value={selectedWorkOrder ? selectedWorkOrder?.createdBy : account?.firstName}
                   register={register('createdBy')}
                 />
                 <InformationCard
                   Icon={BiCalendar}
-                  label={t(`${MARKETS}.createdDate`)}
+                  label={t(`${VENDOR_MANAGER}.createdDate`)}
                   value={dateFormat(new Date())}
                   register={register('createdDate')}
                 />
@@ -122,13 +122,13 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   <>
                     <InformationCard
                       Icon={BiDetail}
-                      label={t(`${MARKETS}.modifiedBy`)}
+                      label={t(`${VENDOR_MANAGER}.modifiedBy`)}
                       value={selectedWorkOrder?.modifiedBy}
                       register={register('modifiedBy')}
                     />
                     <InformationCard
                       Icon={BiCalendar}
-                      label={t(`${MARKETS}.modifiedDate`)}
+                      label={t(`${VENDOR_MANAGER}.modifiedDate`)}
                       value={dateFormat(selectedWorkOrder?.modifiedDate)}
                       register={register('modifiedDate')}
                     />
@@ -138,7 +138,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
               <Divider border="1px solid #E2E8F0 !important" my="30px" />
               <Box>
                 <FormLabel variant="strong-label" size="md">
-                  {t(`${MARKETS}.skills`)}
+                  {t(`${VENDOR_MANAGER}.skills`)}
                 </FormLabel>
                 <Input
                   {...register('skill')}
@@ -152,10 +152,10 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
               <HStack spacing="16px">
                 <Button variant="outline" colorScheme="brand" onClick={onClose}>
-                  {t(`${MARKETS}.cancel`)}
+                  {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
                 <Button disabled={!watchvalue} type="submit" colorScheme="brand">
-                  {t(`${MARKETS}.save`)}
+                  {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>
             </ModalFooter>

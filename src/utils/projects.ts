@@ -42,8 +42,7 @@ export const useProjectWorkOrders = projectId => {
     const response = await client(`project/${projectId}/workorders`, {})
 
     return orderBy(
-      response?.data
-      ,
+      response?.data,
       [
         item => {
           const createdDate = new Date(item.createdDate)
