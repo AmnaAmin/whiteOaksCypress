@@ -33,9 +33,16 @@ import { usePCProject } from 'utils/pc-projects'
 import { useDocuments } from 'utils/vendor-projects'
 import { useTransactions } from 'utils/transactions'
 import { useUpdateWorkOrderMutation } from 'utils/work-order'
-import { useFetchProjectId } from './details/assignedItems.utils'
 
-const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWorkOrderType; onClose: () => void }) => {
+const WorkOrderDetails = ({
+  workOrder,
+  onClose: close,
+  swoProject,
+}: {
+  workOrder: ProjectWorkOrderType
+  onClose: () => void
+  swoProject?: any
+}) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
@@ -52,7 +59,7 @@ const WorkOrderDetails = ({ workOrder, onClose: close }: { workOrder: ProjectWor
   const isPayable = pathname?.includes('payable')
   const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
   const [isWorkOrderUpdating, setWorkOrderUpdating] = useState(false)
-  const { swoProject } = useFetchProjectId(workOrder?.projectId)
+
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
   const navigate = useNavigate()
 

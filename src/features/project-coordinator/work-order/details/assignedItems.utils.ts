@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/projects/status'
+import { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
@@ -69,16 +70,18 @@ export const useRemainingLineItems = (swoProjectId?: string) => {
 
 export const useFetchProjectId = (projectId?: string | number | null) => {
   const client = useClient(swoPrefix)
+  const [refetchInterval, setRefetchInterval] = useState(15000)
 
   const { data: swoProject, ...rest } = useQuery<any>(
     ['fetchProjectId', projectId],
     async () => {
       const response = await client(`projects?projectId.equals=` + projectId, {})
-
+      if (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED') setRefetchInterval(0)
       return response?.data
     },
     {
       enabled: !!projectId,
+      refetchInterval: refetchInterval,
     },
   )
 
@@ -152,8 +155,8 @@ export const useDeleteLineIds = () => {
   )
 }
 
-export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType) => {
+export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType, swoProject) => {
   const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
-  const isAssignmentAllowed = !workOrder || activePastDue
+  const isAssignmentAllowed = (!workOrder || activePastDue) && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
 }

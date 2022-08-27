@@ -93,7 +93,7 @@ const AssignedItems = props => {
   const formControl = useFormContext<AssignedItemType>()
   const { control, register, setValue } = formControl
 
-  const { isAssignmentAllowed } = useAllowLineItemsAssignment(workOrder)
+  const { isAssignmentAllowed } = useAllowLineItemsAssignment(workOrder, swoProject)
 
   const manualItemArray = useFieldArray({
     control,
