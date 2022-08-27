@@ -166,11 +166,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 _disabled: {
                   bg: '#EBF8FF',
                   color: '#4E87F8',
+                  opacity: 0.5
                 }
               }}
               _disabled={{
                 bg: '#EBF8FF',
                 color: '#4E87F8',
+                opacity: 0.5
               }}
               leftIcon={<RiDeleteBinLine color="#4E87F8" />}
               onClick={onDeleteConfirmationModalOpen}
