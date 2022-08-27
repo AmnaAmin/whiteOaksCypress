@@ -397,7 +397,7 @@ const ManualItems = props => {
 
 const AssignedLineItems = props => {
   const { setUnAssignedItems, unassignedItems } = props
-  const { control, getValues, register } = props.formControl
+  const { control, getValues } = props.formControl
   const { fields: assignedItems, remove: removeAssigned } = props.fieldArray
   const values = getValues()
   return (
@@ -418,7 +418,6 @@ const AssignedLineItems = props => {
                   cursor="pointer"
                 ></Icon>
                 <span>{values?.assignedItems[index]?.sku}</span>
-                <Input size="sm" id="now" {...register(`assignedItems.${index}.sku`)} />
               </HStack>
             </Td>
             <Td>{values?.assignedItems[index]?.productName}</Td>
