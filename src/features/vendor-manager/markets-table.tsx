@@ -1,6 +1,7 @@
-import { Flex, Td, Text, Tr } from '@chakra-ui/react'
+import { Box, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
+import { t } from 'i18next'
 import { Market } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
@@ -56,29 +57,39 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
 
   const { columns } = useColumnWidthResize([
     {
-      Header: `${MARKETS}.metroServiceArea`,
+      Header: t(`${MARKETS}.metroServiceArea`),
       accessor: 'metropolitanServiceArea',
     },
     {
-      Header: `${MARKETS}.createdBy`,
+      Header: t(`${MARKETS}.createdBy`),
       accessor: 'createdBy',
     },
     {
-      Header: `${MARKETS}.createdDate`,
+      Header: t(`${MARKETS}.createdDate`),
       accessor: 'createdDate',
       Cell: ({ value }) => dateFormat(value),
+      getCellExportValue(row) {
+        return dateFormat(row.original.createdDate)
+      },
     },
     {
-      Header: `${MARKETS}.modifiedBy`,
+      Header: t(`${MARKETS}.modifiedBy`),
       accessor: 'modifiedBy',
     },
+
     {
-      Header: `${MARKETS}.modifiedDateSubmit`,
+      Header: t(`${MARKETS}.modifiedDateSubmit`),
       accessor: 'modifiedDate',
-      Cell: ({ value }) => dateFormat(value),
+      Cell({ value }) {
+        return <Box>{dateFormat(value)}</Box>
+      },
+      getCellExportValue(row) {
+        return dateFormat(row.original.modifiedDate)
+      },
     },
+
     {
-      Header: `${MARKETS}.stateName`,
+      Header: t(`${MARKETS}.stateName`),
       accessor: 'stateName',
     },
   ])
