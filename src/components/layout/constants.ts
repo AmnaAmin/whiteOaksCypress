@@ -100,6 +100,14 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#68D391',
     },
   ],
+  [UserTypes.fpm]: [
+    {
+      pathTo: '/projects',
+      title: 'Projects',
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+  ],
 }
 
 export const useRoleBasedMenu = (): Array<Menu> => {
