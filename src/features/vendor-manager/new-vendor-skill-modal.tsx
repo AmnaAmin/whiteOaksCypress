@@ -100,7 +100,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                {t(`${VENDOR_MANAGER}.newVendorSkills`)}
+                {selectedWorkOrder ? `ID-${selectedWorkOrder?.id}` : t(`${VENDOR_MANAGER}.newVendorSkills`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
