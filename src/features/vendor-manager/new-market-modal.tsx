@@ -25,6 +25,7 @@ import { t } from 'i18next'
 import Select from 'components/form/react-select'
 import { useAccountDetails, useMarketsMutation } from 'api/vendor-details'
 import { useStates } from 'api/pc-projects'
+import { Market } from 'types/vendor.types'
 
 const InformationCard: React.FC<{
   Icon: React.ElementType
@@ -56,16 +57,16 @@ const InformationCard: React.FC<{
 type newVendorSkillsTypes = {
   onClose: () => void
   isOpen: boolean
-  selectedWorkOrder?: any
+  selectedMarket?: Market
 }
-export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedWorkOrder }) => {
+export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedMarket }) => {
   const { data: account } = useAccountDetails()
   const { mutate: createMarkets } = useMarketsMutation()
   const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { stateSelectOptions } = useStates()
-  const [selectValue, setSelectValue] = useState({ label: selectedWorkOrder?.stateName, id: selectedWorkOrder?.id })
+  const [selectValue, setSelectValue] = useState({ label: selectedMarket?.stateName, id: selectedMarket?.id })
 
   const setAddressInfo = option => {
     setValue('state', option)
@@ -78,16 +79,16 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
       modifiedBy: data?.modifiedBy,
       metropolitanServiceArea: data?.metroServiceArea,
       stateId: data?.state.id,
-      id: selectedWorkOrder ? selectedWorkOrder.id : '',
-      method: selectedWorkOrder ? 'PUT' : 'POST',
+      id: selectedMarket ? selectedMarket.id : '',
+      method: selectedMarket ? 'PUT' : 'POST',
     }
 
     createMarkets(arg, {
       onSuccess() {
         queryClient.invalidateQueries('markets')
         toast({
-          title: `Market ${selectedWorkOrder?.id ? 'Updated' : ' Created'}`,
-          description: `Market have been ${selectedWorkOrder?.id ? 'Updated' : ' Created'} Successfully.`,
+          title: `Market ${selectedMarket?.id ? 'Updated' : ' Created'}`,
+          description: `Market have been ${selectedMarket?.id ? 'Updated' : ' Created'} Successfully.`,
           status: 'success',
           isClosable: true,
         })
@@ -104,7 +105,6 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     control,
     name: 'state',
   })
-  console.log(selectValue)
 
   return (
     <>
@@ -114,7 +114,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                {selectedWorkOrder ? `ID-${selectedWorkOrder?.id}` : t(`${VENDOR_MANAGER}.newMarket`)}
+                {selectedMarket ? `ID-${selectedMarket?.id}` : t(`${VENDOR_MANAGER}.newMarket`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -123,7 +123,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 <InformationCard
                   Icon={BiDetail}
                   label={t(`${VENDOR_MANAGER}.createdBy`)}
-                  value={selectedWorkOrder ? selectedWorkOrder?.createdBy : account?.firstName}
+                  value={selectedMarket ? selectedMarket?.createdBy : account?.firstName}
                   register={register('createdBy')}
                 />
                 <InformationCard
@@ -132,18 +132,18 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   value={dateFormat(new Date())}
                   register={register('createdDate')}
                 />
-                {selectedWorkOrder && (
+                {selectedMarket && (
                   <>
                     <InformationCard
                       Icon={BiDetail}
                       label={t(`${VENDOR_MANAGER}.modifiedBy`)}
-                      value={selectedWorkOrder?.modifiedBy}
+                      value={selectedMarket?.modifiedBy}
                       register={register('modifiedBy')}
                     />
                     <InformationCard
                       Icon={BiCalendar}
                       label={t(`${VENDOR_MANAGER}.modifiedDate`)}
-                      value={dateFormat(selectedWorkOrder?.modifiedDate)}
+                      value={dateFormat(selectedMarket?.modifiedDate)}
                       register={register('modifiedDate')}
                     />
                   </>
@@ -162,14 +162,14 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                     type="text"
                     variant="required-field"
                     w="215px"
-                    defaultValue={selectedWorkOrder?.metropolitanServiceArea}
+                    defaultValue={selectedMarket?.metropolitanServiceArea}
                   />
                 </Box>
                 <Box w="215px">
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.state`)}
                   </FormLabel>
-                  {selectedWorkOrder && (
+                  {selectedMarket && (
                     <Select
                       {...register('state')}
                       options={stateSelectOptions}
@@ -182,7 +182,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                       }}
                     />
                   )}
-                  {!selectedWorkOrder && (
+                  {!selectedMarket && (
                     <Select
                       {...register('state')}
                       options={stateSelectOptions}

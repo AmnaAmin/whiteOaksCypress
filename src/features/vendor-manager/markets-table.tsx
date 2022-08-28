@@ -16,7 +16,7 @@ type MarketsProps = {
 }
 
 export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoading, markets }) => {
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState()
+  const [selectedMarket, setSelectedMarket] = useState<Market>()
 
   const marketsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     return (
@@ -99,13 +99,13 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
   ])
   return (
     <>
-      {selectedWorkOrder && (
+      {selectedMarket && (
         <NewMarketModal
-          isOpen={selectedWorkOrder ? true : false}
+          isOpen={selectedMarket ? true : false}
           onClose={() => {
-            setSelectedWorkOrder(undefined)
+            setSelectedMarket(undefined)
           }}
-          selectedWorkOrder={selectedWorkOrder}
+          selectedMarket={selectedMarket}
         />
       )}
       <TableWrapper
@@ -117,7 +117,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
         isLoading={isLoading}
         disableFilter={true}
         setTableInstance={setTableInstance}
-        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+        onRowClick={(e, row) => setSelectedMarket(row.original)}
       />
     </>
   )

@@ -23,6 +23,7 @@ import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 import { t } from 'i18next'
+import { Market } from 'types/vendor.types'
 const InformationCard: React.FC<{
   Icon: React.ElementType
   label: string
@@ -53,9 +54,9 @@ const InformationCard: React.FC<{
 type newVendorSkillsTypes = {
   onClose: () => void
   isOpen: boolean
-  selectedWorkOrder?: any
+  selectedVendorSkills?: Market
 }
-export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedWorkOrder }) => {
+export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
   const { data: account } = useAccountDetails()
   const { mutate: createVendorSkills } = useVendorSkillsMutation()
   const { control, register, handleSubmit, reset } = useForm()
@@ -69,16 +70,16 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
       modifiedDate: convertDateTimeToServerISO(data?.createdDate),
       modifiedBy: data?.modifiedBy,
       skill: data?.skill,
-      id: selectedWorkOrder?.id,
-      method: selectedWorkOrder ? 'PUT' : 'POST',
+      id: selectedVendorSkills?.id,
+      method: selectedVendorSkills ? 'PUT' : 'POST',
     }
 
     createVendorSkills(arg, {
       onSuccess() {
         queryClient.invalidateQueries('trades')
         toast({
-          title: `Vendor Skill ${selectedWorkOrder?.id ? 'Updated' : ' Created'}`,
-          description: `Vendor Skill have been ${selectedWorkOrder?.id ? 'Updated' : ' Created'} Successfully.`,
+          title: `Vendor Skill ${selectedVendorSkills?.id ? 'Updated' : ' Created'}`,
+          description: `Vendor Skill have been ${selectedVendorSkills?.id ? 'Updated' : ' Created'} Successfully.`,
           status: 'success',
           isClosable: true,
         })
@@ -100,7 +101,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                {selectedWorkOrder ? `ID-${selectedWorkOrder?.id}` : t(`${VENDOR_MANAGER}.newVendorSkills`)}
+                {selectedVendorSkills ? `ID-${selectedVendorSkills?.id}` : t(`${VENDOR_MANAGER}.newVendorSkills`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -109,7 +110,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 <InformationCard
                   Icon={BiDetail}
                   label={t(`${VENDOR_MANAGER}.createdBy`)}
-                  value={selectedWorkOrder ? selectedWorkOrder?.createdBy : account?.firstName}
+                  value={selectedVendorSkills ? selectedVendorSkills?.createdBy : account?.firstName}
                   register={register('createdBy')}
                 />
                 <InformationCard
@@ -118,18 +119,18 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   value={dateFormat(new Date())}
                   register={register('createdDate')}
                 />
-                {selectedWorkOrder && (
+                {selectedVendorSkills && (
                   <>
                     <InformationCard
                       Icon={BiDetail}
                       label={t(`${VENDOR_MANAGER}.modifiedBy`)}
-                      value={selectedWorkOrder?.modifiedBy}
+                      value={selectedVendorSkills?.modifiedBy}
                       register={register('modifiedBy')}
                     />
                     <InformationCard
                       Icon={BiCalendar}
                       label={t(`${VENDOR_MANAGER}.modifiedDate`)}
-                      value={dateFormat(selectedWorkOrder?.modifiedDate)}
+                      value={dateFormat(selectedVendorSkills?.modifiedDate)}
                       register={register('modifiedDate')}
                     />
                   </>
@@ -145,7 +146,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   type="text"
                   borderLeft="2.5px solid blue"
                   w="215px"
-                  defaultValue={selectedWorkOrder?.skill}
+                  defaultValue={selectedVendorSkills?.skill}
                 />
               </Box>
             </ModalBody>

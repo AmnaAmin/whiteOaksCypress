@@ -41,7 +41,7 @@ export const Markets = () => {
               fontWeight={500}
               onClick={() => {
                 if (projectTableInstance) {
-                  projectTableInstance?.exportData('xlsx', false)
+                  projectTableInstance?.exportData('csv', false)
                 }
               }}
             >
