@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -90,7 +90,12 @@ export const Projects = () => {
           )}
           {fpmUsers?.length > 0 && isFPM && (
             <FormControl w="215px">
-              <ReactSelect onChange={setSelectedFPM} options={fpmUsers} selectProps={{ isBorderLeft: true }} />
+              <ReactSelect
+                onChange={setSelectedFPM}
+                options={fpmUsers}
+                placeholder={'Select'}
+                selectProps={{ isBorderLeft: true }}
+              />
             </FormControl>
           )}
         </Flex>
