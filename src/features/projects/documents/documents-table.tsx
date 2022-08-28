@@ -1,16 +1,18 @@
 import { Box, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-ui/react'
-import { Button } from 'components/button/button'
+import { ExportButton } from 'components/table-refactored/export-button'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
+import TableColumnSettings from 'components/table/table-column-settings'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
-import { FaAtom } from 'react-icons/fa'
+import { BiDownArrowCircle } from 'react-icons/bi'
 import { useParams } from 'react-router'
+import { TableNames } from 'types/table-column.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile, downloadFileOnly } from 'utils/file-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { useDocuments } from 'utils/vendor-projects'
 
 const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
@@ -31,7 +33,7 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} p="0">
             {/** @ts-ignore */}
             <Flex alignItems="center" h="60px">
               <Text
@@ -67,7 +69,8 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { documents = [] } = useDocuments({
     projectId,
   })
-  const { columns } = useColumnWidthResize(
+
+  const { columns: documentColumns } = useColumnWidthResize(
     [
       {
         id: 'fileType',
@@ -130,12 +133,17 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     ],
     ref,
   )
+  const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.document)
+  const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(documentColumns, TableNames.document)
 
+  const onSave = columns => {
+    postDocumentColumn(columns)
+  }
   return (
     <Box>
       <TableWrapper
         disableFilter={true}
-        columns={columns}
+        columns={tableColumns}
         data={documents}
         TableRow={vendorDocumentRow}
         tableHeight="calc(100vh - 300px)"
@@ -144,15 +152,9 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
       {isProjectCoordinator && (
         <Flex justifyContent="end">
           <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <Button variant="ghost" colorScheme="brand" m={0}>
-              <Icon as={BiExport} fontSize="18px" mr={1} />
-              {t('export')}
-            </Button>
+            <ExportButton columns={tableColumns as any} data={documents} colorScheme="brand" />
             <Divider orientation="vertical" border="1px solid" h="20px" />
-            <Button variant="ghost" colorScheme="brand" m={0}>
-              <Icon as={FaAtom} fontSize="18px" mr={1} />
-              {t('settings')}
-            </Button>
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </HStack>
         </Flex>
       )}

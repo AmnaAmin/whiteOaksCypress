@@ -18,7 +18,7 @@ import {
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
-import { useAccountDetails, useVendorSkillsMutation } from 'utils/vendor-details'
+import { useAccountDetails, useMarketsMutation } from 'utils/vendor-details'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
@@ -60,37 +60,34 @@ type newVendorSkillsTypes = {
 }
 export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedWorkOrder }) => {
   const { data: account } = useAccountDetails()
-  const { mutate: createVendorSkills } = useVendorSkillsMutation()
-  const { control, register, handleSubmit, reset } = useForm()
+  const { mutate: createMarkets } = useMarketsMutation()
+  const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { stateSelectOptions } = useStates()
-  const [addressInfo, setAddressInfo] = useState()
+  const [selectValue, setSelectValue] = useState({ label: selectedWorkOrder?.stateName, id: selectedWorkOrder?.id })
 
+  const setAddressInfo = option => {
+    setValue('state', option)
+  }
   const onSubmit = data => {
     const arg = {
       createdBy: data?.createdBy,
       createdDate: convertDateTimeToServerISO(data?.createdDate),
       modifiedDate: convertDateTimeToServerISO(data?.createdDate),
       modifiedBy: data?.modifiedBy,
-      skill: data?.skill,
-      id: selectedWorkOrder?.id,
+      metropolitanServiceArea: data?.metroServiceArea,
+      stateId: data?.state.id,
+      id: selectedWorkOrder ? selectedWorkOrder.id : '',
       method: selectedWorkOrder ? 'PUT' : 'POST',
-
-      //   method: selectedWorkOrder ? 'PUT' : 'POST',
-      //   createdBy: 'Admin',
-      //   createdDate: '2022-08-28T00:00:00.000Z',
-      //   metropolitanServiceArea: 'DC',
-      //   modifiedDate: null,
-      //   stateId: '4',
     }
 
-    createVendorSkills(arg, {
+    createMarkets(arg, {
       onSuccess() {
-        queryClient.invalidateQueries('trades')
+        queryClient.invalidateQueries('markets')
         toast({
-          title: `Vendor Skill ${selectedWorkOrder?.id ? 'Updated' : ' Created'}`,
-          description: `Vendor Skill have been ${selectedWorkOrder?.id ? 'Updated' : ' Created'} Successfully.`,
+          title: `Market ${selectedWorkOrder?.id ? 'Updated' : ' Created'}`,
+          description: `Market have been ${selectedWorkOrder?.id ? 'Updated' : ' Created'} Successfully.`,
           status: 'success',
           isClosable: true,
         })
@@ -107,8 +104,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     control,
     name: 'state',
   })
-
-  console.log('addressInfo :', addressInfo)
+  console.log(selectValue)
 
   return (
     <>
@@ -118,7 +114,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                {t(`${VENDOR_MANAGER}.newVendorSkills`)}
+                {selectedWorkOrder ? `ID-${selectedWorkOrder?.id}` : t(`${VENDOR_MANAGER}.newMarket`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -166,23 +162,37 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                     type="text"
                     variant="required-field"
                     w="215px"
-                    defaultValue={selectedWorkOrder?.skill}
+                    defaultValue={selectedWorkOrder?.metropolitanServiceArea}
                   />
                 </Box>
                 <Box w="215px">
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.state`)}
                   </FormLabel>
-                  <Select
-                    {...register('state')}
-                    options={stateSelectOptions}
-                    // size="md"
-                    // value={field.value}
-                    selectProps={{ isBorderLeft: true }}
-                    onChange={option => {
-                      setAddressInfo(option)
-                    }}
-                  />
+                  {selectedWorkOrder && (
+                    <Select
+                      {...register('state')}
+                      options={stateSelectOptions}
+                      // size="md"
+                      value={selectValue}
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => {
+                        setAddressInfo(option)
+                        setSelectValue({ label: option.label, id: option.id })
+                      }}
+                    />
+                  )}
+                  {!selectedWorkOrder && (
+                    <Select
+                      {...register('state')}
+                      options={stateSelectOptions}
+                      // size="md"
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => {
+                        setAddressInfo(option)
+                      }}
+                    />
+                  )}
                 </Box>
               </HStack>
             </ModalBody>

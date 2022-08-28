@@ -2,9 +2,11 @@ import { Box, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { t } from 'i18next'
+import { useState } from 'react'
 import { Market } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { NewMarketModal } from './new-market-modal'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 
 type MarketsProps = {
@@ -14,6 +16,8 @@ type MarketsProps = {
 }
 
 export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoading, markets }) => {
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState()
+
   const marketsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     return (
       <Tr
@@ -94,15 +98,27 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
     },
   ])
   return (
-    <TableWrapper
-      columns={columns}
-      data={markets || []}
-      TableRow={marketsRow}
-      tableHeight="calc(100vh - 300px)"
-      name="work-orders-table"
-      isLoading={isLoading}
-      disableFilter={true}
-      setTableInstance={setTableInstance}
-    />
+    <>
+      {selectedWorkOrder && (
+        <NewMarketModal
+          isOpen={selectedWorkOrder ? true : false}
+          onClose={() => {
+            setSelectedWorkOrder(undefined)
+          }}
+          selectedWorkOrder={selectedWorkOrder}
+        />
+      )}
+      <TableWrapper
+        columns={columns}
+        data={markets || []}
+        TableRow={marketsRow}
+        tableHeight="calc(100vh - 300px)"
+        name="work-orders-table"
+        isLoading={isLoading}
+        disableFilter={true}
+        setTableInstance={setTableInstance}
+        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+      />
+    </>
   )
 }

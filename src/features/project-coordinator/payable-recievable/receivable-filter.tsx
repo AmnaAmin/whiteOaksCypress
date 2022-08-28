@@ -87,7 +87,7 @@ export const ReceivableFilter = ({ cardSelected, onSelected }) => {
     },
     {
       id: '6',
-      text: 'Overpayment',
+      text: '40 Days',
       value: currencyFormatter(ThirtyToFourtyDaysSum),
       number: thirtyToFourtyDays?.length,
       iconColor: '#FBB6CE',

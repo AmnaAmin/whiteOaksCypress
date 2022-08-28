@@ -195,6 +195,7 @@ export const useStates = () => {
     states?.map(state => ({
       value: state?.code,
       label: state?.name,
+      id: state?.id,
     })) || []
 
   return {

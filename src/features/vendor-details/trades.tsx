@@ -46,13 +46,13 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
               <Controller
                 name={`trades.${index}`}
                 control={control}
-                key={checkbox.id}
+                key={checkbox.trade.id}
                 render={({ field: { name, onChange, value } }) => {
                   return (
                     <CheckboxButton
                       name={name}
-                      key={name}
-                      isChecked={value.checked}
+                      key={value.trade.id}
+                      isChecked={checkbox.checked}
                       data-testid={`tradeChecks.${value.trade.id}`}
                       onChange={event => {
                         const checked = event.target.checked

@@ -227,6 +227,29 @@ export const useVendorSkillsMutation = () => {
     },
   )
 }
+export const useMarketsMutation = () => {
+  const client = useClient()
+  const toast = useToast()
+
+  return useMutation(
+    (payload: any) => {
+      return client('markets', {
+        data: payload,
+        method: payload?.method,
+      })
+    },
+    {
+      onError(error: any) {
+        toast({
+          title: 'Note',
+          description: (error.title as string) ?? 'Markets Operation Failed.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
 
 export const useMarkets = () => {
   const client = useClient()
