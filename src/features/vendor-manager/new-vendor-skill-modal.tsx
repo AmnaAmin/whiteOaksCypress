@@ -18,7 +18,7 @@ import {
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
-import { useAccountDetails, useVendorSkillsMutation } from 'utils/vendor-details'
+import { useAccountDetails, useVendorSkillsMutation } from 'api/vendor-details'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'

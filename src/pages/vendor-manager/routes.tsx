@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import VendorProfilePassword from 'pages/vendor/password'
 import CreateATicket from 'pages/vendor/create-a-ticket'
 import Settings from 'pages/vendor/settings'
-import Vendors from '../project-cordinator/vendors'
+import Vendors from 'pages/vendor-manager/vendors'
 import { VendorSkills } from './vendor-skills'
 import { Markets } from './markets'
 

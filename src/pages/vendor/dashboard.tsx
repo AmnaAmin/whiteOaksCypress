@@ -4,14 +4,14 @@ import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
 import PaidChart from 'components/chart/paid-chart'
-// import { usePaidWOAmountByYearAndMonthTotal } from 'utils/vendor-dashboard'
+// import { usePaidWOAmountByYearAndMonthTotal } from 'api/vendor-dashboard'
 import Dropdown from 'components/dropdown-menu/Dropdown'
 import { MonthOption, monthOptions } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
-import { ProjectFilters } from 'features/projects/project-fliters'
+import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
 
 const Dashboard: React.FC = () => {
