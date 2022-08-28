@@ -1,6 +1,6 @@
 import { Layout } from 'components/layout'
 import VendorRoutes from 'pages/vendor/routes'
-import ProjectCordinatorRoutes from 'pages/project-cordinator/routes'
+import ProjectCordinatorRoutes from 'pages/routes'
 import VendorManagerRoutes from 'pages/vendor-manager/routes'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 

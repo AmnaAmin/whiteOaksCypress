@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp, BsPlus } from 'react-icons/bs'
 import { exportBtnIcon } from 'theme/common-style'
-import { useMarkets } from 'utils/vendor-details'
+import { useMarkets } from 'api/vendor-details'
 
 export const Markets = () => {
   const { markets, isLoading } = useMarkets()

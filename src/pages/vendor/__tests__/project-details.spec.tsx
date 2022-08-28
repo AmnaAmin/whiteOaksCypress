@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { UploadDocumentModal } from 'features/projects/documents/upload-document'
+import { UploadDocumentModal } from 'features/project-details/documents/upload-document'
 import { Providers } from 'providers'
 import { act, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
 
