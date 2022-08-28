@@ -3,13 +3,13 @@ import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack } from
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
-import { useVendorCards, useVendorEntity } from 'utils/vendor-dashboard'
+import { useVendorCards, useVendorEntity } from 'api/vendor-dashboard'
 import { useTranslation } from 'react-i18next'
 
 import { LicenseDocument } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import Status from 'features/projects/status'
+import Status from 'features/common/status'
 import numeral from 'numeral'
 
 const LicenseType: { [key: number]: string } = {

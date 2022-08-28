@@ -21,7 +21,7 @@ import {
   parseSupportFormValuesToAPIPayload,
   SEVERITY_OPTIONS,
   useCreateTicketMutation,
-} from 'utils/support'
+} from 'api/support'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'

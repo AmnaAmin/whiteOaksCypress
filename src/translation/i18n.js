@@ -1,12 +1,12 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import { projects } from 'features/projects/projects.i18n'
-import { transactioni18n } from 'features/project-coordinator/transaction.i18n'
+import { projects } from 'features/vendor/projects/projects.i18n'
+import { transactioni18n } from 'features/project-details/transaction-details/transaction-details.i18n'
 
 import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
 
-import { workOrder } from 'features/project-coordinator/work-order/workOrder.i18n'
+import { workOrder } from 'features/work-order/workOrder.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
