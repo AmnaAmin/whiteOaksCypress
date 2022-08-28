@@ -12,12 +12,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { BiExport, BiSync } from 'react-icons/bi'
 import { TableNames } from 'types/table-column.types'
-// import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-receivable'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'utils/table-column-settings'
 import { compact } from 'lodash'
 import { useBatchProcessingMutation, useCheckBatch } from 'utils/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
+import { OverPaymentTransactionsTable } from 'features/projects/transactions/overpayment-transactions-table'
 
 export const Payable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)
@@ -151,17 +151,9 @@ export const Payable = () => {
         accessor: 'checkbox',
         Cell: ({ row }) => {
           return (
-            //   <Checkbox
-            //   // isDisabled={loading}
-            //   variant="link"
-            //   value={row.original?.projectId}
-            //   {...register(`id.${row.index}`)}
-            //   isChecked={!!formValues?.id?.[row.index]}
-            // />
             <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
               <Spacer w="20px" />
               <Checkbox
-                // isDisabled={loading}
                 value={row.original?.id}
                 {...register(`id.${row.index}`)}
                 isChecked={!!formValues?.id?.[row.index]}
@@ -207,51 +199,53 @@ export const Payable = () => {
             clear={clearAll}
           />
           <Spacer />
-          <Button
-            alignContent="right"
-            // onClick={onNewProjectModalOpen}
-            colorScheme="brand"
-            type="submit"
-          >
+          <Button alignContent="right" colorScheme="brand" type="submit" disabled={selectedCard === '6'}>
             <Icon as={BiSync} fontSize="18px" mr={2} />
             {!loading ? 'Batch Process' : 'Processing...'}
           </Button>
         </Flex>
         <Divider border="2px solid #E2E8F0" />
-        <Box mt={2}>
-          {loading && <ViewLoader />}
-          <PayableTable
-            selectedCard={selectedCard as string}
-            selectedDay={selectedDay as string}
-            payableColumns={tableColumns}
-            setTableInstance={setProjectTableInstance}
-            weekDayFilters={weekDayFilters}
-          />
-        </Box>
-
-        <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={4}>
-          <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
-            <Button
-              m={0}
-              colorScheme="brand"
-              variant="ghost"
-              onClick={() => {
-                if (projectTableInstance) {
-                  projectTableInstance?.exportData('xlsx', false)
-                }
-              }}
-            >
-              <Icon as={BiExport} fontSize="18px" mr={1} />
-              {t('export')}
-            </Button>
-            <Center>
-              <Divider orientation="vertical" height="25px" border="1px solid" />
-            </Center>
-
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-          </Flex>
-        </Stack>
       </Box>
+
+      {/* -- If overpayment card is not selected, then show payable table. (Overpayment Card Id is 6) -- */}
+      {selectedCard !== '6' ? (
+        <>
+          <Box mt={2}>
+            {loading && <ViewLoader />}
+            <PayableTable
+              selectedCard={selectedCard as string}
+              selectedDay={selectedDay as string}
+              payableColumns={tableColumns}
+              setTableInstance={setProjectTableInstance}
+              weekDayFilters={weekDayFilters}
+            />
+          </Box>
+          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={4}>
+            <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
+              <Button
+                m={0}
+                colorScheme="brand"
+                variant="ghost"
+                onClick={() => {
+                  if (projectTableInstance) {
+                    projectTableInstance?.exportData('xlsx', false)
+                  }
+                }}
+              >
+                <Icon as={BiExport} fontSize="18px" mr={1} />
+                {t('export')}
+              </Button>
+              <Center>
+                <Divider orientation="vertical" height="25px" border="1px solid" />
+              </Center>
+
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </Flex>
+          </Stack>
+        </>
+      ) : (
+        <OverPaymentTransactionsTable />
+      )}
       <ConfirmationBox
         title="Batch processing"
         content="Batch Process has been completed successfully."
