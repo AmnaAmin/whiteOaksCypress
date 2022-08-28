@@ -77,8 +77,6 @@ export const createDocumentPayload = (file: File, documentType = 42): Promise<Do
     if (file.type !== '') filetype = file.type
 
     reader.addEventListener('load', (event: any) => {
-      console.log('File', file.type)
-
       res({
         fileType: file.name,
         fileObject: event?.target?.result?.split(',')[1],

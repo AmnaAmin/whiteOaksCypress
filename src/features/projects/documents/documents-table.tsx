@@ -70,7 +70,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     projectId,
   })
 
-  const { columns: DOCUMENT_COLUMNS } = useColumnWidthResize(
+  const { columns: documentColumns } = useColumnWidthResize(
     [
       {
         id: 'fileType',
@@ -134,7 +134,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     ref,
   )
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.document)
-  const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(DOCUMENT_COLUMNS, TableNames.document)
+  const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(documentColumns, TableNames.document)
 
   const onSave = columns => {
     postDocumentColumn(columns)
