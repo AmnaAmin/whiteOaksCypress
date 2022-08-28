@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from 'features/project-coordinator/work-order/work-order-edit'
 import Status from 'features/projects/status'
+import { useFetchProjectId } from './work-order/details/assignedItems.utils'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -60,6 +61,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
+  const { swoProject } = useFetchProjectId(projectId)
 
   useEffect(() => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -117,6 +119,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
     <Box>
       <WorkOrderDetails
         workOrder={selectedWorkOrder as ProjectWorkOrderType}
+        swoProject={swoProject}
         onClose={() => {
           setSelectedWorkOrder(undefined)
           refetch()

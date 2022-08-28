@@ -27,15 +27,11 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors } from 'utils/pc-projects'
 import { currencyFormatter } from 'utils/stringFormatters'
 import { useTrades } from 'utils/vendor-details'
-import {
-  parseNewWoValuesToPayload,
-  useAssignLineItems,
-  useCreateWorkOrderMutation,
-  useFetchProjectId,
-} from 'utils/work-order'
+import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
+import { useFetchProjectId, useAssignLineItems } from './details/assignedItems.utils'
 
 const CalenderCard = props => {
   return (

@@ -13,7 +13,7 @@ import {
 import RemainingListTable from 'features/project-coordinator/work-order/details/remaining-list-table'
 import { t } from 'i18next'
 import React, { useState } from 'react'
-import { LineItems } from 'utils/work-order'
+import { LineItems } from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
 
 const RemainingItemsModal: React.FC<{
