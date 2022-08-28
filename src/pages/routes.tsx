@@ -19,7 +19,8 @@ export default function ProjectCordinatorRoutes() {
       <Route path="/settings" element={<Settings />} />
       {routes.map(page => (
         <Route
-          path={page.path}
+          key={page.path}
+          path={`/${page.path}`}
           element={
             <Suspense fallback={ViewLoader}>
               <page.element />
