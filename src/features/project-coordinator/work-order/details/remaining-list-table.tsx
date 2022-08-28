@@ -4,7 +4,7 @@ import { TableWrapper } from 'components/table/table'
 import numeral from 'numeral'
 import React from 'react'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { LineItems } from 'utils/work-order'
+import { LineItems } from './assignedItems.utils'
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
