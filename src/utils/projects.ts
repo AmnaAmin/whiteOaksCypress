@@ -162,6 +162,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         finalSOWAmount: fo?.newAmount || 0,
         accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - (fo?.partialPayment || 0),
       })) || [],
+    workOrderFinancialOverviews: restProjectFinancialOverviews,
     ...rest,
   }
 }

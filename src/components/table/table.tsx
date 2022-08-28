@@ -7,6 +7,7 @@ import Table, {
   TableLoadingState,
   TableProps,
   TBody,
+  TFooter,
   useCustomTable,
 } from './react-table'
 
@@ -24,6 +25,7 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
     isLoading,
     enablePagination = false,
     disableFilter = false,
+    isShowFooter,
     ...restProps
   } = props
   const tableInstance = useCustomTable(
@@ -43,6 +45,8 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
       ) : (
         <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
       )}
+
+      {isShowFooter && <TFooter {...tableInstance} />}
     </Table>
   )
 }
