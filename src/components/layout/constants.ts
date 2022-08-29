@@ -105,22 +105,10 @@ export const MENU_ROLE_BASED: Menus = {
 
   [UserTypes.doc]: [
     {
-      pathTo: '/vendors',
-      title: 'Vendors',
-      Icon: BiUserPin,
-      color: '#9F7AEA',
-    },
-    {
-      pathTo: '/vendorSkills',
-      title: 'Vendors Skills',
-      Icon: BiAlignMiddle,
+      pathTo: '/projects',
+      title: 'Projects',
+      Icon: FaAlignCenter,
       color: '#4E87F8',
-    },
-    {
-      pathTo: '/markets',
-      title: 'Markets',
-      Icon: BiStats,
-      color: '#68D391',
     },
   ],
 

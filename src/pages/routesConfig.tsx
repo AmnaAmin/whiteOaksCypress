@@ -46,9 +46,8 @@ export default function useRoutesConfig() {
 
     case isDoc:
       return [
-        { path: 'vendors', element: Vendors },
-        { path: 'vendorSkills', element: VendorSkills },
-        { path: 'markets', element: Markets },
+        { path: 'projects', element: Projects },
+        { path: 'project-details/:projectId', element: ProjectDetails },
       ]
 
     case isVendor:
