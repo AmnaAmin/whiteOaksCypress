@@ -110,6 +110,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
   ],
 
   [UserTypes.fpm]: [
