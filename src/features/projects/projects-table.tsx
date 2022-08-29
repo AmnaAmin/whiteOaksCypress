@@ -288,9 +288,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       var date = dates?.dueDate
       return date.substr(0, 10)
     })
-
     if (selectedDay) {
-      setFilterProjects(projects?.filter(project => clientDate.includes(project?.clientDueDate?.substr(0, 10))))
+      setFilterProjects(projects?.filter(project => clientDate?.includes(project?.clientDueDate?.substr(0, 10))))
     }
   }, [selectedCard, selectedDay, projects, usersId])
 

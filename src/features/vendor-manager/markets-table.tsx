@@ -98,7 +98,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
     },
   ])
   return (
-    <>
+    <Box overflow={'auto'}>
       {selectedMarket && (
         <NewMarketModal
           isOpen={selectedMarket ? true : false}
@@ -119,6 +119,6 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
         setTableInstance={setTableInstance}
         onRowClick={(e, row) => setSelectedMarket(row.original)}
       />
-    </>
+    </Box>
   )
 }
