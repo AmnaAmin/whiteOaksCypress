@@ -93,8 +93,7 @@ export const AddPropertyInfo: React.FC<{
     })
 
     // Check for duplicate address
-    const duplicatedInProjects = projects?.filter(p => p.propertyId === property?.id) || []
-
+    const duplicatedInProjects = projects?.filter(p => p.propertyId === property?.id && (p.projectStatus === 'NEW'|| p.projectStatus === "ACTIVE" || p.projectStatus === 'PUNCH' || p.projectStatus === 'CLOSED')) || []
     setIsDuplicateAddress(false)
     setValue('acknowledgeCheck', false)
 
