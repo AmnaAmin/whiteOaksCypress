@@ -31,9 +31,9 @@ const UserInfo: React.FC = () => {
   const { data } = useAuth()
   const account = data?.user
   const userName = `${account?.firstName} ${account?.lastName}`
-  const isAdmin = useMemo(() => {
-    return account?.authorities.find(authority => authority === 'ROLE_ADMIN')
-  }, [account?.authorities])
+  // const isAdmin = useMemo(() => {
+  //   return account?.authorities.find(authority => authority === 'ROLE_ADMIN')
+  // }, [account?.authorities])
 
   return (
     <HStack>
@@ -50,7 +50,7 @@ const UserInfo: React.FC = () => {
           </Text>
         </Flex>
         <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.600">
-          {isAdmin ? 'Admin' : 'User'}
+          {account?.userTypeLabel}
         </Text>
       </VStack>
     </HStack>
