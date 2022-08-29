@@ -2,9 +2,11 @@ import { Box, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { t } from 'i18next'
+import { useState } from 'react'
 import { Market } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { NewMarketModal } from './new-market-modal'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 
 type MarketsProps = {
@@ -14,6 +16,8 @@ type MarketsProps = {
 }
 
 export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoading, markets }) => {
+  const [selectedMarket, setSelectedMarket] = useState<Market>()
+
   const marketsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     return (
       <Tr
@@ -95,6 +99,15 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
   ])
   return (
     <Box overflow={'auto'}>
+      {selectedMarket && (
+        <NewMarketModal
+          isOpen={selectedMarket ? true : false}
+          onClose={() => {
+            setSelectedMarket(undefined)
+          }}
+          selectedMarket={selectedMarket}
+        />
+      )}
       <TableWrapper
         columns={columns}
         data={markets || []}
@@ -104,6 +117,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
         isLoading={isLoading}
         disableFilter={true}
         setTableInstance={setTableInstance}
+        onRowClick={(e, row) => setSelectedMarket(row.original)}
       />
     </Box>
   )
