@@ -11,6 +11,7 @@ import { Markets } from 'pages/vendor-manager/markets'
 // import { ProjectCoordinatorDashboard } from 'pages/dashboard'
 
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { Performance } from './fpm/performance'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -24,6 +25,7 @@ export default function useRoutesConfig() {
       return [
         { path: 'projects', element: Projects },
         { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'performance', element: Performance },
       ]
     case isProjectCoordinator:
       return [
