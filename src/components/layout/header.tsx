@@ -14,9 +14,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import DropdownLanguage from 'translation/DropdownLanguage'
-// import { IRootState } from "app/shared/reducers";
-import React, { useMemo, useState } from 'react'
-// import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import React, { useState } from 'react'
 import { FaAngleDown, FaAngleUp, FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
@@ -31,9 +29,6 @@ const UserInfo: React.FC = () => {
   const { data } = useAuth()
   const account = data?.user
   const userName = `${account?.firstName} ${account?.lastName}`
-  // const isAdmin = useMemo(() => {
-  //   return account?.authorities.find(authority => authority === 'ROLE_ADMIN')
-  // }, [account?.authorities])
 
   return (
     <HStack>
