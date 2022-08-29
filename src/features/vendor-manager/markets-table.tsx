@@ -94,15 +94,17 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
     },
   ])
   return (
-    <TableWrapper
-      columns={columns}
-      data={markets || []}
-      TableRow={marketsRow}
-      tableHeight="calc(100vh - 300px)"
-      name="work-orders-table"
-      isLoading={isLoading}
-      disableFilter={true}
-      setTableInstance={setTableInstance}
-    />
+    <Box overflow={'auto'}>
+      <TableWrapper
+        columns={columns}
+        data={markets || []}
+        TableRow={marketsRow}
+        tableHeight="calc(100vh - 300px)"
+        name="work-orders-table"
+        isLoading={isLoading}
+        disableFilter={true}
+        setTableInstance={setTableInstance}
+      />
+    </Box>
   )
 }
