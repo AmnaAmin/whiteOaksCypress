@@ -37,7 +37,7 @@ const RemainingItemsModal: React.FC<{
     control,
     name: 'remainingItems',
   })
-  const { fields: remainingList } = remainingFieldArray
+
   useEffect(() => {
     reset({ remainingItems })
   }, [remainingItems])
