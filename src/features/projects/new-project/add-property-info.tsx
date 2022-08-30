@@ -98,8 +98,8 @@ export const AddPropertyInfo: React.FC<{
       projects?.filter(
         p =>
           p.propertyId === property?.id &&
-          [STATUS.New as string, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(
-            p.projectStatus?.toLowerCase() as string,
+          [STATUS.New, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(
+            p.projectStatus?.toLowerCase() as STATUS,
           ),
       ) || []
     setIsDuplicateAddress(false)
