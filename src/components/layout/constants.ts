@@ -36,6 +36,7 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#68D391',
     },
   ],
+
   [UserTypes.pc]: [
     // {
     //   pathTo: '/pcDashboard',
@@ -80,6 +81,7 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#0BC5EA',
     },
   ],
+
   [UserTypes.vendorManager]: [
     {
       pathTo: '/vendors',
@@ -100,6 +102,22 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#68D391',
     },
   ],
+
+  [UserTypes.doc]: [
+    {
+      pathTo: '/projects',
+      title: 'Projects',
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+  ],
+
   [UserTypes.fpm]: [
     {
       pathTo: '/projects',

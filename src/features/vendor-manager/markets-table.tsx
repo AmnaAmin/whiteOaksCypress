@@ -59,7 +59,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
     )
   }
 
-  const { columns } = useColumnWidthResize([
+  const { columns, resizeElementRef } = useColumnWidthResize([
     {
       Header: t(`${VENDOR_MANAGER}.metroServiceArea`),
       accessor: 'metropolitanServiceArea',
@@ -98,7 +98,7 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
     },
   ])
   return (
-    <>
+    <Box ref={resizeElementRef}>
       {selectedMarket && (
         <NewMarketModal
           isOpen={selectedMarket ? true : false}
@@ -119,6 +119,6 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
         setTableInstance={setTableInstance}
         onRowClick={(e, row) => setSelectedMarket(row.original)}
       />
-    </>
+    </Box>
   )
 }
