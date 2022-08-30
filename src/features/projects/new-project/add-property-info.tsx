@@ -18,15 +18,16 @@ import { AddressInfo, ProjectFormValues } from 'types/project.type'
 import { useState } from 'react'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
-import { useProjects } from 'utils/projects'
+import { useProjects } from 'api/projects'
 import Select from 'components/form/react-select'
 import { CreatableSelect } from 'components/form/react-select'
-import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'utils/pc-projects'
+import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { AddressVerificationModal } from './address-verification-modal'
 import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
-import { NEW_PROJECT } from 'features/projects/projects.i18n'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { STATUS } from 'features/common/status'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -93,8 +94,14 @@ export const AddPropertyInfo: React.FC<{
     })
 
     // Check for duplicate address
-    const duplicatedInProjects = projects?.filter(p => p.propertyId === property?.id) || []
-
+    const duplicatedInProjects =
+      projects?.filter(
+        p =>
+          p.propertyId === property?.id &&
+          [STATUS.New, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(
+            p.projectStatus?.toLowerCase() as STATUS,
+          ),
+      ) || []
     setIsDuplicateAddress(false)
     setValue('acknowledgeCheck', false)
 
