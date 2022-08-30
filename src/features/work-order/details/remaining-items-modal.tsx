@@ -32,7 +32,7 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset, getValues } = formControl
+  const { handleSubmit, control, reset } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
@@ -42,7 +42,12 @@ const RemainingItemsModal: React.FC<{
     reset({ remainingItems })
   }, [remainingItems])
 
-  const onSubmit = () => {}
+  const onSubmit = values => {
+    setAssignedItems(selectedItems)
+    setSelectedItems([])
+    updateLineItems([...values.remainingItems])
+    onClose()
+  }
   return (
     <Box>
       <Modal variant="custom" isOpen={props.isOpen} onClose={props.onClose} size="5xl">
@@ -74,16 +79,7 @@ const RemainingItemsModal: React.FC<{
                 >
                   {t('cancel')}
                 </Button>
-                <Button
-                  variant="solid"
-                  colorScheme="brand"
-                  onClick={() => {
-                    setAssignedItems(selectedItems)
-                    setSelectedItems([])
-                    updateLineItems([...getValues().remainingItems])
-                    onClose()
-                  }}
-                >
+                <Button variant="solid" colorScheme="brand" type="submit">
                   {t('save')}
                 </Button>
               </HStack>
