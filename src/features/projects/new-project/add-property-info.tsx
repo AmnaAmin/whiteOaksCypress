@@ -27,6 +27,7 @@ import { AddressVerificationModal } from './address-verification-modal'
 import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { STATUS } from 'features/common/status'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -93,7 +94,14 @@ export const AddPropertyInfo: React.FC<{
     })
 
     // Check for duplicate address
-    const duplicatedInProjects = projects?.filter(p => p.propertyId === property?.id && (p.projectStatus === 'NEW'|| p.projectStatus === "ACTIVE" || p.projectStatus === 'PUNCH' || p.projectStatus === 'CLOSED')) || []
+    const duplicatedInProjects =
+      projects?.filter(
+        p =>
+          p.propertyId === property?.id &&
+          [STATUS.New as string, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(
+            p.projectStatus?.toLowerCase() as string,
+          ),
+      ) || []
     setIsDuplicateAddress(false)
     setValue('acknowledgeCheck', false)
 
