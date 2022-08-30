@@ -1,6 +1,9 @@
-import { Box, Checkbox, HStack, Spinner, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
-import { t } from 'i18next'
+import { Box, Checkbox, Flex, Td, Text, Tr } from '@chakra-ui/react'
+import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
+import { difference } from 'lodash'
 import { FieldValue, UseFormReturn } from 'react-hook-form'
+import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { EditableCell, LineItems } from './assignedItems.utils'
 
@@ -11,142 +14,190 @@ type RemainingListType = {
   isLoading?: boolean
   formControl: UseFormReturn<any>
 }
+
+const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+  return (
+    <Tr
+      bg="white"
+      _hover={{
+        background: '#eee',
+      }}
+      onClick={e => {
+        if (onRowClick) {
+          onRowClick(e, row)
+        }
+      }}
+      {...row.getRowProps({
+        style,
+      })}
+    >
+      {row.cells.map(cell => {
+        return (
+          <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} p="0">
+            <Flex alignItems="center" h="60px">
+              <Text
+                noOfLines={1}
+                title={cell.value}
+                padding="0 15px"
+                color="gray.600"
+                mb="20px"
+                mt="10px"
+                fontSize="14px"
+                fontStyle="normal"
+                fontWeight="400"
+              >
+                {cell.render('Cell')}
+              </Text>
+            </Flex>
+          </Td>
+        )
+      })}
+    </Tr>
+  )
+}
 const RemainingListTable = (props: RemainingListType) => {
   const { selectedItems, setSelectedItems, isLoading, remainingFieldArray, formControl } = props
   const { fields: remainingItems } = remainingFieldArray
   const { getValues } = formControl
   const values = getValues()
 
+  const REMAINING_ITEMS_COLUMNS = [
+    {
+      Header: () => {
+        return (
+          <Flex justifyContent="end">
+            <Checkbox
+              isChecked={
+                difference(
+                  values?.remainingItems.map(r => r.id),
+                  selectedItems.map(s => s.id),
+                )?.length < 1
+              }
+              onChange={e => {
+                if (e.currentTarget?.checked) {
+                  setSelectedItems([...values?.remainingItems])
+                } else {
+                  setSelectedItems([])
+                }
+              }}
+            />
+          </Flex>
+        )
+      },
+      disableSortBy: true,
+      accessor: 'assigned',
+      Cell: ({ row }) => (
+        <Flex justifyContent="end">
+          <Checkbox
+            isChecked={selectedItems?.map(s => s.id).includes(values?.remainingItems[row?.index]?.id)}
+            onChange={e => {
+              if (e.currentTarget?.checked) {
+                if (!selectedItems?.map(s => s.id).includes(values?.remainingItems[row?.index].id)) {
+                  setSelectedItems([...selectedItems, values?.remainingItems[row?.index]])
+                }
+              } else {
+                setSelectedItems([...selectedItems.filter(s => s.id !== values?.remainingItems[row?.index].id)])
+              }
+            }}
+          />
+        </Flex>
+      ),
+      disableExport: true,
+    },
+    {
+      Header: `${WORK_ORDER}.sku`,
+      accessor: 'sku',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="sku"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="text"
+        />
+      ),
+    },
+    {
+      Header: `${WORK_ORDER}.productName`,
+      accessor: 'productName',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="productName"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="text"
+        />
+      ),
+    },
+    {
+      Header: `${WORK_ORDER}.details`,
+      accessor: 'description',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="description"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="text"
+        />
+      ),
+    },
+    {
+      Header: `${WORK_ORDER}.quantity`,
+      accessor: 'quantity',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="quantity"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="number"
+        />
+      ),
+    },
+    {
+      Header: `${WORK_ORDER}.price`,
+      accessor: 'unitPrice',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="unitPrice"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="number"
+          valueFormatter={currencyFormatter}
+        />
+      ),
+    },
+    {
+      Header: `${WORK_ORDER}.total`,
+      accessor: 'totalPrice',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="totalPrice"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="number"
+          valueFormatter={currencyFormatter}
+        />
+      ),
+    },
+  ]
+
   return (
-    <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md">
-      <TableContainer>
-        <Box>
-          <Table display={'block'} minH={'350px'} width={'100%'} overflow={'auto'}>
-            <Thead h="72px" position="sticky" top="0">
-              <Tr whiteSpace="nowrap">
-                <Th minW="200px">
-                  <HStack gap={'10px'} justifyContent="start">
-                    <Checkbox
-                      size="md"
-                      onChange={e => {
-                        if (e.currentTarget?.checked) {
-                          setSelectedItems([...values.remainingItems])
-                        } else {
-                          setSelectedItems([])
-                        }
-                      }}
-                    ></Checkbox>
-                    <span>{t(`${WORK_ORDER}.sku`)}</span>
-                  </HStack>
-                </Th>
-                <Th minW="200px">{t(`${WORK_ORDER}.productName`)}</Th>
-                <Th minW="200px">{t(`${WORK_ORDER}.details`)}</Th>
-                <Th minW="200px">{t(`${WORK_ORDER}.quantity`)}</Th>
-                <Th minW="200px">{t(`${WORK_ORDER}.price`)}</Th>
-                <Th minW="200px">{t(`${WORK_ORDER}.total`)}</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {isLoading ? (
-                <Tr>
-                  <Td colSpan={7} textAlign="center">
-                    <Spinner size="md" />
-                  </Td>
-                </Tr>
-              ) : (
-                <>
-                  {remainingItems?.length < 1 && (
-                    <Tr>
-                      <Td border="none" colSpan={7} textAlign="center">
-                        No data returned for this view
-                      </Td>
-                    </Tr>
-                  )}
-                  {remainingItems?.map((items, index) => {
-                    return (
-                      <Tr>
-                        <Td>
-                          <HStack gap={'10px'}>
-                            <Checkbox
-                              size="md"
-                              isChecked={selectedItems.map(s => s.id).includes(values.remainingItems[index]?.id)}
-                              onChange={e => {
-                                if (e.currentTarget?.checked) {
-                                  if (!selectedItems.map(s => s.id).includes(values.remainingItems[index]?.id)) {
-                                    setSelectedItems([...selectedItems, values.remainingItems[index]])
-                                  }
-                                } else {
-                                  setSelectedItems([
-                                    ...selectedItems.filter(s => s.id !== values.remainingItems[index]?.id),
-                                  ])
-                                }
-                              }}
-                            ></Checkbox>
-                            <EditableCell
-                              index={index}
-                              fieldName="sku"
-                              formControl={props.formControl}
-                              inputType="text"
-                              fieldArray="remainingItems"
-                            />
-                          </HStack>
-                        </Td>
-                        <Td>
-                          <EditableCell
-                            index={index}
-                            fieldName="productName"
-                            formControl={props.formControl}
-                            inputType="text"
-                            fieldArray="remainingItems"
-                          />
-                        </Td>
-                        <Td>
-                          <EditableCell
-                            index={index}
-                            fieldName="description"
-                            formControl={props.formControl}
-                            inputType="text"
-                            fieldArray="remainingItems"
-                          />
-                        </Td>
-                        <Td>
-                          <EditableCell
-                            index={index}
-                            fieldName="quantity"
-                            formControl={props.formControl}
-                            inputType="text"
-                            fieldArray="remainingItems"
-                          />
-                        </Td>
-                        <Td>
-                          <EditableCell
-                            index={index}
-                            fieldName="unitPrice"
-                            formControl={props.formControl}
-                            inputType="text"
-                            fieldArray="remainingItems"
-                          />
-                        </Td>
-                        <Td>
-                          <EditableCell
-                            index={index}
-                            fieldName="totalPrice"
-                            formControl={props.formControl}
-                            inputType="text"
-                            fieldArray="remainingItems"
-                          />
-                        </Td>
-                      </Tr>
-                    )
-                  })}
-                </>
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-      </TableContainer>
+    <Box overflow="auto" width="100%">
+      <TableWrapper
+        columns={REMAINING_ITEMS_COLUMNS}
+        data={remainingItems ?? []}
+        isLoading={isLoading}
+        TableRow={RemainingItemsRow}
+        tableHeight="calc(100vh - 300px)"
+        name="remaining-items-table"
+        defaultFlexStyle={false}
+      />
     </Box>
   )
 }
-
 export default RemainingListTable
