@@ -84,7 +84,15 @@ interface FormValues {
 }
 
 const WorkOrderDetailTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, setWorkOrderUpdating, swoProject } = props
+  const {
+    workOrder,
+    onSave,
+    navigateToProjectDetails,
+    isWorkOrderUpdating,
+    setWorkOrderUpdating,
+    swoProject,
+    rejectInvoiceCheck,
+  } = props
 
   const formReturn = useForm<FormValues>()
   const { register, control, reset } = formReturn
@@ -237,7 +245,12 @@ const WorkOrderDetailTab = props => {
 
             <SimpleGrid columns={5}>
               <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
-              <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
+              <CalenderCard
+                title="LW Submitted "
+                date={
+                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
+                }
+              />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
             </SimpleGrid>
