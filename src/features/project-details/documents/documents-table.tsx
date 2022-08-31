@@ -66,7 +66,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const setDocumentTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { isProjectCoordinator, isFPM } = useUserRolesSelector()
+  const { isProjectCoordinator, isDoc } = useUserRolesSelector()
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
@@ -154,7 +154,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         setTableInstance={setDocumentTableInstance}
       />
       {isProjectCoordinator ||
-        (isFPM ? (
+        (isDoc ? (
           <Flex justifyContent="end">
             <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
               <Button
