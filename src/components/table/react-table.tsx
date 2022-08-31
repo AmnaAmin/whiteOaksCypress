@@ -158,7 +158,7 @@ export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) =>
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => {
-            const title = column.render('Header')
+            const header = column.render('Header')
 
             return (
               // @ts-ignore
@@ -177,9 +177,9 @@ export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) =>
                     noOfLines={2}
                     isTruncated
                     display="inline-block"
-                    title={title}
+                    title={typeof header === 'string' ? header : ''}
                   >
-                    {t(title)}
+                    {typeof header === 'string' ? t(header) : header}
                   </Text>
                   {column.isSorted &&
                     (column.isSortedDesc ? (

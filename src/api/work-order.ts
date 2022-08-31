@@ -16,7 +16,7 @@ type UpdateWorkOrderProps = {
 }
 
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
-  const { hideToast, swoProjectId } = props
+  const { hideToast } = props
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -38,7 +38,6 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries('accountPayable')
-        queryClient.invalidateQueries(['remainingItems', swoProjectId])
         if (!hideToast) {
           toast({
             title: 'Work Order',

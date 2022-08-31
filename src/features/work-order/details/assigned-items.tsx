@@ -22,24 +22,15 @@ import {
   Thead,
   Tr,
   useCheckbox,
-  useDisclosure,
 } from '@chakra-ui/react'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { useState } from 'react'
+import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
-import {
-  EditableCell,
-  LineItems,
-  PriceInput,
-  useAllowLineItemsAssignment,
-  useRemainingLineItems,
-} from './assignedItems.utils'
+import { EditableCell, LineItems, PriceInput } from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
-import RemainingItemsModal from './remaining-items-modal'
-
 import { currencyFormatter } from 'utils/string-formatters'
 
 export const CustomCheckBox = props => {
@@ -83,60 +74,37 @@ export const CustomCheckBox = props => {
 }
 
 type AssignedItemType = {
-  assignedItems: LineItems[]
-  manualItems: LineItems[]
-  showPrice?: boolean
+  isLoadingLineItems?: boolean
+  onOpenRemainingItemsModal: () => void
+  assignedItemsArray: FieldValues
+  manualItemArray: FieldValues
+  unassignedItems: LineItems[]
+  setUnAssignedItems: (items) => void
+  formControl: UseFormReturn
+  isAssignmentAllowed: boolean
 }
 
-const AssignedItems = props => {
-  const { swoProject, isLoadingLineItems, workOrder } = props
+const AssignedItems = (props: AssignedItemType) => {
+  const {
+    isLoadingLineItems,
+    onOpenRemainingItemsModal,
+    assignedItemsArray,
+    manualItemArray,
+    unassignedItems,
+    setUnAssignedItems,
+    formControl,
+    isAssignmentAllowed,
+  } = props
   const [showLineItems] = useState(true)
-  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { t } = useTranslation()
-
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
-  const formControl = useFormContext<AssignedItemType>()
   const { control, register, setValue } = formControl
 
-  const { isAssignmentAllowed } = useAllowLineItemsAssignment(workOrder, swoProject)
-
-  const manualItemArray = useFieldArray({
-    control,
-    name: 'manualItems',
-  })
   const { fields: manualItems, append: appendManual } = manualItemArray
 
-  const assignedItemsArray = useFieldArray({
-    control,
-    name: 'assignedItems',
-  })
-  const { fields: assignedItems, append } = assignedItemsArray
+  const { fields: assignedItems } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
   const markAllChecked = lineItems?.length > 0 && lineItems.every(l => l.isVerified)
 
-  const {
-    onClose: onCloseRemainingItemsModal,
-    isOpen: isOpenRemainingItemsModal,
-    onOpen: onOpenRemainingItemsModal,
-  } = useDisclosure()
-
-  useEffect(() => {
-    setUnAssignedItems(remainingItems ?? [])
-  }, [remainingItems])
-
-  const setAssignedItems = useCallback(
-    items => {
-      const selectedIds = items.map(i => i.id)
-      const assigned = [
-        ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false }
-        }),
-      ]
-      append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
-    },
-    [unassignedItems, setUnAssignedItems],
-  )
   return (
     <Box>
       {showLineItems && (
@@ -251,14 +219,6 @@ const AssignedItems = props => {
           </Box>
         </>
       )}
-
-      <RemainingItemsModal
-        isOpen={isOpenRemainingItemsModal}
-        onClose={onCloseRemainingItemsModal}
-        setAssignedItems={setAssignedItems}
-        remainingItems={unassignedItems}
-        isLoading={isLoading}
-      />
     </Box>
   )
 }
@@ -400,7 +360,7 @@ const ManualItems = props => {
   )
 }
 
-const AssignedLineItems = props => {
+export const AssignedLineItems = props => {
   const { setUnAssignedItems, unassignedItems } = props
   const { control, getValues } = props.formControl
   const { fields: assignedItems, remove: removeAssigned } = props.fieldArray
@@ -422,17 +382,41 @@ const AssignedLineItems = props => {
                   }}
                   cursor="pointer"
                 ></Icon>
-                <EditableCell index={index} fieldName="sku" formControl={props.formControl} inputType="text" />
+                <EditableCell
+                  index={index}
+                  fieldName="sku"
+                  fieldArray="assignedItems"
+                  formControl={props.formControl}
+                  inputType="text"
+                />
               </HStack>
             </Td>
             <Td>
-              <EditableCell index={index} fieldName="productName" formControl={props.formControl} inputType="text" />
+              <EditableCell
+                index={index}
+                fieldName="productName"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="text"
+              />
             </Td>
             <Td>
-              <EditableCell index={index} fieldName="description" formControl={props.formControl} inputType="text" />
+              <EditableCell
+                index={index}
+                fieldName="description"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="text"
+              />
             </Td>
             <Td>
-              <EditableCell index={index} fieldName="quantity" formControl={props.formControl} inputType="number" />
+              <EditableCell
+                index={index}
+                fieldName="quantity"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="number"
+              />
             </Td>
             <Td>
               <EditableCell
@@ -440,6 +424,7 @@ const AssignedLineItems = props => {
                 fieldName="price"
                 formControl={props.formControl}
                 inputType="number"
+                fieldArray="assignedItems"
                 valueFormatter={currencyFormatter}
               />
             </Td>
