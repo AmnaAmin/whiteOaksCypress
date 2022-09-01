@@ -39,7 +39,6 @@ if (process.env.NODE_ENV === 'test') {
 
 export const Providers: React.FC = ({ children }) => {
   const queryClient = new QueryClient(queryConfig)
-
   return (
     <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={queryClient}>

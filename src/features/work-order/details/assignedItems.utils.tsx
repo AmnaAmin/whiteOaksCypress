@@ -1,8 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
-import { ProjectWorkOrderType } from 'types/project.type'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Input } from '@chakra-ui/react'
 
@@ -101,6 +100,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
   const { swoProjectId, showToast } = props
   const client = useClient(swoPrefix)
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation(
     (lineItems: any) => {
@@ -111,10 +111,11 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
     },
     {
       onSuccess(res: any) {
+        queryClient.invalidateQueries(['remainingItems', swoProjectId])
         if (showToast) {
           toast({
             title: 'Line Items Assignment',
-            description: 'Line Items Assignment updated successfully.',
+            description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
           })
@@ -123,7 +124,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
       onError(error: any) {
         toast({
           title: 'Assigned Line Items',
-          description: (error.title as string) ?? 'Unable to update line items assignment.',
+          description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
         })
@@ -156,7 +157,7 @@ export const useDeleteLineIds = () => {
   )
 }
 
-export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType, swoProject) => {
+export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const isAssignmentAllowed = (!workOrder || activePastDue) && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
@@ -172,41 +173,46 @@ type EditableCellType = {
   fieldName: string
   formControl: any
   inputType?: string
+  fieldArray: string
 }
 
 export const EditableCell = (props: EditableCellType) => {
   const [selectedCell, setSelectedCell] = useState('')
-  const { index, fieldName, formControl, inputType, valueFormatter } = props
+  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray } = props
   const { getValues, setValue } = formControl
   const values = getValues()
   return (
     <>
-      {selectedCell !== index + '-' + fieldName ? (
-        <span
-          onClick={() => {
-            setSelectedCell(index + '-' + fieldName)
-          }}
-        >
-          {valueFormatter
-            ? valueFormatter(values?.assignedItems[index]?.[fieldName])
-            : values?.assignedItems[index]?.[fieldName]}
-        </span>
-      ) : (
-        <Input
-          size="sm"
-          id="sku"
-          type={inputType ?? 'text'}
-          defaultValue={values?.assignedItems[index]?.[fieldName]}
-          onChange={e => {
-            if (e.target.value === '') {
-              setSelectedCell('')
-            }
-          }}
-          onBlurCapture={e => {
-            setValue(`assignedItems.${index}.${fieldName}`, e.target.value)
-            setSelectedCell('')
-          }}
-        />
+      {values?.[fieldArray]?.length > 0 && (
+        <>
+          {selectedCell !== index + '-' + fieldName ? (
+            <span
+              onClick={() => {
+                setSelectedCell(index + '-' + fieldName)
+              }}
+            >
+              {valueFormatter
+                ? valueFormatter(values?.[fieldArray][index]?.[fieldName])
+                : values?.[fieldArray][index]?.[fieldName]}
+            </span>
+          ) : (
+            <Input
+              size="sm"
+              id="sku"
+              type={inputType ?? 'text'}
+              defaultValue={values?.[fieldArray][index]?.[fieldName]}
+              onChange={e => {
+                if (e.target.value === '') {
+                  setSelectedCell('')
+                }
+              }}
+              onBlurCapture={e => {
+                setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
+                setSelectedCell('')
+              }}
+            />
+          )}
+        </>
       )}
     </>
   )

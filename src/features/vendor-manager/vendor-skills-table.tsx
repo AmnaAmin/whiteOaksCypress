@@ -7,6 +7,7 @@ import { useTrades } from 'api/vendor-details'
 import { NewVendorSkillsModal } from './new-vendor-skill-modal'
 import { dateFormat } from 'utils/date-time-utils'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
+import { Market } from 'types/vendor.types'
 const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
@@ -39,7 +40,7 @@ const vendorSkillsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
   const { data: VendorSkills, isLoading } = useTrades()
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState()
+  const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
@@ -69,13 +70,13 @@ export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
   )
   return (
     <Box ref={resizeElementRef}>
-      {selectedWorkOrder && (
+      {selectedVendorSkills && (
         <NewVendorSkillsModal
-          isOpen={selectedWorkOrder ? true : false}
+          isOpen={selectedVendorSkills ? true : false}
           onClose={() => {
-            setSelectedWorkOrder(undefined)
+            setSelectedVendorSkills(undefined)
           }}
-          selectedWorkOrder={selectedWorkOrder}
+          selectedVendorSkills={selectedVendorSkills}
         />
       )}
       <TableWrapper
@@ -86,7 +87,7 @@ export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
         name="clients-table"
         isLoading={isLoading}
         disableFilter={true}
-        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+        onRowClick={(e, row) => setSelectedVendorSkills(row.original)}
       />
     </Box>
   )

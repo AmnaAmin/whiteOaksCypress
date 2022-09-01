@@ -6,6 +6,7 @@ import { useQueryClient } from 'react-query'
 import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
+import { useState } from 'react'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -50,11 +51,11 @@ export const useCall = () => {
   })
 }
 
-export const useProjectCards = () => {
+export const useProjectCards = (id?: string) => {
   const client = useClient()
 
-  return useQuery('projectCards', async () => {
-    const response = await client(`projectCards`, {})
+  return useQuery(['projectCards', id], async () => {
+    const response = await client(`projectCards/${id ?? ''}`, {})
 
     return response?.data
   })
@@ -92,6 +93,31 @@ export const useSaveProjectDetails = () => {
       },
     },
   )
+}
+
+export const useFPMUsers = () => {
+  const client = useClient()
+  const [selectedFPM, setSelectedFPM] = useState<any>(null)
+  const { data: fpmUsers, ...rest } = useQuery('fpm-users', async () => {
+    const response = await client(`users/fpmByRoleType`, {})
+    return response?.data
+  })
+  const { data: usersId } = useQuery(
+    ['fpm-users', selectedFPM?.id],
+    async () => {
+      const response = await client(`users/fpmByRoleType/${selectedFPM?.id}`, {})
+      return response?.data
+    },
+    { enabled: !!selectedFPM?.id },
+  )
+  const fpmUserOptions =
+    fpmUsers?.map(user => ({
+      ...user,
+      label: `${user?.firstName} ${user?.lastName}`,
+      value: user?.id,
+    })) || []
+
+  return { fpmUsers: fpmUserOptions, usersId, selectedFPM, setSelectedFPM, ...rest }
 }
 
 const parseXmlResponse = async (response: any) => {
@@ -195,6 +221,7 @@ export const useStates = () => {
     states?.map(state => ({
       value: state?.code,
       label: state?.name,
+      id: state?.id,
     })) || []
 
   return {

@@ -65,6 +65,10 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
         accessor: 'name',
       },
       {
+        Header: 'Project ID' as string,
+        accessor: 'projectId',
+      },
+      {
         Header: 'Type' as string,
         accessor: 'transactionTypeLabel',
       },

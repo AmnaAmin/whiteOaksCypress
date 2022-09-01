@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from 'utils/test-utils'
+import { fireEvent, render, screen, waitForLoadingToFinish } from 'utils/test-utils'
 import App from 'App'
 import userEvent from '@testing-library/user-event'
 // import { FIRST_PROJECT_ID } from '../../mocks/api/projects/data'
@@ -10,6 +10,7 @@ describe('Vendor Projects Test Cases', () => {
     await render(<App />, { route: '/projects' })
 
     expect(global.window.location.pathname).toEqual('/projects')
+    await waitForLoadingToFinish()
 
     userEvent.click(screen.getByTestId('column-settings-button'))
 

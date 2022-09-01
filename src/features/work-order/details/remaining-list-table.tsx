@@ -1,10 +1,19 @@
 import { Box, Checkbox, Flex, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import numeral from 'numeral'
-import React from 'react'
+import { difference } from 'lodash'
+import { FieldValue, UseFormReturn } from 'react-hook-form'
+import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { LineItems } from './assignedItems.utils'
+import { EditableCell, LineItems } from './assignedItems.utils'
+
+type RemainingListType = {
+  setSelectedItems: (items) => void
+  selectedItems: LineItems[]
+  remainingFieldArray: FieldValue<any>
+  isLoading?: boolean
+  formControl: UseFormReturn<any>
+}
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -46,33 +55,50 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     </Tr>
   )
 }
-type RemainingListType = {
-  setSelectedItems: (items) => void
-  selectedItems: LineItems[]
-  remainingItems: LineItems[]
-  isLoading?: boolean
-}
 const RemainingListTable = (props: RemainingListType) => {
-  const { selectedItems, setSelectedItems, isLoading, remainingItems } = props
+  const { selectedItems, setSelectedItems, isLoading, remainingFieldArray, formControl } = props
+  const { fields: remainingItems } = remainingFieldArray
+  const { getValues } = formControl
+  const values = getValues()
 
   const REMAINING_ITEMS_COLUMNS = [
     {
-      Header: 'Check',
+      Header: () => {
+        return (
+          <Flex justifyContent="end">
+            <Checkbox
+              isChecked={
+                difference(
+                  values?.remainingItems.map(r => r.id),
+                  selectedItems.map(s => s.id),
+                )?.length < 1
+              }
+              onChange={e => {
+                if (e.currentTarget?.checked) {
+                  setSelectedItems([...values?.remainingItems])
+                } else {
+                  setSelectedItems([])
+                }
+              }}
+            />
+          </Flex>
+        )
+      },
+      disableSortBy: true,
       accessor: 'assigned',
       Cell: ({ row }) => (
         <Flex justifyContent="end">
           <Checkbox
-            isChecked={selectedItems.map(s => s.id).includes(row?.original?.id)}
+            isChecked={selectedItems?.map(s => s.id).includes(values?.remainingItems[row?.index]?.id)}
             onChange={e => {
               if (e.currentTarget?.checked) {
-                if (!selectedItems.map(s => s.id).includes(row?.original?.id)) {
-                  setSelectedItems([...selectedItems, row?.original])
+                if (!selectedItems?.map(s => s.id).includes(values?.remainingItems[row?.index].id)) {
+                  setSelectedItems([...selectedItems, values?.remainingItems[row?.index]])
                 }
               } else {
-                setSelectedItems([...selectedItems.filter(s => s.id !== row?.original?.id)])
+                setSelectedItems([...selectedItems.filter(s => s.id !== values?.remainingItems[row?.index].id)])
               }
             }}
-            value={(row.original as any).sku}
           />
         </Flex>
       ),
@@ -81,38 +107,82 @@ const RemainingListTable = (props: RemainingListType) => {
     {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="sku"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="text"
+        />
+      ),
     },
     {
       Header: `${WORK_ORDER}.productName`,
       accessor: 'productName',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="productName"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="text"
+        />
+      ),
     },
     {
       Header: `${WORK_ORDER}.details`,
       accessor: 'description',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="description"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="text"
+        />
+      ),
     },
     {
       Header: `${WORK_ORDER}.quantity`,
       accessor: 'quantity',
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="quantity"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="number"
+        />
+      ),
     },
     {
       Header: `${WORK_ORDER}.price`,
       accessor: 'unitPrice',
-      Cell(cellInfo) {
-        return numeral(cellInfo.value).format('$0,0.00')
-      },
-      getCellExportValue(row) {
-        return numeral(row.original.amount).format('$0,0.00')
-      },
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="unitPrice"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="number"
+          valueFormatter={currencyFormatter}
+        />
+      ),
     },
     {
       Header: `${WORK_ORDER}.total`,
       accessor: 'totalPrice',
-      Cell(cellInfo) {
-        return numeral(cellInfo.value).format('$0,0.00')
-      },
-      getCellExportValue(row) {
-        return numeral(row.original.amount).format('$0,0.00')
-      },
+      Cell: ({ row }) => (
+        <EditableCell
+          index={row.index}
+          fieldName="totalPrice"
+          fieldArray="remainingItems"
+          formControl={formControl}
+          inputType="number"
+          valueFormatter={currencyFormatter}
+        />
+      ),
     },
   ]
 
@@ -130,5 +200,4 @@ const RemainingListTable = (props: RemainingListType) => {
     </Box>
   )
 }
-
 export default RemainingListTable

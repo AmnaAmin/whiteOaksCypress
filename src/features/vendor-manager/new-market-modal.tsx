@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -18,12 +18,15 @@ import {
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
-import { useAccountDetails, useVendorSkillsMutation } from 'api/vendor-details'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 import { t } from 'i18next'
+import Select from 'components/form/react-select'
+import { useAccountDetails, useMarketsMutation } from 'api/vendor-details'
+import { useStates } from 'api/pc-projects'
 import { Market } from 'types/vendor.types'
+
 const InformationCard: React.FC<{
   Icon: React.ElementType
   label: string
@@ -54,32 +57,38 @@ const InformationCard: React.FC<{
 type newVendorSkillsTypes = {
   onClose: () => void
   isOpen: boolean
-  selectedVendorSkills?: Market
+  selectedMarket?: Market
 }
-export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
+export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedMarket }) => {
   const { data: account } = useAccountDetails()
-  const { mutate: createVendorSkills } = useVendorSkillsMutation()
-  const { control, register, handleSubmit, reset } = useForm()
+  const { mutate: createMarkets } = useMarketsMutation()
+  const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
+  const { stateSelectOptions } = useStates()
+  const [selectValue, setSelectValue] = useState({ label: selectedMarket?.stateName, id: selectedMarket?.id })
 
+  const setAddressInfo = option => {
+    setValue('state', option)
+  }
   const onSubmit = data => {
     const arg = {
       createdBy: data?.createdBy,
       createdDate: convertDateTimeToServerISO(data?.createdDate),
       modifiedDate: convertDateTimeToServerISO(data?.createdDate),
       modifiedBy: data?.modifiedBy,
-      skill: data?.skill,
-      id: selectedVendorSkills?.id,
-      method: selectedVendorSkills ? 'PUT' : 'POST',
+      metropolitanServiceArea: data?.metroServiceArea,
+      stateId: data?.state.id,
+      id: selectedMarket ? selectedMarket.id : '',
+      method: selectedMarket ? 'PUT' : 'POST',
     }
 
-    createVendorSkills(arg, {
+    createMarkets(arg, {
       onSuccess() {
-        queryClient.invalidateQueries('trades')
+        queryClient.invalidateQueries('markets')
         toast({
-          title: `Vendor Skill ${selectedVendorSkills?.id ? 'Updated' : ' Created'}`,
-          description: `Vendor Skill have been ${selectedVendorSkills?.id ? 'Updated' : ' Created'} Successfully.`,
+          title: `Market ${selectedMarket?.id ? 'Updated' : ' Created'}`,
+          description: `Market have been ${selectedMarket?.id ? 'Updated' : ' Created'} Successfully.`,
           status: 'success',
           isClosable: true,
         })
@@ -88,9 +97,13 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
       },
     })
   }
-  const watchvalue = useWatch({
+  const metroValue = useWatch({
     control,
-    name: 'skill',
+    name: 'metroServiceArea',
+  })
+  const stateValue = useWatch({
+    control,
+    name: 'state',
   })
 
   return (
@@ -101,7 +114,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
-                {selectedVendorSkills ? `ID-${selectedVendorSkills?.id}` : t(`${VENDOR_MANAGER}.newVendorSkills`)}
+                {selectedMarket ? `ID-${selectedMarket?.id}` : t(`${VENDOR_MANAGER}.newMarket`)}
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
@@ -110,7 +123,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 <InformationCard
                   Icon={BiDetail}
                   label={t(`${VENDOR_MANAGER}.createdBy`)}
-                  value={selectedVendorSkills ? selectedVendorSkills?.createdBy : account?.firstName}
+                  value={selectedMarket ? selectedMarket?.createdBy : account?.firstName}
                   register={register('createdBy')}
                 />
                 <InformationCard
@@ -119,43 +132,76 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   value={dateFormat(new Date())}
                   register={register('createdDate')}
                 />
-                {selectedVendorSkills && (
+                {selectedMarket && (
                   <>
                     <InformationCard
                       Icon={BiDetail}
                       label={t(`${VENDOR_MANAGER}.modifiedBy`)}
-                      value={selectedVendorSkills?.modifiedBy}
+                      value={selectedMarket?.modifiedBy}
                       register={register('modifiedBy')}
                     />
                     <InformationCard
                       Icon={BiCalendar}
                       label={t(`${VENDOR_MANAGER}.modifiedDate`)}
-                      value={dateFormat(selectedVendorSkills?.modifiedDate)}
+                      value={dateFormat(selectedMarket?.modifiedDate)}
                       register={register('modifiedDate')}
                     />
                   </>
                 )}
               </HStack>
               <Divider border="1px solid #E2E8F0 !important" my="30px" />
-              <Box>
-                <FormLabel variant="strong-label" size="md">
-                  {t(`${VENDOR_MANAGER}.skills`)}
-                </FormLabel>
-                <Input
-                  {...register('skill')}
-                  type="text"
-                  borderLeft="2.5px solid blue"
-                  w="215px"
-                  defaultValue={selectedVendorSkills?.skill}
-                />
-              </Box>
+              {/* <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
+                <GridItem> */}
+              <HStack spacing="16px">
+                <Box>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${VENDOR_MANAGER}.metroServiceArea`)}
+                  </FormLabel>
+                  <Input
+                    {...register('metroServiceArea')}
+                    type="text"
+                    variant="required-field"
+                    w="215px"
+                    defaultValue={selectedMarket?.metropolitanServiceArea}
+                  />
+                </Box>
+                <Box w="215px">
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${VENDOR_MANAGER}.state`)}
+                  </FormLabel>
+                  {selectedMarket && (
+                    <Select
+                      {...register('state')}
+                      options={stateSelectOptions}
+                      // size="md"
+                      value={selectValue}
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => {
+                        setAddressInfo(option)
+                        setSelectValue({ label: option.label, id: option.id })
+                      }}
+                    />
+                  )}
+                  {!selectedMarket && (
+                    <Select
+                      {...register('state')}
+                      options={stateSelectOptions}
+                      // size="md"
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => {
+                        setAddressInfo(option)
+                      }}
+                    />
+                  )}
+                </Box>
+              </HStack>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
               <HStack spacing="16px">
                 <Button variant="outline" colorScheme="brand" onClick={onClose}>
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button disabled={!watchvalue} type="submit" colorScheme="brand">
+                <Button disabled={!metroValue || !stateValue} type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>

@@ -245,6 +245,8 @@ type ProjectProps = {
   projectColumns: Column[]
   resizeElementRef: any
   setTableInstance: (tableInstance: any) => void
+  usersId?: number[]
+  selectedFPM?: any
 }
 export const ProjectsTable: React.FC<ProjectProps> = ({
   setTableInstance,
@@ -252,24 +254,25 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
   selectedDay,
+  usersId,
+  selectedFPM,
 }) => {
   const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
-
-  const { data: days } = useWeekDayProjectsDue()
+  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
   useEffect(() => {
     // To get pastDue Ids
     const pastDueIds = projects?.filter(project => project?.pastDue)
     const idPastDue = pastDueIds?.map(project => project?.id)
-
     if (!selectedCard && !selectedDay) setFilterProjects(projects)
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard ||
-          project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
-          (selectedCard === 'pastDue' && idPastDue?.includes(project?.id)),
+          (!selectedCard ||
+            project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
+            (selectedCard === 'pastDue' && idPastDue?.includes(project?.id))) &&
+          (!usersId?.length || usersId.includes(project.projectManagerId as number)),
       ),
     )
 
@@ -285,11 +288,10 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       var date = dates?.dueDate
       return date.substr(0, 10)
     })
-
     if (selectedDay) {
-      setFilterProjects(projects?.filter(project => clientDate.includes(project?.clientDueDate?.substr(0, 10))))
+      setFilterProjects(projects?.filter(project => clientDate?.includes(project?.clientDueDate?.substr(0, 10))))
     }
-  }, [selectedCard, selectedDay, projects])
+  }, [selectedCard, selectedDay, projects, usersId])
 
   return (
     <Box overflowX={'auto'} overflowY="hidden" height="100%">
