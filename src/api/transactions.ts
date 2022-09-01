@@ -318,7 +318,6 @@ export const parseChangeOrderAPIPayload = async (
   const documents: any = []
 
   // Transaction attachment document
-  console.log('formValues', formValues)
   const attachment = await getFileContents(formValues.attachment, formValues.transactionType?.value)
   const lienWaiverDocument = await generateLienWaiverPDF(formValues.lienWaiver)
 
