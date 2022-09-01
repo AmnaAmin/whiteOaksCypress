@@ -12,6 +12,8 @@ type RemainingListType = {
   remainingFieldArray: FieldValue<any>
   isLoading?: boolean
   formControl: UseFormReturn<any>
+  updatedItems: number[]
+  setUpdatedItems: (items) => void
 }
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -54,7 +56,15 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 const RemainingListTable = (props: RemainingListType) => {
-  const { selectedItems, setSelectedItems, isLoading, remainingFieldArray, formControl } = props
+  const {
+    selectedItems,
+    setSelectedItems,
+    isLoading,
+    remainingFieldArray,
+    formControl,
+    updatedItems,
+    setUpdatedItems,
+  } = props
   const { fields: remainingItems, remove } = remainingFieldArray
   const { getValues } = formControl
   const values = getValues()
@@ -133,6 +143,8 @@ const RemainingListTable = (props: RemainingListType) => {
                 formControl={props.formControl}
                 inputType="text"
                 fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             )}
           </>
@@ -162,6 +174,8 @@ const RemainingListTable = (props: RemainingListType) => {
                 formControl={props.formControl}
                 inputType="text"
                 fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             )}
           </>
@@ -191,6 +205,8 @@ const RemainingListTable = (props: RemainingListType) => {
                 formControl={props.formControl}
                 inputType="text"
                 fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             )}
           </>
@@ -219,6 +235,8 @@ const RemainingListTable = (props: RemainingListType) => {
                 formControl={props.formControl}
                 inputType="number"
                 fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             )}
           </>
@@ -247,6 +265,8 @@ const RemainingListTable = (props: RemainingListType) => {
                 formControl={props.formControl}
                 inputType="number"
                 fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             )}
           </>
@@ -275,6 +295,8 @@ const RemainingListTable = (props: RemainingListType) => {
                 formControl={props.formControl}
                 inputType="number"
                 fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             )}
           </>

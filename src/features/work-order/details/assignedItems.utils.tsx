@@ -210,11 +210,13 @@ type EditableCellType = {
   formControl: any
   inputType?: string
   fieldArray: string
+  updatedItems?: number[]
+  setUpdatedItems?: (items) => void
 }
 
 export const EditableField = (props: EditableCellType) => {
   const [selectedCell, setSelectedCell] = useState('')
-  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray } = props
+  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray, updatedItems, setUpdatedItems } = props
   const { getValues, setValue } = formControl
   const values = getValues()
   return (
@@ -241,6 +243,9 @@ export const EditableField = (props: EditableCellType) => {
               type={inputType ?? 'text'}
               defaultValue={values?.[fieldArray][index]?.[fieldName]}
               onChange={e => {
+                if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
+                  setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
+                }
                 if (e.target.value === '') {
                   setSelectedCell('')
                 }

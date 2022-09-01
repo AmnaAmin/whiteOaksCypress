@@ -31,6 +31,7 @@ const RemainingItemsModal: React.FC<{
 }> = props => {
   const { remainingItems, isLoading, setAssignedItems, onClose, swoProject, isAssignmentAllowed } = props
   const [selectedItems, setSelectedItems] = useState<LineItems[]>([])
+  const [updatedItems, setUpdatedItems] = useState<number[]>([])
   const { mutateAsync: updateLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, showToast: false })
   const { mutateAsync: createLineItems } = useCreateLineItem({ swoProject, showToast: false })
 
@@ -51,7 +52,7 @@ const RemainingItemsModal: React.FC<{
 
   const onSubmit = async values => {
     const newLineItems = values.remainingItems.filter(r => r.action === 'new')
-    const update = updateLineItems([...values.remainingItems.filter(r => !!r.id)])
+    const update = updateLineItems([...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))])
     const create = createLineItems([
       ...newLineItems.map(({ action, ...rest }) => {
         return rest
@@ -64,6 +65,7 @@ const RemainingItemsModal: React.FC<{
       reset()
     })
     setSelectedItems([])
+    setUpdatedItems([])
   }
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -111,6 +113,8 @@ const RemainingItemsModal: React.FC<{
                 isLoading={isLoading}
                 selectedItems={selectedItems}
                 setSelectedItems={setSelectedItems}
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
               />
             </ModalBody>
             <ModalFooter p="0">
