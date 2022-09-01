@@ -1,7 +1,7 @@
 import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { ProjectSummaryCard } from 'features/project-details/project-summary-card'
 import { useTranslation } from 'react-i18next'
@@ -21,8 +21,8 @@ import { UploadDocumentModal } from 'features/project-details/documents/upload-d
 import { Card } from 'components/card/card'
 // import { AlertsTable } from 'features/projects/alerts/alerts-table'
 // import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-// import ProjectSchedule from 'features/project-schedule/project-schedule'
-// import { useGanttChart } from 'utils/pc-projects'
+import ProjectSchedule from 'features/project-details/project-schedule/project-schedule'
+import { useGanttChart } from 'api/pc-projects'
 // import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
@@ -35,10 +35,10 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  // const { ganttChartData } = useGanttChart(projectId)
+  const { ganttChartData } = useGanttChart(projectId)
   // const [alertRow, selectedAlertRow] = useState(true)
   // const [firstDate, setFirstDate] = useState(undefined);
-  // const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
+  const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -64,38 +64,36 @@ export const ProjectDetails: React.FC = props => {
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
 
-  // useEffect(() => {
-  //   if (ganttChartData?.length > 0) {
-  //     const firstRecord = {
-  //       id: +new Date(),
-  //       name: 'Client',
-  //       type: 'task',
-  //       start: new Date(projectData?.clientStartDate as string),
-  //       end: new Date(projectData?.clientDueDate as string),
-  //       progress: 100,
-  //     }
+  useEffect(() => {
+    if (ganttChartData?.length > 0 && projectData) {
+      const firstRecord = {
+        id: +new Date(),
+        name: 'Client',
+        type: 'task',
+        start: new Date(projectData.clientStartDate as string),
+        end: new Date(projectData.clientDueDate as string),
+        progress: 100,
+      }
 
-  //     const payload = [...ganttChartData]
-
-  //     setFormattedGanttData([
-  //       firstRecord,
-  //       ...payload.map(row => ({
-  //         id: row.id,
-  //         type: 'task',
-  //         name: row.workDescription,
-  //         progress: Number(row.status),
-  //         start: new Date(row.startDate as string),
-  //         end: new Date(row.endDate as string),
-  //       })),
-  //     ])
-  //   }
-  // }, [ganttChartData])
+      setFormattedGanttData([
+        firstRecord,
+        ...ganttChartData.map(row => ({
+          id: row.id,
+          type: 'task',
+          name: row.workDescription,
+          progress: Number(row.status),
+          start: new Date(row.startDate as string),
+          end: new Date(row.endDate as string),
+        })),
+      ])
+    }
+  }, [ganttChartData, projectData])
 
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
-        {/* <ProjectSchedule isLoading={isLoading} data={formattedGanttData} /> */}
+        <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
         {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
         {tabIndex === 1}
