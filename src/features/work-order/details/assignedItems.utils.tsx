@@ -1,9 +1,8 @@
-import { useToast } from '@chakra-ui/react'
+import { Box, Checkbox, FormControl, FormErrorMessage, Input, useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
-import { Input } from '@chakra-ui/react'
 
 const swoPrefix = '/smartwo/api'
 
@@ -27,6 +26,7 @@ export type LineItems = {
   source?: string
   isVerified?: boolean
   isCompleted?: boolean
+  action?: string
 }
 
 export const getRemovedItems = (formValues, workOrder) => {
@@ -133,6 +133,42 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
   )
 }
 
+export const useCreateLineItem = ({ swoProject, showToast }) => {
+  const client = useClient(swoPrefix)
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (lineItems: any) => {
+      return client(`line-items/${swoProject?.textractJobId}`, {
+        data: lineItems,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess(res: any) {
+        queryClient.invalidateQueries(['remainingItems', swoProject])
+        if (showToast) {
+          toast({
+            title: 'Line Items Assignment',
+            description: 'Line Items updated successfully.',
+            status: 'success',
+            isClosable: true,
+          })
+        }
+      },
+      onError(error: any) {
+        toast({
+          title: 'Assigned Line Items',
+          description: (error.title as string) ?? 'Unable to update line items.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
 export const useDeleteLineIds = () => {
   const client = useClient()
   const toast = useToast()
@@ -176,7 +212,7 @@ type EditableCellType = {
   fieldArray: string
 }
 
-export const EditableCell = (props: EditableCellType) => {
+export const EditableField = (props: EditableCellType) => {
   const [selectedCell, setSelectedCell] = useState('')
   const { index, fieldName, formControl, inputType, valueFormatter, fieldArray } = props
   const { getValues, setValue } = formControl
@@ -186,7 +222,10 @@ export const EditableCell = (props: EditableCellType) => {
       {values?.[fieldArray]?.length > 0 && (
         <>
           {selectedCell !== index + '-' + fieldName ? (
-            <span
+            <Box
+              minW={'100px'}
+              minH={'20px'}
+              cursor={'pointer'}
               onClick={() => {
                 setSelectedCell(index + '-' + fieldName)
               }}
@@ -194,7 +233,7 @@ export const EditableCell = (props: EditableCellType) => {
               {valueFormatter
                 ? valueFormatter(values?.[fieldArray][index]?.[fieldName])
                 : values?.[fieldArray][index]?.[fieldName]}
-            </span>
+            </Box>
           ) : (
             <Input
               size="sm"
@@ -215,5 +254,52 @@ export const EditableCell = (props: EditableCellType) => {
         </>
       )}
     </>
+  )
+}
+
+type InputFieldType = {
+  index: number
+  fieldName: string
+  formControl: any
+  inputType?: string
+  fieldArray: string
+}
+export const InputField = (props: InputFieldType) => {
+  const { index, fieldName, formControl, inputType, fieldArray } = props
+  const {
+    formState: { errors },
+    register,
+  } = formControl
+  return (
+    <>
+      <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
+        <Input
+          size="sm"
+          id="now"
+          inputType={inputType ?? 'text'}
+          {...register(`${fieldArray}.${index}.${fieldName}`, { required: 'This is required' })}
+        />
+        {errors?.remainingItems && (
+          <FormErrorMessage>{errors?.[fieldArray][index]?.[fieldName]?.message}</FormErrorMessage>
+        )}
+      </FormControl>
+    </>
+  )
+}
+
+export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
+  return (
+    <Checkbox
+      isChecked={selectedItems?.map(s => s.id).includes(row.id)}
+      onChange={e => {
+        if (e.currentTarget?.checked) {
+          if (!selectedItems?.map(s => s.id).includes(row.id)) {
+            setSelectedItems([...selectedItems, row])
+          }
+        } else {
+          setSelectedItems([...selectedItems.filter(s => s.id !== row.id)])
+        }
+      }}
+    />
   )
 }

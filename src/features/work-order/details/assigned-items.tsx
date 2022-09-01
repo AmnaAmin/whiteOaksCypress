@@ -1,16 +1,12 @@
-import { AddIcon, CheckIcon } from '@chakra-ui/icons'
+import { CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
   chakra,
   Checkbox,
   Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   Icon,
-  Input,
   Spinner,
   Stack,
   Table,
@@ -28,10 +24,9 @@ import { useState } from 'react'
 import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
-import NumberFormat from 'react-number-format'
-import { EditableCell, LineItems, PriceInput } from './assignedItems.utils'
-import { WORK_ORDER } from '../workOrder.i18n'
 import { currencyFormatter } from 'utils/string-formatters'
+import { WORK_ORDER } from '../workOrder.i18n'
+import { EditableField, LineItems } from './assignedItems.utils'
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -77,7 +72,6 @@ type AssignedItemType = {
   isLoadingLineItems?: boolean
   onOpenRemainingItemsModal: () => void
   assignedItemsArray: FieldValues
-  manualItemArray: FieldValues
   unassignedItems: LineItems[]
   setUnAssignedItems: (items) => void
   formControl: UseFormReturn
@@ -89,7 +83,6 @@ const AssignedItems = (props: AssignedItemType) => {
     isLoadingLineItems,
     onOpenRemainingItemsModal,
     assignedItemsArray,
-    manualItemArray,
     unassignedItems,
     setUnAssignedItems,
     formControl,
@@ -98,8 +91,6 @@ const AssignedItems = (props: AssignedItemType) => {
   const [showLineItems] = useState(true)
   const { t } = useTranslation()
   const { control, register, setValue } = formControl
-
-  const { fields: manualItems, append: appendManual } = manualItemArray
 
   const { fields: assignedItems } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
@@ -115,28 +106,6 @@ const AssignedItems = (props: AssignedItemType) => {
               <Box pl="2" pr="1">
                 <Divider orientation="vertical" h="20px" />
               </Box>
-
-              {isAssignmentAllowed && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  colorScheme="brand"
-                  leftIcon={<Icon as={AddIcon} boxSize={3} />}
-                  onClick={() =>
-                    appendManual({
-                      sku: '',
-                      productName: '',
-                      details: '',
-                      quantity: '',
-                      price: '',
-                      isVerified: false,
-                      isCompleted: false,
-                    })
-                  }
-                >
-                  {t(`${WORK_ORDER}.addNewItem`)}
-                </Button>
-              )}
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -196,14 +165,13 @@ const AssignedItems = (props: AssignedItemType) => {
                       </Tr>
                     ) : (
                       <>
-                        {assignedItems?.length < 1 && manualItems?.length < 1 && (
+                        {assignedItems?.length < 1 && (
                           <Tr>
                             <Td colSpan={7} textAlign="center">
                               No data returned for this view
                             </Td>
                           </Tr>
                         )}
-                        <ManualItems formControl={formControl} fieldArray={manualItemArray} />
                         <AssignedLineItems
                           formControl={formControl}
                           fieldArray={assignedItemsArray}
@@ -220,143 +188,6 @@ const AssignedItems = (props: AssignedItemType) => {
         </>
       )}
     </Box>
-  )
-}
-
-const ManualItems = props => {
-  const { fields: manualItems, remove: removeManual } = props.fieldArray
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = props.formControl
-
-  return (
-    <>
-      {manualItems.map((items, index) => {
-        return (
-          <Tr>
-            <Td>
-              <HStack position="relative" right="16px">
-                <Icon
-                  as={BiXCircle}
-                  boxSize={5}
-                  color="brand.300"
-                  onClick={() => removeManual(index)}
-                  cursor="pointer"
-                  mt="2"
-                />
-                <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.sku?.message}>
-                  <FormLabel></FormLabel>
-                  <Input
-                    size="sm"
-                    id="now"
-                    {...register(`manualItems.${index}.sku`, { required: 'This is required' })}
-                  />
-                  {errors?.manualItems && (
-                    <FormErrorMessage>{errors?.manualItems[index]?.sku?.message}</FormErrorMessage>
-                  )}
-                </FormControl>
-              </HStack>
-            </Td>
-            <Td>
-              <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.productName?.message}>
-                <FormLabel></FormLabel>
-                <Input
-                  size="sm"
-                  id="productName"
-                  {...register(`manualItems.${index}.productName`, {
-                    required: 'This is required',
-                  })}
-                />
-                {errors?.manualItems && (
-                  <FormErrorMessage>{errors?.manualItems[index]?.productName?.message}</FormErrorMessage>
-                )}
-              </FormControl>
-            </Td>
-            <Td>
-              <Box>
-                <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.details?.message}>
-                  <FormLabel></FormLabel>
-                  <Input
-                    size="sm"
-                    id="details"
-                    {...register(`manualItems.${index}.details`, { required: 'This is required' })}
-                  />
-                  {errors?.manualItems && (
-                    <FormErrorMessage>{errors?.manualItems[index]?.sku?.message}</FormErrorMessage>
-                  )}
-                </FormControl>
-              </Box>
-            </Td>
-            <Td>
-              <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.quantity?.message}>
-                <FormLabel></FormLabel>
-                <Input
-                  size="sm"
-                  id="quantity"
-                  type="number"
-                  {...register(`manualItems.${index}.quantity`, { required: 'This is required' })}
-                />
-                {errors?.manualItems && (
-                  <FormErrorMessage>{errors?.manualItems[index]?.quantity?.message}</FormErrorMessage>
-                )}
-              </FormControl>
-            </Td>
-            <Td>
-              <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.price?.message}>
-                <FormLabel></FormLabel>
-                <Controller
-                  control={control}
-                  name={`manualItems.${index}.price`}
-                  rules={{ required: 'This is required field' }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <>
-                        <NumberFormat
-                          value={field.value}
-                          onValueChange={values => {
-                            const { floatValue } = values
-                            field.onChange(floatValue)
-                          }}
-                          customInput={PriceInput}
-                          thousandSeparator={true}
-                          prefix={'$'}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Td>
-            <Td>
-              <CustomCheckBox text="Completed" isDisabled={true} isChecked={false} />
-            </Td>
-            {/*
-                              
-            Commented this code. Will be working on this in up coming stories.
-            <Td>
-              <Box>
-                <Button
-                  pt="1"
-                  variant="outline"
-                  colorScheme="brand"
-                  rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
-                  size="sm"
-                >
-                  {t(`${WORK_ORDER}.upload`)}
-                </Button>
-              </Box>
-            </Td>*/}
-
-            <Td>
-              <CustomCheckBox text="Verified" isDisabled={true} isChecked={false} />
-            </Td>
-          </Tr>
-        )
-      })}
-    </>
   )
 }
 
@@ -382,7 +213,7 @@ export const AssignedLineItems = props => {
                   }}
                   cursor="pointer"
                 ></Icon>
-                <EditableCell
+                <EditableField
                   index={index}
                   fieldName="sku"
                   fieldArray="assignedItems"
@@ -392,7 +223,7 @@ export const AssignedLineItems = props => {
               </HStack>
             </Td>
             <Td>
-              <EditableCell
+              <EditableField
                 index={index}
                 fieldName="productName"
                 fieldArray="assignedItems"
@@ -401,7 +232,7 @@ export const AssignedLineItems = props => {
               />
             </Td>
             <Td>
-              <EditableCell
+              <EditableField
                 index={index}
                 fieldName="description"
                 fieldArray="assignedItems"
@@ -410,7 +241,7 @@ export const AssignedLineItems = props => {
               />
             </Td>
             <Td>
-              <EditableCell
+              <EditableField
                 index={index}
                 fieldName="quantity"
                 fieldArray="assignedItems"
@@ -419,7 +250,7 @@ export const AssignedLineItems = props => {
               />
             </Td>
             <Td>
-              <EditableCell
+              <EditableField
                 index={index}
                 fieldName="price"
                 formControl={props.formControl}
