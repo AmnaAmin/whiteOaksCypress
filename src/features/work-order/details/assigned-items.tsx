@@ -26,7 +26,8 @@ import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, LineItems } from './assignedItems.utils'
+import { EditableField, LineItems, SWOProject } from './assignedItems.utils'
+import { FaSpinner } from 'react-icons/fa'
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -76,6 +77,7 @@ type AssignedItemType = {
   setUnAssignedItems: (items) => void
   formControl: UseFormReturn
   isAssignmentAllowed: boolean
+  swoProject: SWOProject
 }
 
 const AssignedItems = (props: AssignedItemType) => {
@@ -87,6 +89,7 @@ const AssignedItems = (props: AssignedItemType) => {
     setUnAssignedItems,
     formControl,
     isAssignmentAllowed,
+    swoProject,
   } = props
   const [showLineItems] = useState(true)
   const { t } = useTranslation()
@@ -129,6 +132,12 @@ const AssignedItems = (props: AssignedItemType) => {
             </Button> */}
               {isAssignmentAllowed && (
                 <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
+                  {t(`${WORK_ORDER}.remainingItems`)}
+                </Button>
+              )}
+
+              {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
+                <Button variant="outline" colorScheme="brand" disabled leftIcon={<FaSpinner />}>
                   {t(`${WORK_ORDER}.remainingItems`)}
                 </Button>
               )}
@@ -252,7 +261,7 @@ export const AssignedLineItems = props => {
             <Td>
               <EditableField
                 index={index}
-                fieldName="price"
+                fieldName="unitPrice"
                 formControl={props.formControl}
                 inputType="number"
                 fieldArray="assignedItems"

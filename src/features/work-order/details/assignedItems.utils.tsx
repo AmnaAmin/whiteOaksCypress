@@ -29,6 +29,17 @@ export type LineItems = {
   action?: string
 }
 
+export type SWOProject = {
+  id: number | string
+  projectId: number | string
+  textractJobId: string
+  status: string
+  documentUrl: string
+  createdBy: string
+  createdDate: string
+  modifiedBy: string
+  modifiedDate: string
+}
 export const getRemovedItems = (formValues, workOrder) => {
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
@@ -53,7 +64,10 @@ export const useRemainingLineItems = (swoProjectId?: string) => {
   const { data: remainingItems, ...rest } = useQuery<any>(
     ['remainingItems', swoProjectId],
     async () => {
-      const response = await client(`line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}`, {})
+      const response = await client(
+        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=id,asc&page=0`,
+        {},
+      )
 
       return response?.data
     },
@@ -161,6 +175,39 @@ export const useCreateLineItem = ({ swoProject, showToast }) => {
         toast({
           title: 'Assigned Line Items',
           description: (error.title as string) ?? 'Unable to update line items.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+export const useDeleteLineItems = swoProjectId => {
+  const client = useClient(swoPrefix)
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (payload: { itemIds: string }) => {
+      return client('line-items/' + payload.itemIds, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['remainingItems', swoProjectId])
+        toast({
+          title: 'Assigned Items',
+          description: 'Item Deleted Successfully',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Assigned Items',
+          description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
         })
@@ -281,7 +328,7 @@ export const InputField = (props: InputFieldType) => {
         <Input
           size="sm"
           id="now"
-          inputType={inputType ?? 'text'}
+          type={inputType ?? 'text'}
           {...register(`${fieldArray}.${index}.${fieldName}`, { required: 'This is required' })}
         />
         {errors?.remainingItems && (

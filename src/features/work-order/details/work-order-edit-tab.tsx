@@ -319,6 +319,7 @@ const WorkOrderDetailTab = props => {
               formControl={formReturn as UseFormReturn<any>}
               assignedItemsArray={assignedItemsArray}
               isAssignmentAllowed={isAssignmentAllowed}
+              swoProject={swoProject}
             />
           </Box>
         </ModalBody>

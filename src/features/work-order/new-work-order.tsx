@@ -459,6 +459,7 @@ const NewWorkOrder: React.FC<{
                   formControl={formReturn as UseFormReturn<any>}
                   assignedItemsArray={assignedItemsArray}
                   isAssignmentAllowed={isAssignmentAllowed}
+                  swoProject={swoProject}
                 />
               </Box>
             </Box>

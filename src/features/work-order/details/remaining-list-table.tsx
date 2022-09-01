@@ -4,8 +4,10 @@ import { TableWrapper } from 'components/table/table'
 import { difference } from 'lodash'
 import { FieldValue, UseFormReturn } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
+import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, InputField, LineItems, SelectCheckBox } from './assignedItems.utils'
+import { EditableField, InputField, LineItems, SelectCheckBox, SWOProject } from './assignedItems.utils'
+
 type RemainingListType = {
   setSelectedItems: (items) => void
   selectedItems: LineItems[]
@@ -14,6 +16,7 @@ type RemainingListType = {
   formControl: UseFormReturn<any>
   updatedItems: number[]
   setUpdatedItems: (items) => void
+  swoProject: SWOProject
 }
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
@@ -264,6 +267,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 fieldName="unitPrice"
                 formControl={props.formControl}
                 inputType="number"
+                valueFormatter={currencyFormatter}
                 fieldArray="remainingItems"
                 updatedItems={updatedItems}
                 setUpdatedItems={setUpdatedItems}
@@ -296,6 +300,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 inputType="number"
                 fieldArray="remainingItems"
                 updatedItems={updatedItems}
+                valueFormatter={currencyFormatter}
                 setUpdatedItems={setUpdatedItems}
               />
             )}
