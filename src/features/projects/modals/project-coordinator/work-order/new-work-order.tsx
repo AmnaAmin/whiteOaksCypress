@@ -30,7 +30,7 @@ import { useTrades } from 'utils/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'utils/work-order'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
-
+import round from 'lodash/round'
 const CalenderCard = props => {
   return (
     <Flex>
@@ -86,6 +86,8 @@ const NewWorkOrder: React.FC<{
   const [vendorOptions, setVendorOptions] = useState([])
   const [approvedAmount, setApprovedAmount] = useState<number | null>()
   const [percentageField, setPercentageField] = useState<number | null>()
+  const [invoiceAmount, setInvoiceAmount] = useState(0)
+
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
@@ -112,7 +114,7 @@ const NewWorkOrder: React.FC<{
     }
   }, [isSuccess, onClose])
 
-  useEffect(() => {
+  const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
     if (approvedAmount && percentageField) {
       const amount = approvedAmount
       const percentage = percentageField
@@ -125,7 +127,25 @@ const NewWorkOrder: React.FC<{
     } else {
       setValue('invoiceAmount', '')
     }
-  }, [approvedAmount, percentageField])
+  }
+
+  const onPercentageChange = percentageField => {
+    setPercentageField(percentageField)
+    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
+  }
+
+  const onApprovedAmountChange = approvedAmount => {
+    setApprovedAmount(approvedAmount)
+    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
+  }
+
+  const onInoviceAmountChange = invoiceAmount => {
+    setInvoiceAmount(invoiceAmount)
+    const approve = parseInt(`${approvedAmount}`, 10)
+    const percentageField = round(((approve - invoiceAmount) * 100) / approve, 2)
+    setPercentageField(percentageField)
+    setValue('percentage', percentageField)
+  }
 
   useEffect(() => {
     const option = [] as any
@@ -270,7 +290,7 @@ const NewWorkOrder: React.FC<{
                                 prefix={'$'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
-                                  setApprovedAmount(e.floatValue)
+                                  onApprovedAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -298,7 +318,7 @@ const NewWorkOrder: React.FC<{
                                 suffix={'%'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
-                                  setPercentageField(e.floatValue)
+                                  onPercentageChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -326,8 +346,9 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
-                                onValueChnge={e => {
+                                onValueChange={e => {
                                   field.onChange(e.floatValue)
+                                  onInoviceAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
