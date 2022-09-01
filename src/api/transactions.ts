@@ -63,7 +63,15 @@ export const useProjectInfo = (projectId: string) => {
   }
 }
 
-const adminOrOperationTransactionTypeOptions = [
+const transactionTypeOptions = [
+  {
+    value: TransactionTypeValues.changeOrder,
+    label: 'Change Order',
+  },
+  {
+    value: TransactionTypeValues.draw,
+    label: 'Draw',
+  },
   {
     value: TransactionTypeValues.material,
     label: 'Material',
@@ -75,23 +83,11 @@ const adminOrOperationTransactionTypeOptions = [
 ]
 
 export const useTransactionTypes = () => {
-  const { isProjectCoordinator, isAdmin } = useUserRolesSelector()
-  const transactionTypeOptions = [
-    {
-      value: TransactionTypeValues.changeOrder,
-      label: 'Change Order',
-    },
-    {
-      value: TransactionTypeValues.draw,
-      label: 'Draw',
-    },
-  ]
+  const { isVendor } = useUserRolesSelector()
 
   return {
-    transactionTypeOptions:
-      isAdmin || isProjectCoordinator
-        ? [...transactionTypeOptions, ...adminOrOperationTransactionTypeOptions]
-        : transactionTypeOptions,
+    // Note for vendor user we only show change order and draw, that's why we filter out the rest
+    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
   }
 }
 
@@ -125,7 +121,7 @@ export const createWorkOrderLabel = (skillName: string, companyName: string) => 
 export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
   let workOrderSelectOptions: SelectOption[] = []
   const client = useClient()
-  const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
 
   const { data: changeOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
     ['workordersWithChangeOrders', projectId],
@@ -141,12 +137,12 @@ export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
     value: `${changeOrder.id}`,
   }))
 
-  if (isAdmin || isProjectCoordinator) {
+  if (isVendor) {
+    workOrderSelectOptions = changeOrderOptions || workOrderSelectOptions
+  } else {
     workOrderSelectOptions = changeOrderOptions
       ? [WORK_ORDER_DEFAULT_OPTION, ...changeOrderOptions]
       : [WORK_ORDER_DEFAULT_OPTION]
-  } else {
-    workOrderSelectOptions = changeOrderOptions || workOrderSelectOptions
   }
 
   return {
@@ -166,7 +162,7 @@ export const createAgainstLabel = (companyName: string, skillName: string) => {
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
-  const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
   const client = useClient()
 
   const { data: workOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
@@ -209,12 +205,12 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
   )
 
   const againstOptions: SelectOption[] = useMemo(() => {
-    if (isAdmin || isProjectCoordinator) {
-      return workOrderOptions ? [AGAINST_DEFAULT_OPTION, ...workOrderOptions] : [AGAINST_DEFAULT_OPTION]
-    } else {
+    if (isVendor) {
       return workOrderOptions || []
+    } else {
+      return workOrderOptions ? [AGAINST_DEFAULT_OPTION, ...workOrderOptions] : [AGAINST_DEFAULT_OPTION]
     }
-  }, [workOrderOptions, isAdmin, isProjectCoordinator])
+  }, [workOrderOptions, isVendor])
 
   return {
     workOrdersKeyValues,
