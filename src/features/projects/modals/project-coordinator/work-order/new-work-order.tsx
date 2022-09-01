@@ -86,7 +86,7 @@ const NewWorkOrder: React.FC<{
   const [vendorOptions, setVendorOptions] = useState([])
   const [approvedAmount, setApprovedAmount] = useState<number | null>()
   const [percentageField, setPercentageField] = useState<number | null>()
-  const [invoiceAmount, setInvoiceAmount] = useState(0)
+  const [, setInvoiceAmount] = useState(0)
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
