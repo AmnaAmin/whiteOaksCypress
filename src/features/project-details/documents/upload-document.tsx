@@ -95,7 +95,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                 <Grid gridTemplateColumns={'215px 215px'} gap="15px">
                   <GridItem>
                     <FormControl isInvalid={!!errors?.documnetType} data-testid="document-type">
-                      <FormLabel htmlFor="documentType" variant="strong-label">
+                      <FormLabel htmlFor="documentType" variant="strong-label" size="md">
                         {t('documentType')}{' '}
                       </FormLabel>
                       <Controller
@@ -122,7 +122,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
 
                   <GridItem>
                     <FormControl isInvalid={!!errors?.chooseFile}>
-                      <FormLabel htmlFor="chooseFile" variant="strong-label">
+                      <FormLabel htmlFor="chooseFile" variant="strong-label" size="md">
                         {t('uploadFile')}
                       </FormLabel>
                       <Controller
