@@ -658,7 +658,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             {t('back')}
           </Button>
         ) : (
-          <Button onClick={onModalClose} variant="solid" colorScheme="brand" data-testid="close-transaction-form">
+          <Button
+            onClick={onModalClose}
+            variant={!isApproved ? 'outline' : 'solid'}
+            colorScheme="brand"
+            data-testid="close-transaction-form"
+          >
             {t('Cancel')}
           </Button>
         )}
@@ -681,15 +686,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
           </Button>
         ) : (
           !isApproved && (
-            <Button
-              type="submit"
-              form="newTransactionForm"
-              data-testid="save-transaction"
-              colorScheme="brand"
-              variant="solid"
-            >
-              {t('save')}
-            </Button>
+            <>
+              <Button
+                type="submit"
+                form="newTransactionForm"
+                data-testid="save-transaction"
+                colorScheme="brand"
+                variant="solid"
+              >
+                {t('save')}
+              </Button>
+            </>
           )
         )}
       </HStack>
