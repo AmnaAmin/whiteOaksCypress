@@ -32,6 +32,8 @@ import { useTranslation } from 'react-i18next'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { useProjectInformationNextButtonDisabled, usePropertyInformationNextDisabled } from './hooks'
 import { createDocumentPayload } from 'utils/file-utils'
+import { useAuth } from 'utils/auth-context'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -40,6 +42,9 @@ type AddProjectFormProps = {
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const { t } = useTranslation()
   const toast = useToast()
+  const { isProjectCoordinator } = useUserRolesSelector()
+  const { data } = useAuth()
+  const user = data?.user
 
   const { mutate: saveProjectDetails } = useSaveProjectDetails()
   const [tabIndex, setTabIndex] = useState(0)
@@ -150,8 +155,11 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       }
 
       saveProjectDetails(newProjectPayload, {
-        onSuccess(response: any) {
-          const projectId = response?.data?.id
+        onSuccess(response) {
+          const project = response?.data
+          const projectId = project?.id
+          const projectCordinatorId = project?.projectCordinatorId
+
           toast({
             title: 'Project Details',
             description: `New project has been created successfully with project id: ${projectId}`,
@@ -161,6 +169,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             position: 'top-left',
           })
           onClose()
+
+          if (isProjectCoordinator && user?.id !== projectCordinatorId) return
+
           navigate(`/project-details/${projectId}`)
         },
         onError(error: any) {
