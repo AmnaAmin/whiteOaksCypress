@@ -12,10 +12,11 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
-import { useEffect } from 'react'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useCallback, useEffect, useState } from 'react'
+import { useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
@@ -28,7 +29,10 @@ import {
   useAssignLineItems,
   useDeleteLineIds,
   LineItems,
+  useAllowLineItemsAssignment,
+  useRemainingLineItems,
 } from './assignedItems.utils'
+import RemainingItemsModal from './remaining-items-modal'
 
 const CalenderCard = props => {
   return (
@@ -79,10 +83,17 @@ interface FormValues {
 }
 
 const WorkOrderDetailTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, setWorkOrderUpdating, swoProject, rejectInvoiceCheck } = props
+  const {
+    workOrder,
+    onSave,
+    navigateToProjectDetails,
+    isWorkOrderUpdating,
+    setWorkOrderUpdating,
+    swoProject,
+    rejectInvoiceCheck,
+  } = props
 
   const formReturn = useForm<FormValues>()
-
   const { register, control, reset } = formReturn
 
   const assignedItemsArray = useFieldArray({
@@ -90,14 +101,13 @@ const WorkOrderDetailTab = props => {
     name: 'assignedItems',
   })
   const { append } = assignedItemsArray
-  const manualItemArray = useFieldArray({
-    control,
-    name: 'manualItems',
-  })
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
   const { mutate: deleteLineItems } = useDeleteLineIds()
+  const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
+  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
+  const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const { t } = useTranslation()
 
   const {
@@ -112,6 +122,31 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
+
+  // Remaining Items handles
+  const {
+    onClose: onCloseRemainingItemsModal,
+    isOpen: isOpenRemainingItemsModal,
+    onOpen: onOpenRemainingItemsModal,
+  } = useDisclosure()
+
+  const setAssignedItems = useCallback(
+    items => {
+      const selectedIds = items.map(i => i.id)
+      const assigned = [
+        ...items.map(s => {
+          return { ...s, isVerified: false, isCompleted: false }
+        }),
+      ]
+      append(assigned)
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
+    },
+    [unassignedItems, setUnAssignedItems],
+  )
+
+  useEffect(() => {
+    setUnAssignedItems(remainingItems ?? [])
+  }, [remainingItems])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
@@ -190,24 +225,27 @@ const WorkOrderDetailTab = props => {
 
   return (
     <Box>
-      <FormProvider {...formReturn}>
-        <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-          <ModalBody h="400px" overflow={'auto'}>
-            <Stack pt="32px" spacing="32px" mx="32px">
-              <SimpleGrid columns={5}>
-                <InformationCard title="Company Name" date={companyName} />
-                <InformationCard title="Vendor Type" date={skillName} />
-                <InformationCard title="Email" date={businessEmailAddress} />
-                <InformationCard title=" Phone" date={businessPhoneNumber} />
-              </SimpleGrid>
-              <Box>
-                <Divider borderColor="#CBD5E0" />
-              </Box>
+      <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
+        <ModalBody h="400px" overflow={'auto'}>
+          <Stack pt="32px" spacing="32px" mx="32px">
+            <SimpleGrid columns={5}>
+              <InformationCard title="Company Name" date={companyName} />
+              <InformationCard title="Vendor Type" date={skillName} />
+              <InformationCard title="Email" date={businessEmailAddress} />
+              <InformationCard title=" Phone" date={businessPhoneNumber} />
+            </SimpleGrid>
+            <Box>
+              <Divider borderColor="#CBD5E0" />
+            </Box>
 
-<<<<<<<<< Temporary merge branch 1
             <SimpleGrid columns={5}>
               <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
-              <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
+              <CalenderCard
+                title="LW Submitted "
+                date={
+                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
+                }
+              />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
             </SimpleGrid>
@@ -269,16 +307,6 @@ const WorkOrderDetailTab = props => {
                     {...register('workOrderDateCompleted')}
                   />
                 </FormControl>
-=========
-              <SimpleGrid columns={5}>
-                <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
-                <CalenderCard title="LW Submitted " date={dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'} />
-                {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-                <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
-              </SimpleGrid>
-              <Box>
-                <Divider borderColor="#CBD5E0" />
->>>>>>>>> Temporary merge branch 2
               </Box>
             </HStack>
           </Box>
@@ -289,9 +317,9 @@ const WorkOrderDetailTab = props => {
               unassignedItems={unassignedItems}
               setUnAssignedItems={setUnAssignedItems}
               formControl={formReturn as UseFormReturn<any>}
-              manualItemArray={manualItemArray}
               assignedItemsArray={assignedItemsArray}
               isAssignmentAllowed={isAssignmentAllowed}
+              swoProject={swoProject}
             />
           </Box>
         </ModalBody>
@@ -320,6 +348,7 @@ const WorkOrderDetailTab = props => {
         </ModalFooter>
       </form>
       <RemainingItemsModal
+        isAssignmentAllowed={isAssignmentAllowed}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
         setAssignedItems={setAssignedItems}
