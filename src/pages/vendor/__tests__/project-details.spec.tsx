@@ -1,24 +1,25 @@
 import userEvent from '@testing-library/user-event'
-import { UploadDocumentModal } from 'features/projects/documents/upload-document'
+import { UploadDocumentModal } from 'features/project-details/documents/upload-document'
 import { Providers } from 'providers'
 import { act, render, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
 
+const onClose = jest.fn()
+
 const renderDocumentUploadModal = async () => {
-  render(<UploadDocumentModal isOpen={true} />, { wrapper: Providers })
+  render(<UploadDocumentModal isOpen={true} onClose={onClose} />, { wrapper: Providers })
 
   await waitForLoadingToFinish()
 }
 
-const chooseFileByLabel = (labelRegExp: RegExp) => {
-  const inputEl = screen.getByLabelText(labelRegExp)
+const chooseFileByLabel = (inputElement, fileName = 'dummy-file.png') => {
   // Create dummy file then upload
-  const file = new File(['(⌐□_□)'], 'dummy-file.png', {
+  const file = new File(['(⌐□_□)'], fileName, {
     type: 'image/png',
   })
 
-  userEvent.upload(inputEl, file)
+  userEvent.upload(inputElement, file)
 
-  expect(screen.getByText(/dummy-file\.png/)).toBeInTheDocument()
+  expect(screen.getByText(fileName)).toBeInTheDocument()
 }
 
 jest.setTimeout(150000)
@@ -44,7 +45,7 @@ describe('Porject Details: Document tab test cases', () => {
     // User first select Transaction type, one of ['Change Order', 'Draw']
     await selectOption(screen.getByTestId('document-type'), 'Drawings')
 
-    chooseFileByLabel(/Choose File/i)
+    chooseFileByLabel(screen.getByTestId('choose-document'))
 
     await act(async () => {
       await userEvent.click(screen.getByText(/Save/i))
@@ -58,9 +59,26 @@ describe('Porject Details: Document tab test cases', () => {
   test('Upload document Empty fields validation', async () => {
     await renderDocumentUploadModal()
 
-    act(() => {
-      userEvent.click(screen.getByText(/Save/i))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/Save/i))
     })
     expect(screen.getByText(/Document type is required/i)).toBeInTheDocument()
+
+    await userEvent.click(screen.getByText(/Cancel/i))
+  })
+
+  test('Upload document with longer name than 30 character validation', async () => {
+    await renderDocumentUploadModal()
+
+    // Fill document form
+    await selectOption(screen.getByTestId('document-type'), 'Drawings')
+
+    chooseFileByLabel(screen.getByTestId('choose-document'), 'dummy-file-with-long-name-more-than-30-characters.png')
+
+    await act(async () => {
+      await userEvent.click(screen.getByText(/Save/i))
+    })
+
+    expect(screen.getByText(/File name length should be less than 30/i)).toBeInTheDocument()
   })
 })

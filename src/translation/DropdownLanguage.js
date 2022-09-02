@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FaAngleDown } from 'react-icons/fa'
 import { Menu, MenuButton, MenuItem, MenuList, Box, Stack } from '@chakra-ui/react'
 import Flags from 'country-flag-icons/react/3x2'
-import { useSaveLanguage, useAccountDetails } from 'utils/vendor-details'
+import { useSaveLanguage, useAccountDetails } from 'api/vendor-details'
 
 const languageStyle = {
   paddingRight: '5px',

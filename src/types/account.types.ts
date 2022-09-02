@@ -4,6 +4,8 @@ export enum UserTypes {
   vendor = 'Vendor',
   pc = 'Project Coordinator',
   vendorManager = 'Vendor Manager',
+  fpm = 'Field Project Manager',
+  doc = 'Director Of Construction',
 }
 
 export type Account = {

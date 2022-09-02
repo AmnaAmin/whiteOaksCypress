@@ -41,6 +41,19 @@ export const getFormattedDate = (date: Date) => {
   return month + '/' + day + '/' + year
 }
 
+/**
+ * Returns a date with localized midnight timestamp
+ * by adjusting the UTC minutes with timezoneOffset
+ * @param date string
+ * @returns 
+ */
+export const getLocalTimeZoneDate = (date: string) => {
+  if(!date) return null;
+  const dateObj = new Date(date);
+  dateObj.setUTCMinutes(dateObj.getTimezoneOffset());
+  return datePickerFormat(dateObj);
+}
+
 export type MonthOption = {
   value: number
   month: string

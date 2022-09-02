@@ -1,10 +1,20 @@
 import { Box } from '@chakra-ui/react'
-import { useVendorsPerMonth } from 'utils/vendor-dashboard'
+import { useVendorsPerMonth } from 'api/vendor-dashboard'
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { GenericObjectType } from 'types/common.types'
 import { values } from 'lodash'
-import { WORK_ORDER_STATUS } from 'features/projects/work-order-status'
+
+export enum WORK_ORDER_STATUS {
+  Paid = 68,
+  Active = 34,
+  Completed = 36,
+  Cancelled = 35,
+  Inactive = 37,
+  Invoiced = 110,
+  Decline = 111,
+  PastDue = 114,
+}
 
 export const months = [
   'January',

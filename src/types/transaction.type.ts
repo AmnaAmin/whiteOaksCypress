@@ -90,6 +90,7 @@ export enum TransactionTypeValues {
   material = 31,
   payment = 49,
   woPaid = 62,
+  overpayment = 113,
 }
 
 export enum TransactionStatusValues {
