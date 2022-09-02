@@ -49,14 +49,15 @@ export const Receivable = () => {
   }, [loading])
 
   const Submit = formValues => {
-    setLoading(true)
-    setIsBatchClick(true)
-
     const payloadData = compact(formValues.id).map(id => ({
       id: parseInt(id as string),
       type: 'Remaining Payments',
     }))
 
+    if (!payloadData.length) return
+
+    setLoading(true)
+    setIsBatchClick(true)
     const obj = {
       typeCode: 'AR',
       entities: payloadData,
