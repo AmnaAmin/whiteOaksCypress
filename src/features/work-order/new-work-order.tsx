@@ -93,7 +93,6 @@ type NewWorkOrderType = {
   clientApprovedAmount: string | number | null
   percentage: string | number | null
   assignedItems: LineItems[]
-  manualItems: LineItems[]
 }
 
 const NewWorkOrder: React.FC<{
@@ -135,10 +134,6 @@ const NewWorkOrder: React.FC<{
     name: 'assignedItems',
   })
   const { append } = assignedItemsArray
-  const manualItemArray = useFieldArray({
-    control,
-    name: 'manualItems',
-  })
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
 
@@ -462,9 +457,9 @@ const NewWorkOrder: React.FC<{
                   unassignedItems={unassignedItems}
                   setUnAssignedItems={setUnAssignedItems}
                   formControl={formReturn as UseFormReturn<any>}
-                  manualItemArray={manualItemArray}
                   assignedItemsArray={assignedItemsArray}
                   isAssignmentAllowed={isAssignmentAllowed}
+                  swoProject={swoProject}
                 />
               </Box>
             </Box>
@@ -491,6 +486,7 @@ const NewWorkOrder: React.FC<{
       </form>
 
       <RemainingItemsModal
+        isAssignmentAllowed={isAssignmentAllowed}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
         setAssignedItems={setAssignedItems}

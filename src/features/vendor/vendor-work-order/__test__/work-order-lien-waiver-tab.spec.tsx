@@ -37,7 +37,7 @@ describe('Work Order Lien Waiver Test Cases', () => {
     expect(screen.getByTestId('nameOfClaimant').textContent).toEqual(workOrder?.claimantName)
     expect(screen.getByTestId('makerOfCheck').textContent).toEqual(workOrder?.makerOfCheck)
     expect(screen.getByTestId('propertyAddress').textContent).toEqual(workOrder?.propertyAddress)
-    expect(screen.getByTestId('amountOfCheck').textContent).toEqual('$' + workOrder?.amountOfCheck)
+    expect(screen.getByTestId('amountOfCheck').textContent).toEqual('$' + workOrder?.finalInvoiceAmount)
     expect(screen.getByTestId('claimantsTitle')).not.toHaveAttribute('disabled')
     expect(screen.getByTestId('save-lien-waiver')).toBeInTheDocument()
     expect(screen.queryByTestId('recentLW')).not.toBeInTheDocument()

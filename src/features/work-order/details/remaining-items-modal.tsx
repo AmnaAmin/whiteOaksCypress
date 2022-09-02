@@ -1,7 +1,9 @@
 import {
   Box,
   Button,
+  Divider,
   HStack,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,13 +11,17 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useDisclosure,
 } from '@chakra-ui/react'
 import RemainingListTable from 'features/work-order/details/remaining-list-table'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
-import { LineItems, useAssignLineItems } from './assignedItems.utils'
+import { LineItems, SWOProject, useAssignLineItems, useCreateLineItem, useDeleteLineItems } from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { AddIcon } from '@chakra-ui/icons'
+import { RiDeleteBinLine } from 'react-icons/ri'
+import { ConfirmationBox } from 'components/Confirmation'
 
 const RemainingItemsModal: React.FC<{
   isOpen: boolean
@@ -23,11 +29,23 @@ const RemainingItemsModal: React.FC<{
   setAssignedItems: (items) => void
   remainingItems: LineItems[]
   isLoading: boolean
-  swoProject: any
+  swoProject: SWOProject
+  isAssignmentAllowed: boolean
 }> = props => {
-  const { remainingItems, isLoading, setAssignedItems, onClose, swoProject } = props
+  const { remainingItems, isLoading, setAssignedItems, onClose, swoProject, isAssignmentAllowed } = props
   const [selectedItems, setSelectedItems] = useState<LineItems[]>([])
+  const [updatedItems, setUpdatedItems] = useState<number[]>([])
+  const { mutateAsync: updateLineItemsAsync } = useAssignLineItems({ swoProjectId: swoProject?.id, showToast: false })
+  const { mutateAsync: createLineItemsAsync } = useCreateLineItem({ swoProject, showToast: false })
   const { mutate: updateLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, showToast: true })
+  const { mutate: createLineItems } = useCreateLineItem({ swoProject, showToast: true })
+  const { mutate: deleteLineItem, isLoading: isDeleteLoading } = useDeleteLineItems(swoProject?.id)
+
+  const {
+    isOpen: isDeleteConfirmationModalOpen,
+    onClose: onDeleteConfirmationModalClose,
+    onOpen: onDeleteConfirmationModalOpen,
+  } = useDisclosure()
 
   const formControl = useForm<{
     remainingItems: LineItems[]
@@ -38,33 +56,120 @@ const RemainingItemsModal: React.FC<{
     name: 'remainingItems',
   })
 
+  const { prepend } = remainingFieldArray
+
   useEffect(() => {
     reset({ remainingItems })
   }, [remainingItems])
 
-  const onSubmit = values => {
-    setAssignedItems(selectedItems)
-    setSelectedItems([])
-    updateLineItems([...values.remainingItems])
-    onClose()
+  const onSubmit = async values => {
+    const newLineItems = values.remainingItems.filter(r => r.action === 'new')
+    const updatedLineItems = [...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))]
+
+    if (updatedLineItems?.length > 0 && newLineItems?.length > 0) {
+      const update = updateLineItemsAsync(updatedLineItems)
+      const create = createLineItemsAsync([
+        ...newLineItems.map(({ action, ...rest }) => {
+          return rest
+        }),
+      ])
+      Promise.all([update, create]).then(values => {
+        assignAndReset()
+      })
+    } else if (updatedLineItems?.length > 0) {
+      updateLineItems(updatedLineItems, {
+        onSuccess: () => {
+          assignAndReset()
+        },
+      })
+    } else if (newLineItems?.length > 0) {
+      createLineItems(
+        [
+          ...newLineItems.map(({ action, ...rest }) => {
+            return rest
+          }),
+        ],
+        {
+          onSuccess: () => {
+            assignAndReset()
+          },
+        },
+      )
+    } else {
+      assignAndReset()
+    }
   }
+
+  const assignAndReset = () => {
+    onClose()
+    setAssignedItems(selectedItems)
+    reset()
+    setSelectedItems([])
+    setUpdatedItems([])
+  }
+  const checkKeyDown = e => {
+    if (e.code === 'Enter') e.preventDefault()
+  }
+
   return (
     <Box>
-      <Modal variant="custom" isOpen={props.isOpen} onClose={props.onClose} size="5xl">
+      <Modal variant="custom" isOpen={props.isOpen} onClose={props.onClose} size="6xl">
         <ModalOverlay />
         <ModalContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
             <ModalHeader fontSize="16px" fontWeight={500} color="gray.600">
-              {t(`${WORK_ORDER}.remainingList`)}
+              <HStack>
+                <span>{t(`${WORK_ORDER}.remainingList`)}</span>
+                <Box pl="2" pr="1">
+                  <Divider size="lg" orientation="vertical" h="25px" />
+                </Box>
+                {isAssignmentAllowed && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    colorScheme="brand"
+                    leftIcon={<Icon as={AddIcon} boxSize={3} />}
+                    onClick={() =>
+                      prepend({
+                        sku: '',
+                        productName: '',
+                        description: '',
+                        quantity: '',
+                        unitPrice: '',
+                        totalPrice: '',
+                        action: 'new',
+                      })
+                    }
+                  >
+                    {t(`${WORK_ORDER}.addNewItem`)}
+                  </Button>
+                )}
+                <Box pl="2" pr="1">
+                  <Divider size="lg" orientation="vertical" h="25px" />
+                </Box>
+                <Button
+                  data-testid="delete-row-button"
+                  variant="ghost"
+                  disabled={selectedItems?.length < 1}
+                  colorScheme="brand"
+                  onClick={onDeleteConfirmationModalOpen}
+                  leftIcon={<RiDeleteBinLine color="#4E87F8" />}
+                >
+                  {t('deleteRow')}
+                </Button>
+              </HStack>
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-            <ModalBody h="400px" overflow={'auto'}>
+            <ModalBody h="450px" overflow={'auto'}>
               <RemainingListTable
                 formControl={formControl}
                 remainingFieldArray={remainingFieldArray}
                 isLoading={isLoading}
                 selectedItems={selectedItems}
                 setSelectedItems={setSelectedItems}
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
+                swoProject={swoProject}
               />
             </ModalBody>
             <ModalFooter p="0">
@@ -87,6 +192,24 @@ const RemainingItemsModal: React.FC<{
           </form>
         </ModalContent>
       </Modal>
+      <ConfirmationBox
+        title="Are You Sure?"
+        content="Do you really want to delete this item? This process cannot be undone."
+        isOpen={isDeleteConfirmationModalOpen}
+        onClose={onDeleteConfirmationModalClose}
+        onConfirm={() => {
+          deleteLineItem(
+            { itemIds: selectedItems?.map(s => s.id)?.join(',') },
+            {
+              onSuccess: () => {
+                setSelectedItems([])
+                onDeleteConfirmationModalClose()
+              },
+            },
+          )
+        }}
+        isLoading={isDeleteLoading}
+      />
     </Box>
   )
 }

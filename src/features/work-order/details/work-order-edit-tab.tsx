@@ -80,7 +80,6 @@ interface FormValues {
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
   assignedItems?: LineItems[]
-  manualItems?: LineItems[]
 }
 
 const WorkOrderDetailTab = props => {
@@ -102,10 +101,6 @@ const WorkOrderDetailTab = props => {
     name: 'assignedItems',
   })
   const { append } = assignedItemsArray
-  const manualItemArray = useFieldArray({
-    control,
-    name: 'manualItems',
-  })
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
@@ -322,9 +317,9 @@ const WorkOrderDetailTab = props => {
               unassignedItems={unassignedItems}
               setUnAssignedItems={setUnAssignedItems}
               formControl={formReturn as UseFormReturn<any>}
-              manualItemArray={manualItemArray}
               assignedItemsArray={assignedItemsArray}
               isAssignmentAllowed={isAssignmentAllowed}
+              swoProject={swoProject}
             />
           </Box>
         </ModalBody>
@@ -353,6 +348,7 @@ const WorkOrderDetailTab = props => {
         </ModalFooter>
       </form>
       <RemainingItemsModal
+        isAssignmentAllowed={isAssignmentAllowed}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
         setAssignedItems={setAssignedItems}
