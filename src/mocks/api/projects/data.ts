@@ -327,7 +327,7 @@ export const TRANSACTIONS = [
     parentWorkOrderId: null,
     projectId: 2991,
     vendorId: null,
-    paymentTerm: 7,
+    paymentTerm: 20,
     clientApprovedDate: INVOICED_DATE,
     paidDate: null,
     lineItems: [
