@@ -30,10 +30,9 @@ export const Markets = () => {
         </HStack>
         <MarketsTable setTableInstance={setProjectTableInstance} isLoading={isLoading} markets={markets} />
         <Flex width="100%" justifyContent="end">
-          <Box rounded="0px 0px 9px 9px" bg="gray.200" border="1px solid #E2E8F0">
+          <Box borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
             <Button
               m={0}
-              bg="gray.200"
               variant="ghost"
               colorScheme="brand"
               onClick={() => {
