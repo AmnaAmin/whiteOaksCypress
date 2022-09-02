@@ -82,7 +82,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         Cell: withPreviewCell,
       },
       {
-        Header: t('transaction') || '',
+        Header: t('transactionDoc') || '',
         accessor: 'label',
         id: 'label',
         Cell: withPreviewCell,
@@ -99,7 +99,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         accessor: 'fileObjectContentType',
         Cell: withPreviewCell,
       },
-
 
       {
         Header: t('createdBy') || '',
