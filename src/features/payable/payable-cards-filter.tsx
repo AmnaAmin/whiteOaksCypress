@@ -10,7 +10,6 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
   const data = PayableData?.workOrders
   const { transactions = [] } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
   const overPaymentCard = transactions
-  console.log('data', data)
 
   enum PayableCardTypes {
     PastDue = '1',
