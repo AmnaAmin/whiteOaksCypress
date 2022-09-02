@@ -27,23 +27,23 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
 
   const pastDueSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
-    .map(a => a.invoiceAmount)
+    .map(a => a.finalInvoiceAmount)
     .reduce((prev, current) => prev + current, 0)
   const sevenDaysSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.SevenDays)
-    .map(a => a.invoiceAmount)
+    .map(a => a.finalInvoiceAmount)
     .reduce((sum, current) => sum + current, 0)
   const EightToTenDaysSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.EightToTenDays)
-    .map(a => a.invoiceAmount)
+    .map(a => a.finalInvoiceAmount)
     .reduce((sum, current) => sum + current, 0)
   const TenToTwentyDaysSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.TenToTwentyDays)
-    .map(a => a.invoiceAmount)
+    .map(a => a.finalInvoiceAmount)
     .reduce((sum, current) => sum + current, 0)
   const TwentyToThirdayDaysSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
-    .map(a => a.invoiceAmount)
+    .map(a => a.finalInvoiceAmount)
     .reduce((sum, current) => sum + current, 0)
   const overpaymentSum = overPaymentCard?.map(a => a.transactionTotal)?.reduce((sum, current) => sum + current, 0)
 
