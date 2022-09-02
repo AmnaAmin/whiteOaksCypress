@@ -14,19 +14,6 @@ export const datePickerFormat = (date: string | Date) => {
   return date ? format(new Date(date), 'yyyy-MM-dd') : null
 }
 
-/**
- * Returns a date with localized midnight timestamp
- * by adjusting the UTC minutes with timezoneOffset
- * @param date string
- * @returns 
- */
- export const getLocalTimeZoneDate = (date: string) => {
-  if(!date) return null;
-  const dateObj = new Date(date);
-  dateObj.setUTCMinutes(dateObj.getTimezoneOffset());
-  return datePickerFormat(dateObj);
-}
-
 export const dateISOFormat = (date: string | Date | null) => {
   if (date === null) return null
 
@@ -39,6 +26,19 @@ export const getFormattedDate = (date: Date) => {
   const day = date.getDate().toString().padStart(2, '0')
 
   return month + '/' + day + '/' + year
+}
+
+/**
+ * Returns a date with localized midnight timestamp
+ * by adjusting the UTC minutes with timezoneOffset
+ * @param date string
+ * @returns
+ */
+export const getLocalTimeZoneDate = (date: string) => {
+  if (!date) return null
+  const dateObj = new Date(date)
+  dateObj.setUTCMinutes(dateObj.getTimezoneOffset())
+  return datePickerFormat(dateObj)
 }
 
 export type MonthOption = {

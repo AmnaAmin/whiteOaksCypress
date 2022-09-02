@@ -1,4 +1,4 @@
-import { usePaidWOAmountByYearAndMonth } from 'utils/vendor-dashboard'
+import { usePaidWOAmountByYearAndMonth } from 'api/vendor-dashboard'
 import { round } from 'lodash'
 import React from 'react'
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'

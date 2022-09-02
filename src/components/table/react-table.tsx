@@ -84,6 +84,7 @@ export type TableExtraProps = {
   defaultFlexStyle?: boolean
   enablePagination?: boolean
   isShowFooter?: boolean
+  rowHeight?: string | number
 }
 
 export function useCustomTable(props: TableProps, ...rest) {
@@ -158,7 +159,7 @@ export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) =>
       {headerGroups.map(headerGroup => (
         <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => {
-            const title = column.render('Header')
+            const header = column.render('Header')
 
             return (
               // @ts-ignore
@@ -177,9 +178,9 @@ export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) =>
                     noOfLines={2}
                     isTruncated
                     display="inline-block"
-                    title={title}
+                    title={typeof header === 'string' ? header : ''}
                   >
-                    {t(title)}
+                    {typeof header === 'string' ? t(header) : header}
                   </Text>
                   {column.isSorted &&
                     (column.isSortedDesc ? (
@@ -214,6 +215,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   rows,
   prepareRow,
   TableRow = Row,
+  rowHeight,
   onRowClick,
 }) => {
   // Note: this hack for firefox to set the table body height
@@ -254,7 +256,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
               style={{ overflowY: 'overlay' }}
               height={height}
               rowCount={rows.length}
-              rowHeight={60}
+              rowHeight={rowHeight ?? 60}
               noRowsRenderer={NoRowsRenderer}
               rowRenderer={RenderRow}
               width={width}

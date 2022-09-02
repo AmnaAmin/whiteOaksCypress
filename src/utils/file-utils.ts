@@ -1,4 +1,5 @@
 import trimCanvas from 'trim-canvas'
+import { DocumentPayload } from 'types/project-details.types'
 
 export const downloadFileOnly = doc => {
   fetch(doc.s3Url)
@@ -65,4 +66,25 @@ export const convertFileToBlob = async (file: File) => {
   const fileType = file.name
 
   return { fileObject, fileObjectContentType, fileType }
+}
+
+// make file uploadable
+export const createDocumentPayload = (file: File, documentType = 42): Promise<DocumentPayload> => {
+  return new Promise((res, rej) => {
+    const reader = new FileReader()
+    let filetype = 'text/plain'
+
+    if (file.type !== '') filetype = file.type
+
+    reader.addEventListener('load', (event: any) => {
+      res({
+        fileType: file.name,
+        fileObject: event?.target?.result?.split(',')[1],
+        fileObjectContentType: filetype,
+        documentType,
+      })
+    })
+
+    reader.readAsDataURL(file)
+  })
 }
