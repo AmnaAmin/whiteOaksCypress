@@ -40,7 +40,7 @@ import {
   useAllowLineItemsAssignment,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
-
+import round from 'lodash/round'
 const CalenderCard = props => {
   return (
     <Flex>
@@ -93,7 +93,6 @@ type NewWorkOrderType = {
   clientApprovedAmount: string | number | null
   percentage: string | number | null
   assignedItems: LineItems[]
-  manualItems: LineItems[]
 }
 
 const NewWorkOrder: React.FC<{
@@ -108,6 +107,8 @@ const NewWorkOrder: React.FC<{
   const [vendorOptions, setVendorOptions] = useState([])
   const [approvedAmount, setApprovedAmount] = useState<number | null>()
   const [percentageField, setPercentageField] = useState<number | null>()
+  const [, setInvoiceAmount] = useState(0)
+
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
@@ -135,10 +136,6 @@ const NewWorkOrder: React.FC<{
     name: 'assignedItems',
   })
   const { append } = assignedItemsArray
-  const manualItemArray = useFieldArray({
-    control,
-    name: 'manualItems',
-  })
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
 
@@ -191,8 +188,9 @@ const NewWorkOrder: React.FC<{
   }
 
   // Work Order Fields Handles
-  useEffect(() => {
+  const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
     if (approvedAmount && percentageField) {
+      
       const vendorWoAmountResult = approvedAmount - approvedAmount * (percentageField / 100)
       setValue('invoiceAmount', vendorWoAmountResult.toFixed(2))
     } else if (approvedAmount === 0) {
@@ -202,7 +200,25 @@ const NewWorkOrder: React.FC<{
     } else {
       setValue('invoiceAmount', '')
     }
-  }, [approvedAmount, percentageField])
+  }
+
+  const onPercentageChange = percentageField => {
+    setPercentageField(percentageField)
+    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
+  }
+
+  const onApprovedAmountChange = approvedAmount => {
+    setApprovedAmount(approvedAmount)
+    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
+  }
+
+  const onInoviceAmountChange = invoiceAmount => {
+    setInvoiceAmount(invoiceAmount)
+    const approve = parseInt(`${approvedAmount}`, 10)
+    const percentageField = round(((approve - invoiceAmount) * 100) / approve, 2)
+    setPercentageField(percentageField)
+    setValue('percentage', percentageField)
+  }
 
   useEffect(() => {
     const option = [] as any
@@ -348,7 +364,7 @@ const NewWorkOrder: React.FC<{
                                 prefix={'$'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
-                                  setApprovedAmount(e.floatValue)
+                                  onApprovedAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -376,7 +392,7 @@ const NewWorkOrder: React.FC<{
                                 suffix={'%'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
-                                  setPercentageField(e.floatValue)
+                                  onPercentageChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -404,8 +420,9 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
-                                onValueChnge={e => {
+                                onValueChange={e => {
                                   field.onChange(e.floatValue)
+                                  onInoviceAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -462,9 +479,9 @@ const NewWorkOrder: React.FC<{
                   unassignedItems={unassignedItems}
                   setUnAssignedItems={setUnAssignedItems}
                   formControl={formReturn as UseFormReturn<any>}
-                  manualItemArray={manualItemArray}
                   assignedItemsArray={assignedItemsArray}
                   isAssignmentAllowed={isAssignmentAllowed}
+                  swoProject={swoProject}
                 />
               </Box>
             </Box>
@@ -491,6 +508,7 @@ const NewWorkOrder: React.FC<{
       </form>
 
       <RemainingItemsModal
+        isAssignmentAllowed={isAssignmentAllowed}
         isOpen={isOpenRemainingItemsModal}
         onClose={onCloseRemainingItemsModal}
         setAssignedItems={setAssignedItems}

@@ -76,15 +76,25 @@ interface FormValues {
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
   assignedItems?: LineItems[]
-  manualItems?: LineItems[]
 }
 
 const WorkOrderDetailTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, setWorkOrderUpdating, swoProject } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, setWorkOrderUpdating, swoProject, rejectInvoiceCheck } = props
 
   const formReturn = useForm<FormValues>()
 
   const { register, control, reset } = formReturn
+
+  const assignedItemsArray = useFieldArray({
+    control,
+    name: 'assignedItems',
+  })
+  const { append } = assignedItemsArray
+  const manualItemArray = useFieldArray({
+    control,
+    name: 'manualItems',
+  })
+
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
   const { mutate: deleteLineItems } = useDeleteLineIds()
@@ -194,102 +204,129 @@ const WorkOrderDetailTab = props => {
                 <Divider borderColor="#CBD5E0" />
               </Box>
 
+<<<<<<<<< Temporary merge branch 1
+            <SimpleGrid columns={5}>
+              <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
+              <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
+              {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
+              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
+            </SimpleGrid>
+            <Box>
+              <Divider borderColor="#CBD5E0" />
+            </Box>
+          </Stack>
+          <Box mt="32px" mx="32px">
+            <HStack spacing="16px">
+              <Box w="215px">
+                <FormControl zIndex="2">
+                  <FormLabel variant="strong-label" size="md">
+                    {t('expectedStart')}
+                  </FormLabel>
+                  <Input
+                    id="workOrderStartDate"
+                    type="date"
+                    size="md"
+                    css={calendarIcon}
+                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    variant="required-field"
+                    {...register('workOrderStartDate', {
+                      required: 'This is required field.',
+                    })}
+                  />
+                </FormControl>
+              </Box>
+              <Box w="215px">
+                <FormControl>
+                  <FormLabel variant="strong-label" size="md">
+                    {t('expectedCompletion')}
+                  </FormLabel>
+                  <Input
+                    id="workOrderExpectedCompletionDate"
+                    type="date"
+                    size="md"
+                    css={calendarIcon}
+                    min={woStartDate as string}
+                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    variant="required-field"
+                    {...register('workOrderExpectedCompletionDate', {
+                      required: 'This is required field.',
+                    })}
+                  />
+                </FormControl>
+              </Box>
+              <Box w="215px">
+                <FormControl>
+                  <FormLabel variant="strong-label" size="md">
+                    {t('completedByVendor')}
+                  </FormLabel>
+                  <Input
+                    id="workOrderDateCompleted"
+                    type="date"
+                    size="md"
+                    css={calendarIcon}
+                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    variant="outline"
+                    {...register('workOrderDateCompleted')}
+                  />
+                </FormControl>
+=========
               <SimpleGrid columns={5}>
                 <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
-                <CalenderCard title="LW Submitted " date={dateFormat(dateLeanWaiverSubmitted)} />
+                <CalenderCard title="LW Submitted " date={dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'} />
                 {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
                 <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
               </SimpleGrid>
               <Box>
                 <Divider borderColor="#CBD5E0" />
+>>>>>>>>> Temporary merge branch 2
               </Box>
-            </Stack>
-            <Box mt="32px" mx="32px">
-              <HStack spacing="16px">
-                <Box w="215px">
-                  <FormControl zIndex="2">
-                    <FormLabel variant="strong-label" size="md">
-                      {t('expectedStart')}
-                    </FormLabel>
-                    <Input
-                      id="workOrderStartDate"
-                      type="date"
-                      size="md"
-                      css={calendarIcon}
-                      isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
-                      variant="required-field"
-                      {...register('workOrderStartDate', {
-                        required: 'This is required field.',
-                      })}
-                    />
-                  </FormControl>
-                </Box>
-                <Box w="215px">
-                  <FormControl>
-                    <FormLabel variant="strong-label" size="md">
-                      {t('expectedCompletion')}
-                    </FormLabel>
-                    <Input
-                      id="workOrderExpectedCompletionDate"
-                      type="date"
-                      size="md"
-                      css={calendarIcon}
-                      min={woStartDate as string}
-                      isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
-                      variant="required-field"
-                      {...register('workOrderExpectedCompletionDate', {
-                        required: 'This is required field.',
-                      })}
-                    />
-                  </FormControl>
-                </Box>
-                <Box w="215px">
-                  <FormControl>
-                    <FormLabel variant="strong-label" size="md">
-                      {t('completedByVendor')}
-                    </FormLabel>
-                    <Input
-                      id="workOrderDateCompleted"
-                      type="date"
-                      size="md"
-                      css={calendarIcon}
-                      isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
-                      variant="outline"
-                      {...register('workOrderDateCompleted')}
-                    />
-                  </FormControl>
-                </Box>
-              </HStack>
-            </Box>
-            <Box mx="32px">
-              <AssignedItems workOrder={workOrder} swoProject={swoProject} isLoadingLineItems={isWorkOrderUpdating} />
-            </Box>
-          </ModalBody>
-          <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-            <HStack justifyContent="start" w="100%">
-              {navigateToProjectDetails && (
-                <Button
-                  variant="outline"
-                  colorScheme="brand"
-                  size="md"
-                  onClick={navigateToProjectDetails}
-                  leftIcon={<BiSpreadsheet />}
-                >
-                  {t('seeProjectDetails')}
-                </Button>
-              )}
             </HStack>
-            <HStack spacing="16px" w="100%" justifyContent="end">
-              <Button onClick={props.onClose} colorScheme="brand" variant="outline">
-                {t('cancel')}
+          </Box>
+          <Box mx="32px">
+            <AssignedItems
+              isLoadingLineItems={isWorkOrderUpdating}
+              onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+              unassignedItems={unassignedItems}
+              setUnAssignedItems={setUnAssignedItems}
+              formControl={formReturn as UseFormReturn<any>}
+              manualItemArray={manualItemArray}
+              assignedItemsArray={assignedItemsArray}
+              isAssignmentAllowed={isAssignmentAllowed}
+            />
+          </Box>
+        </ModalBody>
+        <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+          <HStack justifyContent="start" w="100%">
+            {navigateToProjectDetails && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={navigateToProjectDetails}
+                leftIcon={<BiSpreadsheet />}
+              >
+                {t('seeProjectDetails')}
               </Button>
-              <Button colorScheme="brand" type="submit">
-                {t('save')}
-              </Button>
-            </HStack>
-          </ModalFooter>
-        </form>
-      </FormProvider>
+            )}
+          </HStack>
+          <HStack spacing="16px" w="100%" justifyContent="end">
+            <Button onClick={props.onClose} colorScheme="brand" variant="outline">
+              {t('cancel')}
+            </Button>
+            <Button colorScheme="brand" type="submit">
+              {t('save')}
+            </Button>
+          </HStack>
+        </ModalFooter>
+      </form>
+      <RemainingItemsModal
+        isOpen={isOpenRemainingItemsModal}
+        onClose={onCloseRemainingItemsModal}
+        setAssignedItems={setAssignedItems}
+        remainingItems={unassignedItems}
+        isLoading={isRemainingItemsLoading}
+        swoProject={swoProject}
+      />
     </Box>
   )
 }
