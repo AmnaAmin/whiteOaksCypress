@@ -2,11 +2,35 @@ import React from 'react'
 import { Box, Center, CenterProps, Flex, HStack, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { useGetProjectFinancialOverview } from 'api/projects'
+import { currencyFormatter } from 'utils/string-formatters'
+import { useMonthData } from './hooks'
 
 const InfoStructureCard: React.FC<
-  { amount; isLoading: boolean; bonus: string; profit: string; revenue?: string } & CenterProps
-> = ({ amount, children, isLoading, title, bonus, profit, revenue, ...rest }) => {
+  {
+    amount
+    previousBonus?: number | any
+    newBonus?: number | any
+    isLoading: boolean
+    bonus?: string
+    profit?: string
+    revenue?: string
+    goals?: string
+    target?: string
+  } & CenterProps
+> = ({
+  amount,
+  newBonus,
+  goals,
+  previousBonus,
+  target,
+  children,
+  isLoading,
+  title,
+  bonus,
+  profit,
+  revenue,
+  ...rest
+}) => {
   return (
     <Center h="55px" flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
       <Box mb={'35px'} fontSize="16px" fontWeight={400} color="gray.600" textAlign={'center'}>
@@ -18,31 +42,53 @@ const InfoStructureCard: React.FC<
         ) : (
           <>
             <HStack spacing="54px">
-              <Box h="40px" textAlign={'center'}>
-                <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
-                  {bonus}
-                </Text>
-                <Text fontWeight={400} color="gray.500">
-                  $ 200.00
-                </Text>
-              </Box>
-              <Box h="40px" textAlign={'center'}>
-                <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
-                  {profit}
-                </Text>
-                <Text fontWeight={400} color="gray.500">
-                  $ 200.00
-                </Text>
-              </Box>
-              {revenue && (
-                <Box h="40px" textAlign={'center'}>
-                  <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
-                    {revenue}
-                  </Text>
-                  <Text fontWeight={400} color="gray.500">
-                    {revenue}
-                  </Text>
-                </Box>
+              {!goals && (
+                <>
+                  <Box h="40px" textAlign={'center'}>
+                    <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
+                      {bonus}
+                    </Text>
+                    <Text fontWeight={400} color="gray.500">
+                      {previousBonus || newBonus ? currencyFormatter(previousBonus || newBonus) : '$0.00'}
+                    </Text>
+                  </Box>
+                  <Box h="40px" textAlign={'center'}>
+                    <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
+                      {profit}
+                    </Text>
+                    <Text fontWeight={400} color="gray.500">
+                      {amount ? currencyFormatter(amount?.profit) : '$0.00'}
+                    </Text>
+                  </Box>
+                  <Box h="40px" textAlign={'center'}>
+                    <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
+                      {revenue}
+                    </Text>
+                    <Text fontWeight={400} color="gray.500">
+                      {amount ? currencyFormatter(amount?.revenue) : '$0.00'}
+                    </Text>
+                  </Box>
+                </>
+              )}
+              {goals && (
+                <>
+                  <Box h="40px" textAlign={'center'}>
+                    <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
+                      {target}
+                    </Text>
+                    <Text fontWeight={400} color="gray.500">
+                      {amount ? currencyFormatter(amount?.target) : '$0.00'}
+                    </Text>
+                  </Box>
+                  <Box h="40px" textAlign={'center'}>
+                    <Text color="gray.600" fontSize={'16px'} fontWeight={500}>
+                      {bonus}
+                    </Text>
+                    <Text fontWeight={400} color="gray.500">
+                      {amount?.newBonus ? `${amount?.newBonus}%` : '0%'}
+                    </Text>
+                  </Box>
+                </>
               )}
             </HStack>
           </>
@@ -52,33 +98,48 @@ const InfoStructureCard: React.FC<
   )
 }
 
-export const InformationCardFPM: React.FC<{ projectId?: string }> = ({ projectId }) => {
+export const InformationCardFPM: React.FC<{ projectId?: string; chartData: any; isLoading: boolean }> = ({
+  projectId,
+  chartData,
+  isLoading,
+}) => {
   const { t } = useTranslation()
 
-  const { isLoading, finalSOWAmount, accountPayable, projectTotalCost } = useGetProjectFinancialOverview(projectId)
+  // const currentMonth = format(new Date(), 'LLLL', { locale: enAU })
+  // const current = new Date();
+  // current.setMonth(current.getMonth()-1);
+  // const previousMonth = current.toLocaleString('default', { month: 'long' });
+
+  const currentMonth = 'June'
+  const previous = 'May'
+  const { nameMonthData: currentMonthData } = useMonthData(currentMonth, chartData)
+  const { nameMonthData: previousMonthData } = useMonthData(previous, chartData)
 
   return (
     <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
       <InfoStructureCard
         bonus="Bonus"
+        newBonus={chartData?.newBonus}
         profit="Profit"
         revenue={'revenue'}
-        amount={finalSOWAmount}
+        amount={currentMonthData}
         title={t('Current Month')}
         isLoading={isLoading}
       />
       <InfoStructureCard
         bonus="Bonus"
+        previousBonus={chartData?.previousBonus}
         profit="Profit"
         revenue={'Revenue'}
-        amount={accountPayable}
+        amount={previousMonthData}
         isLoading={isLoading}
         title={t('Previous Month')}
       />
       <InfoStructureCard
-        bonus="Target"
-        profit="Bonus%"
-        amount={projectTotalCost}
+        bonus="Bonus%"
+        goals="Goals"
+        target="Target"
+        amount={chartData}
         isLoading={isLoading}
         title={t('Goals')}
       />
