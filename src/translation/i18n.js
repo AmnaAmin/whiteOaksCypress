@@ -239,7 +239,8 @@ i18n.use(initReactI18next).init({
         document: 'Document',
         documentType: 'Document Type',
         fileType: 'File Type',
-        vendorGL: 'Vendor/GL',
+        vendorGL: 'Vendor',
+        transactionDoc: 'Transaction',
         createdDate: 'Created Date',
         createdBy: 'Created By',
         // Project - Alerts
@@ -742,7 +743,8 @@ i18n.use(initReactI18next).init({
         document: 'Documento',
         documentType: 'Tipo de Documento',
         fileType: 'Tipo de Archivo',
-        vendorGL: 'Vendedor/GL',
+        vendorGL: 'Vendedor',
+        transactionDoc: 'Transacción',
         createdDate: 'Fecha de creación',
         createdBy: 'creado por',
         // Project - Alerts

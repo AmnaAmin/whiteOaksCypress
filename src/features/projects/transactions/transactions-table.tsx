@@ -75,6 +75,16 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         accessor: 'skillName',
       },
       {
+        Header: t('vendorGL') as string,
+        accessor: 'parentWorkOrderId',
+        Cell(cellInfo) {
+          return cellInfo.value ? cellInfo?.row?.original?.vendor || '' : 'Project SOW'
+        },
+        getCellExportValue(row) {
+          return row.original.parentWorkOrderId ? row.original?.vendor || '' : 'Project SOW'
+        },
+      },
+      {
         Header: t('totalAmount') as string,
         accessor: 'transactionTotal',
         Cell(cellInfo) {
