@@ -285,7 +285,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await selectOption(screen.getByTestId('against-select-field'), 'Project SOW')
 
       // user select payment term select option
-      await selectOption(screen.getByTestId('payment-term-select'), '7')
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
 
       await fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2022-10-01' } })
 
@@ -297,7 +297,7 @@ describe('Given Project Coordinator create new transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      expect(getByText(screen.getByTestId('payment-term-select'), '7')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('payment-term-select'), '20')).toBeInTheDocument()
       expect((screen.getByTestId('invoice-date') as HTMLInputElement).value).toEqual('2022-10-01')
 
       const totalAmount = screen.getByTestId('total-amount')
@@ -717,7 +717,7 @@ describe('Given update transaction', () => {
       // Check pay date variance is calculated like (invoiced date + paymentTerm) - paid date = variance
       // (07/08/2022 + 7) - (07/20/2022) = -5
       const payDateVariance = screen.getByTestId('pay-date-variance') as HTMLInputElement
-      expect(payDateVariance.value).toEqual('-5')
+      expect(payDateVariance.value).toEqual('8')
 
       // Clear the description and amount field
       await userEvent.clear(descriptionField)
