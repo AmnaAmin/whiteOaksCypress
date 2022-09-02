@@ -190,7 +190,7 @@ export const useDeleteLineItems = swoProjectId => {
 
   return useMutation(
     (payload: { itemIds: string }) => {
-      return client('line-items/' + payload.itemIds, {
+      return client('line-items?ids=' + payload.itemIds, {
         method: 'DELETE',
       })
     },
