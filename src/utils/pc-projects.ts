@@ -248,6 +248,34 @@ export const useFPMs = () => {
   }
 }
 
+export const useFPMsByMarket = marketId => {
+  const client = useClient()
+
+  const { data: fieldProjectMangersByMarket, ...rest } = useQuery(
+    ['FPMByMarket', marketId],
+    async () => {
+      const response = await client(`users/usertype/5/market/` + marketId, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!marketId,
+    },
+  )
+
+  const fieldProjectManagerByMarketOptions =
+    fieldProjectMangersByMarket?.map(fpm => ({
+      value: fpm.id,
+      label: `${fpm.firstName} ${fpm.lastName}`,
+    })) || []
+
+  return {
+    fieldProjectManagerByMarketOptions,
+    fieldProjectMangersByMarket,
+    ...rest,
+  }
+}
+
 export const useProjectCoordinators = () => {
   const client = useClient()
 
