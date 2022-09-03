@@ -463,6 +463,11 @@ i18n.use(initReactI18next).init({
         creditCard: 'Credit Card',
         ach: 'ACH',
         comment: 'Comment',
+
+        //Reports
+        rptPageTitle: 'Reports',
+        rptBackBtnLabel: 'Back',
+
       },
     },
     es: {
@@ -899,6 +904,10 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlerts: 'Alertas activadas',
         managedAlerts: 'Alertas administradas',
+
+        //Reports
+        rptPageTitle: 'Reports',
+        rptBackBtnLabel: 'Back',
       },
     },
   },

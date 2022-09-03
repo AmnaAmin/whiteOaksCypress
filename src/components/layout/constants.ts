@@ -116,6 +116,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
+    {
+      pathTo: '/reports',
+      title: 'Reports',
+      Icon: FaAlignCenter,
+      color: '#9F7AEA',
+    },
   ],
 
   [UserTypes.fpm]: [

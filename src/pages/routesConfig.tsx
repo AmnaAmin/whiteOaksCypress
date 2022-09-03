@@ -3,6 +3,7 @@ import { Projects } from 'pages/projects'
 import { ProjectDetails } from 'pages/project-details'
 import { Payable } from './payable'
 import Vendors from './vendor-manager/vendors'
+import Reports from './reports'
 import Clients from './clients'
 import { Receivable } from './receivable'
 import { VendorSkills } from 'pages/vendor-manager/vendor-skills'
@@ -49,6 +50,7 @@ export default function useRoutesConfig() {
         { path: 'projects', element: Projects },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'vendors', element: Vendors },
+        { path: 'reports', element: Reports },
       ]
 
     case isVendor:
