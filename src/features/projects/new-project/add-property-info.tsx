@@ -98,9 +98,7 @@ export const AddPropertyInfo: React.FC<{
       projects?.filter(
         p =>
           p.propertyId === property?.id &&
-          [STATUS.New, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(
-            p.projectStatus?.toLowerCase() as STATUS,
-          ),
+          [STATUS.New, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(p.projectStatus?.toLowerCase() as STATUS),
       ) || []
     setIsDuplicateAddress(false)
     setValue('acknowledgeCheck', false)
@@ -249,6 +247,7 @@ export const AddPropertyInfo: React.FC<{
                         value={field.value}
                         selectProps={{ isBorderLeft: true }}
                         onChange={option => {
+                          setValue('projectManager', null)
                           field.onChange(option)
                         }}
                       />
