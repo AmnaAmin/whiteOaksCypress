@@ -20,7 +20,7 @@ const Reports = () => {
         fontWeight={500}
         color="gray.600"
       >
-        <Text flex={1}> <a style={{cursor: "pointer"}} onClick={() => navigate(-1)}>{t('rptBackBtnLabel')}</a> </Text>
+         <Text flex={1}> <Button  onClick={() => navigate(-1)}>{t('rptBackBtnLabel')}</Button> </Text>
       
       </Flex>
       <Box alignItems="left">
