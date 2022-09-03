@@ -242,6 +242,7 @@ export const AddPropertyInfo: React.FC<{
                         value={field.value}
                         selectProps={{ isBorderLeft: true }}
                         onChange={option => {
+                          setValue('projectManager', null)
                           field.onChange(option)
                         }}
                       />

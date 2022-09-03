@@ -3,28 +3,26 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Grid, Grid
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
-import { useClients, useFPMs, useProjectCoordinators } from 'utils/pc-projects'
+import { useClients, useFPMsByMarket, useProjectCoordinators } from 'utils/pc-projects'
 import { NEW_PROJECT } from 'features/projects/projects.i18n'
 import { useTranslation } from 'react-i18next'
 import { useProjectManagementSaveButtonDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
+import Select from 'components/form/react-select'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
   onClose: () => void
 }> = props => {
+  const { register, control, setValue, getValues } = useFormContext<ProjectFormValues>()
+  const values = getValues()
   const { t } = useTranslation()
-  const { fieldProjectManagerOptions } = useFPMs()
+  // not used until requirement is clear : const { fieldProjectManagerOptions } = useFPMs()
+  const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.newMarket?.value)
   const { projectCoordinatorSelectOptions } = useProjectCoordinators()
   const { clientSelectOptions } = useClients()
 
-  const { register, control, setValue } = useFormContext<ProjectFormValues>()
-
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
-
-  const setFPM = option => {
-    setValue('projectManager', option)
-  }
 
   const setPC = e => {
     setValue('projectCoordinator', e)
@@ -45,14 +43,17 @@ export const ManageProject: React.FC<{
                 control={control}
                 name={`projectManager`}
                 rules={{ required: 'This is required field' }}
-                render={({ field: { value }, fieldState }) => (
+                render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
-                      id="projectManager"
-                      options={fieldProjectManagerOptions}
-                      selected={value}
-                      onChange={setFPM}
+                    <Select
+                      {...field}
+                      options={fieldProjectManagerByMarketOptions}
+                      size="md"
+                      value={field.value}
                       selectProps={{ isBorderLeft: true }}
+                      onChange={option => {
+                        field.onChange(option)
+                      }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
