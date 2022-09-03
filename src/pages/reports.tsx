@@ -24,7 +24,7 @@ const Reports = () => {
       
       </Flex>
       <Box alignItems="left">
-      <iframe id="woiframe" src={iframe_src} width="100%" height="680px" frameBorder="0"></iframe>
+       <iframe title="WOA Reports" id="woiframe" src={iframe_src} width="100%" height="680px" frameBorder="0"></iframe>
       </Box>
       </Box>
   )
