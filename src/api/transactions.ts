@@ -8,6 +8,7 @@ import {
   FormValues,
   ProjectWorkOrder,
   SelectOption,
+  TransactionMarkAsValues,
   TransactionStatusValues,
   TransactionType,
   TransactionTypeValues,
@@ -28,12 +29,22 @@ import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { ACCONT_RECEIVABLE_API_KEY } from 'api/account-receivable'
 import numeral from 'numeral'
 import { ErrorType } from 'types/common.types'
+import {
+  CHANGE_ORDER_DEFAULT_OPTION,
+  CHANGE_ORDER_DEFAULT_VALUE,
+  LIEN_WAIVER_DEFAULT_VALUES,
+  TRANSACTION_FEILD_DEFAULT,
+  TRANSACTION_MARK_AS_OPTIONS,
+  TRANSACTION_STATUS_OPTIONS,
+} from 'constants/transaction.constants'
+
+export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
 export const useTransactions = (projectId?: string) => {
   const client = useClient()
 
   const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
-    ['transactions', projectId],
+    [GET_TRANSACTIONS_API_KEY, projectId],
     async () => {
       const response = await client(`change-orders?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
 
@@ -90,13 +101,6 @@ export const useTransactionTypes = () => {
     transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
   }
 }
-
-export const TRANSACTION_STATUS_OPTIONS = [
-  { value: TransactionStatusValues.pending, label: 'Pending' },
-  { value: TransactionStatusValues.approved, label: 'Approved' },
-  { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
-  { value: TransactionStatusValues.denied, label: 'Denied' },
-]
 
 export const useTransactionStatusOptions = () => {
   const vendorOptions = [TransactionStatusValues.pending, TransactionStatusValues.cancelled]
@@ -219,12 +223,6 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
   }
 }
 
-export const CHANGE_ORDER_DEFAULT_VALUE = '0'
-const CHANGE_ORDER_DEFAULT_OPTION = {
-  label: '$0.00',
-  value: CHANGE_ORDER_DEFAULT_VALUE,
-}
-
 // Create label for change order
 export const createChangeOrderLabel = (changeOrderAmount: number, workOrderName: string) => {
   return `$${changeOrderAmount} (${workOrderName})`
@@ -339,6 +337,11 @@ export const parseChangeOrderAPIPayload = async (
           parentWorkOrderId: isAgainstProjectSOWSelected ? null : `${formValues.against?.value}`,
         }
 
+  const isOverpaymentTransaction = formValues.transactionType?.value === TransactionTypeValues.overpayment
+  const paidDate = isOverpaymentTransaction ? formValues.paidBackDate : formValues.paidDate
+
+  const markAsRevenue = isOverpaymentTransaction ? formValues.markAs?.value === TransactionMarkAsValues.revenue : null
+
   const lineItems = formValues.transaction
     .filter(transaction => transaction.amount !== '')
     .map(transaction => ({
@@ -355,8 +358,9 @@ export const parseChangeOrderAPIPayload = async (
     createdBy: formValues.createdBy,
     newExpectedCompletionDate,
     expectedCompletionDate,
+    markAsRevenue,
     clientApprovedDate: dateISOFormat(formValues.invoicedDate as string),
-    paidDate: dateISOFormat(formValues.paidDate as string),
+    paidDate: dateISOFormat(paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
     payDateVariance: formValues.payDateVariance || '',
     paymentReceived: dateISOFormat(formValues.paymentRecievedDate as string),
@@ -388,26 +392,6 @@ export const parseChangeOrderUpdateAPIPayload = async (
   }
 }
 
-export const TRANSACTION_FEILD_DEFAULT = {
-  id: Date.now(),
-  description: '',
-  amount: '',
-  checked: false,
-}
-
-export const LIEN_WAIVER_DEFAULT_VALUES = {
-  claimantName: '',
-  customerName: '',
-  propertyAddress: '',
-  owner: '',
-  makerOfCheck: '',
-  amountOfCheck: '',
-  checkPayableTo: '',
-  claimantsSignature: '',
-  claimantTitle: '',
-  dateOfSignature: '',
-}
-
 export const transactionDefaultFormValues = (createdBy: string): FormValues => {
   return {
     transactionType: null,
@@ -419,6 +403,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     createdBy,
     modifiedBy: null,
     modifiedDate: null,
+    markAs: null,
+    paidBackDate: null,
     transaction: [TRANSACTION_FEILD_DEFAULT],
     attachment: null,
     lienWaiverDocument: null,
@@ -516,6 +502,9 @@ export const parseTransactionToFormValues = (
   const isMaterialRefunded =
     transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
 
+  const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS[1] : TRANSACTION_MARK_AS_OPTIONS[0]
+  const paidBackDate = transaction.transactionType === TransactionTypeValues.overpayment ? transaction.paidDate : null
+
   return {
     transactionType: {
       label: transaction.transactionTypeLabel,
@@ -529,6 +518,8 @@ export const parseTransactionToFormValues = (
     newExpectedCompletionDate: datePickerFormat(transaction.newExpectedCompletionDate as string),
     createdBy: transaction.createdBy,
     dateCreated: dateFormat(transaction.createdDate as string),
+    markAs,
+    paidBackDate: datePickerFormat(paidBackDate as string),
     attachment,
     lienWaiverDocument,
     modifiedBy: transaction.modifiedBy,
@@ -562,7 +553,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])

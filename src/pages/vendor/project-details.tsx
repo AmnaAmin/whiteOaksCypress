@@ -91,7 +91,6 @@ const ProjectDetails: React.FC = props => {
                   <WorkOrdersTable
                     projectData={projectData as Project}
                     onTabChange={n => {
-                      console.log(n)
                       setTabIndex(n)
                     }}
                     ref={tabsContainerRef}

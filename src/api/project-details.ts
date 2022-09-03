@@ -17,6 +17,7 @@ import { useClient } from 'utils/auth-context'
 import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
+import { GET_TRANSACTIONS_API_KEY } from './transactions'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -144,6 +145,7 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['overpayment', project?.data?.id])
         queryClient.invalidateQueries([PROJECT_EXTRA_ATTRIBUTES, project?.data?.id])
+        queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
 
         toast({
           title: 'Project Details Updated',

@@ -36,7 +36,13 @@ import {
   useTransactionTypes,
   useWorkOrderChangeOrders,
 } from 'api/transactions'
-import { ChangeOrderType, FormValues, SelectOption } from 'types/transaction.type'
+import {
+  ChangeOrderType,
+  FormValues,
+  SelectOption,
+  TransactionStatusValues,
+  TransactionTypeValues,
+} from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
   useAgainstOptions,
@@ -59,6 +65,12 @@ import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import {
+  REQUIRED_FIELD_ERROR_MESSAGE,
+  STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
+  TRANSACTION_MARK_AS_OPTIONS,
+} from 'constants/transaction.constants'
+import { TRANSACTION } from './transactions.i18n'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -167,6 +179,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowPaymentRecievedDateField,
+    isShowPaidBackDateField,
+    isShowMarkAsField,
   } = useFieldShowHideDecision(control, transaction)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
@@ -294,7 +308,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                       {t('transactionType')}
                     </FormLabel>
                     <Controller
-                      rules={{ required: 'This is required field' }}
+                      rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                       control={control}
                       name="transactionType"
                       render={({ field, fieldState }) => {
@@ -330,7 +344,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                     <Controller
                       control={control}
                       name="against"
-                      rules={{ required: 'This is required' }}
+                      rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                       render={({ field, fieldState }) => (
                         <>
                           <Select
@@ -475,7 +489,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         <Controller
                           control={control}
                           name="paymentTerm"
-                          rules={{ required: 'This is required' }}
+                          rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           render={({ field, fieldState }) => (
                             <>
                               <Select
@@ -514,7 +528,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           css={calendarIcon}
                           isDisabled={isApproved}
                           {...register('invoicedDate', {
-                            required: isInvoicedDateRequired ? 'This is required field.' : '',
+                            required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
                           })}
                         />
                         <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
@@ -541,11 +555,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           size="md"
                           isDisabled={isPaidDateDisabled}
                           css={calendarIcon}
-                          {...register('paidDate', { required: isPaidDateRequired ? 'This is required field.' : '' })}
+                          {...register('paidDate', {
+                            required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                          })}
                         />
                         <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
+
                     <GridItem>
                       <FormControl isInvalid={!!errors.payDateVariance}>
                         <FormLabel
@@ -594,9 +611,70 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         type="date"
                         variant="required-field"
                         isDisabled={isApproved}
-                        {...register('paymentRecievedDate', { required: 'This is required field.' })}
+                        {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
                       <FormErrorMessage>{errors?.paymentRecievedDate?.message}</FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                )}
+
+                {/**
+                 * NOTE: Fields markAs and paidBackDate will show when the transaction of type Overpayment is selected.
+                 * **/}
+                {isShowMarkAsField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.markAs} data-testid="mark-as-select-field">
+                      <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="markAs">
+                        {t(`${TRANSACTION}.markAs`)}
+                      </FormLabel>
+                      <Controller
+                        rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
+                        control={control}
+                        name="markAs"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Select
+                                {...field}
+                                options={TRANSACTION_MARK_AS_OPTIONS}
+                                isDisabled={isApproved}
+                                size="md"
+                                selectProps={{ isBorderLeft: true }}
+                                onChange={field.onChange}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                )}
+
+                {isShowPaidBackDateField && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.paidBackDate}>
+                      <FormLabel
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={500}
+                        color="gray.600"
+                        htmlFor="paidBackDate"
+                        whiteSpace="nowrap"
+                      >
+                        {t(`${TRANSACTION}.paidBackDate`)}
+                      </FormLabel>
+                      <Input
+                        data-testid="paid-back-date"
+                        id="paidBackDate"
+                        type="date"
+                        variant={'required-field'}
+                        size="md"
+                        isDisabled={isPaidDateDisabled}
+                        css={calendarIcon}
+                        {...register('paidBackDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
+                      />
+                      <FormErrorMessage>{errors?.paidBackDate?.message}</FormErrorMessage>
                     </FormControl>
                   </GridItem>
                 )}
@@ -610,7 +688,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                       <Controller
                         control={control}
                         name="status"
-                        rules={{ required: 'This is required' }}
+                        rules={{
+                          required: REQUIRED_FIELD_ERROR_MESSAGE,
+                          validate: option => {
+                            return transactionType?.value === TransactionTypeValues.overpayment &&
+                              option?.value === TransactionStatusValues.pending
+                              ? STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE
+                              : true
+                          },
+                        }}
                         render={({ field, fieldState }) => (
                           <>
                             <Select

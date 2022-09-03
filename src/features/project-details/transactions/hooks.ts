@@ -3,6 +3,7 @@ import {
   FormValues,
   ProjectWorkOrder,
   SelectOption,
+  TransactionMarkAsValues,
   TransactionStatusValues,
   TransactionTypeValues,
 } from 'types/transaction.type'
@@ -14,18 +15,30 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const useFieldShowHideDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
+  const markAs = useWatch({ name: 'markAs', control })
   const against = useWatch({ name: 'against', control })
+  const status = useWatch({ name: 'status', control })
   const selectedTransactionTypeId = transactionType?.value
   const selectedAgainstId = against?.value
 
   const isTransactionTypeChangeOrderSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.changeOrder
+  const isTransactionTypeOverpaymentSelected =
+    selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
-  const isShowStatusField = !!transaction
   const isTransactionTypeDrawAgainstProjectSOWSelected =
     isAgainstProjectSOWOptionSelected && selectedTransactionTypeId === TransactionTypeValues.draw
   const isShowRefundMaterialCheckbox = selectedTransactionTypeId === TransactionTypeValues.material
+
+  // The status field should be hidden if user create new transaction or
+  // if the transaction of type overpayment with markAs = revenue
+  // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
+  const isShowStatusField =
+    !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
+
+  const isStatusNotCancelled = status?.value !== TransactionStatusValues.cancelled
+  const markAsPaid = markAs?.value === 'paid'
 
   return {
     isShowWorkOrderSelectField: isAgainstProjectSOWOptionSelected && isTransactionTypeChangeOrderSelected,
@@ -36,6 +49,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowRefundMaterialCheckbox,
     isShowPaymentRecievedDateField: selectedTransactionTypeId === TransactionTypeValues.payment,
+    isShowPaidBackDateField: isTransactionTypeOverpaymentSelected && markAsPaid && isStatusNotCancelled,
+    isShowMarkAsField: isTransactionTypeOverpaymentSelected && isStatusNotCancelled,
   }
 }
 

@@ -16,9 +16,14 @@ import {
   APPROVED_TRANSACTION_ID,
   AGAINST_SELECTED_OPTION,
   TRANSACTION_OF_CHANGE_ORDER_AGAINST_PROJECT_SOW_NOT_APPLICABLE_WORK_ORDER_ID,
+  OVERPAYMENT_TRANSACTION_ID,
 } from 'mocks/api/projects/data'
 import { createAgainstLabel, createChangeOrderLabel, createWorkOrderLabel } from 'api/transactions'
 import { dateFormat } from 'utils/date-time-utils'
+import {
+  REQUIRED_FIELD_ERROR_MESSAGE,
+  STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
+} from 'constants/transaction.constants'
 
 beforeAll(() => {
   setToken('pc')
@@ -832,6 +837,119 @@ describe('Given update transaction', () => {
       await waitForLoadingToFinish()
 
       expect(onClose).toHaveBeenCalled()
+    })
+  })
+
+  describe('When user update Overpayment transaction of status pending', () => {
+    test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction as paid successfully', async () => {
+      const onClose = jest.fn()
+
+      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212' })
+
+      // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
+      expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('transaction-type'), 'Overpayment')).toBeInTheDocument()
+
+      // Check Against select field is prepopulated with Vendor and disabled
+      expect(getByRole(screen.getByTestId('against-select-field'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // check MarkAs select field is prepopulated with 'Paid Back'
+      expect(getByText(screen.getByTestId('mark-as-select-field'), 'Paid Back')).toBeInTheDocument()
+
+      // check the status is prepopulated with 'Pending'
+      expect(getByText(screen.getByTestId('status-select-field'), 'Pending')).toBeInTheDocument()
+
+      // Fill Paid Back date and status as 'Approved'
+      await selectOption(screen.getByTestId('status-select-field'), 'Approved', 'Pending')
+      await userEvent.type(screen.getByTestId('paid-back-date'), '2021-01-01')
+
+      // Check status select field selected value is 'Approved'
+      expect(getByText(screen.getByTestId('status-select-field'), 'Approved')).toBeInTheDocument()
+
+      const descriptionField = screen.getByTestId('transaction-description-0') as HTMLInputElement
+      const amountField = screen.getByTestId('transaction-amount-0') as HTMLInputElement
+
+      // Check the description and amount field are prepopulated with the values of the transaction
+      expect(descriptionField.value).toEqual('Overpayment')
+      expect(amountField.value).toEqual('11103')
+
+      // Check total amount is rendered properly
+      const totalAmount = screen.getByTestId('total-amount')
+      expect(totalAmount.textContent).toEqual('Total: $11,103.00')
+
+      // Submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+
+    test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction as revenue successfully', async () => {
+      const onClose = jest.fn()
+
+      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212' })
+
+      // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
+      expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('transaction-type'), 'Overpayment')).toBeInTheDocument()
+
+      // Check Against select field is prepopulated with Vendor and disabled
+      expect(getByRole(screen.getByTestId('against-select-field'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // Check the MarkAs select field is prepopulated with 'Paid Back' and select 'Revenue'
+      expect(getByText(screen.getByTestId('mark-as-select-field'), 'Paid Back')).toBeInTheDocument()
+      await selectOption(screen.getByTestId('mark-as-select-field'), 'Revenue', 'Paid Back')
+
+      // Check the form fields updated properly, like markAs value and status and Paid Back fields should be hidden
+      expect(getByText(screen.getByTestId('mark-as-select-field'), 'Revenue')).toBeInTheDocument()
+      expect(screen.queryByTestId('paid-back-date')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('status-select-field')).not.toBeInTheDocument()
+
+      // Submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+
+    test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction with pending status should show form errors', async () => {
+      const onClose = jest.fn()
+
+      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212' })
+
+      // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
+      expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('transaction-type'), 'Overpayment')).toBeInTheDocument()
+
+      // Check Against select field is prepopulated with Vendor and disabled
+      expect(getByRole(screen.getByTestId('against-select-field'), 'combobox')).toBeDisabled()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // check MarkAs select field is prepopulated with 'Paid Back'
+      expect(getByText(screen.getByTestId('mark-as-select-field'), 'Paid Back')).toBeInTheDocument()
+
+      // check the paid back date is empty
+      expect(screen.getByTestId('paid-back-date').textContent).toEqual('')
+
+      // check the status is prepopulated with 'Pending'
+      expect(getByText(screen.getByTestId('status-select-field'), 'Pending')).toBeInTheDocument()
+
+      // Submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      // Check the form errors
+      expect(screen.getByText(REQUIRED_FIELD_ERROR_MESSAGE)).toBeInTheDocument()
+      expect(screen.getByText(STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE)).toBeInTheDocument()
     })
   })
 
