@@ -78,6 +78,7 @@ const RemainingListTable = (props: RemainingListType) => {
         return (
           <Checkbox
             isChecked={
+              values?.remainingItems?.length > 0 &&
               difference(
                 values?.remainingItems.map(r => r.id),
                 selectedItems.map(s => s.id),

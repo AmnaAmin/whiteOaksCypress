@@ -103,7 +103,7 @@ const WorkOrderDetailTab = props => {
   const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
-  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { mutate: deleteLineItems } = useDeleteLineIds()
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])

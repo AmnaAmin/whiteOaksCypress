@@ -114,7 +114,7 @@ const NewWorkOrder: React.FC<{
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
   const { swoProject } = useFetchProjectId(projectData?.id)
-  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
@@ -190,7 +190,6 @@ const NewWorkOrder: React.FC<{
   // Work Order Fields Handles
   const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
     if (approvedAmount && percentageField) {
-      
       const vendorWoAmountResult = approvedAmount - approvedAmount * (percentageField / 100)
       setValue('invoiceAmount', vendorWoAmountResult.toFixed(2))
     } else if (approvedAmount === 0) {

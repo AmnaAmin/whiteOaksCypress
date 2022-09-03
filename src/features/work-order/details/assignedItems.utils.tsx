@@ -58,14 +58,14 @@ export const getUnAssignedItems = (formValues, workOrder) => {
   return unAssignedItems
 }
 
-export const useRemainingLineItems = (swoProjectId?: string) => {
+export const useRemainingLineItems = (swoProjectId?: string | number | null) => {
   const client = useClient(swoPrefix)
 
   const { data: remainingItems, ...rest } = useQuery<any>(
     ['remainingItems', swoProjectId],
     async () => {
       const response = await client(
-        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=id,asc&page=0`,
+        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=modifiedDate,desc&page=0`,
         {},
       )
 
@@ -90,7 +90,10 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
     ['fetchProjectId', projectId],
     async () => {
       const response = await client(`projects?projectId.equals=` + projectId, {})
-      if (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED') setRefetchInterval(0)
+
+      if (!response?.data[0] || (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED')) {
+        setRefetchInterval(0)
+      }
       return response?.data
     },
     {
@@ -108,10 +111,11 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
 type AssignArgumentType = {
   swoProjectId: string | number | null
   showToast?: boolean
+  refetchLineItems?: boolean
 }
 
 export const useAssignLineItems = (props: AssignArgumentType) => {
-  const { swoProjectId, showToast } = props
+  const { swoProjectId, showToast, refetchLineItems } = props
   const client = useClient(swoPrefix)
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -125,7 +129,9 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
     },
     {
       onSuccess(res: any) {
-        queryClient.invalidateQueries(['remainingItems', swoProjectId])
+        if (refetchLineItems) {
+          queryClient.invalidateQueries(['remainingItems', swoProjectId])
+        }
         if (showToast) {
           toast({
             title: 'Line Items Assignment',
@@ -147,7 +153,14 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
   )
 }
 
-export const useCreateLineItem = ({ swoProject, showToast }) => {
+type CreateArgumentType = {
+  swoProject: SWOProject
+  showToast?: boolean
+  refetchLineItems?: boolean
+}
+
+export const useCreateLineItem = (props: CreateArgumentType) => {
+  const { swoProject, showToast, refetchLineItems } = props
   const client = useClient(swoPrefix)
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -161,7 +174,9 @@ export const useCreateLineItem = ({ swoProject, showToast }) => {
     },
     {
       onSuccess(res: any) {
-        queryClient.invalidateQueries(['remainingItems', swoProject])
+        if (refetchLineItems) {
+          queryClient.invalidateQueries(['remainingItems', swoProject.id])
+        }
         if (showToast) {
           toast({
             title: 'Line Items Assignment',
@@ -293,12 +308,9 @@ export const EditableField = (props: EditableCellType) => {
                 if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
                   setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                 }
-                if (e.target.value === '') {
-                  setSelectedCell('')
-                }
               }}
               onBlurCapture={e => {
-                setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
+                if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
               }}
             />
