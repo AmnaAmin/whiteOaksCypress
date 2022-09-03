@@ -50,7 +50,7 @@ import {
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useUserProfile } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
@@ -115,7 +115,7 @@ export type TransactionFormProps = {
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
   const { t } = useTranslation()
-  const { isVendor, isAdmin, isProjectCoordinator } = useUserRolesSelector()
+
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   // const [document, setDocument] = useState<File | null>(null)
@@ -246,16 +246,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    transaction,
-    againstOptions?.length,
-    setValue,
-    isVendor,
-    workOrderSelectOptions.length,
-    changeOrderSelectOptions.length,
-    isProjectCoordinator,
-    isAdmin,
-  ])
+  }, [transaction, againstOptions?.length, workOrderSelectOptions.length, changeOrderSelectOptions.length])
 
   const { transactionType } = getValues()
 
