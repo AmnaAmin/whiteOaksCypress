@@ -141,7 +141,7 @@ const NewWorkOrder: React.FC<{
 
   const onInoviceAmountChange = invoiceAmount => {
     setInvoiceAmount(invoiceAmount)
-    const approve = parseInt(`${approvedAmount}`, 10)
+    const approve = approvedAmount as number
     const percentageField = round(((approve - invoiceAmount) * 100) / approve, 2)
     setPercentageField(percentageField)
     setValue('percentage', percentageField)
