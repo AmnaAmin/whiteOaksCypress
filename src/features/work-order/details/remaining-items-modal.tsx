@@ -12,11 +12,19 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import RemainingListTable from 'features/work-order/details/remaining-list-table'
 import { t } from 'i18next'
 import React, { useEffect, useState } from 'react'
-import { LineItems, SWOProject, useAssignLineItems, useCreateLineItem, useDeleteLineItems } from './assignedItems.utils'
+import {
+  LineItems,
+  SWOProject,
+  useAssignLineItems,
+  useCreateLineItem,
+  useDeleteLineItems,
+  useRemainingLineItems,
+} from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { AddIcon } from '@chakra-ui/icons'
@@ -35,11 +43,17 @@ const RemainingItemsModal: React.FC<{
   const { remainingItems, isLoading, setAssignedItems, onClose, swoProject, isAssignmentAllowed } = props
   const [selectedItems, setSelectedItems] = useState<LineItems[]>([])
   const [updatedItems, setUpdatedItems] = useState<number[]>([])
-  const { mutateAsync: updateLineItemsAsync } = useAssignLineItems({ swoProjectId: swoProject?.id, showToast: false })
-  const { mutateAsync: createLineItemsAsync } = useCreateLineItem({ swoProject, showToast: false })
-  const { mutate: updateLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, showToast: true })
-  const { mutate: createLineItems } = useCreateLineItem({ swoProject, showToast: true })
+  const { mutateAsync: updateLineItemsAsync } = useAssignLineItems({ swoProjectId: swoProject?.id })
+  const { mutateAsync: createLineItemsAsync } = useCreateLineItem({ swoProject })
+  const { mutate: updateLineItems } = useAssignLineItems({
+    swoProjectId: swoProject?.id,
+    showToast: true,
+    refetchLineItems: true,
+  })
+  const { mutate: createLineItems } = useCreateLineItem({ swoProject, showToast: true, refetchLineItems: true })
   const { mutate: deleteLineItem, isLoading: isDeleteLoading } = useDeleteLineItems(swoProject?.id)
+  const { refetch: refetchRemainingItems } = useRemainingLineItems(swoProject?.id)
+  const toast = useToast()
 
   const {
     isOpen: isDeleteConfirmationModalOpen,
@@ -59,6 +73,12 @@ const RemainingItemsModal: React.FC<{
   const { prepend } = remainingFieldArray
 
   useEffect(() => {
+    if (swoProject?.status?.toLocaleUpperCase() === 'COMPLETED') {
+      refetchRemainingItems()
+    }
+  }, [swoProject])
+
+  useEffect(() => {
     reset({ remainingItems })
   }, [remainingItems])
 
@@ -74,7 +94,16 @@ const RemainingItemsModal: React.FC<{
         }),
       ])
       Promise.all([update, create]).then(values => {
+        refetchRemainingItems()
         assignAndReset()
+        if (values[0] && values[1]) {
+          toast({
+            title: 'Remaining Items',
+            description: 'Remaining Items updated successfully.',
+            status: 'success',
+            isClosable: true,
+          })
+        }
       })
     } else if (updatedLineItems?.length > 0) {
       updateLineItems(updatedLineItems, {

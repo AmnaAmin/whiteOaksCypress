@@ -289,15 +289,9 @@ export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
 
-  const manualItems = [
-    ...formValues?.manualItems?.map(a => {
-      return { ...a, id: '', a: a.id, source: 'manual' }
-    }),
-  ]
-
   const assignedItems = [
     ...formValues?.assignedItems?.map(a => {
-      const isNewSmartLineItem = !a.smartLineItemId && a.source !== 'manual'
+      const isNewSmartLineItem = !a.smartLineItemId
       return {
         ...a,
         id: isNewSmartLineItem ? '' : a.id,
@@ -309,7 +303,7 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
-    assignedItems: [...assignedItems, ...manualItems],
+    assignedItems: [...assignedItems],
   }
 }
 
@@ -320,7 +314,6 @@ export const defaultValuesWODetails = workOrder => {
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: false,
     assignedItems: workOrder?.assignedItems?.length > 0 ? workOrder?.assignedItems : [],
-    manualItems: [],
   }
   return defaultValues
 }
@@ -358,11 +351,14 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     vendorSkillId: formValues.vendorSkillId?.value,
     // new work-order have hardcoded capacity
     capacity: selectedCapacity,
-    assignedItems: [
-      ...formValues?.assignedItems?.map(a => {
-        return { ...a, id: '', smartLineItemId: a.id }
-      }),
-    ],
+    assignedItems:
+      formValues?.assignedItems?.length > 0
+        ? [
+            ...formValues?.assignedItems?.map(a => {
+              return { ...a, id: '', smartLineItemId: a.id }
+            }),
+          ]
+        : [],
     documents: arr,
     status: 34,
     projectId: projectId,

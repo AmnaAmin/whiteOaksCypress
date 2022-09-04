@@ -80,6 +80,24 @@ type AssignedItemType = {
   swoProject: SWOProject
 }
 
+/*const UploadImage: React.FC<{ Images }> = ({ Images }) => {
+  return (
+    <Box>
+      <Button
+        minW={'auto'}
+        _focus={{ outline: 'none' }}
+        variant="unstyled"
+        leftIcon={<BiUpload color="#4E87F8" />}
+        display="flex"
+      >
+        <Text fontWeight={400} fontSize="14px" color="#4E87F8">
+          {Images}
+        </Text>
+      </Button>
+    </Box>
+  )
+}*/
+
 const AssignedItems = (props: AssignedItemType) => {
   const {
     isLoadingLineItems,
@@ -261,13 +279,16 @@ export const AssignedLineItems = props => {
             <Td>
               <EditableField
                 index={index}
-                fieldName="unitPrice"
+                fieldName="price"
                 formControl={props.formControl}
                 inputType="number"
                 fieldArray="assignedItems"
                 valueFormatter={currencyFormatter}
               />
             </Td>
+            {/*<Td>
+              <UploadImage Images={'Upload'} />
+                </Td>*/}
             <Td>
               <Controller
                 control={control}

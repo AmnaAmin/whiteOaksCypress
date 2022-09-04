@@ -114,7 +114,7 @@ const NewWorkOrder: React.FC<{
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
   const { swoProject } = useFetchProjectId(projectData?.id)
-  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id })
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
@@ -151,7 +151,7 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false }
+          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
         }),
       ]
       append(assigned)
@@ -172,25 +172,29 @@ const NewWorkOrder: React.FC<{
   }, [isSuccess, onClose])
 
   const onSubmit = values => {
-    assignLineItems(
-      [
-        ...values.assignedItems.map(a => {
-          return { ...a, isAssigned: true }
-        }),
-      ],
-      {
-        onSuccess: () => {
-          const payload = parseNewWoValuesToPayload(values, projectData.id)
-          createWorkOrder(payload as any)
+    if (values?.assignedItems?.length > 0) {
+      assignLineItems(
+        [
+          ...values?.assignedItems?.map(a => {
+            return { ...a, isAssigned: true }
+          }),
+        ],
+        {
+          onSuccess: () => {
+            const payload = parseNewWoValuesToPayload(values, projectData.id)
+            createWorkOrder(payload as any)
+          },
         },
-      },
-    )
+      )
+    } else {
+      const payload = parseNewWoValuesToPayload(values, projectData.id)
+      createWorkOrder(payload as any)
+    }
   }
 
   // Work Order Fields Handles
   const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
     if (approvedAmount && percentageField) {
-      
       const vendorWoAmountResult = approvedAmount - approvedAmount * (percentageField / 100)
       setValue('invoiceAmount', vendorWoAmountResult.toFixed(2))
     } else if (approvedAmount === 0) {
