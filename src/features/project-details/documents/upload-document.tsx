@@ -41,7 +41,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
 
   const workOderState = workOders
     ? workOders?.map(state => ({
-        label: state?.skillName,
+        label: `${state?.companyName}(${state?.skillName})`,
         value: state?.id,
       }))
     : null
