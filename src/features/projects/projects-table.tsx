@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
+import { TableWrapper } from 'components/table/table'
 import { Link } from 'react-router-dom'
-import { useProjects } from 'utils/projects'
-import Status from './status'
-import { dateFormat } from 'utils/date-time-utils'
+import { useProjects, useWeekDayProjectsDue } from 'api/projects'
+import Status from 'features/common/status'
 import { Column } from 'react-table'
-import { t } from 'i18next'
+import { dateFormat } from 'utils/date-time-utils'
+import numeral from 'numeral'
 
 export const PROJECT_COLUMNS = [
   {
@@ -15,49 +15,203 @@ export const PROJECT_COLUMNS = [
     accessor: 'id',
   },
   {
-    Header: t('type'),
-    accessor: 'projectTypeLabel',
+    Header: 'General Labor',
+    accessor: 'generalLabourName',
   },
   {
-    Header: t('WOstatus'),
-    accessor: 'vendorWOStatusValue',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.vendorWOStatusValue} />,
+    Header: 'FPM',
+    accessor: 'projectManager',
   },
   {
-    Header: t('address'),
+    Header: 'Status',
+    accessor: 'projectStatus',
+    Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
+  },
+  {
+    Header: 'Address',
     accessor: 'streetAddress',
   },
   {
-    Header: t('region'),
+    Header: 'City',
+    accessor: 'city',
+  },
+  {
+    Header: 'Client Start Date',
+    accessor: 'clientStartDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.clientStartDate)
+    },
+  },
+  {
+    Header: 'Client Due Date',
+    accessor: 'clientDueDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.clientDueDate)
+    },
+  },
+  {
+    Header: 'Type',
+    accessor: 'projectTypeLabel',
+  },
+  {
+    Header: 'Project Coordinator',
+    accessor: 'projectCoordinator',
+  },
+  {
+    Header: 'Account Payable',
+    accessor: 'accountPayable',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountPayable).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Zip',
+    accessor: 'zipCode',
+  },
+  {
+    Header: 'Client',
+    accessor: 'clientName',
+  },
+  {
+    Header: 'SOW Final Amount',
+    accessor: 'sowOriginalContractAmount',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.sowOriginalContractAmount).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Project Cost',
+    accessor: 'projectRelatedCost',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountPayable).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Paid Date',
+    accessor: 'woaPaidDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.woaPaidDate)
+    },
+  },
+  {
+    Header: 'Invoice Number',
+    accessor: 'invoiceNumber',
+  },
+  {
+    Header: 'Invoice Date',
+    accessor: 'woaInvoiceDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.woaInvoiceDate)
+    },
+  },
+  {
+    Header: 'Account Receivable',
+    accessor: 'accountRecievable',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.accountRecievable).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Market',
+    accessor: 'market',
+  },
+  {
+    Header: 'State',
+    accessor: 'state',
+  },
+  {
+    Header: 'WOA Finish',
+    accessor: 'woaCompletionDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.woaCompletionDate)
+    },
+  },
+  {
+    Header: 'Region',
     accessor: 'region',
   },
   {
-    Header: t('pendingTransactions'),
-    accessor: 'pendingTransactions',
-  },
-  {
-    Header: t('pastDueWO'),
-    accessor: 'pastDueWorkorders',
-  },
-  {
-    Header: t('DueDateWO'),
-    accessor: 'clientDueDate',
-    Cell({ value }) {
-      return dateFormat(value)
+    Header: 'Partial Payment',
+    accessor: 'partialPayment',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
     },
     getCellExportValue(row) {
-      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+      return numeral(row.original.partialPayment).format('$0,0.00')
     },
   },
   {
-    Header: t('expectedPaymentDate'),
-    accessor: 'vendorWOExpectedPaymentDate',
-    Cell({ value }) {
-      return dateFormat(value)
+    Header: 'Expected Payment',
+    accessor: 'expectedPaymentDate',
+    Cell: ({ value }) => dateFormat(value),
+    getCellExportValue(row) {
+      return dateFormat(row.original.expectedPaymentDate)
+    },
+  },
+  {
+    Header: 'Profit Margins',
+    accessor: 'profitPercentage',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value / 100).format('0,0.00%')
     },
     getCellExportValue(row) {
-      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+      return `${row.original.profitPercentage}%`
     },
+  },
+  {
+    Header: 'Profits',
+    accessor: 'profitTotal',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.profitTotal).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Material Cost',
+    accessor: 'materialCost',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.materialCost).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Draw Amount',
+    accessor: 'drawAmount',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.drawAmount).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'WO Number',
+    accessor: 'woNumber',
+  },
+  {
+    Header: 'PO Number',
+    accessor: 'poNumber',
   },
 ]
 
@@ -66,25 +220,25 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const projectId = idCell?.value
 
   return (
-    <Link to={`/project-details/${projectId}`} data-testid="project-table-row">
-      <Tr
-        bg="white"
-        _hover={{
-          background: 'gray.50',
-          '& > td > a': {
-            color: '#333',
-          },
-        }}
-        {...row.getRowProps({
-          style,
-        })}
-      >
-        {row.cells.map((cell, index) => {
-          return (
-            <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-              <Flex alignItems="center" h="72px" pl="10px">
+    <Tr
+      bg="white"
+      _hover={{
+        background: '#eee',
+        '& > td > a': {
+          color: '#333',
+        },
+      }}
+      {...row.getRowProps({
+        style,
+      })}
+    >
+      {row.cells.map((cell, index) => {
+        return (
+          <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
+            <Link to={`/project-details/${projectId}`}>
+              <Flex alignItems="center" h="72px" pl="3">
                 <Text
-                  noOfLines={2}
+                  noOfLines={1}
                   title={cell.value}
                   padding="0 15px"
                   color="gray.600"
@@ -97,42 +251,70 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
                   {cell.render('Cell')}
                 </Text>
               </Flex>
-            </Td>
-          )
-        })}
-      </Tr>
-    </Link>
+            </Link>
+          </Td>
+        )
+      })}
+    </Tr>
   )
 }
 
 type ProjectProps = {
   selectedCard: string
+  selectedDay: string
   projectColumns: Column[]
   resizeElementRef: any
   setTableInstance: (tableInstance: any) => void
+  usersId?: number[]
+  selectedFPM?: any
 }
 export const ProjectsTable: React.FC<ProjectProps> = ({
   setTableInstance,
   projectColumns,
   resizeElementRef,
   selectedCard,
+  selectedDay,
+  usersId,
+  selectedFPM,
 }) => {
   const { projects, isLoading } = useProjects()
   const [filterProjects, setFilterProjects] = useState(projects)
+  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
   useEffect(() => {
-    if (!selectedCard) setFilterProjects(projects)
+    // To get pastDue Ids
+    const pastDueIds = projects?.filter(project => project?.pastDue)
+    const idPastDue = pastDueIds?.map(project => project?.id)
+    if (!selectedCard && !selectedDay) setFilterProjects(projects)
     setFilterProjects(
       projects?.filter(
         project =>
-          !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          (!selectedCard ||
+            project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
+            (selectedCard === 'pastDue' && idPastDue?.includes(project?.id))) &&
+          (!usersId?.length || usersId.includes(project.projectManagerId as number)),
       ),
     )
-  }, [selectedCard, projects])
+
+    // Due Project Weekly Filter
+    const getDates = days?.filter(day => {
+      if (selectedDay === 'All' || selectedDay === day.dayName) {
+        return true
+      }
+      return false
+    })
+
+    const clientDate = getDates?.map(dates => {
+      var date = dates?.dueDate
+      return date.substr(0, 10)
+    })
+    if (selectedDay) {
+      setFilterProjects(projects?.filter(project => clientDate?.includes(project?.clientDueDate?.substr(0, 10))))
+    }
+  }, [selectedCard, selectedDay, projects, usersId])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box overflowX={'auto'} overflowY="hidden" height="100%">
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
@@ -141,7 +323,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         name="my-table"
         setTableInstance={setTableInstance}
         tableHeight={'inherit'}
+        enablePagination={true}
         sortBy={{ id: 'id', desc: true }}
+        defaultFlexStyle={false}
       />
     </Box>
   )

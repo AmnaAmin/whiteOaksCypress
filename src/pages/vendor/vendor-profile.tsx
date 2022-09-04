@@ -1,14 +1,16 @@
+// Revisit, Separate the vendor profile forms from vendor profile page.
+
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { Card } from 'features/login-form-centered/Card'
-import PcDetails, { useVendorDetails } from 'features/project-coordinator/vendor/details'
-import { Details } from 'features/vendor-details/details'
-import { DocumentsCard } from 'features/vendor-details/documents-card'
-import { License } from 'features/vendor-details/license'
-import { MarketList } from 'features/vendor-details/markets'
-import { TradeList } from 'features/vendor-details/trades'
+import CreateDetails, { useVendorDetails } from 'features/vendor-profile/create-details'
+import { UpdateDetails } from 'features/vendor-profile/update-details'
+import { DocumentsCard } from 'features/vendor-profile/documents-card'
+import { License } from 'features/vendor-profile/license'
+import { MarketList } from 'features/vendor-profile/markets'
+import { TradeList } from 'features/vendor-profile/trades'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -28,7 +30,7 @@ import {
   usePaymentMethods,
   useSaveVendorDetails,
   useVendorProfile,
-} from 'utils/vendor-details'
+} from 'api/vendor-details'
 
 type Props = {
   vendorProfileData?: VendorProfile
@@ -37,6 +39,7 @@ type Props = {
   updateVendorId?: (number) => void
   vendorModalType?: string
 }
+
 export const validateTrade = trades => {
   const checkedTrades = trades?.filter(t => t.checked)
   if (!(checkedTrades && checkedTrades.length > 0)) {
@@ -52,6 +55,7 @@ export const validateMarket = markets => {
   }
   return true
 }
+
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
@@ -203,13 +207,13 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             <TabPanel p="0px">
               {tabIndex === 0 ? (
                 VendorType === 'editVendor' ? (
-                  <PcDetails
+                  <CreateDetails
                     isActive={tabIndex === 0}
                     vendorProfileData={vendorProfileData as VendorProfile}
                     onClose={props.onClose}
                   />
                 ) : (
-                  <Details
+                  <UpdateDetails
                     isActive={tabIndex === 0}
                     vendorProfileData={vendorProfileData as VendorProfile}
                     onClose={props.onClose}

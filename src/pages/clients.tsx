@@ -1,0 +1,41 @@
+import { Box, Divider, Flex, Text } from '@chakra-ui/react'
+import { ClientsTable } from 'features/clients/clients-table'
+import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+
+const Clients = () => {
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
+
+  return (
+    <Box>
+      <Flex h="52px" alignItems="center" justifyContent="space-between" px={2}>
+        <Text fontSize="18px" fontWeight={500} color="gray.600">
+          {t('clientOverview')}
+        </Text>
+      </Flex>
+      <Flex
+        px={7}
+        alignItems="center"
+        bg="gray.50"
+        h="52px"
+        borderBottom="1px solid #E2E8F0"
+        borderTopRadius={6}
+        fontSize="18px"
+        fontWeight={500}
+        color="gray.600"
+      >
+        <Text flex={1}>{t('businessName')}</Text>
+        <Divider orientation="vertical" border="1px solid" />
+        <Text pl={5} flex={1}>
+          {t('accountPayable')}
+        </Text>
+      </Flex>
+      <Box>
+        <ClientsTable ref={tabsContainerRef} />
+      </Box>
+    </Box>
+  )
+}
+
+export default Clients

@@ -161,7 +161,7 @@ export type VendorEntity = Vendor & {
 }
 
 export type Document = {
-  documentType: string
+  documentType: number
   fileObject: string
   fileObjectContentType: string
   fileType: string
@@ -256,9 +256,10 @@ export type Market = {
   id: number
   metropolitanServiceArea: string
   modifiedBy: string
-  modifiedDate: string | null
+  modifiedDate: string
   stateId: number
   stateName: string
+  skill: string
 }
 
 type MarketFormValues = {
