@@ -26,9 +26,10 @@ import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { createDocumentPayload } from 'utils/file-utils'
+import { useWorkOrderDocuments } from 'api/projects'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -36,6 +37,14 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const { vendorId } = useUserProfile() as Account
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
+  const { data: workOders } = useWorkOrderDocuments(projectId)
+
+  const workOderState = workOders
+    ? workOders?.map(state => ({
+        label: state?.skillName,
+        value: state?.id,
+      }))
+    : null
 
   const states = documentTypes
     ? documentTypes?.map(state => ({
@@ -52,15 +61,17 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   } = useForm()
 
   const onSubmit = async formValues => {
+    const workOrderId = formValues?.against?.value?.toString()
     const documentPayload = await createDocumentPayload(
       formValues.chooseFile,
-      formValues?.documentType?.value?.string(),
+      formValues?.documentTypes?.value?.toString(),
     )
 
     const doc: Document = {
       ...documentPayload,
       projectId,
       vendorId,
+      workOrderId,
     }
 
     saveDocument(doc, {
@@ -70,6 +81,11 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       },
     })
   }
+  const watchField = useWatch({
+    control,
+    name: 'documentTypes',
+  })
+  const watchOption = watchField?.label === 'Permit' ? true : false
 
   return (
     <Modal
@@ -84,7 +100,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('uploadDocument')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
@@ -92,15 +108,15 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               <ViewLoader />
             ) : (
               <HStack h="130px">
-                <Grid gridTemplateColumns={'215px 215px'} gap="15px">
+                <Grid gridTemplateColumns={'215px 215px 215px'} gap="15px">
                   <GridItem>
-                    <FormControl isInvalid={!!errors?.documnetType} data-testid="document-type">
+                    <FormControl isInvalid={!!errors?.documentTypes} data-testid="document-type">
                       <FormLabel htmlFor="documentType" variant="strong-label" size="md">
-                        {t('documentType')}{' '}
+                        {t('documentType')}
                       </FormLabel>
                       <Controller
                         control={control}
-                        name="documnetType"
+                        name="documentTypes"
                         rules={{ required: 'Document type is required' }}
                         render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
                           return (
@@ -119,6 +135,34 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       />
                     </FormControl>
                   </GridItem>
+                  {watchOption && (
+                    <GridItem>
+                      <FormControl isInvalid={!!errors?.against} data-testid="document-type">
+                        <FormLabel htmlFor="documentType" variant="strong-label" size="md">
+                          {t('against')}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          name="against"
+                          rules={{ required: 'Against type is required' }}
+                          render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                            return (
+                              <>
+                                <ReactSelect
+                                  options={workOderState}
+                                  selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                                  value={documentType}
+                                  onChange={onChange}
+                                />
+
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </GridItem>
+                  )}
 
                   <GridItem>
                     <FormControl isInvalid={!!errors?.chooseFile}>
@@ -166,6 +210,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               variant="outline"
               onClick={() => {
                 onClose()
+                reset()
               }}
               colorScheme="brand"
             >

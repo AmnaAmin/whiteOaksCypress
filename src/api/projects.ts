@@ -54,6 +54,16 @@ export const useProjectWorkOrders = projectId => {
   })
 }
 
+export const useWorkOrderDocuments = projectId => {
+  const client = useClient()
+
+  return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
+    const response = await client(`project/${projectId}/workorders`, {})
+
+    return response?.data
+  })
+}
+
 export const useProjectAlerts = (projectId, login) => {
   const client = useClient('/alert/api')
 

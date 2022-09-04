@@ -175,6 +175,7 @@ export type Document = {
   modifiedDate?: string
   vendorName?: string
   workOrderName?: string
+  workOrderId?: number
 }
 
 type Select = {
