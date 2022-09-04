@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { Task, ViewMode, Gantt } from 'gantt-task-react'
 import { getStartEndDateForProject } from './helper'
 import { ProjectTaskList } from './task-list-header'
 import { ProjectTaskListTable } from './task-list-table'
 import { useColumnWidth } from './hooks'
+import { ViewSwitcher } from 'components/gantt-chart/view-switcher'
 import 'gantt-task-react/dist/index.css'
 import './gantt-task.css'
 
 const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
+  const [view, setView] = React.useState<ViewMode>(ViewMode.Day)
   const [tasks, setTasks] = React.useState<Task[]>(data)
-  const columnWidth = useColumnWidth(ViewMode.QuarterDay)
+  const columnWidth = useColumnWidth(view);
 
   const handleTaskChange = (task: Task) => {
     let newTasks = tasks.map(t => (t.id === task.id ? task : t))
@@ -42,25 +44,33 @@ const ProjectScheduleDetails: React.FC<{
   }, [data])
 
   return (
-    <Box className="Wrapper ProjectDetails_Chart">
+    <Flex
+      className="Wrapper ProjectDetails_Chart"
+      direction={"column"}
+      gridGap={4}
+    >
+      <ViewSwitcher
+        viewMode={view}
+        onViewModeChange={viewMode => setView(viewMode)}
+      />
       <Gantt
         tasks={tasks}
-        rowHeight={80}
-        viewMode={ViewMode.QuarterDay}
-        ganttHeight={tasks.length === 2 ? 160 : 255}
+        rowHeight={30}
+        viewMode={view}
+        ganttHeight={150}
         onDateChange={handleTaskChange}
         onProgressChange={handleProgressChange}
         onExpanderClick={handleExpanderClick}
-        listCellWidth={'155px'}
         TaskListHeader={ProjectTaskList}
-        TaskListTable={ProjectTaskListTable}
-        projectProgressSelectedColor="#4E87F8"
-        projectProgressColor="#4E87F8"
-        barProgressColor="#4E87F8"
-        barCornerRadius={32}
+        // TaskListHeader={ProjectTaskList}
+        // TaskListTable={ProjectTaskListTable}
+        // projectProgressSelectedColor="#4E87F8"
+        // projectProgressColor="#4E87F8"
+        // barProgressColor="#4E87F8"
+        // barCornerRadius={32}
         columnWidth={columnWidth}
       />
-    </Box>
+    </Flex>
   )
 }
 
