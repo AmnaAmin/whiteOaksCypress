@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, Textarea, WrapItem, FormLabel, Text, HStack, FormCon
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useAccountDetails } from 'utils/vendor-details'
+import { useAccountDetails } from 'api/vendor-details'
 import { convertDateTimeFromServer } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'

@@ -30,4 +30,5 @@ export enum TableNames {
   projectFinancialOverview = 'project-financial-overview',
   payable = 'payable',
   receivable = 'receivable',
+  document = 'document',
 }

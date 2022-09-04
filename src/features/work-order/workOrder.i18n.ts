@@ -1,0 +1,55 @@
+export const WORK_ORDER = 'workOrders'
+
+export const workOrder = {
+  en: {
+    translation: {
+      [WORK_ORDER]: {
+        assignedLineItems: 'Assigned Line Items',
+        remainingItems: 'Remaining Items',
+        downloadPDF: 'Download as PDF',
+        markCompleted: 'Mark All Completed',
+        productName: 'Product Name',
+        sku: 'SKU',
+        location: 'Location',
+        quantity: 'Quantity',
+        price: 'Price',
+        images: 'Images',
+        invoicedDate: 'Invoiced Date',
+        addNewItem: 'Add New Item',
+        details: 'Details',
+        status: 'Status',
+        verification: 'Verification',
+        showPrice: 'Show Price to Vendor',
+        markAllVerified: 'Mark All Verified',
+        remainingList: 'Remaining List',
+        total: 'Total',
+        actions: 'Actions',
+      },
+    },
+  },
+  es: {
+    translation: {
+      [WORK_ORDER]: {
+        assignedLineItems: 'Elementos de línea asignados',
+        remainingItems: 'Artículos restantes',
+        downloadPDF: 'Descargar como PDF',
+        markCompleted: 'Marcar todo completado',
+        productName: 'Nombre del producto',
+        sku: 'SKU',
+        location: 'Ubicación',
+        quantity: 'Cantidad',
+        price: 'Precio',
+        images: 'Imágenes',
+        addNewItem: 'Agregar ítem nuevo',
+        details: 'Detalles',
+        status: 'Estado',
+        verification: 'Verificación',
+        showPrice: 'Mostrar precio al vendedor',
+        markAllVerified: 'Marcar todo verificado',
+        remainingList: 'Lista restante',
+        total: 'Total',
+        actions: 'Comportamiento',
+      },
+    },
+  },
+}
