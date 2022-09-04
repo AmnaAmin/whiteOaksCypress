@@ -29,7 +29,7 @@ import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { createDocumentPayload } from 'utils/file-utils'
-import { useWorkOrderDocuments } from 'api/projects'
+import { useProjectWorkOrders } from 'api/projects'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -37,7 +37,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const { vendorId } = useUserProfile() as Account
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
-  const { data: workOders } = useWorkOrderDocuments(projectId)
+  const { data: workOders } = useProjectWorkOrders(projectId)
 
   const workOderState = workOders
     ? workOders?.map(state => ({
@@ -85,7 +85,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     control,
     name: 'documentTypes',
   })
-  const watchOption = watchField?.label === 'Permit' ? true : false
+  const watchPermitOption = watchField?.label === 'Permit'
 
   return (
     <Modal
@@ -136,7 +136,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       />
                     </FormControl>
                   </GridItem>
-                  {watchOption && (
+                  {watchPermitOption && (
                     <GridItem>
                       <FormControl isInvalid={!!errors?.against} data-testid="document-type">
                         <FormLabel htmlFor="documentType" variant="strong-label" size="md">
