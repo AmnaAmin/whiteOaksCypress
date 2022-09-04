@@ -20,7 +20,7 @@ const Reports = () => {
         fontWeight={500}
         color="gray.600"
       >
-         <Text flex={1}> <Button className="chakra-button css-1bzwwdx" onClick={() => navigate(-1)}>{t('rptBackBtnLabel')}</Button> </Text>
+         <Text flex={1}> <Button  colorScheme="brand" fontSize="14px" onClick={() => navigate(-1)}>{t('rptBackBtnLabel')}</Button> </Text>
       
       </Flex>
       <Box alignItems="left">
