@@ -93,6 +93,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       isOpen={isOpen}
       onClose={() => {
         onClose()
+        reset()
       }}
       size="3xl"
       variant="custom"
@@ -100,7 +101,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('uploadDocument')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
@@ -210,7 +211,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               variant="outline"
               onClick={() => {
                 onClose()
-                reset()
               }}
               colorScheme="brand"
             >
