@@ -1,4 +1,4 @@
-import { BiAlignMiddle, BiCreditCard, BiDollarCircle, BiGroup, BiStats, BiUser, BiUserPin } from 'react-icons/bi'
+import { BiAlignMiddle, BiCreditCard, BiDollarCircle, BiGroup, BiStats, BiUser, BiUserPin, BiBarChartSquare } from 'react-icons/bi'
 
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
@@ -119,8 +119,8 @@ export const MENU_ROLE_BASED: Menus = {
     {
       pathTo: '/reports',
       title: 'Reports',
-      Icon: FaAlignCenter,
-      color: '#9F7AEA',
+      Icon: BiBarChartSquare,
+      color: '#FC8181',
     },
   ],
 
