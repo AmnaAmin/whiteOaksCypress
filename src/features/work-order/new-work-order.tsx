@@ -25,7 +25,7 @@ import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'rea
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
-import { useFilteredVendors } from 'api/pc-projects'
+import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
@@ -40,7 +40,7 @@ import {
   useAllowLineItemsAssignment,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
-import round from 'lodash/round'
+
 const CalenderCard = props => {
   return (
     <Flex>
@@ -105,9 +105,6 @@ const NewWorkOrder: React.FC<{
   const { vendors } = useFilteredVendors(vendorSkillId)
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
-  const [approvedAmount, setApprovedAmount] = useState<number | null>()
-  const [percentageField, setPercentageField] = useState<number | null>()
-  const [, setInvoiceAmount] = useState(0)
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -160,6 +157,9 @@ const NewWorkOrder: React.FC<{
     [unassignedItems, setUnAssignedItems],
   )
 
+  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
+    setValue,
+  })
   useEffect(() => {
     setUnAssignedItems(remainingItems ?? [])
   }, [remainingItems])
@@ -170,7 +170,6 @@ const NewWorkOrder: React.FC<{
       onClose()
     }
   }, [isSuccess, onClose])
-
   const onSubmit = values => {
     if (values?.assignedItems?.length > 0) {
       assignLineItems(
@@ -192,37 +191,7 @@ const NewWorkOrder: React.FC<{
     }
   }
 
-  // Work Order Fields Handles
-  const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
-    if (approvedAmount && percentageField) {
-      const vendorWoAmountResult = approvedAmount - approvedAmount * (percentageField / 100)
-      setValue('invoiceAmount', vendorWoAmountResult.toFixed(2))
-    } else if (approvedAmount === 0) {
-      setValue('invoiceAmount', 0)
-    } else if (approvedAmount && percentageField === 0) {
-      setValue('invoiceAmount', approvedAmount.toFixed(2))
-    } else {
-      setValue('invoiceAmount', '')
-    }
-  }
 
-  const onPercentageChange = percentageField => {
-    setPercentageField(percentageField)
-    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
-  }
-
-  const onApprovedAmountChange = approvedAmount => {
-    setApprovedAmount(approvedAmount)
-    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
-  }
-
-  const onInoviceAmountChange = invoiceAmount => {
-    setInvoiceAmount(invoiceAmount)
-    const approve = parseInt(`${approvedAmount}`, 10)
-    const percentageField = round(((approve - invoiceAmount) * 100) / approve, 2)
-    setPercentageField(percentageField)
-    setValue('percentage', percentageField)
-  }
 
   useEffect(() => {
     const option = [] as any
