@@ -30,6 +30,8 @@ export type Project = {
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
   market: string | null
+  materialCost: number | null
+  drawAmount: number | null
   modifiedBy: string | null
   modifiedDate: string | null
   name: string | null

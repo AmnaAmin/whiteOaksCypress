@@ -78,6 +78,8 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
         generalLabor: 'General Labor',
+        materialCost: 'Material Cost',
+        drawAmount: 'Draw Amount',
 
         // Receivable
         dueProjects: 'Due Projects',
@@ -466,7 +468,6 @@ i18n.use(initReactI18next).init({
         //Reports
         rptPageTitle: 'Reports',
         rptBackBtnLabel: 'Back',
-
       },
     },
     es: {
@@ -592,6 +593,8 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
         generalLabor: 'Trabajo general',
+        materialCost: 'Costo material',
+        drawAmount: 'Monto del sorteo',
 
         // receivable
         dueProjects: 'Proyectos Vencidos',

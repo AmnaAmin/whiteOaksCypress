@@ -186,6 +186,26 @@ export const PROJECT_COLUMNS = [
     },
   },
   {
+    Header: 'Material Cost',
+    accessor: 'materialCost',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.materialCost).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Draw Amount',
+    accessor: 'drawAmount',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.drawAmount).format('$0,0.00')
+    },
+  },
+  {
     Header: 'WO Number',
     accessor: 'woNumber',
   },
