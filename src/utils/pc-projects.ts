@@ -378,7 +378,7 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
   }
 
   const onPercentageChange = percentageField => {
-    if (fieldUpdating.current && fieldUpdating.current != 'percentageField') {
+    if (fieldUpdating.current && fieldUpdating.current !== 'percentageField') {
       fieldUpdating.current = null
       return
     }
@@ -394,7 +394,7 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
   }
 
   const onInoviceAmountChange = invoiceAmount => {
-    if (fieldUpdating.current && fieldUpdating.current != 'invoiceAmount') {
+    if (fieldUpdating.current && fieldUpdating.current !== 'invoiceAmount') {
       fieldUpdating.current = null
       return
     }
