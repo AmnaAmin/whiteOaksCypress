@@ -73,6 +73,12 @@ const RemainingItemsModal: React.FC<{
   const { prepend } = remainingFieldArray
 
   useEffect(() => {
+    if (swoProject?.status?.toLocaleUpperCase() === 'COMPLETED') {
+      refetchRemainingItems()
+    }
+  }, [swoProject])
+
+  useEffect(() => {
     reset({ remainingItems })
   }, [remainingItems])
 

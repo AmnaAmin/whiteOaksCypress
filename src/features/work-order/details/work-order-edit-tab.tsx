@@ -135,7 +135,7 @@ const WorkOrderDetailTab = props => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false }
+          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
         }),
       ]
       append(assigned)
@@ -205,7 +205,7 @@ const WorkOrderDetailTab = props => {
 
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
-    const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId && a.source !== 'manual')]
+    const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrder)
     const removedItems = getRemovedItems(formValues, workOrder)

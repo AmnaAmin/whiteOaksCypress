@@ -151,7 +151,7 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false }
+          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
         }),
       ]
       append(assigned)
@@ -172,19 +172,24 @@ const NewWorkOrder: React.FC<{
   }, [isSuccess, onClose])
 
   const onSubmit = values => {
-    assignLineItems(
-      [
-        ...values.assignedItems.map(a => {
-          return { ...a, isAssigned: true }
-        }),
-      ],
-      {
-        onSuccess: () => {
-          const payload = parseNewWoValuesToPayload(values, projectData.id)
-          createWorkOrder(payload as any)
+    if (values?.assignedItems?.length > 0) {
+      assignLineItems(
+        [
+          ...values?.assignedItems?.map(a => {
+            return { ...a, isAssigned: true }
+          }),
+        ],
+        {
+          onSuccess: () => {
+            const payload = parseNewWoValuesToPayload(values, projectData.id)
+            createWorkOrder(payload as any)
+          },
         },
-      },
-    )
+      )
+    } else {
+      const payload = parseNewWoValuesToPayload(values, projectData.id)
+      createWorkOrder(payload as any)
+    }
   }
 
   // Work Order Fields Handles
