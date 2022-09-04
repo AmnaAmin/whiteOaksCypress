@@ -58,7 +58,7 @@ export const ProjectCard = ({
                 paddingLeft={'20px'}
                 data-testid={`value-of-${title.toLocaleLowerCase()}`}
               >
-                {number}
+                {isLoading ? <BlankSlate /> : number}
               </Text>
             </Box>
           </Flex>

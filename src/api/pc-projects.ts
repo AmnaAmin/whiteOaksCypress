@@ -75,7 +75,7 @@ export const useProjectDetails = (projectId?: string) => {
   )
 }
 
-export const useSaveProjectDetails = () => {
+export const useCreateProjectMutation = () => {
   const client = useClient()
   const queryClient = useQueryClient()
   // const toast = useToast()
@@ -90,6 +90,7 @@ export const useSaveProjectDetails = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries('projects')
+        queryClient.invalidateQueries('project-details')
       },
     },
   )

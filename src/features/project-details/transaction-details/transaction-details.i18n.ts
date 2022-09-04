@@ -1,6 +1,6 @@
 export const WO_FINANCIAL_OVERVIEW = 'woFinancialOverview'
 
-export const transactioni18n = {
+export const transactionDetailI18n = {
   en: {
     translation: {
       vendor: 'Vendor',

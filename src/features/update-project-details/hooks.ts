@@ -5,6 +5,7 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) => {
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
+  const remainingPayment = useWatch({ name: 'remainingPayment', control })
 
   const projectStatus = status?.value
 
@@ -63,7 +64,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isOverPaymentDisalbed: isAllTimeDisabled,
     isWOAExpectedPayDateDisabled: isAllTimeDisabled,
     isRemainingPaymentDisabled: isAllTimeDisabled,
-    isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate),
+    isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
     isProjectCoordinatorDisabled: isAllTimeDisabled,
