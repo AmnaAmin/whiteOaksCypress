@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useMonthData } from './hooks'
+import { format } from 'date-fns'
+import { enAU } from 'date-fns/locale'
 
 const InfoStructureCard: React.FC<
   {
@@ -57,7 +59,7 @@ const InfoStructureCard: React.FC<
                       {profit}
                     </Text>
                     <Text fontWeight={400} color="gray.500">
-                      {amount ? currencyFormatter(amount?.profit) : '$0.00'}
+                      {amount?.profit ? currencyFormatter(amount?.profit) : '$0.00'}
                     </Text>
                   </Box>
                   <Box h="40px" textAlign={'center'}>
@@ -65,7 +67,7 @@ const InfoStructureCard: React.FC<
                       {revenue}
                     </Text>
                     <Text fontWeight={400} color="gray.500">
-                      {amount ? currencyFormatter(amount?.revenue) : '$0.00'}
+                      {amount?.revenue ? currencyFormatter(amount?.revenue) : '$0.00'}
                     </Text>
                   </Box>
                 </>
@@ -105,21 +107,18 @@ export const InformationCardFPM: React.FC<{ projectId?: string; chartData: any; 
 }) => {
   const { t } = useTranslation()
 
-  // const currentMonth = format(new Date(), 'LLLL', { locale: enAU })
-  // const current = new Date();
-  // current.setMonth(current.getMonth()-1);
-  // const previousMonth = current.toLocaleString('default', { month: 'long' });
-
-  const currentMonth = 'June'
-  const previous = 'May'
+  const currentMonth = format(new Date(), 'LLLL', { locale: enAU })
+  const current = new Date()
+  current.setMonth(current.getMonth() - 1)
+  const previousMonth = current.toLocaleString('default', { month: 'long' })
   const { nameMonthData: currentMonthData } = useMonthData(currentMonth, chartData)
-  const { nameMonthData: previousMonthData } = useMonthData(previous, chartData)
+  const { nameMonthData: previousMonthData } = useMonthData(previousMonth, chartData)
 
   return (
     <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
       <InfoStructureCard
         bonus="Bonus"
-        newBonus={chartData?.newBonus}
+        newBonus={chartData?.currentBonus}
         profit="Profit"
         revenue={'revenue'}
         amount={currentMonthData}
