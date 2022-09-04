@@ -5,7 +5,7 @@ import { useNavigate} from "react-router-dom";
 
 const Reports = () => {
   const { t } = useTranslation()
-  const iframe_src = process.env.SERVER_SUPERSET_URL + '/superset/dashboard/11/?standalone=2';
+  const iframe_src = process.env.REACT_APP_SUPERSET_URL + '/superset/dashboard/11/?standalone=2';
   let navigate = useNavigate();
   return (
     <Box>
