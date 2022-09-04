@@ -398,6 +398,7 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
       fieldUpdating.current = null
       return
     }
+    if (!approvedAmount) return
     const approve = approvedAmount as number
     const percentageField = round(((approve - invoiceAmount) * 100) / approve, 2)
     setPercentageField(percentageField)
