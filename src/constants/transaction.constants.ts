@@ -33,16 +33,17 @@ export const TRANSACTION_STATUS_OPTIONS = [
   { value: TransactionStatusValues.denied, label: 'Denied' },
 ]
 
-export const TRANSACTION_MARK_AS_OPTIONS = [
-  {
+export const TRANSACTION_MARK_AS_OPTIONS = {
+  paid: {
     value: TransactionMarkAsValues.paid,
     label: 'Paid Back',
   },
-  {
+  revenue: {
     value: TransactionMarkAsValues.revenue,
     label: 'Revenue',
   },
-]
+}
+export const TRANSACTION_MARK_AS_OPTIONS_ARRAY = Object.values(TRANSACTION_MARK_AS_OPTIONS)
 
 export const STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE = 'Status should not be pending'
 export const REQUIRED_FIELD_ERROR_MESSAGE = 'This field is required'

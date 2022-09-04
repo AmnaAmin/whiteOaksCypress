@@ -68,7 +68,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
-  TRANSACTION_MARK_AS_OPTIONS,
+  TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'constants/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 
@@ -636,7 +636,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                             <>
                               <Select
                                 {...field}
-                                options={TRANSACTION_MARK_AS_OPTIONS}
+                                options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
                                 isDisabled={isApproved}
                                 size="md"
                                 selectProps={{ isBorderLeft: true }}

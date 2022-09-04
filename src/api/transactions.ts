@@ -502,7 +502,7 @@ export const parseTransactionToFormValues = (
   const isMaterialRefunded =
     transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
 
-  const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS[1] : TRANSACTION_MARK_AS_OPTIONS[0]
+  const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS.revenue : TRANSACTION_MARK_AS_OPTIONS.paid
   const paidBackDate = transaction.transactionType === TransactionTypeValues.overpayment ? transaction.paidDate : null
 
   return {
