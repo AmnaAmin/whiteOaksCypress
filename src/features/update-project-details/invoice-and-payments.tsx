@@ -70,7 +70,7 @@ const InvoiceAndPayments: React.FC = () => {
     // Do not calculated WOA expect date if payment term is not selected
     if (!date) return
 
-    const woaExpectedDate = addDays(new Date(utcDate), paymentTerm)
+    const woaExpectedDate = addDays(utcDate, paymentTerm)
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
 
