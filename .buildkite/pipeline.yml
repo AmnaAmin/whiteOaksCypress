@@ -23,7 +23,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'dev-IntegrationTests'
-      SUPERSET_URL: "https://bi-dev.woaharvest.com"
+      REACT_APP_SUPERSET_URL: "https://bi-dev.woaharvest.com"
 
   - command:
       - chmod 755 auto/build.sh
@@ -41,7 +41,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'dev'
-      SUPERSET_URL: "https://bi-dev.woaharvest.com"
+      REACT_APP_SUPERSET_URL: "https://bi-dev.woaharvest.com"
 
   - command:
       - chmod 755 auto/build.sh
@@ -59,7 +59,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'qa'
-      SUPERSET_URL: "https://bi-dev.woaharvest.com"
+      REACT_APP_SUPERSET_URL: "https://bi-dev.woaharvest.com"
 
   - wait
 
@@ -83,7 +83,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'preprod'
-      SUPERSET_URL: "https://bi-dev.woaharvest.com"
+      REACT_APP_SUPERSET_URL: "https://bi-dev.woaharvest.com"
 
   - wait
 
@@ -107,4 +107,4 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'prod'
-      SUPERSET_URL: "https://bi.woaharvest.com"
+      REACT_APP_SUPERSET_URL: "https://bi.woaharvest.com"
