@@ -62,9 +62,9 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
   const { swoProject } = useFetchProjectId(projectId)
-  
-// Do not show WO which have been cancelled
-  const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35) 
+
+  // Do not show WO which have been cancelled
+  const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35)
 
   useEffect(() => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {

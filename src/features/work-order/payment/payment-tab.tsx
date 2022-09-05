@@ -74,11 +74,10 @@ const PaymentInfoTab = props => {
   }
 
   useEffect(() => {
-    if (!rejectInvoiceCheck)
-    {
+    if (!rejectInvoiceCheck) {
       setValue('dateInvoiceSubmitted', 'mm/dd/yyyy')
       setValue('paymentTermDate', 'mm/dd/yyyy')
-      setValue('expectedPaymentDate', 'mm/dd/yyyy') 
+      setValue('expectedPaymentDate', 'mm/dd/yyyy')
     }
   }, [])
 
