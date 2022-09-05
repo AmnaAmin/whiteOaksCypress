@@ -51,25 +51,27 @@ const InvoiceAndPayments: React.FC = () => {
   const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const date = e.target.value
+    const date = new Date(e.target.value)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     const paymentTerm = getValues().paymentTerms?.value
 
     // Do not calculated WOA expect date if payment term is not selected
     if (!paymentTerm) return
 
-    const woaExpectedDate = addDays(new Date(date), paymentTerm)
+    const woaExpectedDate = addDays(utcDate, paymentTerm)
 
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
 
   const onPaymentTermChange = (option: SelectOption) => {
-    const date = getValues().invoiceBackDate
+    const date = new Date(getValues().invoiceBackDate as string)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     const paymentTerm = Number(option.value)
 
     // Do not calculated WOA expect date if payment term is not selected
     if (!date) return
 
-    const woaExpectedDate = addDays(new Date(date), paymentTerm)
+    const woaExpectedDate = addDays(utcDate, paymentTerm)
 
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
