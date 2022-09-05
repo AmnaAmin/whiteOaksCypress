@@ -1,11 +1,10 @@
-import { Box, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-ui/react'
-import { ExportButton } from 'components/table-refactored/export-button'
+import { Box, Button, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import TableColumnSettings from 'components/table/table-column-settings'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BiDownArrowCircle } from 'react-icons/bi'
+import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
 import { useParams } from 'react-router'
 import { TableNames } from 'types/table-column.types'
 import { dateFormat } from 'utils/date-time-utils'
@@ -63,7 +62,11 @@ const withPreviewCell = ({ value, row }) => {
 }
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
-  const { isProjectCoordinator } = useUserRolesSelector()
+  const [documentTableInstance, setInstance] = useState<any>(null)
+  const setDocumentTableInstance = tableInstance => {
+    setInstance(tableInstance)
+  }
+  const { isProjectCoordinator, isDoc } = useUserRolesSelector()
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
@@ -85,9 +88,9 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         Cell: withPreviewCell,
       },
       {
-        id: 'fileObjectContentType',
-        Header: t('fileType') || '',
-        accessor: 'fileObjectContentType',
+        Header: t('transactionDoc') || '',
+        accessor: 'label',
+        id: 'label',
         Cell: withPreviewCell,
       },
       {
@@ -97,11 +100,12 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         Cell: withPreviewCell,
       },
       {
-        Header: t('trade') || '',
-        accessor: 'workOrderName',
-        id: 'workOrderName',
+        id: 'fileObjectContentType',
+        Header: t('fileType') || '',
+        accessor: 'fileObjectContentType',
         Cell: withPreviewCell,
       },
+
       {
         Header: t('createdBy') || '',
         accessor: 'createdBy',
@@ -148,16 +152,30 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         TableRow={vendorDocumentRow}
         tableHeight="calc(100vh - 300px)"
         name="vendor-document-table"
+        setTableInstance={setDocumentTableInstance}
       />
-      {isProjectCoordinator && (
-        <Flex justifyContent="end">
-          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <ExportButton columns={tableColumns as any} data={documents} colorScheme="brand" />
-            <Divider orientation="vertical" border="1px solid" h="20px" />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-          </HStack>
-        </Flex>
-      )}
+      {isProjectCoordinator ||
+        (isDoc ? (
+          <Flex justifyContent="end">
+            <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+              <Button
+                m={0}
+                colorScheme="brand"
+                variant="ghost"
+                onClick={() => {
+                  if (documentTableInstance) {
+                    documentTableInstance?.exportData('mm/dd/yy', false)
+                  }
+                }}
+              >
+                <Icon as={BiExport} fontSize="18px" mr={1} />
+                {t('export')}
+              </Button>
+              <Divider orientation="vertical" border="1px solid" h="20px" />
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </HStack>
+          </Flex>
+        ) : null)}
     </Box>
   )
 })

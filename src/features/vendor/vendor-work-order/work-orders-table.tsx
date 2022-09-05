@@ -64,6 +64,8 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
   const { t } = useTranslation()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
+  // Do not show WO which have been cancelled
+  const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35)
 
   useEffect(() => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -132,7 +134,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
       {workOrders && (
         <TableWrapper
           columns={columns}
-          data={workOrders}
+          data={workOrdersNotCancelled || []}
           TableRow={WorkOrderRow}
           tableHeight="calc(100vh - 300px)"
           name="work-orders-table"

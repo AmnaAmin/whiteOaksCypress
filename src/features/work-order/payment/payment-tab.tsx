@@ -21,6 +21,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
 import { addDays, nextFriday } from 'date-fns'
+import { useEffect } from 'react'
 
 const CalenderCard = props => {
   return (
@@ -59,8 +60,7 @@ const PaymentInfoTab = props => {
   const { workOrder, onSave, navigateToProjectDetails } = props
 
   const { t } = useTranslation()
-  const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
-
+  const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance, rejectInvoiceCheck } = props.workOrder
   interface FormValues {
     dateInvoiceSubmitted: string | null
     paymentTerm: any
@@ -72,6 +72,14 @@ const PaymentInfoTab = props => {
     clientOriginalApprovedAmount: string | null
     finalInvoiceAmount: string | null
   }
+
+  useEffect(() => {
+    if (!rejectInvoiceCheck) {
+      setValue('dateInvoiceSubmitted', 'mm/dd/yyyy')
+      setValue('paymentTermDate', 'mm/dd/yyyy')
+      setValue('expectedPaymentDate', 'mm/dd/yyyy')
+    }
+  }, [])
 
   const { register, handleSubmit, control, getValues, setValue } = useForm<FormValues>({
     defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
@@ -100,7 +108,7 @@ const PaymentInfoTab = props => {
           <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
             <CalenderCard
               title={t('lwDate')}
-              date={dateLeanWaiverSubmitted ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
+              date={dateLeanWaiverSubmitted && rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
             />
             <CalenderCard
               title={t('permitDate')}

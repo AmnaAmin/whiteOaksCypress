@@ -26,6 +26,7 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
     enablePagination = false,
     disableFilter = false,
     isShowFooter,
+    rowHeight,
     ...restProps
   } = props
   const tableInstance = useCustomTable(
@@ -43,7 +44,7 @@ export const TableWrapper: React.FC<TableProps & TableExtraProps> = props => {
       {isLoading ? (
         <TableLoadingState {...tableInstance} />
       ) : (
-        <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} />
+        <TableBody {...tableInstance} onRowClick={onRowClick} TableRow={TableRow} rowHeight={rowHeight} />
       )}
 
       {isShowFooter && <TFooter {...tableInstance} />}

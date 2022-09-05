@@ -4,23 +4,32 @@ import { useAuth } from './auth-context'
 type UserRoles = {
   isVendor: boolean
   isAdmin: boolean
-  isGeneralLabor: boolean
   isProjectCoordinator: boolean
   isVendorManager: boolean
   isFPM: boolean
+  isDoc: boolean
+}
+
+enum UserTypes {
+  admin = 1,
+  fieldProjectManager = 5,
+  vendor = 6,
+  projectCoordinator = 112,
+  vendorManager = 1007,
+  directorOfConstruction = 1001,
 }
 
 export const useUserRolesSelector = (): UserRoles => {
   const { data } = useAuth()
-  const { userTypeLabel = '' } = data?.user as Account
+  const { userType } = data?.user as Account
 
   return {
-    isAdmin: userTypeLabel?.includes('Admin'),
-    isGeneralLabor: userTypeLabel?.includes('General Labor'),
-    isVendor: userTypeLabel === 'Vendor',
-    isProjectCoordinator: userTypeLabel?.includes('Project Coordinator'),
-    isVendorManager: userTypeLabel?.includes('Vendor Manager'),
-    isFPM: userTypeLabel?.includes('Field Project Manager'),
+    isAdmin: userType === UserTypes.admin,
+    isVendor: userType === UserTypes.vendor,
+    isProjectCoordinator: userType === UserTypes.projectCoordinator,
+    isVendorManager: userType === UserTypes.vendorManager,
+    isFPM: userType === UserTypes.fieldProjectManager,
+    isDoc: userType === UserTypes.directorOfConstruction,
   }
 }
 

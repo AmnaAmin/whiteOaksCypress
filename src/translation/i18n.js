@@ -245,7 +245,8 @@ i18n.use(initReactI18next).init({
         document: 'Document',
         documentType: 'Document Type',
         fileType: 'File Type',
-        vendorGL: 'Vendor/GL',
+        vendorGL: 'Vendor',
+        transactionDoc: 'Transaction',
         createdDate: 'Created Date',
         createdBy: 'Created By',
         uploadFile: 'Upload File',
@@ -462,6 +463,10 @@ i18n.use(initReactI18next).init({
         creditCard: 'Credit Card',
         ach: 'ACH',
         comment: 'Comment',
+
+        //Reports
+        rptPageTitle: 'Reports',
+        rptBackBtnLabel: 'Back',
       },
     },
     es: {
@@ -752,7 +757,8 @@ i18n.use(initReactI18next).init({
         document: 'Documento',
         documentType: 'Tipo de Documento',
         fileType: 'Tipo de Archivo',
-        vendorGL: 'Vendedor/GL',
+        vendorGL: 'Vendedor',
+        transactionDoc: 'Transacción',
         createdDate: 'Fecha de creación',
         createdBy: 'creado por',
         uploadFile: 'Subir archivo',
@@ -897,6 +903,10 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlerts: 'Alertas activadas',
         managedAlerts: 'Alertas administradas',
+
+        //Reports
+        rptPageTitle: 'Reports',
+        rptBackBtnLabel: 'Back',
       },
     },
   },

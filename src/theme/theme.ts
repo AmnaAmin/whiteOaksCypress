@@ -9,6 +9,7 @@ import checkbox from './components/checkbox'
 import label from './components/label'
 import spinner from './components/spinner'
 import table from './components/table'
+import divider from './components/divider'
 
 export const theme = extendTheme({
   styles: {
@@ -131,5 +132,6 @@ export const theme = extendTheme({
     ...label,
     ...spinner,
     ...table,
+    ...divider,
   },
 })

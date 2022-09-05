@@ -1,10 +1,23 @@
-import { Box, Checkbox, Flex, Td, Text, Tr } from '@chakra-ui/react'
+import { Box, Checkbox, Flex, Icon, Td, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import numeral from 'numeral'
-import React from 'react'
+import { difference } from 'lodash'
+import { FieldValue, UseFormReturn } from 'react-hook-form'
+import { BiXCircle } from 'react-icons/bi'
+import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { LineItems } from './assignedItems.utils'
+import { EditableField, InputField, LineItems, SelectCheckBox, SWOProject } from './assignedItems.utils'
+
+type RemainingListType = {
+  setSelectedItems: (items) => void
+  selectedItems: LineItems[]
+  remainingFieldArray: FieldValue<any>
+  isLoading?: boolean
+  formControl: UseFormReturn<any>
+  updatedItems: number[]
+  setUpdatedItems: (items) => void
+  swoProject: SWOProject
+}
 
 const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -24,21 +37,20 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} p="0">
-            <Flex alignItems="center" h="60px">
-              <Text
-                noOfLines={1}
+          <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} w={'100%'} h={'100%'} p="0">
+            <Flex alignItems={'center'} h={'100%'} w={'100%'}>
+              <Box
                 title={cell.value}
-                padding="0 15px"
+                padding="0 15px 10px 10px"
                 color="gray.600"
-                mb="20px"
-                mt="10px"
                 fontSize="14px"
                 fontStyle="normal"
                 fontWeight="400"
+                maxHeight={'60px'}
+                overflow="hidden"
               >
                 {cell.render('Cell')}
-              </Text>
+              </Box>
             </Flex>
           </Td>
         )
@@ -46,78 +58,261 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     </Tr>
   )
 }
-type RemainingListType = {
-  setSelectedItems: (items) => void
-  selectedItems: LineItems[]
-  remainingItems: LineItems[]
-  isLoading?: boolean
-}
 const RemainingListTable = (props: RemainingListType) => {
-  const { selectedItems, setSelectedItems, isLoading, remainingItems } = props
+  const {
+    selectedItems,
+    setSelectedItems,
+    isLoading,
+    remainingFieldArray,
+    formControl,
+    updatedItems,
+    setUpdatedItems,
+  } = props
+  const { fields: remainingItems, remove } = remainingFieldArray
+  const { getValues } = formControl
+  const values = getValues()
 
   const REMAINING_ITEMS_COLUMNS = [
     {
-      Header: 'Check',
-      accessor: 'assigned',
-      Cell: ({ row }) => (
-        <Flex justifyContent="end">
+      Header: () => {
+        return (
           <Checkbox
-            isChecked={selectedItems.map(s => s.id).includes(row?.original?.id)}
+            isChecked={
+              values?.remainingItems?.length > 0 &&
+              difference(
+                values?.remainingItems.map(r => r.id),
+                selectedItems.map(s => s.id),
+              )?.length < 1
+            }
             onChange={e => {
               if (e.currentTarget?.checked) {
-                if (!selectedItems.map(s => s.id).includes(row?.original?.id)) {
-                  setSelectedItems([...selectedItems, row?.original])
-                }
+                setSelectedItems([...values?.remainingItems])
               } else {
-                setSelectedItems([...selectedItems.filter(s => s.id !== row?.original?.id)])
+                setSelectedItems([])
               }
             }}
-            value={(row.original as any).sku}
           />
-        </Flex>
-      ),
+        )
+      },
+      disableSortBy: true,
+      accessor: 'assigned',
+      canFilter: false,
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <Flex justifyContent="end" paddingLeft={'10px'}>
+            {!isNew ? (
+              <SelectCheckBox
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems}
+                row={values?.remainingItems?.[row?.index]}
+              />
+            ) : (
+              <Icon
+                as={BiXCircle}
+                boxSize={5}
+                color="brand.300"
+                onClick={() => {
+                  remove(row?.index)
+                }}
+                cursor="pointer"
+              ></Icon>
+            )}
+          </Flex>
+        )
+      },
       disableExport: true,
+      width: 50,
+      sortable: false,
     },
     {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <>
+            {isNew ? (
+              <InputField
+                index={row?.index}
+                fieldName="sku"
+                formControl={props.formControl}
+                inputType="text"
+                fieldArray="remainingItems"
+              ></InputField>
+            ) : (
+              <EditableField
+                index={row?.index}
+                fieldName="sku"
+                formControl={props.formControl}
+                inputType="text"
+                fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
+              />
+            )}
+          </>
+        )
+      },
+      width: 100,
     },
     {
       Header: `${WORK_ORDER}.productName`,
       accessor: 'productName',
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <>
+            {isNew ? (
+              <InputField
+                index={row?.index}
+                fieldName="productName"
+                formControl={props.formControl}
+                inputType="text"
+                fieldArray="remainingItems"
+              ></InputField>
+            ) : (
+              <EditableField
+                index={row?.index}
+                fieldName="productName"
+                formControl={props.formControl}
+                inputType="text"
+                fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
+              />
+            )}
+          </>
+        )
+      },
+      width: 250,
     },
     {
       Header: `${WORK_ORDER}.details`,
       accessor: 'description',
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <>
+            {isNew ? (
+              <InputField
+                index={row?.index}
+                fieldName="description"
+                formControl={props.formControl}
+                inputType="text"
+                fieldArray="remainingItems"
+              ></InputField>
+            ) : (
+              <EditableField
+                index={row?.index}
+                fieldName="description"
+                formControl={props.formControl}
+                inputType="text"
+                fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
+              />
+            )}
+          </>
+        )
+      },
     },
     {
       Header: `${WORK_ORDER}.quantity`,
       accessor: 'quantity',
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <>
+            {isNew ? (
+              <InputField
+                index={row?.index}
+                fieldName="quantity"
+                formControl={props.formControl}
+                inputType="number"
+                fieldArray="remainingItems"
+              ></InputField>
+            ) : (
+              <EditableField
+                index={row?.index}
+                fieldName="quantity"
+                formControl={props.formControl}
+                inputType="number"
+                fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
+              />
+            )}
+          </>
+        )
+      },
     },
     {
       Header: `${WORK_ORDER}.price`,
       accessor: 'unitPrice',
-      Cell(cellInfo) {
-        return numeral(cellInfo.value).format('$0,0.00')
-      },
-      getCellExportValue(row) {
-        return numeral(row.original.amount).format('$0,0.00')
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <>
+            {isNew ? (
+              <InputField
+                index={row?.index}
+                fieldName="unitPrice"
+                formControl={props.formControl}
+                inputType="number"
+                fieldArray="remainingItems"
+              ></InputField>
+            ) : (
+              <EditableField
+                index={row?.index}
+                fieldName="unitPrice"
+                formControl={props.formControl}
+                inputType="number"
+                valueFormatter={currencyFormatter}
+                fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                setUpdatedItems={setUpdatedItems}
+              />
+            )}
+          </>
+        )
       },
     },
     {
       Header: `${WORK_ORDER}.total`,
       accessor: 'totalPrice',
-      Cell(cellInfo) {
-        return numeral(cellInfo.value).format('$0,0.00')
-      },
-      getCellExportValue(row) {
-        return numeral(row.original.amount).format('$0,0.00')
+      Cell: ({ row }) => {
+        const isNew = values?.remainingItems[row?.index].action === 'new'
+        return (
+          <>
+            {isNew ? (
+              <InputField
+                index={row?.index}
+                fieldName="totalPrice"
+                formControl={props.formControl}
+                inputType="number"
+                fieldArray="remainingItems"
+              ></InputField>
+            ) : (
+              <EditableField
+                index={row?.index}
+                fieldName="totalPrice"
+                formControl={props.formControl}
+                inputType="number"
+                fieldArray="remainingItems"
+                updatedItems={updatedItems}
+                valueFormatter={currencyFormatter}
+                setUpdatedItems={setUpdatedItems}
+              />
+            )}
+          </>
+        )
       },
     },
   ]
 
   return (
-    <Box overflow="auto" width="100%">
+    <Box width="100%" height={'100%'}>
       <TableWrapper
         columns={REMAINING_ITEMS_COLUMNS}
         data={remainingItems ?? []}
@@ -126,9 +321,10 @@ const RemainingListTable = (props: RemainingListType) => {
         tableHeight="calc(100vh - 300px)"
         name="remaining-items-table"
         defaultFlexStyle={false}
+        disableFilter={true}
+        rowHeight={80}
       />
     </Box>
   )
 }
-
 export default RemainingListTable

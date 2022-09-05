@@ -1,16 +1,12 @@
-import { AddIcon, CheckIcon } from '@chakra-ui/icons'
+import { CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
   chakra,
   Checkbox,
   Divider,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   HStack,
   Icon,
-  Input,
   Spinner,
   Stack,
   Table,
@@ -22,25 +18,16 @@ import {
   Thead,
   Tr,
   useCheckbox,
-  useDisclosure,
 } from '@chakra-ui/react'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { useState } from 'react'
+import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
-import NumberFormat from 'react-number-format'
-import {
-  EditableCell,
-  LineItems,
-  PriceInput,
-  useAllowLineItemsAssignment,
-  useRemainingLineItems,
-} from './assignedItems.utils'
-import { WORK_ORDER } from '../workOrder.i18n'
-import RemainingItemsModal from './remaining-items-modal'
-
 import { currencyFormatter } from 'utils/string-formatters'
+import { WORK_ORDER } from '../workOrder.i18n'
+import { EditableField, LineItems, SWOProject } from './assignedItems.utils'
+import { FaSpinner } from 'react-icons/fa'
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -83,60 +70,53 @@ export const CustomCheckBox = props => {
 }
 
 type AssignedItemType = {
-  assignedItems: LineItems[]
-  manualItems: LineItems[]
-  showPrice?: boolean
+  isLoadingLineItems?: boolean
+  onOpenRemainingItemsModal: () => void
+  assignedItemsArray: FieldValues
+  unassignedItems: LineItems[]
+  setUnAssignedItems: (items) => void
+  formControl: UseFormReturn
+  isAssignmentAllowed: boolean
+  swoProject: SWOProject
 }
 
-const AssignedItems = props => {
-  const { swoProject, isLoadingLineItems, workOrder } = props
-  const [showLineItems] = useState(true)
-  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
-  const { t } = useTranslation()
+/*const UploadImage: React.FC<{ Images }> = ({ Images }) => {
+  return (
+    <Box>
+      <Button
+        minW={'auto'}
+        _focus={{ outline: 'none' }}
+        variant="unstyled"
+        leftIcon={<BiUpload color="#4E87F8" />}
+        display="flex"
+      >
+        <Text fontWeight={400} fontSize="14px" color="#4E87F8">
+          {Images}
+        </Text>
+      </Button>
+    </Box>
+  )
+}*/
 
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
-  const formControl = useFormContext<AssignedItemType>()
+const AssignedItems = (props: AssignedItemType) => {
+  const {
+    isLoadingLineItems,
+    onOpenRemainingItemsModal,
+    assignedItemsArray,
+    unassignedItems,
+    setUnAssignedItems,
+    formControl,
+    isAssignmentAllowed,
+    swoProject,
+  } = props
+  const [showLineItems] = useState(true)
+  const { t } = useTranslation()
   const { control, register, setValue } = formControl
 
-  const { isAssignmentAllowed } = useAllowLineItemsAssignment(workOrder, swoProject)
-
-  const manualItemArray = useFieldArray({
-    control,
-    name: 'manualItems',
-  })
-  const { fields: manualItems, append: appendManual } = manualItemArray
-
-  const assignedItemsArray = useFieldArray({
-    control,
-    name: 'assignedItems',
-  })
-  const { fields: assignedItems, append } = assignedItemsArray
+  const { fields: assignedItems } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
   const markAllChecked = lineItems?.length > 0 && lineItems.every(l => l.isVerified)
 
-  const {
-    onClose: onCloseRemainingItemsModal,
-    isOpen: isOpenRemainingItemsModal,
-    onOpen: onOpenRemainingItemsModal,
-  } = useDisclosure()
-
-  useEffect(() => {
-    setUnAssignedItems(remainingItems ?? [])
-  }, [remainingItems])
-
-  const setAssignedItems = useCallback(
-    items => {
-      const selectedIds = items.map(i => i.id)
-      const assigned = [
-        ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false }
-        }),
-      ]
-      append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
-    },
-    [unassignedItems, setUnAssignedItems],
-  )
   return (
     <Box>
       {showLineItems && (
@@ -147,28 +127,6 @@ const AssignedItems = props => {
               <Box pl="2" pr="1">
                 <Divider orientation="vertical" h="20px" />
               </Box>
-
-              {isAssignmentAllowed && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  colorScheme="brand"
-                  leftIcon={<Icon as={AddIcon} boxSize={3} />}
-                  onClick={() =>
-                    appendManual({
-                      sku: '',
-                      productName: '',
-                      details: '',
-                      quantity: '',
-                      price: '',
-                      isVerified: false,
-                      isCompleted: false,
-                    })
-                  }
-                >
-                  {t(`${WORK_ORDER}.addNewItem`)}
-                </Button>
-              )}
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -192,6 +150,12 @@ const AssignedItems = props => {
             </Button> */}
               {isAssignmentAllowed && (
                 <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
+                  {t(`${WORK_ORDER}.remainingItems`)}
+                </Button>
+              )}
+
+              {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
+                <Button variant="outline" colorScheme="brand" disabled leftIcon={<FaSpinner />}>
                   {t(`${WORK_ORDER}.remainingItems`)}
                 </Button>
               )}
@@ -228,14 +192,13 @@ const AssignedItems = props => {
                       </Tr>
                     ) : (
                       <>
-                        {assignedItems?.length < 1 && manualItems?.length < 1 && (
+                        {assignedItems?.length < 1 && (
                           <Tr>
                             <Td colSpan={7} textAlign="center">
                               No data returned for this view
                             </Td>
                           </Tr>
                         )}
-                        <ManualItems formControl={formControl} fieldArray={manualItemArray} />
                         <AssignedLineItems
                           formControl={formControl}
                           fieldArray={assignedItemsArray}
@@ -251,156 +214,11 @@ const AssignedItems = props => {
           </Box>
         </>
       )}
-
-      <RemainingItemsModal
-        isOpen={isOpenRemainingItemsModal}
-        onClose={onCloseRemainingItemsModal}
-        setAssignedItems={setAssignedItems}
-        remainingItems={unassignedItems}
-        isLoading={isLoading}
-      />
     </Box>
   )
 }
 
-const ManualItems = props => {
-  const { fields: manualItems, remove: removeManual } = props.fieldArray
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = props.formControl
-
-  return (
-    <>
-      {manualItems.map((items, index) => {
-        return (
-          <Tr>
-            <Td>
-              <HStack position="relative" right="16px">
-                <Icon
-                  as={BiXCircle}
-                  boxSize={5}
-                  color="brand.300"
-                  onClick={() => removeManual(index)}
-                  cursor="pointer"
-                  mt="2"
-                />
-                <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.sku?.message}>
-                  <FormLabel></FormLabel>
-                  <Input
-                    size="sm"
-                    id="now"
-                    {...register(`manualItems.${index}.sku`, { required: 'This is required' })}
-                  />
-                  {errors?.manualItems && (
-                    <FormErrorMessage>{errors?.manualItems[index]?.sku?.message}</FormErrorMessage>
-                  )}
-                </FormControl>
-              </HStack>
-            </Td>
-            <Td>
-              <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.productName?.message}>
-                <FormLabel></FormLabel>
-                <Input
-                  size="sm"
-                  id="productName"
-                  {...register(`manualItems.${index}.productName`, {
-                    required: 'This is required',
-                  })}
-                />
-                {errors?.manualItems && (
-                  <FormErrorMessage>{errors?.manualItems[index]?.productName?.message}</FormErrorMessage>
-                )}
-              </FormControl>
-            </Td>
-            <Td>
-              <Box>
-                <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.details?.message}>
-                  <FormLabel></FormLabel>
-                  <Input
-                    size="sm"
-                    id="details"
-                    {...register(`manualItems.${index}.details`, { required: 'This is required' })}
-                  />
-                  {errors?.manualItems && (
-                    <FormErrorMessage>{errors?.manualItems[index]?.sku?.message}</FormErrorMessage>
-                  )}
-                </FormControl>
-              </Box>
-            </Td>
-            <Td>
-              <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.quantity?.message}>
-                <FormLabel></FormLabel>
-                <Input
-                  size="sm"
-                  id="quantity"
-                  type="number"
-                  {...register(`manualItems.${index}.quantity`, { required: 'This is required' })}
-                />
-                {errors?.manualItems && (
-                  <FormErrorMessage>{errors?.manualItems[index]?.quantity?.message}</FormErrorMessage>
-                )}
-              </FormControl>
-            </Td>
-            <Td>
-              <FormControl isInvalid={errors?.manualItems && !!errors?.manualItems[index]?.price?.message}>
-                <FormLabel></FormLabel>
-                <Controller
-                  control={control}
-                  name={`manualItems.${index}.price`}
-                  rules={{ required: 'This is required field' }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <>
-                        <NumberFormat
-                          value={field.value}
-                          onValueChange={values => {
-                            const { floatValue } = values
-                            field.onChange(floatValue)
-                          }}
-                          customInput={PriceInput}
-                          thousandSeparator={true}
-                          prefix={'$'}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Td>
-            <Td>
-              <CustomCheckBox text="Completed" isDisabled={true} isChecked={false} />
-            </Td>
-            {/*
-                              
-            Commented this code. Will be working on this in up coming stories.
-            <Td>
-              <Box>
-                <Button
-                  pt="1"
-                  variant="outline"
-                  colorScheme="brand"
-                  rightIcon={<Icon as={BiUpload} boxSize={3} mb="1" />}
-                  size="sm"
-                >
-                  {t(`${WORK_ORDER}.upload`)}
-                </Button>
-              </Box>
-            </Td>*/}
-
-            <Td>
-              <CustomCheckBox text="Verified" isDisabled={true} isChecked={false} />
-            </Td>
-          </Tr>
-        )
-      })}
-    </>
-  )
-}
-
-const AssignedLineItems = props => {
+export const AssignedLineItems = props => {
   const { setUnAssignedItems, unassignedItems } = props
   const { control, getValues } = props.formControl
   const { fields: assignedItems, remove: removeAssigned } = props.fieldArray
@@ -422,27 +240,55 @@ const AssignedLineItems = props => {
                   }}
                   cursor="pointer"
                 ></Icon>
-                <EditableCell index={index} fieldName="sku" formControl={props.formControl} inputType="text" />
+                <EditableField
+                  index={index}
+                  fieldName="sku"
+                  fieldArray="assignedItems"
+                  formControl={props.formControl}
+                  inputType="text"
+                />
               </HStack>
             </Td>
             <Td>
-              <EditableCell index={index} fieldName="productName" formControl={props.formControl} inputType="text" />
+              <EditableField
+                index={index}
+                fieldName="productName"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="text"
+              />
             </Td>
             <Td>
-              <EditableCell index={index} fieldName="description" formControl={props.formControl} inputType="text" />
+              <EditableField
+                index={index}
+                fieldName="description"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="text"
+              />
             </Td>
             <Td>
-              <EditableCell index={index} fieldName="quantity" formControl={props.formControl} inputType="number" />
+              <EditableField
+                index={index}
+                fieldName="quantity"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="number"
+              />
             </Td>
             <Td>
-              <EditableCell
+              <EditableField
                 index={index}
                 fieldName="price"
                 formControl={props.formControl}
                 inputType="number"
+                fieldArray="assignedItems"
                 valueFormatter={currencyFormatter}
               />
             </Td>
+            {/*<Td>
+              <UploadImage Images={'Upload'} />
+                </Td>*/}
             <Td>
               <Controller
                 control={control}

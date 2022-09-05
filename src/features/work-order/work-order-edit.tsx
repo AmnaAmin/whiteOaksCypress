@@ -193,6 +193,7 @@ const WorkOrderDetails = ({
                       isWorkOrderUpdating={isWorkOrderUpdating}
                       setWorkOrderUpdating={setWorkOrderUpdating}
                       swoProject={swoProject}
+                      rejectInvoiceCheck={rejectInvoice}
                     />
                   </TabPanel>
                   <TabPanel p={0}>
@@ -234,6 +235,7 @@ const WorkOrderDetails = ({
                         workOrder={workOrder}
                         onClose={onClose}
                         onSave={onSave}
+                        rejectInvoiceCheck={rejectInvoice}
                       />
                     )}
                   </TabPanel>

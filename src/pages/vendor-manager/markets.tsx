@@ -4,9 +4,9 @@ import { NewMarketModal } from 'features/vendor-manager/new-market-modal'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BsBoxArrowUp, BsPlus } from 'react-icons/bs'
-import { exportBtnIcon } from 'theme/common-style'
+import { BsPlus } from 'react-icons/bs'
 import { useMarkets } from 'api/vendor-details'
+import { BiExport } from 'react-icons/bi'
 
 export const Markets = () => {
   const { markets, isLoading } = useMarkets()
@@ -30,22 +30,18 @@ export const Markets = () => {
         </HStack>
         <MarketsTable setTableInstance={setProjectTableInstance} isLoading={isLoading} markets={markets} />
         <Flex width="100%" justifyContent="end">
-          <Box rounded="0px 0px 9px 9px" bg="white" border="1px solid #E2E8F0">
+          <Box borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
             <Button
               m={0}
               variant="ghost"
               colorScheme="brand"
-              _focus={{ border: 'none' }}
-              fontSize="12px"
-              fontStyle="normal"
-              fontWeight={500}
               onClick={() => {
                 if (projectTableInstance) {
                   projectTableInstance?.exportData('csv', false)
                 }
               }}
             >
-              <Icon as={BsBoxArrowUp} style={exportBtnIcon} mr={1} />
+              <Icon as={BiExport} fontSize="16px" mr={1} />
               {'Export'}
             </Button>
           </Box>

@@ -3,6 +3,7 @@ import { Projects } from 'pages/projects'
 import { ProjectDetails } from 'pages/project-details'
 import { Payable } from './payable'
 import Vendors from './vendor-manager/vendors'
+import Reports from './reports'
 import Clients from './clients'
 import { Receivable } from './receivable'
 import { VendorSkills } from 'pages/vendor-manager/vendor-skills'
@@ -19,7 +20,7 @@ const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
 
 export default function useRoutesConfig() {
-  const { isFPM, isProjectCoordinator, isVendor, isVendorManager } = useUserRolesSelector()
+  const { isFPM, isProjectCoordinator, isVendor, isVendorManager, isDoc } = useUserRolesSelector()
   switch (true) {
     case isFPM:
       return [
@@ -44,6 +45,14 @@ export default function useRoutesConfig() {
         { path: 'vendors', element: Vendors },
         { path: 'vendorSkills', element: VendorSkills },
         { path: 'markets', element: Markets },
+      ]
+
+    case isDoc:
+      return [
+        { path: 'projects', element: Projects },
+        { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'vendors', element: Vendors },
+        { path: 'reports', element: Reports },
       ]
 
     case isVendor:

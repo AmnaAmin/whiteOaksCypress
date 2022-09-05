@@ -1,10 +1,8 @@
-import { useToast } from '@chakra-ui/react'
+import { Box, Checkbox, FormControl, FormErrorMessage, Input, useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useState } from 'react'
-import { useMutation, useQuery } from 'react-query'
-import { ProjectWorkOrderType } from 'types/project.type'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
-import { Input } from '@chakra-ui/react'
 
 const swoPrefix = '/smartwo/api'
 
@@ -28,8 +26,20 @@ export type LineItems = {
   source?: string
   isVerified?: boolean
   isCompleted?: boolean
+  action?: string
 }
 
+export type SWOProject = {
+  id: number | string
+  projectId: number | string
+  textractJobId: string
+  status: string
+  documentUrl: string
+  createdBy: string
+  createdDate: string
+  modifiedBy: string
+  modifiedDate: string
+}
 export const getRemovedItems = (formValues, workOrder) => {
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
@@ -48,13 +58,16 @@ export const getUnAssignedItems = (formValues, workOrder) => {
   return unAssignedItems
 }
 
-export const useRemainingLineItems = (swoProjectId?: string) => {
+export const useRemainingLineItems = (swoProjectId?: string | number | null) => {
   const client = useClient(swoPrefix)
 
   const { data: remainingItems, ...rest } = useQuery<any>(
     ['remainingItems', swoProjectId],
     async () => {
-      const response = await client(`line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}`, {})
+      const response = await client(
+        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=modifiedDate,desc&page=0`,
+        {},
+      )
 
       return response?.data
     },
@@ -77,7 +90,10 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
     ['fetchProjectId', projectId],
     async () => {
       const response = await client(`projects?projectId.equals=` + projectId, {})
-      if (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED') setRefetchInterval(0)
+
+      if (!response?.data[0] || (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED')) {
+        setRefetchInterval(0)
+      }
       return response?.data
     },
     {
@@ -95,12 +111,14 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
 type AssignArgumentType = {
   swoProjectId: string | number | null
   showToast?: boolean
+  refetchLineItems?: boolean
 }
 
 export const useAssignLineItems = (props: AssignArgumentType) => {
-  const { swoProjectId, showToast } = props
+  const { swoProjectId, showToast, refetchLineItems } = props
   const client = useClient(swoPrefix)
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation(
     (lineItems: any) => {
@@ -111,10 +129,13 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
     },
     {
       onSuccess(res: any) {
+        if (refetchLineItems) {
+          queryClient.invalidateQueries(['remainingItems', swoProjectId])
+        }
         if (showToast) {
           toast({
             title: 'Line Items Assignment',
-            description: 'Line Items Assignment updated successfully.',
+            description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
           })
@@ -123,7 +144,85 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
       onError(error: any) {
         toast({
           title: 'Assigned Line Items',
-          description: (error.title as string) ?? 'Unable to update line items assignment.',
+          description: (error.title as string) ?? 'Unable to update line items.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+type CreateArgumentType = {
+  swoProject: SWOProject
+  showToast?: boolean
+  refetchLineItems?: boolean
+}
+
+export const useCreateLineItem = (props: CreateArgumentType) => {
+  const { swoProject, showToast, refetchLineItems } = props
+  const client = useClient(swoPrefix)
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (lineItems: any) => {
+      return client(`line-items/${swoProject?.textractJobId}`, {
+        data: lineItems,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess(res: any) {
+        if (refetchLineItems) {
+          queryClient.invalidateQueries(['remainingItems', swoProject.id])
+        }
+        if (showToast) {
+          toast({
+            title: 'Line Items Assignment',
+            description: 'Line Items updated successfully.',
+            status: 'success',
+            isClosable: true,
+          })
+        }
+      },
+      onError(error: any) {
+        toast({
+          title: 'Assigned Line Items',
+          description: (error.title as string) ?? 'Unable to update line items.',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+export const useDeleteLineItems = swoProjectId => {
+  const client = useClient(swoPrefix)
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (payload: { itemIds: string }) => {
+      return client('line-items?ids=' + payload.itemIds, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['remainingItems', swoProjectId])
+        toast({
+          title: 'Assigned Items',
+          description: 'Item Deleted Successfully',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Assigned Items',
+          description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
         })
@@ -156,7 +255,7 @@ export const useDeleteLineIds = () => {
   )
 }
 
-export const useAllowLineItemsAssignment = (workOrder: ProjectWorkOrderType, swoProject) => {
+export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const isAssignmentAllowed = (!workOrder || activePastDue) && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
@@ -172,42 +271,99 @@ type EditableCellType = {
   fieldName: string
   formControl: any
   inputType?: string
+  fieldArray: string
+  updatedItems?: number[]
+  setUpdatedItems?: (items) => void
 }
 
-export const EditableCell = (props: EditableCellType) => {
+export const EditableField = (props: EditableCellType) => {
   const [selectedCell, setSelectedCell] = useState('')
-  const { index, fieldName, formControl, inputType, valueFormatter } = props
+  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray, updatedItems, setUpdatedItems } = props
   const { getValues, setValue } = formControl
   const values = getValues()
   return (
     <>
-      {selectedCell !== index + '-' + fieldName ? (
-        <span
-          onClick={() => {
-            setSelectedCell(index + '-' + fieldName)
-          }}
-        >
-          {valueFormatter
-            ? valueFormatter(values?.assignedItems[index]?.[fieldName])
-            : values?.assignedItems[index]?.[fieldName]}
-        </span>
-      ) : (
-        <Input
-          size="sm"
-          id="sku"
-          type={inputType ?? 'text'}
-          defaultValue={values?.assignedItems[index]?.[fieldName]}
-          onChange={e => {
-            if (e.target.value === '') {
-              setSelectedCell('')
-            }
-          }}
-          onBlurCapture={e => {
-            setValue(`assignedItems.${index}.${fieldName}`, e.target.value)
-            setSelectedCell('')
-          }}
-        />
+      {values?.[fieldArray]?.length > 0 && (
+        <>
+          {selectedCell !== index + '-' + fieldName ? (
+            <Box
+              minW={'100px'}
+              minH={'20px'}
+              cursor={'pointer'}
+              onClick={() => {
+                setSelectedCell(index + '-' + fieldName)
+              }}
+            >
+              {valueFormatter
+                ? valueFormatter(values?.[fieldArray][index]?.[fieldName])
+                : values?.[fieldArray][index]?.[fieldName]}
+            </Box>
+          ) : (
+            <Input
+              size="sm"
+              id="sku"
+              type={inputType ?? 'text'}
+              defaultValue={values?.[fieldArray][index]?.[fieldName]}
+              onChange={e => {
+                if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
+                  setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
+                }
+              }}
+              onBlurCapture={e => {
+                if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
+                setSelectedCell('')
+              }}
+            />
+          )}
+        </>
       )}
     </>
+  )
+}
+
+type InputFieldType = {
+  index: number
+  fieldName: string
+  formControl: any
+  inputType?: string
+  fieldArray: string
+}
+export const InputField = (props: InputFieldType) => {
+  const { index, fieldName, formControl, inputType, fieldArray } = props
+  const {
+    formState: { errors },
+    register,
+  } = formControl
+  return (
+    <>
+      <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
+        <Input
+          size="sm"
+          id="now"
+          type={inputType ?? 'text'}
+          {...register(`${fieldArray}.${index}.${fieldName}`, { required: 'This is required' })}
+        />
+        {errors?.remainingItems && (
+          <FormErrorMessage>{errors?.[fieldArray][index]?.[fieldName]?.message}</FormErrorMessage>
+        )}
+      </FormControl>
+    </>
+  )
+}
+
+export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
+  return (
+    <Checkbox
+      isChecked={selectedItems?.map(s => s.id).includes(row.id)}
+      onChange={e => {
+        if (e.currentTarget?.checked) {
+          if (!selectedItems?.map(s => s.id).includes(row.id)) {
+            setSelectedItems([...selectedItems, row])
+          }
+        } else {
+          setSelectedItems([...selectedItems.filter(s => s.id !== row.id)])
+        }
+      }}
+    />
   )
 }

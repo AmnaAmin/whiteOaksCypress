@@ -14,7 +14,7 @@ import {
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 
@@ -315,12 +315,12 @@ export const parseFormValuesFromAPIData = ({
     woNumber: project.woNumber,
     poNumber: project.poNumber,
     projectName: project.name,
-    woaStartDate: datePickerFormat(project.woaStartDate as string),
-    woaCompletionDate: datePickerFormat(project.woaCompletionDate as string),
-    clientStartDate: datePickerFormat(project.clientStartDate as string),
-    clientDueDate: datePickerFormat(project.clientDueDate as string),
-    clientWalkthroughDate: datePickerFormat(project.clientWalkthroughDate as string),
-    clientSignOffDate: datePickerFormat(project.clientSignoffDate as string),
+    woaStartDate: getLocalTimeZoneDate(project.woaStartDate as string),
+    woaCompletionDate: getLocalTimeZoneDate(project.woaCompletionDate as string),
+    clientStartDate: getLocalTimeZoneDate(project.clientStartDate as string),
+    clientDueDate: getLocalTimeZoneDate(project.clientDueDate as string),
+    clientWalkthroughDate: getLocalTimeZoneDate(project.clientWalkthroughDate as string),
+    clientSignOffDate: getLocalTimeZoneDate(project.clientSignoffDate as string),
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -328,11 +328,11 @@ export const parseFormValuesFromAPIData = ({
     finalSOWAmount: project.sowNewAmount,
     invoiceNumber: project.invoiceNumber,
     invoiceAttachment: project.documents?.[0],
-    invoiceBackDate: datePickerFormat(project.woaBackdatedInvoiceDate as string),
+    invoiceBackDate: getLocalTimeZoneDate(project.woaBackdatedInvoiceDate as string),
     invoiceLink: project.invoiceLink,
     paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, project.paymentTerm),
-    woaInvoiceDate: datePickerFormat(project.woaInvoiceDate as string),
-    woaExpectedPayDate: datePickerFormat(project.expectedPaymentDate as string),
+    woaInvoiceDate: getLocalTimeZoneDate(project.woaInvoiceDate as string),
+    woaExpectedPayDate: getLocalTimeZoneDate(project.expectedPaymentDate as string),
     overPayment: overPayment?.sum,
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
     payment: '',
@@ -363,14 +363,14 @@ export const parseFormValuesFromAPIData = ({
     hoaContactExtension: project.hoaPhoneNumberExtension,
 
     // Misc form values
-    dateCreated: datePickerFormat(project.createdDate as string),
-    activeDate: datePickerFormat(projectExtraAttributes?.activeDate as string),
-    punchDate: datePickerFormat(projectExtraAttributes?.punchDate as string),
-    closedDate: datePickerFormat(project.projectClosedDate as string),
-    clientPaidDate: datePickerFormat(project.clientPaidDate as string),
-    collectionDate: datePickerFormat(projectExtraAttributes?.collectionDate as string),
-    disputedDate: datePickerFormat(projectExtraAttributes?.disputedDate as string),
-    woaPaidDate: datePickerFormat(project.woaPaidDate as string),
+    dateCreated: getLocalTimeZoneDate(project.createdDate as string),
+    activeDate: getLocalTimeZoneDate(projectExtraAttributes?.activeDate as string),
+    punchDate: getLocalTimeZoneDate(projectExtraAttributes?.punchDate as string),
+    closedDate: getLocalTimeZoneDate(project.projectClosedDate as string),
+    clientPaidDate: getLocalTimeZoneDate(project.clientPaidDate as string),
+    collectionDate: getLocalTimeZoneDate(projectExtraAttributes?.collectionDate as string),
+    disputedDate: getLocalTimeZoneDate(projectExtraAttributes?.disputedDate as string),
+    woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
     payDateVariance: project.signoffDateVariance,
     payVariance: project.woaPayVariance,

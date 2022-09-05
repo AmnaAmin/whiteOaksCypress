@@ -222,7 +222,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     setWorkOrderUpdating(true)
     if (!workOrder.lienWaiverAccepted) {
       redirectToLienWaiver()
-    } else if (Math.abs(workOrder?.amountOfCheck - workOrder?.finalInvoiceAmount) !== 0) {
+    } else if (Math.abs(workOrder?.lienWaiverAmount - workOrder?.finalInvoiceAmount) !== 0) {
       rejectLienWaiver()
     } else {
       generateInvoice()
