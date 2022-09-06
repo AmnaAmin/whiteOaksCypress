@@ -464,7 +464,7 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     doc.text(workOrder.skillName, x + length + 30, 65)
 
     doc.rect(x, y + 15, length, width, 'D')
-    doc.text('Sub Contractor:', x + 5, y + 22)
+    doc.text('Sub Contractor: ' + workOrder.companyName, x + 5, y + 22)
     doc.rect(x + length, y + 15, 65, width, 'D')
     doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount), x + length + 5, y + 22)
 
@@ -478,6 +478,7 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
           return {
             location: ai.location,
             id: ai.id,
+            sku: ai.sku,
             description: ai.description,
             quantity: ai.quantity,
           }
@@ -491,7 +492,7 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
       },
       columns: [
         { header: 'Location', dataKey: 'location' },
-        { header: 'SKU', dataKey: 'id' },
+        { header: 'SKU', dataKey: 'sku' },
         { header: 'Description', dataKey: 'description' },
         { header: 'Quantity', dataKey: 'quantity' },
       ],

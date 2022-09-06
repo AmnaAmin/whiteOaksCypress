@@ -4,6 +4,7 @@ import {
   Button,
   chakra,
   Checkbox,
+  Divider,
   Flex,
   HStack,
   Icon,
@@ -24,13 +25,13 @@ import {
 import { useState } from 'react'
 import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiDownload, BiXCircle } from 'react-icons/bi'
+import { BiDownload } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { EditableField, LineItems, SWOProject, UploadImage } from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
 import { readFileContent } from 'api/vendor-details'
-import { values } from 'lodash'
+import { difference } from 'lodash'
 
 const headerStyle = {
   textTransform: 'none',
@@ -106,11 +107,11 @@ const AssignedItems = (props: AssignedItemType) => {
   const [showLineItems] = useState(true)
   const { control, register, setValue, getValues } = formControl
   const { t } = useTranslation()
-  const { fields: assignedItems } = assignedItemsArray
+  const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
   const markAllChecked = lineItems?.length > 0 && lineItems.every(l => l.isVerified)
   const values = getValues()
-  const [selectedRows, setSelectedRows] = useState<number[] | null>()
+  const [selectedRows, setSelectedRows] = useState<any>([])
 
   return (
     <Box>
@@ -119,6 +120,33 @@ const AssignedItems = (props: AssignedItemType) => {
           <Stack direction="row" mt="32px" justifyContent="space-between">
             <HStack>
               <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>
+              <Box pl="2" pr="1">
+                <Divider size="lg" orientation="vertical" h="25px" />
+              </Box>
+              <Button
+                variant="ghost"
+                disabled={selectedRows?.length < 1}
+                onClick={() => {
+                  setUnAssignedItems([
+                    ...values?.assignedItems
+                      ?.filter(a => selectedRows.includes(a.id))
+                      ?.map(i => {
+                        return { ...i, unitPrice: i?.price }
+                      }),
+                    ...unassignedItems,
+                  ])
+                  const removedItems: any = []
+                  values?.assignedItems?.forEach((item, index) => {
+                    if (selectedRows.includes(item.id)) {
+                      removedItems.push(index)
+                    }
+                  })
+                  removeAssigned(removedItems)
+                }}
+                colorScheme="brand"
+              >
+                {t(`${WORK_ORDER}.unassignLineItems`)}
+              </Button>
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -140,7 +168,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 variant="outline"
                 onClick={downloadPdf}
                 colorScheme="brand"
-                disabled={!downloadPdf && assignedItems?.length > 0}
+                disabled={!downloadPdf || assignedItems?.length < 1}
                 leftIcon={<Icon as={BiDownload} boxSize={4} />}
               >
                 {t(`${WORK_ORDER}.downloadPDF`)}
@@ -168,8 +196,21 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} minW="50px">
                         <Checkbox
                           size="md"
+                          isChecked={
+                            values?.assignedItems?.length > 0 &&
+                            difference(
+                              values?.assignedItems.map(r => r.id),
+                              selectedRows,
+                            )?.length < 1
+                          }
                           onChange={e => {
-                            setSelectedRows([...values?.assignedItems.map((a, index) => index)])
+                            if (e.currentTarget.checked) {
+                              const selected =
+                                values?.assignedItems?.length > 0 ? [...values?.assignedItems?.map(a => a.id)] : []
+                              setSelectedRows(selected)
+                            } else {
+                              setSelectedRows([])
+                            }
                           }}
                         ></Checkbox>
                       </Th>
@@ -217,9 +258,9 @@ const AssignedItems = (props: AssignedItemType) => {
                         <AssignedLineItems
                           formControl={formControl}
                           fieldArray={assignedItemsArray}
-                          unassignedItems={unassignedItems}
-                          setUnAssignedItems={setUnAssignedItems}
                           downloadPdf={downloadPdf}
+                          selectedRows={selectedRows}
+                          setSelectedRows={setSelectedRows}
                         />
                       </>
                     )}
@@ -235,9 +276,9 @@ const AssignedItems = (props: AssignedItemType) => {
 }
 
 export const AssignedLineItems = props => {
-  const { setUnAssignedItems, unassignedItems, selectedRows, setSelectedRows } = props
+  const { selectedRows, setSelectedRows } = props
   const { control, getValues, setValue } = props.formControl
-  const { fields: assignedItems, remove: removeAssigned } = props.fieldArray
+  const { fields: assignedItems } = props.fieldArray
   const values = getValues()
 
   const onFileChange = async file => {
@@ -270,27 +311,20 @@ export const AssignedLineItems = props => {
             <Td>
               <Checkbox
                 size="md"
-                isChecked={selectedRows?.includes(index)}
+                isChecked={selectedRows?.includes(values?.assignedItems[index]?.id)}
                 onChange={e => {
-                  setSelectedRows(index)
+                  if (e.currentTarget?.checked) {
+                    if (!selectedRows?.includes(values?.assignedItems[index]?.id)) {
+                      setSelectedRows([...selectedRows, values?.assignedItems[index]?.id])
+                    }
+                  } else {
+                    setSelectedRows([...selectedRows.filter(s => s !== values?.assignedItems[index]?.id)])
+                  }
                 }}
               ></Checkbox>
             </Td>
             <Td>
               <HStack position="relative" right="16px">
-                <Icon
-                  as={BiXCircle}
-                  boxSize={5}
-                  color="brand.300"
-                  onClick={() => {
-                    setUnAssignedItems([
-                      ...unassignedItems,
-                      { ...values?.assignedItems[index], unitPrice: values?.assignedItems[index].price },
-                    ])
-                    removeAssigned(index)
-                  }}
-                  cursor="pointer"
-                ></Icon>
                 <EditableField
                   index={index}
                   fieldName="sku"

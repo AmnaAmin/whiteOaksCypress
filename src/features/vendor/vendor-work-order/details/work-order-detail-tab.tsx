@@ -24,10 +24,11 @@ import jsPDF from 'jspdf'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { currencyFormatter } from 'utils/string-formatters'
 import { createInvoicePdf } from 'api/work-order'
+import { CustomCheckBox } from 'features/work-order/details/assigned-items'
 
 const CalenderCard = props => {
   return (
-    <Flex justifyContent={'center'}>
+    <Flex justifyContent={'left'}>
       <Box pr={4}>
         <BiCalendar size={23} color="#718096" />
       </Box>
@@ -40,34 +41,6 @@ const CalenderCard = props => {
         </FormLabel>
       </Box>
     </Flex>
-  )
-}
-
-const CheckboxStructure = ({ checked, id, onChange }) => {
-  const { t } = useTranslation()
-  return (
-    <Box>
-      <Checkbox
-        id={id}
-        isChecked={checked}
-        rounded="6px"
-        colorScheme="none"
-        iconColor="#2AB450"
-        h="32px"
-        w="120px"
-        bg="#F2F3F4"
-        color="#A0AEC0"
-        _checked={{ bg: '#E7F8EC', color: '#2AB450' }}
-        boxShadow="0px 0px 4px -2px "
-        justifyContent="center"
-        fontSize={14}
-        onChange={e => {
-          onChange(e, id)
-        }}
-      >
-        {t('completed')}
-      </Checkbox>
-    </Box>
   )
 }
 
@@ -116,13 +89,12 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
 
   const downloadPdf = () => {
     let doc = new jsPDF()
-    doc = createInvoicePdf(doc, workOrder, projectData, assignedItems)
-    doc.save('assigned-items.pdf')
+    createInvoicePdf(doc, workOrder, projectData, assignedItems)
   }
   return (
     <Box>
       <ModalBody h="400px">
-        <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
+        <SimpleGrid columns={4} spacing={8} borderBottom="1px solid  #E2E8F0" minH="80px" m="30px" alignItems={'left'}>
           <CalenderCard title={t('WOIssued')} value={convertDateTimeFromServer(workOrder.workOrderIssueDate)} />
           <CalenderCard title={t('expectedStart')} value={convertDateTimeFromServer(workOrder.workOrderStartDate)} />
           <CalenderCard
@@ -134,8 +106,9 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
             value={convertDateTimeFromServer(workOrder.workOrderDateCompleted)}
           />
         </SimpleGrid>
+
         {assignedItems && assignedItems.length > 0 && (
-          <Box p={25}>
+          <Box pl={25} pr={25}>
             <Box>
               <Flex justifyContent="space-between" pb={5} alignItems="center">
                 <Text fontSize="16px" fontWeight={500} color="gray.600">
@@ -143,15 +116,6 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                 </Text>
 
                 <HStack>
-                  <Button
-                    leftIcon={<BiDownload />}
-                    variant="outline"
-                    colorScheme="brand"
-                    size="md"
-                    onClick={downloadPdf}
-                  >
-                    {t('downloadPDF')}
-                  </Button>
                   <Checkbox
                     size="md"
                     colorScheme="brand"
@@ -166,10 +130,19 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                       {t('markCompleted')}
                     </FormLabel>
                   </Checkbox>
+                  <Button
+                    leftIcon={<BiDownload />}
+                    variant="outline"
+                    colorScheme="brand"
+                    size="md"
+                    onClick={downloadPdf}
+                  >
+                    {t('downloadPDF')}
+                  </Button>
                 </HStack>
               </Flex>
             </Box>
-            <Box h={200} overflow="auto" mb={9}>
+            <Box h={200} overflow="auto">
               <Table border="1px solid #E2E8F0" variant="simple" size="md">
                 <Thead>
                   <Tr>
@@ -197,8 +170,15 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                           {item.quantity}
                         </Td>
                         {workOrder.showPricing && <Td>{currencyFormatter(item.price)}</Td>}
-                        <Td textAlign={'center'}>
-                          <CheckboxStructure checked={item.isCompleted} id={item.id} onChange={onStatusChange} />
+                        <Td alignItems={'center'}>
+                          <CustomCheckBox
+                            text="Completed"
+                            isChecked={item.isCompleted}
+                            id={item.id}
+                            onChange={e => {
+                              onStatusChange(e, item.id)
+                            }}
+                          ></CustomCheckBox>
                         </Td>
                         {/*<Td>
                     <UploadImage Images={'Upload'} />

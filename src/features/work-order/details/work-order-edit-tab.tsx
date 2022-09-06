@@ -35,7 +35,6 @@ import {
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
-import { useCall } from 'api/pc-projects'
 
 const CalenderCard = props => {
   return (
@@ -99,7 +98,6 @@ const WorkOrderDetailTab = props => {
 
   const formReturn = useForm<FormValues>()
   const { register, control, reset } = formReturn
-
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
@@ -107,6 +105,7 @@ const WorkOrderDetailTab = props => {
   const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { mutate: deleteLineItems } = useDeleteLineIds()
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
@@ -122,7 +121,6 @@ const WorkOrderDetailTab = props => {
     workOrderIssueDate,
     dateLeanWaiverSubmitted,
     // datePermitsPulled,
-    assignedItems,
     workOrderCompletionDateVariance,
   } = props.workOrder
 
@@ -137,8 +135,8 @@ const WorkOrderDetailTab = props => {
 
   const downloadPdf = useCallback(() => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, assignedItems)
-  }, [assignedItems, projectData, workOrder])
+    createInvoicePdf(doc, workOrder, projectData, assignedItemsWatch)
+  }, [assignedItemsWatch, projectData, workOrder])
 
   const setAssignedItems = useCallback(
     items => {
