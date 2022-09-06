@@ -292,11 +292,17 @@ export const parseWODetailValuesToPayload = formValues => {
   const assignedItems = [
     ...formValues?.assignedItems?.map(a => {
       const isNewSmartLineItem = !a.smartLineItemId
-      return {
+      if (a.document) {
+        delete a?.document?.fileObject
+      }
+      const assignedItem = {
         ...a,
+        document: a.uploadedDoc ? a.uploadedDoc : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
       }
+      delete assignedItem.uploadedDoc
+      return assignedItem
     }),
   ]
   return {
@@ -313,7 +319,12 @@ export const defaultValuesWODetails = workOrder => {
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: false,
-    assignedItems: workOrder?.assignedItems?.length > 0 ? workOrder?.assignedItems : [],
+    assignedItems:
+      workOrder?.assignedItems?.length > 0
+        ? workOrder?.assignedItems?.map(e => {
+            return { ...e, uploadedDoc: null }
+          })
+        : [],
   }
   return defaultValues
 }
@@ -341,6 +352,21 @@ export const defaultValuesLienWaiver = lienWaiverData => {
 export const parseNewWoValuesToPayload = (formValues, projectId) => {
   const selectedCapacity = 1
   const arr = [] as any
+  const assignedItems = [
+    ...formValues?.assignedItems?.map(a => {
+      if (a.document) {
+        delete a?.document?.fileObject
+      }
+      const assignedItem = {
+        ...a,
+        document: a.uploadedDoc ? a.uploadedDoc : a.document,
+        id: '',
+        smartLineItemId: a.id,
+      }
+      delete assignedItem.uploadedDoc
+      return assignedItem
+    }),
+  ]
   return {
     workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
     workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
@@ -351,14 +377,7 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     vendorSkillId: formValues.vendorSkillId?.value,
     // new work-order have hardcoded capacity
     capacity: selectedCapacity,
-    assignedItems:
-      formValues?.assignedItems?.length > 0
-        ? [
-            ...formValues?.assignedItems?.map(a => {
-              return { ...a, id: '', smartLineItemId: a.id }
-            }),
-          ]
-        : [],
+    assignedItems: formValues?.assignedItems?.length > 0 ? assignedItems : [],
     documents: arr,
     status: 34,
     projectId: projectId,

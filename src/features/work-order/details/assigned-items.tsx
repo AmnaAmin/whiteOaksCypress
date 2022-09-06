@@ -4,7 +4,7 @@ import {
   Button,
   chakra,
   Checkbox,
-  Divider,
+  Flex,
   HStack,
   Icon,
   Spinner,
@@ -18,16 +18,26 @@ import {
   Thead,
   Tr,
   useCheckbox,
+  VStack,
 } from '@chakra-ui/react'
 
 import { useState } from 'react'
 import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiXCircle } from 'react-icons/bi'
+import { BiDownload, BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, LineItems, SWOProject } from './assignedItems.utils'
+import { EditableField, LineItems, SWOProject, UploadImage } from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
+import { readFileContent } from 'api/vendor-details'
+import { values } from 'lodash'
+
+const headerStyle = {
+  textTransform: 'none',
+  fontWeight: 500,
+  fontSize: '14px',
+  color: '#4A5568',
+}
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -78,25 +88,8 @@ type AssignedItemType = {
   formControl: UseFormReturn
   isAssignmentAllowed: boolean
   swoProject: SWOProject
+  downloadPdf?: () => void
 }
-
-/*const UploadImage: React.FC<{ Images }> = ({ Images }) => {
-  return (
-    <Box>
-      <Button
-        minW={'auto'}
-        _focus={{ outline: 'none' }}
-        variant="unstyled"
-        leftIcon={<BiUpload color="#4E87F8" />}
-        display="flex"
-      >
-        <Text fontWeight={400} fontSize="14px" color="#4E87F8">
-          {Images}
-        </Text>
-      </Button>
-    </Box>
-  )
-}*/
 
 const AssignedItems = (props: AssignedItemType) => {
   const {
@@ -108,14 +101,16 @@ const AssignedItems = (props: AssignedItemType) => {
     formControl,
     isAssignmentAllowed,
     swoProject,
+    downloadPdf,
   } = props
   const [showLineItems] = useState(true)
+  const { control, register, setValue, getValues } = formControl
   const { t } = useTranslation()
-  const { control, register, setValue } = formControl
-
   const { fields: assignedItems } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
   const markAllChecked = lineItems?.length > 0 && lineItems.every(l => l.isVerified)
+  const values = getValues()
+  const [selectedRows, setSelectedRows] = useState<number[] | null>()
 
   return (
     <Box>
@@ -124,9 +119,6 @@ const AssignedItems = (props: AssignedItemType) => {
           <Stack direction="row" mt="32px" justifyContent="space-between">
             <HStack>
               <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>
-              <Box pl="2" pr="1">
-                <Divider orientation="vertical" h="20px" />
-              </Box>
             </HStack>
             <HStack spacing="16px">
               <Checkbox size="lg" {...register('showPrice')}>
@@ -143,11 +135,16 @@ const AssignedItems = (props: AssignedItemType) => {
               >
                 {t(`${WORK_ORDER}.markAllVerified`)}
               </Checkbox>
-              {/* Commented this code. Will be working on this in up coming stories.
-              
-              <Button variant="outline" colorScheme="brand" leftIcon={<Icon as={BiDownload} boxSize={4} />}>
+
+              <Button
+                variant="outline"
+                onClick={downloadPdf}
+                colorScheme="brand"
+                disabled={!downloadPdf && assignedItems?.length > 0}
+                leftIcon={<Icon as={BiDownload} boxSize={4} />}
+              >
                 {t(`${WORK_ORDER}.downloadPDF`)}
-            </Button> */}
+              </Button>
               {isAssignmentAllowed && (
                 <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
                   {t(`${WORK_ORDER}.remainingItems`)}
@@ -168,17 +165,35 @@ const AssignedItems = (props: AssignedItemType) => {
                 <Table display={'block'} width={'100%'} overflow={'auto'}>
                   <Thead h="72px" position="sticky" top="0">
                     <Tr whiteSpace="nowrap">
-                      <Th minW="200px">{t(`${WORK_ORDER}.sku`)}</Th>
-                      <Th minW="200px">{t(`${WORK_ORDER}.productName`)}</Th>
-                      <Th minW="200px">{t(`${WORK_ORDER}.details`)}</Th>
-                      <Th minW="200px">{t(`${WORK_ORDER}.quantity`)}</Th>
-                      <Th minW="200px">{t(`${WORK_ORDER}.price`)}</Th>
-                      <Th minW="200px" textAlign={'center'}>
+                      <Th sx={headerStyle} minW="50px">
+                        <Checkbox
+                          size="md"
+                          onChange={e => {
+                            setSelectedRows([...values?.assignedItems.map((a, index) => index)])
+                          }}
+                        ></Checkbox>
+                      </Th>
+                      <Th sx={headerStyle} minW="200px">
+                        {t(`${WORK_ORDER}.sku`)}
+                      </Th>
+                      <Th sx={headerStyle} minW="200px">
+                        {t(`${WORK_ORDER}.productName`)}
+                      </Th>
+                      <Th sx={headerStyle} minW="200px">
+                        {t(`${WORK_ORDER}.details`)}
+                      </Th>
+                      <Th sx={headerStyle} minW="100px">
+                        {t(`${WORK_ORDER}.quantity`)}
+                      </Th>
+                      <Th sx={headerStyle} minW="100px">
+                        {t(`${WORK_ORDER}.price`)}
+                      </Th>
+                      <Th sx={headerStyle} minW="200px">
                         {t(`${WORK_ORDER}.status`)}
                       </Th>
-                      {/* Will be working on this in upcoming stores:
-                      <Th>{ t(`${WORK_ORDER}.images`)}</Th> */}
-                      <Th minW="200px" textAlign={'center'}>
+
+                      <Th sx={headerStyle}>{t(`${WORK_ORDER}.images`)}</Th>
+                      <Th sx={headerStyle} minW="200px">
                         {t(`${WORK_ORDER}.verification`)}
                       </Th>
                     </Tr>
@@ -204,6 +219,7 @@ const AssignedItems = (props: AssignedItemType) => {
                           fieldArray={assignedItemsArray}
                           unassignedItems={unassignedItems}
                           setUnAssignedItems={setUnAssignedItems}
+                          downloadPdf={downloadPdf}
                         />
                       </>
                     )}
@@ -219,15 +235,47 @@ const AssignedItems = (props: AssignedItemType) => {
 }
 
 export const AssignedLineItems = props => {
-  const { setUnAssignedItems, unassignedItems } = props
-  const { control, getValues } = props.formControl
+  const { setUnAssignedItems, unassignedItems, selectedRows, setSelectedRows } = props
+  const { control, getValues, setValue } = props.formControl
   const { fields: assignedItems, remove: removeAssigned } = props.fieldArray
   const values = getValues()
+
+  const onFileChange = async file => {
+    const fileContents = await readFileContent(file)
+    const documentFile = {
+      fileObjectContentType: file?.type,
+      fileType: file?.name,
+      fileObject: fileContents,
+      documentType: 39,
+    }
+    return documentFile
+  }
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+        <Flex ml={1}>
+          <Icon as={BiDownload} size="sm" mt={'3px'} />
+          <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
+            {text}
+          </Text>
+        </Flex>
+      </a>
+    )
+  }
   return (
     <>
       {assignedItems.map((items, index) => {
         return (
           <Tr>
+            <Td>
+              <Checkbox
+                size="md"
+                isChecked={selectedRows?.includes(index)}
+                onChange={e => {
+                  setSelectedRows(index)
+                }}
+              ></Checkbox>
+            </Td>
             <Td>
               <HStack position="relative" right="16px">
                 <Icon
@@ -235,7 +283,10 @@ export const AssignedLineItems = props => {
                   boxSize={5}
                   color="brand.300"
                   onClick={() => {
-                    setUnAssignedItems([...unassignedItems, { ...values?.assignedItems[index] }])
+                    setUnAssignedItems([
+                      ...unassignedItems,
+                      { ...values?.assignedItems[index], unitPrice: values?.assignedItems[index].price },
+                    ])
                     removeAssigned(index)
                   }}
                   cursor="pointer"
@@ -286,9 +337,6 @@ export const AssignedLineItems = props => {
                 valueFormatter={currencyFormatter}
               />
             </Td>
-            {/*<Td>
-              <UploadImage Images={'Upload'} />
-                </Td>*/}
             <Td>
               <Controller
                 control={control}
@@ -303,6 +351,37 @@ export const AssignedLineItems = props => {
                   ></CustomCheckBox>
                 )}
               ></Controller>
+            </Td>
+            <Td>
+              <Controller
+                name={`assignedItems.${index}.uploadedDoc`}
+                control={control}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box>
+                        <UploadImage
+                          label={`upload`}
+                          value={field?.value?.fileType}
+                          onChange={async (file: any) => {
+                            const document = await onFileChange(file)
+                            field.onChange(document)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></UploadImage>
+                      </Box>
+                      {assignedItems[index]?.document?.s3Url && (
+                        <Box>
+                          {downloadDocument(
+                            values.assignedItems[index]?.document?.s3Url,
+                            values.assignedItems[index]?.document?.fileType,
+                          )}
+                        </Box>
+                      )}
+                    </VStack>
+                  )
+                }}
+              />
             </Td>
             <Td>
               <Controller

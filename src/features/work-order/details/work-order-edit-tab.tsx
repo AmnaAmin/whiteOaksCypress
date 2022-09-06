@@ -31,8 +31,11 @@ import {
   LineItems,
   useAllowLineItemsAssignment,
   useRemainingLineItems,
+  createInvoicePdf,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
+import jsPDF from 'jspdf'
+import { useCall } from 'api/pc-projects'
 
 const CalenderCard = props => {
   return (
@@ -91,6 +94,7 @@ const WorkOrderDetailTab = props => {
     setWorkOrderUpdating,
     swoProject,
     rejectInvoiceCheck,
+    projectData,
   } = props
 
   const formReturn = useForm<FormValues>()
@@ -118,6 +122,7 @@ const WorkOrderDetailTab = props => {
     workOrderIssueDate,
     dateLeanWaiverSubmitted,
     // datePermitsPulled,
+    assignedItems,
     workOrderCompletionDateVariance,
   } = props.workOrder
 
@@ -130,12 +135,17 @@ const WorkOrderDetailTab = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
+  const downloadPdf = useCallback(() => {
+    let doc = new jsPDF()
+    createInvoicePdf(doc, workOrder, projectData, assignedItems)
+  }, [assignedItems, projectData, workOrder])
+
   const setAssignedItems = useCallback(
     items => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
+          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice, document: null }
         }),
       ]
       append(assigned)
@@ -320,6 +330,7 @@ const WorkOrderDetailTab = props => {
               assignedItemsArray={assignedItemsArray}
               isAssignmentAllowed={isAssignmentAllowed}
               swoProject={swoProject}
+              downloadPdf={downloadPdf}
             />
           </Box>
         </ModalBody>

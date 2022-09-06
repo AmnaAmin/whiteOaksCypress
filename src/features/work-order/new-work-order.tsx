@@ -148,7 +148,7 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
+          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice, document: null }
         }),
       ]
       append(assigned)
@@ -170,6 +170,7 @@ const NewWorkOrder: React.FC<{
       onClose()
     }
   }, [isSuccess, onClose])
+
   const onSubmit = values => {
     if (values?.assignedItems?.length > 0) {
       assignLineItems(
@@ -190,8 +191,6 @@ const NewWorkOrder: React.FC<{
       createWorkOrder(payload as any)
     }
   }
-
-
 
   useEffect(() => {
     const option = [] as any
