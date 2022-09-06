@@ -10,7 +10,6 @@ import { TableNames } from 'types/table-column.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile, downloadFileOnly } from 'utils/file-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings'
 import { useDocuments } from 'api/vendor-projects'
 
@@ -66,7 +65,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const setDocumentTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { isProjectCoordinator, isDoc } = useUserRolesSelector()
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
@@ -154,28 +152,26 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         name="vendor-document-table"
         setTableInstance={setDocumentTableInstance}
       />
-      {isProjectCoordinator ||
-        (isDoc ? (
-          <Flex justifyContent="end">
-            <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-              <Button
-                m={0}
-                colorScheme="brand"
-                variant="ghost"
-                onClick={() => {
-                  if (documentTableInstance) {
-                    documentTableInstance?.exportData('mm/dd/yy', false)
-                  }
-                }}
-              >
-                <Icon as={BiExport} fontSize="18px" mr={1} />
-                {t('export')}
-              </Button>
-              <Divider orientation="vertical" border="1px solid" h="20px" />
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-            </HStack>
-          </Flex>
-        ) : null)}
+
+      <Flex justifyContent="end">
+        <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+          <Button
+            m={0}
+            colorScheme="brand"
+            variant="ghost"
+            onClick={() => {
+              if (documentTableInstance) {
+                documentTableInstance?.exportData('mm/dd/yy', false)
+              }
+            }}
+          >
+            <Icon as={BiExport} fontSize="18px" mr={1} />
+            {t('export')}
+          </Button>
+          <Divider orientation="vertical" border="1px solid" h="20px" />
+          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+        </HStack>
+      </Flex>
     </Box>
   )
 })
