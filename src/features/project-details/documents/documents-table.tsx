@@ -144,18 +144,20 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     postDocumentColumn(columns)
   }
   return (
-    <Box>
-      <TableWrapper
-        disableFilter={true}
-        columns={tableColumns}
-        data={documents}
-        TableRow={vendorDocumentRow}
-        tableHeight="calc(100vh - 300px)"
-        name="vendor-document-table"
-        setTableInstance={setDocumentTableInstance}
-      />
-      {isProjectCoordinator ||
-        (isDoc ? (
+    <>
+      <Box overflow={'auto'}>
+        <TableWrapper
+          disableFilter={true}
+          columns={tableColumns}
+          data={documents}
+          TableRow={vendorDocumentRow}
+          tableHeight="calc(100vh - 300px)"
+          name="vendor-document-table"
+          setTableInstance={setDocumentTableInstance}
+        />
+      </Box>
+      <Box>
+        {isProjectCoordinator || isDoc ? (
           <Flex justifyContent="end">
             <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
               <Button
@@ -175,7 +177,8 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </HStack>
           </Flex>
-        ) : null)}
-    </Box>
+        ) : null}
+      </Box>
+    </>
   )
 })
