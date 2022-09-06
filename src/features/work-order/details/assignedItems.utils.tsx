@@ -300,6 +300,7 @@ export const EditableField = (props: EditableCellType) => {
             </Box>
           ) : (
             <Input
+              autoFocus
               size="sm"
               id="sku"
               type={inputType ?? 'text'}
@@ -338,6 +339,7 @@ export const InputField = (props: InputFieldType) => {
     <>
       <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
         <Input
+          autoFocus
           size="sm"
           id="now"
           type={inputType ?? 'text'}
