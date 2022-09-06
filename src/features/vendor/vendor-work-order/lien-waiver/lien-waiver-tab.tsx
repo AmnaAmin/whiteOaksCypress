@@ -75,7 +75,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       ...lienWaiverData,
       ...formValues,
       lienWaiverAccepted: true,
-      lienWaiverAmount: formValues.finalInvoiceAmount,
+      amountOfCheck: formValues.finalInvoiceAmount,
       documents,
     }
   }
