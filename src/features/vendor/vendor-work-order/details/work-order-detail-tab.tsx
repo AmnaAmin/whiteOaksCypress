@@ -2,7 +2,7 @@ import { Box, HStack, Flex, SimpleGrid, FormLabel, ModalFooter, ModalBody } from
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
-import { dateFormatter } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import jsPDF from 'jspdf'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import AssignedItems from 'features/work-order/details/assigned-items'
@@ -93,13 +93,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
             m="30px"
             alignItems={'left'}
           >
-            <CalenderCard title={t('WOIssued')} value={dateFormatter(workOrder.workOrderIssueDate)} />
-            <CalenderCard title={t('expectedStart')} value={dateFormatter(workOrder.workOrderStartDate)} />
+            <CalenderCard title={t('WOIssued')} value={dateFormat(workOrder.workOrderIssueDate)} />
+            <CalenderCard title={t('expectedStart')} value={dateFormat(workOrder.workOrderStartDate)} />
             <CalenderCard
               title={t('expectedCompletion')}
-              value={dateFormatter(workOrder.workOrderExpectedCompletionDate)}
+              value={dateFormat(workOrder.workOrderExpectedCompletionDate)}
             />
-            <CalenderCard title={t('completedByVendor')} value={dateFormatter(workOrder.workOrderDateCompleted)} />
+            <CalenderCard title={t('completedByVendor')} value={dateFormat(workOrder.workOrderDateCompleted)} />
           </SimpleGrid>
           <Box mx="32px">
             {values?.assignedItems && values?.assignedItems?.length > 0 && (
