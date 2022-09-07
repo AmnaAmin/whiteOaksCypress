@@ -440,7 +440,7 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
   const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
   doc.text(heading, xHeading, 35)
   var img = new Image()
-  img.src = '/wo-logo.png'
+  img.src = '/vendorportal/wo-logo.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
     doc.setFontSize(10)
