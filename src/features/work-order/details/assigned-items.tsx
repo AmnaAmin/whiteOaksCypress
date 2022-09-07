@@ -5,7 +5,6 @@ import {
   chakra,
   Checkbox,
   Divider,
-  Flex,
   HStack,
   Icon,
   Spinner,
@@ -19,7 +18,6 @@ import {
   Thead,
   Tr,
   useCheckbox,
-  VStack,
 } from '@chakra-ui/react'
 
 import { useState } from 'react'
@@ -28,9 +26,8 @@ import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, LineItems, SWOProject, UploadImage } from './assignedItems.utils'
+import { EditableField, LineItems, SWOProject } from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
-import { readFileContent } from 'api/vendor-details'
 import { difference } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
@@ -106,7 +103,7 @@ const AssignedItems = (props: AssignedItemType) => {
     downloadPdf,
   } = props
   const [showLineItems] = useState(true)
-  const { control, register, setValue, getValues } = formControl
+  const { control, register, getValues, setValue } = formControl
   const { t } = useTranslation()
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
@@ -271,10 +268,10 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} textAlign={'center'} minW="200px">
                         {t(`${WORK_ORDER}.status`)}
                       </Th>
-
+                      {/*Commenting till backend functionality is complete
                       <Th sx={headerStyle} textAlign={'center'}>
                         {t(`${WORK_ORDER}.images`)}
-                      </Th>
+                      </Th> */}
                       {!isVendor && (
                         <Th sx={headerStyle} textAlign={'center'} minW="200px">
                           {t(`${WORK_ORDER}.verification`)}
@@ -321,10 +318,11 @@ const AssignedItems = (props: AssignedItemType) => {
 
 export const AssignedLineItems = props => {
   const { selectedRows, setSelectedRows, isVendor } = props
-  const { control, getValues, setValue } = props.formControl
+  const { control, getValues } = props.formControl
   const { fields: assignedItems } = props.fieldArray
   const values = getValues()
 
+  /* commenting till backend is done
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
     const documentFile = {
@@ -334,7 +332,9 @@ export const AssignedLineItems = props => {
       documentType: 39,
     }
     return documentFile
-  }
+  } 
+  
+
   const downloadDocument = (link, text) => {
     return (
       <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
@@ -346,7 +346,8 @@ export const AssignedLineItems = props => {
         </Flex>
       </a>
     )
-  }
+  } */
+
   return (
     <>
       {assignedItems.map((items, index) => {
@@ -472,7 +473,7 @@ export const AssignedLineItems = props => {
                 ></Controller>
               </HStack>
             </Td>
-
+            {/* Commenting till backend functionality is complete
             <Td>
               <HStack justifyContent={'center'} h="50px">
                 <Controller
@@ -506,7 +507,7 @@ export const AssignedLineItems = props => {
                   }}
                 />
               </HStack>
-            </Td>
+                </Td> */}
             {!isVendor && (
               <Td>
                 <HStack justifyContent={'center'} h="50px">
