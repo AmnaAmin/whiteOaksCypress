@@ -215,7 +215,7 @@ export const parseWODetailValuesToPayload = formValues => {
       }
       const assignedItem = {
         ...a,
-        document: a.uploadedDoc ? a.uploadedDoc : a.document,
+        document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
       }
