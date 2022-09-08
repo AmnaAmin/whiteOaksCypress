@@ -18,8 +18,6 @@ import {
 
 import { useDocumentTypes, useUploadDocument } from 'api/vendor-projects'
 import { useTranslation } from 'react-i18next'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { Account } from 'types/account.types'
 import { Document } from 'types/vendor.types'
 
 import ReactSelect from 'components/form/react-select'
@@ -34,7 +32,6 @@ import { useProjectWorkOrders } from 'api/projects'
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   const [documentType] = useState<SelectOption | undefined>()
-  const { vendorId } = useUserProfile() as Account
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOders } = useProjectWorkOrders(projectId)
@@ -42,7 +39,8 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const workOderState = workOders
     ? workOders?.map(state => ({
         label: `${state?.companyName}(${state?.skillName})`,
-        value: state?.id,
+        value: state,
+        // vendorId: state?.vendorId,
       }))
     : null
 
@@ -61,7 +59,8 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   } = useForm()
 
   const onSubmit = async formValues => {
-    const workOrderId = formValues?.against?.value?.toString()
+    const vendorId = formValues?.against?.value?.vendorId?.toString()
+    const workOrderId = formValues?.against?.value?.id?.toString()
     const documentPayload = await createDocumentPayload(
       formValues.chooseFile,
       formValues?.documentTypes?.value?.toString(),
