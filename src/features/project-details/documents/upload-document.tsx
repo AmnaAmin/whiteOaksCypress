@@ -40,7 +40,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     ? workOders?.map(state => ({
         label: `${state?.companyName}(${state?.skillName})`,
         value: state,
-        // vendorId: state?.vendorId,
       }))
     : null
 
@@ -100,7 +99,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('uploadDocument')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
@@ -210,6 +209,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               variant="outline"
               onClick={() => {
                 onClose()
+                reset()
               }}
               colorScheme="brand"
             >
