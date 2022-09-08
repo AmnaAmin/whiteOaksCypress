@@ -131,6 +131,9 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
             </Flex>
           )
         },
+        getCellExportValue(row) {
+          return dateFormat(row.original.createdDate)
+        },
       },
     ],
     ref,
