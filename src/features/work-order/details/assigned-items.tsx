@@ -5,6 +5,7 @@ import {
   chakra,
   Checkbox,
   Divider,
+  Flex,
   HStack,
   Icon,
   Spinner,
@@ -18,6 +19,7 @@ import {
   Thead,
   Tr,
   useCheckbox,
+  VStack,
 } from '@chakra-ui/react'
 
 import { useState } from 'react'
@@ -26,10 +28,11 @@ import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, LineItems, SWOProject } from './assignedItems.utils'
+import { EditableField, LineItems, mapToRemainingItems, SWOProject, UploadImage } from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
 import { difference } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { readFileContent } from 'api/vendor-details'
 
 const headerStyle = {
   textTransform: 'none',
@@ -134,7 +137,7 @@ const AssignedItems = (props: AssignedItemType) => {
                           ...values?.assignedItems
                             ?.filter(a => selectedRows.includes(a.id))
                             ?.map(i => {
-                              return { ...i, unitPrice: i?.price }
+                              return mapToRemainingItems(i)
                             }),
                           ...unassignedItems,
                         ])
@@ -259,7 +262,6 @@ const AssignedItems = (props: AssignedItemType) => {
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
                       )}
-
                       {isVendor && !!values.showPrice && (
                         <Th sx={headerStyle} minW="100px">
                           {t(`${WORK_ORDER}.price`)}
@@ -268,10 +270,10 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} textAlign={'center'} minW="200px">
                         {t(`${WORK_ORDER}.status`)}
                       </Th>
-                      {/*Commenting till backend functionality is complete
+
                       <Th sx={headerStyle} textAlign={'center'}>
                         {t(`${WORK_ORDER}.images`)}
-                      </Th> */}
+                      </Th>
                       {!isVendor && (
                         <Th sx={headerStyle} textAlign={'center'} minW="200px">
                           {t(`${WORK_ORDER}.verification`)}
@@ -318,11 +320,10 @@ const AssignedItems = (props: AssignedItemType) => {
 
 export const AssignedLineItems = props => {
   const { selectedRows, setSelectedRows, isVendor } = props
-  const { control, getValues } = props.formControl
+  const { control, getValues, setValue } = props.formControl
   const { fields: assignedItems } = props.fieldArray
   const values = getValues()
 
-  /* commenting till backend is done
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
     const documentFile = {
@@ -332,8 +333,7 @@ export const AssignedLineItems = props => {
       documentType: 39,
     }
     return documentFile
-  } 
-  
+  }
 
   const downloadDocument = (link, text) => {
     return (
@@ -346,25 +346,25 @@ export const AssignedLineItems = props => {
         </Flex>
       </a>
     )
-  } */
+  }
 
   return (
     <>
-      {assignedItems.map((items, index) => {
+      {assignedItems?.map((items, index) => {
         return (
           <Tr>
             {!isVendor && (
               <Td>
                 <Checkbox
                   size="md"
-                  isChecked={selectedRows?.includes(values?.assignedItems[index]?.id)}
+                  isChecked={selectedRows?.includes(values?.assignedItems?.[index]?.id)}
                   onChange={e => {
                     if (e.currentTarget?.checked) {
-                      if (!selectedRows?.includes(values?.assignedItems[index]?.id)) {
-                        setSelectedRows([...selectedRows, values?.assignedItems[index]?.id])
+                      if (!selectedRows?.includes(values?.assignedItems?.[index]?.id)) {
+                        setSelectedRows([...selectedRows, values?.assignedItems?.[index]?.id])
                       }
                     } else {
-                      setSelectedRows([...selectedRows.filter(s => s !== values?.assignedItems[index]?.id)])
+                      setSelectedRows([...selectedRows.filter(s => s !== values?.assignedItems?.[index]?.id)])
                     }
                   }}
                 ></Checkbox>
@@ -372,15 +372,13 @@ export const AssignedLineItems = props => {
             )}
             <Td>
               {!isVendor ? (
-                <HStack position="relative" right="16px">
-                  <EditableField
-                    index={index}
-                    fieldName="sku"
-                    fieldArray="assignedItems"
-                    formControl={props.formControl}
-                    inputType="text"
-                  />
-                </HStack>
+                <EditableField
+                  index={index}
+                  fieldName="sku"
+                  fieldArray="assignedItems"
+                  formControl={props.formControl}
+                  inputType="text"
+                />
               ) : (
                 <Box>{values?.assignedItems[index]?.sku}</Box>
               )}
@@ -400,15 +398,13 @@ export const AssignedLineItems = props => {
             </Td>
             <Td>
               {!isVendor ? (
-                <HStack position="relative" right="16px">
-                  <EditableField
-                    index={index}
-                    fieldName="sku"
-                    fieldArray="location"
-                    formControl={props.formControl}
-                    inputType="text"
-                  />
-                </HStack>
+                <EditableField
+                  index={index}
+                  fieldName="sku"
+                  fieldArray="location"
+                  formControl={props.formControl}
+                  inputType="text"
+                />
               ) : (
                 <Box>{values?.assignedItems[index]?.sku}</Box>
               )}
@@ -473,7 +469,7 @@ export const AssignedLineItems = props => {
                 ></Controller>
               </HStack>
             </Td>
-            {/* Commenting till backend functionality is complete
+
             <Td>
               <HStack justifyContent={'center'} h="50px">
                 <Controller
@@ -507,7 +503,7 @@ export const AssignedLineItems = props => {
                   }}
                 />
               </HStack>
-                </Td> */}
+            </Td>
             {!isVendor && (
               <Td>
                 <HStack justifyContent={'center'} h="50px">

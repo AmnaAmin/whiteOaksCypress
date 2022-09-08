@@ -248,7 +248,7 @@ const RemainingListTable = (props: RemainingListType) => {
       },
     },
     {
-      Header: `${WORK_ORDER}.price`,
+      Header: `${WORK_ORDER}.unitPrice`,
       accessor: 'unitPrice',
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'

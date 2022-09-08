@@ -211,6 +211,7 @@ export const parseWODetailValuesToPayload = formValues => {
       const isNewSmartLineItem = !a.smartLineItemId
       if (a.document) {
         delete a?.document?.fileObject
+        delete a?.document?.documentTypelabel
       }
       const assignedItem = {
         ...a,
