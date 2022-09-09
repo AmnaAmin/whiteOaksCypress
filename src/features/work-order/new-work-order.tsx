@@ -18,6 +18,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
+import { useGetProjectFinancialOverview } from 'api/projects'
 import Select from 'components/form/react-select'
 import { t } from 'i18next'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -97,9 +98,10 @@ type NewWorkOrderType = {
 
 const NewWorkOrder: React.FC<{
   projectData: Project
+  projectId?: string
   isOpen: boolean
   onClose: () => void
-}> = ({ projectData, isOpen, onClose }) => {
+}> = ({ projectData, isOpen, onClose, projectId }) => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
@@ -156,6 +158,8 @@ const NewWorkOrder: React.FC<{
     },
     [unassignedItems, setUnAssignedItems],
   )
+
+  const { profitMargin } = useGetProjectFinancialOverview(projectId)
 
   const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
     setValue,
@@ -252,9 +256,12 @@ const NewWorkOrder: React.FC<{
                   title="Client End "
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
-                <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
+                <InformationCard title="Profit Percentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
 
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
+                <InformationCard
+                  title=" Final SOW Amount"
+                  date={currencyFormatter(projectData?.sowOriginalContractAmount as number)}
+                />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}

@@ -130,7 +130,12 @@ export const ProjectDetails: React.FC = props => {
                         <Text>{t('newWorkOrder')}</Text>
                       </Flex>
 
-                      <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
+                      <NewWorkOrder
+                        projectId={projectId}
+                        projectData={projectData as Project}
+                        isOpen={isOpen}
+                        onClose={onClose}
+                      />
                     </Button>
                   )}
                 {tabIndex === 3 && (
