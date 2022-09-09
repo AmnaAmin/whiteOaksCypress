@@ -1,5 +1,6 @@
 import { Box, Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Text, useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import { useState, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -274,7 +275,8 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
 export const mapToRemainingItems = item => {
   return {
     ...item,
-    totalPrice: item?.price,
+    unitPrice: item?.price,
+    totalPrice: Number(item?.price) * Number(item?.quantity),
   }
 }
 
@@ -285,14 +287,20 @@ export const mapToLineItems = item => {
     ...item,
     isVerified: false,
     isCompleted: false,
-    price: item.totalPrice,
+    price: item.unitPrice,
     document: null,
   }
 }
 
 /* mapping when line item in unassigned and saved. Any changes made to line item will also be saved in swo */
 export const mapToUnAssignItem = item => {
-  return { ...item, id: item.smartLineItemId, isAssigned: false, totalPrice: item.price }
+  return {
+    ...item,
+    unitPrice: item?.price,
+    id: item.smartLineItemId,
+    isAssigned: false,
+    totalPrice: Number(item?.price) * Number(item?.quantity),
+  }
 }
 
 export const PriceInput = props => {
@@ -308,11 +316,22 @@ type EditableCellType = {
   fieldArray: string
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
+  onChange?: (e, index) => void
 }
 
 export const EditableField = (props: EditableCellType) => {
   const [selectedCell, setSelectedCell] = useState('')
-  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray, updatedItems, setUpdatedItems } = props
+  const {
+    index,
+    fieldName,
+    formControl,
+    inputType,
+    valueFormatter,
+    fieldArray,
+    updatedItems,
+    setUpdatedItems,
+    onChange,
+  } = props
   const { getValues, setValue } = formControl
   const values = getValues()
   return (
@@ -334,7 +353,7 @@ export const EditableField = (props: EditableCellType) => {
             </Box>
           ) : (
             <Input
-              autoFocus
+              key={fieldName + '.' + index}
               size="sm"
               id="sku"
               type={inputType ?? 'text'}
@@ -347,6 +366,10 @@ export const EditableField = (props: EditableCellType) => {
               onBlurCapture={e => {
                 if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
+
+                if (onChange) {
+                  onChange(e, index)
+                }
               }}
             />
           )}
@@ -359,26 +382,40 @@ export const EditableField = (props: EditableCellType) => {
 type InputFieldType = {
   index: number
   fieldName: string
-  formControl: any
+  formControl: UseFormReturn<any>
   inputType?: string
   fieldArray: string
+  type?: string
+  onChange?: (e, index) => void
 }
 export const InputField = (props: InputFieldType) => {
-  const { index, fieldName, formControl, inputType, fieldArray } = props
+  const { index, fieldName, formControl, fieldArray, onChange: handleChange, inputType = 'text' } = props
   const {
     formState: { errors },
-    register,
+    control,
   } = formControl
   return (
     <>
       <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
-        <Input
-          autoFocus
-          size="sm"
-          id="now"
-          type={inputType ?? 'text'}
-          {...register(`${fieldArray}.${index}.${fieldName}`, { required: 'This is required' })}
-        />
+        <Controller
+          control={control}
+          name={`${fieldArray}.${index}.${fieldName}`}
+          rules={{ required: 'This is required' }}
+          render={({ field, fieldState }) => (
+            <Input
+              key={[fieldName] + '.' + [index]}
+              size="sm"
+              type={inputType}
+              value={field.value}
+              onChange={e => {
+                field.onChange(e.target.value)
+              }}
+              onBlur={e => {
+                if (handleChange) handleChange(e, index)
+              }}
+            ></Input>
+          )}
+        ></Controller>
         {errors?.remainingItems && (
           <FormErrorMessage>{errors?.[fieldArray][index]?.[fieldName]?.message}</FormErrorMessage>
         )}
