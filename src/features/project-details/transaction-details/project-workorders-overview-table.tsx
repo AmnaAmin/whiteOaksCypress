@@ -134,18 +134,6 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Adjustments for CO',
-        accessor: 'coAdjustment',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('coAdjustment', info.rows), [info.rows])
-
-          return numeral(total).format('$0,0.00')
-        },
-      },
-      {
         Header: 'Invoiced Amount',
         accessor: 'accountPayable',
         Cell(cellInfo) {
