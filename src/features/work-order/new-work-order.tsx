@@ -38,6 +38,7 @@ import {
   useRemainingLineItems,
   LineItems,
   useAllowLineItemsAssignment,
+  mapToLineItems,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 
@@ -148,7 +149,7 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice, document: null }
+          return mapToLineItems(s)
         }),
       ]
       append(assigned)
@@ -252,7 +253,10 @@ const NewWorkOrder: React.FC<{
                   title="Client End "
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
-                <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
+                <InformationCard
+                  title="Profit Percentage"
+                  date={projectData?.profitPercentage ? `${projectData?.profitPercentage}%` : '0%'}
+                />
 
                 <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
                 {/*  commenting as requirement yet to be confirmed

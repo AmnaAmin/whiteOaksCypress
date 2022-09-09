@@ -269,6 +269,32 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   return { isAssignmentAllowed }
 }
 
+/* map to remaining when user unassigns using Unassign Line Item action */
+
+export const mapToRemainingItems = item => {
+  return {
+    ...item,
+    totalPrice: item?.price,
+  }
+}
+
+/* map to assigned items when user assigns using save on remaining items modal */
+
+export const mapToLineItems = item => {
+  return {
+    ...item,
+    isVerified: false,
+    isCompleted: false,
+    price: item.totalPrice,
+    document: null,
+  }
+}
+
+/* mapping when line item in unassigned and saved. Any changes made to line item will also be saved in swo */
+export const mapToUnAssignItem = item => {
+  return { ...item, id: item.smartLineItemId, isAssigned: false, totalPrice: item.price }
+}
+
 export const PriceInput = props => {
   return <Input {...props} variant="outline" size="sm" />
 }
@@ -303,7 +329,7 @@ export const EditableField = (props: EditableCellType) => {
               }}
             >
               {valueFormatter
-                ? valueFormatter(Number(values?.[fieldArray][index]?.[fieldName]?.toString()?.replace(/[^0-9]+/g, '')))
+                ? valueFormatter(values?.[fieldArray][index]?.[fieldName])
                 : values?.[fieldArray][index]?.[fieldName]}
             </Box>
           ) : (
@@ -429,10 +455,7 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
     { label: 'Lock Box Code:', value: projectData.lockBoxCode },
   ]
-  const totalAward = assignedItems?.reduce(
-    (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
-    0,
-  )
+  const totalAward = assignedItems?.reduce((partialSum, a) => partialSum + Number(a?.price ?? 0), 0)
   const basicFont = undefined
   const heading = 'Work Order'
   doc.setFontSize(16)

@@ -32,6 +32,8 @@ import {
   useAllowLineItemsAssignment,
   useRemainingLineItems,
   createInvoicePdf,
+  mapToLineItems,
+  mapToUnAssignItem,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
@@ -143,7 +145,7 @@ const WorkOrderDetailTab = props => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice, document: null }
+          return mapToLineItems(s)
         }),
       ]
       append(assigned)
@@ -194,7 +196,7 @@ const WorkOrderDetailTab = props => {
             return { id: a.id, isAssigned: true }
           }),
           ...unAssignedItems.map(a => {
-            return { id: a.smartLineItemId, isAssigned: false }
+            return mapToUnAssignItem(a)
           }),
         ],
         {

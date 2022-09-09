@@ -211,10 +211,11 @@ export const parseWODetailValuesToPayload = formValues => {
       const isNewSmartLineItem = !a.smartLineItemId
       if (a.document) {
         delete a?.document?.fileObject
+        delete a?.document?.documentTypelabel
       }
       const assignedItem = {
         ...a,
-        document: a.uploadedDoc ? a.uploadedDoc : a.document,
+        document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
       }
