@@ -109,7 +109,6 @@ const AssignedItems = (props: AssignedItemType) => {
   const { t } = useTranslation()
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
   const lineItems = useWatch({ name: 'assignedItems', control })
-  const markAllVerified = lineItems?.length > 0 && lineItems.every(l => l.isVerified)
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
   const values = getValues()
   const [selectedRows, setSelectedRows] = useState<any>([])
@@ -165,10 +164,11 @@ const AssignedItems = (props: AssignedItemType) => {
               {!isVendor && (
                 <Checkbox
                   size="lg"
-                  isChecked={markAllVerified}
                   onChange={e => {
                     assignedItems.forEach((item, index) => {
-                      setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
+                      if (values?.assignedItems?.[index]?.isCompleted) {
+                        setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
+                      }
                     })
                   }}
                 >
@@ -258,6 +258,9 @@ const AssignedItems = (props: AssignedItemType) => {
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
                       )}
+                      <Th sx={headerStyle} minW="100px">
+                        {t(`${WORK_ORDER}.total`)}
+                      </Th>
                       {isVendor && !!values.showPrice && (
                         <Th sx={headerStyle} minW="100px">
                           {t(`${WORK_ORDER}.price`)}
@@ -333,7 +336,7 @@ export const AssignedLineItems = props => {
 
   const downloadDocument = (link, text) => {
     return (
-      <a href={link} download style={{ marginTop: '5px', color: '#4E87F8' }}>
+      <a href={link} target="_blank" rel="noreferrer" download style={{ marginTop: '5px', color: '#4E87F8' }}>
         <HStack>
           <Icon as={BiDownload} size="sm" />
           <Text fontSize="12px" fontStyle="normal" maxW="100px" isTruncated>
@@ -435,6 +438,15 @@ export const AssignedLineItems = props => {
                 <Box>{currencyFormatter(values?.assignedItems[index]?.price)}</Box>
               </Td>
             )}
+            {
+              <Td>
+                <Box>
+                  {currencyFormatter(
+                    (values?.assignedItems?.[index]?.price ?? 0) * values?.assignedItems?.[index]?.quantity ?? 0,
+                  )}
+                </Box>
+              </Td>
+            }
             <Td>
               <HStack justifyContent={'center'} h="50px">
                 <Controller
@@ -445,6 +457,9 @@ export const AssignedLineItems = props => {
                       text="Completed"
                       isChecked={field.value}
                       onChange={e => {
+                        if (!e.target.checked) {
+                          setValue(`assignedItems.${index}.isVerified`, false)
+                        }
                         field.onChange(e.currentTarget.checked)
                       }}
                     ></CustomCheckBox>
@@ -452,7 +467,6 @@ export const AssignedLineItems = props => {
                 ></Controller>
               </HStack>
             </Td>
-
             <Td>
               <Controller
                 name={`assignedItems.${index}.uploadedDoc`}
@@ -494,6 +508,7 @@ export const AssignedLineItems = props => {
                     render={({ field, fieldState }) => (
                       <CustomCheckBox
                         text="Verified"
+                        disabled={!values.assignedItems?.[index]?.isCompleted}
                         isChecked={field.value}
                         onChange={e => {
                           field.onChange(e.currentTarget.checked)
