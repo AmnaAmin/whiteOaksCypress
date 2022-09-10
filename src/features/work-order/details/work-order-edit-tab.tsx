@@ -37,6 +37,8 @@ import {
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
+import { useProjectWorkOrders } from 'api/projects'
+import { useParams } from 'react-router-dom'
 
 const CalenderCard = props => {
   return (
@@ -114,6 +116,8 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const { t } = useTranslation()
+  const { projectId } = useParams<'projectId'>()
+  const { data: workOrders } = useProjectWorkOrders(projectId)
 
   const {
     skillName,
@@ -156,7 +160,7 @@ const WorkOrderDetailTab = props => {
 
   useEffect(() => {
     setUnAssignedItems(remainingItems ?? [])
-  }, [remainingItems])
+  }, [remainingItems, workOrders])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
