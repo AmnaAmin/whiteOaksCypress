@@ -148,6 +148,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
       //     return numeral(total).format('$0,0.00')
       //   },
       // },
+
       {
         Header: 'Invoiced Amount',
         accessor: 'accountPayable',
