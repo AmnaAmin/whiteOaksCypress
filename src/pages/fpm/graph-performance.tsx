@@ -2,6 +2,7 @@ import { Box } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { GenericObjectType } from 'types/common.types'
+import { currencyFormatter } from 'utils/string-formatters'
 
 export enum WORK_ORDER_STATUS {
   Paid = 68,
@@ -128,13 +129,31 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
               fontWeight: 400,
               fill: '#4A5568',
             }}
+            tickFormatter={value => `$${value}`}
           />
 
-          <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
+          <Tooltip
+            formatter={value => currencyFormatter(value)}
+            contentStyle={{ borderRadius: '6px' }}
+            data-testid="tooltip-overview"
+            cursor={{ fill: '#EBF8FF' }}
+          />
 
-          <Bar dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />
-          <Bar dataKey="Profit" fill="#949AC2" radius={[10, 10, 0, 0]} hide={barProps['Profit'] === true} />
-          <Bar dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]} hide={barProps['Revenue'] === true} />
+          <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />
+          <Bar
+            barSize={30}
+            dataKey="Profit"
+            fill="#949AC2"
+            radius={[10, 10, 0, 0]}
+            hide={barProps['Profit'] === true}
+          />
+          <Bar
+            barSize={30}
+            dataKey="Revenue"
+            fill="#68B8EF"
+            radius={[10, 10, 0, 0]}
+            hide={barProps['Revenue'] === true}
+          />
           <Legend
             onClick={selectBar}
             wrapperStyle={{
