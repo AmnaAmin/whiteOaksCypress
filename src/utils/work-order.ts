@@ -9,6 +9,7 @@ import { STATUS } from 'features/projects/status'
 import { currencyFormatter } from './stringFormatters'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { useTranslation } from 'react-i18next'
+import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 
 export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
   const client = useClient()
@@ -31,7 +32,7 @@ export const useUpdateWorkOrderMutation = (hideToast?: boolean) => {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries('accountPayable')
+        queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         if (!hideToast) {
           toast({
             title: 'Work Order',
