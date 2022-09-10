@@ -1,11 +1,13 @@
 import { ProjectStatus as STATUS } from 'types/project-details.types'
 import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) => {
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
+  const { isFPM } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -36,7 +38,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
 
-    isWOAStartDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+    isWOAStartDisabled:
+      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isWOACompletionDisabled:
       isStatusClosed ||
       isStatusNew ||
@@ -46,9 +49,9 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
       isStatusPaid ||
       isStatusOverPayment,
     isClientStartDateDisabled:
-      isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isClientDueDateDisabled:
-      isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isClientWalkthroughDisabled:
       isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isClientSignOffDisabled: isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
