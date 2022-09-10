@@ -109,6 +109,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                 assignedItemsArray={assignedItemsArray}
                 isAssignmentAllowed={false}
                 downloadPdf={downloadPdf}
+                workOrder={workOrder}
               />
             )}
           </Box>

@@ -25,7 +25,7 @@ import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'rea
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
-import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
+import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
@@ -89,8 +89,8 @@ type NewWorkOrderType = {
   vendorSkillId: number | string | null
   vendorId: number | string | null
   workOrderExpectedCompletionDate: string | Date | null
-  workOrderStartDate: string | undefined
-  invoiceAmount: string | number | null
+  workOrderStartDate: string | number | undefined
+  invoiceAmount: string | number | null | undefined
   clientApprovedAmount: string | number | null
   percentage: string | number | null
   assignedItems: LineItems[]
@@ -114,17 +114,31 @@ const NewWorkOrder: React.FC<{
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
-  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
-  const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
+  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
+  const defaultFormValues = () => {
+    return {
+      vendorSkillId: null,
+      vendorId: null,
+      workOrderExpectedCompletionDate: null,
+      workOrderStartsDate: undefined,
+      invoiceAmount: null,
+      clientApprovedAmount: null,
+      percentage: null,
+      assignedItems: [],
+    }
+  }
   // Hook form initialization
-  const formReturn = useForm<NewWorkOrderType>()
+  const formReturn = useForm<NewWorkOrderType>({
+    defaultValues: defaultFormValues(),
+  })
 
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    getValues,
     reset,
     formState: { errors },
   } = formReturn
@@ -133,10 +147,32 @@ const NewWorkOrder: React.FC<{
     control,
     name: 'assignedItems',
   })
+
   const { append } = assignedItemsArray
-
+  const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const watchClientApprovedAmount = useWatch({ name: 'clientApprovedAmount', control })
+  const watchInvoiceAmount = useWatch({ name: 'invoiceAmount', control })
+  const watchLineItems = useWatch({ name: 'assignedItems', control })
 
+  const { percentage } = usePercentageCalculation({
+    clientApprovedAmount: watchClientApprovedAmount,
+    vendorWOAmount: watchInvoiceAmount,
+  })
+
+  useEffect(() => {
+    if (percentage) {
+      setValue('percentage', percentage)
+    }
+  }, [percentage])
+
+  useEffect(() => {
+    const vendorWOAmount = getValues().assignedItems?.reduce(
+      (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+      0,
+    )
+    setValue('invoiceAmount', vendorWOAmount)
+  }, [watchLineItems])
   // Remaining Items handles
   const {
     onClose: onCloseRemainingItemsModal,
@@ -158,16 +194,13 @@ const NewWorkOrder: React.FC<{
     [unassignedItems, setUnAssignedItems],
   )
 
-  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
-    setValue,
-  })
   useEffect(() => {
     setUnAssignedItems(remainingItems ?? [])
   }, [remainingItems])
 
   useEffect(() => {
     if (isSuccess) {
-      reset()
+      reset(defaultFormValues())
       onClose()
     }
   }, [isSuccess, onClose])
@@ -226,8 +259,8 @@ const NewWorkOrder: React.FC<{
     <Modal
       isOpen={isOpen}
       onClose={() => {
+        reset(defaultFormValues())
         onClose()
-        reset()
       }}
       size="6xl"
       variant="custom"
@@ -340,7 +373,6 @@ const NewWorkOrder: React.FC<{
                                 prefix={'$'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
-                                  onApprovedAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -364,12 +396,9 @@ const NewWorkOrder: React.FC<{
                             <>
                               <NumberFormat
                                 value={field.value}
+                                disabled
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
-                                onValueChange={e => {
-                                  field.onChange(e.floatValue)
-                                  onPercentageChange(e.floatValue)
-                                }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -396,10 +425,7 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
-                                onValueChange={e => {
-                                  field.onChange(e.floatValue)
-                                  onInoviceAmountChange(e.floatValue)
-                                }}
+                                disabled
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -458,6 +484,7 @@ const NewWorkOrder: React.FC<{
                   assignedItemsArray={assignedItemsArray}
                   isAssignmentAllowed={isAssignmentAllowed}
                   swoProject={swoProject}
+                  workOrder={null}
                 />
               </Box>
             </Box>
@@ -467,15 +494,15 @@ const NewWorkOrder: React.FC<{
             <HStack spacing="16px">
               <Button
                 onClick={() => {
+                  reset(defaultFormValues())
                   onClose()
-                  reset()
                 }}
                 colorScheme="brand"
                 variant="outline"
               >
                 {t('cancel')}
               </Button>
-              <Button type="submit" colorScheme="brand">
+              <Button type="submit" colorScheme="brand" disabled={getValues()?.assignedItems?.length < 1}>
                 {t('save')}
               </Button>
             </HStack>

@@ -99,7 +99,7 @@ const WorkOrderDetailTab = props => {
   } = props
 
   const formReturn = useForm<FormValues>()
-  const { register, control, reset } = formReturn
+  const { register, control, reset, getValues } = formReturn
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
@@ -331,6 +331,7 @@ const WorkOrderDetailTab = props => {
               isAssignmentAllowed={isAssignmentAllowed}
               swoProject={swoProject}
               downloadPdf={downloadPdf}
+              workOrder={workOrder}
             />
           </Box>
         </ModalBody>

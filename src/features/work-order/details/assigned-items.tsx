@@ -1,4 +1,4 @@
-import { CheckIcon } from '@chakra-ui/icons'
+import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -32,6 +32,7 @@ import { FaSpinner } from 'react-icons/fa'
 import { difference } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { readFileContent } from 'api/vendor-details'
+import { ProjectWorkOrderType } from 'types/project.type'
 
 const headerStyle = {
   textTransform: 'none',
@@ -90,6 +91,7 @@ type AssignedItemType = {
   isAssignmentAllowed: boolean
   swoProject?: SWOProject
   downloadPdf?: () => void
+  workOrder: ProjectWorkOrderType | null
 }
 
 const AssignedItems = (props: AssignedItemType) => {
@@ -103,16 +105,19 @@ const AssignedItems = (props: AssignedItemType) => {
     isAssignmentAllowed,
     swoProject,
     downloadPdf,
+    workOrder,
   } = props
   const [showLineItems] = useState(true)
   const { control, register, getValues, setValue } = formControl
   const { t } = useTranslation()
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
-  const lineItems = useWatch({ name: 'assignedItems', control })
-  const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
+
   const values = getValues()
   const [selectedRows, setSelectedRows] = useState<any>([])
   const { isVendor } = useUserRolesSelector()
+  const watchClientApprovedAmount = useWatch({ name: 'clientApprovedAmount', control })
+  const lineItems = useWatch({ name: 'assignedItems', control })
+  const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
 
   return (
     <Box>
@@ -120,7 +125,23 @@ const AssignedItems = (props: AssignedItemType) => {
         <>
           <Stack direction="row" mt="32px" justifyContent="space-between">
             <HStack>
-              <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>
+              <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>ss
+              {isAssignmentAllowed && (
+                <>
+                  <Box pl="2" pr="1">
+                    <Divider size="lg" orientation="vertical" h="25px" />
+                  </Box>
+                  <Button
+                    variant="ghost"
+                    disabled={!workOrder && !watchClientApprovedAmount}
+                    colorScheme="brand"
+                    onClick={onOpenRemainingItemsModal}
+                    leftIcon={<Icon as={AddIcon} boxSize={2} />}
+                  >
+                    {t(`${WORK_ORDER}.addNewItem`)}
+                  </Button>
+                </>
+              )}
               {isAssignmentAllowed && (
                 <>
                   <Box pl="2" pr="1">
@@ -157,13 +178,13 @@ const AssignedItems = (props: AssignedItemType) => {
             </HStack>
             <HStack spacing="16px">
               {!isVendor && (
-                <Checkbox size="lg" {...register('showPrice')}>
+                <Checkbox size="md" {...register('showPrice')}>
                   {t(`${WORK_ORDER}.showPrice`)}
                 </Checkbox>
               )}
-              {!isVendor && (
+              {!isVendor && workOrder && (
                 <Checkbox
-                  size="lg"
+                  size="md"
                   onChange={e => {
                     assignedItems.forEach((item, index) => {
                       if (values?.assignedItems?.[index]?.isCompleted) {
@@ -188,19 +209,15 @@ const AssignedItems = (props: AssignedItemType) => {
                   {t(`${WORK_ORDER}.markAllCompleted`)}
                 </Checkbox>
               )}
-
-              <Button
-                variant="outline"
-                onClick={downloadPdf}
-                colorScheme="brand"
-                disabled={!downloadPdf || assignedItems?.length < 1}
-                leftIcon={<Icon as={BiDownload} boxSize={4} />}
-              >
-                {t(`${WORK_ORDER}.downloadPDF`)}
-              </Button>
-              {isAssignmentAllowed && (
-                <Button variant="outline" colorScheme="brand" onClick={onOpenRemainingItemsModal}>
-                  {t(`${WORK_ORDER}.remainingItems`)}
+              {downloadPdf && (
+                <Button
+                  variant="outline"
+                  onClick={downloadPdf}
+                  colorScheme="brand"
+                  disabled={assignedItems?.length < 1}
+                  leftIcon={<Icon as={BiDownload} boxSize={4} />}
+                >
+                  {t(`${WORK_ORDER}.downloadPDF`)}
                 </Button>
               )}
 
