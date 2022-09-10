@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const ACCONT_PAYABLE_API_KEY = 'account-payable'
+export const ACCONT_PAYABLE_API_KEY = 'account-payable'
 
 export const useAccountPayable = () => {
   const client = useClient()
