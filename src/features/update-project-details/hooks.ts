@@ -90,14 +90,14 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
 
   const projectStatus = status?.value
-
   const isStatusActive = projectStatus === STATUS.Active
   const isStatusClosed = projectStatus === STATUS.Closed
+  const isStatusPunch = projectStatus === STATUS.Punch
 
   return {
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
-    isWOACompletionDateRequired: isStatusClosed,
+    isWOACompletionDateRequired: isStatusClosed || isStatusPunch,
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
   }
