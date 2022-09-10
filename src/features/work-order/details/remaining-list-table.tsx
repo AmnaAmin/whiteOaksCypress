@@ -100,7 +100,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <Flex justifyContent="end" paddingLeft={'10px'}>
+          <Box paddingLeft={'6px'}>
             {!isNew ? (
               <SelectCheckBox
                 selectedItems={selectedItems}
@@ -118,7 +118,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 cursor="pointer"
               ></Icon>
             )}
-          </Flex>
+          </Box>
         )
       },
       disableExport: true,
@@ -131,7 +131,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <>
+          <Box pl={'5px'}>
             {isNew ? (
               <InputField
                 index={row?.index}
@@ -151,7 +151,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 setUpdatedItems={setUpdatedItems}
               />
             )}
-          </>
+          </Box>
         )
       },
       width: 100,
@@ -162,7 +162,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <>
+          <Box pl={'7px'}>
             {isNew ? (
               <InputField
                 index={row?.index}
@@ -182,7 +182,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 setUpdatedItems={setUpdatedItems}
               />
             )}
-          </>
+          </Box>
         )
       },
       width: 250,
@@ -193,7 +193,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <>
+          <Box pl={'7px'}>
             {isNew ? (
               <InputField
                 index={row?.index}
@@ -213,7 +213,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 setUpdatedItems={setUpdatedItems}
               />
             )}
-          </>
+          </Box>
         )
       },
     },
@@ -223,7 +223,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <>
+          <Box pl={'7px'}>
             {isNew ? (
               <InputField
                 index={row?.index}
@@ -243,17 +243,17 @@ const RemainingListTable = (props: RemainingListType) => {
                 setUpdatedItems={setUpdatedItems}
               />
             )}
-          </>
+          </Box>
         )
       },
     },
     {
-      Header: `${WORK_ORDER}.price`,
+      Header: `${WORK_ORDER}.unitPrice`,
       accessor: 'unitPrice',
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <>
+          <Box pl={'7px'}>
             {isNew ? (
               <InputField
                 index={row?.index}
@@ -274,7 +274,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 setUpdatedItems={setUpdatedItems}
               />
             )}
-          </>
+          </Box>
         )
       },
     },
@@ -284,7 +284,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index].action === 'new'
         return (
-          <>
+          <Box pl={'7px'}>
             {isNew ? (
               <InputField
                 index={row?.index}
@@ -305,7 +305,7 @@ const RemainingListTable = (props: RemainingListType) => {
                 setUpdatedItems={setUpdatedItems}
               />
             )}
-          </>
+          </Box>
         )
       },
     },

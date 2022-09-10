@@ -39,8 +39,10 @@ import {
   useRemainingLineItems,
   LineItems,
   useAllowLineItemsAssignment,
+  mapToLineItems,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
+import { useParams } from 'react-router-dom'
 
 const CalenderCard = props => {
   return (
@@ -98,15 +100,15 @@ type NewWorkOrderType = {
 
 const NewWorkOrder: React.FC<{
   projectData: Project
-  projectId?: string
   isOpen: boolean
   onClose: () => void
-}> = ({ projectData, isOpen, onClose, projectId }) => {
+}> = ({ projectData, isOpen, onClose }) => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
+  const { projectId } = useParams<{ projectId: string }>()
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -150,7 +152,7 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice, document: null }
+          return mapToLineItems(s)
         }),
       ]
       append(assigned)
@@ -256,6 +258,7 @@ const NewWorkOrder: React.FC<{
                   title="Client End "
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
+
                 <InformationCard title="Profit Percentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
 
                 <InformationCard

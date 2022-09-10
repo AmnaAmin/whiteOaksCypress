@@ -18,6 +18,7 @@ import {
   Thead,
   Tr,
   useCheckbox,
+  VStack,
 } from '@chakra-ui/react'
 
 import { useState } from 'react'
@@ -26,10 +27,11 @@ import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, LineItems, SWOProject } from './assignedItems.utils'
+import { EditableField, LineItems, mapToRemainingItems, SWOProject, UploadImage } from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
 import { difference } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { readFileContent } from 'api/vendor-details'
 
 const headerStyle = {
   textTransform: 'none',
@@ -134,7 +136,7 @@ const AssignedItems = (props: AssignedItemType) => {
                           ...values?.assignedItems
                             ?.filter(a => selectedRows.includes(a.id))
                             ?.map(i => {
-                              return { ...i, unitPrice: i?.price }
+                              return mapToRemainingItems(i)
                             }),
                           ...unassignedItems,
                         ])
@@ -246,9 +248,6 @@ const AssignedItems = (props: AssignedItemType) => {
                         {t(`${WORK_ORDER}.productName`)}
                       </Th>
                       <Th sx={headerStyle} minW="200px">
-                        {t(`${WORK_ORDER}.location`)}
-                      </Th>
-                      <Th sx={headerStyle} minW="200px">
                         {t(`${WORK_ORDER}.details`)}
                       </Th>
                       <Th sx={headerStyle} minW="100px">
@@ -259,7 +258,6 @@ const AssignedItems = (props: AssignedItemType) => {
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
                       )}
-
                       {isVendor && !!values.showPrice && (
                         <Th sx={headerStyle} minW="100px">
                           {t(`${WORK_ORDER}.price`)}
@@ -268,10 +266,10 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} textAlign={'center'} minW="200px">
                         {t(`${WORK_ORDER}.status`)}
                       </Th>
-                      {/*Commenting till backend functionality is complete
+
                       <Th sx={headerStyle} textAlign={'center'}>
                         {t(`${WORK_ORDER}.images`)}
-                      </Th> */}
+                      </Th>
                       {!isVendor && (
                         <Th sx={headerStyle} textAlign={'center'} minW="200px">
                           {t(`${WORK_ORDER}.verification`)}
@@ -318,53 +316,51 @@ const AssignedItems = (props: AssignedItemType) => {
 
 export const AssignedLineItems = props => {
   const { selectedRows, setSelectedRows, isVendor } = props
-  const { control, getValues } = props.formControl
+  const { control, getValues, setValue } = props.formControl
   const { fields: assignedItems } = props.fieldArray
   const values = getValues()
 
-  /* commenting till backend is done
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
     const documentFile = {
       fileObjectContentType: file?.type,
       fileType: file?.name,
-      fileObject: fileContents,
+      fileObject: fileContents ?? '',
       documentType: 39,
     }
     return documentFile
-  } 
-  
+  }
 
   const downloadDocument = (link, text) => {
     return (
-      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
-        <Flex ml={1}>
-          <Icon as={BiDownload} size="sm" mt={'3px'} />
-          <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
+      <a href={link} download style={{ marginTop: '5px', color: '#4E87F8' }}>
+        <HStack>
+          <Icon as={BiDownload} size="sm" />
+          <Text fontSize="12px" fontStyle="normal" maxW="100px" isTruncated>
             {text}
           </Text>
-        </Flex>
+        </HStack>
       </a>
     )
-  } */
+  }
 
   return (
     <>
-      {assignedItems.map((items, index) => {
+      {assignedItems?.map((items, index) => {
         return (
           <Tr>
             {!isVendor && (
               <Td>
                 <Checkbox
                   size="md"
-                  isChecked={selectedRows?.includes(values?.assignedItems[index]?.id)}
+                  isChecked={selectedRows?.includes(values?.assignedItems?.[index]?.id)}
                   onChange={e => {
                     if (e.currentTarget?.checked) {
-                      if (!selectedRows?.includes(values?.assignedItems[index]?.id)) {
-                        setSelectedRows([...selectedRows, values?.assignedItems[index]?.id])
+                      if (!selectedRows?.includes(values?.assignedItems?.[index]?.id)) {
+                        setSelectedRows([...selectedRows, values?.assignedItems?.[index]?.id])
                       }
                     } else {
-                      setSelectedRows([...selectedRows.filter(s => s !== values?.assignedItems[index]?.id)])
+                      setSelectedRows([...selectedRows.filter(s => s !== values?.assignedItems?.[index]?.id)])
                     }
                   }}
                 ></Checkbox>
@@ -372,15 +368,13 @@ export const AssignedLineItems = props => {
             )}
             <Td>
               {!isVendor ? (
-                <HStack position="relative" right="16px">
-                  <EditableField
-                    index={index}
-                    fieldName="sku"
-                    fieldArray="assignedItems"
-                    formControl={props.formControl}
-                    inputType="text"
-                  />
-                </HStack>
+                <EditableField
+                  index={index}
+                  fieldName="sku"
+                  fieldArray="assignedItems"
+                  formControl={props.formControl}
+                  inputType="text"
+                />
               ) : (
                 <Box>{values?.assignedItems[index]?.sku}</Box>
               )}
@@ -396,21 +390,6 @@ export const AssignedLineItems = props => {
                 />
               ) : (
                 <Box>{values?.assignedItems[index]?.productName}</Box>
-              )}
-            </Td>
-            <Td>
-              {!isVendor ? (
-                <HStack position="relative" right="16px">
-                  <EditableField
-                    index={index}
-                    fieldName="sku"
-                    fieldArray="location"
-                    formControl={props.formControl}
-                    inputType="text"
-                  />
-                </HStack>
-              ) : (
-                <Box>{values?.assignedItems[index]?.sku}</Box>
               )}
             </Td>
             <Td>
@@ -473,41 +452,39 @@ export const AssignedLineItems = props => {
                 ></Controller>
               </HStack>
             </Td>
-            {/* Commenting till backend functionality is complete
-            <Td>
-              <HStack justifyContent={'center'} h="50px">
-                <Controller
-                  name={`assignedItems.${index}.uploadedDoc`}
-                  control={control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <VStack>
-                        <Box>
-                          <UploadImage
-                            label={`upload`}
-                            value={field?.value?.fileType}
-                            onChange={async (file: any) => {
-                              const document = await onFileChange(file)
-                              field.onChange(document)
-                            }}
-                            onClear={() => setValue(field.name, null)}
-                          ></UploadImage>
-                        </Box>
 
-                        {assignedItems[index]?.document?.s3Url && (
-                          <Box>
-                            {downloadDocument(
-                              values.assignedItems[index]?.document?.s3Url,
-                              values.assignedItems[index]?.document?.fileType,
-                            )}
-                          </Box>
-                        )}
-                      </VStack>
-                    )
-                  }}
-                />
-              </HStack>
-                </Td> */}
+            <Td>
+              <Controller
+                name={`assignedItems.${index}.uploadedDoc`}
+                control={control}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack gap="1px">
+                      <Box>
+                        <UploadImage
+                          label={`upload`}
+                          value={field?.value?.fileType}
+                          onChange={async (file: any) => {
+                            const document = await onFileChange(file)
+                            field.onChange(document)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></UploadImage>
+                      </Box>
+
+                      {assignedItems[index]?.document?.s3Url && (
+                        <Box>
+                          {downloadDocument(
+                            values.assignedItems[index]?.document?.s3Url,
+                            values.assignedItems[index]?.document?.fileType,
+                          )}
+                        </Box>
+                      )}
+                    </VStack>
+                  )
+                }}
+              />
+            </Td>
             {!isVendor && (
               <Td>
                 <HStack justifyContent={'center'} h="50px">
