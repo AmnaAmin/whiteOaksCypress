@@ -492,7 +492,10 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
     { label: 'Lock Box Code:', value: projectData.lockBoxCode },
   ]
-  const totalAward = assignedItems?.reduce((partialSum, a) => partialSum + Number(a?.price ?? 0), 0)
+  const totalAward = assignedItems?.reduce(
+    (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+    0,
+  )
   const basicFont = undefined
   const heading = 'Work Order'
   doc.setFontSize(16)
