@@ -161,7 +161,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - (fo?.partialPayment || 0),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
-    vendorPaymentPercentage: vendorPaymentPercentage,
+    vendorPaymentPercentage,
     ...rest,
   }
 }
