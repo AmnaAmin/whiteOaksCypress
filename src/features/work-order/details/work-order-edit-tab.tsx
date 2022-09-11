@@ -331,6 +331,7 @@ const WorkOrderDetailTab = props => {
               isAssignmentAllowed={isAssignmentAllowed}
               swoProject={swoProject}
               downloadPdf={downloadPdf}
+              workOrder={workOrder}
             />
           </Box>
         </ModalBody>
