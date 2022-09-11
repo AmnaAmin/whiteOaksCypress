@@ -75,43 +75,43 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     [
       {
         id: 'fileType',
-        Header: t('document') || '',
+        Header: 'document',
         accessor: 'fileType',
         Cell: withPreviewCell,
       },
       {
         id: 'documentType',
-        Header: t('documentType') || '',
+        Header: 'documentType',
         accessor: 'documentTypelabel',
         Cell: withPreviewCell,
       },
       {
-        Header: t('transactionDoc') || '',
+        Header: 'transactionDoc',
         accessor: 'label',
         id: 'label',
         Cell: withPreviewCell,
       },
       {
         id: 'vendorName',
-        Header: t('vendorGL') || '',
+        Header: 'vendorGL',
         accessor: 'vendorName',
         Cell: withPreviewCell,
       },
       {
         id: 'fileObjectContentType',
-        Header: t('fileType') || '',
+        Header: 'fileType',
         accessor: 'fileObjectContentType',
         Cell: withPreviewCell,
       },
 
       {
-        Header: t('createdBy') || '',
+        Header: 'createdBy',
         accessor: 'createdBy',
         id: 'createdBy',
         Cell: withPreviewCell,
       },
       {
-        Header: t('createdDate') || '',
+        Header: 'createdDate',
         accessor: 'createdDate',
         id: 'createdDate',
         Cell({ value, row }) {
