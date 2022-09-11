@@ -169,9 +169,7 @@ const NewWorkOrder: React.FC<{
   })
 
   useEffect(() => {
-    if (percentage) {
-      setValue('percentage', percentage)
-    }
+    if (percentage !== null) setValue('percentage', percentage)
   }, [percentage])
 
   useEffect(() => {
