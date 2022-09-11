@@ -30,7 +30,7 @@ import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'rea
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
-import { useFilteredVendors, usePercentageAndInoviceChange, usePercentageCalculation } from 'api/pc-projects'
+import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
@@ -204,9 +204,6 @@ const NewWorkOrder: React.FC<{
 
   const { profitMargin } = useGetProjectFinancialOverview(projectId)
 
-  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
-    setValue,
-  })
   useEffect(() => {
     setUnAssignedItems(remainingItems ?? [])
   }, [remainingItems])
