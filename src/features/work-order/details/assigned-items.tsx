@@ -232,7 +232,7 @@ const AssignedItems = (props: AssignedItemType) => {
           <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md">
             <TableContainer>
               <Box>
-                <Table display={'block'} width={'100%'} overflow={'auto'}>
+                <Table width={'100%'} overflow={'auto'}>
                   <Thead h="72px" position="sticky" top="0">
                     <Tr whiteSpace="nowrap">
                       {!isVendor && (
@@ -283,14 +283,17 @@ const AssignedItems = (props: AssignedItemType) => {
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
                       )}
-                      <Th sx={headerStyle} textAlign={'center'} minW="200px">
-                        {t(`${WORK_ORDER}.status`)}
-                      </Th>
-
-                      <Th sx={headerStyle} textAlign={'center'}>
-                        {t(`${WORK_ORDER}.images`)}
-                      </Th>
-                      {!isVendor && (
+                      {workOrder && (
+                        <Th sx={headerStyle} textAlign={'center'} minW="200px">
+                          {t(`${WORK_ORDER}.status`)}
+                        </Th>
+                      )}
+                      {workOrder && (
+                        <Th sx={headerStyle} textAlign={'center'}>
+                          {t(`${WORK_ORDER}.images`)}
+                        </Th>
+                      )}
+                      {!isVendor && workOrder && (
                         <Th sx={headerStyle} textAlign={'center'} minW="200px">
                           {t(`${WORK_ORDER}.verification`)}
                         </Th>
@@ -320,6 +323,7 @@ const AssignedItems = (props: AssignedItemType) => {
                           selectedRows={selectedRows}
                           setSelectedRows={setSelectedRows}
                           isVendor={isVendor}
+                          workOrder={workOrder}
                         />
                       </>
                     )}
@@ -335,7 +339,7 @@ const AssignedItems = (props: AssignedItemType) => {
 }
 
 export const AssignedLineItems = props => {
-  const { selectedRows, setSelectedRows, isVendor } = props
+  const { selectedRows, setSelectedRows, isVendor, workOrder } = props
   const { control, getValues, setValue } = props.formControl
   const { fields: assignedItems } = props.fieldArray
   const values = getValues()
@@ -464,59 +468,63 @@ export const AssignedLineItems = props => {
                 </Box>
               </Td>
             }
-            <Td>
-              <HStack justifyContent={'center'} h="50px">
+            {workOrder && (
+              <Td>
+                <HStack justifyContent={'center'} h="50px">
+                  <Controller
+                    control={control}
+                    name={`assignedItems.${index}.isCompleted`}
+                    render={({ field, fieldState }) => (
+                      <CustomCheckBox
+                        text="Completed"
+                        isChecked={field.value}
+                        onChange={e => {
+                          if (!e.target.checked) {
+                            setValue(`assignedItems.${index}.isVerified`, false)
+                          }
+                          field.onChange(e.currentTarget.checked)
+                        }}
+                      ></CustomCheckBox>
+                    )}
+                  ></Controller>
+                </HStack>
+              </Td>
+            )}
+            {workOrder && (
+              <Td>
                 <Controller
+                  name={`assignedItems.${index}.uploadedDoc`}
                   control={control}
-                  name={`assignedItems.${index}.isCompleted`}
-                  render={({ field, fieldState }) => (
-                    <CustomCheckBox
-                      text="Completed"
-                      isChecked={field.value}
-                      onChange={e => {
-                        if (!e.target.checked) {
-                          setValue(`assignedItems.${index}.isVerified`, false)
-                        }
-                        field.onChange(e.currentTarget.checked)
-                      }}
-                    ></CustomCheckBox>
-                  )}
-                ></Controller>
-              </HStack>
-            </Td>
-            <Td>
-              <Controller
-                name={`assignedItems.${index}.uploadedDoc`}
-                control={control}
-                render={({ field, fieldState }) => {
-                  return (
-                    <VStack gap="1px">
-                      <Box>
-                        <UploadImage
-                          label={`upload`}
-                          value={field?.value?.fileType}
-                          onChange={async (file: any) => {
-                            const document = await onFileChange(file)
-                            field.onChange(document)
-                          }}
-                          onClear={() => setValue(field.name, null)}
-                        ></UploadImage>
-                      </Box>
-
-                      {assignedItems[index]?.document?.s3Url && (
+                  render={({ field, fieldState }) => {
+                    return (
+                      <VStack gap="1px">
                         <Box>
-                          {downloadDocument(
-                            values.assignedItems[index]?.document?.s3Url,
-                            values.assignedItems[index]?.document?.fileType,
-                          )}
+                          <UploadImage
+                            label={`upload`}
+                            value={field?.value?.fileType}
+                            onChange={async (file: any) => {
+                              const document = await onFileChange(file)
+                              field.onChange(document)
+                            }}
+                            onClear={() => setValue(field.name, null)}
+                          ></UploadImage>
                         </Box>
-                      )}
-                    </VStack>
-                  )
-                }}
-              />
-            </Td>
-            {!isVendor && (
+
+                        {assignedItems[index]?.document?.s3Url && (
+                          <Box>
+                            {downloadDocument(
+                              values.assignedItems[index]?.document?.s3Url,
+                              values.assignedItems[index]?.document?.fileType,
+                            )}
+                          </Box>
+                        )}
+                      </VStack>
+                    )
+                  }}
+                />
+              </Td>
+            )}
+            {!isVendor && workOrder && (
               <Td>
                 <HStack justifyContent={'center'} h="50px">
                   <Controller

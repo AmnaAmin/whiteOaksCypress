@@ -1,6 +1,10 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
+  CloseButton,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -41,6 +45,7 @@ import {
   mapToLineItems,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
+import { WORK_ORDER } from './workOrder.i18n'
 
 const CalenderCard = props => {
   return (
@@ -276,6 +281,13 @@ const NewWorkOrder: React.FC<{
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
           <ModalBody overflow={'auto'} justifyContent="center">
+            <Box>
+              <Alert status="info" variant="custom" size="sm">
+                <AlertIcon />
+                <AlertDescription>{t(`${WORK_ORDER}.clientApprovedAmountInfo`)}</AlertDescription>
+                <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+              </Alert>
+            </Box>
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard

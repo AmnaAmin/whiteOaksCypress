@@ -99,7 +99,7 @@ const WorkOrderDetailTab = props => {
   } = props
 
   const formReturn = useForm<FormValues>()
-  const { register, control, reset, getValues } = formReturn
+  const { register, control, reset } = formReturn
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
