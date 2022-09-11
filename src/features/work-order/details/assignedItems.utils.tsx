@@ -1,8 +1,16 @@
-import { Box, Checkbox, FormControl, FormErrorMessage, Input, useToast } from '@chakra-ui/react'
+import { Box, Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Text, useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
-import { useState } from 'react'
+import { Controller, UseFormReturn } from 'react-hook-form'
+import { useState, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
+import { MdOutlineCancel } from 'react-icons/md'
+import { useTranslation } from 'react-i18next'
+import { BiUpload } from 'react-icons/bi'
+import { WORK_ORDER } from '../workOrder.i18n'
+import { dateFormat } from 'utils/date-time-utils'
+import autoTable from 'jspdf-autotable'
+import { currencyFormatter } from 'utils/string-formatters'
 
 const swoPrefix = '/smartwo/api'
 
@@ -27,6 +35,7 @@ export type LineItems = {
   isVerified?: boolean
   isCompleted?: boolean
   action?: string
+  document?: any
 }
 
 export type SWOProject = {
@@ -261,6 +270,39 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   return { isAssignmentAllowed }
 }
 
+/* map to remaining when user unassigns using Unassign Line Item action */
+
+export const mapToRemainingItems = item => {
+  return {
+    ...item,
+    unitPrice: item?.price,
+    totalPrice: Number(item?.price) * Number(item?.quantity),
+  }
+}
+
+/* map to assigned items when user assigns using save on remaining items modal */
+
+export const mapToLineItems = item => {
+  return {
+    ...item,
+    isVerified: false,
+    isCompleted: false,
+    price: item.unitPrice,
+    document: null,
+  }
+}
+
+/* mapping when line item in unassigned and saved. Any changes made to line item will also be saved in swo */
+export const mapToUnAssignItem = item => {
+  return {
+    ...item,
+    unitPrice: item?.price,
+    id: item.smartLineItemId,
+    isAssigned: false,
+    totalPrice: Number(item?.price) * Number(item?.quantity),
+  }
+}
+
 export const PriceInput = props => {
   return <Input {...props} variant="outline" size="sm" />
 }
@@ -274,11 +316,22 @@ type EditableCellType = {
   fieldArray: string
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
+  onChange?: (e, index) => void
 }
 
 export const EditableField = (props: EditableCellType) => {
   const [selectedCell, setSelectedCell] = useState('')
-  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray, updatedItems, setUpdatedItems } = props
+  const {
+    index,
+    fieldName,
+    formControl,
+    inputType,
+    valueFormatter,
+    fieldArray,
+    updatedItems,
+    setUpdatedItems,
+    onChange,
+  } = props
   const { getValues, setValue } = formControl
   const values = getValues()
   return (
@@ -300,6 +353,7 @@ export const EditableField = (props: EditableCellType) => {
             </Box>
           ) : (
             <Input
+              key={fieldName + '.' + index}
               size="sm"
               id="sku"
               type={inputType ?? 'text'}
@@ -312,6 +366,10 @@ export const EditableField = (props: EditableCellType) => {
               onBlurCapture={e => {
                 if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
+
+                if (onChange) {
+                  onChange(e, index)
+                }
               }}
             />
           )}
@@ -324,25 +382,40 @@ export const EditableField = (props: EditableCellType) => {
 type InputFieldType = {
   index: number
   fieldName: string
-  formControl: any
+  formControl: UseFormReturn<any>
   inputType?: string
   fieldArray: string
+  type?: string
+  onChange?: (e, index) => void
 }
 export const InputField = (props: InputFieldType) => {
-  const { index, fieldName, formControl, inputType, fieldArray } = props
+  const { index, fieldName, formControl, fieldArray, onChange: handleChange, inputType = 'text' } = props
   const {
     formState: { errors },
-    register,
+    control,
   } = formControl
   return (
     <>
       <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
-        <Input
-          size="sm"
-          id="now"
-          type={inputType ?? 'text'}
-          {...register(`${fieldArray}.${index}.${fieldName}`, { required: 'This is required' })}
-        />
+        <Controller
+          control={control}
+          name={`${fieldArray}.${index}.${fieldName}`}
+          rules={{ required: 'This is required' }}
+          render={({ field, fieldState }) => (
+            <Input
+              key={[fieldName] + '.' + [index]}
+              size="sm"
+              type={inputType}
+              value={field.value}
+              onChange={e => {
+                field.onChange(e.target.value)
+              }}
+              onBlur={e => {
+                if (handleChange) handleChange(e, index)
+              }}
+            ></Input>
+          )}
+        ></Controller>
         {errors?.remainingItems && (
           <FormErrorMessage>{errors?.[fieldArray][index]?.[fieldName]?.message}</FormErrorMessage>
         )}
@@ -366,4 +439,136 @@ export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
       }}
     />
   )
+}
+
+export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ label, onChange, onClear, value }) => {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation()
+
+  const onFileChange = event => {
+    const file = event.currentTarget.files?.[0]
+    onChange?.(file)
+    event.target.value = null
+  }
+
+  const onFileClear = event => {
+    event.stopPropagation()
+    onClear?.()
+  }
+
+  return (
+    <Box>
+      <input ref={inputRef} type="file" style={{ display: 'none', color: 'red' }} onChange={onFileChange} />
+      {!value ? (
+        <Button
+          minW={'auto'}
+          size="sm"
+          onClick={() => inputRef?.current?.click()}
+          colorScheme="brand"
+          variant="outline"
+          leftIcon={<BiUpload color="#4E87F8" />}
+          display="flex"
+        >
+          {t(`${WORK_ORDER}.${label}`)}
+        </Button>
+      ) : (
+        <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+          <HStack spacing="5px" h="31px" padding="10px" align="center">
+            <Text as="span" maxW="120px" isTruncated title="something">
+              {value}
+            </Text>
+            <MdOutlineCancel cursor="pointer" onClick={onFileClear} />
+          </HStack>
+        </Box>
+      )}
+    </Box>
+  )
+}
+
+export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
+  const invoiceInfo = [
+    { label: 'Property Address:', value: workOrder.propertyAddress },
+    { label: 'Start Date:', value: workOrder.workOrderStartDate },
+    { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
+    { label: 'Lock Box Code:', value: projectData.lockBoxCode },
+  ]
+  const totalAward = assignedItems?.reduce(
+    (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+    0,
+  )
+  const basicFont = undefined
+  const heading = 'Work Order'
+  doc.setFontSize(16)
+  doc.setFont(basicFont, 'bold')
+  const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
+  doc.text(heading, xHeading, 35)
+  var img = new Image()
+  img.src = '/vendorportal/wo-logo.png'
+  img.onload = function () {
+    doc.addImage(img, 'png', 160, 5, 35, 35)
+    doc.setFontSize(10)
+    doc.setFont(basicFont, 'normal')
+    const x = 15
+    let y = 50
+    const length = 115
+    const width = 10
+    invoiceInfo.forEach(inv => {
+      doc.rect(x, y, length, width, 'D')
+      doc.text(inv.label, x + 5, y + 7)
+      doc.text(
+        inv.label === 'Start Date:' || inv.label === 'Completion Date:' ? dateFormat(inv.value) || '' : inv.value,
+        x + 45,
+        y + 7,
+      )
+      y = y + 10
+    })
+    doc.rect(x + length, 50, 65, width, 'D')
+    doc.text('Square Feet:', x + length + 5, 55)
+    doc.rect(x + length, 60, 65, width, 'D')
+    doc.text('Work Type:', x + length + 5, 65)
+    doc.text(workOrder.skillName, x + length + 30, 65)
+
+    doc.rect(x, y + 15, length, width, 'D')
+    doc.text('Sub Contractor: ' + workOrder.companyName, x + 5, y + 22)
+    doc.rect(x + length, y + 15, 65, width, 'D')
+    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount), x + length + 5, y + 22)
+
+    autoTable(doc, {
+      startY: y + 40,
+      headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
+      theme: 'grid',
+      bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
+      body: [
+        ...assignedItems.map(ai => {
+          return {
+            location: ai.location,
+            id: ai.id,
+            sku: ai.sku,
+            description: ai.description,
+            quantity: ai.quantity,
+          }
+        }),
+      ],
+      columnStyles: {
+        location: { cellWidth: 70 },
+        id: { cellWidth: 20 },
+        description: { cellWidth: 70 },
+        quantity: { cellWidth: 20 },
+      },
+      columns: [
+        { header: 'Location', dataKey: 'location' },
+        { header: 'SKU', dataKey: 'sku' },
+        { header: 'Description', dataKey: 'description' },
+        { header: 'Quantity', dataKey: 'quantity' },
+      ],
+    })
+    doc.setFontSize(10)
+    doc.setFont(basicFont, 'normal')
+    const tableEndsY = doc.lastAutoTable.finalY
+    const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
+    doc.setDrawColor(0, 0, 0)
+    doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
+    doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
+    doc.save('Assigned Line Items.pdf')
+  }
 }

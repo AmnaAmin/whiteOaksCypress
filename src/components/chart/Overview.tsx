@@ -56,7 +56,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
       Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
       Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
       Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
-      Cancelled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+      Canceled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
@@ -110,7 +110,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Cancelled" fill="#F7685B" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
           <Legend
             wrapperStyle={{
               lineHeight: '31px',

@@ -3,7 +3,7 @@ import { WorkOrderDetails } from '../work-order-details'
 import { Providers } from 'providers'
 import { WORK_ORDERS, PROJECTS } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
-import { convertDateTimeFromServer } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData, transactions }: any) => {
   await render(
@@ -33,15 +33,13 @@ describe('Work Order modal showing work order specific details', () => {
       workOrder?.statusLabel?.toLocaleLowerCase(),
     )
     expect(screen.getByTestId('WO Issued').textContent).toEqual(
-      workOrder?.workOrderIssueDate ? convertDateTimeFromServer(workOrder?.workOrderIssueDate) : 'mm/dd/yy',
+      workOrder?.workOrderIssueDate ? dateFormat(workOrder?.workOrderIssueDate) : 'mm/dd/yy',
     )
     expect(screen.getByTestId('Expected Start').textContent).toEqual(
-      workOrder?.workOrderStartDate ? convertDateTimeFromServer(workOrder?.workOrderStartDate) : 'mm/dd/yy',
+      workOrder?.workOrderStartDate ? dateFormat(workOrder?.workOrderStartDate) : 'mm/dd/yy',
     )
     expect(screen.getByTestId('Expected Completion').textContent).toEqual(
-      workOrder?.workOrderExpectedCompletionDate
-        ? convertDateTimeFromServer(workOrder?.workOrderExpectedCompletionDate)
-        : 'mm/dd/yy',
+      workOrder?.workOrderExpectedCompletionDate ? dateFormat(workOrder?.workOrderExpectedCompletionDate) : 'mm/dd/yy',
     )
     expect(screen.getByTestId('Completed by Vendor').textContent).toEqual('mm/dd/yy')
   })
@@ -54,7 +52,7 @@ describe('Work Order modal showing work order specific details', () => {
     await renderWorkOrderDetails({ onClose, workOrder, projectData, transactions })
 
     expect(screen.getByTestId('Completed by Vendor').textContent).toEqual(
-      workOrder?.workOrderDateCompleted ? convertDateTimeFromServer(workOrder?.workOrderDateCompleted) : 'mm/dd/yy',
+      workOrder?.workOrderDateCompleted ? dateFormat(workOrder?.workOrderDateCompleted) : 'mm/dd/yy',
     )
     expect(screen.getByTestId('Completed by Vendor').textContent).not.toEqual('mm/dd/yy')
   })

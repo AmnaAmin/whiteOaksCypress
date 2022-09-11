@@ -194,6 +194,7 @@ const WorkOrderDetails = ({
                       setWorkOrderUpdating={setWorkOrderUpdating}
                       swoProject={swoProject}
                       rejectInvoiceCheck={rejectInvoice}
+                      projectData={projectData}
                     />
                   </TabPanel>
                   <TabPanel p={0}>

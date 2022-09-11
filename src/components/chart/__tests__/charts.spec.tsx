@@ -8,13 +8,13 @@ const vendorData = months.map(key => ({
   Active: WO_BY_VENDORS_PER_MONTH?.[key]?.Active || 0,
   Closed: WO_BY_VENDORS_PER_MONTH?.[key]?.Completed || 0,
   Paid: WO_BY_VENDORS_PER_MONTH?.[key]?.Paid || 0,
-  Cancelled: WO_BY_VENDORS_PER_MONTH?.[key]?.Cancelled || 0,
+  Canceled: WO_BY_VENDORS_PER_MONTH?.[key]?.Cancelled || 0,
 }))
 
 describe('Charts testcases', () => {
   test('Overview graph test case', async () => {
     const { container } = render(<OverviewGraph width={400} height={300} vendorData={vendorData} />)
-    expect(screen.getByTestId('legend-Cancelled')).toBeInTheDocument()
+    expect(screen.getByTestId('legend-Canceled')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Active')).toBeInTheDocument()
     // expect(screen.getByTestId('legend-Closed')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Paid')).toBeInTheDocument()

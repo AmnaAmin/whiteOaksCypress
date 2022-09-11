@@ -31,8 +31,12 @@ import {
   LineItems,
   useAllowLineItemsAssignment,
   useRemainingLineItems,
+  createInvoicePdf,
+  mapToLineItems,
+  mapToUnAssignItem,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
+import jsPDF from 'jspdf'
 
 const CalenderCard = props => {
   return (
@@ -91,11 +95,11 @@ const WorkOrderDetailTab = props => {
     setWorkOrderUpdating,
     swoProject,
     rejectInvoiceCheck,
+    projectData,
   } = props
 
   const formReturn = useForm<FormValues>()
   const { register, control, reset } = formReturn
-
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
@@ -103,6 +107,7 @@ const WorkOrderDetailTab = props => {
   const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { mutate: deleteLineItems } = useDeleteLineIds()
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
@@ -130,12 +135,17 @@ const WorkOrderDetailTab = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
+  const downloadPdf = useCallback(() => {
+    let doc = new jsPDF()
+    createInvoicePdf(doc, workOrder, projectData, assignedItemsWatch)
+  }, [assignedItemsWatch, projectData, workOrder])
+
   const setAssignedItems = useCallback(
     items => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
+          return mapToLineItems(s)
         }),
       ]
       append(assigned)
@@ -186,7 +196,7 @@ const WorkOrderDetailTab = props => {
             return { id: a.id, isAssigned: true }
           }),
           ...unAssignedItems.map(a => {
-            return { id: a.smartLineItemId, isAssigned: false }
+            return mapToUnAssignItem(a)
           }),
         ],
         {
@@ -320,6 +330,8 @@ const WorkOrderDetailTab = props => {
               assignedItemsArray={assignedItemsArray}
               isAssignmentAllowed={isAssignmentAllowed}
               swoProject={swoProject}
+              downloadPdf={downloadPdf}
+              workOrder={workOrder}
             />
           </Box>
         </ModalBody>

@@ -1,6 +1,10 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
+  CloseButton,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -18,6 +22,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
+import { useGetProjectFinancialOverview } from 'api/projects'
 import Select from 'components/form/react-select'
 import { t } from 'i18next'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -25,7 +30,7 @@ import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'rea
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
-import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
+import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
@@ -38,8 +43,11 @@ import {
   useRemainingLineItems,
   LineItems,
   useAllowLineItemsAssignment,
+  mapToLineItems,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
+import { WORK_ORDER } from './workOrder.i18n'
+import { useParams } from 'react-router-dom'
 
 const CalenderCard = props => {
   return (
@@ -64,7 +72,7 @@ const InformationCard = props => {
     <Flex>
       <Box lineHeight="20px">
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
-          {props.title}
+          {t(props.title)}
         </Text>
         <Text
           minH="20px"
@@ -88,8 +96,8 @@ type NewWorkOrderType = {
   vendorSkillId: number | string | null
   vendorId: number | string | null
   workOrderExpectedCompletionDate: string | Date | null
-  workOrderStartDate: string | undefined
-  invoiceAmount: string | number | null
+  workOrderStartDate: string | number | undefined
+  invoiceAmount: string | number | null | undefined
   clientApprovedAmount: string | number | null
   percentage: string | number | null
   assignedItems: LineItems[]
@@ -105,6 +113,7 @@ const NewWorkOrder: React.FC<{
   const { vendors } = useFilteredVendors(vendorSkillId)
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
+  const { projectId } = useParams<{ projectId: string }>()
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -113,17 +122,31 @@ const NewWorkOrder: React.FC<{
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
-  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
-  const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
+  const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
+  const defaultFormValues = () => {
+    return {
+      vendorSkillId: null,
+      vendorId: null,
+      workOrderExpectedCompletionDate: null,
+      workOrderStartsDate: undefined,
+      invoiceAmount: null,
+      clientApprovedAmount: null,
+      percentage: null,
+      assignedItems: [],
+    }
+  }
   // Hook form initialization
-  const formReturn = useForm<NewWorkOrderType>()
+  const formReturn = useForm<NewWorkOrderType>({
+    defaultValues: defaultFormValues(),
+  })
 
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    getValues,
     reset,
     formState: { errors },
   } = formReturn
@@ -132,10 +155,30 @@ const NewWorkOrder: React.FC<{
     control,
     name: 'assignedItems',
   })
+
   const { append } = assignedItemsArray
-
+  const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const watchClientApprovedAmount = useWatch({ name: 'clientApprovedAmount', control })
+  const watchInvoiceAmount = useWatch({ name: 'invoiceAmount', control })
+  const watchLineItems = useWatch({ name: 'assignedItems', control })
 
+  const { percentage } = usePercentageCalculation({
+    clientApprovedAmount: watchClientApprovedAmount,
+    vendorWOAmount: watchInvoiceAmount,
+  })
+
+  useEffect(() => {
+    if (percentage !== null) setValue('percentage', percentage)
+  }, [percentage])
+
+  useEffect(() => {
+    const vendorWOAmount = getValues().assignedItems?.reduce(
+      (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+      0,
+    )
+    setValue('invoiceAmount', vendorWOAmount)
+  }, [watchLineItems])
   // Remaining Items handles
   const {
     onClose: onCloseRemainingItemsModal,
@@ -148,7 +191,7 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
+          return mapToLineItems(s)
         }),
       ]
       append(assigned)
@@ -157,19 +200,19 @@ const NewWorkOrder: React.FC<{
     [unassignedItems, setUnAssignedItems],
   )
 
-  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
-    setValue,
-  })
+  const { profitMargin } = useGetProjectFinancialOverview(projectId)
+
   useEffect(() => {
     setUnAssignedItems(remainingItems ?? [])
   }, [remainingItems])
 
   useEffect(() => {
     if (isSuccess) {
-      reset()
+      reset(defaultFormValues())
       onClose()
     }
   }, [isSuccess, onClose])
+
   const onSubmit = values => {
     if (values?.assignedItems?.length > 0) {
       assignLineItems(
@@ -190,8 +233,6 @@ const NewWorkOrder: React.FC<{
       createWorkOrder(payload as any)
     }
   }
-
-
 
   useEffect(() => {
     const option = [] as any
@@ -226,8 +267,8 @@ const NewWorkOrder: React.FC<{
     <Modal
       isOpen={isOpen}
       onClose={() => {
+        reset(defaultFormValues())
         onClose()
-        reset()
       }}
       size="6xl"
       variant="custom"
@@ -244,6 +285,13 @@ const NewWorkOrder: React.FC<{
 
           <ModalBody overflow={'auto'} justifyContent="center">
             <Box>
+              <Alert status="info" variant="custom" size="sm">
+                <AlertIcon />
+                <AlertDescription>{t(`${WORK_ORDER}.clientApprovedAmountInfo`)}</AlertDescription>
+                <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+              </Alert>
+            </Box>
+            <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard
                   title="Client Start"
@@ -253,9 +301,13 @@ const NewWorkOrder: React.FC<{
                   title="Client End "
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
-                <InformationCard title="Profit Percentage" date={`${projectData?.profitPercentage}%`} />
 
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
+                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
+
+                <InformationCard
+                  title="finalSowAmount"
+                  date={currencyFormatter(projectData?.sowOriginalContractAmount as number)}
+                />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
@@ -337,7 +389,6 @@ const NewWorkOrder: React.FC<{
                                 prefix={'$'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
-                                  onApprovedAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -361,12 +412,9 @@ const NewWorkOrder: React.FC<{
                             <>
                               <NumberFormat
                                 value={field.value}
+                                disabled
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
-                                onValueChange={e => {
-                                  field.onChange(e.floatValue)
-                                  onPercentageChange(e.floatValue)
-                                }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -393,10 +441,7 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
-                                onValueChange={e => {
-                                  field.onChange(e.floatValue)
-                                  onInoviceAmountChange(e.floatValue)
-                                }}
+                                disabled
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -455,6 +500,7 @@ const NewWorkOrder: React.FC<{
                   assignedItemsArray={assignedItemsArray}
                   isAssignmentAllowed={isAssignmentAllowed}
                   swoProject={swoProject}
+                  workOrder={null}
                 />
               </Box>
             </Box>
@@ -464,15 +510,15 @@ const NewWorkOrder: React.FC<{
             <HStack spacing="16px">
               <Button
                 onClick={() => {
+                  reset(defaultFormValues())
                   onClose()
-                  reset()
                 }}
                 colorScheme="brand"
                 variant="outline"
               >
                 {t('cancel')}
               </Button>
-              <Button type="submit" colorScheme="brand">
+              <Button type="submit" colorScheme="brand" disabled={getValues()?.assignedItems?.length < 1}>
                 {t('save')}
               </Button>
             </HStack>
