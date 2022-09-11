@@ -67,7 +67,7 @@ const InformationCard = props => {
     <Flex>
       <Box lineHeight="20px">
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
-          {props.title}
+          {t(props.title)}
         </Text>
         <Text
           minH="20px"
@@ -259,10 +259,10 @@ const NewWorkOrder: React.FC<{
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
 
-                <InformationCard title="Profit Percentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
+                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
 
                 <InformationCard
-                  title=" Final SOW Amount"
+                  title="finalSowAmount"
                   date={currencyFormatter(projectData?.sowOriginalContractAmount as number)}
                 />
                 {/*  commenting as requirement yet to be confirmed
