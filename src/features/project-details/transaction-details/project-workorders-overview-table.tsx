@@ -134,6 +134,17 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
+        Header: 'Vendor Payment',
+        accessor: 'vendorPaymentPercentage',
+        Cell(cellInfo) {
+          return cellInfo.value+"%"
+        },
+        Footer: info => {
+          const vendorPaymentPercentage = React.useMemo(() => getTotalOfKey('vendorPaymentPercentage', info.rows), [info.rows])
+          return vendorPaymentPercentage+"%"
+        },
+      },
+      {
         Header: 'Adjustments for CO',
         accessor: 'coAdjustment',
         Cell(cellInfo) {
