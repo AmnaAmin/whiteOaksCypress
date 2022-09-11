@@ -18,6 +18,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
+import { useGetProjectFinancialOverview } from 'api/projects'
 import Select from 'components/form/react-select'
 import { t } from 'i18next'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -41,6 +42,7 @@ import {
   mapToLineItems,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
+import { useParams } from 'react-router-dom'
 
 const CalenderCard = props => {
   return (
@@ -65,7 +67,7 @@ const InformationCard = props => {
     <Flex>
       <Box lineHeight="20px">
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
-          {props.title}
+          {t(props.title)}
         </Text>
         <Text
           minH="20px"
@@ -106,6 +108,7 @@ const NewWorkOrder: React.FC<{
   const { vendors } = useFilteredVendors(vendorSkillId)
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
+  const { projectId } = useParams<{ projectId: string }>()
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -157,6 +160,8 @@ const NewWorkOrder: React.FC<{
     },
     [unassignedItems, setUnAssignedItems],
   )
+
+  const { profitMargin } = useGetProjectFinancialOverview(projectId)
 
   const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
     setValue,
@@ -253,12 +258,13 @@ const NewWorkOrder: React.FC<{
                   title="Client End "
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
-                <InformationCard
-                  title="Profit Percentage"
-                  date={projectData?.profitPercentage ? `${projectData?.profitPercentage}%` : '0%'}
-                />
 
-                <InformationCard title=" Final SOW Amount" date={currencyFormatter(projectData?.revenue as number)} />
+                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
+
+                <InformationCard
+                  title="finalSowAmount"
+                  date={currencyFormatter(projectData?.sowOriginalContractAmount as number)}
+                />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
