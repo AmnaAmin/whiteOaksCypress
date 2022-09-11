@@ -2,8 +2,8 @@ import { Box } from '@chakra-ui/react'
 import { useVendorsPerMonth } from 'api/vendor-dashboard'
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { GenericObjectType } from 'types/common.types'
 import { values } from 'lodash'
+import { months, monthsShort } from 'utils/date-time-utils'
 
 export enum WORK_ORDER_STATUS {
   Paid = 68,
@@ -14,35 +14,6 @@ export enum WORK_ORDER_STATUS {
   Invoiced = 110,
   Decline = 111,
   PastDue = 114,
-}
-
-export const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-export const monthsShort: GenericObjectType = {
-  January: 'Jan',
-  February: 'Feb',
-  March: 'Mar',
-  April: 'Apr',
-  May: 'May',
-  June: 'Jun',
-  July: 'Jul',
-  August: 'Aug',
-  September: 'Sep',
-  October: 'Oct',
-  November: 'Nov',
-  December: 'Dec',
 }
 
 const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {

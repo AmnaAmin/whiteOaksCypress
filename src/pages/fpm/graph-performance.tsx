@@ -1,50 +1,11 @@
 import { Box } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import React, { useCallback, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { GenericObjectType } from 'types/common.types'
+import { months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
-export enum WORK_ORDER_STATUS {
-  Paid = 68,
-  Active = 34,
-  Completed = 36,
-  Cancelled = 35,
-  Inactive = 37,
-  Invoiced = 110,
-  Decline = 111,
-  PastDue = 114,
-}
-
-export const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-export const monthsShort: GenericObjectType = {
-  January: 'Jan',
-  February: 'Feb',
-  March: 'Mar',
-  April: 'Apr',
-  May: 'May',
-  June: 'Jun',
-  July: 'Jul',
-  August: 'Aug',
-  September: 'Sep',
-  October: 'Oct',
-  November: 'Nov',
-  December: 'Dec',
-}
-
-const PerformanceGraph: React.FC<{ chartData?: any }> = ({ chartData }) => {
+const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ chartData, isLoading }) => {
   const vendors = [chartData?.chart]
 
   const vendorData = months.map(key => {
@@ -61,7 +22,9 @@ const PerformanceGraph: React.FC<{ chartData?: any }> = ({ chartData }) => {
     }
   })
 
-  return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
+  return (
+    <>{isLoading ? <BlankSlate size="sm" /> : <OverviewGraph vendorData={vendorData} width="98%" height={360} />}</>
+  )
 }
 
 export const OverviewGraph = ({ vendorData, width, height }) => {
@@ -81,13 +44,16 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
     ),
   )
 
-  const selectBar = e => {
-    setBarProps({
-      ...barProps,
-      [e.dataKey]: !barProps[e.dataKey],
-      hover: null,
-    })
-  }
+  const selectBar = useCallback(
+    e => {
+      setBarProps({
+        ...barProps,
+        [e.dataKey]: !barProps[e.dataKey],
+        hover: null,
+      })
+    },
+    [barProps],
+  )
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>

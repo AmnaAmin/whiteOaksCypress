@@ -21,7 +21,7 @@ export const Performance = () => {
             {t('Performance Per Month')}
           </Text>{' '}
         </Center>
-        <PerformanceGraph chartData={chart} />
+        <PerformanceGraph chartData={chart} isLoading={isLoading} />
       </Card>
     </>
   )
