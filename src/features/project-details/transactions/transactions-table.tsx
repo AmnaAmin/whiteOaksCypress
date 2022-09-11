@@ -29,7 +29,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} p="0">
             <Flex alignItems="center" h="60px" pl="2">
               <Text
                 fontSize="14px"
