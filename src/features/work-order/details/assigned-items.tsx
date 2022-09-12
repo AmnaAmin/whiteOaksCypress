@@ -125,7 +125,18 @@ const AssignedItems = (props: AssignedItemType) => {
         <>
           <Stack direction="row" mt="32px" justifyContent="space-between">
             <HStack>
-              <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>ss
+              <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>
+              {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
+                <>
+                  <Box pl="2" pr="1">
+                    <Divider size="lg" orientation="vertical" h="25px" />
+                  </Box>
+                  <Button variant="ghost" disabled colorScheme="brand" leftIcon={<FaSpinner />}>
+                    {t(`${WORK_ORDER}.addNewItem`)}
+                  </Button>
+                </>
+              )}
+
               {isAssignmentAllowed && (
                 <>
                   <Box pl="2" pr="1">
@@ -140,10 +151,6 @@ const AssignedItems = (props: AssignedItemType) => {
                   >
                     {t(`${WORK_ORDER}.addNewItem`)}
                   </Button>
-                </>
-              )}
-              {isAssignmentAllowed && (
-                <>
                   <Box pl="2" pr="1">
                     <Divider size="lg" orientation="vertical" h="25px" />
                   </Box>
@@ -218,12 +225,6 @@ const AssignedItems = (props: AssignedItemType) => {
                   leftIcon={<Icon as={BiDownload} boxSize={4} />}
                 >
                   {t(`${WORK_ORDER}.downloadPDF`)}
-                </Button>
-              )}
-
-              {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
-                <Button variant="outline" colorScheme="brand" disabled leftIcon={<FaSpinner />}>
-                  {t(`${WORK_ORDER}.remainingItems`)}
                 </Button>
               )}
             </HStack>
