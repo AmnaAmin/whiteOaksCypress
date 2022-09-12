@@ -76,6 +76,12 @@ const RemainingItemsModal: React.FC<{
     reset({ remainingItems })
   }, [remainingItems])
 
+  useEffect(() => {
+    if (swoProject?.status?.toLocaleUpperCase() === 'COMPLETED') {
+      refetchRemainingItems()
+    }
+  }, [swoProject])
+
   const onSubmit = async values => {
     const newLineItems = values.remainingItems.filter(r => r.action === 'new')
     const updatedLineItems = [...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))]
