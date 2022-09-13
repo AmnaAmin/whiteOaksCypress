@@ -579,7 +579,7 @@ export const useColumnsShowDecision = ({ workOrder }) => {
   const defaultStatus = false
   const { isVendor } = useUserRolesSelector()
   const showEditablePrice = !isVendor && !workOrder // !workOrder temporary check, Price is editable for non-vendor
-  const showReadOnlyPrice = isVendor && !!workOrder?.showPricing //price is readonly for non vendor and will only show if showPricing is true.
+  const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
   const showVerification = !isVendor && workOrder
   return {
     showSelect: defaultStatus || !isVendor,
