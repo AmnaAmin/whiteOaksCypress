@@ -27,7 +27,16 @@ import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, LineItems, mapToRemainingItems, SWOProject, UploadImage } from './assignedItems.utils'
+import {
+  EditableField,
+  LineItems,
+  mapToRemainingItems,
+  SWOProject,
+  UploadImage,
+  useActionsShowDecision,
+  useColumnsShowDecision,
+  useFieldEnableDecision,
+} from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
 import { difference } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -114,10 +123,13 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const values = getValues()
   const [selectedRows, setSelectedRows] = useState<any>([])
-  const { isVendor } = useUserRolesSelector()
   const watchClientApprovedAmount = useWatch({ name: 'clientApprovedAmount', control })
   const lineItems = useWatch({ name: 'assignedItems', control })
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
+  const { showEditablePrice, showReadOnlyPrice, showStatus, showImages, showVerification, showSelect } =
+    useColumnsShowDecision({ workOrder })
+  const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsComplete } = useActionsShowDecision({ workOrder })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, values })
 
   return (
     <Box>
@@ -184,14 +196,15 @@ const AssignedItems = (props: AssignedItemType) => {
               )}
             </HStack>
             <HStack spacing="16px">
-              {!isVendor && (
+              {showPriceCheckBox && (
                 <Checkbox size="md" {...register('showPrice')}>
                   {t(`${WORK_ORDER}.showPrice`)}
                 </Checkbox>
               )}
-              {!isVendor && workOrder && (
+              {showMarkAllIsVerified && (
                 <Checkbox
                   size="md"
+                  disabled={!verificationEnabled}
                   onChange={e => {
                     assignedItems.forEach((item, index) => {
                       if (values?.assignedItems?.[index]?.isCompleted) {
@@ -203,9 +216,10 @@ const AssignedItems = (props: AssignedItemType) => {
                   {t(`${WORK_ORDER}.markAllVerified`)}
                 </Checkbox>
               )}
-              {isVendor && (
+              {showMarkAllIsComplete && (
                 <Checkbox
                   size="lg"
+                  disabled={!statusEnabled}
                   isChecked={markAllCompleted}
                   onChange={e => {
                     assignedItems.forEach((item, index) => {
@@ -236,7 +250,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 <Table width={'100%'} overflow={'auto'}>
                   <Thead h="72px" position="sticky" top="0">
                     <Tr whiteSpace="nowrap">
-                      {!isVendor && (
+                      {showSelect && (
                         <Th sx={headerStyle} minW="50px">
                           <Checkbox
                             size="md"
@@ -271,7 +285,7 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} minW="100px">
                         {t(`${WORK_ORDER}.quantity`)}
                       </Th>
-                      {!isVendor && (
+                      {(showReadOnlyPrice || showEditablePrice) && (
                         <Th sx={headerStyle} minW="100px">
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
@@ -279,22 +293,17 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} minW="100px">
                         {t(`${WORK_ORDER}.total`)}
                       </Th>
-                      {isVendor && !!values.showPrice && (
-                        <Th sx={headerStyle} minW="100px">
-                          {t(`${WORK_ORDER}.price`)}
-                        </Th>
-                      )}
-                      {workOrder && (
+                      {showStatus && (
                         <Th sx={headerStyle} textAlign={'center'} minW="200px">
                           {t(`${WORK_ORDER}.status`)}
                         </Th>
                       )}
-                      {workOrder && (
+                      {showImages && (
                         <Th sx={headerStyle} textAlign={'center'}>
                           {t(`${WORK_ORDER}.images`)}
                         </Th>
                       )}
-                      {!isVendor && workOrder && (
+                      {showVerification && (
                         <Th sx={headerStyle} textAlign={'center'} minW="200px">
                           {t(`${WORK_ORDER}.verification`)}
                         </Th>
@@ -323,7 +332,6 @@ const AssignedItems = (props: AssignedItemType) => {
                           downloadPdf={downloadPdf}
                           selectedRows={selectedRows}
                           setSelectedRows={setSelectedRows}
-                          isVendor={isVendor}
                           workOrder={workOrder}
                         />
                       </>
@@ -340,10 +348,15 @@ const AssignedItems = (props: AssignedItemType) => {
 }
 
 export const AssignedLineItems = props => {
-  const { selectedRows, setSelectedRows, isVendor, workOrder } = props
+  const { selectedRows, setSelectedRows, workOrder } = props
   const { control, getValues, setValue } = props.formControl
   const { fields: assignedItems } = props.fieldArray
   const values = getValues()
+  const { showEditablePrice, showReadOnlyPrice, showStatus, showImages, showVerification, showSelect } =
+    useColumnsShowDecision({ workOrder })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, values })
+  const { isVendor } = useUserRolesSelector()
+  const allowEdit = !isVendor && !workOrder
 
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
@@ -374,7 +387,7 @@ export const AssignedLineItems = props => {
       {assignedItems?.map((items, index) => {
         return (
           <Tr>
-            {!isVendor && (
+            {showSelect && (
               <Td>
                 <Checkbox
                   size="md"
@@ -392,7 +405,7 @@ export const AssignedLineItems = props => {
               </Td>
             )}
             <Td>
-              {!isVendor ? (
+              {allowEdit ? (
                 <EditableField
                   index={index}
                   fieldName="sku"
@@ -405,7 +418,7 @@ export const AssignedLineItems = props => {
               )}
             </Td>
             <Td>
-              {!isVendor ? (
+              {allowEdit ? (
                 <EditableField
                   index={index}
                   fieldName="productName"
@@ -418,7 +431,7 @@ export const AssignedLineItems = props => {
               )}
             </Td>
             <Td>
-              {!isVendor ? (
+              {allowEdit ? (
                 <EditableField
                   index={index}
                   fieldName="description"
@@ -431,7 +444,7 @@ export const AssignedLineItems = props => {
               )}
             </Td>
             <Td>
-              {!isVendor ? (
+              {allowEdit ? (
                 <EditableField
                   index={index}
                   fieldName="quantity"
@@ -443,7 +456,7 @@ export const AssignedLineItems = props => {
                 <Box>{values?.assignedItems[index]?.quantity}</Box>
               )}
             </Td>
-            {!isVendor && (
+            {showEditablePrice && (
               <Td>
                 <EditableField
                   index={index}
@@ -455,7 +468,7 @@ export const AssignedLineItems = props => {
                 />
               </Td>
             )}
-            {isVendor && values.showPrice && (
+            {showReadOnlyPrice && (
               <Td>
                 <Box>{currencyFormatter(values?.assignedItems[index]?.price)}</Box>
               </Td>
@@ -469,7 +482,7 @@ export const AssignedLineItems = props => {
                 </Box>
               </Td>
             }
-            {workOrder && (
+            {showStatus && (
               <Td>
                 <HStack justifyContent={'center'} h="50px">
                   <Controller
@@ -479,6 +492,7 @@ export const AssignedLineItems = props => {
                       <CustomCheckBox
                         text="Completed"
                         isChecked={field.value}
+                        disabled={!statusEnabled}
                         onChange={e => {
                           if (!e.target.checked) {
                             setValue(`assignedItems.${index}.isVerified`, false)
@@ -491,7 +505,7 @@ export const AssignedLineItems = props => {
                 </HStack>
               </Td>
             )}
-            {workOrder && (
+            {showImages && (
               <Td>
                 <Controller
                   name={`assignedItems.${index}.uploadedDoc`}
@@ -525,7 +539,7 @@ export const AssignedLineItems = props => {
                 />
               </Td>
             )}
-            {!isVendor && workOrder && (
+            {showVerification && (
               <Td>
                 <HStack justifyContent={'center'} h="50px">
                   <Controller
@@ -534,7 +548,7 @@ export const AssignedLineItems = props => {
                     render={({ field, fieldState }) => (
                       <CustomCheckBox
                         text="Verified"
-                        disabled={!values.assignedItems?.[index]?.isCompleted}
+                        disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
                         isChecked={field.value}
                         onChange={e => {
                           field.onChange(e.currentTarget.checked)

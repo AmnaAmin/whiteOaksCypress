@@ -8,6 +8,7 @@ import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
+import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -36,7 +37,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries('accountPayable')
+        queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -201,6 +202,16 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 }
 
 /* WorkOrder Details */
+
+export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
+  const defaultStatus = false
+  const completedByVendor =
+    [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
+    formValues?.assignedItems?.every(e => e.isCompleted && e.isVerified)
+  return {
+    completedByVendor: defaultStatus || completedByVendor,
+  }
+}
 
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder

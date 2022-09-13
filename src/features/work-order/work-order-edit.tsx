@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
-  useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -33,18 +32,18 @@ import { usePCProject } from 'api/pc-projects'
 import { useDocuments } from 'api/vendor-projects'
 import { useTransactions } from 'api/transactions'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
+import { useFetchProjectId } from './details/assignedItems.utils'
 
 const WorkOrderDetails = ({
   workOrder,
-  onClose: close,
-  swoProject,
+  onClose,
+  isOpen,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
-  swoProject?: any
+  isOpen: boolean
 }) => {
   const { t } = useTranslation()
-  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [tabIndex, setTabIndex] = useState(0)
   // const [notesCount, setNotesCount] = useState(0)
   const [rejectLW, setRejectLW] = useState(false)
@@ -52,6 +51,7 @@ const WorkOrderDetails = ({
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
+  const { swoProject } = useFetchProjectId(projId)
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
   })
@@ -63,27 +63,22 @@ const WorkOrderDetails = ({
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
   const navigate = useNavigate()
 
-  const onClose = useCallback(() => {
-    onCloseDisclosure()
-    close()
-  }, [close, onCloseDisclosure])
-
   useEffect(() => {
     if (workOrder) {
-      onOpen()
       setRejectInvoice(workOrder.status === 111)
       if (workOrder.leanWaiverSubmitted) {
         setRejectLW(!workOrder.lienWaiverAccepted)
+      } else {
+        setRejectLW(false)
       }
       if (!projId) {
         setProjId(workOrder?.projectId?.toString())
       }
     } else {
-      onCloseDisclosure()
+      onClose()
       setTabIndex(0)
-      setRejectLW(false)
     }
-  }, [onCloseDisclosure, onOpen, workOrder])
+  }, [workOrder, onClose])
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }

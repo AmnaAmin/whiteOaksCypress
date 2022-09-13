@@ -11,6 +11,7 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const swoPrefix = '/smartwo/api'
 
@@ -570,5 +571,46 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
     doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
     doc.save('Assigned Line Items.pdf')
+  }
+}
+
+export const useColumnsShowDecision = ({ workOrder }) => {
+  const defaultStatus = false
+  const { isVendor } = useUserRolesSelector()
+  const showEditablePrice = !isVendor && !workOrder // !workOrder temporary check,
+  const showReadOnlyPrice = isVendor && !!workOrder.showPricing
+  const showVerification = !isVendor && workOrder
+  return {
+    showSelect: defaultStatus || !isVendor,
+    showEditablePrice: defaultStatus || showEditablePrice,
+    showReadOnlyPrice: defaultStatus || showReadOnlyPrice,
+    showStatus: defaultStatus || workOrder,
+    showImages: defaultStatus || workOrder,
+    showVerification: defaultStatus || showVerification,
+  }
+}
+
+export const useActionsShowDecision = ({ workOrder }) => {
+  const defaultStatus = false
+  const { isVendor } = useUserRolesSelector()
+
+  return {
+    showPriceCheckBox: defaultStatus || !isVendor,
+    showMarkAllIsVerified: defaultStatus || (!isVendor && workOrder),
+    showMarkAllIsComplete: defaultStatus || isVendor,
+    showVerification: defaultStatus || workOrder,
+  }
+}
+
+export const useFieldEnableDecision = ({ workOrder, values }) => {
+  const defaultStatus = false
+  const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(
+    workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
+  )
+
+  return {
+    statusEnabled: defaultStatus || statusEnabled,
+    verificationEnabled: defaultStatus || verificationEnabled,
   }
 }

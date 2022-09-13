@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'api/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -50,6 +50,7 @@ type PayablePropsTyep = {
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
+    const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const { data: payableData, isLoading, refetch } = useAccountPayable()
 
     useEffect(() => {
@@ -102,7 +103,9 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             onClose={() => {
               setSelectedWorkOrder(undefined)
               refetch()
+              onCloseDisclosure()
             }}
+            isOpen={isOpen}
           />
           <TableWrapper
             columns={payableColumns}
@@ -113,7 +116,10 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             tableHeight="calc(100vh - 300px)"
             name="payable-table"
             defaultFlexStyle={false}
-            onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+            onRowClick={(e, row) => {
+              setSelectedWorkOrder(row.original)
+              onOpen()
+            }}
           />
         </>
       </Box>
