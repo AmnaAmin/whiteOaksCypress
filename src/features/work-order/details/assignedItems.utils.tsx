@@ -574,11 +574,14 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
   }
 }
 
+// !workOrder is a check for new work order modal.
+// In case of edit workorder will be a non-nullable object.
+// In case of new work order, it will be null
+
 export const useColumnsShowDecision = ({ workOrder }) => {
-  // !workOrder is a check for new work order modal. In case of edit workorder will be a non-nullable object. In case of new work order, it will be null
   const defaultStatus = false
   const { isVendor } = useUserRolesSelector()
-  const showEditablePrice = !isVendor && !workOrder // !workOrder temporary check, Price is editable for non-vendor
+  const showEditablePrice = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
   const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
   const showVerification = !isVendor && workOrder
   return {
