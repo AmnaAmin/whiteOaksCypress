@@ -356,7 +356,7 @@ export const AssignedLineItems = props => {
     useColumnsShowDecision({ workOrder })
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, values })
   const { isVendor } = useUserRolesSelector()
-  const allowEdit = !isVendor && !workOrder
+  const allowEdit = !isVendor && !workOrder // !workOrder temporary check till further requirements
 
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
