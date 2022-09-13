@@ -3,23 +3,58 @@ import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
+import React from 'react'
 
-const PROJECTS_QUERY_KEY = 'projects'
-export const useProjects = () => {
+export const PROJECTS_QUERY_KEY = 'projects'
+export const useProjects = (filterQueryString?: string, page?: number, size?: number) => {
+  const [total, setTotal] = React.useState(0)
   const client = useClient()
 
-  const { data, ...rest } = useQuery<Array<Project>>(PROJECTS_QUERY_KEY, async () => {
-    const response = await client(`projects?page=0&size=10000000&sort=id,asc`, {})
+  const { data, ...rest } = useQuery<Array<Project>>(
+    [PROJECTS_QUERY_KEY, filterQueryString],
+    async () => {
+      const response = await client(`projects?${filterQueryString || ''}`, {})
+      const total = response?.headers?.get('X-Total-Count')
 
-    return response?.data
-  })
+      if (total) {
+        setTotal(size ? Math.ceil(Number(total) / size) : 0)
+      }
+
+      return response?.data
+    },
+    {
+      keepPreviousData: true,
+    },
+  )
 
   return {
     projects: data,
+    totalPages: total,
     ...rest,
   }
 }
 
+export const ALL_PROJECTS_QUERY_KEY = 'all_projects'
+export const useGetAllProjects = () => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ALL_PROJECTS_QUERY_KEY,
+    async () => {
+      const response = await client(`projects?page=0&size=1000000&sort=id,asc`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    allProjects: data,
+    ...rest,
+  }
+}
 export const useProject = (projectId?: string) => {
   const client = useClient()
 
@@ -66,10 +101,16 @@ export const useProjectAlerts = (projectId, login) => {
 
 export const useWeekDayProjectsDue = (id?: string) => {
   const client = useClient()
-  return useQuery(['weekDayFilters', id], async () => {
-    const response = await client(`projects-due-this-week/${id ?? ''}`, {})
-    return response?.data
-  })
+  return useQuery(
+    ['weekDayFilters', id],
+    async () => {
+      const response = await client(`projects-due-this-week/${id ?? ''}`, {})
+      return response?.data
+    },
+    {
+      enabled: !!id,
+    },
+  )
 }
 
 export const useProjectNotes = ({ projectId }: { projectId: number | undefined }) => {
