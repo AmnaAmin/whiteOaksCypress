@@ -3,6 +3,7 @@ import numeral from 'numeral'
 import React from 'react'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings'
+import { percentageFormatter } from 'utils/string-formatters'
 
 type WorkOrderFinancialOverviewTableProps = { financialOveriewTableData: any; isLoading: boolean }
 
@@ -131,6 +132,20 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
           const total = React.useMemo(() => getTotalOfKey('material', info.rows), [info.rows])
 
           return numeral(total).format('$0,0.00')
+        },
+      },
+      {
+        Header: 'Vendor Payment',
+        accessor: 'vendorPaymentPercentage',
+        Cell(cellInfo) {
+          return cellInfo.value ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
+        },
+        Footer: info => {
+          const vendorPaymentPercentage = React.useMemo(
+            () => getTotalOfKey('vendorPaymentPercentage', info.rows),
+            [info.rows],
+          )
+          return vendorPaymentPercentage ? numeral(percentageFormatter(vendorPaymentPercentage)).format('0.00%') : ''
         },
       },
       {
