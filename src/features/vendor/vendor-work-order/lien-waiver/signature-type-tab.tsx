@@ -35,8 +35,7 @@ export const SignatureTab = props => {
                   labelStyle={{
                     fontSize: '16px',
                     fontWeight: 500,
-                    color: 'gray.800',
-                    marginBottom: '20px',
+                    color: 'gray.600',
                     display: 'flex',
                     justifyContent: 'center',
                   }}
@@ -64,7 +63,7 @@ export const SignatureTab = props => {
         <ModalFooter mt={6}>
           <HStack spacing="16px">
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
-              {t('close')}
+              {t('cancel')}
             </Button>
             <Button data-testid="save-signature" colorScheme="brand" type="submit" onClick={handleSubmit(onSubmit)}>
               {t('apply')}
