@@ -129,7 +129,7 @@ const AssignedItems = (props: AssignedItemType) => {
   const { showEditablePrice, showReadOnlyPrice, showStatus, showImages, showVerification, showSelect } =
     useColumnsShowDecision({ workOrder })
   const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsComplete } = useActionsShowDecision({ workOrder })
-  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, values })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
 
   return (
     <Box>
@@ -354,7 +354,7 @@ export const AssignedLineItems = props => {
   const values = getValues()
   const { showEditablePrice, showReadOnlyPrice, showStatus, showImages, showVerification, showSelect } =
     useColumnsShowDecision({ workOrder })
-  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, values })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
   const { isVendor } = useUserRolesSelector()
   const allowEdit = !isVendor && !workOrder // !workOrder temporary check till further requirements
 

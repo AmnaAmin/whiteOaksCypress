@@ -604,7 +604,7 @@ export const useActionsShowDecision = ({ workOrder }) => {
   }
 }
 
-export const useFieldEnableDecision = ({ workOrder, values }) => {
+export const useFieldEnableDecision = ({ workOrder }) => {
   const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
   const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
   const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
