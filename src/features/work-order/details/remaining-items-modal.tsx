@@ -186,7 +186,7 @@ const RemainingItemsModal: React.FC<{
                       onClick={onDeleteConfirmationModalOpen}
                       leftIcon={<RiDeleteBinLine color="#4E87F8" />}
                     >
-                      {t('deleteRow')}
+                      {t(`${WORK_ORDER}.deleteRows`)}
                     </Button>
                   </>
                 )}
