@@ -129,8 +129,9 @@ export const ProjectDetails: React.FC = props => {
                         </Text>
                         <Text>{t('newWorkOrder')}</Text>
                       </Flex>
-
-                      <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
+                      {isOpen && (
+                        <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
+                      )}
                     </Button>
                   )}
                 {tabIndex === 3 && (

@@ -11,6 +11,7 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const swoPrefix = '/smartwo/api'
 
@@ -570,5 +571,46 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
     doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
     doc.save('Assigned Line Items.pdf')
+  }
+}
+
+// !workOrder is a check for new work order modal.
+// In case of edit, workorder will be a non-nullable object.
+// In case of new work order, it will be null
+
+export const useColumnsShowDecision = ({ workOrder }) => {
+  const { isVendor } = useUserRolesSelector()
+  const showEditablePrice = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
+  const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
+  const showVerification = !isVendor && workOrder
+  return {
+    showSelect: !isVendor,
+    showEditablePrice: showEditablePrice,
+    showReadOnlyPrice: showReadOnlyPrice,
+    showStatus: !!workOrder,
+    showImages: !!workOrder,
+    showVerification: showVerification,
+  }
+}
+
+export const useActionsShowDecision = ({ workOrder }) => {
+  const { isVendor } = useUserRolesSelector()
+
+  return {
+    showPriceCheckBox: !isVendor,
+    showMarkAllIsVerified: !isVendor && workOrder,
+    showMarkAllIsComplete: isVendor,
+    showVerification: !!workOrder,
+  }
+}
+
+export const useFieldEnableDecision = ({ workOrder }) => {
+  const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
+  const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
+  const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
+
+  return {
+    statusEnabled: statusEnabled,
+    verificationEnabled: verificationEnabled,
   }
 }
