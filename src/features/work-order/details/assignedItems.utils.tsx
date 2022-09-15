@@ -575,46 +575,42 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
 }
 
 // !workOrder is a check for new work order modal.
-// In case of edit workorder will be a non-nullable object.
+// In case of edit, workorder will be a non-nullable object.
 // In case of new work order, it will be null
 
 export const useColumnsShowDecision = ({ workOrder }) => {
-  const defaultStatus = false
   const { isVendor } = useUserRolesSelector()
   const showEditablePrice = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
   const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
   const showVerification = !isVendor && workOrder
   return {
-    showSelect: defaultStatus || !isVendor,
-    showEditablePrice: defaultStatus || showEditablePrice,
-    showReadOnlyPrice: defaultStatus || showReadOnlyPrice,
-    showStatus: defaultStatus || workOrder,
-    showImages: defaultStatus || workOrder,
-    showVerification: defaultStatus || showVerification,
+    showSelect: !isVendor,
+    showEditablePrice: showEditablePrice,
+    showReadOnlyPrice: showReadOnlyPrice,
+    showStatus: !!workOrder,
+    showImages: !!workOrder,
+    showVerification: showVerification,
   }
 }
 
 export const useActionsShowDecision = ({ workOrder }) => {
-  const defaultStatus = false
   const { isVendor } = useUserRolesSelector()
 
   return {
-    showPriceCheckBox: defaultStatus || !isVendor,
-    showMarkAllIsVerified: defaultStatus || (!isVendor && workOrder),
-    showMarkAllIsComplete: defaultStatus || isVendor,
-    showVerification: defaultStatus || workOrder,
+    showPriceCheckBox: !isVendor,
+    showMarkAllIsVerified: !isVendor && workOrder,
+    showMarkAllIsComplete: isVendor,
+    showVerification: !!workOrder,
   }
 }
 
-export const useFieldEnableDecision = ({ workOrder, values }) => {
-  const defaultStatus = false
-  const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
-  const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(
-    workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
-  )
+export const useFieldEnableDecision = ({ workOrder }) => {
+  const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
+  const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
+  const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
 
   return {
-    statusEnabled: defaultStatus || statusEnabled,
-    verificationEnabled: defaultStatus || verificationEnabled,
+    statusEnabled: statusEnabled,
+    verificationEnabled: verificationEnabled,
   }
 }

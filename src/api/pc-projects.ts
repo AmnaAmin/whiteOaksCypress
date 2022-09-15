@@ -414,7 +414,7 @@ export const useFilteredVendors = vendorSkillId => {
 
 export const usePercentageCalculation = ({ clientApprovedAmount, vendorWOAmount }) => {
   let percentage = 0
-  if (clientApprovedAmount && clientApprovedAmount) {
+  if (clientApprovedAmount && vendorWOAmount) {
     percentage = ((clientApprovedAmount - vendorWOAmount) / clientApprovedAmount) * 100
     percentage = round(percentage, 2)
   }
