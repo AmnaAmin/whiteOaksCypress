@@ -23,7 +23,7 @@ export const useUploadDocument = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['documents', projectId])
-
+        queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         toast({
           title: 'Upload New Document',
           description: 'New document has been uploaded successfully.',
