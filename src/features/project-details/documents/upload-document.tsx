@@ -36,7 +36,11 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOders } = useProjectWorkOrders(projectId)
 
-  const workOderState = workOders
+  //Permit document against vendor dropdown should not show Cancelled WO vendors list.
+  const statusLabel = workOders?.map(e => e?.statusLabel)
+  const workOderState = statusLabel?.includes('Cancelled')
+    ? null
+    : workOders
     ? workOders?.map(state => ({
         label: `${state?.companyName}(${state?.skillName})`,
         value: state,
