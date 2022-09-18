@@ -8,7 +8,6 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { SelectOption } from 'types/transaction.type'
 import NumberFormat from 'react-number-format'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -45,7 +44,6 @@ const Contact: React.FC<ContactProps> = ({
     isFieldProjectManagerExtensionDisabled,
     isClientDisabled,
   } = useFieldsDisabled(control)
-  const { isDoc } = useUserRolesSelector()
 
   return (
     <Stack spacing={14} mt="7">
