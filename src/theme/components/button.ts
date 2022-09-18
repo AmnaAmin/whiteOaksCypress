@@ -42,6 +42,9 @@ const ButtonVariants = {
           _hover: {
             bg: `${props.colorScheme}.50`,
           },
+          _disabled: {
+            bg: `${props.colorScheme}.50`,
+          },
         }
       },
       link: props => {
