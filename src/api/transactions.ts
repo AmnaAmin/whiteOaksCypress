@@ -642,10 +642,10 @@ export const useTransaction = (transactionId?: number) => {
   }
 }
 
-export const useTransactionExport = projectId => {
+export const useTransactionExport = (projectId, transactions) => {
   const client = useClient()
   const [exportData, setExport] = useState([])
-  const { data, ...rest } = useQuery(['changeOrder', projectId], async () => {
+  const { data, ...rest } = useQuery(['changeOrder', projectId, JSON.stringify(transactions)], async () => {
     const response = await client(`changeOrder/project/${projectId}`, {})
     return response?.data
   })
@@ -680,7 +680,7 @@ export const useTransactionExport = projectId => {
       })
     })
     setExport(exportData)
-  }, [data])
+  }, [data, transactions])
   return {
     data,
     exportData,
