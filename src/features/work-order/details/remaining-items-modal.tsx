@@ -153,7 +153,7 @@ const RemainingItemsModal: React.FC<{
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody h="450px" overflow={'auto'}>
-              <HStack>
+              <HStack mb="10px">
                 {isAssignmentAllowed && (
                   <>
                     <Button

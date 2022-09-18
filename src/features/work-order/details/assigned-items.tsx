@@ -321,8 +321,8 @@ const AssignedItems = (props: AssignedItemType) => {
                       <>
                         {assignedItems?.length < 1 && (
                           <Tr>
-                            <Td colSpan={7} textAlign="center">
-                              No data returned for this view
+                            <Td colSpan={7} verticalAlign="middle" color={'gray.400'} h={'315px'} textAlign="center">
+                              {t(`${WORK_ORDER}.emptyTableText`)}
                             </Td>
                           </Tr>
                         )}

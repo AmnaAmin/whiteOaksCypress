@@ -21,6 +21,7 @@ export const projects = {
         originalSOWAmount: 'Original SOW Amount',
         uploadProjectSOW: 'Upload Project SOW',
         chooseFile: 'Choose File',
+        fileFormat: 'Please select a valid file format (pdf, png, jpg, jpeg)',
 
         // Project Property Form
         projectId: 'Project ID',
@@ -96,6 +97,7 @@ export const projects = {
         superPhoneNumber: 'Teléfono del Supervisor',
         superEmail: 'Correo del Supervisor',
         save: 'Guardar',
+        fileFormat: 'Seleccione un formato de archivo válido (pdf, png, jpg, jpeg)',
       },
     },
   },

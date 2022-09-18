@@ -7,6 +7,7 @@ type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   isError?: boolean
   testId?: string
   isRequired?: boolean
+  acceptedFiles?: string
 }
 
 const ChooseFileField: React.FC<ChooseFileProps> = ({
@@ -16,17 +17,18 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
   onClear,
   isError,
   isRequired,
+  acceptedFiles,
   ...inputProps
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const onFileChange = event => {
     const file = event.currentTarget.files?.[0]
     inputProps?.onChange?.(file)
+    event.target.value = null
   }
 
   const onFileClear = event => {
     event.stopPropagation()
-
     onClear?.()
   }
 
@@ -65,6 +67,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
         style={{ display: 'none', color: 'red' }}
         onChange={onFileChange}
         data-testid={testId}
+        accept={acceptedFiles}
       />
       <Button
         type="button"

@@ -266,8 +266,9 @@ export const useDeleteLineIds = () => {
 }
 
 export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
-  const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
-  const isAssignmentAllowed = (!workOrder || activePastDue) && swoProject?.status?.toUpperCase() === 'COMPLETED'
+  // commenting this out but this condition will be used in upcoming stories.
+  //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  const isAssignmentAllowed = !workOrder && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
 }
 

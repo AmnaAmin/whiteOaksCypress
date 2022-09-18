@@ -30,7 +30,7 @@ export const workOrder = {
         upload: 'Upload',
         select: 'Select',
         deleteRows: 'Delete Row(s)',
-
+        emptyTableText: 'No Items Assigned',
         unassignLineItems: 'Unassign Items',
         clientApprovedAmountInfo: 'Client Approved Amount is required to enable add items.',
       },
@@ -65,6 +65,7 @@ export const workOrder = {
         select: 'Seleccione',
         unassignLineItems: 'Desasignar elementos',
         deleteRows: 'Eliminar fila(s)',
+        emptyTableText: 'No hay elementos asignados',
         clientApprovedAmountInfo: 'Se requiere una cantidad aprobada por el cliente para agregar artículos.',
       },
     },
