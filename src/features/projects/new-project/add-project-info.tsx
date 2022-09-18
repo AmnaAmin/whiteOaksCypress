@@ -208,7 +208,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                             if (!['application/pdf', 'image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
                               setError(field.name, {
                                 type: 'custom',
-                                message: 'Please select a valid file format (pdf, png, jpg, jpeg).',
+                                message: t(`${NEW_PROJECT}.fileFormat`),
                               })
                             }
                           }}
