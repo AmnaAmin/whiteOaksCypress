@@ -63,7 +63,7 @@ const Contact: React.FC<ContactProps> = ({
                     {...field}
                     selectProps={{ isBorderLeft: true }}
                     options={projectCoordinatorSelectOptions}
-                    isDisabled={isProjectCoordinatorDisabled && !isDoc}
+                    isDisabled={isProjectCoordinatorDisabled}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
