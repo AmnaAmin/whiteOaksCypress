@@ -28,24 +28,25 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
+import { STATUS } from 'features/common/status'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   const [documentType] = useState<SelectOption | undefined>()
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
-  const { data: workOders } = useProjectWorkOrders(projectId)
+  const { data: workOrders } = useProjectWorkOrders(projectId)
 
   //Permit document against vendor dropdown should not show Cancelled WO vendors list.
-  const statusLabel = workOders?.map(e => e?.statusLabel)
-  const workOderState = statusLabel?.includes('Cancelled')
-    ? null
-    : workOders
-    ? workOders?.map(state => ({
-        label: `${state?.companyName}(${state?.skillName})`,
-        value: state,
-      }))
-    : null
+  const permitWorkOrders = workOrders?.filter(wo => !STATUS.Cancelled.includes(wo?.statusLabel?.toLowerCase()))
+
+  const workOderState =
+    permitWorkOrders?.length && workOrders
+      ? workOrders?.map(state => ({
+          label: `${state?.companyName}(${state?.skillName})`,
+          value: state,
+        }))
+      : null
 
   const states = documentTypes
     ? documentTypes?.map(state => ({
