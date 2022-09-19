@@ -22,6 +22,7 @@ import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
+import { STATUS } from 'features/common/status'
 
 const CalenderCard = props => {
   return (
@@ -74,12 +75,12 @@ const PaymentInfoTab = props => {
   }
 
   useEffect(() => {
-    if (!rejectInvoiceCheck) {
-      setValue('dateInvoiceSubmitted', 'mm/dd/yyyy')
-      setValue('paymentTermDate', 'mm/dd/yyyy')
-      setValue('expectedPaymentDate', 'mm/dd/yyyy')
+    if ([STATUS.Declined]?.includes(workOrder?.statusLabel?.toLowerCase())) {
+      setValue('dateInvoiceSubmitted', null)
+      setValue('paymentTermDate', null)
+      setValue('expectedPaymentDate', null)
     }
-  }, [])
+  }, [workOrder])
 
   const { register, handleSubmit, control, getValues, setValue } = useForm<FormValues>({
     defaultValues: defaultValuesPayment(workOrder, paymentsTerms),

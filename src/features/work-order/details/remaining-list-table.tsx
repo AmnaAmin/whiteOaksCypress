@@ -31,10 +31,23 @@ type CellInputType = {
   handleChange?: (e, index) => void
   type?: string
   valueFormatter?: (value) => void
+  selectedCell: string
+  setSelectedCell: (val) => void
 }
 const renderInput = (props: CellInputType) => {
-  const { row, values, formControl, updatedItems, setUpdatedItems, fieldName, handleChange, type, valueFormatter } =
-    props
+  const {
+    row,
+    values,
+    formControl,
+    updatedItems,
+    setUpdatedItems,
+    fieldName,
+    handleChange,
+    type,
+    valueFormatter,
+    selectedCell,
+    setSelectedCell,
+  } = props
   const isNew = values?.remainingItems[row?.index].action === 'new'
   return (
     <Box pl={'5px'}>
@@ -43,7 +56,7 @@ const renderInput = (props: CellInputType) => {
           index={row?.index}
           fieldName={fieldName}
           formControl={formControl}
-          type={type}
+          inputType={type}
           fieldArray="remainingItems"
           onChange={handleChange}
         ></InputField>
@@ -58,6 +71,9 @@ const renderInput = (props: CellInputType) => {
           setUpdatedItems={setUpdatedItems}
           onChange={handleChange}
           valueFormatter={valueFormatter}
+          selectedCell={selectedCell}
+          setSelectedCell={setSelectedCell}
+          allowEdit={true}
         />
       )}
     </Box>
@@ -117,6 +133,7 @@ const RemainingListTable = (props: RemainingListType) => {
   const { getValues, setValue } = formControl
   const values = getValues()
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
+  const [selectedCell, setSelectedCell] = useState('')
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -186,7 +203,17 @@ const RemainingListTable = (props: RemainingListType) => {
     {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
-      Cell: ({ row }) => renderInput({ row, values, formControl, updatedItems, setUpdatedItems, fieldName: 'sku' }),
+      Cell: ({ row }) =>
+        renderInput({
+          row,
+          values,
+          formControl,
+          updatedItems,
+          setUpdatedItems,
+          fieldName: 'sku',
+          selectedCell,
+          setSelectedCell,
+        }),
       width: 150,
     },
     {
@@ -200,6 +227,8 @@ const RemainingListTable = (props: RemainingListType) => {
           updatedItems,
           setUpdatedItems,
           fieldName: 'productName',
+          selectedCell,
+          setSelectedCell,
         }),
       width: 250,
     },
@@ -214,6 +243,8 @@ const RemainingListTable = (props: RemainingListType) => {
           updatedItems,
           setUpdatedItems,
           fieldName: 'description',
+          selectedCell,
+          setSelectedCell,
         }),
     },
     {
@@ -228,6 +259,8 @@ const RemainingListTable = (props: RemainingListType) => {
           setUpdatedItems,
           fieldName: 'quantity',
           type: 'number',
+          selectedCell,
+          setSelectedCell,
           handleChange: (e, index) => {
             handleQuantityChange(e, index)
           },
@@ -246,6 +279,8 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'unitPrice',
           valueFormatter: currencyFormatter,
           type: 'number',
+          selectedCell,
+          setSelectedCell,
           handleChange: (e, index) => {
             handleUnitPriceChange(e, index)
           },

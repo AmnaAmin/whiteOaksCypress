@@ -1,10 +1,6 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Box,
   Button,
-  CloseButton,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -31,12 +27,13 @@ import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
+import round from 'lodash/round'
 import {
   useFetchProjectId,
   useAssignLineItems,
@@ -44,9 +41,9 @@ import {
   LineItems,
   useAllowLineItemsAssignment,
   mapToLineItems,
+  calculateVendorAmount,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
-import { WORK_ORDER } from './workOrder.i18n'
 import { useParams } from 'react-router-dom'
 
 const CalenderCard = props => {
@@ -148,9 +145,10 @@ const NewWorkOrder: React.FC<{
     setValue,
     getValues,
     reset,
+    watch,
     formState: { errors },
   } = formReturn
-
+  const formValues = getValues()
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
@@ -158,9 +156,13 @@ const NewWorkOrder: React.FC<{
 
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const woStartDate = useWatch({ name: 'workOrderStartDate', control })
-  const watchClientApprovedAmount = useWatch({ name: 'clientApprovedAmount', control })
-  const watchInvoiceAmount = useWatch({ name: 'invoiceAmount', control })
+
+  const [woStartDate, watchPercentage, watchClientApprovedAmount, watchInvoiceAmount] = watch([
+    'workOrderStartDate',
+    'percentage',
+    'clientApprovedAmount',
+    'invoiceAmount',
+  ])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
   const { percentage } = usePercentageCalculation({
@@ -173,12 +175,18 @@ const NewWorkOrder: React.FC<{
   }, [percentage])
 
   useEffect(() => {
-    const vendorWOAmount = getValues().assignedItems?.reduce(
+    const clientAmount = formValues.assignedItems?.reduce(
       (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
       0,
     )
-    setValue('invoiceAmount', vendorWOAmount)
+    const vendorAmount = formValues.assignedItems?.reduce(
+      (partialSum, a) => partialSum + Number(a?.vendorAmount ?? 0),
+      0,
+    )
+    setValue('clientApprovedAmount', round(clientAmount, 2))
+    setValue('invoiceAmount', round(vendorAmount, 2))
   }, [watchLineItems])
+
   // Remaining Items handles
   const {
     onClose: onCloseRemainingItemsModal,
@@ -191,13 +199,13 @@ const NewWorkOrder: React.FC<{
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return mapToLineItems(s)
+          return mapToLineItems(s, watchPercentage)
         }),
       ]
       append(assigned)
       setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
     },
-    [unassignedItems, setUnAssignedItems],
+    [unassignedItems, setUnAssignedItems, watchPercentage],
   )
 
   const { profitMargin } = useGetProjectFinancialOverview(projectId)
@@ -284,13 +292,6 @@ const NewWorkOrder: React.FC<{
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
           <ModalBody overflow={'auto'} justifyContent="center">
-            <Box>
-              <Alert status="info" variant="custom" size="sm">
-                <AlertIcon />
-                <AlertDescription>{t(`${WORK_ORDER}.clientApprovedAmountInfo`)}</AlertDescription>
-                <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
-              </Alert>
-            </Box>
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard
@@ -387,6 +388,7 @@ const NewWorkOrder: React.FC<{
                                 thousandSeparator
                                 customInput={CustomRequiredInput}
                                 prefix={'$'}
+                                disabled
                                 onValueChange={e => {
                                   field.onChange(e.floatValue)
                                 }}
@@ -412,9 +414,23 @@ const NewWorkOrder: React.FC<{
                             <>
                               <NumberFormat
                                 value={field.value}
-                                disabled
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
+                                onValueChange={e => {
+                                  field.onChange(e.floatValue)
+                                }}
+                                onBlur={e => {
+                                  formValues?.assignedItems?.forEach((item, index) => {
+                                    const clientAmount =
+                                      Number(formValues.assignedItems?.[index]?.price ?? 0) *
+                                      Number(formValues.assignedItems?.[index]?.quantity ?? 0)
+                                    setValue(`assignedItems.${index}.profit`, removePercentageFormat(e.target.value))
+                                    setValue(
+                                      `assignedItems.${index}.vendorAmount`,
+                                      calculateVendorAmount(clientAmount, removePercentageFormat(e.target.value)),
+                                    )
+                                  })
+                                }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
