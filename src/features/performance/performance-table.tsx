@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 // import { Clients } from 'types/client.type'
 // import Client from 'features/clients/client-modal'
 import { TableWrapper } from 'components/table/table'
-import { useTranslation } from 'react-i18next'
 import { usePerformance } from 'api/performance'
+import numeral from 'numeral'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -51,14 +51,32 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       {
         Header: 'Revenue',
         accessor: 'revenue',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.revenue).format('$0,0.00')
+        },
       },
       {
         Header: 'Profit',
         accessor: 'profit',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.profit).format('$0,0.00')
+        },
       },
       {
         Header: 'Target',
         accessor: 'target',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.target).format('$0,0.00')
+        },
       },
       {
         Header: 'Badge',
@@ -67,6 +85,12 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       {
         Header: 'Disqualified Revenue',
         accessor: 'disqualifiedRevenue',
+        Cell(cellInfo) {
+          return numeral(cellInfo.value).format('$0,0.00')
+        },
+        getCellExportValue(row) {
+          return numeral(row.original.disqualifiedRevenue).format('$0,0.00')
+        },
       },
       {
         Header: 'Email',
@@ -77,7 +101,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
   )
 
   return (
-    <Box ref={resizeElementRef}>
+    <Box ref={resizeElementRef} height={'450px'}>
      {/* <Client 
     //     clientDetails={selectedClient as Clients}
     //     onClose={() => {
