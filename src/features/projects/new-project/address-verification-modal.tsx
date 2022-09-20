@@ -65,7 +65,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} variant="transparent" size="flexible">
+    <Modal isOpen={isOpen} onClose={onClose} variant="transparent" size="auto">
       <ModalOverlay />
       <ModalContent mt="250px">
         <ModalBody minW="400px">

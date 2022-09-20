@@ -245,13 +245,13 @@ const AssignedItems = (props: AssignedItemType) => {
           </Stack>
 
           <Box mt="16px" border="1px solid" borderColor="gray.100" borderRadius="md">
-            <TableContainer>
-              <Box>
-                <Table width={'100%'} overflow={'auto'}>
-                  <Thead h="72px" position="sticky" top="0">
+            <Box>
+              <TableContainer>
+                <Table width={'100%'}>
+                  <Thead h="72px">
                     <Tr whiteSpace="nowrap">
                       {showSelect && (
-                        <Th sx={headerStyle} minW="50px">
+                        <Th sx={headerStyle} w="50px">
                           <Checkbox
                             size="md"
                             isChecked={
@@ -273,30 +273,30 @@ const AssignedItems = (props: AssignedItemType) => {
                           ></Checkbox>
                         </Th>
                       )}
-                      <Th sx={headerStyle} minW="200px">
+                      <Th sx={headerStyle} minW="100px" maxW="150px">
                         {t(`${WORK_ORDER}.sku`)}
                       </Th>
                       <Th sx={headerStyle} minW="200px">
                         {t(`${WORK_ORDER}.productName`)}
                       </Th>
-                      <Th sx={headerStyle} minW="200px">
+                      <Th sx={headerStyle} minW="250px">
                         {t(`${WORK_ORDER}.details`)}
                       </Th>
-                      <Th sx={headerStyle} minW="100px">
+                      <Th sx={headerStyle} w="70px">
                         {t(`${WORK_ORDER}.quantity`)}
                       </Th>
                       {(showReadOnlyPrice || showEditablePrice) && (
                         <>
-                          <Th sx={headerStyle} minW="100px">
+                          <Th sx={headerStyle} w="100px">
                             {t(`${WORK_ORDER}.price`)}
                           </Th>
-                          <Th sx={headerStyle} minW="100px">
+                          <Th sx={headerStyle} w="100px">
                             {t(`${WORK_ORDER}.clientAmount`)}
                           </Th>
-                          <Th sx={headerStyle} minW="100px">
+                          <Th sx={headerStyle} w="70px">
                             {t(`${WORK_ORDER}.profit`)}
                           </Th>
-                          <Th sx={headerStyle} minW="100px">
+                          <Th sx={headerStyle} w="100px">
                             {t(`${WORK_ORDER}.vendorAmount`)}
                           </Th>
                         </>
@@ -330,7 +330,7 @@ const AssignedItems = (props: AssignedItemType) => {
                       <>
                         {assignedItems?.length < 1 && (
                           <Tr>
-                            <Td colSpan={7} verticalAlign="middle" color={'gray.400'} h={'315px'} textAlign="center">
+                            <Td colSpan={9} verticalAlign="middle" color={'gray.400'} h={'315px'} textAlign="center">
                               {t(`${WORK_ORDER}.emptyTableText`)}
                             </Td>
                           </Tr>
@@ -347,8 +347,8 @@ const AssignedItems = (props: AssignedItemType) => {
                     )}
                   </Tbody>
                 </Table>
-              </Box>
-            </TableContainer>
+              </TableContainer>
+            </Box>
           </Box>
         </>
       )}

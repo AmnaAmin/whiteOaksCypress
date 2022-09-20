@@ -89,7 +89,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h="400px" overflow={'auto'}>
+        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <SimpleGrid
             columns={4}
             spacing={8}

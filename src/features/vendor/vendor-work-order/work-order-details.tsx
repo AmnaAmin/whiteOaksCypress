@@ -67,10 +67,10 @@ export const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="none">
+    <Modal isOpen={isOpen} onClose={onClose} size="flexible">
       <ModalOverlay />
       {workOrder && (
-        <ModalContent w={1200} rounded={[0]} borderTop="2px solid #4E87F8">
+        <ModalContent rounded={[0]} borderTop="2px solid #4E87F8">
           <ModalHeader h="64px" py={4} display="flex" alignItems="center">
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
