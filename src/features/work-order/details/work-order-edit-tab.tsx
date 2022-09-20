@@ -32,7 +32,6 @@ import {
   useAllowLineItemsAssignment,
   useRemainingLineItems,
   createInvoicePdf,
-  mapToLineItems,
   mapToUnAssignItem,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
@@ -104,7 +103,6 @@ const WorkOrderDetailTab = props => {
     control,
     name: 'assignedItems',
   })
-  const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
@@ -143,6 +141,8 @@ const WorkOrderDetailTab = props => {
 
   const setAssignedItems = useCallback(
     items => {
+      /*
+      not used now, will be used in upcoming stories
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
@@ -150,7 +150,7 @@ const WorkOrderDetailTab = props => {
         }),
       ]
       append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])*/
     },
     [unassignedItems, setUnAssignedItems],
   )

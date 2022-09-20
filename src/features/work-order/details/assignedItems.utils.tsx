@@ -12,6 +12,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import round from 'lodash/round'
 
 const swoPrefix = '/smartwo/api'
 
@@ -37,6 +38,8 @@ export type LineItems = {
   isCompleted?: boolean
   action?: string
   document?: any
+  vendorAmount?: number | null
+  profit?: number | null
 }
 
 export type SWOProject = {
@@ -272,6 +275,13 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   return { isAssignmentAllowed }
 }
 
+export const calculateVendorAmount = (amount, percentage) => {
+  return round(amount - amount * (percentage / 100), 2)
+}
+
+export const calculateProfit = (clientAmount, vendorAmount) => {
+  return round(((clientAmount - vendorAmount) / clientAmount) * 100, 2)
+}
 /* map to remaining when user unassigns using Unassign Line Item action */
 
 export const mapToRemainingItems = item => {
@@ -284,13 +294,18 @@ export const mapToRemainingItems = item => {
 
 /* map to assigned items when user assigns using save on remaining items modal */
 
-export const mapToLineItems = item => {
+export const mapToLineItems = (item, watchPercentage?) => {
+  const amount = item.unitPrice * item.quantity
+  const percentage = watchPercentage
   return {
     ...item,
     isVerified: false,
     isCompleted: false,
     price: item.unitPrice,
     document: null,
+    profit: percentage,
+    clientAmount: amount,
+    vendorAmount: calculateVendorAmount(amount, percentage),
   }
 }
 
@@ -319,10 +334,12 @@ type EditableCellType = {
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
   onChange?: (e, index) => void
+  selectedCell: string
+  setSelectedCell: (e) => void
+  allowEdit?: boolean
 }
 
 export const EditableField = (props: EditableCellType) => {
-  const [selectedCell, setSelectedCell] = useState('')
   const {
     index,
     fieldName,
@@ -333,6 +350,9 @@ export const EditableField = (props: EditableCellType) => {
     updatedItems,
     setUpdatedItems,
     onChange,
+    selectedCell,
+    setSelectedCell,
+    allowEdit,
   } = props
   const { getValues, setValue } = formControl
   const values = getValues()
@@ -346,7 +366,9 @@ export const EditableField = (props: EditableCellType) => {
               minH={'20px'}
               cursor={'pointer'}
               onClick={() => {
-                setSelectedCell(index + '-' + fieldName)
+                if (allowEdit) {
+                  setSelectedCell(index + '-' + fieldName)
+                }
               }}
             >
               {valueFormatter
@@ -365,7 +387,7 @@ export const EditableField = (props: EditableCellType) => {
                   setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                 }
               }}
-              onBlurCapture={e => {
+              onBlur={e => {
                 if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
 
@@ -385,9 +407,8 @@ type InputFieldType = {
   index: number
   fieldName: string
   formControl: UseFormReturn<any>
-  inputType?: string
   fieldArray: string
-  type?: string
+  inputType?: string
   onChange?: (e, index) => void
 }
 export const InputField = (props: InputFieldType) => {
