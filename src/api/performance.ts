@@ -10,14 +10,63 @@ export const useRevenuePerformance = () => {
   })
 }
 
-  export const usePerformance = () => {
-    const client = useClient()
+export const usePerformance = () => {
+  const client = useClient()
 
-    return useQuery(
-      'performance-list',
-      async () => {
-        const response = await client(`fpm-quota`, {})
-        return response?.data
-      },
-    )
-  }
+  return useQuery('performance-list', async () => {
+    const response = await client(`fpm-quota`, {})
+    return response?.data
+  })
+}
+
+export const IgnorePerformance = [
+  {
+    value: 0,
+    label: 'No',
+  },
+  {
+    value: 10,
+    label: '10',
+  },
+  {
+    value: 20,
+    label: '20',
+  },
+  {
+    value: 30,
+    label: '30',
+  },
+  {
+    value: 60,
+    label: '60',
+  },
+  {
+    value: 90,
+    label: '90',
+  },
+  {
+    value: -1,
+    label: 'Indefinitely',
+  },
+]
+
+export const badges = [
+  { value: 'None', label: 'None' },
+  { value: 'Silver', label: 'Silver' },
+  { value: 'Gold', label: 'Gold' },
+  { value: 'Platinum', label: 'Platinum' },
+]
+
+export const bonus = [
+  { value: 0, label: '0%' },
+  { value: 1, label: '1%' },
+  { value: 2, label: '2%' },
+  { value: 3, label: '3%' },
+  { value: 4, label: '4%' },
+  { value: 5, label: '5%' },
+  { value: 6, label: '6%' },
+  { value: 7, label: '7%' },
+  { value: 8, label: '8%' },
+  { value: 9, label: '9%' },
+  { value: 10, label: '10%' },
+]

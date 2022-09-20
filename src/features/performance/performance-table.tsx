@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
-// import { Clients } from 'types/client.type'
-// import Client from 'features/clients/client-modal'
 import { TableWrapper } from 'components/table/table'
 import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
+import PerformanceDetails from './performance-details'
+import { Performance } from 'types/performance.type'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -40,12 +40,12 @@ const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => 
 }
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { data : performance } = usePerformance()
-//   const [selectedClient, setSelectedClient] = useState<Clients>()
+  const { data: performance } = usePerformance()
+  const [selectedUser, setSelectedUser] = useState<Performance>()
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header:'Name' as string,
+        Header: 'Name' as string,
         accessor: 'name',
       },
       {
@@ -102,12 +102,12 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef} height={'450px'}>
-     {/* <Client 
-    //     clientDetails={selectedClient as Clients}
-    //     onClose={() => {
-    //       setSelectedClient(undefined)
-    //     }}
-    //   /> */}
+      <PerformanceDetails
+        PerformanceDetails={selectedUser as Performance}
+        onClose={() => {
+          setSelectedUser(undefined)
+        }}
+      />
 
       <TableWrapper
         columns={columns}
@@ -115,7 +115,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         TableRow={performanceTableRow}
         tableHeight="calc(100vh - 225px)"
         name="performance-table"
-        // onRowClick={(e, row) => setSelectedClient(row.original)}
+        onRowClick={(e, row) => setSelectedUser(row.original)}
       />
     </Box>
   )
