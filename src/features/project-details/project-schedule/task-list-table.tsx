@@ -1,27 +1,15 @@
 import React from 'react'
-import { Flex, Box, Text } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { Task } from './task-types.ds'
 import { dateFormat } from 'utils/date-time-utils'
 
 const styles = {
-  taskListWrapper: '_3ZbQT',
-  taskListTableRow: '_34SS0',
-  taskListCell: '_3lLk3',
-  taskListNameWrapper: '_nI1Xw',
-  taskListExpander: '_2QjE6',
-  taskListEmptyExpander: '_2TfEi',
-}
-
-const titleCss = {
-  color: 'gray.600',
-  fontSize: 14,
-  fontWeight: 500,
-}
-
-const valueCss = {
-  color: 'gray.500',
-  fontSize: 14,
-  fontWeight: 400,
+  taskListWrapper: '_3ZbQT taskListWrapper',
+  taskListTableRow: '_34SS0 taskListTableRow',
+  taskListCell: '_3lLk3 taskListCell',
+  taskListNameWrapper: '_nI1Xw taskListNameWrapper',
+  taskListExpander: '_2QjE6 taskListExpander',
+  taskListEmptyExpander: '_2TfEi taskListEmptyExpander',
 }
 
 export const ProjectTaskListTable: React.FC<{
@@ -38,33 +26,76 @@ export const ProjectTaskListTable: React.FC<{
   setSelectedTask: (taskId: string) => void
   onExpanderClick: (task: Task) => void
 }> = props => {
-  const rowHeight = '80px',
-    rowWidth = '450px',
-    tasks = props.tasks
-
+  const tasks = props.tasks
   return (
-    <Box className={styles.taskListWrapper}>
+    <Box
+      fontSize={props.fontSize}
+      fontWeight={600}
+      color={'#4A5568'}
+      width={'500px'}
+      maxHeight={200}
+      className={styles.taskListWrapper}
+    >
       {tasks.length > 0 ? (
         <>
-          {tasks.map((task, index) => (
-            <Box key={task.id + '-' + index} className={styles.taskListTableRow} height={rowHeight}>
-              <Box className={styles.taskListCell} minW={rowWidth} maxW={rowWidth}>
-                <Flex justifyContent="space-between" padding="5px 15px">
-                  <Flex direction="column" gap={4}>
-                    <Text style={titleCss}>{index === 0 ? 'Project' : 'White Oaks Aligned'}</Text>
-                    <Text style={valueCss}>{task.name}</Text>
-                  </Flex>
-                  <Flex direction={'column'} gap={4}>
-                    <Text>Start ***************** End</Text>
-                    <Flex justifyContent="space-between">
-                      <Text style={valueCss}>{dateFormat(task?.start as Date)}</Text>
-                      <Text style={valueCss}>{dateFormat(task?.end as Date)}</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
+          {tasks.map((task) => {
+            let expanderSymbol = "";
+            if (task.hideChildren === false) {
+              expanderSymbol = "▼";
+            } else if (task.hideChildren === true) {
+              expanderSymbol = "▶";
+            }
+        
+            return (
+              <Box
+                key={task.name}
+                className={styles.taskListTableRow}
+                style={{
+                  height: props.rowHeight
+                }}
+              >
+                <Box
+                  className={styles.taskListCell}
+                  style= {{
+                    minWidth: props.rowWidth,
+                    maxWidth: props.rowWidth
+                  }}
+                >
+                  <Box
+                    className={styles.taskListNameWrapper}
+                  >
+                    <Box
+                      className={expanderSymbol ? styles.taskListExpander : styles.taskListEmptyExpander}
+                      onClick={() => props.onExpanderClick?.(task)}
+                    >
+                      {expanderSymbol}
+                    </Box>
+                    <Box>
+                      {task.name}
+                    </Box>
+                  </Box>
+                </Box>
+                <Box
+                  className={styles.taskListCell}
+                  style= {{
+                    minWidth: props.rowWidth,
+                    maxWidth: props.rowWidth
+                  }}
+                >
+                  {dateFormat(task?.start as Date)}
+              </Box>
+              <Box
+                  className={styles.taskListCell}
+                  style= {{
+                    minWidth: props.rowWidth,
+                    maxWidth: props.rowWidth
+                  }}
+                >
+                  {dateFormat(task?.end as Date)}
               </Box>
             </Box>
-          ))}
+            )
+          })}
         </>
       ) : null}
     </Box>

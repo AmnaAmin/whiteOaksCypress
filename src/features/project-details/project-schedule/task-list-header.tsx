@@ -15,25 +15,20 @@ export const ProjectTaskList: FC<{
   fontFamily: string
   fontSize: string
 }> = props => {
-  const headerHeight = props.headerHeight
 
   return (
     <Grid
-      gap={3}
-      gridTemplateColumns="repeat(auto-fit,minmax(1fr,1fr, 1fr))"
-      fontFamily={props.fontFamily}
-      fontSize={14}
-      fontWeight={600}
-      color={'#4A5568'}
-      // alignItems={'center'}
-      // justifyContent={'space-between'}
-      paddingLeft={'13px'}
+      gridTemplateColumns="1fr 1fr 1fr"
+      width="500px"
       className={styles.ganttTable}
-      style={{
-        height: headerHeight,
-      }}
+      alignItems="center"
+      fontWeight={600}
+      fontSize={props.fontSize}
+      color="#4A5568"
+      paddingLeft="13px"
+      height={props.headerHeight}
     >
-      <Text>From</Text>
+      <Text>Project</Text>
       <Text>Start Date</Text>
       <Text>End Date</Text>
     </Grid>

@@ -1,6 +1,4 @@
-.Wrapper {
-  margin-bottom: 2rem;
-}
+
 .ViewContainer {
   list-style: none;
   -ms-box-orient: horizontal;
@@ -91,4 +89,61 @@ input:checked + .Slider:before {
 
 .ProjectDetails_Chart .ticks line:not(:first-child) {
   stroke: none;
+}
+
+.taskListTableRow {
+  background-color: inherit;
+}
+
+/*
+  Below is the gantt chart css for headers/labels on the left area
+*/
+
+/* Header, item list text css */
+.ProjectDetails_Chart .css-0 {
+  font-weight: 400;
+  color: #4A5568;
+}
+/* Row color */
+.ProjectDetails_Chart ._2dZTy:nth-child(even) {
+  fill: #F7FAFC;
+}
+/* Border css */
+.ProjectDetails_Chart ._2B2zv > .taskListWrapper{
+  border-left: 1px solid #e6e4e4;
+  border-bottom: 1px solid #e6e4e4;
+}
+
+/*
+  Below is the gantt chart css override for graphical section
+*/
+
+/* today column css */
+.ProjectDetails_Chart .today{
+  display: none;
+}
+
+/* Row color */
+.ProjectDetails_Chart ._34SS0:nth-of-type(even) {
+  background-color: #F7FAFC;
+}
+
+/* Border css */
+.ProjectDetails_Chart ._2B2zv > svg {
+  border-right: 1px solid #e6e4e4;
+  border-bottom: 1px solid #e6e4e4;
+}
+
+/* Fills for progress bars */
+.ProjectDetails_Chart .bar > g:nth-of-type(4n+1) ._KxSXS > g > rect{
+  fill: #949AC2;
+}
+.ProjectDetails_Chart .bar > g:nth-of-type(4n+2) ._KxSXS > g > rect{
+  fill: #FB8832;
+}
+.ProjectDetails_Chart .bar > g:nth-of-type(4n+3) ._KxSXS > g > rect{
+  fill: #F7685B;
+}
+.ProjectDetails_Chart .bar > g:nth-of-type(4n+4) ._KxSXS > g > rect{
+  fill: #68B8EF;
 }
