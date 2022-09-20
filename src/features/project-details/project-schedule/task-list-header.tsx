@@ -25,10 +25,9 @@ export const ProjectTaskList: FC<{
       fontWeight={600}
       fontSize={props.fontSize}
       color="#4A5568"
-      paddingLeft="13px"
       height={props.headerHeight}
     >
-      <Text>Project</Text>
+      <Text paddingLeft="13px">Project</Text>
       <Text>Start Date</Text>
       <Text>End Date</Text>
     </Grid>
