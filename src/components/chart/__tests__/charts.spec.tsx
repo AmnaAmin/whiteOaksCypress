@@ -1,20 +1,21 @@
-import { OverviewGraph, months, monthsShort } from 'components/chart/Overview'
+import { OverviewGraph } from 'components/chart/Overview'
 import { PaidChartGraph } from 'components/chart/paid-chart'
 import { render, screen } from '@testing-library/react'
 import { WO_BY_VENDORS_PER_MONTH, PAID_BY_YEAR_AND_MONTH } from 'mocks/api/vendor-dashboard/data'
+import { months, monthsShort } from 'utils/date-time-utils'
 
 const vendorData = months.map(key => ({
   name: monthsShort[key],
   Active: WO_BY_VENDORS_PER_MONTH?.[key]?.Active || 0,
   Closed: WO_BY_VENDORS_PER_MONTH?.[key]?.Completed || 0,
   Paid: WO_BY_VENDORS_PER_MONTH?.[key]?.Paid || 0,
-  Cancelled: WO_BY_VENDORS_PER_MONTH?.[key]?.Cancelled || 0,
+  Canceled: WO_BY_VENDORS_PER_MONTH?.[key]?.Cancelled || 0,
 }))
 
 describe('Charts testcases', () => {
   test('Overview graph test case', async () => {
     const { container } = render(<OverviewGraph width={400} height={300} vendorData={vendorData} />)
-    expect(screen.getByTestId('legend-Cancelled')).toBeInTheDocument()
+    expect(screen.getByTestId('legend-Canceled')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Active')).toBeInTheDocument()
     // expect(screen.getByTestId('legend-Closed')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Paid')).toBeInTheDocument()

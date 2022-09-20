@@ -1,14 +1,14 @@
 import { useToast } from '@chakra-ui/toast'
 import { STATUS } from 'features/common/status'
-import autoTable from 'jspdf-autotable'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { convertDateTimeFromServer, dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
+import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -37,7 +37,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries('accountPayable')
+        queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -155,88 +155,6 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
   }
 }
 
-/* WorkOrder Invoice */
-export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
-  const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder.propertyAddress },
-    { label: 'Start Date:', value: workOrder.workOrderStartDate },
-    { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
-    { label: 'Lock Box Code:', value: projectData.lockBoxCode },
-  ]
-
-  const basicFont = undefined
-  const heading = 'Work Order'
-  doc.setFontSize(16)
-  doc.setFont(basicFont as any, 'bold')
-  const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
-  doc.text(heading, xHeading, 20)
-  doc.setFontSize(10)
-  doc.setFont(basicFont as any, 'normal')
-  let x = 15
-  let y = 25
-  const length = 115
-  const width = 10
-  invoiceInfo.forEach(inv => {
-    doc.rect(x, y, length, width, 'D')
-    doc.text(inv.label, x + 5, y + 7)
-    doc.text(
-      inv.label === 'Start Date:' || inv.label === 'Completion Date:'
-        ? convertDateTimeFromServer(inv.value)
-        : inv.value,
-      x + 45,
-      y + 7,
-    )
-    y = y + 10
-  })
-  doc.rect(x + length, 25, 65, width, 'D')
-  doc.text('Square Feet:', x + length + 5, 30)
-  doc.rect(x + length, 35, 65, width, 'D')
-  doc.text('Work Type:', x + length + 5, 40)
-  doc.text(workOrder.skillName, x + length + 30, 40)
-
-  doc.rect(x, y + 15, length, width, 'D')
-  doc.text('Sub Contractor:', x + 5, y + 22)
-  doc.rect(x + length, y + 15, 65, width, 'D')
-  doc.text('Total:', x + length + 5, y + 22)
-
-  autoTable(doc, {
-    startY: y + 40,
-    headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
-    theme: 'grid',
-    bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
-    body: [
-      ...assignedItems.map(ai => {
-        return {
-          location: ai.location,
-          id: ai.id,
-          description: ai.description,
-          quantity: ai.quantity,
-        }
-      }),
-    ],
-    columnStyles: {
-      location: { cellWidth: 70 },
-      id: { cellWidth: 20 },
-      description: { cellWidth: 70 },
-      quantity: { cellWidth: 20 },
-    },
-    columns: [
-      { header: 'Location', dataKey: 'location' },
-      { header: 'SKU', dataKey: 'id' },
-      { header: 'Description', dataKey: 'description' },
-      { header: 'Quantity', dataKey: 'quantity' },
-    ],
-  })
-  doc.setFontSize(10)
-  doc.setFont(basicFont as any, 'normal')
-  const tableEndsY = (doc as any).lastAutoTable.finalY
-  const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-  doc.setDrawColor(0, 0, 0)
-  doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
-  doc.text('Total Award:', summaryX, tableEndsY + 7)
-  return doc
-}
-
 /* WorkOrder Payments */
 export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const defaultStatus = false
@@ -285,6 +203,16 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 
 /* WorkOrder Details */
 
+export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
+  const defaultStatus = false
+  const completedByVendor =
+    [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
+    formValues?.assignedItems?.every(e => e.isCompleted && e.isVerified)
+  return {
+    completedByVendor: defaultStatus || completedByVendor,
+  }
+}
+
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
@@ -292,17 +220,25 @@ export const parseWODetailValuesToPayload = formValues => {
   const assignedItems = [
     ...formValues?.assignedItems?.map(a => {
       const isNewSmartLineItem = !a.smartLineItemId
-      return {
+      if (a.document) {
+        delete a?.document?.fileObject
+        delete a?.document?.documentTypelabel
+      }
+      const assignedItem = {
         ...a,
+        document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
       }
+      delete assignedItem.uploadedDoc
+      return assignedItem
     }),
   ]
   return {
     workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
     workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
+    showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
   }
 }
@@ -312,8 +248,13 @@ export const defaultValuesWODetails = workOrder => {
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
-    showPrice: false,
-    assignedItems: workOrder?.assignedItems?.length > 0 ? workOrder?.assignedItems : [],
+    showPrice: workOrder.showPricing ?? false,
+    assignedItems:
+      workOrder?.assignedItems?.length > 0
+        ? workOrder?.assignedItems?.map(e => {
+            return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
+          })
+        : [],
   }
   return defaultValues
 }
@@ -341,6 +282,21 @@ export const defaultValuesLienWaiver = lienWaiverData => {
 export const parseNewWoValuesToPayload = (formValues, projectId) => {
   const selectedCapacity = 1
   const arr = [] as any
+  const assignedItems = [
+    ...formValues?.assignedItems?.map(a => {
+      if (a.document) {
+        delete a?.document?.fileObject
+      }
+      const assignedItem = {
+        ...a,
+        document: a.uploadedDoc ? a.uploadedDoc : a.document,
+        id: '',
+        smartLineItemId: a.id,
+      }
+      delete assignedItem.uploadedDoc
+      return assignedItem
+    }),
+  ]
   return {
     workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
     workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
@@ -351,16 +307,10 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     vendorSkillId: formValues.vendorSkillId?.value,
     // new work-order have hardcoded capacity
     capacity: selectedCapacity,
-    assignedItems:
-      formValues?.assignedItems?.length > 0
-        ? [
-            ...formValues?.assignedItems?.map(a => {
-              return { ...a, id: '', smartLineItemId: a.id }
-            }),
-          ]
-        : [],
+    assignedItems: formValues?.assignedItems?.length > 0 ? assignedItems : [],
     documents: arr,
     status: 34,
+    showPricing: formValues.showPrice,
     projectId: projectId,
   }
 }

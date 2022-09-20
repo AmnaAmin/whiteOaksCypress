@@ -52,7 +52,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = formReturn
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors } = useSubFormErrors(errors)
 
@@ -147,6 +147,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               type="submit"
               form="project-details"
               fontSize="16px"
+              disabled={isSubmitting}
             >
               Save
             </Button>

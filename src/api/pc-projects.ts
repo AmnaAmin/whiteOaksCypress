@@ -6,7 +6,8 @@ import { useQueryClient } from 'react-query'
 import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import round from 'lodash/round'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -75,7 +76,7 @@ export const useProjectDetails = (projectId?: string) => {
   )
 }
 
-export const useSaveProjectDetails = () => {
+export const useCreateProjectMutation = () => {
   const client = useClient()
   const queryClient = useQueryClient()
   // const toast = useToast()
@@ -90,6 +91,7 @@ export const useSaveProjectDetails = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries('projects')
+        queryClient.invalidateQueries('project-details')
       },
     },
   )
@@ -408,4 +410,64 @@ export const useFilteredVendors = vendorSkillId => {
     vendors: data,
     ...rest,
   }
+}
+
+export const usePercentageCalculation = ({ clientApprovedAmount, vendorWOAmount }) => {
+  let percentage = 0
+  if (clientApprovedAmount && vendorWOAmount) {
+    percentage = ((clientApprovedAmount - vendorWOAmount) / clientApprovedAmount) * 100
+    percentage = round(percentage, 2)
+  }
+  return { percentage }
+}
+
+export const usePercentageAndInoviceChange = ({ setValue }) => {
+  const [approvedAmount, setApprovedAmount] = useState<number | null>()
+  const [percentageField, setPercentageField] = useState<number | null>()
+  const fieldUpdating = useRef<string | null>(null)
+
+  const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
+    if (approvedAmount && percentageField) {
+      const amount = approvedAmount
+      const percentage = percentageField
+      const vendorWoAmountResult = amount - amount * (percentage / 100)
+      setValue('invoiceAmount', round(vendorWoAmountResult, 2))
+    } else if (approvedAmount === 0) {
+      setValue('invoiceAmount', 0)
+    } else if (approvedAmount && percentageField === 0) {
+      setValue('invoiceAmount', round(approvedAmount, 2))
+    } else {
+      setValue('invoiceAmount', '')
+    }
+  }
+
+  const onPercentageChange = percentageField => {
+    if (fieldUpdating.current && fieldUpdating.current !== 'percentageField') {
+      fieldUpdating.current = null
+      return
+    }
+    setPercentageField(percentageField)
+    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
+    fieldUpdating.current = 'percentageField'
+  }
+
+  const onApprovedAmountChange = approvedAmount => {
+    setApprovedAmount(approvedAmount)
+    updatePercentageAndApprovedAmount(approvedAmount, percentageField)
+    if (fieldUpdating.current) return
+  }
+
+  const onInoviceAmountChange = invoiceAmount => {
+    if (fieldUpdating.current && fieldUpdating.current !== 'invoiceAmount') {
+      fieldUpdating.current = null
+      return
+    }
+    if (!approvedAmount) return
+    const approve = approvedAmount as number
+    const percentageField = round(((approve - invoiceAmount) * 100) / approve, 2)
+    setPercentageField(percentageField)
+    setValue('percentage', percentageField)
+    fieldUpdating.current = 'invoiceAmount'
+  }
+  return { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange }
 }

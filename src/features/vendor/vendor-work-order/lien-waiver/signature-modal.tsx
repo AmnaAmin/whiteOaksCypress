@@ -49,25 +49,26 @@ const SignatureModal = ({
     <Modal data-testid="signature-modal" blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
       <ModalContent h="400px" mt="200px">
-        <ModalHeader color="gray.700" fontWeight={500} fontSize="16px" fontStyle="normal">
+        <ModalHeader color="gray.600" fontWeight={500} fontSize="16px" fontStyle="normal">
           {t('addSignature')}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
         <Divider mb={3} />
         <ModalBody h="50vh">
-          <Stack w={{ base: '800px', xl: '100%' }} spacing={5}>
+          <Stack spacing={5}>
             <Tabs variant="enclosed">
               <TabList>
                 <Tab
-                  minW={105}
+                  // minW={105}
                   _focus={{ outline: 'none' }}
+                  pl={0}
                   _selected={{
                     color: 'button.300',
-                    borderBottom: '1px solid',
+                    borderBottom: '2.5px solid',
                     borderBottomColor: 'button.300',
                   }}
                 >
-                  <BiText />
+                  <BiText size={22} />
                   {t('type')}
                 </Tab>
               </TabList>

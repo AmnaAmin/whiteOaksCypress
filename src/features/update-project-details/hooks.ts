@@ -1,10 +1,13 @@
 import { ProjectStatus as STATUS } from 'types/project-details.types'
 import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) => {
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
+  const remainingPayment = useWatch({ name: 'remainingPayment', control })
+  const { isFPM } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -35,13 +38,20 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
 
-    isWOAStartDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+    isWOAStartDisabled:
+      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isWOACompletionDisabled:
-      isStatusNew || isStatusActive || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isStatusClosed ||
+      isStatusNew ||
+      isStatusActive ||
+      isStatusInvoiced ||
+      isStatusClientPaid ||
+      isStatusPaid ||
+      isStatusOverPayment,
     isClientStartDateDisabled:
-      isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isClientDueDateDisabled:
-      isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isClientWalkthroughDisabled:
       isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
     isClientSignOffDisabled: isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
@@ -57,10 +67,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isOverPaymentDisalbed: isAllTimeDisabled,
     isWOAExpectedPayDateDisabled: isAllTimeDisabled,
     isRemainingPaymentDisabled: isAllTimeDisabled,
-    isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate),
+    isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: isAllTimeDisabled,
+    isProjectCoordinatorDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid,
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
     isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed,
@@ -83,14 +93,14 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
 
   const projectStatus = status?.value
-
   const isStatusActive = projectStatus === STATUS.Active
   const isStatusClosed = projectStatus === STATUS.Closed
+  const isStatusPunch = projectStatus === STATUS.Punch
 
   return {
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
-    isWOACompletionDateRequired: isStatusClosed,
+    isWOACompletionDateRequired: isStatusClosed || isStatusPunch,
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
   }

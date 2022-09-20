@@ -129,8 +129,6 @@ export const ProjectDetails: React.FC = props => {
                         </Text>
                         <Text>{t('newWorkOrder')}</Text>
                       </Flex>
-
-                      <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />
                     </Button>
                   )}
                 {tabIndex === 3 && (
@@ -220,6 +218,7 @@ export const ProjectDetails: React.FC = props => {
           onClose={onTransactionModalClose}
           projectId={projectId as string}
         />
+        {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>

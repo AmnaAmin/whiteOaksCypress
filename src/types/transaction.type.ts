@@ -93,6 +93,11 @@ export enum TransactionTypeValues {
   overpayment = 113,
 }
 
+export enum TransactionMarkAsValues {
+  paid = 'paid',
+  revenue = 'revenue',
+}
+
 export enum TransactionStatusValues {
   pending = 'PENDING',
   cancelled = 'CANCELLED',
@@ -136,6 +141,8 @@ export interface FormValues {
   modifiedBy: string | null
   workOrder: SelectOption | null
   changeOrder: SelectOption | null
+  markAs: SelectOption | null
+  paidBackDate: string | null
   transaction: TransactionFormValues[]
   status: SelectOption | null
   expectedCompletionDate: string
@@ -164,6 +171,7 @@ export type ChangeOrderPayload = {
   parentWorkOrderId?: string | null
   createdDate1: string | null
   createdBy: string | null
+  markAsRevenue: boolean | null
   sowRelatedWorkOrderId?: string | null
   sowRelatedChangeOrderId?: string | null
   newExpectedCompletionDate: string | null
@@ -213,6 +221,7 @@ export type ChangeOrderType = {
   sowRelatedWorkOrderId: number | null
   sowRelatedChangeOrderId: number | null
   transactionTypeLabel: string
+  markAsRevenue: boolean | null
   approvedBy: string | null
   totalWhiteoaksCost: number | null
   name: string

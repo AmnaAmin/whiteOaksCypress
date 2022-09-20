@@ -24,7 +24,7 @@ import { ManageProject } from './manage-project'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useToast } from '@chakra-ui/react'
-import { useSaveProjectDetails } from 'api/pc-projects'
+import { useCreateProjectMutation } from 'api/pc-projects'
 import { dateISOFormat } from 'utils/date-time-utils'
 import { useNavigate } from 'react-router-dom'
 import { DevTool } from '@hookform/devtools'
@@ -46,7 +46,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const { data } = useAuth()
   const user = data?.user
 
-  const { mutate: saveProjectDetails } = useSaveProjectDetails()
+  const { mutate: saveProjectDetails } = useCreateProjectMutation()
   const [tabIndex, setTabIndex] = useState(0)
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const navigate = useNavigate()
@@ -97,7 +97,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(methods.control)
+  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(
+    methods.control,
+    methods?.formState?.errors,
+  )
   const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(
     methods.control,
     isDuplicateAddress,
@@ -170,6 +173,8 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
           })
           onClose()
 
+          // In case project coordinator created a new project for other user
+          // than it should be redirected to project details page
           if (isProjectCoordinator && user?.id !== projectCordinatorId) return
 
           navigate(`/project-details/${projectId}`)

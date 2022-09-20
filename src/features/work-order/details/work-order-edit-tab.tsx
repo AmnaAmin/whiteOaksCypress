@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
-import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'api/work-order'
+import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -31,8 +31,11 @@ import {
   LineItems,
   useAllowLineItemsAssignment,
   useRemainingLineItems,
+  createInvoicePdf,
+  mapToUnAssignItem,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
+import jsPDF from 'jspdf'
 
 const CalenderCard = props => {
   return (
@@ -91,18 +94,18 @@ const WorkOrderDetailTab = props => {
     setWorkOrderUpdating,
     swoProject,
     rejectInvoiceCheck,
+    projectData,
   } = props
 
   const formReturn = useForm<FormValues>()
   const { register, control, reset } = formReturn
-
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
   })
-  const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { mutate: deleteLineItems } = useDeleteLineIds()
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
@@ -122,6 +125,7 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
+  const { completedByVendor } = useFieldEnableDecisionDetailsTab({ workOrder, formValues })
 
   // Remaining Items handles
   const {
@@ -130,16 +134,23 @@ const WorkOrderDetailTab = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
+  const downloadPdf = useCallback(() => {
+    let doc = new jsPDF()
+    createInvoicePdf(doc, workOrder, projectData, assignedItemsWatch)
+  }, [assignedItemsWatch, projectData, workOrder])
+
   const setAssignedItems = useCallback(
     items => {
+      /*
+      not used now, will be used in upcoming stories
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...s, isVerified: false, isCompleted: false, price: s.unitPrice }
+          return mapToLineItems(s)
         }),
       ]
       append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])*/
     },
     [unassignedItems, setUnAssignedItems],
   )
@@ -186,7 +197,7 @@ const WorkOrderDetailTab = props => {
             return { id: a.id, isAssigned: true }
           }),
           ...unAssignedItems.map(a => {
-            return { id: a.smartLineItemId, isAssigned: false }
+            return mapToUnAssignItem(a)
           }),
         ],
         {
@@ -302,7 +313,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />
@@ -320,6 +331,8 @@ const WorkOrderDetailTab = props => {
               assignedItemsArray={assignedItemsArray}
               isAssignmentAllowed={isAssignmentAllowed}
               swoProject={swoProject}
+              downloadPdf={downloadPdf}
+              workOrder={workOrder}
             />
           </Box>
         </ModalBody>

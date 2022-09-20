@@ -79,7 +79,7 @@ export const useTableColumnSettings = (columns: any, tableName: TableNames) => {
       return (
         savedColumns?.map((col, index) => {
           return generateSettingColumn({
-            field: t(col.colId),
+            field: t(col.field),
             contentKey: col.contentKey as string,
             order: index,
             userId: email,

@@ -8,6 +8,7 @@ import Status from 'features/common/status'
 import { Column } from 'react-table'
 import { dateFormat } from 'utils/date-time-utils'
 import numeral from 'numeral'
+import { percentageFormatter } from 'utils/string-formatters'
 
 export const PROJECT_COLUMNS = [
   {
@@ -183,6 +184,38 @@ export const PROJECT_COLUMNS = [
     },
     getCellExportValue(row) {
       return numeral(row.original.profitTotal).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Material Cost',
+    accessor: 'materialCost',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.materialCost).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Draw Amount',
+    accessor: 'drawAmount',
+    Cell(cellInfo) {
+      return numeral(cellInfo.value).format('$0,0.00')
+    },
+    getCellExportValue(row) {
+      return numeral(row.original.drawAmount).format('$0,0.00')
+    },
+  },
+  {
+    Header: 'Vendor Payment',
+    accessor: 'vendorPaymentPercentage',
+    Cell(cellInfo) {
+      const vendorPaymentPercentage = percentageFormatter(cellInfo.value);
+      return vendorPaymentPercentage ? numeral(vendorPaymentPercentage).format("0.00%") : ""
+    },
+    getCellExportValue(row) { 
+      const vendorPaymentPercentage = row.original.vendorPaymentPercentage;
+      return vendorPaymentPercentage ? numeral(vendorPaymentPercentage).format("0.00%") : ""
     },
   },
   {

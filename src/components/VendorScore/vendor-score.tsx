@@ -26,7 +26,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const scoreProgress = ((vendorEntity?.score ?? 0) / 5) * 100
   const { t } = useTranslation()
   const { data: cards } = useVendorCards()
-  const ammount = numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0,00a)')
+  const ammount = numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0,0.00)')
 
   const defaultData = [
     {

@@ -10,7 +10,6 @@ import { TableNames } from 'types/table-column.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { downloadFile, downloadFileOnly } from 'utils/file-utils'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings'
 import { useDocuments } from 'api/vendor-projects'
 
@@ -66,7 +65,6 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const setDocumentTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { isProjectCoordinator, isDoc } = useUserRolesSelector()
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
@@ -77,43 +75,43 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     [
       {
         id: 'fileType',
-        Header: t('document') || '',
+        Header: t('document'),
         accessor: 'fileType',
         Cell: withPreviewCell,
       },
       {
         id: 'documentType',
-        Header: t('documentType') || '',
+        Header: t('documentType'),
         accessor: 'documentTypelabel',
         Cell: withPreviewCell,
       },
       {
-        Header: t('transactionDoc') || '',
+        Header: t('transactionDoc'),
         accessor: 'label',
         id: 'label',
         Cell: withPreviewCell,
       },
       {
         id: 'vendorName',
-        Header: t('vendorGL') || '',
+        Header: t('vendorGL'),
         accessor: 'vendorName',
         Cell: withPreviewCell,
       },
       {
         id: 'fileObjectContentType',
-        Header: t('fileType') || '',
+        Header: t('fileType'),
         accessor: 'fileObjectContentType',
         Cell: withPreviewCell,
       },
 
       {
-        Header: t('createdBy') || '',
+        Header: t('createdBy'),
         accessor: 'createdBy',
         id: 'createdBy',
         Cell: withPreviewCell,
       },
       {
-        Header: t('createdDate') || '',
+        Header: t('createdDate'),
         accessor: 'createdDate',
         id: 'createdDate',
         Cell({ value, row }) {
@@ -132,6 +130,9 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
               />
             </Flex>
           )
+        },
+        getCellExportValue(row) {
+          return dateFormat(row.original.createdDate)
         },
       },
     ],
@@ -154,28 +155,26 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         name="vendor-document-table"
         setTableInstance={setDocumentTableInstance}
       />
-      {isProjectCoordinator ||
-        (isDoc ? (
-          <Flex justifyContent="end">
-            <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-              <Button
-                m={0}
-                colorScheme="brand"
-                variant="ghost"
-                onClick={() => {
-                  if (documentTableInstance) {
-                    documentTableInstance?.exportData('mm/dd/yy', false)
-                  }
-                }}
-              >
-                <Icon as={BiExport} fontSize="18px" mr={1} />
-                {t('export')}
-              </Button>
-              <Divider orientation="vertical" border="1px solid" h="20px" />
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-            </HStack>
-          </Flex>
-        ) : null)}
+
+      <Flex justifyContent="end">
+        <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
+          <Button
+            m={0}
+            colorScheme="brand"
+            variant="ghost"
+            onClick={() => {
+              if (documentTableInstance) {
+                documentTableInstance?.exportData('mm/dd/yy', false)
+              }
+            }}
+          >
+            <Icon as={BiExport} fontSize="18px" mr={1} />
+            {t('export')}
+          </Button>
+          <Divider orientation="vertical" border="1px solid" h="20px" />
+          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+        </HStack>
+      </Flex>
     </Box>
   )
 })

@@ -2,11 +2,10 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 import { projects } from 'features/vendor/projects/projects.i18n'
-import { transactioni18n } from 'features/project-details/transaction-details/transaction-details.i18n'
-
+import { transactionDetailI18n } from 'features/project-details/transaction-details/transaction-details.i18n'
 import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
-
 import { workOrder } from 'features/work-order/workOrder.i18n'
+import { transaction } from 'features/project-details/transactions/transactions.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -16,9 +15,10 @@ i18n.use(initReactI18next).init({
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'Expected Completion Date cannot be more than 1 year of Expected Start Date',
         ...projects.en.translation,
-        ...transactioni18n.en.tranlation,
+        ...transactionDetailI18n.en.tranlation,
         ...vendor_manager.en.translation,
         ...workOrder.en.translation,
+        ...transaction.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -78,6 +78,8 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
         generalLabor: 'General Labor',
+        materialCost: 'Material Cost',
+        drawAmount: 'Draw Amount',
 
         // Receivable
         dueProjects: 'Due Projects',
@@ -104,6 +106,7 @@ i18n.use(initReactI18next).init({
         ProjectLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
         transactionTypeLabel: 'Type',
+        parentWorkOrderId: 'Vendor',
         transactionTotal: 'Total Amount',
         modifiedDate: 'Submit',
         skillName: 'Trade',
@@ -111,7 +114,6 @@ i18n.use(initReactI18next).init({
         vendorWOExpectedPaymentDate: 'Expected Payment Date',
 
         // Projects-Transactions
-        updateTransaction: 'Update Transaction',
         newTransaction: 'New Transaction',
         newWorkOrder: 'New Work Order',
         newDocument: 'New Document',
@@ -166,6 +168,7 @@ i18n.use(initReactI18next).init({
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
         companyName: 'Company Name',
+        ownerName: 'Primary Contact',
         clientApprovedAmount: 'Client Approved Amount',
         profitPercentage: 'Profit Percentage',
         vendorWorkOrderAmount: 'Vendor WO Amount',
@@ -467,7 +470,6 @@ i18n.use(initReactI18next).init({
         //Reports
         rptPageTitle: 'Reports',
         rptBackBtnLabel: 'Back',
-
       },
     },
     es: {
@@ -476,9 +478,10 @@ i18n.use(initReactI18next).init({
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
         ...projects.es.translation,
-        ...transactioni18n.es.tranlation,
+        ...transactionDetailI18n.es.tranlation,
         ...vendor_manager.es.translation,
         ...workOrder.es.translation,
+        ...transaction.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -592,6 +595,8 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
         generalLabor: 'Trabajo general',
+        materialCost: 'Costo material',
+        drawAmount: 'Monto del sorteo',
 
         // receivable
         dueProjects: 'Proyectos Vencidos',
@@ -619,6 +624,7 @@ i18n.use(initReactI18next).init({
         ProjectLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
         transactionTypeLabel: 'Escribe',
+        parentWorkOrderId: 'Vendedora',
         transactionTotal: 'Cantidad Total',
         modifiedDate: 'Entregar',
 
@@ -677,10 +683,12 @@ i18n.use(initReactI18next).init({
         total: 'Total',
         close: 'Cerca',
         save: 'Ahorrar',
+
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
         companyName: 'Nombre de empresa',
+        ownerName: 'Contacto Primario',
         clientApprovedAmount: 'Monto aprobado por el cliente',
         profitPercentage: 'Porcentaje de beneficio',
         vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',

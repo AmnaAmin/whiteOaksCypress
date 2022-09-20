@@ -115,7 +115,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
-  const { exportData } = useTransactionExport(projectId)
+  const { exportData } = useTransactionExport(projectId, transactions)
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row

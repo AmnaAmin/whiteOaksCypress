@@ -112,7 +112,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     },
   )
 
-  const [firstFinancialRecord, ...restProjectFinancialOverviews] = projectFinacialOverview || []
+  const [firstFinancialRecord, vendorPaymentPercentage, ...restProjectFinancialOverviews] = projectFinacialOverview || []
 
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
@@ -161,6 +161,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - (fo?.partialPayment || 0),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
+    vendorPaymentPercentage,
     ...rest,
   }
 }

@@ -132,12 +132,18 @@ export const InvoiceTabPC = ({
           />
           <InvoiceInfo
             title={t('invoiceDate')}
-            value={workOrder.dateInvoiceSubmitted && !rejectInvoiceCheck ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy'}
+            value={
+              workOrder.dateInvoiceSubmitted && !rejectInvoiceCheck
+                ? dateFormat(workOrder?.dateInvoiceSubmitted)
+                : 'mm/dd/yyyy'
+            }
             icons={BiCalendar}
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={workOrder.paymentTermDate && !rejectInvoiceCheck ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'}
+            value={
+              workOrder.paymentTermDate && !rejectInvoiceCheck ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'
+            }
             icons={BiCalendar}
           />
         </Grid>

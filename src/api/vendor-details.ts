@@ -56,6 +56,19 @@ export const useVendorProfile = (vendorId: number) => {
   )
 }
 
+export const useFPMProfile = (FpmId: number) => {
+  const client = useClient()
+
+  return useQuery(
+    'vendorProfile',
+    async () => {
+      const response = await client(`fpm-quota-info/${FpmId}`, {})
+      return response?.data
+    },
+    { enabled: !!FpmId },
+  )
+}
+
 export const useAccountDetails = () => {
   const client = useClient()
 

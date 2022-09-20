@@ -25,7 +25,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomInput, CustomRequiredInput } from 'components/input/input'
 
 const textStyle = {
   color: '#4A5568',
@@ -265,7 +265,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                           <>
                             <NumberFormat
                               value={field.value}
-                              customInput={CustomRequiredInput}
+                              customInput={CustomInput}
                               format="(###)-###-####"
                               mask="_"
                               onValueChange={e => {

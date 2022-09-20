@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import sub from 'date-fns/sub'
 import { range } from 'lodash'
+import { GenericObjectType } from 'types/common.types'
 
 export const dateFormat = (date: string | Date) => {
   if (date === null) return ''
@@ -75,4 +76,33 @@ export const dateFormatter = d => {
     year: 'numeric',
   })
   return formattedDate
+}
+
+export const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+export const monthsShort: GenericObjectType = {
+  January: 'Jan',
+  February: 'Feb',
+  March: 'Mar',
+  April: 'Apr',
+  May: 'May',
+  June: 'Jun',
+  July: 'Jul',
+  August: 'Aug',
+  September: 'Sep',
+  October: 'Oct',
+  November: 'Nov',
+  December: 'Dec',
 }

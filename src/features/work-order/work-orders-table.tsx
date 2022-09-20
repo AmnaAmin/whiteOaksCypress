@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, Spinner, Center } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, Spinner, Center, useDisclosure } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { TableWrapper } from 'components/table/table'
@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from 'features/work-order/work-order-edit'
 import Status from 'features/common/status'
-import { useFetchProjectId } from './details/assignedItems.utils'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -61,10 +60,10 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
-  const { swoProject } = useFetchProjectId(projectId)
-  
-// Do not show WO which have been cancelled
-  const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35) 
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+
+  // Do not show WO which have been cancelled
+  const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35)
 
   useEffect(() => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -120,14 +119,17 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   return (
     <Box>
-      <WorkOrderDetails
-        workOrder={selectedWorkOrder as ProjectWorkOrderType}
-        swoProject={swoProject}
-        onClose={() => {
-          setSelectedWorkOrder(undefined)
-          refetch()
-        }}
-      />
+      {isOpen && (
+        <WorkOrderDetails
+          workOrder={selectedWorkOrder as ProjectWorkOrderType}
+          onClose={() => {
+            setSelectedWorkOrder(undefined)
+            refetch()
+            onCloseDisclosure()
+          }}
+          isOpen={isOpen}
+        />
+      )}
       {isLoading && (
         <Center>
           <Spinner size="xl" />
@@ -140,7 +142,10 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           TableRow={WorkOrderRow}
           tableHeight="calc(100vh - 300px)"
           name="work-orders-table"
-          onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+          onRowClick={(e, row) => {
+            setSelectedWorkOrder(row.original)
+            onOpen()
+          }}
         />
       )}
     </Box>

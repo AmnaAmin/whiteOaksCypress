@@ -75,7 +75,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       ...lienWaiverData,
       ...formValues,
       lienWaiverAccepted: true,
-      lienWaiverAmount: formValues.finalInvoiceAmount,
+      amountOfCheck: formValues.finalInvoiceAmount,
       documents,
     }
   }
@@ -142,7 +142,7 @@ export const LienWaiverTab: React.FC<any> = props => {
       setRecentLWFile(recentLW)
       setValue('claimantsSignature', signatureDoc?.s3Url)
       setClaimantsSignature(signatureDoc?.s3Url ?? '')
-      setValue('claimantTitle', lienWaiverData.claimantName)
+      setValue('claimantTitle', lienWaiverData.claimantTitle)
       setValue('dateOfSignature', lienWaiverData.dateOfSignature)
     } else {
       setRecentLWFile(null)
