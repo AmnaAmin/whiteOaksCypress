@@ -136,7 +136,7 @@ const WorkOrderDetailTab = props => {
 
   const downloadPdf = useCallback(() => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, assignedItemsWatch)
+    createInvoicePdf({ doc, workOrder, projectData, assignedItems: assignedItemsWatch, hideAward: false })
   }, [assignedItemsWatch, projectData, workOrder])
 
   const setAssignedItems = useCallback(

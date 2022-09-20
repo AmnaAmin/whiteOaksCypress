@@ -230,6 +230,7 @@ const RemainingListTable = (props: RemainingListType) => {
           selectedCell,
           setSelectedCell,
         }),
+      minWidth: 250,
     },
     {
       Header: `${WORK_ORDER}.details`,
@@ -245,6 +246,7 @@ const RemainingListTable = (props: RemainingListType) => {
           selectedCell,
           setSelectedCell,
         }),
+      minWidth: 300,
     },
     {
       Header: `${WORK_ORDER}.quantity`,

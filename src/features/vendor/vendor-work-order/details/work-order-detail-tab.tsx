@@ -56,7 +56,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
 
   const downloadPdf = () => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, values.assignedItems)
+    createInvoicePdf({
+      doc,
+      workOrder,
+      projectData,
+      assignedItems: values.assignedItems,
+      hideAward: !workOrder.showPrice,
+    })
   }
 
   const parseAssignedItems = values => {

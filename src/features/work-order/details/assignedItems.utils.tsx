@@ -151,6 +151,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
             description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -160,6 +161,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
           description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -196,6 +198,7 @@ export const useCreateLineItem = (props: CreateArgumentType) => {
             description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -205,6 +208,7 @@ export const useCreateLineItem = (props: CreateArgumentType) => {
           description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -230,6 +234,7 @@ export const useDeleteLineItems = swoProjectId => {
           description: 'Item Deleted Successfully',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -238,6 +243,7 @@ export const useDeleteLineItems = swoProjectId => {
           description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -262,6 +268,7 @@ export const useDeleteLineIds = () => {
           description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -507,12 +514,12 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
   )
 }
 
-export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
+export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder.propertyAddress },
-    { label: 'Start Date:', value: workOrder.workOrderStartDate },
-    { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
-    { label: 'Lock Box Code:', value: projectData.lockBoxCode },
+    { label: 'Property Address:', value: workOrder?.propertyAddress },
+    { label: 'Start Date:', value: workOrder?.workOrderStartDate },
+    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted },
+    { label: 'Lock Box Code:', value: projectData?.lockBoxCode },
   ]
   const totalAward = assignedItems?.reduce(
     (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
@@ -563,7 +570,6 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
       body: [
         ...assignedItems.map(ai => {
           return {
-            location: ai.location,
             id: ai.id,
             sku: ai.sku,
             description: ai.description,
@@ -572,13 +578,11 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
         }),
       ],
       columnStyles: {
-        location: { cellWidth: 70 },
-        id: { cellWidth: 20 },
-        description: { cellWidth: 70 },
-        quantity: { cellWidth: 20 },
+        sku: { cellWidth: 40 },
+        description: { cellWidth: 100 },
+        quantity: { cellWidth: 40 },
       },
       columns: [
-        { header: 'Location', dataKey: 'location' },
         { header: 'SKU', dataKey: 'sku' },
         { header: 'Description', dataKey: 'description' },
         { header: 'Quantity', dataKey: 'quantity' },
@@ -588,9 +592,11 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     doc.setFont(basicFont, 'normal')
     const tableEndsY = doc.lastAutoTable.finalY
     const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-    doc.setDrawColor(0, 0, 0)
-    doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
-    doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
+    if (!hideAward) {
+      doc.setDrawColor(0, 0, 0)
+      doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
+      doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
+    }
     doc.save('Assigned Line Items.pdf')
   }
 }
@@ -605,7 +611,7 @@ export const useColumnsShowDecision = ({ workOrder }) => {
   const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
   const showVerification = !isVendor && workOrder
   return {
-    showSelect: !isVendor,
+    showSelect: !isVendor && !workOrder,
     showEditablePrice: showEditablePrice,
     showReadOnlyPrice: showReadOnlyPrice,
     showStatus: !!workOrder,

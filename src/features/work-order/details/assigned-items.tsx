@@ -24,7 +24,7 @@ import {
 import { useCallback, useState } from 'react'
 import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiDownload } from 'react-icons/bi'
+import { BiDownload, BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
 import {
@@ -40,7 +40,7 @@ import {
   useFieldEnableDecision,
 } from './assignedItems.utils'
 import { FaSpinner } from 'react-icons/fa'
-import { difference } from 'lodash'
+import { CgPlayListRemove } from 'react-icons/cg'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { readFileContent } from 'api/vendor-details'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -124,7 +124,6 @@ const AssignedItems = (props: AssignedItemType) => {
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
 
   const values = getValues()
-  const [selectedRows, setSelectedRows] = useState<any>([])
   const lineItems = useWatch({ name: 'assignedItems', control })
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
   const { showEditablePrice, showReadOnlyPrice, showStatus, showImages, showVerification, showSelect } =
@@ -162,35 +161,6 @@ const AssignedItems = (props: AssignedItemType) => {
                     leftIcon={<Icon as={AddIcon} boxSize={2} />}
                   >
                     {t(`${WORK_ORDER}.addNewItem`)}
-                  </Button>
-                  <Box pl="2" pr="1">
-                    <Divider size="lg" orientation="vertical" h="25px" />
-                  </Box>
-                  <Button
-                    variant="ghost"
-                    disabled={selectedRows?.length < 1}
-                    onClick={() => {
-                      if (setUnAssignedItems && unassignedItems) {
-                        setUnAssignedItems([
-                          ...values?.assignedItems
-                            ?.filter(a => selectedRows.includes(a.id))
-                            ?.map(i => {
-                              return mapToRemainingItems(i)
-                            }),
-                          ...unassignedItems,
-                        ])
-                        const removedItems: any = []
-                        values?.assignedItems?.forEach((item, index) => {
-                          if (selectedRows.includes(item.id)) {
-                            removedItems.push(index)
-                          }
-                        })
-                        removeAssigned(removedItems)
-                      }
-                    }}
-                    colorScheme="brand"
-                  >
-                    {t(`${WORK_ORDER}.unassignLineItems`)}
                   </Button>
                 </>
               )}
@@ -252,25 +222,24 @@ const AssignedItems = (props: AssignedItemType) => {
                     <Tr whiteSpace="nowrap">
                       {showSelect && (
                         <Th sx={headerStyle} w="50px">
-                          <Checkbox
-                            size="md"
-                            isChecked={
-                              values?.assignedItems?.length > 0 &&
-                              difference(
-                                values?.assignedItems.map(r => r.id),
-                                selectedRows,
-                              )?.length < 1
-                            }
-                            onChange={e => {
-                              if (e.currentTarget.checked) {
-                                const selected =
-                                  values?.assignedItems?.length > 0 ? [...values?.assignedItems?.map(a => a.id)] : []
-                                setSelectedRows(selected)
-                              } else {
-                                setSelectedRows([])
+                          <Icon
+                            as={CgPlayListRemove}
+                            boxSize={7}
+                            color="brand.300"
+                            title="UnAssign All"
+                            onClick={() => {
+                              if (setUnAssignedItems && unassignedItems) {
+                                setUnAssignedItems([
+                                  ...values.assignedItems?.map(i => {
+                                    return mapToRemainingItems(i)
+                                  }),
+                                  ...unassignedItems,
+                                ])
+                                removeAssigned()
                               }
                             }}
-                          ></Checkbox>
+                            cursor="pointer"
+                          ></Icon>
                         </Th>
                       )}
                       <Th sx={headerStyle} minW="100px" maxW="150px">
@@ -282,7 +251,7 @@ const AssignedItems = (props: AssignedItemType) => {
                       <Th sx={headerStyle} minW="250px">
                         {t(`${WORK_ORDER}.details`)}
                       </Th>
-                      <Th sx={headerStyle} w="70px">
+                      <Th sx={headerStyle} w="100px">
                         {t(`${WORK_ORDER}.quantity`)}
                       </Th>
                       {(showReadOnlyPrice || showEditablePrice) && (
@@ -339,9 +308,9 @@ const AssignedItems = (props: AssignedItemType) => {
                           formControl={formControl}
                           fieldArray={assignedItemsArray}
                           downloadPdf={downloadPdf}
-                          selectedRows={selectedRows}
-                          setSelectedRows={setSelectedRows}
                           workOrder={workOrder}
+                          unassignedItems={unassignedItems}
+                          setUnAssignedItems={setUnAssignedItems}
                         />
                       </>
                     )}
@@ -357,9 +326,9 @@ const AssignedItems = (props: AssignedItemType) => {
 }
 
 export const AssignedLineItems = props => {
-  const { selectedRows, setSelectedRows, workOrder } = props
+  const { workOrder, unassignedItems, setUnAssignedItems } = props
   const { control, getValues, setValue, watch } = props.formControl
-  const { fields: assignedItems } = props.fieldArray
+  const { fields: assignedItems, remove: removeAssigned } = props.fieldArray
   const values = getValues()
   const { showEditablePrice, showReadOnlyPrice, showStatus, showImages, showVerification, showSelect } =
     useColumnsShowDecision({ workOrder })
@@ -451,19 +420,16 @@ export const AssignedLineItems = props => {
           <Tr>
             {showSelect && (
               <Td>
-                <Checkbox
-                  size="md"
-                  isChecked={selectedRows?.includes(values?.assignedItems?.[index]?.id)}
-                  onChange={e => {
-                    if (e.currentTarget?.checked) {
-                      if (!selectedRows?.includes(values?.assignedItems?.[index]?.id)) {
-                        setSelectedRows([...selectedRows, values?.assignedItems?.[index]?.id])
-                      }
-                    } else {
-                      setSelectedRows([...selectedRows.filter(s => s !== values?.assignedItems?.[index]?.id)])
-                    }
+                <Icon
+                  as={BiXCircle}
+                  boxSize={5}
+                  color="brand.300"
+                  onClick={() => {
+                    setUnAssignedItems([{ ...mapToRemainingItems(values?.assignedItems[index]) }, ...unassignedItems])
+                    removeAssigned(index)
                   }}
-                ></Checkbox>
+                  cursor="pointer"
+                ></Icon>
               </Td>
             )}
             <Td>
