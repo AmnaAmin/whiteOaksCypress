@@ -96,7 +96,7 @@ const WorkOrderDetails = ({
     navigate(`/project-details/${workOrder.projectId}`)
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="6xl" variant={'custom'}>
+    <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'}>
       <ModalOverlay />
       {workOrder && (
         <>

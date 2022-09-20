@@ -236,7 +236,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
   return (
     <Box>
-      <ModalBody h="400px" pl="25px" pr="25px">
+      <ModalBody h={'calc(100vh - 300px)'} pl="25px" pr="25px">
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
@@ -263,143 +263,176 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
-        <Box>
-          <Box h="250px" overflow="auto" border="1px solid #E2E8F0">
-            <Table variant="simple" size="md">
-              <Thead pos="sticky" top={0}>
-                <Tr>
-                  <Td>{t('item')}</Td>
-                  <Td>{t('description')}</Td>
-                  <Td>{t('total')}</Td>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {items.map((item, index) => {
-                  return (
-                    <Tr key={index} data-testid={'invoice-items'} h="72px">
-                      <Td>{item.id}</Td>
-                      <Td>{item.name}</Td>
+        <Box h="calc(100% - 150px)" overflow="auto" border="1px solid #E2E8F0">
+          <Table variant="simple" size="md">
+            <Thead pos="sticky" top={0}>
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {items.map((item, index) => {
+                return (
+                  <Tr key={index} data-testid={'invoice-items'} h="72px">
+                    <Td>{item.id}</Td>
+                    <Td>{item.name}</Td>
+                    <Td>
+                      <Flex justifyContent="space-between" alignItems="center">
+                        <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
+                        {allowManualEntry && (
+                          <Text>
+                            <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
+                          </Text>
+                        )}
+                      </Flex>
+                    </Td>
+                  </Tr>
+                )
+              })}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>{' '}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>{' '}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>{' '}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>{' '}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>{' '}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>{' '}
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td>{t('total')}</Td>
+              </Tr>
+            </Tbody>
+            <form>
+              <>
+                {allowManualEntry && (
+                  <Tfoot>
+                    <Tr>
+                      <Td pt="0" pb={6}>
+                        <Button
+                          type="submit"
+                          size="xs"
+                          variant="ghost"
+                          my={0.5}
+                          fontSize="14px"
+                          fontWeight={600}
+                          color="#4E87F8"
+                        >
+                          +{t('addNewItem')}
+                        </Button>
+
+                        <FormControl isInvalid={!!errors.item?.message}>
+                          <Input
+                            w={165}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="item"
+                            {...register('item', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+
                       <Td>
-                        <Flex justifyContent="space-between" alignItems="center">
-                          <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
-                          {allowManualEntry && (
-                            <Text>
-                              <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
-                            </Text>
-                          )}
-                        </Flex>
+                        <FormControl isInvalid={!!errors.description?.message}>
+                          <Input
+                            w={149}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="description"
+                            {...register('description', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.unitPrice?.message}>
+                          <Input
+                            w={149}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="unitPrice"
+                            {...register('unitPrice', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.quantity?.message}>
+                          <Input
+                            w={84}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="quantity"
+                            {...register('quantity', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.amount?.message}>
+                          <Input
+                            w={84}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="amount"
+                            {...register('amount', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
+                        </FormControl>
                       </Td>
                     </Tr>
-                  )
-                })}
-              </Tbody>
-              <form>
-                <>
-                  {allowManualEntry && (
-                    <Tfoot>
-                      <Tr>
-                        <Td pt="0" pb={6}>
-                          <Button
-                            type="submit"
-                            size="xs"
-                            variant="ghost"
-                            my={0.5}
-                            fontSize="14px"
-                            fontWeight={600}
-                            color="#4E87F8"
-                          >
-                            +{t('addNewItem')}
-                          </Button>
+                  </Tfoot>
+                )}
+              </>
+            </form>
+          </Table>
 
-                          <FormControl isInvalid={!!errors.item?.message}>
-                            <Input
-                              w={165}
-                              type="text"
-                              h="28px"
-                              bg="gray.50"
-                              // id="item"
-                              {...register('item', { required: 'This field is required.' })}
-                            />
-                            <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
-                          </FormControl>
-                        </Td>
-
-                        <Td>
-                          <FormControl isInvalid={!!errors.description?.message}>
-                            <Input
-                              w={149}
-                              type="text"
-                              h="28px"
-                              bg="gray.50"
-                              // id="description"
-                              {...register('description', { required: 'This field is required.' })}
-                            />
-                            <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
-                          </FormControl>
-                        </Td>
-                        <Td>
-                          <FormControl isInvalid={!!errors.unitPrice?.message}>
-                            <Input
-                              w={149}
-                              type="text"
-                              h="28px"
-                              bg="gray.50"
-                              // id="unitPrice"
-                              {...register('unitPrice', { required: 'This field is required.' })}
-                            />
-                            <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
-                          </FormControl>
-                        </Td>
-                        <Td>
-                          <FormControl isInvalid={!!errors.quantity?.message}>
-                            <Input
-                              w={84}
-                              type="text"
-                              h="28px"
-                              bg="gray.50"
-                              // id="quantity"
-                              {...register('quantity', { required: 'This field is required.' })}
-                            />
-                            <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
-                          </FormControl>
-                        </Td>
-                        <Td>
-                          <FormControl isInvalid={!!errors.amount?.message}>
-                            <Input
-                              w={84}
-                              type="text"
-                              h="28px"
-                              bg="gray.50"
-                              // id="amount"
-                              {...register('amount', { required: 'This field is required.' })}
-                            />
-                            <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
-                          </FormControl>
-                        </Td>
-                      </Tr>
-                    </Tfoot>
-                  )}
-                </>
-              </form>
-            </Table>
-
-            <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
-              <Box>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('subTotal')}:</Text>
-                  <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
-                </HStack>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('totalAmountPaid')}:</Text>
-                  <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
-                </HStack>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('balanceDue')}</Text>
-                  <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
-                </HStack>
-              </Box>
-            </VStack>
-          </Box>
+          <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
+            <Box>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('subTotal')}:</Text>
+                <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
+              </HStack>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('totalAmountPaid')}:</Text>
+                <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
+              </HStack>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('balanceDue')}</Text>
+                <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
+              </HStack>
+            </Box>
+          </VStack>
         </Box>
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>

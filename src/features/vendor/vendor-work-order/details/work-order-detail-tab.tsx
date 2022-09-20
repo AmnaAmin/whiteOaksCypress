@@ -56,7 +56,13 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
 
   const downloadPdf = () => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, values.assignedItems)
+    createInvoicePdf({
+      doc,
+      workOrder,
+      projectData,
+      assignedItems: values.assignedItems,
+      hideAward: !workOrder.showPrice,
+    })
   }
 
   const parseAssignedItems = values => {
@@ -89,7 +95,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h="400px" overflow={'auto'}>
+        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <SimpleGrid
             columns={4}
             spacing={8}
