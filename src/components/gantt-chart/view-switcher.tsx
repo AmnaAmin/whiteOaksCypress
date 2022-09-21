@@ -7,11 +7,11 @@ type ViewSwitcherProps = {
   viewMode: ViewMode,
   onViewModeChange: (viewMode: ViewMode) => void
 }
-type viewFilter = {
+type ViewFilter = {
   label: string,
   value: ViewMode
 }
-const viewFilters:viewFilter[] = [
+const viewFilters:ViewFilter[] = [
   {
     label: 'Hour',
     value: ViewMode.Hour,
@@ -44,7 +44,7 @@ const viewFilters:viewFilter[] = [
 
 export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({ viewMode, onViewModeChange }) => {
   return (
-    <Box className="ViewContainer" gridGap={4}>
+    <Box className="view-container" gridGap={4}>
       {viewFilters.map((view) => {
         return (
           <Button

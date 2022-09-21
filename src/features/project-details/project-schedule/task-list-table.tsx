@@ -2,6 +2,7 @@ import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { Task } from './task-types.ds'
 import { dateFormat } from 'utils/date-time-utils'
+import { MdOutlineArrowRight, MdOutlineArrowDropDown } from "react-icons/md";
 
 const styles = {
   taskListWrapper: '_3ZbQT taskListWrapper',
@@ -39,13 +40,11 @@ export const ProjectTaskListTable: React.FC<{
       {tasks.length > 0 ? (
         <>
           {tasks.map((task) => {
-            let expanderSymbol = "";
-            if (task.hideChildren === false) {
-              expanderSymbol = "▼";
-            } else if (task.hideChildren === true) {
-              expanderSymbol = "▶";
+            let expanderSymbol = null;
+            if(task) {
+              task.hideChildren ? <MdOutlineArrowRight /> : <MdOutlineArrowDropDown />        
             }
-        
+
             return (
               <Box
                 key={task.name}

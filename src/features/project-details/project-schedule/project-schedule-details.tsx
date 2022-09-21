@@ -27,7 +27,7 @@ const ProjectScheduleDetails: React.FC<{
 
   return (
     <Flex
-      className="Wrapper ProjectDetails_Chart"
+      className="project-details-chart"
       direction={"column"}
       gridGap={4}
     >
