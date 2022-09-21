@@ -93,7 +93,7 @@ export const ProjectDetails: React.FC = props => {
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
-        <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
+        {formattedGanttData?.length > 0 ? <ProjectSchedule isLoading={isLoading} data={formattedGanttData} /> : null}
         {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
 
         {tabIndex === 1}
