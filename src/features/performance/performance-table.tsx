@@ -5,8 +5,8 @@ import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
-import PerformanceDetails from './performance-details'
 import { PerformanceType } from 'types/performance.type'
+import PerformanceModal from './performance-modal'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -103,7 +103,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef} height={'450px'}>
-      <PerformanceDetails
+      <PerformanceModal
         PerformanceDetails={selectedUser as PerformanceType}
         onClose={() => {
           setSelectedUser(undefined)

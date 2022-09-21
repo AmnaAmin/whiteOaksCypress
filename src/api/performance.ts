@@ -95,7 +95,7 @@ export const useMutatePerformance = (FPMId: number) => {
           status: 'success',
           isClosable: true,
         })
-        queryClient.invalidateQueries('fpm-quota')
+        queryClient.invalidateQueries('performance-list')
       },
       onError(error: ErrorType) {
         toast({
