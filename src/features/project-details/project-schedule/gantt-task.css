@@ -135,15 +135,19 @@ input:checked + .Slider:before {
 }
 
 /* Fills for progress bars */
-.project-details-chart .bar > g:nth-of-type(4n+1) ._KxSXS > g > rect{
+.project-details-chart .bar > g text { fill: #5b5757;}
+.project-details-chart .bar > g ._KxSXS > g > rect:nth-child(1){
+  fill: #E2E8F0;
+}
+.project-details-chart .bar > g:nth-of-type(4n+1) ._KxSXS > g > rect:nth-child(2){
   fill: #949AC2;
 }
-.project-details-chart .bar > g:nth-of-type(4n+2) ._KxSXS > g > rect{
+.project-details-chart .bar > g:nth-of-type(4n+2) ._KxSXS > g > rect:nth-child(2){
   fill: #FB8832;
 }
-.project-details-chart .bar > g:nth-of-type(4n+3) ._KxSXS > g > rect{
+.project-details-chart .bar > g:nth-of-type(4n+3) ._KxSXS > g > rect:nth-child(2){
   fill: #F7685B;
 }
-.project-details-chart .bar > g:nth-of-type(4n+4) ._KxSXS > g > rect{
+.project-details-chart .bar > g:nth-of-type(4n+4) ._KxSXS > g > rect:nth-child(2){
   fill: #68B8EF;
 }
