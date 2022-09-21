@@ -1,5 +1,3 @@
-import { badges } from "api/performance";
-
 export type PerformanceType = {
     userId: number,
     revenue?: string,
@@ -15,5 +13,4 @@ export type PerformanceType = {
     name?: any,
 }
 
-// export type BADGES = ['NONE', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM'];
 
