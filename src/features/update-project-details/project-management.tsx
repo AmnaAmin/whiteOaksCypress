@@ -4,6 +4,7 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { SelectOption } from 'types/transaction.type'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 
 type ProjectManagerProps = {
@@ -12,6 +13,7 @@ type ProjectManagerProps = {
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
   const dateToday = new Date().toISOString().split('T')[0]
+  const { isFPM } = useUserRolesSelector()
 
   const {
     formState: { errors },
@@ -156,7 +158,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 min={minOfWoaStartDate}
                 {...register('woaStartDate', { required: isWOAStartDateRequired ? 'This is required' : false })}
               />
-              <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
+              {isFPM ? (
+                <FormErrorMessage>
+                  {errors?.woaStartDate &&
+                    'WOA Start date is required to move project in Active state, Please contact your PC or admin to provide WOA start date.'}
+                </FormErrorMessage>
+              ) : (
+                <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
