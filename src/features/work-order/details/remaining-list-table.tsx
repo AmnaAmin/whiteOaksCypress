@@ -214,7 +214,7 @@ const RemainingListTable = (props: RemainingListType) => {
           selectedCell,
           setSelectedCell,
         }),
-      width: 150,
+      width: 100,
     },
     {
       Header: `${WORK_ORDER}.productName`,
@@ -230,7 +230,7 @@ const RemainingListTable = (props: RemainingListType) => {
           selectedCell,
           setSelectedCell,
         }),
-      width: 250,
+      minWidth: 250,
     },
     {
       Header: `${WORK_ORDER}.details`,
@@ -246,6 +246,7 @@ const RemainingListTable = (props: RemainingListType) => {
           selectedCell,
           setSelectedCell,
         }),
+      minWidth: 300,
     },
     {
       Header: `${WORK_ORDER}.quantity`,
@@ -265,6 +266,7 @@ const RemainingListTable = (props: RemainingListType) => {
             handleQuantityChange(e, index)
           },
         }),
+      width: 100,
     },
     {
       Header: `${WORK_ORDER}.unitPrice`,
@@ -285,6 +287,7 @@ const RemainingListTable = (props: RemainingListType) => {
             handleUnitPriceChange(e, index)
           },
         }),
+      width: 150,
     },
     {
       Header: `${WORK_ORDER}.total`,
@@ -297,6 +300,7 @@ const RemainingListTable = (props: RemainingListType) => {
           </>
         )
       },
+      width: 150,
     },
   ]
 
@@ -307,7 +311,7 @@ const RemainingListTable = (props: RemainingListType) => {
         data={remainingItems ?? []}
         isLoading={isLoading}
         TableRow={RemainingItemsRow}
-        tableHeight="calc(100vh - 300px)"
+        tableHeight="calc(100vh - 325px)"
         name="remaining-items-table"
         defaultFlexStyle={false}
         disableFilter={true}

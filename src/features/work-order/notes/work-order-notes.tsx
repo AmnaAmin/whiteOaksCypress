@@ -34,7 +34,7 @@ export const WorkOrderNotes: React.FC<any> = props => {
       onClose={onClose}
       navigateToProjectDetails={navigateToProjectDetails}
       messageBoxStyle={{ resize: 'none' }}
-      contentStyle={{ padding: '25px', maxHeight: '400px' }}
+      contentStyle={{ padding: '25px', maxHeight: 'calc(100vh - 300px)' }}
       pageLayoutStyle={{ overflow: 'hidden', borderRadius: '3px' }}
     />
   )

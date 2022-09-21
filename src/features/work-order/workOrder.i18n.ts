@@ -11,7 +11,7 @@ export const workOrder = {
         productName: 'Product Name',
         sku: 'SKU',
         location: 'Location',
-        quantity: 'Quantity',
+        quantity: 'Qty',
         price: 'Price',
         unitPrice: 'Unit Price',
         images: 'Images',

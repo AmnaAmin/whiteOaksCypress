@@ -278,7 +278,7 @@ const NewWorkOrder: React.FC<{
         reset(defaultFormValues())
         onClose()
       }}
-      size="6xl"
+      size="flexible"
       variant="custom"
     >
       <ModalOverlay />
@@ -287,7 +287,7 @@ const NewWorkOrder: React.FC<{
           onSubmit(values)
         })}
       >
-        <ModalContent h="600px" overflow={'auto'}>
+        <ModalContent h="calc(100vh - 100px)" overflow={'auto'}>
           <ModalHeader>{t('newWorkOrder')}</ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
@@ -303,7 +303,7 @@ const NewWorkOrder: React.FC<{
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
 
-                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}%` : '0%'} />
+                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
 
                 <InformationCard
                   title="finalSowAmount"

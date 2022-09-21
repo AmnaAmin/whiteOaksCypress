@@ -199,7 +199,7 @@ i18n.use(initReactI18next).init({
         productName: 'Product Name',
         sku: 'SKU',
         location: 'Location',
-        quantity: 'Quantity',
+        quantity: 'Qty',
         price: 'Price',
         images: 'Images',
         invoicedDate: 'Invoiced Date',
