@@ -1,4 +1,15 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+} from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -43,6 +54,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   return (
     <Box>
       <Stack>
+        {isWOAStartDateRequired && isFPM && (
+          <Alert status="error" mb={5} w="98%">
+            <AlertIcon />
+            WOA Start date is required to move project in Active state, Please contact your PC or admin to provide WOA
+            start date.
+          </Alert>
+        )}
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>
@@ -158,14 +176,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 min={minOfWoaStartDate}
                 {...register('woaStartDate', { required: isWOAStartDateRequired ? 'This is required' : false })}
               />
-              {isFPM ? (
-                <FormErrorMessage>
-                  {errors?.woaStartDate &&
-                    'WOA Start date is required to move project in Active state, Please contact your PC or admin to provide WOA start date.'}
-                </FormErrorMessage>
-              ) : (
-                <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
-              )}
+              <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
