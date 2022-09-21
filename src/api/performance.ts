@@ -19,6 +19,7 @@ export const usePerformance = () => {
 
   return useQuery('performance-list', async () => {
     const response = await client(`fpm-quota`, {})
+    console.log(response?.data)
     return response?.data
   })
 }
@@ -121,3 +122,21 @@ export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, er
       !formValues?.ignoreQuota
     )
   }
+
+  // Performance Graph
+  export const constMonthOptionTypes = {
+    all: 'all',
+    lastMonth: 'lastMonth',
+    thisMonth: 'thisMonth',
+    currentQuarter: 'currentQuarter',
+    pastQuarter: 'pastQuarter',
+  };
+  
+ export const constMonthOption = [
+    { value: constMonthOptionTypes.thisMonth, label: 'This Month' },
+    { value: constMonthOptionTypes.lastMonth, label: 'Last Month' },
+    { value: constMonthOptionTypes.currentQuarter, label: 'Current Quarter' },
+    { value: constMonthOptionTypes.pastQuarter, label: 'Past Quarter' },
+    { value: constMonthOptionTypes.all, label: 'All' },
+  ];
+

@@ -16,15 +16,12 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect } from 'react'
 import { PerformanceType } from 'types/performance.type'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { useFPMProfile } from 'api/vendor-details'
-import { Account } from 'types/account.types'
-import PerformanceGraph from 'pages/fpm/graph-performance'
 import { PerformanceDetail } from './performance-details'
 import { Button } from 'components/button/button'
 import { Card } from 'components/card/card'
 import { FormProvider, useForm } from 'react-hook-form'
 import { badges, bonus, IgnorePerformance, useMutatePerformance, usePerformanceSaveDisabled } from 'api/performance'
+import PerformanceGraph from './revenue-performance-graph'
 
 const PerformanceModal = ({
   PerformanceDetails,
@@ -33,11 +30,6 @@ const PerformanceModal = ({
   PerformanceDetails: PerformanceType
   onClose: () => void
 }) => {
-  const { id } = useUserProfile() as Account
-  const { data: fpmInformationData, isLoading } = useFPMProfile(id)
-  const chart = fpmInformationData
-  // const { data: performance } = usePerformance()
-
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {
@@ -68,12 +60,12 @@ const PerformanceModal = ({
 
   const onSubmit = useCallback(
     async values => {
-        const queryOptions = {
-            onSuccess() {
-              onClose()
-              methods?.reset()
-            },
-          }
+      const queryOptions = {
+        onSuccess() {
+          onClose()
+          methods?.reset()
+        },
+      }
       const performancePayload = {
         newBonus: values.newBonus?.value,
         badge: values.badge?.value,
@@ -111,7 +103,7 @@ const PerformanceModal = ({
                     {'Performance per Month'}
                   </FormLabel>
                   <Box mt={10}>
-                    <PerformanceGraph chartData={chart} isLoading={isLoading} />
+                    <PerformanceGraph isLoading={false} />
                   </Box>
                 </Card>
               </ModalBody>
