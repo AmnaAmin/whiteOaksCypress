@@ -8,9 +8,9 @@ import { values } from 'lodash'
 import { useRevenuePerformance } from 'api/performance'
 
 const RevenuePerformanceGraph = () => {
-  const { data: fpmRevenueData , isLoading } = useRevenuePerformance()
+  const { data: fpmRevenueData, isLoading } = useRevenuePerformance()
   const vendors = values(fpmRevenueData).reduce((a, v) => ({ ...a, ...v }), {})
-   const vendorData = months.map(key => {
+  const vendorData = months.map(key => {
     const entityList = vendors[key] || []
     console.log('entityList', entityList)
 
@@ -20,32 +20,13 @@ const RevenuePerformanceGraph = () => {
     }
   })
 
-  
   console.log('chartData', fpmRevenueData)
   console.log('vendorData', vendorData)
   console.log('vendors', vendors)
-const getRevenue = vendors[0]?.revenue
+  const getRevenue = vendors[0]?.revenue
   console.log('getRevenue', getRevenue)
-  
-  // const vendors = [chartData?.chart]
 
-  // const vendorData = months.map(key => {
-  //   const monthExistsInChart = chartData !== undefined && Object.keys(vendors[0])?.find(months => months === key)
-  //   let nameMonthData
-  //   if (monthExistsInChart) {
-  //     nameMonthData = chartData?.chart[key]
-  //   }
-  //   return {
-  //     name: monthsShort[key],
-  //     // Bonus: nameMonthData?.bonus,
-  //     // Profit: nameMonthData?.profit,
-  //     Revenue: nameMonthData?.revenue,
-  //   }
-  // })
-
-  return (
-    <>{isLoading ? <BlankSlate size="sm" /> : <RevenueGraph vendorData={vendorData} width="98%" height={360} />}</>
-  )
+  return <>{isLoading ? <BlankSlate size="sm" /> : <RevenueGraph vendorData={vendorData} width="98%" height={360} />}</>
 }
 
 export const RevenueGraph = ({ vendorData, width, height }) => {

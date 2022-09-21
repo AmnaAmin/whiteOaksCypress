@@ -36,7 +36,6 @@ const PerformanceModal = ({
   const { id } = useUserProfile() as Account
   const { data: fpmInformationData, isLoading } = useFPMProfile(id)
   const chart = fpmInformationData
-  // const { data: performance } = usePerformance()
 
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -68,12 +67,12 @@ const PerformanceModal = ({
 
   const onSubmit = useCallback(
     async values => {
-        const queryOptions = {
-            onSuccess() {
-              onClose()
-              methods?.reset()
-            },
-          }
+      const queryOptions = {
+        onSuccess() {
+          onClose()
+          methods?.reset()
+        },
+      }
       const performancePayload = {
         newBonus: values.newBonus?.value,
         badge: values.badge?.value,

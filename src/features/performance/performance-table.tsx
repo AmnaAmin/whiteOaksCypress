@@ -42,7 +42,7 @@ const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
   const { data: performance } = usePerformance()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
-  
+
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {

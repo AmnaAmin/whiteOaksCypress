@@ -9,7 +9,7 @@ export const PerformanceTab = () => {
       <Card mt={5} p={0} rounded="13px" flex={1} bg="#FDFDFF">
         <RevenuePerformanceGraph />
       </Card>
-      <PerformanceInfoCards isLoading={false}  />
+      <PerformanceInfoCards isLoading={false} />
       <PerformanceTable />
     </>
   )
