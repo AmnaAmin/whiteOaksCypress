@@ -6,7 +6,7 @@ import { TableWrapper } from 'components/table/table'
 import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
 import PerformanceDetails from './performance-details'
-import { Performance } from 'types/performance.type'
+import { PerformanceType } from 'types/performance.type'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -41,7 +41,8 @@ const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => 
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
   const { data: performance } = usePerformance()
-  const [selectedUser, setSelectedUser] = useState<Performance>()
+  const [selectedUser, setSelectedUser] = useState<PerformanceType>()
+  
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
@@ -103,7 +104,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
   return (
     <Box ref={resizeElementRef} height={'450px'}>
       <PerformanceDetails
-        PerformanceDetails={selectedUser as Performance}
+        PerformanceDetails={selectedUser as PerformanceType}
         onClose={() => {
           setSelectedUser(undefined)
         }}

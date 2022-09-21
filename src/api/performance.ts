@@ -1,4 +1,8 @@
-import { useQuery } from 'react-query'
+import { useToast } from '@chakra-ui/react'
+import { Control, useWatch } from 'react-hook-form'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { ErrorType } from 'types/common.types'
+import { PerformanceType } from 'types/performance.type'
 import { useClient } from 'utils/auth-context'
 
 export const useRevenuePerformance = () => {
@@ -70,3 +74,50 @@ export const bonus = [
   { value: 9, label: '9%' },
   { value: 10, label: '10%' },
 ]
+
+export const useMutatePerformance = (FPMId: number) => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (performancePayload: any) => {
+      return client(`fpm-quota-info/${FPMId}`, {
+        method: 'PUT',
+        data: performancePayload,
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Update Performance Details',
+          description: 'Performance Details have been updated successfully.',
+          status: 'success',
+          isClosable: true,
+        })
+        queryClient.invalidateQueries('fpm-quota')
+      },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Something went wrong',
+          description: error?.message || 'Something went wrong in performance details update',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, errors): boolean => {
+    const formValues = useWatch({ control })
+  
+    return (
+      !formValues?.newBonus ||
+      !formValues?.newTarget ||
+      !formValues?.badge ||
+      !formValues?.ignoreQuota
+    )
+  }

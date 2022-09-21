@@ -1,17 +1,19 @@
+import { badges } from "api/performance";
 
-export type Performance = {
-    revenue: string,
-    profit: number,
-    target: number,
-    newTarget: string,
-    newBonus: 0,
-    badge: BADGES[0],
-    currentBonus: number,
-    previousBonus: number,
-    ignoreQuota: number,
-    removeCards: boolean,
-    name: string,
+export type PerformanceType = {
+    userId: number,
+    revenue?: string,
+    profit?: number,
+    target?: number,
+    newTarget?: string,
+    newBonus?: { value: number; label: string; },
+    badge: { value: string; label: string; },
+    currentBonus?: number,
+    previousBonus?: number,
+    ignoreQuota?: { value: number; label: string; },
+    removeCards?: boolean,
+    name?: any,
 }
 
-export type BADGES = ['NONE', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM'];
+// export type BADGES = ['NONE', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM'];
 

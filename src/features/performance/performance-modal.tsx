@@ -4,18 +4,22 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Input,
   Divider,
   Grid,
   GridItem,
   HStack,
   VStack,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
 import { badges, bonus, IgnorePerformance } from 'api/performance'
+import { PerformanceType } from 'types/performance.type'
+import { Controller, useFormContext } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
+import { CustomRequiredInput } from 'components/input/input'
 
 type FieldInfoCardProps = {
   title: string
@@ -43,11 +47,18 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
 
 type PerformanceDetailsProps = {
   PerformanceDetails?: any
-  onClose?: () => void
 }
 
 export const PerformanceModal = React.forwardRef((props: PerformanceDetailsProps) => {
   const { t } = useTranslation()
+  const { control, setValue } = useFormContext<PerformanceType>()
+
+  useEffect(() => {
+    setValue('newTarget', currencyFormatter(props?.PerformanceDetails?.newTarget))
+    setValue('newBonus', props?.PerformanceDetails?.newBonus)
+    setValue('ignoreQuota', props?.PerformanceDetails?.ignoreQuota)
+    setValue('badge', props?.PerformanceDetails?.badge)
+  }, [])
 
   return (
     <Box>
@@ -75,16 +86,33 @@ export const PerformanceModal = React.forwardRef((props: PerformanceDetailsProps
           </Grid>
         </Flex>
         <Divider mt={1} mb={5} />
+
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
                 {t('Bonus %')}
               </FormLabel>
-              <ReactSelect
-                options={bonus}
-                // value={bonus?.values}
-                selectProps={{ isBorderLeft: true }}
+              <Controller
+                control={control}
+                name={`newBonus`}
+                rules={{ required: 'This is required field' }}
+                render={({ field: { value, onChange }, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      options={bonus}
+                      selected={value}
+                      defaultValue={bonus?.map(p => {
+                        if (p?.value === props?.PerformanceDetails?.newBonus)
+                          return { label: p?.label, value: p?.value }
+                        return null
+                      })}
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
               />
             </FormControl>
           </GridItem>
@@ -93,10 +121,27 @@ export const PerformanceModal = React.forwardRef((props: PerformanceDetailsProps
               <FormLabel variant="strong-label" size="md">
                 {t('New Target')}
               </FormLabel>
-              <Input
-                variant="required-field"
-                placeholder="$0.00"
-                //  value={props?.clientDetails?.paymentTerm}
+              <Controller
+                control={control}
+                name={`newTarget`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        onValueChange={values => {
+                          const { floatValue } = values
+                          field.onChange(floatValue)
+                        }}
+                        customInput={CustomRequiredInput}
+                        thousandSeparator={true}
+                        prefix={'$'}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
               />
             </FormControl>
           </GridItem>
@@ -105,10 +150,25 @@ export const PerformanceModal = React.forwardRef((props: PerformanceDetailsProps
               <FormLabel variant="strong-label" size="md">
                 {t('Badge')}
               </FormLabel>
-              <ReactSelect
-                options={badges}
-                // value={bonus?.values}
-                selectProps={{ isBorderLeft: true }}
+              <Controller
+                control={control}
+                name={`badge`}
+                rules={{ required: 'This is required field' }}
+                render={({ field: { value, onChange }, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      options={badges}
+                      selected={value}
+                      defaultValue={badges?.map(p => {
+                        if (p?.value === props?.PerformanceDetails?.badge) return { label: p?.label, value: p?.value }
+                        return null
+                      })}
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
               />
             </FormControl>
           </GridItem>
@@ -119,10 +179,26 @@ export const PerformanceModal = React.forwardRef((props: PerformanceDetailsProps
               <FormLabel variant="strong-label" size="md">
                 {t('Ignore Performance')}
               </FormLabel>
-              <ReactSelect
-                options={IgnorePerformance}
-                // value={bonus?.values}
-                selectProps={{ isBorderLeft: true }}
+              <Controller
+                control={control}
+                name={`ignoreQuota`}
+                rules={{ required: 'This is required field' }}
+                render={({ field: { value, onChange }, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      options={IgnorePerformance}
+                      selected={value}
+                      defaultValue={IgnorePerformance?.map(p => {
+                        if (p?.value === props?.PerformanceDetails?.ignoreQuota)
+                          return { label: p?.label, value: p?.value }
+                        return null
+                      })}
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
               />
             </FormControl>
           </GridItem>
