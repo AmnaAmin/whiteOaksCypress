@@ -416,9 +416,20 @@ type InputFieldType = {
   fieldArray: string
   inputType?: string
   onChange?: (e, index) => void
+  autoFocus?: boolean
+  setIsFocus?: any
 }
 export const InputField = (props: InputFieldType) => {
-  const { index, fieldName, formControl, fieldArray, onChange: handleChange, inputType = 'text' } = props
+  const {
+    index,
+    fieldName,
+    formControl,
+    fieldArray,
+    onChange: handleChange,
+    inputType = 'text',
+    autoFocus,
+    setIsFocus,
+  } = props
   const {
     formState: { errors },
     control,
@@ -436,12 +447,15 @@ export const InputField = (props: InputFieldType) => {
               size="sm"
               type={inputType}
               value={field.value}
+              autoFocus={autoFocus}
               onChange={e => {
                 field.onChange(e.target.value)
               }}
               onBlur={e => {
+                setIsFocus(false)
                 if (handleChange) handleChange(e, index)
               }}
+              onFocus={() => setIsFocus(true)}
             ></Input>
           )}
         ></Controller>
