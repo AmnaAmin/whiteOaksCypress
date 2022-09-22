@@ -283,6 +283,8 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
 }
 
 export const calculateVendorAmount = (amount, percentage) => {
+  amount = Number(amount)
+  percentage = Number(percentage)
   return round(amount - amount * (percentage / 100), 2)
 }
 
@@ -516,10 +518,10 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
 
 export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder?.propertyAddress },
-    { label: 'Start Date:', value: workOrder?.workOrderStartDate },
-    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted },
-    { label: 'Lock Box Code:', value: projectData?.lockBoxCode },
+    { label: 'Property Address:', value: workOrder?.propertyAddress ?? '' },
+    { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
+    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted ?? '' },
+    { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
   ]
   const totalAward = assignedItems?.reduce(
     (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
@@ -555,12 +557,12 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text('Square Feet:', x + length + 5, 55)
     doc.rect(x + length, 60, 65, width, 'D')
     doc.text('Work Type:', x + length + 5, 65)
-    doc.text(workOrder.skillName, x + length + 30, 65)
+    doc.text(workOrder.skillName ?? '', x + length + 30, 65)
 
     doc.rect(x, y + 15, length, width, 'D')
-    doc.text('Sub Contractor: ' + workOrder.companyName, x + 5, y + 22)
+    doc.text('Sub Contractor: ' + (workOrder.companyName ?? ''), x + 5, y + 22)
     doc.rect(x + length, y + 15, 65, width, 'D')
-    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount), x + length + 5, y + 22)
+    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + length + 5, y + 22)
 
     autoTable(doc, {
       startY: y + 40,
@@ -607,16 +609,18 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
 
 export const useColumnsShowDecision = ({ workOrder }) => {
   const { isVendor } = useUserRolesSelector()
-  const showEditablePrice = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
-  const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
+  const showEditablePrices = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
+  const showReadOnlyPrices = !isVendor && workOrder //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
+  const showVendorPrice = isVendor && workOrder.showPricing
   const showVerification = !isVendor && workOrder
   return {
     showSelect: !isVendor && !workOrder,
-    showEditablePrice: showEditablePrice,
-    showReadOnlyPrice: showReadOnlyPrice,
+    showEditablePrices,
+    showReadOnlyPrices,
     showStatus: !!workOrder,
     showImages: !!workOrder,
-    showVerification: showVerification,
+    showVerification,
+    showVendorPrice,
   }
 }
 

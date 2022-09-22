@@ -173,9 +173,9 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     expectedPaymentDateEnabled: defaultStatus || completedState || invoicedState,
     datePaymentProcessedEnabled: defaultStatus || completedState || invoicedState,
     datePaidEnabled: defaultStatus || completedState || invoicedState,
-    clientApprovedAmountEnabled: defaultStatus,
+    invoiceAmountEnabled: defaultStatus,
     clientOriginalApprovedAmountEnabled: defaultStatus,
-    finalInvoiceAmountEnabled: defaultStatus,
+    clientApprovedAmountEnabled: defaultStatus,
   }
 }
 
@@ -200,9 +200,9 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
     datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
     datePaid: datePickerFormat(workOrder?.datePaid),
-    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
-    finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
+    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
   }
   return defaultValues
 }
