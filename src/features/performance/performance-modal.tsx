@@ -49,6 +49,7 @@ const PerformanceModal = ({
       onOpen()
     } else {
       onCloseDisclosure()
+      // reset()
     }
   }, [onCloseDisclosure, onOpen, PerformanceDetails])
 
@@ -56,7 +57,7 @@ const PerformanceModal = ({
 
   const methods = useForm<PerformanceType>({
     defaultValues: {
-      newTarget: '',
+      newTarget: PerformanceDetails?.newTarget,
       newBonus: bonus[0],
       badge: badges[0],
       ignoreQuota: IgnorePerformance[0],
@@ -70,7 +71,7 @@ const PerformanceModal = ({
       const queryOptions = {
         onSuccess() {
           onClose()
-          methods?.reset()
+          // methods?.reset()
         },
       }
       const performancePayload = {

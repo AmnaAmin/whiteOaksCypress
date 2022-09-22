@@ -51,15 +51,15 @@ type PerformanceDetailsProps = {
 
 export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProps) => {
   const { t } = useTranslation()
-  const { control, setValue } = useFormContext<PerformanceType>()
+  const { control, setValue, register } = useFormContext<PerformanceType>()
   const {data : fpmData} = useFPMDetails(props?.PerformanceDetails?.userId)
 
-  useEffect(() => {
-    setValue('newTarget', currencyFormatter(fpmData?.newTarget))
-    setValue('newBonus', fpmData?.newBonus)
-    setValue('ignoreQuota', fpmData?.ignoreQuota)
-    setValue('badge', fpmData?.badge)
-  }, [])
+  // useEffect(() => {
+  //   setValue('newTarget', currencyFormatter(fpmData?.newTarget))
+  //   setValue('newBonus', fpmData?.newBonus)
+  //   setValue('ignoreQuota', fpmData?.ignoreQuota)
+  //   setValue('badge', fpmData?.badge)
+  // }, [])
 
   return (
     <Box>
@@ -94,8 +94,9 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                name={`newBonus`}
+                // name={`newBonus`}
                 rules={{ required: 'This is required field' }}
+                {...register(`newBonus`)}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
@@ -122,8 +123,9 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                name={`newTarget`}
+                // name={`newTarget`}
                 rules={{ required: 'This is required field' }}
+                {...register(`newTarget`)}
                 render={({ field, fieldState }) => {
                   return (
                     <>
@@ -151,8 +153,9 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                name={`badge`}
+                // name={`badge`}
                 rules={{ required: 'This is required field' }}
+                {...register(`badge`)}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
@@ -180,8 +183,9 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                name={`ignoreQuota`}
+                // name={`ignoreQuota`}
                 rules={{ required: 'This is required field' }}
+                {...register(`ignoreQuota`)}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
