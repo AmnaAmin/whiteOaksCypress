@@ -3,11 +3,10 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import { useFPMDetails, usePerformance } from 'api/performance'
+import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
 import PerformanceModal from './performance-modal'
-import { useParams } from 'react-router-dom'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (

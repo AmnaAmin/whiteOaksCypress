@@ -54,12 +54,12 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
   const { control, setValue, register } = useFormContext<PerformanceType>()
   const {data : fpmData} = useFPMDetails(props?.PerformanceDetails?.userId)
 
-  // useEffect(() => {
-  //   setValue('newTarget', currencyFormatter(fpmData?.newTarget))
-  //   setValue('newBonus', fpmData?.newBonus)
-  //   setValue('ignoreQuota', fpmData?.ignoreQuota)
-  //   setValue('badge', fpmData?.badge)
-  // }, [])
+  useEffect(() => {
+    setValue('newTarget', currencyFormatter(fpmData?.newTarget))
+    setValue('newBonus', fpmData?.newBonus)
+    setValue('ignoreQuota', fpmData?.ignoreQuota)
+    setValue('badge', fpmData?.badge)
+  }, [])
 
   return (
     <Box>
