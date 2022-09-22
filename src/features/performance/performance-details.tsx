@@ -15,7 +15,7 @@ import ReactSelect from 'components/form/react-select'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
-import { badges, bonus, IgnorePerformance } from 'api/performance'
+import { badges, bonus, IgnorePerformance, useFPMDetails } from 'api/performance'
 import { PerformanceType } from 'types/performance.type'
 import { Controller, useFormContext } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
@@ -52,12 +52,13 @@ type PerformanceDetailsProps = {
 export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProps) => {
   const { t } = useTranslation()
   const { control, setValue } = useFormContext<PerformanceType>()
+  const {data : fpmData} = useFPMDetails(props?.PerformanceDetails?.userId)
 
   useEffect(() => {
-    setValue('newTarget', currencyFormatter(props?.PerformanceDetails?.newTarget))
-    setValue('newBonus', props?.PerformanceDetails?.newBonus)
-    setValue('ignoreQuota', props?.PerformanceDetails?.ignoreQuota)
-    setValue('badge', props?.PerformanceDetails?.badge)
+    setValue('newTarget', currencyFormatter(fpmData?.newTarget))
+    setValue('newBonus', fpmData?.newBonus)
+    setValue('ignoreQuota', fpmData?.ignoreQuota)
+    setValue('badge', fpmData?.badge)
   }, [])
 
   return (
@@ -65,22 +66,22 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
       <Box>
         <Flex direction="row" mt={2}>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(props?.PerformanceDetails?.newBonus)} />
+            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.newBonus)} />
           </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
             <FieldInfoCard
               title={t('Previous Bonus')}
-              value={currencyFormatter(props?.PerformanceDetails?.previousBonus)}
+              value={currencyFormatter(fpmData?.previousBonus)}
             />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={t('Profit')} value={currencyFormatter(props?.PerformanceDetails?.profit)} />
+            <FieldInfoCard title={t('Profit')} value={currencyFormatter(fpmData?.profit)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(props?.PerformanceDetails?.revenue)} />
+            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(fpmData?.revenue)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Target')} value={currencyFormatter(props?.PerformanceDetails?.target)} />
+            <FieldInfoCard title={t('Target')} value={currencyFormatter(fpmData?.target)} />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -101,7 +102,7 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
                       options={bonus}
                       selected={value}
                       defaultValue={bonus?.map(p => {
-                        if (p?.value === props?.PerformanceDetails?.newBonus)
+                        if (p?.value === fpmData?.newBonus)
                           return { label: p?.label, value: p?.value }
                         return null
                       })}
@@ -158,7 +159,7 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
                       options={badges}
                       selected={value}
                       defaultValue={badges?.map(p => {
-                        if (p?.value === props?.PerformanceDetails?.badge) return { label: p?.label, value: p?.value }
+                        if (p?.value === fpmData?.badge) return { label: p?.label, value: p?.value }
                         return null
                       })}
                       selectProps={{ isBorderLeft: true }}
@@ -187,7 +188,7 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
                       options={IgnorePerformance}
                       selected={value}
                       defaultValue={IgnorePerformance?.map(p => {
-                        if (p?.value === props?.PerformanceDetails?.ignoreQuota)
+                        if (p?.value === fpmData?.ignoreQuota)
                           return { label: p?.label, value: p?.value }
                         return null
                       })}

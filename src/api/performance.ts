@@ -23,6 +23,16 @@ export const usePerformance = () => {
   })
 }
 
+export const useFPMDetails = (FPMId:any) => {
+    const client = useClient()
+  
+    return useQuery('fpm-details', async () => {
+      const response = await client(`fpm-quota-info/${FPMId}`, {})
+      return response?.data
+    })
+  }
+  
+
 export const IgnorePerformance = [
   {
     value: 0,

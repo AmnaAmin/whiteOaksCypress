@@ -3,10 +3,11 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import { usePerformance } from 'api/performance'
+import { useFPMDetails, usePerformance } from 'api/performance'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
 import PerformanceModal from './performance-modal'
+import { useParams } from 'react-router-dom'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -41,6 +42,9 @@ const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => 
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
   const { data: performance } = usePerformance()
+  // const { FPMId } = useParams<'FPMId'>()
+  // const { data: performance } = useFPMDetails((FPMId))
+
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
@@ -103,12 +107,14 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef} height={'450px'}>
-      <PerformanceModal
-        PerformanceDetails={selectedUser as PerformanceType}
-        onClose={() => {
-          setSelectedUser(undefined)
-        }}
-      />
+      {selectedUser && (
+        <PerformanceModal
+          PerformanceDetails={selectedUser as PerformanceType}
+          onClose={() => {
+            setSelectedUser(undefined)
+          }}
+        />
+      )}
 
       <TableWrapper
         columns={columns}
