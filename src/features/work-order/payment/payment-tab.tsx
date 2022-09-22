@@ -22,6 +22,7 @@ import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
+import { STATUS } from 'features/common/status'
 
 const CalenderCard = props => {
   return (
@@ -74,12 +75,12 @@ const PaymentInfoTab = props => {
   }
 
   useEffect(() => {
-    if (!rejectInvoiceCheck) {
-      setValue('dateInvoiceSubmitted', 'mm/dd/yyyy')
-      setValue('paymentTermDate', 'mm/dd/yyyy')
-      setValue('expectedPaymentDate', 'mm/dd/yyyy')
+    if ([STATUS.Declined]?.includes(workOrder?.statusLabel?.toLowerCase())) {
+      setValue('dateInvoiceSubmitted', null)
+      setValue('paymentTermDate', null)
+      setValue('expectedPaymentDate', null)
     }
-  }, [])
+  }, [workOrder])
 
   const { register, handleSubmit, control, getValues, setValue } = useForm<FormValues>({
     defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
@@ -104,8 +105,15 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ModalBody ml={30} h="400px" overflow={'auto'}>
-          <SimpleGrid columns={5} spacing={8} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
+        <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
+          <SimpleGrid
+            columns={5}
+            spacing={8}
+            mr="30px"
+            borderBottom="1px solid  #E2E8F0"
+            minH="110px"
+            alignItems={'center'}
+          >
             <CalenderCard
               title={t('lwDate')}
               date={dateLeanWaiverSubmitted && rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}

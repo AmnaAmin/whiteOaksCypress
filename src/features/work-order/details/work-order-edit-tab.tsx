@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
-import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'api/work-order'
+import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -32,7 +32,6 @@ import {
   useAllowLineItemsAssignment,
   useRemainingLineItems,
   createInvoicePdf,
-  mapToLineItems,
   mapToUnAssignItem,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
@@ -104,7 +103,6 @@ const WorkOrderDetailTab = props => {
     control,
     name: 'assignedItems',
   })
-  const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
@@ -127,6 +125,7 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
+  const { completedByVendor } = useFieldEnableDecisionDetailsTab({ workOrder, formValues })
 
   // Remaining Items handles
   const {
@@ -137,11 +136,13 @@ const WorkOrderDetailTab = props => {
 
   const downloadPdf = useCallback(() => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, assignedItemsWatch)
+    createInvoicePdf({ doc, workOrder, projectData, assignedItems: assignedItemsWatch, hideAward: false })
   }, [assignedItemsWatch, projectData, workOrder])
 
   const setAssignedItems = useCallback(
     items => {
+      /*
+      not used now, will be used in upcoming stories
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
@@ -149,7 +150,7 @@ const WorkOrderDetailTab = props => {
         }),
       ]
       append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])*/
     },
     [unassignedItems, setUnAssignedItems],
   )
@@ -236,7 +237,7 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h="400px" overflow={'auto'}>
+        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <Stack pt="32px" spacing="32px" mx="32px">
             <SimpleGrid columns={5}>
               <InformationCard title="Company Name" date={companyName} />
@@ -312,7 +313,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />

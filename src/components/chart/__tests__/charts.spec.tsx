@@ -1,7 +1,8 @@
-import { OverviewGraph, months, monthsShort } from 'components/chart/Overview'
+import { OverviewGraph } from 'components/chart/Overview'
 import { PaidChartGraph } from 'components/chart/paid-chart'
 import { render, screen } from '@testing-library/react'
 import { WO_BY_VENDORS_PER_MONTH, PAID_BY_YEAR_AND_MONTH } from 'mocks/api/vendor-dashboard/data'
+import { months, monthsShort } from 'utils/date-time-utils'
 
 const vendorData = months.map(key => ({
   name: monthsShort[key],

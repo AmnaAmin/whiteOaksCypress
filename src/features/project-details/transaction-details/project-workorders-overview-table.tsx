@@ -184,7 +184,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
       isLoading={isLoading}
       columns={tableColumns}
       data={financialOveriewTableData}
-      tableHeight="inherit"
+      tableHeight="calc(100vh - 320px)"
       name="transaction-table"
     />
   )

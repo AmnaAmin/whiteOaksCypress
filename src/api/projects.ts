@@ -153,8 +153,8 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     },
   )
 
-  const [firstFinancialRecord, vendorPaymentPercentage, ...restProjectFinancialOverviews] =
-    projectFinacialOverview || []
+  const [firstFinancialRecord, ...restProjectFinancialOverviews] = projectFinacialOverview || []
+  const [vendorPaymentPercentage] = restProjectFinancialOverviews
 
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)

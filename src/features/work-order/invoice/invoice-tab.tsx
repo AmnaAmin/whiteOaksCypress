@@ -117,7 +117,7 @@ export const InvoiceTabPC = ({
   }
   return (
     <Box>
-      <ModalBody h="400px">
+      <ModalBody h={'calc(100vh - 300px)'}>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
@@ -149,47 +149,46 @@ export const InvoiceTabPC = ({
         </Grid>
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
-        <Box>
-          <Box h="250px" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
-            <Table variant="simple" size="md">
-              <Thead pos="sticky" top={0}>
-                <Tr>
-                  <Td>{t('item')}</Td>
-                  <Td>{t('description')}</Td>
-                  <Td isNumeric>Total</Td>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {items.map((item, index) => {
-                  return (
-                    <Tr h="72px">
-                      <Td>{item.id}</Td>
-                      <Td>{item.name}</Td>
-                      <Td isNumeric>
-                        <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
-                      </Td>
-                    </Tr>
-                  )
-                })}
-              </Tbody>
-            </Table>
-            <VStack alignItems="end" w="98%" fontSize="14px" fontWeight={500} color="gray.600">
-              <Box>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('subTotal')}:</Text>
-                  <Text>{currencyFormatter(subTotal)}</Text>
-                </HStack>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('totalAmountPaid')}:</Text>
-                  <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
-                </HStack>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('balanceDue')}</Text>
-                  <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
-                </HStack>
-              </Box>
-            </VStack>
-          </Box>
+
+        <Box h="calc(100% - 150px)" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
+          <Table variant="simple" size="md">
+            <Thead>
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td isNumeric>Total</Td>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {items.map((item, index) => {
+                return (
+                  <Tr h="72px">
+                    <Td>{item.id}</Td>
+                    <Td>{item.name}</Td>
+                    <Td isNumeric>
+                      <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
+                    </Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+          </Table>
+          <VStack alignItems="end" w="98%" fontSize="14px" fontWeight={500} color="gray.600">
+            <Box>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('subTotal')}:</Text>
+                <Text>{currencyFormatter(subTotal)}</Text>
+              </HStack>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('totalAmountPaid')}:</Text>
+                <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
+              </HStack>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('balanceDue')}</Text>
+                <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
+              </HStack>
+            </Box>
+          </VStack>
         </Box>
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>

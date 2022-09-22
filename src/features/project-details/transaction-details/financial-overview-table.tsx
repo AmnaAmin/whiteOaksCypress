@@ -88,7 +88,7 @@ export const FinancialOverviewTable = React.forwardRef((props: FinancialOverview
       isLoading={isLoading}
       columns={tableColumns}
       data={financialOveriewTableData}
-      tableHeight="inherit"
+      tableHeight="150px"
       name="transaction-table"
     />
   )

@@ -124,6 +124,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
   const { exportData } = useTransactionExport(projectId)
+
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row

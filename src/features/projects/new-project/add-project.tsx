@@ -97,7 +97,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(methods.control)
+  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(
+    methods.control,
+    methods?.formState?.errors,
+  )
   const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(
     methods.control,
     isDuplicateAddress,

@@ -30,7 +30,7 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody ml={30} w="95%" h="400px">
+      <ModalBody ml={30} w="95%" h={'calc(100vh - 300px)'}>
         <HStack mr={100} pt="35px" spacing="60px" justifyContent={'center'}>
           <Box w="20%">
             <InputView
@@ -153,8 +153,8 @@ const InvoicingAndPaymentTab = ({
           </Box>
         </HStack>
         <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" pt={8} />
-        <HStack py={30} spacing="44px" justifyContent="center">
-          <Box w="50%">
+        <HStack mr={100} pt={30} spacing="60px" justifyContent={'center'}>
+          <Box w="20%">
             <InputView
               showDivider={false}
               Icon={<BiCalendar />}
@@ -194,6 +194,7 @@ const InvoicingAndPaymentTab = ({
               }
             />
           </Box> */}
+          <Box w="20%"></Box>
           <Box w="20%"></Box>
           <Box w="20%"></Box>
 
