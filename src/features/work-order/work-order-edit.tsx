@@ -218,6 +218,8 @@ const WorkOrderDetails = ({
                         workOrder={workOrder}
                         onClose={onClose}
                         onSave={onSave}
+                        setTabIndex={setTabIndex}
+                        projectData={projectData}
                       />
                     )}
                   </TabPanel>
