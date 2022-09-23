@@ -682,7 +682,6 @@ export const useTransactionExport = projectId => {
 
   useQuery(['changeOrder', projectId], async () => {
     const response = await client(`changeOrder/project/${projectId}`, {})
-    console.log(`api called`)
     setExport(formatDocumentResponse(response?.data))
   })
   
