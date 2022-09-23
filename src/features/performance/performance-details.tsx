@@ -11,15 +11,14 @@ import {
   VStack,
   FormErrorMessage,
 } from '@chakra-ui/react'
-import ReactSelect from 'components/form/react-select'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
-import { badges, bonus, IgnorePerformance } from 'api/performance'
-// import { PerformanceType } from 'types/performance.type'
+import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
+import Select from 'components/form/react-select'
 
 type FieldInfoCardProps = {
   title: string
@@ -52,38 +51,28 @@ type performanceDetailsProps = {
 
 export const PerformanceDetail = React.forwardRef((props: performanceDetailsProps) => {
   const { formControl } = props
-
+  const { data: fpmData } = useFPMDetails(props?.performanceDetails?.userId)
   const { t } = useTranslation()
-  const { control, reset } = formControl
-  // const { data: fpmData } = useFPMDetails(props?.performanceDetails?.userId)
-
-  useEffect(() => {
-      reset({
-        newTarget: '0',
-        newBonus: props?.performanceDetails?.newBonus,
-        badge: props?.performanceDetails?.badge,
-        ignoreQuota: props?.performanceDetails?.ignoreQuota,
-      })
-  }, [reset, props?.performanceDetails])
+  const { control } = formControl
 
   return (
     <Box>
       <Box>
         <Flex direction="row" mt={2}>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(props?.performanceDetails?.newBonus)} />
+            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.newBonus)} />
           </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Previous Bonus')} value={currencyFormatter(props?.performanceDetails?.previousBonus)} />
+            <FieldInfoCard title={t('Previous Bonus')} value={currencyFormatter(fpmData?.previousBonus)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={t('Profit')} value={currencyFormatter(props?.performanceDetails?.profit)} />
+            <FieldInfoCard title={t('Profit')} value={currencyFormatter(fpmData?.profit)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(props?.performanceDetails?.revenue)} />
+            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(fpmData?.revenue)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Target')} value={currencyFormatter(props?.performanceDetails?.target)} />
+            <FieldInfoCard title={t('Target')} value={currencyFormatter(fpmData?.target)} />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -98,17 +87,18 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                 control={control}
                 name={`newBonus`}
                 rules={{ required: 'This is required field' }}
-                render={({ field: { value, onChange }, fieldState }) => (
+                render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
+                    <Select
+                      {...field}
                       options={bonus}
-                      selected={value}
-                      defaultValue={bonus?.map(p => {
-                        if (p?.value === props?.performanceDetails?.newBonus) return { label: p?.label, value: p?.value }
-                        return null
-                      })}
+                      selected={field.value}
+                      // value={selectedBonus}
                       selectProps={{ isBorderLeft: true }}
-                      onChange={option => onChange(option)}
+                      // onChange={bonus => {
+                      //   field.onChange(bonus)
+                      // }}
+                      onChange={option => field.onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -154,17 +144,14 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                 control={control}
                 name={`badge`}
                 rules={{ required: 'This is required field' }}
-                render={({ field: { value, onChange }, fieldState }) => (
+                render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
+                    <Select
+                      {...field}
                       options={badges}
-                      selected={value}
-                      defaultValue={badges?.map(p => {
-                        if (p?.value === props?.performanceDetails?.badge) return { label: p?.label, value: p?.value }
-                        return null
-                      })}
+                      selected={field.value}
                       selectProps={{ isBorderLeft: true }}
-                      onChange={option => onChange(option)}
+                      onChange={option => field.onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -183,17 +170,17 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                 control={control}
                 name={`ignoreQuota`}
                 rules={{ required: 'This is required field' }}
-                render={({ field: { value, onChange }, fieldState }) => (
+                render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
-                      options={IgnorePerformance}
-                      selected={value}
-                      defaultValue={IgnorePerformance?.map(p => {
-                        if (p?.value === props?.performanceDetails?.ignoreQuota) return { label: p?.label, value: p?.value }
-                        return null
-                      })}
+                    <Select
+                      {...field}
+                      options={ignorePerformance}
+                      selected={field.value}
                       selectProps={{ isBorderLeft: true }}
-                      onChange={option => onChange(option)}
+                      // onChange={bonus => {
+                      //   field.onChange(bonus)
+                      // }}
+                      onChange={option => field.onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>

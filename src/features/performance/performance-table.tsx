@@ -114,17 +114,17 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
           isOpen={isOpen}
         />
       )}
-        <TableWrapper
-          columns={columns}
-          data={performance || []}
-          TableRow={performanceTableRow}
-          tableHeight="calc(100vh - 225px)"
-          name="performance-table"
-          onRowClick={(e, row) => {
-            setSelectedUser(row.original)
-            onOpen()
-          }}
-        />
+      <TableWrapper
+        columns={columns}
+        data={performance || []}
+        TableRow={performanceTableRow}
+        tableHeight="calc(100vh - 225px)"
+        name="performance-table"
+        onRowClick={(e, row) => {
+          setSelectedUser(row.original)
+          onOpen()
+        }}
+      />
     </Box>
   )
 })

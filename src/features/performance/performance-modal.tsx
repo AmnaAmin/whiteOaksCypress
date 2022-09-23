@@ -12,21 +12,15 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { PerformanceType } from 'types/performance.type'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { useFPMProfile } from 'api/vendor-details'
-import { Account } from 'types/account.types'
-import PerformanceGraph from 'pages/fpm/graph-performance'
+// import PerformanceGraph from 'pages/fpm/graph-performance'
 import { PerformanceDetail } from './performance-details'
 import { Button } from 'components/button/button'
 import { Card } from 'components/card/card'
 import { useForm, UseFormReturn } from 'react-hook-form'
-import {
-  useFPMDetails,
-  useMutatePerformance,
-  usePerformanceSaveDisabled,
-} from 'api/performance'
+import { useFPMDetails, useMutatePerformance, usePerformanceSaveDisabled } from 'api/performance'
+import { badges, bonus, ignorePerformance } from 'api/performance'
 
 const PerformanceModal = ({
   performanceDetails,
@@ -37,15 +31,26 @@ const PerformanceModal = ({
   onClose: () => void
   isOpen: boolean
 }) => {
-  const { id } = useUserProfile() as Account
-  const { data: fpmInformationData, isLoading } = useFPMProfile(id)
-  const chart = fpmInformationData
-
   const { t } = useTranslation()
   const { data: fpmData } = useFPMDetails(performanceDetails?.userId)
   const { mutate: savePerformanceDetails } = useMutatePerformance(performanceDetails?.userId)
   const formReturn = useForm<PerformanceType>()
-  const { control, formState } = formReturn
+  const { control, formState, reset } = formReturn
+
+  // Setting Dropdown values
+  const bonusValue = bonus?.find(b => b?.value === fpmData?.newBonus)
+  const badgeValue = badges?.find(b => b?.value === fpmData?.badge)
+  const quotaValue = ignorePerformance?.find(b => b?.value === fpmData?.ignoreQuota)
+
+  useEffect(() => {
+    reset({
+      newTarget: fpmData?.newTarget || '0.00',
+      newBonus: bonusValue,
+      badge: badgeValue,
+      ignoreQuota: quotaValue,
+    })
+  }, [reset, fpmData])
+
   const onSubmit = useCallback(
     async values => {
       const queryOptions = {
@@ -79,14 +84,15 @@ const PerformanceModal = ({
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody justifyContent="center">
-              <PerformanceDetail performanceDetails={fpmData} formControl={formReturn as UseFormReturn<any>} />
+              <PerformanceDetail
+                performanceDetails={performanceDetails}
+                formControl={formReturn as UseFormReturn<any>}
+              />
               <Card mt={5} overflow={'auto'} height={'300px'}>
                 <FormLabel variant={'strong-label'} mb={5} textAlign={'center'}>
                   {'Performance per Month'}
                 </FormLabel>
-                <Box mt={10}>
-                  <PerformanceGraph chartData={chart} isLoading={isLoading} />
-                </Box>
+                <Box mt={10}>{/* <PerformanceGraph chartData={chart} isLoading={isLoading} /> */}</Box>
               </Card>
             </ModalBody>
             <Divider mt={3} />

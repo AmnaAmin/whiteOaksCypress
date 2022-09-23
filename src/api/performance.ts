@@ -23,17 +23,16 @@ export const usePerformance = () => {
   })
 }
 
-export const useFPMDetails = (FPMId:any) => {
-    const client = useClient()
-  
-    return useQuery('fpm-details', async () => {
-      const response = await client(`fpm-quota-info/${FPMId}`, {})
-      return response?.data
-    })
-  }
-  
+export const useFPMDetails = (FPMId: any) => {
+  const client = useClient()
 
-export const IgnorePerformance = [
+  return useQuery('fpm-details', async () => {
+    const response = await client(`fpm-quota-info/${FPMId}`, {})
+    return response?.data
+  })
+}
+
+export const ignorePerformance = [
   {
     value: 0,
     label: 'No',
@@ -107,7 +106,6 @@ export const useMutatePerformance = (FPMId: number) => {
         })
         queryClient.invalidateQueries('performance-list')
         queryClient.invalidateQueries('fpm-details')
-
       },
       onError(error: ErrorType) {
         toast({
@@ -124,12 +122,7 @@ export const useMutatePerformance = (FPMId: number) => {
 }
 
 export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, errors): boolean => {
-    const formValues = useWatch({ control })
-  
-    return (
-      !formValues?.newBonus ||
-      !formValues?.newTarget ||
-      !formValues?.badge ||
-      !formValues?.ignoreQuota
-    )
-  }
+  const formValues = useWatch({ control })
+
+  return !formValues?.newBonus || !formValues?.newTarget || !formValues?.badge || !formValues?.ignoreQuota
+}
