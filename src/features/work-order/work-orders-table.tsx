@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, Spinner, Center, useDisclosure } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { TableWrapper } from 'components/table/table'
@@ -59,7 +59,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
+  const { data: workOrders, refetch, isFetching } = useProjectWorkOrders(projectId)
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   // Do not show WO which have been cancelled
@@ -130,24 +130,19 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           isOpen={isOpen}
         />
       )}
-      {isLoading && (
-        <Center>
-          <Spinner size="xl" />
-        </Center>
-      )}
-      {workOrders && (
-        <TableWrapper
-          columns={columns}
-          data={workOrdersNotCancelled || []}
-          TableRow={WorkOrderRow}
-          tableHeight="calc(100vh - 300px)"
-          name="work-orders-table"
-          onRowClick={(e, row) => {
-            setSelectedWorkOrder(row.original)
-            onOpen()
-          }}
-        />
-      )}
+
+      <TableWrapper
+        columns={columns}
+        data={workOrdersNotCancelled || []}
+        TableRow={WorkOrderRow}
+        tableHeight="calc(100vh - 300px)"
+        name="work-orders-table"
+        isLoading={isFetching}
+        onRowClick={(e, row) => {
+          setSelectedWorkOrder(row.original)
+          onOpen()
+        }}
+      />
     </Box>
   )
 })

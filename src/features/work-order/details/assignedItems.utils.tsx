@@ -283,6 +283,8 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
 }
 
 export const calculateVendorAmount = (amount, percentage) => {
+  amount = Number(amount)
+  percentage = Number(percentage)
   return round(amount - amount * (percentage / 100), 2)
 }
 
@@ -344,6 +346,8 @@ type EditableCellType = {
   selectedCell: string
   setSelectedCell: (e) => void
   allowEdit?: boolean
+  autoFocus?: boolean
+  setIsFocus?: (val) => void
 }
 
 export const EditableField = (props: EditableCellType) => {
@@ -360,6 +364,8 @@ export const EditableField = (props: EditableCellType) => {
     selectedCell,
     setSelectedCell,
     allowEdit,
+    autoFocus,
+    setIsFocus,
   } = props
   const { getValues, setValue } = formControl
   const values = getValues()
@@ -370,6 +376,7 @@ export const EditableField = (props: EditableCellType) => {
           {selectedCell !== index + '-' + fieldName ? (
             <Box
               minH={'20px'}
+              minW={'100px'}
               cursor={'pointer'}
               onClick={() => {
                 if (allowEdit) {
@@ -386,6 +393,7 @@ export const EditableField = (props: EditableCellType) => {
               key={fieldName + '.' + index}
               size="sm"
               id="sku"
+              autoFocus={autoFocus}
               type={inputType ?? 'text'}
               defaultValue={values?.[fieldArray][index]?.[fieldName]}
               onChange={e => {
@@ -393,7 +401,11 @@ export const EditableField = (props: EditableCellType) => {
                   setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                 }
               }}
+              onFocus={() => {
+                if (setIsFocus) setIsFocus(true)
+              }}
               onBlur={e => {
+                if (setIsFocus) setIsFocus(false)
                 if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
 
@@ -416,9 +428,20 @@ type InputFieldType = {
   fieldArray: string
   inputType?: string
   onChange?: (e, index) => void
+  autoFocus?: boolean
+  setIsFocus?: (val) => void
 }
 export const InputField = (props: InputFieldType) => {
-  const { index, fieldName, formControl, fieldArray, onChange: handleChange, inputType = 'text' } = props
+  const {
+    index,
+    fieldName,
+    formControl,
+    fieldArray,
+    onChange: handleChange,
+    inputType = 'text',
+    autoFocus,
+    setIsFocus,
+  } = props
   const {
     formState: { errors },
     control,
@@ -436,11 +459,16 @@ export const InputField = (props: InputFieldType) => {
               size="sm"
               type={inputType}
               value={field.value}
+              autoFocus={autoFocus}
               onChange={e => {
                 field.onChange(e.target.value)
               }}
               onBlur={e => {
+                if (setIsFocus) setIsFocus(false)
                 if (handleChange) handleChange(e, index)
+              }}
+              onFocus={() => {
+                if (setIsFocus) setIsFocus(true)
               }}
             ></Input>
           )}
@@ -516,10 +544,10 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
 
 export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder?.propertyAddress },
-    { label: 'Start Date:', value: workOrder?.workOrderStartDate },
-    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted },
-    { label: 'Lock Box Code:', value: projectData?.lockBoxCode },
+    { label: 'Property Address:', value: workOrder?.propertyAddress ?? '' },
+    { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
+    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted ?? '' },
+    { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
   ]
   const totalAward = assignedItems?.reduce(
     (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
@@ -555,12 +583,12 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text('Square Feet:', x + length + 5, 55)
     doc.rect(x + length, 60, 65, width, 'D')
     doc.text('Work Type:', x + length + 5, 65)
-    doc.text(workOrder.skillName, x + length + 30, 65)
+    doc.text(workOrder.skillName ?? '', x + length + 30, 65)
 
     doc.rect(x, y + 15, length, width, 'D')
-    doc.text('Sub Contractor: ' + workOrder.companyName, x + 5, y + 22)
+    doc.text('Sub Contractor: ' + (workOrder.companyName ?? ''), x + 5, y + 22)
     doc.rect(x + length, y + 15, 65, width, 'D')
-    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount), x + length + 5, y + 22)
+    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + length + 5, y + 22)
 
     autoTable(doc, {
       startY: y + 40,
@@ -607,16 +635,18 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
 
 export const useColumnsShowDecision = ({ workOrder }) => {
   const { isVendor } = useUserRolesSelector()
-  const showEditablePrice = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
-  const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
+  const showEditablePrices = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
+  const showReadOnlyPrices = !isVendor && workOrder //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
+  const showVendorPrice = isVendor && workOrder.showPricing
   const showVerification = !isVendor && workOrder
   return {
     showSelect: !isVendor && !workOrder,
-    showEditablePrice: showEditablePrice,
-    showReadOnlyPrice: showReadOnlyPrice,
+    showEditablePrices,
+    showReadOnlyPrices,
     showStatus: !!workOrder,
     showImages: !!workOrder,
-    showVerification: showVerification,
+    showVerification,
+    showVendorPrice,
   }
 }
 
