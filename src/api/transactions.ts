@@ -557,6 +557,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+        queryClient.invalidateQueries(['changeOrder', projectId])
 
         toast({
           title: 'New Transaction.',
@@ -599,6 +600,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(['changeOrder', projectId])
 
         toast({
           title: 'Update Transaction.',
@@ -645,12 +647,8 @@ export const useTransaction = (transactionId?: number) => {
 export const useTransactionExport = projectId => {
   const client = useClient()
   const [exportData, setExport] = useState([])
-  const { data, ...rest } = useQuery(['changeOrder', projectId], async () => {
-    const response = await client(`changeOrder/project/${projectId}`, {})
-    return response?.data
-  })
   const numberFormatter = value => numeral(value).format('$0,0.00')
-  useEffect(() => {
+  const formatDocumentResponse = (data) => {
     if (!data) return
     let exportData: any = []
     data.forEach(item => {
@@ -679,12 +677,17 @@ export const useTransactionExport = projectId => {
         })
       })
     })
-    setExport(exportData)
-  }, [data])
+    return data;
+  }
+
+  useQuery(['changeOrder', projectId], async () => {
+    const response = await client(`changeOrder/project/${projectId}`, {})
+    console.log(`api called`)
+    setExport(formatDocumentResponse(response?.data))
+  })
+  
   return {
-    data,
-    exportData,
-    ...rest,
+    exportData
   }
 }
 
