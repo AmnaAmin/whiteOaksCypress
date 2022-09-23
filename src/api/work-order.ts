@@ -258,7 +258,7 @@ export const defaultValuesWODetails = workOrder => {
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
-            return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
+            return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
   }
