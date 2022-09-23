@@ -12,19 +12,12 @@ const RevenuePerformanceGraph = () => {
   const vendors = values(fpmRevenueData).reduce((a, v) => ({ ...a, ...v }), {})
   const vendorData = months.map(key => {
     const entityList = vendors[key] || []
-    console.log('entityList', entityList)
 
     return {
       name: monthsShort[key],
       Revenue: entityList?.revenue,
     }
   })
-
-  console.log('chartData', fpmRevenueData)
-  console.log('vendorData', vendorData)
-  console.log('vendors', vendors)
-  const getRevenue = vendors[0]?.revenue
-  console.log('getRevenue', getRevenue)
 
   return <>{isLoading ? <BlankSlate size="sm" /> : <RevenueGraph vendorData={vendorData} width="98%" height={360} />}</>
 }

@@ -15,9 +15,9 @@ import ReactSelect from 'components/form/react-select'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
-import { badges, bonus, IgnorePerformance, useFPMDetails } from 'api/performance'
-import { PerformanceType } from 'types/performance.type'
-import { Controller, useFormContext } from 'react-hook-form'
+import { badges, bonus, IgnorePerformance } from 'api/performance'
+// import { PerformanceType } from 'types/performance.type'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
 
@@ -45,43 +45,45 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
   )
 }
 
-type PerformanceDetailsProps = {
-  PerformanceDetails?: any
+type performanceDetailsProps = {
+  performanceDetails?: any
+  formControl: UseFormReturn
 }
 
-export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProps) => {
+export const PerformanceDetail = React.forwardRef((props: performanceDetailsProps) => {
+  const { formControl } = props
+
   const { t } = useTranslation()
-  const { control, setValue, register } = useFormContext<PerformanceType>()
-  const {data : fpmData} = useFPMDetails(props?.PerformanceDetails?.userId)
+  const { control, reset } = formControl
+  // const { data: fpmData } = useFPMDetails(props?.performanceDetails?.userId)
 
   useEffect(() => {
-    setValue('newTarget', currencyFormatter(fpmData?.newTarget))
-    setValue('newBonus', fpmData?.newBonus)
-    setValue('ignoreQuota', fpmData?.ignoreQuota)
-    setValue('badge', fpmData?.badge)
-  }, [])
+      reset({
+        newTarget: '0',
+        newBonus: props?.performanceDetails?.newBonus,
+        badge: props?.performanceDetails?.badge,
+        ignoreQuota: props?.performanceDetails?.ignoreQuota,
+      })
+  }, [reset, props?.performanceDetails])
 
   return (
     <Box>
       <Box>
         <Flex direction="row" mt={2}>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.newBonus)} />
+            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(props?.performanceDetails?.newBonus)} />
           </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard
-              title={t('Previous Bonus')}
-              value={currencyFormatter(fpmData?.previousBonus)}
-            />
+            <FieldInfoCard title={t('Previous Bonus')} value={currencyFormatter(props?.performanceDetails?.previousBonus)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={t('Profit')} value={currencyFormatter(fpmData?.profit)} />
+            <FieldInfoCard title={t('Profit')} value={currencyFormatter(props?.performanceDetails?.profit)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(fpmData?.revenue)} />
+            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(props?.performanceDetails?.revenue)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Target')} value={currencyFormatter(fpmData?.target)} />
+            <FieldInfoCard title={t('Target')} value={currencyFormatter(props?.performanceDetails?.target)} />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -94,17 +96,15 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                // name={`newBonus`}
+                name={`newBonus`}
                 rules={{ required: 'This is required field' }}
-                {...register(`newBonus`)}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
                       options={bonus}
                       selected={value}
                       defaultValue={bonus?.map(p => {
-                        if (p?.value === fpmData?.newBonus)
-                          return { label: p?.label, value: p?.value }
+                        if (p?.value === props?.performanceDetails?.newBonus) return { label: p?.label, value: p?.value }
                         return null
                       })}
                       selectProps={{ isBorderLeft: true }}
@@ -123,9 +123,8 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                // name={`newTarget`}
+                name={`newTarget`}
                 rules={{ required: 'This is required field' }}
-                {...register(`newTarget`)}
                 render={({ field, fieldState }) => {
                   return (
                     <>
@@ -153,16 +152,15 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                // name={`badge`}
+                name={`badge`}
                 rules={{ required: 'This is required field' }}
-                {...register(`badge`)}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
                       options={badges}
                       selected={value}
                       defaultValue={badges?.map(p => {
-                        if (p?.value === fpmData?.badge) return { label: p?.label, value: p?.value }
+                        if (p?.value === props?.performanceDetails?.badge) return { label: p?.label, value: p?.value }
                         return null
                       })}
                       selectProps={{ isBorderLeft: true }}
@@ -183,17 +181,15 @@ export const PerformanceDetail = React.forwardRef((props: PerformanceDetailsProp
               </FormLabel>
               <Controller
                 control={control}
-                // name={`ignoreQuota`}
+                name={`ignoreQuota`}
                 rules={{ required: 'This is required field' }}
-                {...register(`ignoreQuota`)}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
                       options={IgnorePerformance}
                       selected={value}
                       defaultValue={IgnorePerformance?.map(p => {
-                        if (p?.value === fpmData?.ignoreQuota)
-                          return { label: p?.label, value: p?.value }
+                        if (p?.value === props?.performanceDetails?.ignoreQuota) return { label: p?.label, value: p?.value }
                         return null
                       })}
                       selectProps={{ isBorderLeft: true }}

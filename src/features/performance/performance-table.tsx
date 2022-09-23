@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
@@ -41,9 +41,7 @@ const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => 
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
   const { data: performance } = usePerformance()
-  // const { FPMId } = useParams<'FPMId'>()
-  // const { data: performance } = useFPMDetails((FPMId))
-
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
@@ -106,23 +104,27 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef} height={'450px'}>
-      {selectedUser && (
+      {isOpen && selectedUser && (
         <PerformanceModal
-          PerformanceDetails={selectedUser as PerformanceType}
+          performanceDetails={selectedUser as PerformanceType}
           onClose={() => {
             setSelectedUser(undefined)
+            onCloseDisclosure()
           }}
+          isOpen={isOpen}
         />
       )}
-
-      <TableWrapper
-        columns={columns}
-        data={performance || []}
-        TableRow={performanceTableRow}
-        tableHeight="calc(100vh - 225px)"
-        name="performance-table"
-        onRowClick={(e, row) => setSelectedUser(row.original)}
-      />
+        <TableWrapper
+          columns={columns}
+          data={performance || []}
+          TableRow={performanceTableRow}
+          tableHeight="calc(100vh - 225px)"
+          name="performance-table"
+          onRowClick={(e, row) => {
+            setSelectedUser(row.original)
+            onOpen()
+          }}
+        />
     </Box>
   )
 })
