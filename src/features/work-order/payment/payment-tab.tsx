@@ -61,7 +61,7 @@ const PaymentInfoTab = props => {
   const { workOrder, onSave, navigateToProjectDetails } = props
 
   const { t } = useTranslation()
-  const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance, rejectInvoiceCheck } = props.workOrder
+  const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
   interface FormValues {
     dateInvoiceSubmitted: string | null
     paymentTerm: any
@@ -69,9 +69,9 @@ const PaymentInfoTab = props => {
     expectedPaymentDate: string | null
     datePaymentProcessed: string | null
     datePaid: string | null
-    clientApprovedAmount: string | null
+    invoiceAmount: string | null
     clientOriginalApprovedAmount: string | null
-    finalInvoiceAmount: string | null
+    clientApprovedAmount: string | null
   }
 
   useEffect(() => {
@@ -87,13 +87,13 @@ const PaymentInfoTab = props => {
   })
 
   const {
-    clientApprovedAmountEnabled,
+    invoiceAmountEnabled,
     clientOriginalApprovedAmountEnabled,
     dateInvoiceSubmittedEnabled,
     datePaidEnabled,
     datePaymentProcessedEnabled,
     expectedPaymentDateEnabled,
-    finalInvoiceAmountEnabled,
+    clientApprovedAmountEnabled,
     paymentTermDateEnabled,
     paymentTermEnabled,
   } = useFieldEnableDecision(workOrder)
@@ -116,7 +116,11 @@ const PaymentInfoTab = props => {
           >
             <CalenderCard
               title={t('lwDate')}
-              date={dateLeanWaiverSubmitted && rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
+              date={
+                dateLeanWaiverSubmitted && workOrder.lienWaiverAccepted
+                  ? dateFormat(dateLeanWaiverSubmitted)
+                  : 'mm/dd/yyyy'
+              }
             />
             <CalenderCard
               title={t('permitDate')}
@@ -265,12 +269,12 @@ const PaymentInfoTab = props => {
                     {t('woOriginalAmount')}
                   </FormLabel>
                   <Input
-                    id="clientApprovedAmount"
+                    id="invoiceAmount"
                     type="text"
                     size="md"
-                    isDisabled={!clientApprovedAmountEnabled}
+                    isDisabled={!invoiceAmountEnabled}
                     variant="outline"
-                    {...register('clientApprovedAmount')}
+                    {...register('invoiceAmount')}
                   />
                 </FormControl>
               </Box>
@@ -299,9 +303,9 @@ const PaymentInfoTab = props => {
                     id="cc"
                     type="text"
                     size="md"
-                    isDisabled={!finalInvoiceAmountEnabled}
+                    isDisabled={!clientApprovedAmountEnabled}
                     variant="outline"
-                    {...register('finalInvoiceAmount')}
+                    {...register('clientApprovedAmount')}
                   />
                 </FormControl>
               </Box>
