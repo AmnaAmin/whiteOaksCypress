@@ -346,6 +346,8 @@ type EditableCellType = {
   selectedCell: string
   setSelectedCell: (e) => void
   allowEdit?: boolean
+  autoFocus?: boolean
+  setIsFocus?: (val) => void
 }
 
 export const EditableField = (props: EditableCellType) => {
@@ -362,6 +364,8 @@ export const EditableField = (props: EditableCellType) => {
     selectedCell,
     setSelectedCell,
     allowEdit,
+    autoFocus,
+    setIsFocus,
   } = props
   const { getValues, setValue } = formControl
   const values = getValues()
@@ -389,6 +393,7 @@ export const EditableField = (props: EditableCellType) => {
               key={fieldName + '.' + index}
               size="sm"
               id="sku"
+              autoFocus={autoFocus}
               type={inputType ?? 'text'}
               defaultValue={values?.[fieldArray][index]?.[fieldName]}
               onChange={e => {
@@ -396,7 +401,11 @@ export const EditableField = (props: EditableCellType) => {
                   setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                 }
               }}
+              onFocus={() => {
+                if (setIsFocus) setIsFocus(true)
+              }}
               onBlur={e => {
+                if (setIsFocus) setIsFocus(false)
                 if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
 
@@ -420,7 +429,7 @@ type InputFieldType = {
   inputType?: string
   onChange?: (e, index) => void
   autoFocus?: boolean
-  setIsFocus?: any
+  setIsFocus?: (val) => void
 }
 export const InputField = (props: InputFieldType) => {
   const {
@@ -455,10 +464,12 @@ export const InputField = (props: InputFieldType) => {
                 field.onChange(e.target.value)
               }}
               onBlur={e => {
-                setIsFocus(false)
+                if (setIsFocus) setIsFocus(false)
                 if (handleChange) handleChange(e, index)
               }}
-              onFocus={() => setIsFocus(true)}
+              onFocus={() => {
+                if (setIsFocus) setIsFocus(true)
+              }}
             ></Input>
           )}
         ></Controller>

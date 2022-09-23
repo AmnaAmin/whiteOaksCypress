@@ -80,6 +80,8 @@ const renderInput = (props: CellInputType) => {
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
           allowEdit={true}
+          autoFocus={autoFocus}
+          setIsFocus={setIsFocus}
         />
       )}
     </Box>
@@ -114,9 +116,8 @@ const CellComp = ({ cell }) => {
 
   return (
     <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} w={'100%'} h={'100%'} p="0">
-      <Flex className="bbbbb12312312" alignItems={'center'} h={'100%'} w={'100%'}>
+      <Flex alignItems={'center'} h={'100%'} w={'100%'}>
         <Box
-          className="aaaa12312312"
           title={cell.value}
           padding="0 15px 10px 10px"
           color="gray.600"
@@ -216,9 +217,9 @@ const RemainingListTable = (props: RemainingListType) => {
     {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
-      Cell: props =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
-          row: props.row,
+          row: row,
           values,
           formControl,
           updatedItems,
@@ -226,13 +227,15 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'sku',
           selectedCell,
           setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       width: 100,
     },
     {
       Header: `${WORK_ORDER}.productName`,
       accessor: 'productName',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -242,13 +245,15 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'productName',
           selectedCell,
           setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       minWidth: 250,
     },
     {
       Header: `${WORK_ORDER}.details`,
       accessor: 'description',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -258,13 +263,15 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'description',
           selectedCell,
           setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       minWidth: 300,
     },
     {
       Header: `${WORK_ORDER}.quantity`,
       accessor: 'quantity',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -278,6 +285,8 @@ const RemainingListTable = (props: RemainingListType) => {
           handleChange: (e, index) => {
             handleQuantityChange(e, index)
           },
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       width: 100,
     },
