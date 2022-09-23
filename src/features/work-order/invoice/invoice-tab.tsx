@@ -307,18 +307,21 @@ export const InvoiceTabPC = ({
               {t('see')} {t('invoice')}
             </Button>
           )}
-          {workOrder.lienWaiverAccepted && [WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
-            <Button
-              variant="outline"
-              data-testid="generateInvoice"
-              colorScheme="brand"
-              size="md"
-              leftIcon={<BiSpreadsheet />}
-              onClick={onGenerateInvoiceOpen}
-            >
-              {t('generateINV')}
-            </Button>
-          )}
+          {workOrder.lienWaiverAccepted &&
+            [WOstatus.Declined, WOstatus.Decline, WOstatus.Completed].includes(
+              workOrder?.statusLabel?.toLocaleLowerCase(),
+            ) && (
+              <Button
+                variant="outline"
+                data-testid="generateInvoice"
+                colorScheme="brand"
+                size="md"
+                leftIcon={<BiSpreadsheet />}
+                onClick={onGenerateInvoiceOpen}
+              >
+                {t('generateINV')}
+              </Button>
+            )}
           {navigateToProjectDetails && (
             <Button
               variant="outline"
