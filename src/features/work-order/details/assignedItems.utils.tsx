@@ -372,6 +372,7 @@ export const EditableField = (props: EditableCellType) => {
           {selectedCell !== index + '-' + fieldName ? (
             <Box
               minH={'20px'}
+              minW={'100px'}
               cursor={'pointer'}
               onClick={() => {
                 if (allowEdit) {
