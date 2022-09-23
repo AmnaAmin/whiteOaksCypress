@@ -20,3 +20,10 @@ export const isValidAndNonEmptyObject = (object: {} | undefined | null) => {
 export function numberWithCommas(x: number) {
   return x?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+export const isDefined = (value) => {
+  if(value === undefined || value === null) {
+    return false;
+  }
+  return true;
+}
