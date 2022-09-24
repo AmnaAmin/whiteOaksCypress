@@ -3,7 +3,7 @@ import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { difference } from 'lodash'
 import { memo, useEffect, useState } from 'react'
-import { FieldValue, UseFormReturn } from 'react-hook-form'
+import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
@@ -144,8 +144,9 @@ const RemainingListTable = (props: RemainingListType) => {
     setUpdatedItems,
   } = props
   const { fields: remainingItems, remove } = remainingFieldArray
-  const { getValues, setValue } = formControl
+  const { getValues, setValue, control } = formControl
   const values = getValues()
+  const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
   const [selectedCell, setSelectedCell] = useState('')
 
@@ -154,11 +155,11 @@ const RemainingListTable = (props: RemainingListType) => {
   }, [total])
 
   const handleQuantityChange = (e, index) => {
-    setTotal({ index, value: Number(e?.target?.value) * Number(values?.remainingItems[index]?.unitPrice) })
+    setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.unitPrice) })
   }
 
   const handleUnitPriceChange = (e, index) => {
-    setTotal({ index, value: Number(e?.target?.value) * Number(values?.remainingItems[index]?.quantity) })
+    setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
   }
 
   const REMAINING_ITEMS_COLUMNS = [
@@ -211,7 +212,7 @@ const RemainingListTable = (props: RemainingListType) => {
         )
       },
       disableExport: true,
-      width: 50,
+      width: 100,
       sortable: false,
     },
     {
@@ -248,7 +249,7 @@ const RemainingListTable = (props: RemainingListType) => {
           autoFocus: isFocus,
           setIsFocus,
         }),
-      minWidth: 250,
+      minWidth: 200,
     },
     {
       Header: `${WORK_ORDER}.details`,
