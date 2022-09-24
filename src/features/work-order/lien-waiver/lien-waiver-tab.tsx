@@ -14,32 +14,72 @@ import {
   ModalFooter,
   Stack,
   VStack,
+  Text,
+  useToast,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { orderBy } from 'lodash'
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { BiCaretDown, BiCaretUp, BiDownload, BiSpreadsheet } from 'react-icons/bi'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { BiCaretDown, BiCaretUp, BiDownload, BiSpreadsheet, BiUpload } from 'react-icons/bi'
 import { GetHelpText } from 'utils/lien-waiver'
 import { useTranslation } from 'react-i18next'
 import { dateFormat } from 'utils/date-time-utils'
-import { defaultValuesLienWaiver } from 'api/work-order'
+import { useUpdateWorkOrderMutation } from 'api/work-order'
+import { MdOutlineCancel } from 'react-icons/md'
+import { head } from 'lodash'
+import { readFileContent } from 'api/vendor-details'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { workOrder, onClose, documentsData, onSave, navigateToProjectDetails } = props
   const [documents, setDocuments] = useState<any[]>([])
+  const { isDoc, isProjectCoordinator } = useUserRolesSelector()
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const [first, last] = workOrder?.companyName?.split(' ') || []
+  const { mutate: updateLienWaiver } = useUpdateWorkOrderMutation({})
 
-  const { register, handleSubmit, setValue } = useForm({
-    defaultValues: defaultValuesLienWaiver(workOrder),
+  const { register, handleSubmit, setValue, control } = useForm({
+    // defaultValues: defaultValuesLienWaiver(workOrder),
   })
   const { leanwieverLink } = props.workOrder
+
+  const document = useWatch({ name: 'uploadLW', control })
 
   const onSubmit = formValues => {
     onSave({
       ...formValues,
       documents,
     })
+  }
+
+  const onFileChange = useCallback(
+    e => {
+      const files = e.target.files
+      if (files[0]) {
+        setValue('uploadLW', files[0])
+      }
+    },
+    [setValue],
+  )
+
+  const parseValuesToPayload = async () => {
+    const fileContents = await readFileContent(document as File)
+    return {
+      ...workOrder,
+      lienWaiverAccepted: true,
+      amountOfCheck: workOrder.finalInvoiceAmount,
+      documents: [
+        {
+          documentType: 26,
+          workOrderId: workOrder.id,
+          fileObject: fileContents,
+          fileObjectContentType: document.type,
+          fileType: `LW${workOrder?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.pdf`,
+        },
+      ],
+    }
   }
 
   const [claimantsSignature, setClaimantsSignature] = useState('')
@@ -66,6 +106,21 @@ export const LienWaiverTab: React.FC<any> = props => {
 
     setClaimantsSignature(signatureDoc?.s3Url ?? '')
   }, [documentsData, setValue, workOrder])
+
+  const toast = useToast()
+  const lwUpload = async () => {
+    const payload = await parseValuesToPayload()
+    updateLienWaiver(payload, {
+      onSuccess() {
+        toast({
+          title: 'Upload File',
+          description: 'Is uploaded successfully',
+          status: 'success',
+          isClosable: true,
+        })
+      },
+    })
+  }
 
   return (
     <Box>
@@ -167,7 +222,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           <HStack justifyContent="start" w="100%">
             {workOrder?.lienWaiverAccepted && (
               <Box>
-                <Link href={leanwieverLink} target={'_blank'} color="#4E87F8">
+                <Link href={leanwieverLink} target={'_blank'} color="#4E87F8" download={leanwieverLink}>
                   <Button colorScheme="brand" variant="outline" leftIcon={<BiDownload size={14} />}>
                     See LW{`${workOrder?.id}`}
                   </Button>
@@ -185,11 +240,56 @@ export const LienWaiverTab: React.FC<any> = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
+
+            <input
+              type="file"
+              ref={inputRef}
+              style={{ display: 'none' }}
+              onChange={onFileChange}
+              accept="application/pdf, image/png, image/jpg, image/jpeg"
+            />
+
+            {isDoc ||
+              (isProjectCoordinator &&
+                workOrder?.lienWaiverAccepted &&
+                (!!document ? (
+                  <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                    <HStack spacing="5px" h="38px" padding="10px" align="center">
+                      <Text as="span" maxW="120px" isTruncated title={document?.name || document?.fileType}>
+                        {document?.name || document?.fileType}
+                      </Text>
+                      <MdOutlineCancel
+                        cursor="pointer"
+                        onClick={() => {
+                          setValue('uploadLW', null)
+                          if (inputRef.current) inputRef.current.value = ''
+                        }}
+                      />
+                    </HStack>
+                  </Box>
+                ) : (
+                  <Button
+                    onClick={e => {
+                      if (inputRef.current) {
+                        inputRef.current.click()
+                      }
+                    }}
+                    leftIcon={<BiUpload />}
+                    variant="outline"
+                    size="md"
+                    colorScheme="brand"
+                  >
+                    Upload LW
+                  </Button>
+                )))}
           </HStack>
 
           <HStack justifyContent="end">
-            <Button onClick={onClose} colorScheme="brand">
+            <Button onClick={onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
+            </Button>
+            <Button onClick={() => lwUpload()} colorScheme="brand" isDisabled={!document}>
+              {t('save')}
             </Button>
             {/*!workOrder?.lienWaiverAccepted && (
               <Button onClick={onClose} colorScheme="brand">
