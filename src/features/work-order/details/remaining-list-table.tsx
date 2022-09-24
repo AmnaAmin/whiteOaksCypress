@@ -155,11 +155,15 @@ const RemainingListTable = (props: RemainingListType) => {
   }, [total])
 
   const handleQuantityChange = (e, index) => {
-    setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.unitPrice) })
+    if (e?.target?.value !== '') {
+      setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.unitPrice) })
+    }
   }
 
   const handleUnitPriceChange = (e, index) => {
-    setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
+    if (e?.target?.value !== '') {
+      setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
+    }
   }
 
   const REMAINING_ITEMS_COLUMNS = [
