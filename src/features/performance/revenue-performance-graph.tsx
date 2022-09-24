@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, HStack} from '@chakra-ui/react'
+import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
 import { constMonthOption } from 'api/performance'
 import { Card } from 'components/card/card'
@@ -6,11 +6,17 @@ import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import { flatten } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import _, { flatten, take, includes, last } from 'lodash'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { months, monthsShort } from 'utils/date-time-utils'
+import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
+
+type GraphData = {
+  username: string
+  month: any
+  Revenue: any
+}[]
 
 const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ chartData, isLoading }) => {
   const vendors = [chartData?.chart]
@@ -67,6 +73,17 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     [barProps],
   )
 
+  const renderQuarterTick = (tickProps: any) => {
+    const { x, y, payload } = tickProps
+    const { value } = payload
+
+    return (
+      <text x={x} y={y} textAnchor="middle">
+        {value}
+      </text>
+    )
+  }
+
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -97,17 +114,18 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
 
           {hasUsers && (
             <XAxis
-              dataKey={'month'}
+              dataKey={'centerMonth'}
               axisLine={false}
               tickLine={false}
               tick={{
                 fill: '#4A5568',
-                fontSize: '12px',
+                fontSize: '14px',
                 fontWeight: 400,
                 fontStyle: 'normal',
               }}
               // tick={renderQuarterTick}
               tickMargin={20}
+              interval={0}
               xAxisId="users"
             />
           )}
@@ -184,79 +202,102 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   chartData,
   isLoading,
 }) => {
-   
   const { fieldProjectManagerOptions } = useFPMs()
   const [monthOption, setMonthOption] = useState(constMonthOption[0])
-  const [fpmOption, setFpmOption] = useState(fieldProjectManagerOptions[0])
-  const [graphData, setGraphData] = useState({ username: '', month: 0, Revenue: 0 }[0])
+  const [fpmOption, setFpmOption] = useState([])
+  const [graphData, setGraphData] = useState<GraphData>()
   const currentMonth = format(new Date(), 'LLL', { locale: enUS })
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth)
+
+  const data = useMemo(
+    () =>
+      flatten(
+        months.map((month, monthIndex) => {
+          const monthExistsInChart = Object.keys(chartData)?.find(months => months === month)
+          let nameMonthData
+
+          if (monthExistsInChart) {
+            nameMonthData = chartData?.[month]
+            const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
+              const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
+              return {
+                username: `${firstName} ${lastName}`,
+                month: monthsShort[month],
+                userId: Number(last(userId)),
+                quater: getQuarterByMonth(monthIndex),
+                Revenue: nameMonthData[nameKey]?.revenue,
+              }
+            })
+            let newgraphs = graphs.map((n, i) => ({
+              ...n,
+              centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
+            }))
+            return newgraphs
+          }
+
+          return {
+            month: monthsShort[month],
+            centerMonth: monthsShort[month],
+            quater: getQuarterByMonth(monthIndex),
+            username: '',
+            userId: 0,
+            Bonus: 0,
+            Profit: 0,
+            Revenue: 0,
+          }
+        }),
+      ),
+    [chartData],
+  )
 
   useEffect(() => {
     const finalGraphData = data?.filter(a => a.month === currentMonth)
-    setSelectedMonth(currentMonth)
     setGraphData(finalGraphData)
-  }, [])
+  }, [data])
+  const onFpmOptionChange = options => {
+    setFpmOption(options)
 
-  // Formatted Data
-  const data = flatten(
-    months.map(month => {
-      const monthExistsInChart = Object.keys(chartData)?.find(months => months === month) 
-      let nameMonthData
-      if (monthExistsInChart) {
-        nameMonthData = chartData?.[month] 
-        return Object.keys(nameMonthData).map(nameKey => {
-          const [firstName, lastName] = `${nameKey}`.split('_')
-          return {
-            username: `${firstName} ${lastName}`,
-            month: monthsShort[month], 
-            // Bonus: nameMonthData[nameKey]?.bonus,
-            // Profit: nameMonthData[nameKey]?.profit,
-            Revenue: nameMonthData[nameKey]?.revenue,
-          }
-        })
-      }
-
-      return {
-        month: monthsShort[month],
-        username: '',
-        Bonus: 0,
-        Profit: 0,
-        Revenue: 0,
-      }
-    }),
-  )
-
+    filterGraphData(options, monthOption)
+  }
   const getMonthValue = monthOption => {
+    let selectedFpm = [] as any
+
+    if (!['Last Month', 'This Month'].includes(monthOption?.label)) {
+      selectedFpm = take(fieldProjectManagerOptions, 5)
+    }
+
+    setFpmOption(selectedFpm)
+
+    setMonthOption(monthOption)
+    filterGraphData(selectedFpm, monthOption)
+  }
+  const filterGraphData = (selectedFpm, monthOption) => {
+    let selectedMonth, selectedQuater
     if (monthOption?.label === 'This Month') {
-      const currentMonth = format(new Date(), 'LLL', { locale: enUS })
-      setSelectedMonth(currentMonth)
+      selectedMonth = format(new Date(), 'LLL', { locale: enUS })
     }
     if (monthOption?.label === 'Last Month') {
-      const lastMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
-      setSelectedMonth(lastMonth)
+      selectedMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
     }
     if (monthOption?.label === 'Current Quarter') {
-      var currQuarter = format(subMonths(new Date(), 6), 'LLL', { locale: enUS })
-      setSelectedMonth(currQuarter)
+      selectedQuater = getQuarterByDate()
     }
     if (monthOption?.label === 'Past Quarter') {
-      var pastQuarter = format(subMonths(new Date(), 3), 'LLL', { locale: enUS })
-      console.log(pastQuarter)
-      setSelectedMonth(pastQuarter)
-    }  
-    if (monthOption?.label === 'All') {
-      setSelectedMonth('')
+      selectedQuater = getLastQuarterByDate()
     }
 
-    const finalGraphData = selectedMonth ? data?.filter(a => a.month === selectedMonth) : data
+    selectedFpm = selectedFpm.map(n => n.value)
+    const finalGraphData = data?.filter(
+      a =>
+        (!selectedMonth || a.month === selectedMonth) &&
+        (!selectedQuater || a.quater === selectedQuater) &&
+        (!selectedFpm.length || selectedFpm.includes(a.userId)),
+    )
     setGraphData(finalGraphData)
   }
-
   return (
     <>
       <Card>
-        <Box mb={15} mt={5} height="50px">
+        <Box mb={15} mt={5}>
           <Flex>
             <Box width={'400px'} ml={5}>
               <HStack>
@@ -278,8 +319,10 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 <Box width={'400px'}>
                   <ReactSelect
                     name={`fpmDropdown`}
+                    value={fpmOption}
+                    isDisabled={['Last Month', 'This Month'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
-                    onChange={setFpmOption}
+                    onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
                     isMulti
                   />
