@@ -236,7 +236,7 @@ export const InvoiceTabPC = ({
           <InvoiceInfo
             title={t('invoiceDate')}
             value={
-              workOrder.dateInvoiceSubmitted && !rejectInvoiceCheck
+              workOrder.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                 ? dateFormat(workOrder?.dateInvoiceSubmitted)
                 : 'mm/dd/yyyy'
             }
@@ -245,7 +245,9 @@ export const InvoiceTabPC = ({
           <InvoiceInfo
             title={t('dueDate')}
             value={
-              workOrder.paymentTermDate && !rejectInvoiceCheck ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'
+              workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                ? dateFormat(workOrder?.paymentTermDate)
+                : 'mm/dd/yyyy'
             }
             icons={BiCalendar}
           />
