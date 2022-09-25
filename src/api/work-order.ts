@@ -44,6 +44,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
             description: 'Work Order has been saved successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -55,6 +56,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         toast({
           title: 'Work Order',
           description,
+          position: 'top-left',
           status: 'error',
           isClosable: true,
         })
@@ -90,6 +92,7 @@ export const useCreateWorkOrderMutation = () => {
           description: 'Work Order created successfully',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -99,6 +102,7 @@ export const useCreateWorkOrderMutation = () => {
         }
         toast({
           title: 'Work Order',
+          position: 'top-left',
           description,
           status: 'error',
           isClosable: true,
@@ -127,6 +131,7 @@ export const useNoteMutation = projectId => {
           description: 'Note has been saved successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -135,6 +140,7 @@ export const useNoteMutation = projectId => {
           description: (error.title as string) ?? 'Unable to save note.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -252,7 +258,7 @@ export const defaultValuesWODetails = workOrder => {
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
-            return { ...e, uploadedDoc: null }
+            return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
           })
         : [],
   }

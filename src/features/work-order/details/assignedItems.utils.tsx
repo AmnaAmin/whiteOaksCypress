@@ -12,6 +12,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import round from 'lodash/round'
 
 const swoPrefix = '/smartwo/api'
 
@@ -37,6 +38,8 @@ export type LineItems = {
   isCompleted?: boolean
   action?: string
   document?: any
+  vendorAmount?: number | null
+  profit?: number | null
 }
 
 export type SWOProject = {
@@ -148,6 +151,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
             description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -157,6 +161,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
           description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -193,6 +198,7 @@ export const useCreateLineItem = (props: CreateArgumentType) => {
             description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -202,6 +208,7 @@ export const useCreateLineItem = (props: CreateArgumentType) => {
           description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -227,6 +234,7 @@ export const useDeleteLineItems = swoProjectId => {
           description: 'Item Deleted Successfully',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -235,6 +243,7 @@ export const useDeleteLineItems = swoProjectId => {
           description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -259,6 +268,7 @@ export const useDeleteLineIds = () => {
           description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -272,6 +282,13 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   return { isAssignmentAllowed }
 }
 
+export const calculateVendorAmount = (amount, percentage) => {
+  return round(amount - amount * (percentage / 100), 2)
+}
+
+export const calculateProfit = (clientAmount, vendorAmount) => {
+  return round(((clientAmount - vendorAmount) / clientAmount) * 100, 2)
+}
 /* map to remaining when user unassigns using Unassign Line Item action */
 
 export const mapToRemainingItems = item => {
@@ -284,13 +301,18 @@ export const mapToRemainingItems = item => {
 
 /* map to assigned items when user assigns using save on remaining items modal */
 
-export const mapToLineItems = item => {
+export const mapToLineItems = (item, watchPercentage?) => {
+  const amount = item.unitPrice * item.quantity
+  const percentage = watchPercentage
   return {
     ...item,
     isVerified: false,
     isCompleted: false,
     price: item.unitPrice,
     document: null,
+    profit: percentage,
+    clientAmount: amount,
+    vendorAmount: calculateVendorAmount(amount, percentage),
   }
 }
 
@@ -319,10 +341,12 @@ type EditableCellType = {
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
   onChange?: (e, index) => void
+  selectedCell: string
+  setSelectedCell: (e) => void
+  allowEdit?: boolean
 }
 
 export const EditableField = (props: EditableCellType) => {
-  const [selectedCell, setSelectedCell] = useState('')
   const {
     index,
     fieldName,
@@ -333,6 +357,9 @@ export const EditableField = (props: EditableCellType) => {
     updatedItems,
     setUpdatedItems,
     onChange,
+    selectedCell,
+    setSelectedCell,
+    allowEdit,
   } = props
   const { getValues, setValue } = formControl
   const values = getValues()
@@ -342,11 +369,12 @@ export const EditableField = (props: EditableCellType) => {
         <>
           {selectedCell !== index + '-' + fieldName ? (
             <Box
-              minW={'100px'}
               minH={'20px'}
               cursor={'pointer'}
               onClick={() => {
-                setSelectedCell(index + '-' + fieldName)
+                if (allowEdit) {
+                  setSelectedCell(index + '-' + fieldName)
+                }
               }}
             >
               {valueFormatter
@@ -365,7 +393,7 @@ export const EditableField = (props: EditableCellType) => {
                   setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                 }
               }}
-              onBlurCapture={e => {
+              onBlur={e => {
                 if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
                 setSelectedCell('')
 
@@ -385,9 +413,8 @@ type InputFieldType = {
   index: number
   fieldName: string
   formControl: UseFormReturn<any>
-  inputType?: string
   fieldArray: string
-  type?: string
+  inputType?: string
   onChange?: (e, index) => void
 }
 export const InputField = (props: InputFieldType) => {
@@ -487,12 +514,12 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
   )
 }
 
-export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
+export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder.propertyAddress },
-    { label: 'Start Date:', value: workOrder.workOrderStartDate },
-    { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
-    { label: 'Lock Box Code:', value: projectData.lockBoxCode },
+    { label: 'Property Address:', value: workOrder?.propertyAddress },
+    { label: 'Start Date:', value: workOrder?.workOrderStartDate },
+    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted },
+    { label: 'Lock Box Code:', value: projectData?.lockBoxCode },
   ]
   const totalAward = assignedItems?.reduce(
     (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
@@ -543,7 +570,6 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
       body: [
         ...assignedItems.map(ai => {
           return {
-            location: ai.location,
             id: ai.id,
             sku: ai.sku,
             description: ai.description,
@@ -552,13 +578,11 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
         }),
       ],
       columnStyles: {
-        location: { cellWidth: 70 },
-        id: { cellWidth: 20 },
-        description: { cellWidth: 70 },
-        quantity: { cellWidth: 20 },
+        sku: { cellWidth: 40 },
+        description: { cellWidth: 100 },
+        quantity: { cellWidth: 40 },
       },
       columns: [
-        { header: 'Location', dataKey: 'location' },
         { header: 'SKU', dataKey: 'sku' },
         { header: 'Description', dataKey: 'description' },
         { header: 'Quantity', dataKey: 'quantity' },
@@ -568,9 +592,11 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     doc.setFont(basicFont, 'normal')
     const tableEndsY = doc.lastAutoTable.finalY
     const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-    doc.setDrawColor(0, 0, 0)
-    doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
-    doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
+    if (!hideAward) {
+      doc.setDrawColor(0, 0, 0)
+      doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
+      doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
+    }
     doc.save('Assigned Line Items.pdf')
   }
 }
@@ -585,7 +611,7 @@ export const useColumnsShowDecision = ({ workOrder }) => {
   const showReadOnlyPrice = (isVendor && !!workOrder?.showPricing) || (!isVendor && workOrder) //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
   const showVerification = !isVendor && workOrder
   return {
-    showSelect: !isVendor,
+    showSelect: !isVendor && !workOrder,
     showEditablePrice: showEditablePrice,
     showReadOnlyPrice: showReadOnlyPrice,
     showStatus: !!workOrder,

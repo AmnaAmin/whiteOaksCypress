@@ -70,7 +70,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   return (
     <Box>
       <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onSubmit)}>
-        <ModalBody h="400px" overflow={'auto'}>
+        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <FormControl>
             <VStack align="start" spacing="30px" m="32px">
               <Flex w="100%" alignContent="space-between" pos="relative">

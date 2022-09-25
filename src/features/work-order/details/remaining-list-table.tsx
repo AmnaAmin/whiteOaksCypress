@@ -31,10 +31,23 @@ type CellInputType = {
   handleChange?: (e, index) => void
   type?: string
   valueFormatter?: (value) => void
+  selectedCell: string
+  setSelectedCell: (val) => void
 }
 const renderInput = (props: CellInputType) => {
-  const { row, values, formControl, updatedItems, setUpdatedItems, fieldName, handleChange, type, valueFormatter } =
-    props
+  const {
+    row,
+    values,
+    formControl,
+    updatedItems,
+    setUpdatedItems,
+    fieldName,
+    handleChange,
+    type,
+    valueFormatter,
+    selectedCell,
+    setSelectedCell,
+  } = props
   const isNew = values?.remainingItems[row?.index].action === 'new'
   return (
     <Box pl={'5px'}>
@@ -43,7 +56,7 @@ const renderInput = (props: CellInputType) => {
           index={row?.index}
           fieldName={fieldName}
           formControl={formControl}
-          type={type}
+          inputType={type}
           fieldArray="remainingItems"
           onChange={handleChange}
         ></InputField>
@@ -58,6 +71,9 @@ const renderInput = (props: CellInputType) => {
           setUpdatedItems={setUpdatedItems}
           onChange={handleChange}
           valueFormatter={valueFormatter}
+          selectedCell={selectedCell}
+          setSelectedCell={setSelectedCell}
+          allowEdit={true}
         />
       )}
     </Box>
@@ -117,6 +133,7 @@ const RemainingListTable = (props: RemainingListType) => {
   const { getValues, setValue } = formControl
   const values = getValues()
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
+  const [selectedCell, setSelectedCell] = useState('')
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -186,8 +203,18 @@ const RemainingListTable = (props: RemainingListType) => {
     {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
-      Cell: ({ row }) => renderInput({ row, values, formControl, updatedItems, setUpdatedItems, fieldName: 'sku' }),
-      width: 150,
+      Cell: ({ row }) =>
+        renderInput({
+          row,
+          values,
+          formControl,
+          updatedItems,
+          setUpdatedItems,
+          fieldName: 'sku',
+          selectedCell,
+          setSelectedCell,
+        }),
+      width: 100,
     },
     {
       Header: `${WORK_ORDER}.productName`,
@@ -200,8 +227,10 @@ const RemainingListTable = (props: RemainingListType) => {
           updatedItems,
           setUpdatedItems,
           fieldName: 'productName',
+          selectedCell,
+          setSelectedCell,
         }),
-      width: 250,
+      minWidth: 250,
     },
     {
       Header: `${WORK_ORDER}.details`,
@@ -214,7 +243,10 @@ const RemainingListTable = (props: RemainingListType) => {
           updatedItems,
           setUpdatedItems,
           fieldName: 'description',
+          selectedCell,
+          setSelectedCell,
         }),
+      minWidth: 300,
     },
     {
       Header: `${WORK_ORDER}.quantity`,
@@ -228,10 +260,13 @@ const RemainingListTable = (props: RemainingListType) => {
           setUpdatedItems,
           fieldName: 'quantity',
           type: 'number',
+          selectedCell,
+          setSelectedCell,
           handleChange: (e, index) => {
             handleQuantityChange(e, index)
           },
         }),
+      width: 100,
     },
     {
       Header: `${WORK_ORDER}.unitPrice`,
@@ -246,10 +281,13 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'unitPrice',
           valueFormatter: currencyFormatter,
           type: 'number',
+          selectedCell,
+          setSelectedCell,
           handleChange: (e, index) => {
             handleUnitPriceChange(e, index)
           },
         }),
+      width: 150,
     },
     {
       Header: `${WORK_ORDER}.total`,
@@ -262,6 +300,7 @@ const RemainingListTable = (props: RemainingListType) => {
           </>
         )
       },
+      width: 150,
     },
   ]
 
@@ -272,7 +311,7 @@ const RemainingListTable = (props: RemainingListType) => {
         data={remainingItems ?? []}
         isLoading={isLoading}
         TableRow={RemainingItemsRow}
-        tableHeight="calc(100vh - 300px)"
+        tableHeight="calc(100vh - 325px)"
         name="remaining-items-table"
         defaultFlexStyle={false}
         disableFilter={true}

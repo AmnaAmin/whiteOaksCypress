@@ -12,7 +12,7 @@ export const TransactionDetails = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Flex overflow={'auto'} mb="5" h="135px">
+      <Flex overflow={'auto'} mb="5" h="170px">
         <FinancialOverviewTable ref={ref} financialOveriewTableData={financialOveriewTableData} isLoading={isLoading} />
       </Flex>
       <Flex overflow={'auto'} mb="5" h="350px">

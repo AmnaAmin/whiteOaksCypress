@@ -142,7 +142,16 @@ const RemainingItemsModal: React.FC<{
 
   return (
     <Box>
-      <Modal variant="custom" isOpen={props.isOpen} onClose={props.onClose} size="6xl">
+      <Modal
+        variant="custom"
+        isOpen={props.isOpen}
+        onClose={() => {
+          setSelectedItems([])
+          reset({ remainingItems })
+          props.onClose()
+        }}
+        size="6xl"
+      >
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -152,7 +161,7 @@ const RemainingItemsModal: React.FC<{
               </HStack>
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-            <ModalBody h="450px" overflow={'auto'}>
+            <ModalBody>
               <HStack mb="10px">
                 {isAssignmentAllowed && (
                   <>
@@ -209,6 +218,7 @@ const RemainingItemsModal: React.FC<{
                   colorScheme="brand"
                   onClick={() => {
                     setSelectedItems([])
+                    reset({ remainingItems })
                     props.onClose()
                   }}
                 >
