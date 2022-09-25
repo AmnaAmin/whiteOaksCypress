@@ -1,19 +1,27 @@
 import React, { useEffect } from 'react'
 import { Flex } from '@chakra-ui/react'
-import { Task, ViewMode, Gantt } from 'gantt-task-react'
+import { ViewMode, Gantt } from 'gantt-task-react'
+import { Task } from './task-types.ds'
 import { ProjectTaskList } from './task-list-header'
 import { ProjectTaskListTable } from './task-list-table'
-import { useColumnWidth } from './hooks'
-import { ViewSwitcher } from 'components/gantt-chart/view-switcher'
 import 'gantt-task-react/dist/index.css'
 import './gantt-task.css'
+
+const getColumnWidth = (view: ViewMode) => {
+  switch (true) {
+    case view === ViewMode.Year || view === ViewMode.Month:
+      return 450
+    case view === ViewMode.Week:
+      return 150
+    default:
+      return 65
+  }
+}
 
 const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
-  const [view, setView] = React.useState<ViewMode>(ViewMode.Week)
   const [tasks, setTasks] = React.useState<Task[]>(data)
-  const columnWidth = useColumnWidth(view);
 
   const handleExpanderClick = (task: Task) => {
     setTasks(tasks.map(t => (t.id === task.id ? task : t)))
@@ -31,19 +39,15 @@ const ProjectScheduleDetails: React.FC<{
       direction={"column"}
       gridGap={4}
     >
-      <ViewSwitcher
-        viewMode={view}
-        onViewModeChange={viewMode => setView(viewMode)}
-      />
       <Gantt
         tasks={tasks}
         headerHeight={35}
-        columnWidth={columnWidth}
+        columnWidth={getColumnWidth(ViewMode.Day)}
         rowHeight={27}
         handleWidth={0}
         fontSize="13px"
         barFill={60}
-        viewMode={view}
+        viewMode={ViewMode.Day}
         onExpanderClick={handleExpanderClick}
         TaskListHeader={ProjectTaskList}
         TaskListTable={ProjectTaskListTable}

@@ -3,6 +3,7 @@ import { Box } from '@chakra-ui/react'
 import { Task } from './task-types.ds'
 import { dateFormat } from 'utils/date-time-utils'
 import { MdOutlineArrowRight, MdOutlineArrowDropDown } from "react-icons/md";
+import { Tooltip } from '@chakra-ui/react';
 
 const styles = {
   taskListWrapper: '_3ZbQT taskListWrapper',
@@ -11,6 +12,18 @@ const styles = {
   taskListNameWrapper: '_nI1Xw taskListNameWrapper',
   taskListExpander: '_2QjE6 taskListExpander',
   taskListEmptyExpander: '_2TfEi taskListEmptyExpander',
+}
+
+const rowWidth = '105px'
+
+const HeadingWithTooltip = ({label}) => {
+  return (
+    <Tooltip label={label} color="black" backgroundColor="white" placement="top">
+      <Box isTruncated>
+        {label}
+      </Box>
+    </Tooltip>
+  )
 }
 
 export const ProjectTaskListTable: React.FC<{
@@ -33,7 +46,7 @@ export const ProjectTaskListTable: React.FC<{
       fontSize={props.fontSize}
       fontWeight={600}
       color={'#4A5568'}
-      width={'500px'}
+      width={'400px'}
       maxHeight={200}
       className={styles.taskListWrapper}
     >
@@ -56,8 +69,8 @@ export const ProjectTaskListTable: React.FC<{
                 <Box
                   className={styles.taskListCell}
                   style= {{
-                    minWidth: props.rowWidth,
-                    maxWidth: props.rowWidth
+                    minWidth: rowWidth,
+                    maxWidth: rowWidth
                   }}
                 >
                   <Box
@@ -69,30 +82,37 @@ export const ProjectTaskListTable: React.FC<{
                     >
                       {expanderSymbol}
                     </Box>
-                    <Box>
-                      {task.name}
-                    </Box>
+                    <HeadingWithTooltip label={task.trade} />
                   </Box>
                 </Box>
                 <Box
                   className={styles.taskListCell}
                   style= {{
-                    minWidth: props.rowWidth,
-                    maxWidth: props.rowWidth
+                    minWidth: rowWidth,
+                    maxWidth: rowWidth
                   }}
                 >
-                  {dateFormat(task?.start as Date)}
-              </Box>
-              <Box
+                  <HeadingWithTooltip label={task.name} />
+                </Box>
+                <Box
                   className={styles.taskListCell}
                   style= {{
-                    minWidth: props.rowWidth,
-                    maxWidth: props.rowWidth
+                    minWidth: rowWidth,
+                    maxWidth: rowWidth
                   }}
                 >
-                  {dateFormat(task?.end as Date)}
+                  <HeadingWithTooltip label={dateFormat(task?.start as Date)} />
+                </Box>
+                <Box
+                    className={styles.taskListCell}
+                    style= {{
+                      minWidth: rowWidth,
+                      maxWidth: rowWidth
+                    }}
+                  >
+                    <HeadingWithTooltip label={dateFormat(task?.end as Date)} />
+                </Box>
               </Box>
-            </Box>
             )
           })}
         </>
