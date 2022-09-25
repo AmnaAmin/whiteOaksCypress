@@ -139,15 +139,16 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         Header: 'Vendor Payment',
         accessor: 'vendorPaymentPercentage',
         Cell(cellInfo) {
-          return isDefined(cellInfo.value) 
-            ? numeral(percentageFormatter(cellInfo.value)).format("0.00%")
-            : "";
+          return isDefined(cellInfo.value) ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
         },
         Footer: info => {
-          const vendorPaymentPercentage = React.useMemo(() => getTotalOfKey('vendorPaymentPercentage', info.rows), [info.rows])
+          const vendorPaymentPercentage = React.useMemo(
+            () => getTotalOfKey('vendorPaymentPercentage', info.rows),
+            [info.rows],
+          )
           return isDefined(vendorPaymentPercentage)
-            ? numeral(percentageFormatter(vendorPaymentPercentage)).format("0.00%")
-            : "";
+            ? numeral(percentageFormatter(vendorPaymentPercentage)).format('0.00%')
+            : ''
         },
       },
       {

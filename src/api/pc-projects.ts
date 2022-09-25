@@ -8,6 +8,7 @@ import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
 import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
+import { PROJECTS_QUERY_KEY } from './projects'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -90,7 +91,7 @@ export const useCreateProjectMutation = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('projects')
+        queryClient.invalidateQueries(PROJECTS_QUERY_KEY)
         queryClient.invalidateQueries('project-details')
       },
     },
@@ -110,7 +111,7 @@ export const useFPMUsers = () => {
     return response?.data
   })
 
-  const { data: usersId } = useQuery(
+  const { data: userIds } = useQuery(
     ['fpm-users', selectedFPM?.id],
     async () => {
       const response = await client(`users/fpmByRoleType/${selectedFPM?.id}`, {})
@@ -152,7 +153,7 @@ export const useFPMUsers = () => {
     setFilterFpm(fpmUserOptions)
   }, [fpmTypes, fpmUsers])
 
-  return { fpmUsers: filterFpm, usersId, selectedFPM, setSelectedFPM, ...rest }
+  return { fpmUsers: filterFpm, userIds, selectedFPM, setSelectedFPM, ...rest }
 }
 
 const parseXmlResponse = async (response: any) => {

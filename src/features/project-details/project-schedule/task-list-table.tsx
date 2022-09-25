@@ -2,8 +2,8 @@ import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { Task } from './task-types.ds'
 import { dateFormat } from 'utils/date-time-utils'
-import { MdOutlineArrowRight, MdOutlineArrowDropDown } from "react-icons/md";
-import { Tooltip } from '@chakra-ui/react';
+import { MdOutlineArrowRight, MdOutlineArrowDropDown } from 'react-icons/md'
+import { Tooltip } from '@chakra-ui/react'
 
 const styles = {
   taskListWrapper: '_3ZbQT taskListWrapper',
@@ -16,12 +16,10 @@ const styles = {
 
 const rowWidth = '105px'
 
-const HeadingWithTooltip = ({label}) => {
+const HeadingWithTooltip = ({ label }) => {
   return (
     <Tooltip label={label} color="black" backgroundColor="white" placement="top">
-      <Box isTruncated>
-        {label}
-      </Box>
+      <Box isTruncated>{label}</Box>
     </Tooltip>
   )
 }
@@ -52,10 +50,10 @@ export const ProjectTaskListTable: React.FC<{
     >
       {tasks.length > 0 ? (
         <>
-          {tasks.map((task) => {
-            let expanderSymbol = null;
-            if(task) {
-              task.hideChildren ? <MdOutlineArrowRight /> : <MdOutlineArrowDropDown />        
+          {tasks.map(task => {
+            let expanderSymbol = null
+            if (task) {
+              task.hideChildren ? <MdOutlineArrowRight /> : <MdOutlineArrowDropDown />
             }
 
             return (
@@ -63,19 +61,17 @@ export const ProjectTaskListTable: React.FC<{
                 key={task.name}
                 className={styles.taskListTableRow}
                 style={{
-                  height: props.rowHeight
+                  height: props.rowHeight,
                 }}
               >
                 <Box
                   className={styles.taskListCell}
-                  style= {{
+                  style={{
                     minWidth: rowWidth,
-                    maxWidth: rowWidth
+                    maxWidth: rowWidth,
                   }}
                 >
-                  <Box
-                    className={styles.taskListNameWrapper}
-                  >
+                  <Box className={styles.taskListNameWrapper}>
                     <Box
                       className={expanderSymbol ? styles.taskListExpander : styles.taskListEmptyExpander}
                       onClick={() => props.onExpanderClick?.(task)}
@@ -87,30 +83,30 @@ export const ProjectTaskListTable: React.FC<{
                 </Box>
                 <Box
                   className={styles.taskListCell}
-                  style= {{
+                  style={{
                     minWidth: rowWidth,
-                    maxWidth: rowWidth
+                    maxWidth: rowWidth,
                   }}
                 >
                   <HeadingWithTooltip label={task.name} />
                 </Box>
                 <Box
                   className={styles.taskListCell}
-                  style= {{
+                  style={{
                     minWidth: rowWidth,
-                    maxWidth: rowWidth
+                    maxWidth: rowWidth,
                   }}
                 >
                   <HeadingWithTooltip label={dateFormat(task?.start as Date)} />
                 </Box>
                 <Box
-                    className={styles.taskListCell}
-                    style= {{
-                      minWidth: rowWidth,
-                      maxWidth: rowWidth
-                    }}
-                  >
-                    <HeadingWithTooltip label={dateFormat(task?.end as Date)} />
+                  className={styles.taskListCell}
+                  style={{
+                    minWidth: rowWidth,
+                    maxWidth: rowWidth,
+                  }}
+                >
+                  <HeadingWithTooltip label={dateFormat(task?.end as Date)} />
                 </Box>
               </Box>
             )

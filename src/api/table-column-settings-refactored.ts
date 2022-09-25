@@ -78,7 +78,7 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
         return generateSettingColumn({
           field: col.header as string,
           // @ts-ignore
-          contentKey: col.accessor as string,
+          contentKey: col.accessorKey as string,
           order: index,
           userId: email,
           type: tableName,
@@ -88,10 +88,8 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
 
   const filteredColumns = columns.filter(col => {
     return !settingColumns?.find(pCol => {
-      // console.log('column', pCol)
-
       // @ts-ignore
-      return pCol.colId === col.accessor
+      return pCol.colId === col.accessorKey
     })?.hide
   })
 

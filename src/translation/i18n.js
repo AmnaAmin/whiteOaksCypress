@@ -1,11 +1,12 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import { projects } from 'features/vendor/projects/projects.i18n'
+import { projects as vendorProjects } from 'features/vendor/projects/projects.i18n'
 import { transactionDetailI18n } from 'features/project-details/transaction-details/transaction-details.i18n'
 import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
 import { workOrder } from 'features/work-order/workOrder.i18n'
 import { transaction } from 'features/project-details/transactions/transactions.i18n'
+import { projects } from 'features/projects/projects.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -14,11 +15,12 @@ i18n.use(initReactI18next).init({
         //GLOBAL ERRORS
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'Expected Completion Date cannot be more than 1 year of Expected Start Date',
-        ...projects.en.translation,
+        ...vendorProjects.en.translation,
         ...transactionDetailI18n.en.tranlation,
         ...vendor_manager.en.translation,
         ...workOrder.en.translation,
         ...transaction.en.translation,
+        ...projects.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -481,11 +483,12 @@ i18n.use(initReactI18next).init({
         //GLOBAL ERRORS
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
-        ...projects.es.translation,
+        ...vendorProjects.es.translation,
         ...transactionDetailI18n.es.tranlation,
         ...vendor_manager.es.translation,
         ...workOrder.es.translation,
         ...transaction.es.translation,
+        ...projects.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

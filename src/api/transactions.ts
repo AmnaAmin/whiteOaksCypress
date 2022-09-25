@@ -648,7 +648,7 @@ export const useTransactionExport = projectId => {
   const client = useClient()
   const [exportData, setExport] = useState([])
   const numberFormatter = value => numeral(value).format('$0,0.00')
-  const formatDocumentResponse = (data) => {
+  const formatDocumentResponse = data => {
     if (!data) return
     let exportData: any = []
     data.forEach(item => {
@@ -677,16 +677,16 @@ export const useTransactionExport = projectId => {
         })
       })
     })
-    return data;
+    return data
   }
 
   useQuery(['changeOrder', projectId], async () => {
     const response = await client(`changeOrder/project/${projectId}`, {})
     setExport(formatDocumentResponse(response?.data))
   })
-  
+
   return {
-    exportData
+    exportData,
   }
 }
 

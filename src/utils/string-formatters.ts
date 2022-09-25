@@ -45,8 +45,8 @@ export const truncateWithEllipsis = (s: string, maxLength: number) => {
  * @returns Formatted percentage
  */
 export const percentageFormatter = (percentage: number) => {
-  if(percentage) {
-    return Number(percentage / 100);
+  if (percentage) {
+    return Number(percentage / 100)
   }
-  return percentage;
+  return percentage
 }
