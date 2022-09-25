@@ -88,4 +88,4 @@ export type Client = {
   modifiedDate: string | null
 }
 
-export type Language = 'English' | 'Spanish';
+export type Language = 'English' | 'Spanish'

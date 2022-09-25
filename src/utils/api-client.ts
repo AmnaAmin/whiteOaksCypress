@@ -53,7 +53,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
       return Promise.reject(data)
     }
 
-    return Promise.resolve({ data: null })
+    return Promise.resolve({ data: null, headers: response.headers })
   })
 }
 

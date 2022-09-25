@@ -89,7 +89,7 @@ const Settings = React.forwardRef(() => {
             setImgFile(fileData)
           })
           .catch(err => {
-            console.log('error in convert Image Url to DataURL', err)
+            console.error('error in convert Image Url to DataURL', err)
           })
       }
       reset(defaultSettings)

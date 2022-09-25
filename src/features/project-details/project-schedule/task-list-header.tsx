@@ -15,7 +15,6 @@ export const ProjectTaskList: FC<{
   fontFamily: string
   fontSize: string
 }> = props => {
-
   return (
     <Grid
       gridTemplateColumns="1fr 1fr 1fr 1fr"
@@ -26,7 +25,9 @@ export const ProjectTaskList: FC<{
       color="#4A5568"
       height={props.headerHeight}
     >
-      <Text fontWeight={600} paddingLeft="13px">Name</Text>
+      <Text fontWeight={600} paddingLeft="13px">
+        Name
+      </Text>
       <Text fontWeight={600}>Trade</Text>
       <Text fontWeight={600}>Start Date</Text>
       <Text fontWeight={600}>End Date</Text>

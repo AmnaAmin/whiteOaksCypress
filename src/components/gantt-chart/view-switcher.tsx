@@ -4,14 +4,14 @@ import { Box } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 
 type ViewSwitcherProps = {
-  viewMode: ViewMode,
+  viewMode: ViewMode
   onViewModeChange: (viewMode: ViewMode) => void
 }
 type ViewFilter = {
-  label: string,
+  label: string
   value: ViewMode
 }
-const viewFilters:ViewFilter[] = [
+const viewFilters: ViewFilter[] = [
   {
     label: 'Hour',
     value: ViewMode.Hour,
@@ -22,7 +22,7 @@ const viewFilters:ViewFilter[] = [
   },
   {
     label: 'Half of Day',
-    value: ViewMode.HalfDay
+    value: ViewMode.HalfDay,
   },
   {
     label: 'Day',
@@ -45,16 +45,12 @@ const viewFilters:ViewFilter[] = [
 export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({ viewMode, onViewModeChange }) => {
   return (
     <Box className="view-container" gridGap={4}>
-      {viewFilters.map((view) => {
+      {viewFilters.map(view => {
         return (
-          <Button
-            key={view.value}
-            isActive={viewMode === view.value}
-            onClick={() => onViewModeChange(view.value)}
-          >
+          <Button key={view.value} isActive={viewMode === view.value} onClick={() => onViewModeChange(view.value)}>
             {view.label}
           </Button>
-        );
+        )
       })}
     </Box>
   )

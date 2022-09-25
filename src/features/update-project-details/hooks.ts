@@ -76,7 +76,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isProjectCoordinatorDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid,
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed,
+    isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed || isFPM,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
     isClientDisabled: isAllTimeDisabled,

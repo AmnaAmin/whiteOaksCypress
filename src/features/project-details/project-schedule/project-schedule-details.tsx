@@ -34,11 +34,7 @@ const ProjectScheduleDetails: React.FC<{
   }, [data])
 
   return (
-    <Flex
-      className="project-details-chart"
-      direction={"column"}
-      gridGap={4}
-    >
+    <Flex className="project-details-chart" direction={'column'} gridGap={4}>
       <Gantt
         tasks={tasks}
         headerHeight={35}
