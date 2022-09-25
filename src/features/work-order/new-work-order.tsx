@@ -320,7 +320,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard
                   title="finalSowAmount"
-                  date={currencyFormatter(projectData?.sowOriginalContractAmount as number)}
+                  date={currencyFormatter(projectData?.sowNewAmount as number)}
                 />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
