@@ -24,7 +24,6 @@ export const PerformanceInfoCards: React.FC<{
   const revenue = performance?.map(p => p?.revenue).reduce((partialSum, a) => partialSum + a, 0)
   const profit = performance?.map(p => p?.profit).reduce((partialSum, a) => partialSum + a, 0)
   const disqualifiedRevenue = performance?.map(p => p?.disqualifiedRevenue).reduce((partialSum, a) => partialSum + a, 0)
-  //   const total = revenue + profit + disqualifiedRevenue
 
   return (
     <>

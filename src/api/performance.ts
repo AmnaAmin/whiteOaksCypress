@@ -24,7 +24,16 @@ export const usePerformance = () => {
   })
 }
 
-export const IgnorePerformance = [
+export const useFPMDetails = (FPMId: any) => {
+  const client = useClient()
+
+  return useQuery('fpm-details', async () => {
+    const response = await client(`fpm-quota-info/${FPMId}`, {})
+    return response?.data
+  })
+}
+
+export const ignorePerformance = [
   {
     value: 0,
     label: 'No',
@@ -97,6 +106,7 @@ export const useMutatePerformance = (FPMId: number) => {
           isClosable: true,
         })
         queryClient.invalidateQueries('performance-list')
+        queryClient.invalidateQueries('fpm-details')
       },
       onError(error: ErrorType) {
         toast({

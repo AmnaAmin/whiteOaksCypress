@@ -9,7 +9,7 @@ export const PerformanceTab = () => {
 
   return (
     <>
-      <Box mt={10} p={0} rounded="13px" flex={1} bg='#F7FAFE' border='1px solid #EAE6E6'>
+      <Box mt={10} p={0} rounded="13px" flex={1} >
         <PerformanceGraphWithUsers isLoading={isLoading} chartData={performanceChart || []} />
       </Box>
       <PerformanceInfoCards isLoading={false} />

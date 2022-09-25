@@ -172,6 +172,9 @@ const NewWorkOrder: React.FC<{
 
   useEffect(() => {
     if (percentage !== null) setValue('percentage', percentage)
+    if (percentage === 0) {
+      resetLineItemsProfit(0)
+    }
   }, [percentage])
 
   useEffect(() => {
@@ -187,6 +190,14 @@ const NewWorkOrder: React.FC<{
     setValue('invoiceAmount', round(vendorAmount, 2))
   }, [watchLineItems])
 
+  const resetLineItemsProfit = profit => {
+    formValues?.assignedItems?.forEach((item, index) => {
+      const clientAmount =
+        Number(formValues.assignedItems?.[index]?.price ?? 0) * Number(formValues.assignedItems?.[index]?.quantity ?? 0)
+      setValue(`assignedItems.${index}.profit`, profit)
+      setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
+    })
+  }
   // Remaining Items handles
   const {
     onClose: onCloseRemainingItemsModal,
@@ -211,7 +222,9 @@ const NewWorkOrder: React.FC<{
   const { profitMargin } = useGetProjectFinancialOverview(projectId)
 
   useEffect(() => {
-    setUnAssignedItems(remainingItems ?? [])
+    const tempAssignedItems = formValues?.assignedItems?.filter(a => !a.smartLineItemId)?.map(item => item.id)
+    const items = remainingItems?.filter?.(item => !tempAssignedItems?.includes(item.id))
+    setUnAssignedItems(items)
   }, [remainingItems])
 
   useEffect(() => {
@@ -417,19 +430,10 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
                                 onValueChange={e => {
-                                  field.onChange(e.floatValue)
+                                  field.onChange(e.floatValue ?? '')
                                 }}
                                 onBlur={e => {
-                                  formValues?.assignedItems?.forEach((item, index) => {
-                                    const clientAmount =
-                                      Number(formValues.assignedItems?.[index]?.price ?? 0) *
-                                      Number(formValues.assignedItems?.[index]?.quantity ?? 0)
-                                    setValue(`assignedItems.${index}.profit`, removePercentageFormat(e.target.value))
-                                    setValue(
-                                      `assignedItems.${index}.vendorAmount`,
-                                      calculateVendorAmount(clientAmount, removePercentageFormat(e.target.value)),
-                                    )
-                                  })
+                                  resetLineItemsProfit(removePercentageFormat(e.target.value))
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

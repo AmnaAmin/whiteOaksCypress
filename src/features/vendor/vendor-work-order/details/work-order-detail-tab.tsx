@@ -61,7 +61,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
       workOrder,
       projectData,
       assignedItems: values.assignedItems,
-      hideAward: !workOrder.showPrice,
+      hideAward: !workOrder.showPricing,
     })
   }
 

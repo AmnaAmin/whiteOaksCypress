@@ -372,7 +372,6 @@ export const useGanttChart = (projectId?: string): any => {
     ['projectSchedule', projectId],
     async () => {
       const response = await client(`ganChartElastic/${projectId}`, {})
-console.log('response', response)
       return response?.data
     },
     { enabled: !!projectId },

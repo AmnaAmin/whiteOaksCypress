@@ -291,41 +291,6 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
                   </Tr>
                 )
               })}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
-              </Tr>
             </Tbody>
             <form>
               <>
