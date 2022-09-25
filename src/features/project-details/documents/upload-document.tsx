@@ -41,9 +41,10 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const permitWorkOrders = workOrders?.filter(wo => !STATUS.Cancelled.includes(wo?.statusLabel?.toLowerCase()))
 
   const workOderState =
-    permitWorkOrders?.length && workOrders
-      ? workOrders?.map(state => ({
+    permitWorkOrders && permitWorkOrders?.length > 0
+      ? permitWorkOrders?.map(state => ({
           label: `${state?.companyName}(${state?.skillName})`,
+
           value: state,
         }))
       : null
