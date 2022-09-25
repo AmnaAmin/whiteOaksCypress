@@ -220,6 +220,8 @@ i18n.use(initReactI18next).init({
         dateOfSignature: 'Date Of Signature',
         apply: 'Apply',
         // Project-Lean-Weiver
+        isUploadedSuccessfully: 'Is Uploaded Successfully',
+        uploadLW: 'Upload LW',
         readMore: 'Read More',
         readLess: 'Read Less',
         recentLW: 'Recent LW',
@@ -740,6 +742,8 @@ i18n.use(initReactI18next).init({
         apply: 'Aplicar',
         woaInvoiceDate: 'woa Factura Fecha',
         // Project - Lean-Weiver
+        isUploadedSuccessfully: 'Se carga con éxito',
+        uploadLW: 'Subir LW',
         readMore: 'Lee mas',
         readLess: 'Leer menos',
         recentLW: 'LW reciente',
