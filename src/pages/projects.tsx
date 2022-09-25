@@ -22,7 +22,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
-import { BiBookAdd, BiChevronRight } from 'react-icons/bi'
+import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { exportBtnIcon } from 'theme/common-style'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -30,8 +30,8 @@ import ReactSelect from 'components/form/react-select'
 import { useFPMUsers } from 'api/pc-projects'
 
 const formatGroupLabel = props => (
-  <Box display="flex" alignItems="center" fontWeight="normal" ml={'-15px'}>
-    <BiChevronRight fontSize={'20px'} /> {props.label}
+  <Box onClick={props.onClick} display="flex" alignItems="center" fontWeight="normal" ml={'-15px'}>
+    {props.isHidden ? <BiChevronRight fontSize={'20px'} /> : <BiChevronDown fontSize={'20px'} />} {props.label}
   </Box>
 )
 
@@ -100,6 +100,7 @@ export const Projects = () => {
                 formatGroupLabel={formatGroupLabel}
                 onChange={setSelectedFPM}
                 options={fpmUsers}
+                menuIsOpen
                 placeholder={'Select'}
                 selectProps={{ isBorderLeft: true }}
               />
