@@ -5,7 +5,7 @@ import { dateFormat } from 'utils/date-time-utils'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
-  generalLabour: 'generalLabour.contains',
+  generalLabourName: 'generalLabourName.contains',
   projectManager: 'projectManager.contains',
   projectStatus: 'projectStatus.equals',
   streetAddress: 'streetAddress.contains',
@@ -44,18 +44,19 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'ID',
     accessorKey: 'id',
+    size: 100,
   },
   {
-    header: 'General Labor',
+    header: 'projects.projectTable.generalLabour',
     accessorKey: 'generalLabourName',
-    maxSize: 200,
+    size: 230,
   },
   {
-    header: 'FPM',
+    header: 'projects.projectTable.projectManager',
     accessorKey: 'projectManager',
   },
   {
-    header: 'Status',
+    header: 'projects.projectTable.status',
     accessorKey: 'projectStatus',
     cell: (row: any) => {
       const value = row.cell.getValue()
@@ -63,62 +64,62 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'Address',
+    header: 'projects.projectTable.address',
     accessorKey: 'streetAddress',
   },
   {
-    header: 'City',
+    header: 'projects.projectTable.city',
     accessorKey: 'city',
   },
   {
-    header: 'Client Start Date',
+    header: 'projects.projectTable.clientStart',
     accessorKey: 'clientStartDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientStartDate),
   },
   {
-    header: 'Client Due Date',
+    header: 'projects.projectTable.clientDue',
     accessorKey: 'clientDueDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientDueDate),
   },
   {
-    header: 'Type',
+    header: 'projects.projectTable.type',
     accessorKey: 'projectTypeLabel',
   },
   {
-    header: 'Project Coordinator',
+    header: 'projects.projectTable.projectCoordinator',
     accessorKey: 'projectCoordinator',
   },
   {
-    header: 'Account Payable',
+    header: 'projects.projectTable.accountPayable',
     accessorKey: 'accountPayable',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.value).format('$0,0.00')
     },
   },
   {
-    header: 'Zip',
+    header: 'projects.projectTable.zip',
     accessorKey: 'zipCode',
   },
   {
-    header: 'Client',
+    header: 'projects.projectTable.client',
     accessorKey: 'clientName',
   },
   {
-    header: 'SOW Final Amount',
+    header: 'projects.projectTable.sow',
     accessorKey: 'sowOriginalContractAmount',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.sowOriginalContractAmount).format('$0,0.00')
     },
   },
   {
-    header: 'Project Cost',
+    header: 'projects.projectTable.projectCost',
     accessorKey: 'projectRelatedCost',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.projectRelatedCost).format('$0,0.00')
     },
   },
   {
-    header: 'Paid Date',
+    header: 'projects.projectTable.paid',
     accessorKey: 'woaPaidDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaPaidDate),
   },
@@ -127,80 +128,80 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'invoiceNumber',
   },
   {
-    header: 'Invoice Date',
+    header: 'projects.projectTable.invoice',
     accessorKey: 'woaInvoiceDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaInvoiceDate),
   },
   {
-    header: 'Account Receivable',
+    header: 'projects.projectTable.accountRecievable',
     accessorKey: 'accountRecievable',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.accountRecievable).format('$0,0.00')
     },
   },
   {
-    header: 'Market',
+    header: 'projects.projectTable.market',
     accessorKey: 'market',
   },
   {
-    header: 'State',
+    header: 'projects.projectTable.state',
     accessorKey: 'state',
   },
   {
-    header: 'WOA Finish',
+    header: 'projects.projectTable.woaFinish',
     accessorKey: 'woaCompletionDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaCompletionDate),
   },
   {
-    header: 'Region',
+    header: 'projects.projectTable.region',
     accessorKey: 'region',
   },
   {
-    header: 'Partial Payment',
+    header: 'projects.projectTable.partialPayment',
     accessorKey: 'partialPayment',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.partialPayment).format('$0,0.00')
     },
   },
   {
-    header: 'Expected Payment',
+    header: 'projects.projectTable.expectedPayment',
     accessorKey: 'expectedPaymentDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
   },
   {
-    header: 'Profit Margins',
+    header: 'projects.projectTable.profitPercentage',
     accessorKey: 'profitPercentage',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.profitPercentage / 100).format('0,0.00%')
     },
   },
   {
-    header: 'Profits',
+    header: 'projects.projectTable.profitTotal',
     accessorKey: 'profitTotal',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.profitTotal).format('$0,0.00')
     },
   },
   {
-    header: 'Material Cost',
+    header: 'projects.projectTable.materialCost',
     accessorKey: 'materialCost',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.materialCost).format('$0,0.00')
     },
   },
   {
-    header: 'Draw Amount',
+    header: 'projects.projectTable.draw',
     accessorKey: 'drawAmount',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.drawAmount).format('$0,0.00')
     },
   },
   {
-    header: 'WO Number',
+    header: 'projects.projectTable.woNo',
     accessorKey: 'woNumber',
   },
   {
-    header: 'PO Number',
+    header: 'projects.projectTable.poNo',
     accessorKey: 'poNumber',
   },
 ]

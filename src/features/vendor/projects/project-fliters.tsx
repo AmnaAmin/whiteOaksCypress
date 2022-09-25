@@ -20,30 +20,35 @@ const useVendorCardJson = cards => {
       {
         id: 'active',
         title: t('activeWO'),
+        value: 'active',
         number: cards?.find(c => c.label === 'active')?.count,
         IconElement: <IconElement Icon={BiFile} bg="orange.100" />,
       },
       {
         id: 'pastDue',
         title: t('pastDue'),
+        value: 'past due',
         number: cards?.find(c => c.label === 'pastDue')?.count,
         IconElement: <IconElement Icon={BiCalendar} bg="#E8F0FF" />,
       },
       {
         id: 'completed',
         title: t('completed'),
+        value: 'completed',
         number: cards?.find(c => c.label === 'completed')?.count, // HK|WOA-1736
         IconElement: <IconElement Icon={BiCheckCircle} bg="#E7F8EC" />,
       },
       {
         id: 'invoiced',
         title: t('completedInvoiced'),
+        value: 'invoiced',
         number: cards?.find(c => c.label === 'invoiced')?.count,
         IconElement: <IconElement Icon={BiDetail} bg="#E2EFDF" />,
       },
       {
         id: 'declined',
         title: t('completednotPaid'),
+        value: 'declined',
         number: cards?.find(c => c.label === 'declined')?.count,
         IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
       },

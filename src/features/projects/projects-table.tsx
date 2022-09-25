@@ -33,10 +33,10 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
+  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-    page: pagination.pageIndex,
-    size: pagination.pageSize,
+    pagination,
+    setPagination,
     selectedCard,
     selectedDay,
     selectedFPM,
@@ -58,16 +58,17 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   return (
-    <Box overflow={'auto'} height="500px">
+    <Box overflow={'auto'} height="calc(100vh - 100px)">
       <TableContextProvider
         data={projects}
         columns={tableColumns}
         pagination={pagination}
-        totalPages={totalPages}
         setPagination={setPagination}
+        columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
+        totalPages={totalPages}
       >
-        <Table tableHeight="inherit" isLoading={isLoading} onRowClick={onRowClick} />
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && projects?.length === 0} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

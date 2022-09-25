@@ -3,33 +3,31 @@ import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
-import React from 'react'
 
+type ProjectsWithTotalCount = {
+  projects: Project[]
+  totalCount: number
+}
 export const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = (filterQueryString?: string, page?: number, size?: number) => {
-  const [total, setTotal] = React.useState(0)
   const client = useClient()
 
-  const { data, ...rest } = useQuery<Array<Project>>(
+  const { data, ...rest } = useQuery<ProjectsWithTotalCount>(
     [PROJECTS_QUERY_KEY, filterQueryString],
     async () => {
-      const response = await client(`projects?${filterQueryString || ''}`, {})
-      const total = response?.headers?.get('X-Total-Count')
+      const response = await client(`v1/projects?${filterQueryString || ''}`, {})
+      const total = response?.headers?.get('X-Total-Count') || 0
 
-      if (total) {
-        setTotal(size ? Math.ceil(Number(total) / size) : 0)
-      }
-
-      return response?.data
+      return { projects: response?.data, totalCount: size ? Math.ceil(Number(total) / size) : 0 }
     },
     {
-      keepPreviousData: true,
+      // keepPreviousData: true,
     },
   )
 
   return {
-    projects: data,
-    totalPages: total,
+    projects: data?.projects,
+    totalPages: data?.totalCount,
     ...rest,
   }
 }

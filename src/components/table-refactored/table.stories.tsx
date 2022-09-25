@@ -48,7 +48,7 @@ export const WithAllComponents = () => {
       setPagination={setPagination}
       totalPages={totalPages}
     >
-      <Table tableHeight="inherit" isLoading={isLoading} />
+      <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
           <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
@@ -158,7 +158,7 @@ export const TableInsideScrollableElement = () => {
   return (
     <Stack maxH="700px" overflow={'auto'}>
       <TableContextProvider data={users} columns={tableColumns}>
-        <Table tableHeight="inherit" isLoading={isLoading} onRowClick={onRowClick} />
+        <Table isLoading={isLoading} onRowClick={onRowClick} />
         <TableFooter position="sticky" bottom="0">
           <ButtonsWrapper>
             <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />

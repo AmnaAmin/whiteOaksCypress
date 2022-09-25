@@ -1,7 +1,7 @@
 import React from 'react'
 import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
 
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack } from '@chakra-ui/react'
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Box } from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -84,11 +84,11 @@ function DebouncedInput({
 
 type TableProps = {
   onRowClick?: (row: any) => void
-  tableHeight?: string | number
   isLoading?: boolean
+  isEmpty?: boolean
 }
 
-export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, ...restProps }) => {
+export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ...restProps }) => {
   const { t } = useTranslation()
 
   const tableInstance = useTableInstance()
@@ -96,7 +96,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, ...restProp
 
   return (
     <Stack display="table" minH="calc(100% - 42px)" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative">
-      <ChakraTable w="100%" {...restProps}>
+      <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
           {getHeaderGroups().map(headerGroup => (
             <Tr key={headerGroup.id}>
@@ -112,25 +112,21 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, ...restProp
                 return (
                   <Th
                     key={header.id}
-                    p="0"
                     position="sticky"
                     top="0"
+                    py="3"
                     bg="#F7FAFC"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                   >
-                    <Flex py="2" px="2" pl="4" alignItems="center">
+                    <Flex alignItems="center">
                       <Text
                         fontSize="14px"
                         color="gray.600"
                         fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
-                        mr="2"
-                        mt="20px"
-                        mb="20px"
-                        lineHeight="20px"
-                        noOfLines={2}
+                        // lineHeight="20px"
                         isTruncated
                         display="inline-block"
                         title={title as string}
@@ -157,7 +153,14 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, ...restProp
           {getHeaderGroups().map(headerGroup => (
             <Tr key={`th_${headerGroup.id}`}>
               {headerGroup.headers.map(header => (
-                <Th key={`th_td_${header.id}`} py={4} px={4} position="sticky" top="75px" bg="#F7FAFC">
+                <Th
+                  key={`th_td_${header.id}`}
+                  py="3"
+                  position="sticky"
+                  top="40px"
+                  borderTop="1px solid #ddd"
+                  bg="#F7FAFC"
+                >
                   {header.column.getCanFilter() ? (
                     <div>
                       <Filter column={header.column} table={tableInstance} />
@@ -169,48 +172,60 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, ...restProp
           ))}
         </Thead>
 
-        <Tbody>
-          {isLoading
-            ? getRowModel().rows.map(row => {
-                return (
-                  <Tr key={row.id}>
+        {isEmpty ? (
+          <Tbody>
+            <Tr>
+              <Td colSpan={100} border="0">
+                <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
+                  There is no data to display.
+                </Box>
+              </Td>
+            </Tr>
+          </Tbody>
+        ) : (
+          <Tbody>
+            {isLoading
+              ? getRowModel().rows.map(row => {
+                  return (
+                    <Tr key={row.id}>
+                      {row.getVisibleCells().map(cell => {
+                        return (
+                          <Td key={cell.id} maxW={`${cell.column.getSize()}px`} minW={`${cell.column.getSize()}px`}>
+                            <BlankSlate size="sm" width="100%" />
+                          </Td>
+                        )
+                      })}
+                    </Tr>
+                  )
+                })
+              : getRowModel().rows.map(row => (
+                  <Tr
+                    key={row.id}
+                    onClick={() => onRowClick?.(row.original)}
+                    cursor={onRowClick ? 'pointer' : 'default'}
+                    _hover={{
+                      bg: 'gray.50',
+                    }}
+                  >
                     {row.getVisibleCells().map(cell => {
+                      const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+
                       return (
-                        <Td key={cell.id}>
-                          <BlankSlate size="sm" width="100%" />
+                        <Td
+                          key={cell.id}
+                          isTruncated
+                          title={cell.getContext()?.getValue() as string}
+                          maxW={`${cell.column.getSize()}px`}
+                          minW={`${cell.column.getSize()}px`}
+                        >
+                          {value}
                         </Td>
                       )
                     })}
                   </Tr>
-                )
-              })
-            : getRowModel().rows.map(row => (
-                <Tr
-                  key={row.id}
-                  onClick={() => onRowClick?.(row.original)}
-                  cursor={onRowClick ? 'pointer' : 'default'}
-                  _hover={{
-                    bg: 'gray.50',
-                  }}
-                >
-                  {row.getVisibleCells().map(cell => {
-                    const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-
-                    return (
-                      <Td
-                        key={cell.id}
-                        px="15px"
-                        maxW="200px"
-                        isTruncated
-                        title={cell.getContext()?.getValue() as string}
-                      >
-                        {value}
-                      </Td>
-                    )
-                  })}
-                </Tr>
-              ))}
-        </Tbody>
+                ))}
+          </Tbody>
+        )}
       </ChakraTable>
     </Stack>
   )
