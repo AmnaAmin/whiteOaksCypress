@@ -15,6 +15,7 @@ export interface Task {
   id: string
   type: TaskType
   name: string
+  trade?: string
   start: Date
   end: Date
   /**

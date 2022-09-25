@@ -18,18 +18,18 @@ export const ProjectTaskList: FC<{
 
   return (
     <Grid
-      gridTemplateColumns="1fr 1fr 1fr"
-      width="500px"
+      gridTemplateColumns="1fr 1fr 1fr 1fr"
+      width="420px"
       className={styles.ganttTable}
       alignItems="center"
-      fontWeight={600}
       fontSize={props.fontSize}
       color="#4A5568"
       height={props.headerHeight}
     >
-      <Text paddingLeft="13px">Project</Text>
-      <Text>Start Date</Text>
-      <Text>End Date</Text>
+      <Text fontWeight={600} paddingLeft="13px">Name</Text>
+      <Text fontWeight={600}>Trade</Text>
+      <Text fontWeight={600}>Start Date</Text>
+      <Text fontWeight={600}>End Date</Text>
     </Grid>
   )
 }
