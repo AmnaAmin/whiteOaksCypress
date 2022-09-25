@@ -56,16 +56,22 @@ export const chakraStyles = {
 
     return { ...provided, height: menuHeight }
   },
-  option: (provider: any, state: any) => ({
-    ...provider,
-    fontSize: getFontSize(state),
-    bg: state.isSelected ? 'gray.50' : 'white',
-    _hover: {
-      bg: state.isSelected ? 'gray.50' : 'blue.50',
-    },
-    color: state.isSelected ? 'gray.800' : '',
-    display: state.data?.isHidden ? 'none' : 'block',
-  }),
+  option: (provider: any, state: any) => {
+    const {
+      selectProps: { styleOption },
+    } = state
+    return {
+      ...provider,
+      fontSize: getFontSize(state),
+      bg: state.isSelected ? 'gray.50' : 'white',
+      _hover: {
+        bg: state.isSelected ? 'gray.50' : 'blue.50',
+      },
+      color: state.isSelected ? 'gray.800' : '',
+      display: state.data?.isHidden ? 'none' : 'block',
+      ...styleOption,
+    }
+  },
   valueContainer(provided: any, { selectProps: { size } }: any) {
     const px = {
       sm: '12px',
