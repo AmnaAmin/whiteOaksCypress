@@ -114,8 +114,8 @@ export const LienWaiverTab: React.FC<any> = props => {
     updateLienWaiver(payload, {
       onSuccess() {
         toast({
-          title: 'Upload File',
-          description: 'Is uploaded successfully',
+          title: t('uploadFile'),
+          description: t('isUploadedSuccessfully'),
           status: 'success',
           isClosable: true,
         })
@@ -279,7 +279,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   size="md"
                   colorScheme="brand"
                 >
-                  Upload LW
+                  {t('uploadLW')}
                 </Button>
               ))}
           </HStack>
