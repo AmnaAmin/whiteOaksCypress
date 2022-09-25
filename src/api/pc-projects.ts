@@ -6,7 +6,7 @@ import { useQueryClient } from 'react-query'
 import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
 
 export const usePCProject = (projectId?: string) => {
@@ -100,10 +100,16 @@ export const useCreateProjectMutation = () => {
 export const useFPMUsers = () => {
   const client = useClient()
   const [selectedFPM, setSelectedFPM] = useState<any>(null)
+  const [filterFpm, setFilterFpm] = useState<any>(null)
   const { data: fpmUsers, ...rest } = useQuery('fpm-users', async () => {
     const response = await client(`users/fpmByRoleType`, {})
     return response?.data
   })
+  const { data: fpmTypes } = useQuery('lookupType', async () => {
+    const response = await client(`lk_value/lookupType/9`, {})
+    return response?.data
+  })
+
   const { data: usersId } = useQuery(
     ['fpm-users', selectedFPM?.id],
     async () => {
@@ -112,14 +118,41 @@ export const useFPMUsers = () => {
     },
     { enabled: !!selectedFPM?.id },
   )
-  const fpmUserOptions =
-    fpmUsers?.map(user => ({
-      ...user,
-      label: `${user?.firstName} ${user?.lastName}`,
-      value: user?.id,
-    })) || []
+  const handleToggleUser = type => {
+    setFilterFpm(users => {
+      return users.map(userType => ({
+        ...userType,
+        isHidden: userType.id === type.id ? !userType.isHidden : userType.isHidden,
+        options: userType.options.map(option => ({
+          ...option,
+          isHidden: userType.id === type.id ? !option.isHidden : option.isHidden,
+        })),
+      }))
+    })
+  }
+  useEffect(() => {
+    const fpmUserOptions =
+      fpmTypes?.map((type, i) => {
+        return {
+          label: type.value,
+          id: type.id,
+          isHidden: i > 0,
+          onClick: () => handleToggleUser(type),
+          options:
+            fpmUsers
+              ?.filter(fpm => fpm.fieldProjectManagerRoleId === type.id)
+              .map(user => ({
+                ...user,
+                isHidden: i > 0,
+                label: `${user?.firstName} ${user?.lastName}`,
+                value: user?.id,
+              })) || [],
+        }
+      }) || []
+    setFilterFpm(fpmUserOptions)
+  }, [fpmTypes, fpmUsers])
 
-  return { fpmUsers: fpmUserOptions, usersId, selectedFPM, setSelectedFPM, ...rest }
+  return { fpmUsers: filterFpm, usersId, selectedFPM, setSelectedFPM, ...rest }
 }
 
 const parseXmlResponse = async (response: any) => {
