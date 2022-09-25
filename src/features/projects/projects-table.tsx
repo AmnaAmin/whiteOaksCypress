@@ -9,6 +9,7 @@ import { Column } from 'react-table'
 import { dateFormat } from 'utils/date-time-utils'
 import numeral from 'numeral'
 import { percentageFormatter } from 'utils/string-formatters'
+import { isDefined } from 'utils'
 
 export const PROJECT_COLUMNS = [
   {
@@ -211,11 +212,11 @@ export const PROJECT_COLUMNS = [
     accessor: 'vendorPaymentPercentage',
     Cell(cellInfo) {
       const vendorPaymentPercentage = percentageFormatter(cellInfo.value);
-      return vendorPaymentPercentage ? numeral(vendorPaymentPercentage).format("0.00%") : ""
+      return isDefined(vendorPaymentPercentage) ? numeral(vendorPaymentPercentage).format("0.00%") : ""
     },
     getCellExportValue(row) { 
       const vendorPaymentPercentage = row.original.vendorPaymentPercentage;
-      return vendorPaymentPercentage ? numeral(vendorPaymentPercentage).format("0.00%") : ""
+      return isDefined(vendorPaymentPercentage) ? numeral(vendorPaymentPercentage).format("0.00%") : ""
     },
   },
   {
