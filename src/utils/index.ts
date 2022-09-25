@@ -23,3 +23,10 @@ export const reduceArrayToObject = (array: any[], key: string) => {
     return obj
   }, {})
 }
+
+export const isDefined = value => {
+  if (value === undefined || value === null) {
+    return false
+  }
+  return true
+}
