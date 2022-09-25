@@ -33,13 +33,13 @@ export const useProjects = (filterQueryString?: string, page?: number, size?: nu
 }
 
 export const ALL_PROJECTS_QUERY_KEY = 'all_projects'
-export const useGetAllProjects = () => {
+export const useGetAllProjects = (filterQueryString: string) => {
   const client = useClient()
 
   const { data, ...rest } = useQuery<Array<Project>>(
     ALL_PROJECTS_QUERY_KEY,
     async () => {
-      const response = await client(`projects?page=0&size=1000000&sort=id,asc`, {})
+      const response = await client(`v1/projects?${filterQueryString}`, {})
 
       return response?.data
     },
