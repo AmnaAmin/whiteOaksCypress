@@ -110,7 +110,7 @@ export const ManageProject: React.FC<{
           <GridItem>
             <FormControl>
               <FormLabel size="md">{t(`${NEW_PROJECT}.clientSuperName`)}</FormLabel>
-              <Input id="clientSuperName" {...register('superLastName')} />
+              <Input id="clientSuperName" {...register('superFirstName')} />
             </FormControl>
           </GridItem>
         </Grid>
