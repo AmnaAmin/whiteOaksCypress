@@ -310,9 +310,7 @@ export const InvoiceTabPC = ({
             </Button>
           )}
           {workOrder.lienWaiverAccepted &&
-            [WOstatus.Declined, WOstatus.Decline, WOstatus.Completed].includes(
-              workOrder?.statusLabel?.toLocaleLowerCase(),
-            ) && (
+            [WOstatus.Declined, WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
               <Button
                 variant="outline"
                 data-testid="generateInvoice"

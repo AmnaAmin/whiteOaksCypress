@@ -30,6 +30,7 @@ import { MdOutlineCancel } from 'react-icons/md'
 import { head } from 'lodash'
 import { readFileContent } from 'api/vendor-details'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { STATUS as WOstatus } from 'features/common/status'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -249,39 +250,38 @@ export const LienWaiverTab: React.FC<any> = props => {
               accept="application/pdf, image/png, image/jpg, image/jpeg"
             />
 
-            {isDoc ||
-              (isProjectCoordinator &&
-                workOrder?.lienWaiverAccepted &&
-                (!!document ? (
-                  <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
-                    <HStack spacing="5px" h="38px" padding="10px" align="center">
-                      <Text as="span" maxW="120px" isTruncated title={document?.name || document?.fileType}>
-                        {document?.name || document?.fileType}
-                      </Text>
-                      <MdOutlineCancel
-                        cursor="pointer"
-                        onClick={() => {
-                          setValue('uploadLW', null)
-                          if (inputRef.current) inputRef.current.value = ''
-                        }}
-                      />
-                    </HStack>
-                  </Box>
-                ) : (
-                  <Button
-                    onClick={e => {
-                      if (inputRef.current) {
-                        inputRef.current.click()
-                      }
-                    }}
-                    leftIcon={<BiUpload />}
-                    variant="outline"
-                    size="md"
-                    colorScheme="brand"
-                  >
-                    Upload LW
-                  </Button>
-                )))}
+            {(isDoc || isProjectCoordinator) &&
+              [(WOstatus.Declined, WOstatus.Completed)].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
+              (!!document ? (
+                <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                  <HStack spacing="5px" h="38px" padding="10px" align="center">
+                    <Text as="span" maxW="120px" isTruncated title={document?.name || document?.fileType}>
+                      {document?.name || document?.fileType}
+                    </Text>
+                    <MdOutlineCancel
+                      cursor="pointer"
+                      onClick={() => {
+                        setValue('uploadLW', null)
+                        if (inputRef.current) inputRef.current.value = ''
+                      }}
+                    />
+                  </HStack>
+                </Box>
+              ) : (
+                <Button
+                  onClick={e => {
+                    if (inputRef.current) {
+                      inputRef.current.click()
+                    }
+                  }}
+                  leftIcon={<BiUpload />}
+                  variant="outline"
+                  size="md"
+                  colorScheme="brand"
+                >
+                  Upload LW
+                </Button>
+              ))}
           </HStack>
 
           <HStack justifyContent="end">
