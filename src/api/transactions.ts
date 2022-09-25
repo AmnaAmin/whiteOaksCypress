@@ -677,7 +677,7 @@ export const useTransactionExport = projectId => {
         })
       })
     })
-    return data
+    return exportData;
   }
 
   useQuery(['changeOrder', projectId], async () => {
