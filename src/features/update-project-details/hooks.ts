@@ -7,7 +7,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const { isFPM } = useUserRolesSelector()
+  const { isFPM, isProjectCoordinator, isDoc } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -22,6 +22,9 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const isStatusPaid = projectStatus === STATUS.Paid
   // const isStatusPastDue = projectStatus === STATUS.PastDue
   const isStatusCancelled = projectStatus === STATUS.Cancelled
+
+  // Enabled field status on location tab
+  const newActivePunchEnabledFieldStatus = isStatusNew || isStatusActive || isStatusPunch
 
   return {
     isStatusNew,
@@ -73,7 +76,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isProjectCoordinatorDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid,
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed,
+    isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed || isFPM,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
     isClientDisabled: isAllTimeDisabled,
@@ -84,8 +87,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isStateDisabled: isAllTimeDisabled,
     isZipDisabled: isAllTimeDisabled,
     isMarketDisabled: isAllTimeDisabled,
-    isGateCodeDisabled: isAllTimeDisabled,
-    isLockBoxCodeDisabled: isAllTimeDisabled,
+    isGateCodeDisabled: isDoc || isProjectCoordinator ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+    isLockBoxCodeDisabled: isDoc || isProjectCoordinator ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
   }
 }
 

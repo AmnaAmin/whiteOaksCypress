@@ -42,17 +42,17 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     selectedFPM,
     userIds,
   })
+  console.log('fitlersQueryString', fitlersQueryString)
   const { projects, isLoading, totalPages } = useProjects(fitlersQueryString, pagination.pageIndex, pagination.pageSize)
 
-  const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-    selectedCard,
-    selectedDay,
-    selectedFPM,
-    userIds,
-  })
-
-  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(filterQueryStringWithoutPagination)
+  // const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
+  //   queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+  //   selectedCard,
+  //   selectedDay,
+  //   selectedFPM,
+  //   userIds,
+  // })
+  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects('')
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
@@ -76,7 +76,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && projects?.length === 0} />
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

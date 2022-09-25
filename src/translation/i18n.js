@@ -222,6 +222,8 @@ i18n.use(initReactI18next).init({
         dateOfSignature: 'Date Of Signature',
         apply: 'Apply',
         // Project-Lean-Weiver
+        isUploadedSuccessfully: 'Is Uploaded Successfully',
+        uploadLW: 'Upload LW',
         readMore: 'Read More',
         readLess: 'Read Less',
         recentLW: 'Recent LW',
@@ -442,6 +444,8 @@ i18n.use(initReactI18next).init({
         superName: 'Super Name',
         superPhone: 'Super Phone',
         superEmail: 'Super Email',
+        woaStartDateMessage:
+          'WOA Start date is required to move the project to Active state, Please contact your PC or admin to provide WOA start date.',
 
         // PC Projects Table
         woNumber: 'WO Number',
@@ -640,6 +644,9 @@ i18n.use(initReactI18next).init({
         newVendor: 'Nuevo Vendedor',
         vendorDetail: 'Detalle del proveedor',
         transactionStatus: 'Estado de la Transacción',
+        //Project-Management tab
+        woaStartDateMessage:
+          'Se requiere la fecha de inicio de WOA para mover el proyecto al estado Activo. Comuníquese con su PC o administrador para proporcionar WOA fecha de inicio.',
 
         // Project - Transactions
         updateTransaction: 'Actualizar transacción',
@@ -743,6 +750,8 @@ i18n.use(initReactI18next).init({
         apply: 'Aplicar',
         woaInvoiceDate: 'woa Factura Fecha',
         // Project - Lean-Weiver
+        isUploadedSuccessfully: 'Se carga con éxito',
+        uploadLW: 'Subir LW',
         readMore: 'Lee mas',
         readLess: 'Leer menos',
         recentLW: 'LW reciente',

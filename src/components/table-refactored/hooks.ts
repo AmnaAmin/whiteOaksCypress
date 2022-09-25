@@ -15,9 +15,12 @@ type UseColumnFiltersQueryStringProps = {
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
   const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, selectedFPM } =
     options
+  const { pageIndex, pageSize } = pagination || {}
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
+  console.log('pagination', pagination)
   const fitlersQueryString = useMemo(() => {
     let projectStatusFilter
     let clientDueDateFilter
@@ -42,8 +45,8 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds.join(',') }]
     }
 
-    return getAPIFilterQueryString(pagination?.pageIndex, pagination?.pageSize, finalFilters, queryStringAPIFilterKeys)
-  }, [selectedCard, selectedDay, columnFilters, pagination, userIds])
+    return getAPIFilterQueryString(pageIndex, pageSize, finalFilters, queryStringAPIFilterKeys)
+  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds])
 
   useEffect(() => {
     if (!pagination) return

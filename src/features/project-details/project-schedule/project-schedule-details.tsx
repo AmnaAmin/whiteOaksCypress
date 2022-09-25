@@ -1,35 +1,27 @@
 import React, { useEffect } from 'react'
-import { Box } from '@chakra-ui/react'
-import { Task, ViewMode, Gantt } from 'gantt-task-react'
-import { getStartEndDateForProject } from './helper'
+import { Flex } from '@chakra-ui/react'
+import { ViewMode, Gantt } from 'gantt-task-react'
+import { Task } from './task-types.ds'
 import { ProjectTaskList } from './task-list-header'
 import { ProjectTaskListTable } from './task-list-table'
-import { useColumnWidth } from './hooks'
 import 'gantt-task-react/dist/index.css'
 import './gantt-task.css'
+
+const getColumnWidth = (view: ViewMode) => {
+  switch (true) {
+    case view === ViewMode.Year || view === ViewMode.Month:
+      return 450
+    case view === ViewMode.Week:
+      return 150
+    default:
+      return 65
+  }
+}
 
 const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
   const [tasks, setTasks] = React.useState<Task[]>(data)
-  const columnWidth = useColumnWidth(ViewMode.QuarterDay)
-
-  const handleTaskChange = (task: Task) => {
-    let newTasks = tasks.map(t => (t.id === task.id ? task : t))
-    if (task.project) {
-      const [start, end] = getStartEndDateForProject(newTasks, task.project)
-      const project = newTasks[newTasks.findIndex(t => t.id === task.project)]
-      if (project.start.getTime() !== start.getTime() || project.end.getTime() !== end.getTime()) {
-        const changedProject = { ...project, start, end }
-        newTasks = newTasks.map(t => (t.id === task.project ? changedProject : t))
-      }
-    }
-    setTasks(newTasks)
-  }
-
-  const handleProgressChange = async (task: Task) => {
-    setTasks(tasks.map(t => (t.id === task.id ? task : t)))
-  }
 
   const handleExpanderClick = (task: Task) => {
     setTasks(tasks.map(t => (t.id === task.id ? task : t)))
@@ -42,25 +34,21 @@ const ProjectScheduleDetails: React.FC<{
   }, [data])
 
   return (
-    <Box className="Wrapper ProjectDetails_Chart">
+    <Flex className="project-details-chart" direction={'column'} gridGap={4}>
       <Gantt
         tasks={tasks}
-        rowHeight={80}
-        viewMode={ViewMode.QuarterDay}
-        ganttHeight={tasks.length === 2 ? 160 : 255}
-        onDateChange={handleTaskChange}
-        onProgressChange={handleProgressChange}
+        headerHeight={35}
+        columnWidth={getColumnWidth(ViewMode.Day)}
+        rowHeight={27}
+        handleWidth={0}
+        fontSize="13px"
+        barFill={60}
+        viewMode={ViewMode.Day}
         onExpanderClick={handleExpanderClick}
-        listCellWidth={'155px'}
         TaskListHeader={ProjectTaskList}
         TaskListTable={ProjectTaskListTable}
-        projectProgressSelectedColor="#4E87F8"
-        projectProgressColor="#4E87F8"
-        barProgressColor="#4E87F8"
-        barCornerRadius={32}
-        columnWidth={columnWidth}
       />
-    </Box>
+    </Flex>
   )
 }
 

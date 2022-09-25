@@ -15,11 +15,17 @@ import { ProjectFilters } from 'features/projects/project-filters/project-filter
 import { ProjectsTable } from 'features/projects/projects-table'
 import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
-import { BiBookAdd } from 'react-icons/bi'
+import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useFPMUsers } from 'api/pc-projects'
+
+const formatGroupLabel = props => (
+  <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-15px'}>
+    {props.isHidden ? <BiChevronRight fontSize={'20px'} /> : <BiChevronDown fontSize={'20px'} />} {props.label}
+  </Box>
+)
 
 export const Projects = () => {
   const {
@@ -70,6 +76,7 @@ export const Projects = () => {
           {fpmUsers?.length > 0 && isFPM && (
             <FormControl w="215px">
               <ReactSelect
+                formatGroupLabel={formatGroupLabel}
                 onChange={setSelectedFPM}
                 options={fpmUsers}
                 placeholder={'Select'}

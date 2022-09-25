@@ -221,6 +221,7 @@ export type ProjectFormValues = {
   clientName?: string
   client?: SelectOption | null
   superLastName?: string | null
+  superFirstName?: string | null
   superPhoneNumber?: string
   superPhoneNumberExtension?: string
   superEmailAddress?: string

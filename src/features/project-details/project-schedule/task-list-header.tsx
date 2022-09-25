@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Grid, Text } from '@chakra-ui/react'
 
 const styles = { ganttTable: '_3_ygE' }
 
@@ -15,21 +15,22 @@ export const ProjectTaskList: FC<{
   fontFamily: string
   fontSize: string
 }> = props => {
-  const headerHeight = props.headerHeight
-
   return (
-    <Flex
-      fontFamily={props.fontFamily}
-      fontSize={14}
-      fontWeight={600}
-      color={'#4A5568'}
-      alignItems={'center'}
-      justifyContent={'center'}
-      paddingLeft={'13px'}
+    <Grid
+      gridTemplateColumns="1fr 1fr 1fr 1fr"
+      width="420px"
       className={styles.ganttTable}
-      style={{
-        height: headerHeight,
-      }}
-    />
+      alignItems="center"
+      fontSize={props.fontSize}
+      color="#4A5568"
+      height={props.headerHeight}
+    >
+      <Text fontWeight={600} paddingLeft="13px">
+        Name
+      </Text>
+      <Text fontWeight={600}>Trade</Text>
+      <Text fontWeight={600}>Start Date</Text>
+      <Text fontWeight={600}>End Date</Text>
+    </Grid>
   )
 }

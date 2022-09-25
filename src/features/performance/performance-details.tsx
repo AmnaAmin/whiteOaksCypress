@@ -1,0 +1,197 @@
+import {
+  Box,
+  Text,
+  Flex,
+  FormControl,
+  FormLabel,
+  Divider,
+  Grid,
+  GridItem,
+  HStack,
+  VStack,
+  FormErrorMessage,
+} from '@chakra-ui/react'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { currencyFormatter } from 'utils/string-formatters'
+import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance'
+import { Controller, UseFormReturn } from 'react-hook-form'
+import NumberFormat from 'react-number-format'
+import { CustomRequiredInput } from 'components/input/input'
+import Select from 'components/form/react-select'
+
+type FieldInfoCardProps = {
+  title: string
+  value: string
+  icon?: React.ElementType
+  testid?: string
+}
+
+const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
+  return (
+    <Box>
+      <HStack alignItems="start">
+        <VStack spacing={1} alignItems="start">
+          <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
+            {title}
+          </Text>
+          <Text color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
+            {value}
+          </Text>
+        </VStack>
+      </HStack>
+    </Box>
+  )
+}
+
+type performanceDetailsProps = {
+  performanceDetails?: any
+  formControl: UseFormReturn
+}
+
+export const PerformanceDetail = React.forwardRef((props: performanceDetailsProps) => {
+  const { formControl } = props
+  const { data: fpmData } = useFPMDetails(props?.performanceDetails?.userId)
+  const { t } = useTranslation()
+  const { control } = formControl
+
+  return (
+    <Box>
+      <Box>
+        <Flex direction="row" mt={2}>
+          <Box width={'34%'} flexWrap={'wrap'}>
+            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.newBonus)} />
+          </Box>
+          <Box width={'34%'} flexWrap={'wrap'}>
+            <FieldInfoCard title={t('Previous Bonus')} value={currencyFormatter(fpmData?.previousBonus)} />
+          </Box>
+          <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
+            <FieldInfoCard title={t('Profit')} value={currencyFormatter(fpmData?.profit)} />
+          </Box>
+          <Box width={'33%'} px={4} flexWrap={'wrap'}>
+            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(fpmData?.revenue)} />
+          </Box>
+          <Box width={'33%'} px={4} flexWrap={'wrap'}>
+            <FieldInfoCard title={t('Target')} value={currencyFormatter(fpmData?.target)} />
+          </Box>
+        </Flex>
+        <Divider mt={4} mb={5} />
+
+        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('Bonus %')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`newBonus`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={bonus}
+                      selected={field.value}
+                      // value={selectedBonus}
+                      selectProps={{ isBorderLeft: true }}
+                      // onChange={bonus => {
+                      //   field.onChange(bonus)
+                      // }}
+                      onChange={option => field.onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('New Target')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`newTarget`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        onValueChange={values => {
+                          const { floatValue } = values
+                          field.onChange(floatValue)
+                        }}
+                        customInput={CustomRequiredInput}
+                        thousandSeparator={true}
+                        prefix={'$'}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('Badge')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`badge`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={badges}
+                      selected={field.value}
+                      selectProps={{ isBorderLeft: true }}
+                      onChange={option => field.onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('Ignore Performance')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`ignoreQuota`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={ignorePerformance}
+                      selected={field.value}
+                      selectProps={{ isBorderLeft: true }}
+                      // onChange={bonus => {
+                      //   field.onChange(bonus)
+                      // }}
+                      onChange={option => field.onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+        </Grid>
+      </Box>
+    </Box>
+  )
+})
+
+export default PerformanceDetail

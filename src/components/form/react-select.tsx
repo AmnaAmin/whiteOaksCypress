@@ -64,6 +64,7 @@ export const chakraStyles = {
       bg: state.isSelected ? 'gray.50' : 'blue.50',
     },
     color: state.isSelected ? 'gray.800' : '',
+    display: state.data?.isHidden ? 'none' : 'block',
   }),
   valueContainer(provided: any, { selectProps: { size } }: any) {
     const px = {

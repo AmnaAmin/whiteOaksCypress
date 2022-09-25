@@ -95,6 +95,23 @@ const ButtonVariants = {
           rounded: 20,
         }
       },
+      unClickable: props => {
+        return {
+          ...chakraTheme.components.Button.variants.outline(props),
+          borderColor: `${props.colorScheme}.300`,
+          color: `${props.colorScheme}.300`,
+          _hover: {
+            bg: 'none',
+          },
+          _focus: {
+            bg: 'none',
+          },
+          _active: {
+            bg: 'none',
+          },
+          cursor: 'auto',
+        }
+      },
     },
 
     sizes: {

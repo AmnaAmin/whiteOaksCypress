@@ -1,9 +1,22 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+} from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+import { t } from 'i18next'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { SelectOption } from 'types/transaction.type'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 
 type ProjectManagerProps = {
@@ -12,6 +25,7 @@ type ProjectManagerProps = {
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
   const dateToday = new Date().toISOString().split('T')[0]
+  const { isFPM } = useUserRolesSelector()
 
   const {
     formState: { errors },
@@ -41,6 +55,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   return (
     <Box>
       <Stack>
+        {isWOAStartDateRequired && isFPM && (
+          <Alert status="error" mb={5} w="98%">
+            <AlertIcon />
+            {t('woaStartDateMessage')}
+          </Alert>
+        )}
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>

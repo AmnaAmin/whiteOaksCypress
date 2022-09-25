@@ -3,6 +3,7 @@ import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
+import { useToast } from '@chakra-ui/react'
 
 type ProjectsWithTotalCount = {
   projects: Project[]
@@ -10,6 +11,7 @@ type ProjectsWithTotalCount = {
 }
 export const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = (filterQueryString?: string, page?: number, size?: number) => {
+  const toast = useToast()
   const client = useClient()
 
   const { data, ...rest } = useQuery<ProjectsWithTotalCount>(
@@ -22,6 +24,17 @@ export const useProjects = (filterQueryString?: string, page?: number, size?: nu
     },
     {
       // keepPreviousData: true,
+      onError: (error: any) => {
+        console.log('error', error)
+        toast({
+          title: 'Error',
+          description: error?.response?.data?.message || 'Something went wrong',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
     },
   )
 
