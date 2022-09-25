@@ -8,7 +8,6 @@ import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
 import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
-import { options } from 'numeral'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
