@@ -100,7 +100,6 @@ export const Projects = () => {
                 formatGroupLabel={formatGroupLabel}
                 onChange={setSelectedFPM}
                 options={fpmUsers}
-                menuIsOpen
                 placeholder={'Select'}
                 selectProps={{ isBorderLeft: true }}
               />
