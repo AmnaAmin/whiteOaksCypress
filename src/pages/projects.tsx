@@ -22,12 +22,18 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
-import { BiBookAdd } from 'react-icons/bi'
+import { BiBookAdd, BiChevronRight } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { exportBtnIcon } from 'theme/common-style'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useFPMUsers } from 'api/pc-projects'
+
+const formatGroupLabel = props => (
+  <Box display="flex" alignItems="center" fontWeight="normal" ml={'-15px'}>
+    <BiChevronRight fontSize={'20px'} /> {props.label}
+  </Box>
+)
 
 export const Projects = () => {
   const {
@@ -91,6 +97,7 @@ export const Projects = () => {
           {fpmUsers?.length > 0 && isFPM && (
             <FormControl w="215px">
               <ReactSelect
+                formatGroupLabel={formatGroupLabel}
                 onChange={setSelectedFPM}
                 options={fpmUsers}
                 placeholder={'Select'}

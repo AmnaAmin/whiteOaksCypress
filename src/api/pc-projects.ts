@@ -6,7 +6,7 @@ import { useQueryClient } from 'react-query'
 import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
 
 export const usePCProject = (projectId?: string) => {
@@ -104,6 +104,11 @@ export const useFPMUsers = () => {
     const response = await client(`users/fpmByRoleType`, {})
     return response?.data
   })
+  const { data: fpmTypes } = useQuery('lookupType', async () => {
+    const response = await client(`lk_value/lookupType/9`, {})
+    return response?.data
+  })
+
   const { data: usersId } = useQuery(
     ['fpm-users', selectedFPM?.id],
     async () => {
@@ -112,12 +117,22 @@ export const useFPMUsers = () => {
     },
     { enabled: !!selectedFPM?.id },
   )
+
   const fpmUserOptions =
-    fpmUsers?.map(user => ({
-      ...user,
-      label: `${user?.firstName} ${user?.lastName}`,
-      value: user?.id,
-    })) || []
+    fpmTypes?.map((type, i) => {
+      return {
+        label: type.value,
+        id: type.id,
+        options:
+          fpmUsers
+            ?.filter(fpm => fpm.fieldProjectManagerRoleId === type.id)
+            .map(user => ({
+              ...user,
+              label: `${user?.firstName} ${user?.lastName}`,
+              value: user?.id,
+            })) || [],
+      }
+    }) || []
 
   return { fpmUsers: fpmUserOptions, usersId, selectedFPM, setSelectedFPM, ...rest }
 }
