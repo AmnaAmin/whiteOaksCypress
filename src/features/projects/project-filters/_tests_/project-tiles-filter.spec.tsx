@@ -36,7 +36,7 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       await userEvent.click(card)
 
       expect(onSelectCard).toHaveBeenCalled()
-      expect(onSelectCard).toBeCalledWith('New')
+      expect(onSelectCard).toBeCalledWith('new')
     })
   })
 })
