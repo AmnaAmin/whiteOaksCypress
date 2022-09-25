@@ -1,14 +1,13 @@
 import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
 import { constMonthOption } from 'api/performance'
-import { Card } from 'components/card/card'
 import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import _, { flatten, take, includes, last } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { flatten, take, last } from 'lodash'
+import React, { useEffect, useMemo, useState } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -18,71 +17,7 @@ type GraphData = {
   Revenue: any
 }[]
 
-const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ chartData, isLoading }) => {
-  const vendors = [chartData?.chart]
-  const vendorData = months.map(key => {
-    const monthExistsInChart = chartData !== undefined && Object.keys(vendors[0])?.find(months => months === key)
-    let nameMonthData
-    if (monthExistsInChart) {
-      nameMonthData = chartData?.chart[key]
-    }
-    return {
-      month: monthsShort[key],
-      Bonus: nameMonthData?.bonus,
-      Profit: nameMonthData?.profit,
-      Revenue: nameMonthData?.revenue,
-    }
-  })
-
-  return (
-    <>
-      {isLoading ? (
-        <BlankSlate size="sm" />
-      ) : (
-        <OverviewGraph vendorData={vendorData} width="98%" height={360} hasUsers={false} />
-      )}
-    </>
-  )
-}
-
 export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
-  const labels = [
-    { key: 'Bonus', color: '#FB8832' },
-    { key: 'Profit', color: '#949AC2' },
-    { key: 'Revenue', color: '#68B8EF' },
-  ]
-
-  const [barProps, setBarProps] = useState(
-    labels.reduce(
-      (a, { key }) => {
-        a[key] = false
-        return a
-      },
-      { hover: null },
-    ),
-  )
-
-  const selectBar = useCallback(
-    e => {
-      setBarProps({
-        ...barProps,
-        [e.dataKey]: !barProps[e.dataKey],
-        hover: null,
-      })
-    },
-    [barProps],
-  )
-
-  const renderQuarterTick = (tickProps: any) => {
-    const { x, y, payload } = tickProps
-    const { value } = payload
-
-    return (
-      <text x={x} y={y} textAnchor="middle">
-        {value}
-      </text>
-    )
-  }
 
   return (
     <div>
@@ -92,10 +27,10 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           data={vendorData}
           barSize={50}
           margin={{
-            top: 14,
+            top: 24,
             right: 30,
-            left: 0,
-            bottom: 0,
+            left: 30,
+            bottom: 30,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
@@ -123,7 +58,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontWeight: 400,
                 fontStyle: 'normal',
               }}
-              // tick={renderQuarterTick}
               tickMargin={20}
               interval={0}
               xAxisId="users"
@@ -144,59 +78,22 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             }}
             tickFormatter={value => `$${value}`}
           />
-
           <Tooltip
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
-            data-testid="tooltip-overview"
             cursor={{ fill: '#EBF8FF' }}
           />
-
-          <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />
           <Bar
-            barSize={30}
-            dataKey="Profit"
-            fill="#949AC2"
-            radius={[10, 10, 0, 0]}
-            hide={barProps['Profit'] === true}
-          />
-          <Bar
-            barSize={30}
+            barSize={50}
             dataKey="Revenue"
             fill="#68B8EF"
             radius={[10, 10, 0, 0]}
-            hide={barProps['Revenue'] === true}
           />
-          {/* { !hasUsers && */}
-          <Legend
-            onClick={selectBar}
-            wrapperStyle={{
-              lineHeight: '31px',
-              position: 'relative',
-              bottom: '20px',
-              left: '36px',
-            }}
-            iconType="circle"
-            iconSize={10}
-            align="center"
-            formatter={value => {
-              return (
-                <Box display="inline-flex" marginInlineEnd="30px" data-testid={'legend-' + value}>
-                  <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
-                    {value}
-                  </Box>
-                </Box>
-              )
-            }}
-          />
-          {/* } */}
         </BarChart>
       </ResponsiveContainer>
     </div>
   )
 }
-
-export default PerformanceGraph
 
 export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: boolean }> = ({
   chartData,
@@ -253,15 +150,17 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     const finalGraphData = data?.filter(a => a.month === currentMonth)
     setGraphData(finalGraphData)
   }, [data])
+
   const onFpmOptionChange = options => {
     setFpmOption(options)
 
     filterGraphData(options, monthOption)
   }
+
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
 
-    if (!['Last Month', 'This Month'].includes(monthOption?.label)) {
+    if (['All'].includes(monthOption?.label)) {
       selectedFpm = take(fieldProjectManagerOptions, 5)
     }
 
@@ -296,13 +195,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }
   return (
     <>
-      <Card>
-        <Box mb={15} mt={5}>
+        <Box mb={15} mt={5} m={2}>
           <Flex>
-            <Box width={'400px'} ml={5}>
+            <Box width={'500px'} ml={5} mt={5}>
               <HStack>
                 <FormLabel width={'120px'}>Filter By Month:</FormLabel>
-                <Box width={'200px'}>
+                <Box width={'250px'}>
                   <ReactSelect
                     name={`monthsDropdown`}
                     options={constMonthOption}
@@ -313,14 +211,14 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 </Box>
               </HStack>
             </Box>
-            <Box width={'550px'} ml={3}>
+            <Box width={'650px'} ml={25} mt={5}>
               <HStack>
                 <FormLabel width={'70px'}>Filter By:</FormLabel>
-                <Box width={'400px'}>
+                <Box width={'530px'}>
                   <ReactSelect
                     name={`fpmDropdown`}
                     value={fpmOption}
-                    isDisabled={['Last Month', 'This Month'].includes(monthOption?.label)}
+                    isDisabled={!['All'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
@@ -334,9 +232,8 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={360} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={450} hasUsers />
         )}
-      </Card>
     </>
   )
 }

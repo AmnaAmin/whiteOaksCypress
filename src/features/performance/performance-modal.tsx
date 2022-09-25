@@ -1,7 +1,6 @@
 import {
   Box,
   Divider,
-  FormLabel,
   HStack,
   Modal,
   ModalBody,
@@ -18,10 +17,10 @@ import { useCallback, useEffect } from 'react'
 import { PerformanceType } from 'types/performance.type'
 import { PerformanceDetail } from './performance-details'
 import { Button } from 'components/button/button'
-import { Card } from 'components/card/card'
 import { FormProvider, useForm } from 'react-hook-form'
 import { badges, bonus, IgnorePerformance, useMutatePerformance, usePerformanceSaveDisabled } from 'api/performance'
-import PerformanceGraph from './revenue-performance-graph'
+import { useFPMProfile } from 'api/vendor-details'
+import PerformanceGraph from './performance-modal-graph'
 
 const PerformanceModal = ({
   PerformanceDetails,
@@ -45,6 +44,7 @@ const PerformanceModal = ({
     }
   }, [onCloseDisclosure, onOpen, PerformanceDetails])
 
+  const { data: fpmInfoData, isLoading } = useFPMProfile(PerformanceDetails?.userId)
   const { mutate: savePerformanceDetails } = useMutatePerformance(PerformanceDetails?.userId)
 
   const methods = useForm<PerformanceType>({
@@ -98,14 +98,11 @@ const PerformanceModal = ({
               <ModalCloseButton _hover={{ bg: 'blue.50' }} />
               <ModalBody justifyContent="center">
                 <PerformanceDetail PerformanceDetails={PerformanceDetails} />
-                <Card mt={5} overflow={'auto'} height={'300px'}>
-                  <FormLabel variant={'strong-label'} mb={5} textAlign={'center'}>
-                    {'Performance per Month'}
-                  </FormLabel>
-                  <Box mt={10}>
-                    <PerformanceGraph isLoading={false} />
+                <Box mt={5} overflow={'auto'} height={'300px'} bg='#F7FAFE' rounded={5} border='1px solid #EAE6E6'>
+                  <Box m={2} mb={2}>
+                    <PerformanceGraph isLoading={isLoading} chartData = {fpmInfoData}/>
                   </Box>
-                </Card>
+                </Box>
               </ModalBody>
               <Divider mt={3} />
               <ModalFooter>
