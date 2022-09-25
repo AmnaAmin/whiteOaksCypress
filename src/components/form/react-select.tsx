@@ -60,7 +60,6 @@ export const chakraStyles = {
     const {
       selectProps: { styleOption },
     } = state
-    console.log('state', state, provider)
     return {
       ...provider,
       fontSize: getFontSize(state),
