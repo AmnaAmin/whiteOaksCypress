@@ -30,7 +30,7 @@ import ReactSelect from 'components/form/react-select'
 import { useFPMUsers } from 'api/pc-projects'
 
 const formatGroupLabel = props => (
-  <Box onClick={props.onClick} display="flex" alignItems="center" fontWeight="normal" ml={'-15px'}>
+  <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-15px'}>
     {props.isHidden ? <BiChevronRight fontSize={'20px'} /> : <BiChevronDown fontSize={'20px'} />} {props.label}
   </Box>
 )
