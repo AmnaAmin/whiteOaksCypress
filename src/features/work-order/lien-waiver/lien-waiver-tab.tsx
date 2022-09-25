@@ -251,7 +251,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             />
 
             {(isDoc || isProjectCoordinator) &&
-              [(WOstatus.Declined, WOstatus.Completed)].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
+              [WOstatus.Declined, WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
               (!!document ? (
                 <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
                   <HStack spacing="5px" h="38px" padding="10px" align="center">
