@@ -11,6 +11,7 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
+import { t } from 'i18next'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -57,8 +58,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
         {isWOAStartDateRequired && isFPM && (
           <Alert status="error" mb={5} w="98%">
             <AlertIcon />
-            WOA Start date is required to move project in Active state, Please contact your PC or admin to provide WOA
-            start date.
+            {t('woaStartDateMessage')}
           </Alert>
         )}
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
