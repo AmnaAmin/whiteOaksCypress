@@ -6,7 +6,6 @@ import { PerformanceGraphWithUsers } from './revenue-performance-graph'
 
 export const PerformanceTab = () => {
   const { data: performanceChart, isLoading } = useRevenuePerformance()
-  console.log('performanceChart', performanceChart)
 
   return (
     <>

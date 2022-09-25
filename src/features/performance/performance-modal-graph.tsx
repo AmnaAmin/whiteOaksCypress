@@ -47,7 +47,6 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   const getMonthValue = monthOption => {
     setMonthOption(monthOption)
     filterGraphData(monthOption)
-    console.log('month', monthOption)
   }
   const filterGraphData = monthOption => {
     let selectedMonth
@@ -57,22 +56,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
 
     const finalGraphData = vendorData?.filter(a => !selectedMonth || a.month === selectedMonth)
     setGraphData(finalGraphData)
-    console.log('finalGraphData', finalGraphData)
   }
-
-  // const getMonthValue = monthOption => {
-  //   setMonthOption(monthOption)
-  //   let selectedMonth
-
-  //   if (monthOption?.label === 'This Month') {
-  //     selectedMonth = format(new Date(), 'LLL', { locale: enUS })
-  //   }
-  //   if (monthOption?.label === 'All') {
-  //     selectedMonth = 'All'
-  //   }
-  //   const finalGraphData = selectedMonth === 'All' ? vendorData : vendorData?.filter(a => a.month === selectedMonth)
-  //   setGraphData(finalGraphData)
-  // }
 
   return (
     <>
@@ -174,7 +158,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontWeight: 400,
                 fontStyle: 'normal',
               }}
-              // tick={renderQuarterTick}
               tickMargin={20}
               interval={0}
               xAxisId="users"
