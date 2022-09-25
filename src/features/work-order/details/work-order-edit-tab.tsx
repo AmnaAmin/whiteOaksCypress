@@ -98,7 +98,7 @@ const WorkOrderDetailTab = props => {
   } = props
 
   const formReturn = useForm<FormValues>()
-  const { register, control, reset } = formReturn
+  const { register, control, reset, setValue } = formReturn
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
@@ -156,7 +156,16 @@ const WorkOrderDetailTab = props => {
   )
 
   useEffect(() => {
-    setUnAssignedItems(remainingItems ?? [])
+    const isVerified = assignedItemsWatch?.every(item => item.isVerified && item.isCompleted)
+    if (!isVerified) {
+      setValue('workOrderDateCompleted', null)
+    }
+  }, [assignedItemsWatch])
+
+  useEffect(() => {
+    const tempAssignedItems = formValues?.assignedItems?.filter(a => !a.smartLineItemId)?.map(item => item.id)
+    const items = remainingItems?.filter?.(item => !tempAssignedItems?.includes(item.id))
+    setUnAssignedItems(items)
   }, [remainingItems])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {

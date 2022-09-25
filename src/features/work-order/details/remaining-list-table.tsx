@@ -2,8 +2,8 @@ import { Box, Checkbox, Flex, Icon, Td, Tr } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { difference } from 'lodash'
-import { useEffect, useState } from 'react'
-import { FieldValue, UseFormReturn } from 'react-hook-form'
+import { memo, useEffect, useState } from 'react'
+import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
@@ -33,6 +33,8 @@ type CellInputType = {
   valueFormatter?: (value) => void
   selectedCell: string
   setSelectedCell: (val) => void
+  autoFocus?: boolean
+  setIsFocus?: any
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -47,6 +49,8 @@ const renderInput = (props: CellInputType) => {
     valueFormatter,
     selectedCell,
     setSelectedCell,
+    autoFocus,
+    setIsFocus,
   } = props
   const isNew = values?.remainingItems[row?.index].action === 'new'
   return (
@@ -59,6 +63,8 @@ const renderInput = (props: CellInputType) => {
           inputType={type}
           fieldArray="remainingItems"
           onChange={handleChange}
+          autoFocus={autoFocus}
+          setIsFocus={setIsFocus}
         ></InputField>
       ) : (
         <EditableField
@@ -74,13 +80,15 @@ const renderInput = (props: CellInputType) => {
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
           allowEdit={true}
+          autoFocus={autoFocus}
+          setIsFocus={setIsFocus}
         />
       )}
     </Box>
   )
 }
 
-const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const RemainingItemsRow: React.FC<RowProps> = memo(({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -97,26 +105,32 @@ const RemainingItemsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
       })}
     >
       {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} w={'100%'} h={'100%'} p="0">
-            <Flex alignItems={'center'} h={'100%'} w={'100%'}>
-              <Box
-                title={cell.value}
-                padding="0 15px 10px 10px"
-                color="gray.600"
-                fontSize="14px"
-                fontStyle="normal"
-                fontWeight="400"
-                maxHeight={'60px'}
-                overflow="hidden"
-              >
-                {cell.render('Cell')}
-              </Box>
-            </Flex>
-          </Td>
-        )
+        return <CellComp key={`row_${cell.column.id}`} cell={cell} />
       })}
     </Tr>
+  )
+})
+
+const CellComp = ({ cell }) => {
+  const [isFocus, setIsFocus] = useState(false)
+
+  return (
+    <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} w={'100%'} h={'100%'} p="0">
+      <Flex alignItems={'center'} h={'100%'} w={'100%'}>
+        <Box
+          title={cell.value}
+          padding="0 15px 10px 10px"
+          color="gray.600"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight="400"
+          maxHeight={'60px'}
+          overflow="hidden"
+        >
+          {cell.render('Cell', { isFocus, setIsFocus })}
+        </Box>
+      </Flex>
+    </Td>
   )
 }
 const RemainingListTable = (props: RemainingListType) => {
@@ -130,8 +144,9 @@ const RemainingListTable = (props: RemainingListType) => {
     setUpdatedItems,
   } = props
   const { fields: remainingItems, remove } = remainingFieldArray
-  const { getValues, setValue } = formControl
+  const { getValues, setValue, control } = formControl
   const values = getValues()
+  const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
   const [selectedCell, setSelectedCell] = useState('')
 
@@ -140,11 +155,15 @@ const RemainingListTable = (props: RemainingListType) => {
   }, [total])
 
   const handleQuantityChange = (e, index) => {
-    setTotal({ index, value: Number(e?.target?.value) * Number(values?.remainingItems[index]?.unitPrice) })
+    if (e?.target?.value !== '') {
+      setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.unitPrice) })
+    }
   }
 
   const handleUnitPriceChange = (e, index) => {
-    setTotal({ index, value: Number(e?.target?.value) * Number(values?.remainingItems[index]?.quantity) })
+    if (e?.target?.value !== '') {
+      setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
+    }
   }
 
   const REMAINING_ITEMS_COLUMNS = [
@@ -197,15 +216,15 @@ const RemainingListTable = (props: RemainingListType) => {
         )
       },
       disableExport: true,
-      width: 50,
+      width: 100,
       sortable: false,
     },
     {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
-          row,
+          row: row,
           values,
           formControl,
           updatedItems,
@@ -213,13 +232,15 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'sku',
           selectedCell,
           setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       width: 100,
     },
     {
       Header: `${WORK_ORDER}.productName`,
       accessor: 'productName',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -229,13 +250,15 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'productName',
           selectedCell,
           setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
         }),
-      minWidth: 250,
+      minWidth: 200,
     },
     {
       Header: `${WORK_ORDER}.details`,
       accessor: 'description',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -245,13 +268,15 @@ const RemainingListTable = (props: RemainingListType) => {
           fieldName: 'description',
           selectedCell,
           setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       minWidth: 300,
     },
     {
       Header: `${WORK_ORDER}.quantity`,
       accessor: 'quantity',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -265,13 +290,15 @@ const RemainingListTable = (props: RemainingListType) => {
           handleChange: (e, index) => {
             handleQuantityChange(e, index)
           },
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       width: 100,
     },
     {
       Header: `${WORK_ORDER}.unitPrice`,
       accessor: 'unitPrice',
-      Cell: ({ row }) =>
+      Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
           row,
           values,
@@ -286,6 +313,8 @@ const RemainingListTable = (props: RemainingListType) => {
           handleChange: (e, index) => {
             handleUnitPriceChange(e, index)
           },
+          autoFocus: isFocus,
+          setIsFocus,
         }),
       width: 150,
     },

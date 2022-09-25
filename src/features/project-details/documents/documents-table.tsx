@@ -24,10 +24,6 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
         style,
       })}
       cursor="pointer"
-      onClick={() => {
-        // @ts-ignore
-        window.open(row.original?.s3Url, '_blank')
-      }}
     >
       {row.cells.map(cell => {
         return (

@@ -1,7 +1,5 @@
-.Wrapper {
-  margin-bottom: 2rem;
-}
-.ViewContainer {
+
+.view-container {
   list-style: none;
   -ms-box-orient: horizontal;
   display: flex;
@@ -80,7 +78,7 @@ input:checked + .Slider:before {
   transform: translateX(26px);
 }
 
-.ViewContainer button {
+.view-container button {
   border-radius: 16px;
   background-color: #f5f5f5;
   color: #4a5568;
@@ -89,6 +87,67 @@ input:checked + .Slider:before {
   line-height: 20px;
 }
 
-.ProjectDetails_Chart .ticks line:not(:first-child) {
+.project-details-chart .ticks line:not(:first-child) {
   stroke: none;
+}
+
+.taskListTableRow {
+  background-color: inherit;
+}
+
+/*
+  Below is the gantt chart css for headers/labels on the left area
+*/
+
+/* Header, item list text css */
+.project-details-chart .css-0 {
+  font-weight: 400;
+  color: #4A5568;
+}
+/* Row color */
+.project-details-chart ._2dZTy:nth-child(even) {
+  fill: #F7FAFC;
+}
+/* Border css */
+.project-details-chart ._2B2zv > .taskListWrapper{
+  border-left: 1px solid #e6e4e4;
+  border-bottom: 1px solid #e6e4e4;
+}
+
+/*
+  Below is the gantt chart css override for graphical section
+*/
+
+/* today column css */
+.project-details-chart .today{
+  display: none;
+}
+
+/* Row color */
+.project-details-chart ._34SS0:nth-of-type(even) {
+  background-color: #F7FAFC;
+}
+
+/* Border css */
+.project-details-chart ._2B2zv > svg {
+  border-right: 1px solid #e6e4e4;
+  border-bottom: 1px solid #e6e4e4;
+}
+
+/* Fills for progress bars */
+.project-details-chart .bar > g text { fill: #5b5757;}
+.project-details-chart .bar > g ._KxSXS > g > rect:nth-child(1){
+  fill: #E2E8F0;
+}
+.project-details-chart .bar > g:nth-of-type(4n+1) ._KxSXS > g > rect:nth-child(2){
+  fill: #949AC2;
+}
+.project-details-chart .bar > g:nth-of-type(4n+2) ._KxSXS > g > rect:nth-child(2){
+  fill: #FB8832;
+}
+.project-details-chart .bar > g:nth-of-type(4n+3) ._KxSXS > g > rect:nth-child(2){
+  fill: #F7685B;
+}
+.project-details-chart .bar > g:nth-of-type(4n+4) ._KxSXS > g > rect:nth-child(2){
+  fill: #68B8EF;
 }

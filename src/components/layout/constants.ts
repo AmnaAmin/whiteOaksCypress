@@ -132,6 +132,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiBarChartSquare,
       color: '#FC8181',
     },
+    {
+      pathTo: '/performance',
+      title: 'Performance',
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
   ],
 
   [UserTypes.fpm]: [
