@@ -1,54 +1,23 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
+import { useFPMs } from 'api/pc-projects'
+import { MonthOption } from 'api/performance'
+import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import React, { useCallback, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { months, monthsShort } from 'utils/date-time-utils'
+import { subMonths, format } from 'date-fns'
+import { enUS } from 'date-fns/locale'
+import { flatten, take, last } from 'lodash'
+import React, { useEffect, useMemo, useState } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
-import { values } from 'lodash'
-import { useRevenuePerformance } from 'api/performance'
 
-const RevenuePerformanceGraph = () => {
-  const { data: fpmRevenueData, isLoading } = useRevenuePerformance()
-  const vendors = values(fpmRevenueData).reduce((a, v) => ({ ...a, ...v }), {})
-  const vendorData = months.map(key => {
-    const entityList = vendors[key] || []
+type GraphData = {
+  username: string
+  month: any
+  Revenue: any
+}[]
 
-    return {
-      name: monthsShort[key],
-      Revenue: entityList?.revenue,
-    }
-  })
-
-  return <>{isLoading ? <BlankSlate size="sm" /> : <RevenueGraph vendorData={vendorData} width="98%" height={360} />}</>
-}
-
-export const RevenueGraph = ({ vendorData, width, height }) => {
-  const labels = [
-    { key: 'Bonus', color: '#FB8832' },
-    { key: 'Profit', color: '#949AC2' },
-    { key: 'Revenue', color: '#68B8EF' },
-  ]
-
-  const [barProps, setBarProps] = useState(
-    labels.reduce(
-      (a, { key }) => {
-        a[key] = false
-        return a
-      },
-      { hover: null },
-    ),
-  )
-
-  const selectBar = useCallback(
-    e => {
-      setBarProps({
-        ...barProps,
-        [e.dataKey]: !barProps[e.dataKey],
-        hover: null,
-      })
-    },
-    [barProps],
-  )
+export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -57,15 +26,15 @@ export const RevenueGraph = ({ vendorData, width, height }) => {
           data={vendorData}
           barSize={50}
           margin={{
-            top: 14,
+            top: 24,
             right: 30,
-            left: 0,
-            bottom: 0,
+            left: 40,
+            bottom: 60,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
-            dataKey="name"
+            dataKey={hasUsers ? 'username' : 'month'}
             axisLine={false}
             tickLine={false}
             tick={{
@@ -75,8 +44,34 @@ export const RevenueGraph = ({ vendorData, width, height }) => {
               fontStyle: 'normal',
             }}
             tickMargin={20}
+            label={{
+              value: 'Field Project Manager',
+              angle: 360,
+              position: 'bottom',
+              textAnchor: 'middle',
+              offset: 60,
+              font: 'inter',
+              fontWeight: 600,
+              fontSize: '12px',
+              fontColor: 'gray/600',
+            }}
           />
-
+          {hasUsers && (
+            <XAxis
+              dataKey={'centerMonth'}
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: '#4A5568',
+                fontSize: '14px',
+                fontWeight: 400,
+                fontStyle: 'normal',
+              }}
+              tickMargin={20}
+              interval={0}
+              xAxisId="users"
+            />
+          )}
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
@@ -86,60 +81,175 @@ export const RevenueGraph = ({ vendorData, width, height }) => {
             axisLine={false}
             tick={{
               fontSize: '12px',
-              fontStyle: 'normal',
+              fontStyle: 'inter',
               fontWeight: 400,
               fill: '#4A5568',
             }}
             tickFormatter={value => `$${value}`}
+            label={{
+              value: 'Revenue',
+              angle: -90,
+              position: 'left',
+              textAnchor: 'middle',
+              offset: 15,
+              font: 'inter',
+              fontWeight: 600,
+              fontSize: '12px',
+            }}
           />
-
           <Tooltip
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
-            data-testid="tooltip-overview"
             cursor={{ fill: '#EBF8FF' }}
           />
-
-          <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />
-          <Bar
-            barSize={30}
-            dataKey="Profit"
-            fill="#949AC2"
-            radius={[10, 10, 0, 0]}
-            hide={barProps['Profit'] === true}
-          />
-          <Bar
-            barSize={30}
-            dataKey="Revenue"
-            fill="#68B8EF"
-            radius={[10, 10, 0, 0]}
-            hide={barProps['Revenue'] === true}
-          />
-          <Legend
-            onClick={selectBar}
-            wrapperStyle={{
-              lineHeight: '31px',
-              position: 'relative',
-              bottom: 'calc(100% + 35px)',
-              left: '36px',
-            }}
-            iconType="circle"
-            iconSize={10}
-            align="right"
-            formatter={value => {
-              return (
-                <Box display="inline-flex" marginInlineEnd="30px" data-testid={'legend-' + value}>
-                  <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
-                    {value}
-                  </Box>
-                </Box>
-              )
-            }}
-          />
+          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   )
 }
 
-export default RevenuePerformanceGraph
+export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: boolean }> = ({
+  chartData,
+  isLoading,
+}) => {
+  const { fieldProjectManagerOptions } = useFPMs()
+  const [monthOption, setMonthOption] = useState(MonthOption[0])
+  const [fpmOption, setFpmOption] = useState([])
+  const [graphData, setGraphData] = useState<GraphData>()
+  const currentMonth = format(new Date(), 'LLL', { locale: enUS })
+
+  const data = useMemo(
+    () =>
+      flatten(
+        months.map((month, monthIndex) => {
+          const monthExistsInChart = Object.keys(chartData)?.find(months => months === month)
+          let nameMonthData
+
+          if (monthExistsInChart) {
+            nameMonthData = chartData?.[month]
+            const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
+              const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
+              return {
+                username: `${firstName} ${lastName}`,
+                month: monthsShort[month],
+                userId: Number(last(userId)),
+                quater: getQuarterByMonth(monthIndex),
+                Revenue: nameMonthData[nameKey]?.revenue,
+              }
+            })
+            let newgraphs = graphs.map((n, i) => ({
+              ...n,
+              centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
+            }))
+            return newgraphs
+          }
+
+          return {
+            month: monthsShort[month],
+            centerMonth: monthsShort[month],
+            quater: getQuarterByMonth(monthIndex),
+            username: '',
+            userId: 0,
+            Bonus: 0,
+            Profit: 0,
+            Revenue: 0,
+          }
+        }),
+      ),
+    [chartData],
+  )
+
+  useEffect(() => {
+    const finalGraphData = data?.filter(a => a.month === currentMonth)
+    setGraphData(finalGraphData)
+  }, [data])
+
+  const onFpmOptionChange = options => {
+    setFpmOption(options)
+
+    filterGraphData(options, monthOption)
+  }
+
+  const getMonthValue = monthOption => {
+    let selectedFpm = [] as any
+
+    if (['All'].includes(monthOption?.label)) {
+      selectedFpm = take(fieldProjectManagerOptions, 5)
+    }
+
+    setFpmOption(selectedFpm)
+
+    setMonthOption(monthOption)
+    filterGraphData(selectedFpm, monthOption)
+  }
+  const filterGraphData = (selectedFpm, monthOption) => {
+    let selectedMonth, selectedQuater
+    if (monthOption?.label === 'This Month') {
+      selectedMonth = format(new Date(), 'LLL', { locale: enUS })
+    }
+    if (monthOption?.label === 'Last Month') {
+      selectedMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
+    }
+    if (monthOption?.label === 'Current Quarter') {
+      selectedQuater = getQuarterByDate()
+    }
+    if (monthOption?.label === 'Past Quarter') {
+      selectedQuater = getLastQuarterByDate()
+    }
+
+    selectedFpm = selectedFpm.map(n => n.value)
+    const finalGraphData = data?.filter(
+      a =>
+        (!selectedMonth || a.month === selectedMonth) &&
+        (!selectedQuater || a.quater === selectedQuater) &&
+        (!selectedFpm.length || selectedFpm.includes(a.userId)),
+    )
+    setGraphData(finalGraphData)
+  }
+  return (
+    <>
+      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
+        <Box mb={15} mt={5} m={2}>
+          <Flex>
+            <Box width={'500px'} ml={5} mt={5}>
+              <HStack>
+                <FormLabel width={'120px'}>Filter By Month:</FormLabel>
+                <Box width={'250px'}>
+                  <ReactSelect
+                    name={`monthsDropdown`}
+                    options={MonthOption}
+                    onChange={getMonthValue}
+                    defaultValue={monthOption}
+                    selected={setMonthOption}
+                  />
+                </Box>
+              </HStack>
+            </Box>
+            <Box width={'650px'} ml={25} mt={5}>
+              <HStack>
+                <FormLabel width={'70px'}>Filter By:</FormLabel>
+                <Box width={'530px'}>
+                  <ReactSelect
+                    name={`fpmDropdown`}
+                    value={fpmOption}
+                    isDisabled={!['All'].includes(monthOption?.label)}
+                    options={fieldProjectManagerOptions}
+                    onChange={onFpmOptionChange}
+                    defaultValue={fpmOption}
+                    isMulti
+                  />
+                </Box>
+              </HStack>
+            </Box>
+          </Flex>
+        </Box>
+        {isLoading ? (
+          <BlankSlate size="sm" />
+        ) : (
+          <OverviewGraph vendorData={graphData} width="98%" height={480} hasUsers />
+        )}
+      </Box>
+    </>
+  )
+}

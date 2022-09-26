@@ -1,7 +1,6 @@
 import {
   Box,
   Divider,
-  FormLabel,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,13 +13,18 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect } from 'react'
 import { PerformanceType } from 'types/performance.type'
-// import PerformanceGraph from 'pages/fpm/graph-performance'
+import {
+  badges,
+  bonus,
+  ignorePerformance,
+  useFPMDetails,
+  useMutatePerformance,
+  usePerformanceSaveDisabled,
+} from 'api/performance'
 import { PerformanceDetail } from './performance-details'
 import { Button } from 'components/button/button'
-import { Card } from 'components/card/card'
 import { useForm, UseFormReturn } from 'react-hook-form'
-import { useFPMDetails, useMutatePerformance, usePerformanceSaveDisabled } from 'api/performance'
-import { badges, bonus, ignorePerformance } from 'api/performance'
+import PerformanceGraph from './performance-modal-graph'
 
 const PerformanceModal = ({
   performanceDetails,
@@ -32,7 +36,7 @@ const PerformanceModal = ({
   isOpen: boolean
 }) => {
   const { t } = useTranslation()
-  const { data: fpmData } = useFPMDetails(performanceDetails?.userId)
+  const { data: fpmData, isLoading } = useFPMDetails(performanceDetails?.userId)
   const { mutate: savePerformanceDetails } = useMutatePerformance(performanceDetails?.userId)
   const formReturn = useForm<PerformanceType>()
   const { control, formState, reset } = formReturn
@@ -88,12 +92,9 @@ const PerformanceModal = ({
                 performanceDetails={performanceDetails}
                 formControl={formReturn as UseFormReturn<any>}
               />
-              <Card mt={5} overflow={'auto'} height={'300px'}>
-                <FormLabel variant={'strong-label'} mb={5} textAlign={'center'}>
-                  {'Performance per Month'}
-                </FormLabel>
-                <Box mt={10}>{/* <PerformanceGraph chartData={chart} isLoading={isLoading} /> */}</Box>
-              </Card>
+              <Box mt={5} overflow={'auto'} height={'300px'} >
+                <PerformanceGraph chartData={fpmData} isLoading={isLoading} />
+              </Box>
             </ModalBody>
             <Divider mt={3} />
             <ModalFooter>

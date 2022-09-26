@@ -55,7 +55,6 @@ export const monthOptions: MonthOption[] = range(12).map(n => ({
   year: format(sub(new Date(), { months: n }), 'yyyy'),
   month: format(sub(new Date(), { months: n }), 'MM'),
 }))
-
 export const convertDateTimeFromServer = (date: string) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : null
 }
@@ -105,4 +104,16 @@ export const monthsShort: GenericObjectType = {
   October: 'Oct',
   November: 'Nov',
   December: 'Dec',
+}
+
+export const getQuarterByDate = (date = new Date()) => {
+  return getQuarterByMonth(date.getMonth())
+}
+
+export const getLastQuarterByDate = (date = new Date()) => {
+  return (getQuarterByDate(date) + 2) % 3
+}
+
+export const getQuarterByMonth = (month: number) => {
+  return Math.floor(month / 3 + 1)
 }

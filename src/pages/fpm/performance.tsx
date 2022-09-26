@@ -1,6 +1,5 @@
-import { Center, Text } from '@chakra-ui/react'
+import { Box, Center, Text } from '@chakra-ui/react'
 import { useFPMProfile } from 'api/vendor-details'
-import { Card } from 'components/card/card'
 import { InformationCardFPM } from 'features/fpm/info-card-fpm'
 import { t } from 'i18next'
 import { Account } from 'types/account.types'
@@ -15,14 +14,14 @@ export const Performance = () => {
   return (
     <>
       <InformationCardFPM chartData={chart} isLoading={isLoading} />
-      <Card mt={5} p={0} rounded="13px" flex={1} bg="#FDFDFF">
+      <Box mt={5} p={0} rounded="13px" flex={1} bg='#F7FAFE' border='1px solid #EAE6E6'>
         <Center mb="5px" mt="25px">
           <Text fontSize="16px" fontWeight={'600'} color="#4A5568">
             {t('Performance Per Month')}
           </Text>{' '}
         </Center>
         <PerformanceGraph chartData={chart} isLoading={isLoading} />
-      </Card>
+      </Box>
     </>
   )
 }
