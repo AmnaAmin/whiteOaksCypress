@@ -53,6 +53,9 @@ export type SWOProject = {
   modifiedBy: string
   modifiedDate: string
 }
+
+export type selectedCell = { id: string; value: string }
+
 export const getRemovedItems = (formValues, workOrder) => {
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
@@ -343,7 +346,7 @@ type EditableCellType = {
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
   onChange?: (e, index) => void
-  selectedCell: any
+  selectedCell: selectedCell | null | undefined
   setSelectedCell: (e) => void
   allowEdit?: boolean
   autoFocus?: boolean
@@ -384,7 +387,7 @@ export const EditableField = (props: EditableCellType) => {
               onClick={() => {
                 if (allowEdit) {
                   setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
-                  if (setIsFocus) setIsFocus(true)
+                  setIsFocus?.(true)
                 }
               }}
             >
@@ -412,17 +415,15 @@ export const EditableField = (props: EditableCellType) => {
                       }
                     }}
                     onBlur={e => {
-                      if (setIsFocus) setIsFocus(false)
+                      setIsFocus?.(false)
                       setSelectedCell(null)
                       if (e.target.value === '') {
                         setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
                       }
-                      if (onChange) {
-                        onChange(e, index)
-                      }
+                      onChange?.(e, index)
                     }}
                     onFocus={() => {
-                      if (setIsFocus) setIsFocus(true)
+                      setIsFocus?.(true)
                     }}
                   ></Input>
                 )}
@@ -478,11 +479,11 @@ export const InputField = (props: InputFieldType) => {
                 field.onChange(e.target.value)
               }}
               onBlur={e => {
-                if (setIsFocus) setIsFocus(false)
-                if (handleChange) handleChange(e, index)
+                setIsFocus?.(false)
+                handleChange?.(e, index)
               }}
               onFocus={() => {
-                if (setIsFocus) setIsFocus(true)
+                setIsFocus?.(true)
               }}
             ></Input>
           )}

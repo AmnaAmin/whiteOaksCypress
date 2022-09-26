@@ -7,7 +7,7 @@ import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, InputField, LineItems, SelectCheckBox, SWOProject } from './assignedItems.utils'
+import { EditableField, InputField, LineItems, SelectCheckBox, selectedCell, SWOProject } from './assignedItems.utils'
 
 type RemainingListType = {
   setSelectedItems: (items) => void
@@ -31,7 +31,7 @@ type CellInputType = {
   handleChange?: (e, index) => void
   type?: string
   valueFormatter?: (value) => void
-  selectedCell: { id: string; value: string } | null | undefined
+  selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
   autoFocus?: boolean
   setIsFocus?: any
@@ -149,7 +149,7 @@ const RemainingListTable = (props: RemainingListType) => {
   const values = getValues()
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
-  const [selectedCell, setSelectedCell] = useState<{ id: string; value: string } | null | undefined>(null)
+  const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)

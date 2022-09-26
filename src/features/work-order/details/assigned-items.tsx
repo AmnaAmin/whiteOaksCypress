@@ -33,6 +33,7 @@ import {
   EditableField,
   LineItems,
   mapToRemainingItems,
+  selectedCell,
   SWOProject,
   UploadImage,
   useActionsShowDecision,
@@ -363,7 +364,7 @@ export const AssignedLineItems = props => {
   } = useColumnsShowDecision({ workOrder })
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
   const { isVendor } = useUserRolesSelector()
-  const [selectedCell, setSelectedCell] = useState<{ id: string; value: string } | null | undefined>(null)
+  const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
   const allowEdit = !isVendor && !workOrder // !workOrder temporary check till further requirements
 
   const watchFieldArray = watch('assignedItems')

@@ -71,7 +71,6 @@ const RemainingItemsModal: React.FC<{
   })
 
   const { prepend } = remainingFieldArray
-  console.log()
 
   useEffect(() => {
     reset({ remainingItems })
