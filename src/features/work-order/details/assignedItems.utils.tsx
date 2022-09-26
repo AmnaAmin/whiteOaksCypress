@@ -460,7 +460,6 @@ export const InputField = (props: InputFieldType) => {
     formState: { errors },
     control,
   } = formControl
-  console.log('errors', errors)
   return (
     <>
       <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
