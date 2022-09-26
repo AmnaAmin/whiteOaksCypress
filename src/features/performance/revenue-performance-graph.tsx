@@ -195,6 +195,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }
   return (
     <>
+    <Box bg='#F7FAFE' border='1px solid #EAE6E6' rounded={'13px'}>
         <Box mb={15} mt={5} m={2}>
           <Flex>
             <Box width={'500px'} ml={5} mt={5}>
@@ -234,6 +235,8 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         ) : (
           <OverviewGraph vendorData={graphData} width="98%" height={450} hasUsers />
         )}
+        </Box>
     </>
+    
   )
 }
