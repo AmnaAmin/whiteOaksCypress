@@ -111,6 +111,7 @@ const NewWorkOrder: React.FC<{
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const { projectId } = useParams<{ projectId: string }>()
+  const { finalSOWAmount } = useGetProjectFinancialOverview(projectId)
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -320,7 +321,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard
                   title="finalSowAmount"
-                  date={currencyFormatter(projectData?.sowNewAmount as number)}
+                  date={finalSOWAmount}
                 />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
