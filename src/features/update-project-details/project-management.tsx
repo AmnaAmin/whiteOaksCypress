@@ -31,8 +31,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     formState: { errors },
     control,
     register,
+    watch,
     clearErrors,
   } = useFormContext<ProjectDetailsFormValues>()
+  const woaStartDate = watch('woaStartDate')
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
@@ -55,7 +57,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   return (
     <Box>
       <Stack>
-        {isWOAStartDateRequired && isFPM && (
+        {isWOAStartDateRequired && !woaStartDate && isFPM && (
           <Alert status="error" mb={5} w="98%">
             <AlertIcon />
             {t('woaStartDateMessage')}
