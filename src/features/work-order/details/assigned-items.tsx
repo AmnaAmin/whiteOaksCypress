@@ -33,6 +33,7 @@ import {
   EditableField,
   LineItems,
   mapToRemainingItems,
+  selectedCell,
   SWOProject,
   UploadImage,
   useActionsShowDecision,
@@ -275,22 +276,22 @@ const AssignedItems = (props: AssignedItemType) => {
                     </Th>
                     {(showReadOnlyPrices || showEditablePrices) && (
                       <>
-                        <Th sx={headerStyle} w="100px">
+                        <Th sx={headerStyle} w="120px">
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
-                        <Th sx={headerStyle} w="100px">
+                        <Th sx={headerStyle} w="150px">
                           {t(`${WORK_ORDER}.clientAmount`)}
                         </Th>
-                        <Th sx={headerStyle} w="70px">
+                        <Th sx={headerStyle} w="100px">
                           {t(`${WORK_ORDER}.profit`)}
                         </Th>
-                        <Th sx={headerStyle} w="100px">
+                        <Th sx={headerStyle} w="150px">
                           {t(`${WORK_ORDER}.vendorAmount`)}
                         </Th>
                       </>
                     )}
                     {showVendorPrice && (
-                      <Th sx={headerStyle} w="100px">
+                      <Th sx={headerStyle} w="150px">
                         {t(`${WORK_ORDER}.amount`)}
                       </Th>
                     )}
@@ -363,7 +364,7 @@ export const AssignedLineItems = props => {
   } = useColumnsShowDecision({ workOrder })
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
   const { isVendor } = useUserRolesSelector()
-  const [selectedCell, setSelectedCell] = useState('')
+  const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
   const allowEdit = !isVendor && !workOrder // !workOrder temporary check till further requirements
 
   const watchFieldArray = watch('assignedItems')
@@ -583,16 +584,18 @@ export const AssignedLineItems = props => {
             {showReadOnlyPrices && (
               <>
                 <Td>
-                  <Box>{currencyFormatter(values?.assignedItems[index]?.price)}</Box>
+                  <Box minW="100px">{currencyFormatter(values?.assignedItems[index]?.price)}</Box>
                 </Td>
                 <Td>
-                  <Box>{currencyFormatter(values?.assignedItems[index]?.clientAmount)}</Box>
+                  <Box minW="100px">{currencyFormatter(values?.assignedItems[index]?.clientAmount)}</Box>
                 </Td>
                 <Td>
-                  <Box>{values?.assignedItems[index]?.profit ? values?.assignedItems[index]?.profit + '%' : ''}</Box>
+                  <Box minW="100px">
+                    {values?.assignedItems[index]?.profit ? values?.assignedItems[index]?.profit + '%' : ''}
+                  </Box>
                 </Td>
                 <Td>
-                  <Box>{currencyFormatter(values?.assignedItems[index]?.vendorAmount)}</Box>
+                  <Box minW="100px"> {currencyFormatter(values?.assignedItems[index]?.vendorAmount)}</Box>
                 </Td>
               </>
             )}

@@ -7,7 +7,7 @@ import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, InputField, LineItems, SelectCheckBox, SWOProject } from './assignedItems.utils'
+import { EditableField, InputField, LineItems, SelectCheckBox, selectedCell, SWOProject } from './assignedItems.utils'
 
 type RemainingListType = {
   setSelectedItems: (items) => void
@@ -31,7 +31,7 @@ type CellInputType = {
   handleChange?: (e, index) => void
   type?: string
   valueFormatter?: (value) => void
-  selectedCell: string
+  selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
   autoFocus?: boolean
   setIsFocus?: any
@@ -52,6 +52,7 @@ const renderInput = (props: CellInputType) => {
     autoFocus,
     setIsFocus,
   } = props
+
   const isNew = values?.remainingItems[row?.index]?.action === 'new'
   return (
     <Box pl={'5px'}>
@@ -105,20 +106,20 @@ const RemainingItemsRow: React.FC<RowProps> = memo(({ row, style, onRowClick }) 
       })}
     >
       {row.cells.map(cell => {
-        return <CellComp key={`row_${cell.column.id}`} cell={cell} />
+        return <CellComp key={`row_${cell.column.id}`} cell={cell} row={row} />
       })}
     </Tr>
   )
 })
 
-const CellComp = ({ cell }) => {
+const CellComp = ({ cell, row }) => {
   const [isFocus, setIsFocus] = useState(false)
 
   return (
     <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} w={'100%'} h={'100%'} p="0">
       <Flex alignItems={'center'} h={'100%'} w={'100%'}>
         <Box
-          title={cell.value}
+          title={cell.value ?? ''}
           padding="0 15px 10px 10px"
           color="gray.600"
           fontSize="14px"
@@ -148,7 +149,7 @@ const RemainingListTable = (props: RemainingListType) => {
   const values = getValues()
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
-  const [selectedCell, setSelectedCell] = useState('')
+  const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -293,7 +294,7 @@ const RemainingListTable = (props: RemainingListType) => {
           autoFocus: isFocus,
           setIsFocus,
         }),
-      width: 100,
+      width: 120,
     },
     {
       Header: `${WORK_ORDER}.unitPrice`,
@@ -316,7 +317,7 @@ const RemainingListTable = (props: RemainingListType) => {
           autoFocus: isFocus,
           setIsFocus,
         }),
-      width: 150,
+      width: 120,
     },
     {
       Header: `${WORK_ORDER}.total`,
@@ -324,7 +325,7 @@ const RemainingListTable = (props: RemainingListType) => {
         return (
           <>
             <Box pl={'7px'} minW={'100px'} minH={'20px'}>
-              {currencyFormatter(values?.remainingItems[row?.index].totalPrice)}
+              {currencyFormatter(values?.remainingItems[row?.index]?.totalPrice)}
             </Box>
           </>
         )

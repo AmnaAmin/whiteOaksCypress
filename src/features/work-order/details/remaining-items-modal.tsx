@@ -64,7 +64,7 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset } = formControl
+  const { handleSubmit, control, reset, clearErrors } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
@@ -83,7 +83,7 @@ const RemainingItemsModal: React.FC<{
   }, [swoProject])
 
   const onSubmit = async values => {
-    const newLineItems = values.remainingItems.filter(r => r.action === 'new')
+    const newLineItems = values.remainingItems.filter(r => r?.action === 'new')
     const updatedLineItems = [...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))]
 
     if (updatedLineItems?.length > 0 && newLineItems?.length > 0) {
@@ -170,7 +170,7 @@ const RemainingItemsModal: React.FC<{
                       variant="ghost"
                       colorScheme="brand"
                       leftIcon={<Icon as={AddIcon} boxSize={2} />}
-                      onClick={() =>
+                      onClick={() => {
                         prepend({
                           sku: '',
                           productName: '',
@@ -180,7 +180,8 @@ const RemainingItemsModal: React.FC<{
                           totalPrice: '',
                           action: 'new',
                         })
-                      }
+                        clearErrors()
+                      }}
                     >
                       {t(`${WORK_ORDER}.addRow`)}
                     </Button>
