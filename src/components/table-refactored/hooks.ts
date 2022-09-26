@@ -20,7 +20,6 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
-  console.log('pagination', pagination)
   const fitlersQueryString = useMemo(() => {
     let projectStatusFilter
     let clientDueDateFilter

@@ -42,17 +42,17 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     selectedFPM,
     userIds,
   })
-  console.log('fitlersQueryString', fitlersQueryString)
+
   const { projects, isLoading, totalPages } = useProjects(fitlersQueryString, pagination.pageIndex, pagination.pageSize)
 
-  // const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
-  //   queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-  //   selectedCard,
-  //   selectedDay,
-  //   selectedFPM,
-  //   userIds,
-  // })
-  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects('')
+  const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+    selectedCard,
+    selectedDay,
+    selectedFPM,
+    userIds,
+  })
+  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(filterQueryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
