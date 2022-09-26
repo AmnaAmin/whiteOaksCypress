@@ -18,7 +18,7 @@ import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { t } from 'i18next'
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -63,13 +63,15 @@ const InvoiceAndPayments: React.FC = () => {
   }
 
   const onPaymentTermChange = (option: SelectOption) => {
-    const date = new Date(getValues().invoiceBackDate as string)
-    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    const { invoiceBackDate, woaInvoiceDate } = getValues();
+    const date = new Date(
+      invoiceBackDate === null || invoiceBackDate === '' ? woaInvoiceDate as string: invoiceBackDate as string
+    );
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     const paymentTerm = Number(option.value)
 
     // Do not calculated WOA expect date if payment term is not selected
     if (!date) return
-
     const woaExpectedDate = addDays(utcDate, paymentTerm)
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
@@ -80,6 +82,12 @@ const InvoiceAndPayments: React.FC = () => {
 
     setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
   }
+
+  useEffect(() => {
+    if(isStatusInvoiced && !formValues.woaInvoiceDate) {
+      setValue('woaInvoiceDate', datePickerFormat(new Date()))
+    }
+  }, [isStatusInvoiced])
 
   return (
     <Stack>
