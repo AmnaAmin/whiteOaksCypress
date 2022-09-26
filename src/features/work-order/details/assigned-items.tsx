@@ -270,7 +270,7 @@ const AssignedItems = (props: AssignedItemType) => {
                     <Th sx={headerStyle} minW="250px">
                       {t(`${WORK_ORDER}.details`)}
                     </Th>
-                    <Th sx={headerStyle} w="120px">
+                    <Th sx={headerStyle} w="100px">
                       {t(`${WORK_ORDER}.quantity`)}
                     </Th>
                     {(showReadOnlyPrices || showEditablePrices) && (
@@ -278,19 +278,19 @@ const AssignedItems = (props: AssignedItemType) => {
                         <Th sx={headerStyle} w="120px">
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
-                        <Th sx={headerStyle} w="120px">
+                        <Th sx={headerStyle} w="150px">
                           {t(`${WORK_ORDER}.clientAmount`)}
                         </Th>
                         <Th sx={headerStyle} w="100px">
                           {t(`${WORK_ORDER}.profit`)}
                         </Th>
-                        <Th sx={headerStyle} w="120px">
+                        <Th sx={headerStyle} w="150px">
                           {t(`${WORK_ORDER}.vendorAmount`)}
                         </Th>
                       </>
                     )}
                     {showVendorPrice && (
-                      <Th sx={headerStyle} w="120px">
+                      <Th sx={headerStyle} w="150px">
                         {t(`${WORK_ORDER}.amount`)}
                       </Th>
                     )}
@@ -583,16 +583,18 @@ export const AssignedLineItems = props => {
             {showReadOnlyPrices && (
               <>
                 <Td>
-                  <Box>{currencyFormatter(values?.assignedItems[index]?.price)}</Box>
+                  <Box minW="100px">{currencyFormatter(values?.assignedItems[index]?.price)}</Box>
                 </Td>
                 <Td>
-                  <Box>{currencyFormatter(values?.assignedItems[index]?.clientAmount)}</Box>
+                  <Box minW="100px">{currencyFormatter(values?.assignedItems[index]?.clientAmount)}</Box>
                 </Td>
                 <Td>
-                  <Box>{values?.assignedItems[index]?.profit ? values?.assignedItems[index]?.profit + '%' : ''}</Box>
+                  <Box minW="100px">
+                    {values?.assignedItems[index]?.profit ? values?.assignedItems[index]?.profit + '%' : ''}
+                  </Box>
                 </Td>
                 <Td>
-                  <Box>{currencyFormatter(values?.assignedItems[index]?.vendorAmount)}</Box>
+                  <Box minW="100px"> {currencyFormatter(values?.assignedItems[index]?.vendorAmount)}</Box>
                 </Td>
               </>
             )}
