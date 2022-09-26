@@ -27,7 +27,7 @@ import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
-import { currencyFormatter, removePercentageFormat } from 'utils/string-formatters'
+import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
 import NumberFormat from 'react-number-format'
@@ -111,6 +111,7 @@ const NewWorkOrder: React.FC<{
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const { projectId } = useParams<{ projectId: string }>()
+  const { finalSOWAmount } = useGetProjectFinancialOverview(projectId)
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -320,7 +321,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard
                   title="finalSowAmount"
-                  date={currencyFormatter(projectData?.sowNewAmount as number)}
+                  date={finalSOWAmount}
                 />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
