@@ -18,7 +18,12 @@ export const datePickerFormat = (date: string | Date) => {
 export const dateISOFormat = (date: string | Date | null) => {
   if (date === null) return null
 
-  return date ? new Date(date).toISOString() : null
+  const dateObj = new Date(date)
+
+  // check is date is valid
+  if (dateObj.toString() === 'Invalid Date') return null
+
+  return dateObj?.toISOString() || null
 }
 
 export const getFormattedDate = (date: Date) => {

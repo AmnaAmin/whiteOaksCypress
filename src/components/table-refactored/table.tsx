@@ -94,6 +94,15 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
   const tableInstance = useTableInstance()
   const { getHeaderGroups, getRowModel } = tableInstance
 
+  const getColumnMaxMinWidths = (column: any) => {
+    const columnWidth = column?.getSize() + 'px'
+
+    return {
+      maxW: columnWidth,
+      minW: columnWidth,
+    }
+  }
+
   return (
     <Stack display="table" minH="calc(100% - 42px)" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative">
       <ChakraTable size="sm" w="100%" {...restProps}>
@@ -109,6 +118,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                 const sortedDesc = sortedBy === 'desc'
                 const isSortable = header.column.getCanSort()
 
+                console.log('header', header)
                 return (
                   <Th
                     key={header.id}
@@ -118,6 +128,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                     bg="#F7FAFC"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
+                    {...getColumnMaxMinWidths(header.column)}
                   >
                     <Flex alignItems="center">
                       <Text
@@ -160,6 +171,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                   top="40px"
                   borderTop="1px solid #ddd"
                   bg="#F7FAFC"
+                  {...getColumnMaxMinWidths(header.column)}
                 >
                   {header.column.getCanFilter() ? (
                     <div>
@@ -190,7 +202,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                     <Tr key={row.id}>
                       {row.getVisibleCells().map(cell => {
                         return (
-                          <Td key={cell.id} maxW={`${cell.column.getSize()}px`} minW={`${cell.column.getSize()}px`}>
+                          <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
                             <BlankSlate size="sm" width="100%" />
                           </Td>
                         )
@@ -215,8 +227,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                           key={cell.id}
                           isTruncated
                           title={cell.getContext()?.getValue() as string}
-                          maxW={`${cell.column.getSize()}px`}
-                          minW={`${cell.column.getSize()}px`}
+                          {...getColumnMaxMinWidths(cell.column)}
                         >
                           {value}
                         </Td>

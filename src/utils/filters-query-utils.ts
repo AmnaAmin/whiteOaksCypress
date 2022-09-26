@@ -2,7 +2,6 @@ import { ColumnFiltersState } from '@tanstack/react-table'
 import { dateISOFormat } from './date-time-utils'
 
 const getQueryString = (obj: { [key: string]: string | number }) => {
-  console.log('obj', obj)
   return Object.keys(obj).reduce((str, key, i) => {
     const delimiter = i === 0 ? '' : '&'
     const val = obj[key]
@@ -48,8 +47,6 @@ export const getAPIFilterQueryString = (
     queryAndTableColumnMapKeys || {},
   )
 
-  console.log('page', page)
-  console.log('size', size)
   return getQueryString({
     ...filterKeyValues,
     page: page || 0,
