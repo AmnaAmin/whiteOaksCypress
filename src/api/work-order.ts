@@ -182,7 +182,7 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
 export const parsePaymentValuesToPayload = formValues => {
   return {
     dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
-    paymentTerm: formValues?.paymenTerm?.value,
+    paymentTerm: formValues?.paymentTerm?.value,
     paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
     expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),

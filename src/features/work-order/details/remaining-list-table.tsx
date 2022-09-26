@@ -52,7 +52,7 @@ const renderInput = (props: CellInputType) => {
     autoFocus,
     setIsFocus,
   } = props
-  const isNew = values?.remainingItems[row?.index].action === 'new'
+  const isNew = values?.remainingItems[row?.index]?.action === 'new'
   return (
     <Box pl={'5px'}>
       {isNew ? (
@@ -192,7 +192,7 @@ const RemainingListTable = (props: RemainingListType) => {
       accessor: 'assigned',
       canFilter: false,
       Cell: ({ row }) => {
-        const isNew = values?.remainingItems[row?.index].action === 'new'
+        const isNew = values?.remainingItems[row?.index]?.action === 'new'
         return (
           <Box paddingLeft={'6px'}>
             {!isNew ? (
