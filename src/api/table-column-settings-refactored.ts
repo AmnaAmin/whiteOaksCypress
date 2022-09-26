@@ -66,7 +66,7 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
   const settingColumns = savedColumns?.length
     ? savedColumns.map((col, index) => {
         return generateSettingColumn({
-          field: t(col.colId),
+          field: t(col.field),
           contentKey: col.contentKey as string,
           order: index,
           userId: email,

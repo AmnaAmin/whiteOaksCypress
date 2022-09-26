@@ -26,6 +26,17 @@ export const dateISOFormat = (date: string | Date | null) => {
   return dateObj?.toISOString() || null
 }
 
+export const dateISOFormatWithZeroTime = (date: string | Date | null) => {
+  if (date === null) return null
+
+  const dateObj = new Date(date)
+
+  // check is date is valid
+  if (dateObj.toString() === 'Invalid Date') return null
+
+  return dateObj?.toISOString() || null
+}
+
 export const getFormattedDate = (date: Date) => {
   const year = date.getFullYear()
   const month = (1 + date.getMonth()).toString().padStart(2, '0')

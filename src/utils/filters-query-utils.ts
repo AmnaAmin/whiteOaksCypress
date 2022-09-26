@@ -1,5 +1,5 @@
 import { ColumnFiltersState } from '@tanstack/react-table'
-import { dateISOFormat } from './date-time-utils'
+import { dateISOFormatWithZeroTime } from './date-time-utils'
 
 const getQueryString = (obj: { [key: string]: string | number }) => {
   return Object.keys(obj).reduce((str, key, i) => {
@@ -33,7 +33,7 @@ export const getAPIFilterQueryString = (
       if (filter?.id?.includes('Date')) {
         return {
           ...filter,
-          value: filter.value ? dateISOFormat(filter.value as string) : null,
+          value: filter.value ? dateISOFormatWithZeroTime(filter.value as string) : null,
         }
       }
 
@@ -51,6 +51,6 @@ export const getAPIFilterQueryString = (
     ...filterKeyValues,
     page: page || 0,
     size: size || 100000,
-    sort: 'id,asc',
+    sort: 'id,desc',
   })
 }
