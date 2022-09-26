@@ -545,16 +545,17 @@ const NewWorkOrder: React.FC<{
           </ModalFooter>
         </ModalContent>
       </form>
-
-      <RemainingItemsModal
-        isAssignmentAllowed={isAssignmentAllowed}
-        isOpen={isOpenRemainingItemsModal}
-        onClose={onCloseRemainingItemsModal}
-        setAssignedItems={setAssignedItems}
-        remainingItems={unassignedItems}
-        isLoading={isLoading}
-        swoProject={swoProject}
-      />
+      {isOpenRemainingItemsModal && (
+        <RemainingItemsModal
+          isAssignmentAllowed={isAssignmentAllowed}
+          isOpen={isOpenRemainingItemsModal}
+          onClose={onCloseRemainingItemsModal}
+          setAssignedItems={setAssignedItems}
+          remainingItems={unassignedItems}
+          isLoading={isLoading}
+          swoProject={swoProject}
+        />
+      )}
     </Modal>
   )
 }

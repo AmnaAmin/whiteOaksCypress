@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Text, useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
-import { Controller, UseFormReturn } from 'react-hook-form'
+import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 import { useState, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -343,7 +343,7 @@ type EditableCellType = {
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
   onChange?: (e, index) => void
-  selectedCell: string
+  selectedCell: any
   setSelectedCell: (e) => void
   allowEdit?: boolean
   autoFocus?: boolean
@@ -367,53 +367,67 @@ export const EditableField = (props: EditableCellType) => {
     autoFocus,
     setIsFocus,
   } = props
-  const { getValues, setValue } = formControl
+  const { getValues, setValue, control } = formControl
   const values = getValues()
+
+  const remainingItemsWatch = useWatch({ name: fieldArray, control })
+
   return (
     <>
       {values?.[fieldArray]?.length > 0 && (
         <>
-          {selectedCell !== index + '-' + fieldName ? (
+          {selectedCell?.id !== index + '-' + fieldName ? (
             <Box
               minH={'20px'}
               minW={'100px'}
               cursor={'pointer'}
               onClick={() => {
                 if (allowEdit) {
-                  setSelectedCell(index + '-' + fieldName)
+                  setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
+                  if (setIsFocus) setIsFocus(true)
                 }
               }}
             >
               {valueFormatter
-                ? valueFormatter(values?.[fieldArray][index]?.[fieldName])
-                : values?.[fieldArray][index]?.[fieldName]}
+                ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
+                : remainingItemsWatch[index]?.[fieldName]}
             </Box>
           ) : (
-            <Input
-              key={fieldName + '.' + index}
-              size="sm"
-              id="sku"
-              autoFocus={autoFocus}
-              type={inputType ?? 'text'}
-              defaultValue={values?.[fieldArray][index]?.[fieldName]}
-              onChange={e => {
-                if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
-                  setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
-                }
-              }}
-              onFocus={() => {
-                if (setIsFocus) setIsFocus(true)
-              }}
-              onBlur={e => {
-                if (setIsFocus) setIsFocus(false)
-                if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
-                setSelectedCell('')
-
-                if (onChange) {
-                  onChange(e, index)
-                }
-              }}
-            />
+            <FormControl>
+              <Controller
+                control={control}
+                name={`${fieldArray}.${index}.${fieldName}`}
+                render={({ field, fieldState }) => (
+                  <Input
+                    minW={'100px'}
+                    key={[fieldName] + '.' + [index]}
+                    size="sm"
+                    type={inputType}
+                    value={field.value}
+                    autoFocus={autoFocus}
+                    onChange={e => {
+                      field.onChange(e.target.value)
+                      if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
+                        setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
+                      }
+                    }}
+                    onBlur={e => {
+                      if (setIsFocus) setIsFocus(false)
+                      setSelectedCell(null)
+                      if (e.target.value === '') {
+                        setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
+                      }
+                      if (onChange) {
+                        onChange(e, index)
+                      }
+                    }}
+                    onFocus={() => {
+                      if (setIsFocus) setIsFocus(true)
+                    }}
+                  ></Input>
+                )}
+              ></Controller>
+            </FormControl>
           )}
         </>
       )}
@@ -446,13 +460,14 @@ export const InputField = (props: InputFieldType) => {
     formState: { errors },
     control,
   } = formControl
+  console.log('errors', errors)
   return (
     <>
       <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
         <Controller
           control={control}
           name={`${fieldArray}.${index}.${fieldName}`}
-          rules={{ required: 'This is required' }}
+          rules={{ required: '*Required' }}
           render={({ field, fieldState }) => (
             <Input
               key={[fieldName] + '.' + [index]}
@@ -484,14 +499,14 @@ export const InputField = (props: InputFieldType) => {
 export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
   return (
     <Checkbox
-      isChecked={selectedItems?.map(s => s.id).includes(row.id)}
+      isChecked={selectedItems?.map(s => s.id)?.includes(row?.id)}
       onChange={e => {
         if (e.currentTarget?.checked) {
-          if (!selectedItems?.map(s => s.id).includes(row.id)) {
+          if (!selectedItems?.map(s => s.id).includes(row?.id)) {
             setSelectedItems([...selectedItems, row])
           }
         } else {
-          setSelectedItems([...selectedItems.filter(s => s.id !== row.id)])
+          setSelectedItems([...selectedItems.filter(s => s.id !== row?.id)])
         }
       }}
     />

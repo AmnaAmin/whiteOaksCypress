@@ -270,27 +270,27 @@ const AssignedItems = (props: AssignedItemType) => {
                     <Th sx={headerStyle} minW="250px">
                       {t(`${WORK_ORDER}.details`)}
                     </Th>
-                    <Th sx={headerStyle} w="100px">
+                    <Th sx={headerStyle} w="120px">
                       {t(`${WORK_ORDER}.quantity`)}
                     </Th>
                     {(showReadOnlyPrices || showEditablePrices) && (
                       <>
-                        <Th sx={headerStyle} w="100px">
+                        <Th sx={headerStyle} w="120px">
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
-                        <Th sx={headerStyle} w="100px">
+                        <Th sx={headerStyle} w="120px">
                           {t(`${WORK_ORDER}.clientAmount`)}
                         </Th>
-                        <Th sx={headerStyle} w="70px">
+                        <Th sx={headerStyle} w="100px">
                           {t(`${WORK_ORDER}.profit`)}
                         </Th>
-                        <Th sx={headerStyle} w="100px">
+                        <Th sx={headerStyle} w="120px">
                           {t(`${WORK_ORDER}.vendorAmount`)}
                         </Th>
                       </>
                     )}
                     {showVendorPrice && (
-                      <Th sx={headerStyle} w="100px">
+                      <Th sx={headerStyle} w="120px">
                         {t(`${WORK_ORDER}.amount`)}
                       </Th>
                     )}
@@ -363,7 +363,7 @@ export const AssignedLineItems = props => {
   } = useColumnsShowDecision({ workOrder })
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
   const { isVendor } = useUserRolesSelector()
-  const [selectedCell, setSelectedCell] = useState('')
+  const [selectedCell, setSelectedCell] = useState<{ id: string; value: string } | null | undefined>(null)
   const allowEdit = !isVendor && !workOrder // !workOrder temporary check till further requirements
 
   const watchFieldArray = watch('assignedItems')
