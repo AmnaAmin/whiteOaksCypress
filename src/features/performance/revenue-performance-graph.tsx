@@ -1,6 +1,6 @@
 import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
-import { constMonthOption } from 'api/performance'
+import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
@@ -100,7 +100,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   isLoading,
 }) => {
   const { fieldProjectManagerOptions } = useFPMs()
-  const [monthOption, setMonthOption] = useState(constMonthOption[0])
+  const [monthOption, setMonthOption] = useState(MonthOption[0])
   const [fpmOption, setFpmOption] = useState([])
   const [graphData, setGraphData] = useState<GraphData>()
   const currentMonth = format(new Date(), 'LLL', { locale: enUS })
@@ -203,7 +203,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 <Box width={'250px'}>
                   <ReactSelect
                     name={`monthsDropdown`}
-                    options={constMonthOption}
+                    options={MonthOption}
                     onChange={getMonthValue}
                     defaultValue={monthOption}
                     selected={setMonthOption}

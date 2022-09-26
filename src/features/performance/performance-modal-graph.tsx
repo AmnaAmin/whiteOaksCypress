@@ -1,5 +1,5 @@
 import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
-import { constMonth, constMonthOption } from 'api/performance'
+import { Month, MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { format } from 'date-fns'
@@ -17,7 +17,7 @@ type GraphData = {
 }[]
 
 const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ chartData, isLoading }) => {
-  const [monthOption, setMonthOption] = useState(constMonthOption[0])
+  const [monthOption, setMonthOption] = useState(MonthOption[0])
   const [graphData, setGraphData] = useState<GraphData>()
   const currentMonth = format(new Date(), 'LLL', { locale: enUS })
   const vendors = [chartData?.chart]
@@ -72,7 +72,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
               <Box width={'150px'} >
                 <ReactSelect
                   name={`monthsDropdown`}
-                  options={constMonth}
+                  options={Month}
                   onChange={getMonthValue}
                   defaultValue={monthOption}
                   selected={setMonthOption}
@@ -231,98 +231,3 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
 }
 
 export default PerformanceGraph
-
-// export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: boolean }> = ({
-//   chartData,
-//   isLoading,
-// }) => {
-//   const [monthOption, setMonthOption] = useState(constMonthOption[0])
-//   const [fpmOption, setFpmOption] = useState([])
-//   const [graphData, setGraphData] = useState<GraphData>()
-//   const currentMonth = format(new Date(), 'LLL', { locale: enUS })
-
-//   const data = useMemo(
-//     () =>
-//       flatten(
-//         months.map((month, monthIndex) => {
-//           const monthExistsInChart = Object.keys(chartData?.chart)?.find(months => months === month)
-//           let nameMonthData
-//           if (monthExistsInChart) {
-//             nameMonthData = chartData?.chart?.[month]
-//             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
-//               const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
-//               return {
-//                 username: `${firstName} ${lastName}`,
-//                 month: monthsShort[month],
-//                 userId: Number(last(userId)),
-//                 quater: getQuarterByMonth(monthIndex),
-//                 Revenue: nameMonthData[nameKey]?.revenue,
-//               }
-//             })
-//             let newgraphs = graphs.map((n, i) => ({
-//               ...n,
-//               centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
-//             }))
-//             return newgraphs
-//           }
-
-//           return {
-//             month: monthsShort[month],
-//             centerMonth: monthsShort[month],
-//             quater: getQuarterByMonth(monthIndex),
-//             username: '',
-//             userId: 0,
-//             Bonus: 0,
-//             Profit: 0,
-//             Revenue: 0,
-//           }
-//         }),
-//       ),
-//     [chartData],
-//   )
-
-//   useEffect(() => {
-//     const finalGraphData = data?.filter(a => a.month === currentMonth)
-//     setGraphData(finalGraphData)
-//   }, [data])
-
-//   const getMonthValue = monthOption => {
-//     setMonthOption(monthOption)
-//     filterGraphData(monthOption)
-//   }
-//   const filterGraphData = monthOption => {
-//     const finalGraphData =
-//       monthOption?.label === 'All' ? data?.filter(a => a.month) : data?.filter(a => a.month === monthOption)
-//     setGraphData(finalGraphData)
-//   }
-
-//   return (
-//     <>
-//       <Card>
-//         <Box mb={15} mt={5}>
-//           <Flex>
-//             <Box width={'400px'} ml={5}>
-//               <HStack>
-//                 <FormLabel width={'120px'}>Filter By Month:</FormLabel>
-//                 <Box width={'200px'}>
-//                   <ReactSelect
-//                     name={`monthsDropdown`}
-//                     options={constMonthOption}
-//                     onChange={getMonthValue}
-//                     defaultValue={monthOption}
-//                     selected={setMonthOption}
-//                   />
-//                 </Box>
-//               </HStack>
-//             </Box>
-//           </Flex>
-//         </Box>
-//         {isLoading ? (
-//           <BlankSlate size="sm" />
-//         ) : (
-//           <OverviewGraph vendorData={graphData} width="98%" height={360} hasUsers />
-//         )}
-//       </Card>
-//     </>
-//   )
-// }

@@ -19,7 +19,6 @@ export const usePerformance = () => {
 
   return useQuery('performance-list', async () => {
     const response = await client(`fpm-quota`, {})
-    console.log(response?.data)
     return response?.data
   })
 }
@@ -134,7 +133,7 @@ export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, er
   }
 
   // Performance Graph
-  export const constMonthOptionTypes = {
+  export const MonthOptionTypes = {
     all: 'all',
     lastMonth: 'lastMonth',
     thisMonth: 'thisMonth',
@@ -142,16 +141,16 @@ export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, er
     pastQuarter: 'pastQuarter',
   };
   
- export const constMonthOption = [
-    { value: constMonthOptionTypes.thisMonth, label: 'This Month' },
-    { value: constMonthOptionTypes.lastMonth, label: 'Last Month' },
-    { value: constMonthOptionTypes.currentQuarter, label: 'Current Quarter' },
-    { value: constMonthOptionTypes.pastQuarter, label: 'Past Quarter' },
-    { value: constMonthOptionTypes.all, label: 'All' },
+ export const MonthOption = [
+    { value: MonthOptionTypes.thisMonth, label: 'This Month' },
+    { value: MonthOptionTypes.lastMonth, label: 'Last Month' },
+    { value: MonthOptionTypes.currentQuarter, label: 'Current Quarter' },
+    { value: MonthOptionTypes.pastQuarter, label: 'Past Quarter' },
+    { value: MonthOptionTypes.all, label: 'All' },
   ];
 
-  export const constMonth = [
-    { value: constMonthOptionTypes.thisMonth, label: 'This Month' },
-    { value: constMonthOptionTypes.all, label: 'All' },
+  export const Month = [
+    { value: MonthOptionTypes.thisMonth, label: 'This Month' },
+    { value: MonthOptionTypes.all, label: 'All' },
   ];
 
