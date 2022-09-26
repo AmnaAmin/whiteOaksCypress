@@ -118,7 +118,6 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                 const sortedDesc = sortedBy === 'desc'
                 const isSortable = header.column.getCanSort()
 
-                console.log('header', header)
                 return (
                   <Th
                     key={header.id}
