@@ -18,7 +18,6 @@ type GraphData = {
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
-
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -29,8 +28,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           margin={{
             top: 24,
             right: 30,
-            left: 30,
-            bottom: 30,
+            left: 40,
+            bottom: 60,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
@@ -45,8 +44,18 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               fontStyle: 'normal',
             }}
             tickMargin={20}
+            label={{
+              value: 'Field Project Manager',
+              angle: 360,
+              position: 'bottom',
+              textAnchor: 'middle',
+              offset: 60,
+              font: 'inter',
+              fontWeight: 600,
+              fontSize: '12px',
+              fontColor: 'gray/600',
+            }}
           />
-
           {hasUsers && (
             <XAxis
               dataKey={'centerMonth'}
@@ -72,23 +81,28 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             axisLine={false}
             tick={{
               fontSize: '12px',
-              fontStyle: 'normal',
+              fontStyle: 'inter',
               fontWeight: 400,
               fill: '#4A5568',
             }}
             tickFormatter={value => `$${value}`}
+            label={{
+              value: 'Revenue',
+              angle: -90,
+              position: 'left',
+              textAnchor: 'middle',
+              offset: 15,
+              font: 'inter',
+              fontWeight: 600,
+              fontSize: '12px',
+            }}
           />
           <Tooltip
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: '#EBF8FF' }}
           />
-          <Bar
-            barSize={50}
-            dataKey="Revenue"
-            fill="#68B8EF"
-            radius={[10, 10, 0, 0]}
-          />
+          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -195,7 +209,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }
   return (
     <>
-    <Box bg='#F7FAFE' border='1px solid #EAE6E6' rounded={'13px'}>
+      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
         <Box mb={15} mt={5} m={2}>
           <Flex>
             <Box width={'500px'} ml={5} mt={5}>
@@ -233,10 +247,9 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={450} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={480} hasUsers />
         )}
-        </Box>
+      </Box>
     </>
-    
   )
 }
