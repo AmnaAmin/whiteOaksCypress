@@ -67,6 +67,8 @@ export const LienWaiverTab: React.FC<any> = props => {
 
   const parseValuesToPayload = async () => {
     const fileContents = await readFileContent(document as File)
+    const fileExtension = document?.type?.split('/')[1] || ''
+
     return {
       ...workOrder,
       lienWaiverAccepted: true,
@@ -77,7 +79,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           workOrderId: workOrder.id,
           fileObject: fileContents,
           fileObjectContentType: document.type,
-          fileType: `LW${workOrder?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.pdf`,
+          fileType: `LW${workOrder?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.${fileExtension}`,
         },
       ],
     }
