@@ -7,7 +7,7 @@ import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -18,11 +18,11 @@ type GraphData = {
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+  const barColors = ["#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2"]
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
         <BarChart
-          data-testid="overview-chart"
           data={vendorData}
           barSize={50}
           margin={{
@@ -102,7 +102,11 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: '#EBF8FF' }}
           />
-          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]} />
+          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
+            {vendorData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
