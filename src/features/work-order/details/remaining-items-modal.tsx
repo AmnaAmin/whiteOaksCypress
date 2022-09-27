@@ -26,7 +26,7 @@ import {
   useRemainingLineItems,
 } from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { AddIcon } from '@chakra-ui/icons'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -64,13 +64,12 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset, clearErrors } = formControl
+  const { handleSubmit, control, reset, clearErrors, setValue } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
   })
-
-  const { prepend } = remainingFieldArray
+  const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
 
   useEffect(() => {
     reset({ remainingItems })
@@ -171,15 +170,19 @@ const RemainingItemsModal: React.FC<{
                       colorScheme="brand"
                       leftIcon={<Icon as={AddIcon} boxSize={2} />}
                       onClick={() => {
-                        prepend({
-                          sku: '',
-                          productName: '',
-                          description: '',
-                          quantity: '',
-                          unitPrice: '',
-                          totalPrice: '',
-                          action: 'new',
-                        })
+                        setValue('remainingItems', [
+                          {
+                            sku: '',
+                            productName: '',
+                            description: '',
+                            quantity: '',
+                            unitPrice: '',
+                            totalPrice: '',
+                            action: 'new',
+                            id: '',
+                          },
+                          ...remainingItemsWatch,
+                        ])
                         clearErrors()
                       }}
                     >

@@ -116,7 +116,7 @@ const CellComp = ({ cell, row }) => {
   const [isFocus, setIsFocus] = useState(false)
 
   return (
-    <Td {...cell.getCellProps()} key={`row_${cell.column.id}`} w={'100%'} h={'100%'} p="0">
+    <Td {...cell.getCellProps()} w={'100%'} h={'100%'} p="0">
       <Flex alignItems={'center'} h={'100%'} w={'100%'}>
         <Box
           title={cell.value ?? ''}
