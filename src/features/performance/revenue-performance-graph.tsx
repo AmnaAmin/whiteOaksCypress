@@ -29,27 +29,31 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             top: 24,
             right: 30,
             left: 40,
-            bottom: 60,
+            bottom: 100,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
+            angle={-45}
             dataKey={hasUsers ? 'username' : 'month'}
+            textAnchor="end"
             axisLine={false}
             tickLine={false}
+            interval={Math.floor(vendorData.length / 60)}
             tick={{
               fill: '#4A5568',
               fontSize: '12px',
               fontWeight: 400,
               fontStyle: 'normal',
             }}
+            tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             tickMargin={20}
             label={{
               value: 'Field Project Manager',
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 60,
+              offset: 100,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -67,8 +71,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontWeight: 400,
                 fontStyle: 'normal',
               }}
-              tickMargin={20}
-              interval={0}
+              tickMargin={60}
               xAxisId="users"
             />
           )}
@@ -76,8 +79,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
             tickSize={8}
-            tickCount={7}
-            domain={[0]}
+            tickCount={10}
+            domain={[0, 'auto']}
             axisLine={false}
             tick={{
               fontSize: '12px',
@@ -129,7 +132,6 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         months.map((month, monthIndex) => {
           const monthExistsInChart = Object.keys(chartData)?.find(months => months === month)
           let nameMonthData
-
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
@@ -178,7 +180,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
 
-    if (['All'].includes(monthOption?.label)) {
+    if (['Past Quarter', 'Current Quarter', 'All'].includes(monthOption?.label)) {
       selectedFpm = take(fieldProjectManagerOptions, 5)
     }
 
@@ -237,7 +239,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                   <ReactSelect
                     name={`fpmDropdown`}
                     value={fpmOption}
-                    isDisabled={!['All'].includes(monthOption?.label)}
+                    isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
@@ -251,7 +253,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={480} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers />
         )}
       </Box>
     </>
