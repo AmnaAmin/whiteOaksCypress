@@ -17,7 +17,12 @@ type GraphData = {
   Revenue: any
 }[]
 
-export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+export const OverviewGraph = ({
+  vendorData,
+  width,
+  height,
+  hasUsers, 
+}) => {
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -29,14 +34,17 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             top: 24,
             right: 30,
             left: 40,
-            bottom: 60,
+            bottom: 100,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
             dataKey={hasUsers ? 'username' : 'month'}
+            angle={-90}
+            textAnchor="end"
             axisLine={false}
             tickLine={false}
+            interval={0}
             tick={{
               fill: '#4A5568',
               fontSize: '12px',
@@ -49,7 +57,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 60,
+              offset: 100,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -68,7 +76,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontStyle: 'normal',
               }}
               tickMargin={20}
-              interval={0}
               xAxisId="users"
             />
           )}
@@ -76,8 +83,9 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
             tickSize={8}
-            tickCount={7}
-            domain={[0]}
+            tickCount={10}
+            domain={[0, 'auto']}
+            interval={0}
             axisLine={false}
             tick={{
               fontSize: '12px',
@@ -129,6 +137,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
+              // const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
+              // const username= `${firstName} ${lastName}`
+              // const usernameInitials = username.split(' ').map((n)=>n[0]).join("").toUpperCase()
+              // return {
+              //   username: `${usernameInitials}`,
+              // user: `${firstName} ${lastName}`,
               const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
               return {
                 username: `${firstName} ${lastName}`,
@@ -174,7 +188,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
 
-    if (['All'].includes(monthOption?.label)) {
+    if (['Past Quarter', 'Current Quarter', 'All'].includes(monthOption?.label)) {
       selectedFpm = take(fieldProjectManagerOptions, 5)
     }
 
@@ -206,6 +220,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         (!selectedFpm.length || selectedFpm.includes(a.userId)),
     )
     setGraphData(finalGraphData)
+
   }
   return (
     <>
@@ -233,7 +248,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                   <ReactSelect
                     name={`fpmDropdown`}
                     value={fpmOption}
-                    isDisabled={!['All'].includes(monthOption?.label)}
+                    isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
@@ -247,7 +262,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={480} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers />
         )}
       </Box>
     </>
