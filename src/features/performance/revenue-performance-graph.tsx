@@ -17,17 +17,11 @@ type GraphData = {
   Revenue: any
 }[]
 
-export const OverviewGraph = ({
-  vendorData,
-  width,
-  height,
-  hasUsers, 
-}) => {
+export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
         <BarChart
-          data-testid="overview-chart"
           data={vendorData}
           barSize={50}
           margin={{
@@ -40,16 +34,17 @@ export const OverviewGraph = ({
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
             dataKey={hasUsers ? 'username' : 'month'}
-            angle={-90}
+            angle={0}
             textAnchor="end"
             axisLine={false}
             tickLine={false}
-            interval={0}
+            // interval={0}
             tick={{
               fill: '#4A5568',
               fontSize: '12px',
               fontWeight: 400,
               fontStyle: 'normal',
+              width:'20px',
             }}
             tickMargin={20}
             label={{
@@ -75,7 +70,7 @@ export const OverviewGraph = ({
                 fontWeight: 400,
                 fontStyle: 'normal',
               }}
-              tickMargin={20}
+              tickMargin={60}
               xAxisId="users"
             />
           )}
@@ -85,7 +80,7 @@ export const OverviewGraph = ({
             tickSize={8}
             tickCount={10}
             domain={[0, 'auto']}
-            interval={0}
+            // interval={0}
             axisLine={false}
             tick={{
               fontSize: '12px',
@@ -133,7 +128,6 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         months.map((month, monthIndex) => {
           const monthExistsInChart = Object.keys(chartData)?.find(months => months === month)
           let nameMonthData
-
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
@@ -220,7 +214,6 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         (!selectedFpm.length || selectedFpm.includes(a.userId)),
     )
     setGraphData(finalGraphData)
-
   }
   return (
     <>
