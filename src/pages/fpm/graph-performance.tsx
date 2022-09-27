@@ -64,7 +64,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           margin={{
             top: 14,
             right: 30,
-            left: 0,
+            left: 20,
             bottom: 0,
           }}
         >
@@ -86,8 +86,8 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
             tickSize={8}
-            tickCount={7}
-            domain={[0]}
+            tickCount={10}
+            domain={[0, 20000]}
             axisLine={false}
             tick={{
               fontSize: '12px',
@@ -96,6 +96,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
               fill: '#4A5568',
             }}
             tickFormatter={value => `$${value}`}
+            interval={0}
           />
 
           <Tooltip
