@@ -44,7 +44,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               fontSize: '12px',
               fontWeight: 400,
               fontStyle: 'normal',
-              // width: '20px',
             }}
             tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             tickMargin={20}
@@ -81,7 +80,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickSize={8}
             tickCount={10}
             domain={[0, 'auto']}
-            // interval={0}
             axisLine={false}
             tick={{
               fontSize: '12px',
@@ -132,12 +130,6 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
-              // const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
-              // const username= `${firstName} ${lastName}`
-              // const usernameInitials = username.split(' ').map((n)=>n[0]).join("").toUpperCase()
-              // return {
-              //   username: `${usernameInitials}`,
-              // user: `${firstName} ${lastName}`,
               const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
               return {
                 username: `${firstName} ${lastName}`,
