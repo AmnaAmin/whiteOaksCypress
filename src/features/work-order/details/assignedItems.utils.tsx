@@ -17,21 +17,21 @@ import round from 'lodash/round'
 const swoPrefix = '/smartwo/api'
 
 export type LineItems = {
-  id: number | string | null
+  id?: number | string | null
   sku: string
   productName: string
-  details: string
-  description: string
+  details?: string
+  description?: string
   price?: string | number | null
-  unitPrice: string | number | null
+  unitPrice?: string | number | null
   quantity: number | string | null
-  totalPrice: string | number | null
+  totalPrice?: string | number | null
   isAssigned?: boolean
-  projectId: string | number | null
-  createdBy: string
-  createdDate: string
-  modifiedBy: string
-  modifiedDate: string
+  projectId?: string | number | null
+  createdBy?: string
+  createdDate?: string
+  modifiedBy?: string
+  modifiedDate?: string
   smartLineItemId?: string | number | null
   source?: string
   isVerified?: boolean
