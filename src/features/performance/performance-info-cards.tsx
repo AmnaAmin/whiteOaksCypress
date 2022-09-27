@@ -42,7 +42,7 @@ export const PerformanceInfoCards: React.FC<{
         ) : (
           <>
             <Center width={'33%'} borderRight="1px solid #E5E5E5" px={4} flexWrap={'wrap'}>
-              <IconElement Icon={ProfitIcon} isLoading={isLoading} />
+              <IconElement Icon={RevenueIcon} isLoading={isLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
                   <Box>{'Revenue'}</Box>
@@ -64,7 +64,7 @@ export const PerformanceInfoCards: React.FC<{
               </Flex>
             </Center>
             <Center width={'33%'}>
-              <IconElement Icon={RevenueIcon} isLoading={isLoading} />
+              <IconElement Icon={ProfitIcon} isLoading={isLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
                   <Box>{'Profit'}</Box>
