@@ -74,17 +74,26 @@ const PaymentInfoTab = props => {
     clientApprovedAmount: string | null
   }
 
+  const {
+    register,
+    handleSubmit,
+    control,
+    getValues,
+    setValue,
+    reset: resetPayments,
+  } = useForm<FormValues>({
+    defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
+  })
+
   useEffect(() => {
     if ([STATUS.Declined]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
       setValue('paymentTermDate', null)
       setValue('expectedPaymentDate', null)
+    } else {
+      resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }
   }, [workOrder])
-
-  const { register, handleSubmit, control, getValues, setValue } = useForm<FormValues>({
-    defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
-  })
 
   const {
     invoiceAmountEnabled,
