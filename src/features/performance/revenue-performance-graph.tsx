@@ -33,19 +33,20 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
+            angle={-45}
             dataKey={hasUsers ? 'username' : 'month'}
-            angle={0}
             textAnchor="end"
             axisLine={false}
             tickLine={false}
-            // interval={0}
+            interval={Math.floor(vendorData.length / 60)}
             tick={{
               fill: '#4A5568',
               fontSize: '12px',
               fontWeight: 400,
               fontStyle: 'normal',
-              width:'20px',
+              // width: '20px',
             }}
+            tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             tickMargin={20}
             label={{
               value: 'Field Project Manager',
