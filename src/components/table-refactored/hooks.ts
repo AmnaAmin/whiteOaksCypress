@@ -27,9 +27,17 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
 
     // This filter will apply when user select a card from the card list
     if (selectedCard) {
-      projectStatusFilter =
-        selectedCard !== 'past due' ? { id: 'projectStatus', value: selectedCard } : { id: 'pastDue', value: true }
-      finalFilters = [...columnFilters, projectStatusFilter]
+      if (selectedCard === 'past due') {
+        const pastDueFilters = [
+          { id: 'projectStatusId', value: '7,8,9' },
+          { id: 'clientSignoffDate', value: new Date() },
+        ]
+        finalFilters = [...finalFilters, ...pastDueFilters]
+      } else {
+        projectStatusFilter =
+          selectedCard !== 'past due' ? { id: 'projectStatus', value: selectedCard } : { id: 'pastDue', value: true }
+        finalFilters = [...columnFilters, projectStatusFilter]
+      }
     }
 
     // This filter will apply when user select a day from the project due days list

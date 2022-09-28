@@ -41,6 +41,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   poNumber: 'poNumber.contains',
   pastDue: 'pastDue.equals',
   projectManagerId: 'projectManagerId.in',
+  projectStatusId: 'projectStatusId.in',
+  clientSignoffDate: 'clientSignoffDate.lessThanOrEqual',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -193,11 +195,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'Vendor Payment',//Not getting this from backend at the moment
+    header: 'Vendor Payment', //Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
       return isDefined(cellInfo.value) ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
-    }
+    },
   },
   {
     header: 'projects.projectTable.draw',
