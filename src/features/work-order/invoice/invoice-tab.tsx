@@ -33,6 +33,7 @@ import { addDays, nextFriday } from 'date-fns'
 import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -72,6 +73,7 @@ export const InvoiceTabPC = ({
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
+  const { isDoc, isProjectCoordinator } = useUserRolesSelector()
 
   const {
     isOpen: isGenerateInvoiceOpen,
@@ -309,7 +311,9 @@ export const InvoiceTabPC = ({
               {t('see')} {t('invoice')}
             </Button>
           )}
-          {workOrder.lienWaiverAccepted &&
+          {isDoc &&
+            isProjectCoordinator &&
+            workOrder.lienWaiverAccepted &&
             [WOstatus.Declined, WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
               <Button
                 variant="outline"
