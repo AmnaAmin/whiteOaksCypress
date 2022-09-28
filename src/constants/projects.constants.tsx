@@ -34,6 +34,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   profitTotal: 'profitTotal.equals',
   materialCost: 'materialCost.contains',
   drawAmount: 'drawAmount.greaterThanOrEqual',
+  vendorPaymentPercentage: 'vendorPaymentPercentage.equals',
   woNumber: 'woNumber.contains',
   poNumber: 'poNumber.contains',
   pastDue: 'pastDue.equals',
@@ -188,6 +189,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.materialCost).format('$0,0.00')
     },
+  },
+  {
+    header: 'vendorPayment',//Not getting this from backend at the moment
+    accessorKey: 'vendorPaymentPercentage',
+    accessorFn(cellInfo: any) {
+      numeral(cellInfo.vendorPaymentPercentage / 100).format('0,0.00%')
+    }
   },
   {
     header: 'projects.projectTable.draw',
