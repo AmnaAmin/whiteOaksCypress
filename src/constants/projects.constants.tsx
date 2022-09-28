@@ -191,7 +191,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'vendorPayment',//Not getting this from backend at the moment
+    header: 'Vendor Payment',//Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
       numeral(cellInfo.vendorPaymentPercentage / 100).format('0,0.00%')
