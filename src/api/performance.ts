@@ -65,6 +65,7 @@ export const ignorePerformance = [
 
 export const badges = [
   { value: 'None', label: 'None' },
+  { value: 'Bronze', label: 'Bronze' },
   { value: 'Silver', label: 'Silver' },
   { value: 'Gold', label: 'Gold' },
   { value: 'Platinum', label: 'Platinum' },

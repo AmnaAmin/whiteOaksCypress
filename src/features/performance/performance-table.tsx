@@ -7,6 +7,7 @@ import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
 import PerformanceModal from './performance-modal'
+import Badge from 'features/common/badge'
 
 const performanceTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -83,6 +84,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       {
         Header: 'Badge',
         accessor: 'badge',
+        Cell: ({ value, row }) => <Badge value={value} id={row.original.badge} />,
       },
       {
         Header: 'Disqualified Revenue',

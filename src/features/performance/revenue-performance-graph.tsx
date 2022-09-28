@@ -7,7 +7,7 @@ import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -18,38 +18,42 @@ type GraphData = {
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+  const barColors = ["#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2"]
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
         <BarChart
-          data-testid="overview-chart"
           data={vendorData}
           barSize={50}
           margin={{
             top: 24,
             right: 30,
             left: 40,
-            bottom: 60,
+            bottom: 100,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
+            angle={-45}
             dataKey={hasUsers ? 'username' : 'month'}
+            textAnchor="end"
             axisLine={false}
             tickLine={false}
+            interval={Math.floor(vendorData.length / 60)}
             tick={{
               fill: '#4A5568',
               fontSize: '12px',
               fontWeight: 400,
               fontStyle: 'normal',
             }}
+            tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             tickMargin={20}
             label={{
               value: 'Field Project Manager',
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 60,
+              offset: 100,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -67,8 +71,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontWeight: 400,
                 fontStyle: 'normal',
               }}
-              tickMargin={20}
-              interval={0}
+              tickMargin={60}
               xAxisId="users"
             />
           )}
@@ -76,8 +79,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
             tickSize={8}
-            tickCount={7}
-            domain={[0]}
+            tickCount={10}
+            domain={[0, 'auto']}
             axisLine={false}
             tick={{
               fontSize: '12px',
@@ -102,7 +105,11 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: '#EBF8FF' }}
           />
-          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]} />
+          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
+            {vendorData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -125,7 +132,6 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         months.map((month, monthIndex) => {
           const monthExistsInChart = Object.keys(chartData)?.find(months => months === month)
           let nameMonthData
-
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
@@ -174,7 +180,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
 
-    if (['All'].includes(monthOption?.label)) {
+    if (['Past Quarter', 'Current Quarter', 'All'].includes(monthOption?.label)) {
       selectedFpm = take(fieldProjectManagerOptions, 5)
     }
 
@@ -233,7 +239,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                   <ReactSelect
                     name={`fpmDropdown`}
                     value={fpmOption}
-                    isDisabled={!['All'].includes(monthOption?.label)}
+                    isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
@@ -247,7 +253,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={480} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers />
         )}
       </Box>
     </>
