@@ -311,8 +311,7 @@ export const InvoiceTabPC = ({
               {t('see')} {t('invoice')}
             </Button>
           )}
-          {isDoc &&
-            isProjectCoordinator &&
+          {(isDoc || isProjectCoordinator) &&
             workOrder.lienWaiverAccepted &&
             [WOstatus.Declined, WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
               <Button

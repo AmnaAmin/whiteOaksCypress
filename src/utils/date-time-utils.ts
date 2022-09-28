@@ -23,7 +23,7 @@ export const dateISOFormat = (date: string | Date | null) => {
   // check is date is valid
   if (dateObj.toString() === 'Invalid Date') return null
 
-  return dateObj?.toISOString() || null
+  return dateObj.toISOString()
 }
 
 export const dateISOFormatWithZeroTime = (date: string | Date | null) => {
@@ -33,6 +33,8 @@ export const dateISOFormatWithZeroTime = (date: string | Date | null) => {
 
   // check is date is valid
   if (dateObj.toString() === 'Invalid Date') return null
+
+  dateObj.setHours(0, 0, 0, 0)
 
   return dateObj?.toISOString() || null
 }

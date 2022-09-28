@@ -41,6 +41,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   poNumber: 'poNumber.contains',
   pastDue: 'pastDue.equals',
   projectManagerId: 'projectManagerId.in',
+  projectStatusId: 'projectStatusId.in',
+  clientSignoffDate: 'clientSignoffDate.lessThanOrEqual',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
