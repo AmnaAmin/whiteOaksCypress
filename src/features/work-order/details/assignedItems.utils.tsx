@@ -105,9 +105,9 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
   const { data: swoProject, ...rest } = useQuery<any>(
     ['fetchProjectId', projectId],
     async () => {
-      const response = await client(`projects?projectId.equals=` + projectId, {})
+      const response = await client(`projects/projectId/` + projectId, {})
 
-      if (!response?.data[0] || (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED')) {
+      if (!response?.data || (response?.data && response?.data?.status === 'COMPLETED')) {
         setRefetchInterval(0)
       }
       return response?.data
@@ -119,7 +119,7 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
   )
 
   return {
-    swoProject: swoProject?.length > 0 ? swoProject[0] : null,
+    swoProject,
     ...rest,
   }
 }
