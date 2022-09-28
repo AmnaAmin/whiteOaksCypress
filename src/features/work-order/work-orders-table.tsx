@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from 'features/work-order/work-order-edit'
 import Status from 'features/common/status'
+import { useGanttChart } from 'api/pc-projects'
 
 const WorkOrderRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -60,6 +61,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   const { data: workOrders, refetch, isFetching } = useProjectWorkOrders(projectId)
+  const { refetch: refetchGantt } = useGanttChart(projectId)
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   // Do not show WO which have been cancelled
@@ -125,6 +127,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           onClose={() => {
             setSelectedWorkOrder(undefined)
             refetch()
+            refetchGantt()
             onCloseDisclosure()
           }}
           isOpen={isOpen}
