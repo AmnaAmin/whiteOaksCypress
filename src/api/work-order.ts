@@ -86,6 +86,7 @@ export const useCreateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['projectSchedule', projectId])
 
         toast({
           title: 'Work Order',
