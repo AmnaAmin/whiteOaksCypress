@@ -44,9 +44,9 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
 
   return tableColumns?.sort((itemA, itemB) => {
     // @ts-ignore
-    const itemAOrder = getOrder(itemA.accessKey) ?? 0
+    const itemAOrder = getOrder(itemA.accessorKey) ?? 0
     // @ts-ignore
-    const itemBOrder = getOrder(itemB.accessor) ?? 0
+    const itemBOrder = getOrder(itemB.accessorKey) ?? 0
 
     return itemAOrder - itemBOrder
   })
