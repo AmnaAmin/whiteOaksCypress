@@ -1,7 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table'
 import Status from 'features/common/status'
 import numeral from 'numeral'
+import { isDefined } from 'utils'
 import { dateFormat } from 'utils/date-time-utils'
+import { percentageFormatter } from 'utils/string-formatters'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -194,7 +196,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'Vendor Payment',//Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
-      numeral(cellInfo.vendorPaymentPercentage / 100).format('0,0.00%')
+      return isDefined(cellInfo.value) ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
     }
   },
   {
