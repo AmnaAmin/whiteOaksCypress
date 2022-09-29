@@ -38,6 +38,8 @@ export const workOrder = {
         clientApprovedAmountInfo: 'Client Approved Amount is required to enable add items.',
         amount: 'Amount',
         itemsLoading: 'Items Loading...',
+        rejectedInvoiceInfo:
+          'Invoice and Lien Waiver have been declined. Please update Lien Waiver and regenerate Invoice.',
       },
     },
   },
@@ -77,6 +79,8 @@ export const workOrder = {
         clientApprovedAmountInfo: 'Se requiere una cantidad aprobada por el cliente para agregar artículos.',
         amount: 'Monto',
         itemsLoading: 'Cargando artículos...',
+        rejectedInvoiceInfo:
+          'Se han rechazado la factura y la exención de gravamen. Actualice la exención de gravamen y regenere la factura.',
       },
     },
   },

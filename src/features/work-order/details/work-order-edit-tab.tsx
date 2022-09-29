@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
   Divider,
@@ -36,6 +39,7 @@ import {
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
+import { WORK_ORDER } from '../workOrder.i18n'
 
 const CalenderCard = props => {
   return (
@@ -248,6 +252,15 @@ const WorkOrderDetailTab = props => {
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <Stack pt="32px" spacing="32px" mx="32px">
+            <Box>
+              {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+                <Alert status="info" variant="custom" size="sm">
+                  <AlertIcon />
+
+                  <AlertDescription>{t(`${WORK_ORDER}.rejectedInvoiceInfo`)}</AlertDescription>
+                </Alert>
+              )}
+            </Box>
             <SimpleGrid columns={5}>
               <InformationCard title="Company Name" date={companyName} />
               <InformationCard title="Vendor Type" date={skillName} />
