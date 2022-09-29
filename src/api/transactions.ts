@@ -134,6 +134,9 @@ export const useProjectWorkOrdersWithChangeOrders = (projectId?: string) => {
 
       return response?.data
     },
+    {
+      enabled: !!projectId,
+    },
   )
 
   const changeOrderOptions = changeOrders?.map(changeOrder => ({
@@ -678,13 +681,17 @@ export const useTransactionExport = projectId => {
         })
       })
     })
-    return exportData;
+    return exportData
   }
 
-  useQuery(['changeOrder', projectId], async () => {
-    const response = await client(`changeOrder/project/${projectId}`, {})
-    setExport(formatDocumentResponse(response?.data))
-  })
+  useQuery(
+    ['changeOrder', projectId],
+    async () => {
+      const response = await client(`changeOrder/project/${projectId}`, {})
+      setExport(formatDocumentResponse(response?.data))
+    },
+    { enabled: !!projectId },
+  )
 
   return {
     exportData,
