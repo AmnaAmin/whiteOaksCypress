@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Divider,
   Flex,
@@ -237,6 +240,12 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   return (
     <Box>
       <ModalBody h={'calc(100vh - 300px)'} pl="25px" pr="25px">
+        {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
+          <Alert status="info" variant="custom" size="sm">
+            <AlertIcon />
+            <AlertDescription>{t('rejectedInvoiceInfo')}</AlertDescription>
+          </Alert>
+        )}
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
