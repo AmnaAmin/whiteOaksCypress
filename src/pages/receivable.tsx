@@ -51,7 +51,7 @@ export const Receivable = () => {
   const Submit = formValues => {
     const payloadData = compact(formValues.id).map(id => ({
       id: parseInt(id as string),
-      type: 'Remaining Payments',
+      type: 'draw',
     }))
 
     if (!payloadData.length) return
