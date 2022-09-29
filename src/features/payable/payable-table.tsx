@@ -98,15 +98,17 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     return (
       <Box overflow="auto" width="100%">
         <>
-          <WorkOrderDetails
-            workOrder={selectedWorkOrder as ProjectWorkOrderType}
-            onClose={() => {
-              setSelectedWorkOrder(undefined)
-              refetch()
-              onCloseDisclosure()
-            }}
-            isOpen={isOpen}
-          />
+          {isOpen && (
+            <WorkOrderDetails
+              workOrder={selectedWorkOrder as ProjectWorkOrderType}
+              onClose={() => {
+                setSelectedWorkOrder(undefined)
+                refetch()
+                onCloseDisclosure()
+              }}
+              isOpen={isOpen}
+            />
+          )}
           <TableWrapper
             columns={payableColumns}
             setTableInstance={setTableInstance}
