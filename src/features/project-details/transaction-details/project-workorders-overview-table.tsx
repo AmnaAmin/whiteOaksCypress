@@ -186,7 +186,6 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
     ],
     TableNames.projectFinancialOverview,
   )
-  // const { isLoading, financialOveriewTableData } = props
 
   return (
     <TableWrapper
