@@ -4,7 +4,6 @@ import { RowProps } from 'components/table/react-table'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableWrapper } from 'components/table/table'
 import { useOverPaymentTransaction, useTransactionExport } from 'api/transactions'
-import { useParams } from 'react-router'
 import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
@@ -53,8 +52,8 @@ const OverpaymentTransactionRow: React.FC<RowProps> = ({ row, style, onRowClick 
 }
 
 export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
-  const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
+  const [projectId, setProjectId] = useState<null | string>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { transactions = [], isLoading } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
@@ -116,12 +115,13 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
   const { exportData } = useTransactionExport(projectId)
+
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row
       setSelectedTransactionName(original.name)
       setSelectedTransactionId(original.id)
-
+      setProjectId(original.projectId)
       onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
