@@ -30,7 +30,8 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       if (selectedCard === 'past due') {
         const pastDueFilters = [
           { id: 'projectStatusId', value: '7,8,9' },
-          { id: 'clientSignoffDate', value: new Date() },
+          { id: 'clientDueDate', value: new Date() },
+          { id: 'woaCompletionDate', value: '0' },
         ]
         finalFilters = [...finalFilters, ...pastDueFilters]
       } else {
