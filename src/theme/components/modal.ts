@@ -45,7 +45,7 @@ const modalVariants = {
     },
 
     sizes: {
-      flexible: {
+      auto: {
         dialog: { maxWidth: 'auto', width: 'auto' },
       },
       '3xl': {
@@ -53,6 +53,9 @@ const modalVariants = {
       },
       '5xl': {
         dialog: { minWidth: '1050px' },
+      },
+      flexible: {
+        dialog: { width: 'calc(100% - 150px)' },
       },
     },
   },

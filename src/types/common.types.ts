@@ -87,3 +87,5 @@ export type Client = {
   modifiedBy: string | null
   modifiedDate: string | null
 }
+
+export type Language = 'English' | 'Spanish'

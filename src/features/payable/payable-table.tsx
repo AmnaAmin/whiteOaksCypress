@@ -1,0 +1,131 @@
+import React, { useEffect, useState } from 'react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
+import { RowProps } from 'components/table/react-table'
+import { useAccountPayable } from 'api/account-payable'
+import { ProjectWorkOrderType } from 'types/project.type'
+import { TableWrapper } from 'components/table/table'
+import { Column } from 'react-table'
+import WorkOrderDetails from 'features/work-order/work-order-edit'
+
+const payableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+  return (
+    <Tr
+      bg="white"
+      _hover={{
+        background: '#eee',
+      }}
+      onClick={e => {
+        if (onRowClick) {
+          onRowClick(e, row)
+        }
+      }}
+      {...row.getRowProps({
+        style,
+      })}
+    >
+      {row.cells.map(cell => {
+        return (
+          <Td {...cell.getCellProps()} p="0">
+            <Flex alignItems="center" h="60px">
+              <Text isTruncated title={cell.value} padding="0 15px">
+                {cell.render('Cell')}
+              </Text>
+            </Flex>
+          </Td>
+        )
+      })}
+    </Tr>
+  )
+}
+
+type PayablePropsTyep = {
+  resizeElementRef?: any
+  ref?: any
+  setTableInstance: (tableInstance: any) => void
+  payableColumns: Column[]
+  selectedCard: string
+  selectedDay: string
+  weekDayFilters: any[]
+}
+
+export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
+  ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
+    const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
+    const { data: payableData, isLoading, refetch } = useAccountPayable()
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+    const [payableFilterData, setFilterPayableData] = useState()
+
+    const workOrders = payableData?.workOrders
+
+    useEffect(() => {
+      if (workOrders?.length > 0 && selectedWorkOrder?.id) {
+        const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+        if (updatedWorkOrder) {
+          setSelectedWorkOrder({ ...updatedWorkOrder })
+        } else {
+          setSelectedWorkOrder(undefined)
+        }
+      } else {
+        setSelectedWorkOrder(undefined)
+      }
+    }, [workOrders])
+
+    useEffect(() => {
+      if (!selectedCard && !selectedDay) setFilterPayableData(workOrders)
+
+      setFilterPayableData(
+        workOrders?.filter(
+          project =>
+            !selectedCard || project.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+        ),
+      )
+
+      // Due Project Weekly Filter
+      const getDates = weekDayFilters?.filter(day => selectedDay === day.id)
+
+      const clientDate = getDates?.map(date => {
+        return date?.date
+      })
+
+      if (selectedDay) {
+        setFilterPayableData(
+          workOrders?.filter(payableValue => {
+            return clientDate.includes(payableValue.expectedPaymentDate?.substr(0, 10))
+          }),
+        )
+      }
+    }, [selectedCard, selectedDay, workOrders])
+
+    return (
+      <Box overflow="auto" width="100%">
+        <>
+          {isOpen && (
+            <WorkOrderDetails
+              workOrder={selectedWorkOrder as ProjectWorkOrderType}
+              onClose={() => {
+                setSelectedWorkOrder(undefined)
+                refetch()
+                onCloseDisclosure()
+              }}
+              isOpen={isOpen}
+            />
+          )}
+          <TableWrapper
+            columns={payableColumns}
+            setTableInstance={setTableInstance}
+            data={payableFilterData || []}
+            isLoading={isLoading}
+            TableRow={payableRow}
+            tableHeight="calc(100vh - 300px)"
+            name="payable-table"
+            defaultFlexStyle={false}
+            onRowClick={(e, row) => {
+              setSelectedWorkOrder(row.original)
+              onOpen()
+            }}
+          />
+        </>
+      </Box>
+    )
+  },
+)

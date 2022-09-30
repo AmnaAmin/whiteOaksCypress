@@ -18,12 +18,12 @@ const TableVariants = {
               background: '#F7FAFC',
               fontWeight: 500,
               bg: 'gray.50',
-              // h: '72px',
+              // h: '45px',
             },
           },
           tbody: {
             tr: {
-              h: '72px',
+              h: '45px',
               bg: 'white',
               fontWeight: 400,
             },

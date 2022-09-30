@@ -31,7 +31,9 @@ type TableWrapperProps = {
   data: any
   columns: ColumnDef<any>[]
   pagination?: PaginationState
+  columnFilters?: ColumnFiltersState
   setPagination?: (updater: Updater<PaginationState>) => void
+  setColumnFilters?: (updater: Updater<ColumnFiltersState>) => void
   totalPages?: number
   defaultFlexStyle?: boolean
 }
@@ -40,15 +42,16 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   data,
   columns,
   pagination,
+  columnFilters,
   setPagination,
+  setColumnFilters,
   totalPages = 0,
   children,
 }) => {
-  const emptyRowsLength = pagination ? pagination.pageSize : 3
+  const emptyRowsLength = 3
 
   const emptyRows = Array(emptyRowsLength).fill({})
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = React.useState('')
 
   // Create pagination state in case pagination object enabled
@@ -69,7 +72,6 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     state: {
       ...paginationState,
       sorting,
-      columnFilters,
       globalFilter,
     },
     onColumnFiltersChange: setColumnFilters,

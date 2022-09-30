@@ -18,9 +18,9 @@ import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useTranslation } from 'react-i18next'
-import { useProjectTypeSelectOptions } from 'utils/pc-projects'
+import { useProjectTypeSelectOptions } from 'api/pc-projects'
 import { CustomRequiredInput } from 'components/input/input'
-import { NEW_PROJECT } from 'features/projects/projects.i18n'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { useProjectInformationNextButtonDisabled, useWOStartDateMin } from './hooks'
 
 type InfoProps = {
@@ -37,9 +37,11 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     formState: { errors },
     control,
     setValue,
+    setError,
+    clearErrors,
   } = useFormContext<ProjectFormValues>()
 
-  const isProjectInformationNextButtonDisabled = useProjectInformationNextButtonDisabled(control)
+  const isProjectInformationNextButtonDisabled = useProjectInformationNextButtonDisabled(control, errors)
 
   const woStartDateMin = useWOStartDateMin(control)
 
@@ -182,7 +184,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
             </FormControl>
           </GridItem>
           <GridItem mb={10}>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.documents}>
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.uploadProjectSOW`)} size="md">
                 {t(`${NEW_PROJECT}.uploadProjectSOW`)}
               </FormLabel>
@@ -199,11 +201,21 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                           name={field.name}
                           value={field.value ? field.value?.name : t(`${NEW_PROJECT}.chooseFile`)}
                           isError={!!fieldState.error?.message}
+                          acceptedFiles=".pdf,.png,.jpg,.jpeg"
                           onChange={(file: any) => {
                             onFileChange(file)
                             field.onChange(file)
+                            if (!['application/pdf', 'image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
+                              setError(field.name, {
+                                type: 'custom',
+                                message: t(`${NEW_PROJECT}.fileFormat`),
+                              })
+                            }
                           }}
-                          onClear={() => setValue(field.name, null)}
+                          onClear={() => {
+                            setValue(field.name, null)
+                            clearErrors([field.name])
+                          }}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>

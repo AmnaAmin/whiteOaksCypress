@@ -179,6 +179,8 @@ export type ProjectDetailsAPIPayload = {
   projectClosedDate: string | null
   finalInvoiceAmount: number | null
   accountRecievable: number | null
+  materialCost: number | null
+  drawAmount: number | null
   accountPayable: number | null
   generalLabourName: string | null
   gatedCommunity: string | null

@@ -1,8 +1,12 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { projects as vendorProjects } from 'features/vendor/projects/projects.i18n'
+import { transactionDetailI18n } from 'features/project-details/transaction-details/transaction-details.i18n'
+import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
+import { workOrder } from 'features/work-order/workOrder.i18n'
+import { transaction } from 'features/project-details/transactions/transactions.i18n'
 import { projects } from 'features/projects/projects.i18n'
-import { transactioni18n } from 'features/project-coordinator/transaction.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -11,8 +15,13 @@ i18n.use(initReactI18next).init({
         //GLOBAL ERRORS
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'Expected Completion Date cannot be more than 1 year of Expected Start Date',
+        ...vendorProjects.en.translation,
+        ...transactionDetailI18n.en.tranlation,
+        ...vendor_manager.en.translation,
+        ...workOrder.en.translation,
+        ...transaction.en.translation,
         ...projects.en.translation,
-        ...transactioni18n.en.tranlation,
+
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -71,6 +80,8 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Pending Transactions',
         expectedPaymentDate: 'Expected Payment Date',
         generalLabor: 'General Labor',
+        materialCost: 'Material Cost',
+        drawAmount: 'Draw Amount',
 
         // Receivable
         dueProjects: 'Due Projects',
@@ -78,7 +89,6 @@ i18n.use(initReactI18next).init({
         terms: 'Terms',
         paymentTypes: 'Payment Types',
         balance: 'Balance',
-        markets: 'Markets',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
         woNo: 'WO No',
@@ -98,6 +108,7 @@ i18n.use(initReactI18next).init({
         ProjectLabel: 'Type',
         vendorWOStatusValue: 'WO Status',
         transactionTypeLabel: 'Type',
+        parentWorkOrderId: 'Vendor',
         transactionTotal: 'Total Amount',
         modifiedDate: 'Submit',
         skillName: 'Trade',
@@ -105,7 +116,6 @@ i18n.use(initReactI18next).init({
         vendorWOExpectedPaymentDate: 'Expected Payment Date',
 
         // Projects-Transactions
-        updateTransaction: 'Update Transaction',
         newTransaction: 'New Transaction',
         newWorkOrder: 'New Work Order',
         newDocument: 'New Document',
@@ -160,6 +170,7 @@ i18n.use(initReactI18next).init({
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
         companyName: 'Company Name',
+        ownerName: 'Primary Contact',
         clientApprovedAmount: 'Client Approved Amount',
         profitPercentage: 'Profit Percentage',
         vendorWorkOrderAmount: 'Vendor WO Amount',
@@ -190,7 +201,7 @@ i18n.use(initReactI18next).init({
         productName: 'Product Name',
         sku: 'SKU',
         location: 'Location',
-        quantity: 'Quantity',
+        quantity: 'Qty',
         price: 'Price',
         images: 'Images',
         invoicedDate: 'Invoiced Date',
@@ -211,6 +222,8 @@ i18n.use(initReactI18next).init({
         dateOfSignature: 'Date Of Signature',
         apply: 'Apply',
         // Project-Lean-Weiver
+        isUploadedSuccessfully: 'Is Uploaded Successfully',
+        uploadLW: 'Upload LW',
         readMore: 'Read More',
         readLess: 'Read Less',
         recentLW: 'Recent LW',
@@ -243,6 +256,7 @@ i18n.use(initReactI18next).init({
         transactionDoc: 'Transaction',
         createdDate: 'Created Date',
         createdBy: 'Created By',
+        uploadFile: 'Upload File',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -380,7 +394,7 @@ i18n.use(initReactI18next).init({
         overpayment: 'Overpayment',
         remainingPayment: 'Remaining Payment',
         payment: 'Payment',
-        invoiceBackDate: 'Invoice back bate',
+        invoiceBackDate: 'Invoice Back Date',
 
         // work order details
         cancelWorkOrder: 'cancel Work Order',
@@ -430,6 +444,8 @@ i18n.use(initReactI18next).init({
         superName: 'Super Name',
         superPhone: 'Super Phone',
         superEmail: 'Super Email',
+        woaStartDateMessage:
+          'WOA Start date is required to move the project to Active state, Please contact your PC or admin to provide WOA start date.',
 
         // PC Projects Table
         woNumber: 'WO Number',
@@ -456,6 +472,10 @@ i18n.use(initReactI18next).init({
         creditCard: 'Credit Card',
         ach: 'ACH',
         comment: 'Comment',
+
+        //Reports
+        rptPageTitle: 'Reports',
+        rptBackBtnLabel: 'Back',
       },
     },
     es: {
@@ -463,8 +483,12 @@ i18n.use(initReactI18next).init({
         //GLOBAL ERRORS
         EXPECTED_AND_COMPLETION_1_YEAR_ERROR:
           'La fecha de finalización esperada no puede ser más de 1 año de la fecha de inicio esperada',
+        ...vendorProjects.es.translation,
+        ...transactionDetailI18n.es.tranlation,
+        ...vendor_manager.es.translation,
+        ...workOrder.es.translation,
+        ...transaction.es.translation,
         ...projects.es.translation,
-        ...transactioni18n.es.tranlation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -578,6 +602,8 @@ i18n.use(initReactI18next).init({
         pendingTransactions: 'Transacciones Pendientes',
         expectedPaymentDate: 'Fecha de Pago Esperada',
         generalLabor: 'Trabajo general',
+        materialCost: 'Costo material',
+        drawAmount: 'Monto del sorteo',
 
         // receivable
         dueProjects: 'Proyectos Vencidos',
@@ -585,7 +611,7 @@ i18n.use(initReactI18next).init({
         terms: 'Términos',
         paymentTypes: 'Formas De Pago',
         balance: 'Balance',
-        markets: 'Mercados',
+
         woInvoiceDate: 'Fecha de factura de OT',
         poNo: 'Número de orden de compra',
         woNo: 'OT No',
@@ -605,8 +631,10 @@ i18n.use(initReactI18next).init({
         ProjectLabel: 'Escribe',
         vendorWOStatusValue: 'Estado WO',
         transactionTypeLabel: 'Escribe',
+        parentWorkOrderId: 'Vendedora',
         transactionTotal: 'Cantidad Total',
         modifiedDate: 'Entregar',
+
         skillName: 'Comercio',
         pastDueWorkorders: 'Vencido WO',
         vendorWOExpectedPaymentDate: 'Fecha de Pago Esperada',
@@ -616,6 +644,9 @@ i18n.use(initReactI18next).init({
         newVendor: 'Nuevo Vendedor',
         vendorDetail: 'Detalle del proveedor',
         transactionStatus: 'Estado de la Transacción',
+        //Project-Management tab
+        woaStartDateMessage:
+          'Se requiere la fecha de inicio de WOA para mover el proyecto al estado Activo. Comuníquese con su PC o administrador para proporcionar WOA fecha de inicio.',
 
         // Project - Transactions
         updateTransaction: 'Actualizar transacción',
@@ -662,10 +693,12 @@ i18n.use(initReactI18next).init({
         total: 'Total',
         close: 'Cerca',
         save: 'Ahorrar',
+
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
         companyName: 'Nombre de empresa',
+        ownerName: 'Contacto Primario',
         clientApprovedAmount: 'Monto aprobado por el cliente',
         profitPercentage: 'Porcentaje de beneficio',
         vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',
@@ -717,6 +750,8 @@ i18n.use(initReactI18next).init({
         apply: 'Aplicar',
         woaInvoiceDate: 'woa Factura Fecha',
         // Project - Lean-Weiver
+        isUploadedSuccessfully: 'Se carga con éxito',
+        uploadLW: 'Subir LW',
         readMore: 'Lee mas',
         readLess: 'Leer menos',
         recentLW: 'LW reciente',
@@ -747,6 +782,7 @@ i18n.use(initReactI18next).init({
         transactionDoc: 'Transacción',
         createdDate: 'Fecha de creación',
         createdBy: 'creado por',
+        uploadFile: 'Subir archivo',
         // Project - Alerts
         value: 'Valor',
         category: 'Categoría',
@@ -888,6 +924,10 @@ i18n.use(initReactI18next).init({
         // Alerts
         triggeredAlerts: 'Alertas activadas',
         managedAlerts: 'Alertas administradas',
+
+        //Reports
+        rptPageTitle: 'Reports',
+        rptBackBtnLabel: 'Back',
       },
     },
   },

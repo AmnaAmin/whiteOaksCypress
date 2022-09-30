@@ -18,7 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
 import last from 'lodash/last'
-import { readFileContent, useSaveSettings, useAccountDetails } from 'utils/vendor-details'
+import { readFileContent, useSaveSettings, useAccountDetails } from 'api/vendor-details'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { useTranslation } from 'react-i18next'
 import { BiUser } from 'react-icons/bi'
@@ -89,7 +89,7 @@ const Settings = React.forwardRef(() => {
             setImgFile(fileData)
           })
           .catch(err => {
-            console.log('error in convert Image Url to DataURL', err)
+            console.error('error in convert Image Url to DataURL', err)
           })
       }
       reset(defaultSettings)
@@ -100,7 +100,7 @@ const Settings = React.forwardRef(() => {
   const watchAllFields = watch()
   React.useEffect(() => {
     const subscription = watch(value => {
-      console.log('Value Change', value)
+      // console.log('Value Change', value)
     })
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])

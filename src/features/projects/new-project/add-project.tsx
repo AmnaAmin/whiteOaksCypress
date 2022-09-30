@@ -24,14 +24,16 @@ import { ManageProject } from './manage-project'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useToast } from '@chakra-ui/react'
-import { useSaveProjectDetails } from 'utils/pc-projects'
+import { useCreateProjectMutation } from 'api/pc-projects'
 import { dateISOFormat } from 'utils/date-time-utils'
 import { useNavigate } from 'react-router-dom'
 import { DevTool } from '@hookform/devtools'
 import { useTranslation } from 'react-i18next'
-import { NEW_PROJECT } from 'features/projects/projects.i18n'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { useProjectInformationNextButtonDisabled, usePropertyInformationNextDisabled } from './hooks'
-import { createDocumentPayload } from 'utils/project-details'
+import { createDocumentPayload } from 'utils/file-utils'
+import { useAuth } from 'utils/auth-context'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type AddProjectFormProps = {
   onClose: () => void
@@ -40,8 +42,11 @@ type AddProjectFormProps = {
 const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const { t } = useTranslation()
   const toast = useToast()
+  const { isProjectCoordinator } = useUserRolesSelector()
+  const { data } = useAuth()
+  const user = data?.user
 
-  const { mutate: saveProjectDetails } = useSaveProjectDetails()
+  const { mutate: saveProjectDetails } = useCreateProjectMutation()
   const [tabIndex, setTabIndex] = useState(0)
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const navigate = useNavigate()
@@ -80,6 +85,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       clientName: '',
       client: null,
       superLastName: '',
+      superFirstName: '',
       superEmailAddress: '',
       superPhoneNumber: '',
       superPhoneNumberExtension: '',
@@ -92,7 +98,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(methods.control)
+  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(
+    methods.control,
+    methods?.formState?.errors,
+  )
   const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(
     methods.control,
     isDuplicateAddress,
@@ -143,6 +152,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         clientName: values.client?.label,
         clientId: values.client?.value,
         superLastName: values.superLastName,
+        superFirstName: values.superFirstName,
         superEmailAddress: values.superEmailAddress,
         superPhoneNumber: values.superPhoneNumber,
         superPhoneNumberExtension: values.superPhoneNumberExtension,
@@ -150,8 +160,11 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       }
 
       saveProjectDetails(newProjectPayload, {
-        onSuccess(response: any) {
-          const projectId = response?.data?.id
+        onSuccess(response) {
+          const project = response?.data
+          const projectId = project?.id
+          const projectCordinatorId = project?.projectCordinatorId
+
           toast({
             title: 'Project Details',
             description: `New project has been created successfully with project id: ${projectId}`,
@@ -161,6 +174,11 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             position: 'top-left',
           })
           onClose()
+
+          // In case project coordinator created a new project for other user
+          // than it should be redirected to project details page
+          if (isProjectCoordinator && user?.id !== projectCordinatorId) return
+
           navigate(`/project-details/${projectId}`)
         },
         onError(error: any) {

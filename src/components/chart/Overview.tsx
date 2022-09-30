@@ -1,38 +1,19 @@
 import { Box } from '@chakra-ui/react'
-import { useVendorsPerMonth } from 'utils/vendor-dashboard'
+import { useVendorsPerMonth } from 'api/vendor-dashboard'
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { GenericObjectType } from 'types/common.types'
 import { values } from 'lodash'
-import { WORK_ORDER_STATUS } from 'features/projects/work-order-status'
+import { months, monthsShort } from 'utils/date-time-utils'
 
-export const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-export const monthsShort: GenericObjectType = {
-  January: 'Jan',
-  February: 'Feb',
-  March: 'Mar',
-  April: 'Apr',
-  May: 'May',
-  June: 'Jun',
-  July: 'Jul',
-  August: 'Aug',
-  September: 'Sep',
-  October: 'Oct',
-  November: 'Nov',
-  December: 'Dec',
+export enum WORK_ORDER_STATUS {
+  Paid = 68,
+  Active = 34,
+  Completed = 36,
+  Cancelled = 35,
+  Inactive = 37,
+  Invoiced = 110,
+  Decline = 111,
+  PastDue = 114,
 }
 
 const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
@@ -46,7 +27,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
       Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
       Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
       Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
-      Cancelled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+      Canceled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
@@ -100,7 +81,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Cancelled" fill="#F7685B" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
           <Legend
             wrapperStyle={{
               lineHeight: '31px',

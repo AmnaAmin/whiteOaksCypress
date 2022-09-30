@@ -458,7 +458,6 @@ export const useTableColumnSettingsUpdateMutationForFakeData = (tableName: Table
   return useMutation(
     'PostGridColumn',
     async (payload: TableColumnSetting[]) => {
-      console.log('payload', payload)
       settingColumns = payload
       return payload
     },

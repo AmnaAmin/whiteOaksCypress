@@ -30,6 +30,8 @@ export type Project = {
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
   market: string | null
+  materialCost: number | null
+  drawAmount: number | null
   modifiedBy: string | null
   modifiedDate: string | null
   name: string | null
@@ -219,6 +221,7 @@ export type ProjectFormValues = {
   clientName?: string
   client?: SelectOption | null
   superLastName?: string | null
+  superFirstName?: string | null
   superPhoneNumber?: string
   superPhoneNumberExtension?: string
   superEmailAddress?: string

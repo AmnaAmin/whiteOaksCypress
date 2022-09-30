@@ -1,148 +1,103 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import { TableWrapper } from 'components/table/table'
-import { RowProps } from 'components/table/react-table'
-import { Link } from 'react-router-dom'
-import { useProjects } from 'utils/projects'
-import Status from './status'
-import { dateFormat } from 'utils/date-time-utils'
-import { Column } from 'react-table'
-import { t } from 'i18next'
-
-export const PROJECT_COLUMNS = [
-  {
-    Header: 'ID',
-    accessor: 'id',
-  },
-  {
-    Header: t('type'),
-    accessor: 'projectTypeLabel',
-  },
-  {
-    Header: t('WOstatus'),
-    accessor: 'vendorWOStatusValue',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.vendorWOStatusValue} />,
-  },
-  {
-    Header: t('address'),
-    accessor: 'streetAddress',
-  },
-  {
-    Header: t('region'),
-    accessor: 'region',
-  },
-  {
-    Header: t('pendingTransactions'),
-    accessor: 'pendingTransactions',
-  },
-  {
-    Header: t('pastDueWO'),
-    accessor: 'pastDueWorkorders',
-  },
-  {
-    Header: t('DueDateWO'),
-    accessor: 'clientDueDate',
-    Cell({ value }) {
-      return dateFormat(value)
-    },
-    getCellExportValue(row) {
-      return dateFormat(row.values.vendorWOExpectedPaymentDate)
-    },
-  },
-  {
-    Header: t('expectedPaymentDate'),
-    accessor: 'vendorWOExpectedPaymentDate',
-    Cell({ value }) {
-      return dateFormat(value)
-    },
-    getCellExportValue(row) {
-      return dateFormat(row.values.vendorWOExpectedPaymentDate)
-    },
-  },
-]
-
-const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
-  const idCell = row.cells.find(cell => cell.column.id === 'id')
-  const projectId = idCell?.value
-
-  return (
-    <Link to={`/project-details/${projectId}`} data-testid="project-table-row">
-      <Tr
-        bg="white"
-        _hover={{
-          background: 'gray.50',
-          '& > td > a': {
-            color: '#333',
-          },
-        }}
-        {...row.getRowProps({
-          style,
-        })}
-      >
-        {row.cells.map((cell, index) => {
-          return (
-            <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-              <Flex alignItems="center" h="72px" pl="10px">
-                <Text
-                  noOfLines={2}
-                  title={cell.value}
-                  padding="0 15px"
-                  color="gray.600"
-                  mb="20px"
-                  mt="10px"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  fontWeight="400"
-                >
-                  {cell.render('Cell')}
-                </Text>
-              </Flex>
-            </Td>
-          )
-        })}
-      </Tr>
-    </Link>
-  )
-}
+import React, { useState } from 'react'
+import { Box } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
+import { useGetAllProjects, useProjects } from 'api/projects'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import Table from 'components/table-refactored/table'
+import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ExportButton } from 'components/table-refactored/export-button'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentPageWithTotal,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { TableNames } from 'types/table-column.types'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { PaginationState } from '@tanstack/react-table'
+import { PROJECT_COLUMNS } from 'constants/projects.constants'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
 
 type ProjectProps = {
   selectedCard: string
-  projectColumns: Column[]
-  resizeElementRef: any
-  setTableInstance: (tableInstance: any) => void
+  selectedDay: string
+  userIds?: number[]
+  selectedFPM?: any
 }
-export const ProjectsTable: React.FC<ProjectProps> = ({
-  setTableInstance,
-  projectColumns,
-  resizeElementRef,
-  selectedCard,
-}) => {
-  const { projects, isLoading } = useProjects()
-  const [filterProjects, setFilterProjects] = useState(projects)
 
-  useEffect(() => {
-    if (!selectedCard) setFilterProjects(projects)
-    setFilterProjects(
-      projects?.filter(
-        project =>
-          !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
-      ),
-    )
-  }, [selectedCard, projects])
+export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
+  const navigate = useNavigate()
+
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+    pagination,
+    setPagination,
+    selectedCard,
+    selectedDay,
+    selectedFPM,
+    userIds,
+  })
+
+  const { projects, isLoading, totalPages } = useProjects(fitlersQueryString, pagination.pageIndex, pagination.pageSize)
+
+  const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+    selectedCard,
+    selectedDay,
+    selectedFPM,
+    userIds,
+  })
+  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(filterQueryStringWithoutPagination)
+
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+
+  const onSave = (columns: any) => {
+    postGridColumn(columns)
+  }
+
+  const onRowClick = rowData => {
+    navigate(`/project-details/${rowData.id}`)
+  }
 
   return (
-    <Box ref={resizeElementRef} height="100%">
-      <TableWrapper
-        isLoading={isLoading}
-        columns={projectColumns}
-        data={filterProjects || []}
-        TableRow={ProjectRow}
-        name="my-table"
-        setTableInstance={setTableInstance}
-        tableHeight={'inherit'}
-        sortBy={{ id: 'id', desc: true }}
-      />
+    <Box overflow={'auto'} height="calc(100vh - 100px)">
+      <TableContextProvider
+        data={projects}
+        columns={tableColumns}
+        pagination={pagination}
+        setPagination={setPagination}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+        totalPages={totalPages}
+      >
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
+        <TableFooter position="sticky" bottom="0" left="0" right="0">
+          <ButtonsWrapper>
+            <ExportButton
+              columns={tableColumns}
+              data={allProjects}
+              refetch={refetch}
+              isLoading={isExportDataLoading}
+              colorScheme="brand"
+              fileName="projects.xlsx"
+            />
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </ButtonsWrapper>
+          <TablePagination>
+            <ShowCurrentPageWithTotal />
+            <GotoFirstPage />
+            <GotoPreviousPage />
+            <GotoNextPage />
+            <GotoLastPage />
+          </TablePagination>
+        </TableFooter>
+      </TableContextProvider>
     </Box>
   )
 }

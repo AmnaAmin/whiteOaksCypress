@@ -3,13 +3,13 @@ import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack } from
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
-import { useVendorCards, useVendorEntity } from 'utils/vendor-dashboard'
+import { useVendorCards, useVendorEntity } from 'api/vendor-dashboard'
 import { useTranslation } from 'react-i18next'
 
 import { LicenseDocument } from 'types/vendor.types'
 import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import Status from 'features/projects/status'
+import Status from 'features/common/status'
 import numeral from 'numeral'
 
 const LicenseType: { [key: number]: string } = {
@@ -26,7 +26,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const scoreProgress = ((vendorEntity?.score ?? 0) / 5) * 100
   const { t } = useTranslation()
   const { data: cards } = useVendorCards()
-  const ammount = numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0,00a)')
+  const ammount = numeral(cards?.find(c => c.label === 'upcomingInvoiceTotal')?.count).format('($0,0.00)')
 
   const defaultData = [
     {
