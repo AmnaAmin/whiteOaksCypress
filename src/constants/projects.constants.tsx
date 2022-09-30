@@ -111,9 +111,9 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.sow',
-    accessorKey: 'sowOriginalContractAmount',
+    accessorKey: 'sowNewAmount',
     accessorFn(cellInfo: any) {
-      return numeral(cellInfo.sowOriginalContractAmount).format('$0,0.00')
+      return numeral(cellInfo.sowNewAmount).format('$0,0.00')
     },
   },
   {
@@ -198,7 +198,9 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.vendorPayment', //Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
-      return isDefined(cellInfo.vendorPaymentPercentage) ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%') : '0.00%'
+      return isDefined(cellInfo.vendorPaymentPercentage)
+        ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
+        : '0.00%'
     },
   },
   {
