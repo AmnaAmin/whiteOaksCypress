@@ -30,7 +30,9 @@ export const getAPIFilterQueryString = (
 ) => {
   const dateToISOFormatFilters =
     columnFilters?.map(filter => {
-      if (filter?.id?.includes('Date')) {
+      // change to iso format if we have date and value is not specified 0 or 1.
+      // Dates will have value 0 or 1 if we have to null check the field
+      if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
         return {
           ...filter,
           value: filter.value ? dateISOFormatWithZeroTime(filter.value as string) : null,
