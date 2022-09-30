@@ -27,7 +27,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   accountRecievable: 'accountRecievable.greaterThanOrEqual',
   market: 'market.contains',
   state: 'state.contains',
-  woaCompletionDate: 'woaCompletionDate.specified',
+  woaCompletionDate: 'woaCompletionDate.equals',
   region: 'region.contains',
   partialPayment: 'partialPayment.contains',
   expectedPaymentDate: 'expectedPaymentDate.equals',
@@ -195,10 +195,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'projects.projectTable.vendorPayment', //Not getting this from backend at the moment
+    header: 'projects.projectTable.vendorPayment', // Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
-      return isDefined(cellInfo.vendorPaymentPercentage) ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%') : '0.00%'
+      return isDefined(cellInfo.vendorPaymentPercentage)
+        ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
+        : '0.00%'
     },
   },
   {

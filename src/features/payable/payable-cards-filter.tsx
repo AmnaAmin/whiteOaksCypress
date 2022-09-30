@@ -17,6 +17,7 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     EightToTenDays = '3',
     TenToTwentyDays = '4',
     TwentyToThirdayDays = '5',
+    ThirtyToFourtyDays = '6',
   }
 
   const pastDue = data?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
@@ -29,6 +30,12 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     ?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
     .map(a => a.finalInvoiceAmount)
     .reduce((prev, current) => prev + current, 0)
+  console.log('1', data?.filter(a => a.durationCategory === PayableCardTypes.PastDue).length)
+  console.log('2', data?.filter(a => a.durationCategory === PayableCardTypes.SevenDays).length)
+  console.log('3', data?.filter(a => a.durationCategory === PayableCardTypes.EightToTenDays).length)
+  console.log('4', data?.filter(a => a.durationCategory === PayableCardTypes.TenToTwentyDays).length)
+  console.log('5', data?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays).length)
+  console.log('6', data?.filter(a => a.durationCategory === PayableCardTypes.ThirtyToFourtyDays).length)
   const sevenDaysSum = data
     ?.filter(a => a.durationCategory === PayableCardTypes.SevenDays)
     .map(a => a.finalInvoiceAmount)
@@ -45,6 +52,8 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     ?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
     .map(a => a.finalInvoiceAmount)
     .reduce((sum, current) => sum + current, 0)
+  const sum = data?.map(a => a.finalInvoiceAmount)?.reduce((sum, current) => sum + current, 0)
+  console.log('sum', sum)
   const overpaymentSum = overPaymentCard?.map(a => a.transactionTotal)?.reduce((sum, current) => sum + current, 0)
 
   const payableData = [
