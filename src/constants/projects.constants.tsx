@@ -129,7 +129,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaPaidDate),
   },
   {
-    header: 'Invoice Number',
+    header: 'projects.projectTable.invoiceNumber',
     accessorKey: 'invoiceNumber',
   },
   {

@@ -53,7 +53,7 @@ export const Projects = () => {
         <Flex w="100%" py="16px">
           <Flex alignItems="center" pl={2}>
             <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
-              {t('Due Projects')}
+              {t('projects.dueProjects')}
             </FormLabel>
             <Box ml="2">
               <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
