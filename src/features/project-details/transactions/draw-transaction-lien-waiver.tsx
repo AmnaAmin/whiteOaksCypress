@@ -29,6 +29,7 @@ import { GetHelpText } from 'utils/lien-waiver'
 
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
 import { useTranslation } from 'react-i18next'
+import { TRANSACTION } from './transactions.i18n'
 
 type LienWaiverProps = {
   onClose?: () => void
@@ -109,25 +110,25 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
 
         <Grid templateColumns="215px 215px" gap="40px 80px" w="100%">
           <GridItem>
-            <InputView label={t('nameofClaimant')} InputElem={<Text>{formValues?.claimantName}</Text>} />
+            <InputView label={t(`${TRANSACTION}.nameofClaimant`)} InputElem={<Text>{formValues?.claimantName}</Text>} />
           </GridItem>
 
           <GridItem>
-            <InputView label={t('jobLocation')} InputElem={<Text>{formValues?.propertyAddress}</Text>} />
+            <InputView label={t(`${TRANSACTION}.jobLocation`)} InputElem={<Text>{formValues?.propertyAddress}</Text>} />
           </GridItem>
 
           <GridItem>
-            <InputView label={t('makerOfCheck')} InputElem={<Text>{formValues?.makerOfCheck}</Text>} />
+            <InputView label={t(`${TRANSACTION}.makerOfCheck`)} InputElem={<Text>{formValues?.makerOfCheck}</Text>} />
           </GridItem>
           <GridItem>
-            <InputView label={t('amountOfCheck')} InputElem={<Text>{formValues?.amountOfCheck}</Text>} />
+            <InputView label={t(`${TRANSACTION}.amountOfCheck`)} InputElem={<Text>{formValues?.amountOfCheck}</Text>} />
           </GridItem>
 
           <GridItem>
             <FormInput
               testId="claimants-title"
               errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
-              label={t('claimantsTitle')}
+              label={t(`${TRANSACTION}.claimantsTitle`)}
               placeholder=""
               register={register}
               elementStyle={{
@@ -142,7 +143,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
           <GridItem>
             <FormControl isInvalid={!formValues?.claimantsSignature}>
               <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
-                {t('claimantsSignature')}
+              {t(`${TRANSACTION}.claimantsSignature`)}
               </FormLabel>
               <Button
                 pos="relative"
@@ -197,7 +198,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               testId="signature-date"
               icon={<BiCalendar />}
               errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
-              label={t('dateOfSignature')}
+              label={t(`${TRANSACTION}.dateOfSignature`)}
               placeholder=""
               register={register}
               name={`lienWaiver.dateOfSignature`}
@@ -230,7 +231,7 @@ const HelpText = ({ children }) => {
       {!isReadMore ? (
         <Link onClick={toggleReadMore} style={{ color: '#4A5568' }}>
           <Flex fontStyle="normal" fontWeight={500} fontSize="14px">
-            <Box>{t('readMore')}</Box>
+            <Box>{t(`${TRANSACTION}.readMore`)}</Box>
             <Box ml="3px" mt="3px">
               <BiCaretDown />
             </Box>
@@ -239,7 +240,7 @@ const HelpText = ({ children }) => {
       ) : (
         <Link onClick={toggleReadMore}>
           <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4A5568' }}>
-            <Box>{t('readLess')}</Box>
+            <Box>{t(`${TRANSACTION}.readLess`)}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />
             </Box>
