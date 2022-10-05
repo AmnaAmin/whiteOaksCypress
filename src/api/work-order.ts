@@ -284,6 +284,16 @@ export const defaultValuesLienWaiver = lienWaiverData => {
   }
   return defaultValues
 }
+
+export const useLWFieldsStatusDecision = ({ workOrder }) => {
+  const disabled =
+    ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) ||
+    (workOrder.leanWaiverSubmitted && workOrder?.lienWaiverAccepted)
+  return {
+    isFieldsDisabled: disabled,
+  }
+}
+
 /* New Work Order */
 
 export const parseNewWoValuesToPayload = (formValues, projectId) => {
