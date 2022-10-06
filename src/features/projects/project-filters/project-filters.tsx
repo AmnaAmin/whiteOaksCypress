@@ -14,7 +14,6 @@ import React from 'react'
 import { useProjectCards } from 'api/pc-projects'
 import { ProjectCard } from 'features/common/project-card'
 import { useTranslation } from 'react-i18next'
-import { projects } from '../projects.i18n'
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (

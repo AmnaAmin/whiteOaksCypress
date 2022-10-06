@@ -7,6 +7,7 @@ import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
 import { workOrder } from 'features/work-order/workOrder.i18n'
 import { transaction } from 'features/project-details/transactions/transactions.i18n'
 import { projects } from 'features/projects/projects.i18n'
+import { project } from 'features/update-project-details/project-details.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -21,6 +22,7 @@ i18n.use(initReactI18next).init({
         ...workOrder.en.translation,
         ...transaction.en.translation,
         ...projects.en.translation,
+        ...project.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -489,6 +491,7 @@ i18n.use(initReactI18next).init({
         ...workOrder.es.translation,
         ...transaction.es.translation,
         ...projects.es.translation,
+        ...project.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

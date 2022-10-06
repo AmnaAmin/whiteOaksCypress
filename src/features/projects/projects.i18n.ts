@@ -82,7 +82,7 @@ export const projects = {
           startDate: 'Start Date',
           endDate: 'End Date',
         },
-        projectDetails:{
+        projectDetails: {
           transactions: 'Transactions',
           viewDetails: 'View Details',
           newTransaction: 'New Transaction',
@@ -90,6 +90,7 @@ export const projects = {
           vendorWorkOrders: 'Vendor Work Orders',
           documents: 'Documents',
           notes: 'Notes',
+          upload: 'Upload',
         },
         dueProjects: 'Due Projects',
         export: 'Export',
@@ -177,7 +178,7 @@ export const projects = {
           startDate: 'Fecha de inicio',
           endDate: 'Fecha final',
         },
-        projectDetails:{
+        projectDetails: {
           transactions: 'Transaccións',
           viewDetails: 'Ver detalles',
           newTransaction: 'Nueva Transacción',
@@ -185,6 +186,7 @@ export const projects = {
           vendorWorkOrders: 'Órdenes de Trabajo del Proveedor',
           documents: 'Documentos',
           notes: 'Notas',
+          upload: 'Subir',
         },
         dueProjects: 'Proyectos Vencidos',
         export: 'Exportar',

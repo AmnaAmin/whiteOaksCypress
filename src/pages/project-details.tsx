@@ -135,7 +135,7 @@ export const ProjectDetails: React.FC = props => {
                   )}
                 {tabIndex === 3 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
-                    Upload
+                    {t('projects.projectDetails.upload')}
                   </Button>
                 )}
 
@@ -167,7 +167,7 @@ export const ProjectDetails: React.FC = props => {
                       isDisabled={preventNewTransaction}
                       leftIcon={<BiAddToQueue />}
                     >
-                          {t('projects.projectDetails.newTransaction')}
+                      {t('projects.projectDetails.newTransaction')}
                     </Button>
                   </HStack>
                 )}
