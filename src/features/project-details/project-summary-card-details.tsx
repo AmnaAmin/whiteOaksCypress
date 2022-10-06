@@ -37,10 +37,9 @@ export const ProjectSummaryCardDetails: React.FC<{
         borderRadius="4px"
         box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
       >
-        {/* woa-4612 */}
         <InfoStructureCard title={'Lock Box Code'} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1}>
-            {projectData?.name}
+            {projectData?.lockBoxCode}
           </FormLabel>
         </InfoStructureCard>
 
