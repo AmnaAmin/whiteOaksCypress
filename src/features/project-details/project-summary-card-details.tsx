@@ -41,7 +41,7 @@ export const ProjectSummaryCardDetails: React.FC<{
       >
         <InfoStructureCard title={t('projects.projectSummary.projectName')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1}>
-            {projectData?.name}
+            {projectData?.name ? projectData?.name : '-----------'}
           </FormLabel>
         </InfoStructureCard>
 
