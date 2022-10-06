@@ -120,12 +120,13 @@ const AssignedItems = (props: AssignedItemType) => {
     downloadPdf,
     workOrder,
   } = props
-  const { control, register, getValues, setValue } = formControl
+  const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
 
   const values = getValues()
   const lineItems = useWatch({ name: 'assignedItems', control })
+  const watchUploadWO = watch('uploadWO')
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
   const {
     showEditablePrices,
@@ -170,6 +171,7 @@ const AssignedItems = (props: AssignedItemType) => {
                   variant="ghost"
                   colorScheme="brand"
                   onClick={onOpenRemainingItemsModal}
+                  disabled={!!watchUploadWO}
                   leftIcon={<Icon as={AddIcon} boxSize={2} />}
                 >
                   {t(`${WORK_ORDER}.addNewItem`)}

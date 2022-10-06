@@ -17,6 +17,7 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import Select from 'components/form/react-select'
@@ -26,7 +27,7 @@ import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'rea
 import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
-import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
+import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
@@ -45,6 +46,8 @@ import {
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
+import ChooseFileField from 'components/choose-file/choose-file'
+import { WORK_ORDER } from './workOrder.i18n'
 
 const CalenderCard = props => {
   return (
@@ -98,6 +101,7 @@ type NewWorkOrderType = {
   clientApprovedAmount: string | number | null
   percentage: string | number | null
   assignedItems: LineItems[]
+  uploadWO: any
 }
 
 const NewWorkOrder: React.FC<{
@@ -130,8 +134,9 @@ const NewWorkOrder: React.FC<{
       workOrderStartsDate: undefined,
       invoiceAmount: null,
       clientApprovedAmount: null,
-      percentage: null,
+      percentage: 0,
       assignedItems: [],
+      uploadWO: null,
     }
   }
   // Hook form initialization
@@ -154,29 +159,20 @@ const NewWorkOrder: React.FC<{
     control,
     name: 'assignedItems',
   })
-
+  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
+    setValue,
+  })
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
 
-  const [woStartDate, watchPercentage, watchClientApprovedAmount, watchInvoiceAmount] = watch([
-    'workOrderStartDate',
-    'percentage',
-    'clientApprovedAmount',
-    'invoiceAmount',
-  ])
+  const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
-  const { percentage } = usePercentageCalculation({
-    clientApprovedAmount: watchClientApprovedAmount,
-    vendorWOAmount: watchInvoiceAmount,
-  })
-
   useEffect(() => {
-    if (percentage !== null) setValue('percentage', percentage)
-    if (percentage === 0) {
+    if (watchPercentage === 0) {
       resetLineItemsProfit(0)
     }
-  }, [percentage])
+  }, [watchPercentage])
 
   useEffect(() => {
     const clientAmount = formValues.assignedItems?.reduce(
@@ -235,7 +231,7 @@ const NewWorkOrder: React.FC<{
     }
   }, [isSuccess, onClose])
 
-  const onSubmit = values => {
+  const onSubmit = async values => {
     if (values?.assignedItems?.length > 0) {
       assignLineItems(
         [
@@ -244,14 +240,14 @@ const NewWorkOrder: React.FC<{
           }),
         ],
         {
-          onSuccess: () => {
-            const payload = parseNewWoValuesToPayload(values, projectData.id)
+          onSuccess: async () => {
+            const payload = await parseNewWoValuesToPayload(values, projectData.id)
             createWorkOrder(payload as any)
           },
         },
       )
     } else {
-      const payload = parseNewWoValuesToPayload(values, projectData.id)
+      const payload = await parseNewWoValuesToPayload(values, projectData.id)
       createWorkOrder(payload as any)
     }
   }
@@ -319,10 +315,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
 
-                <InformationCard
-                  title="finalSowAmount"
-                  date={finalSOWAmount}
-                />
+                <InformationCard title="finalSowAmount" date={finalSOWAmount} />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
@@ -402,9 +395,10 @@ const NewWorkOrder: React.FC<{
                                 thousandSeparator
                                 customInput={CustomRequiredInput}
                                 prefix={'$'}
-                                disabled
+                                disabled={!watchUploadWO}
                                 onValueChange={e => {
-                                  field.onChange(e.floatValue)
+                                  field.onChange(e.floatValue ?? '')
+                                  onApprovedAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -432,6 +426,7 @@ const NewWorkOrder: React.FC<{
                                 suffix={'%'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue ?? '')
+                                  onPercentageChange(e.floatValue)
                                 }}
                                 onBlur={e => {
                                   resetLineItemsProfit(removePercentageFormat(e.target.value))
@@ -462,7 +457,11 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
-                                disabled
+                                disabled={!watchUploadWO}
+                                onValueChange={e => {
+                                  field.onChange(e.floatValue ?? '')
+                                  onInoviceAmountChange(e.floatValue)
+                                }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -512,6 +511,40 @@ const NewWorkOrder: React.FC<{
                       </FormErrorMessage>
                     </FormControl>
                   </Box>
+                  <Box>
+                    <FormControl>
+                      <FormLabel variant="strong-label" size="md">
+                        {t(`${WORK_ORDER}.uploadWO`)}
+                      </FormLabel>
+                      <Controller
+                        name="uploadWO"
+                        control={control}
+                        render={({ field, fieldState }) => {
+                          return (
+                            <VStack alignItems="baseline">
+                              <Box>
+                                <ChooseFileField
+                                  name={field.name}
+                                  value={field.value?.name ? field.value?.name : 'Choose File'}
+                                  isError={!!fieldState.error?.message}
+                                  onChange={(file: any) => {
+                                    if (formValues.assignedItems?.length > 0) {
+                                      setUnAssignedItems([...formValues.assignedItems, ...unassignedItems])
+                                    }
+                                    setValue('assignedItems', [])
+                                    setValue('percentage', 0)
+                                    field.onChange(file)
+                                  }}
+                                  onClear={() => setValue(field.name, null)}
+                                ></ChooseFileField>
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </Box>
+                            </VStack>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
                 </SimpleGrid>
                 <AssignedItems
                   onOpenRemainingItemsModal={onOpenRemainingItemsModal}
@@ -539,7 +572,11 @@ const NewWorkOrder: React.FC<{
               >
                 {t('cancel')}
               </Button>
-              <Button type="submit" colorScheme="brand" disabled={getValues()?.assignedItems?.length < 1}>
+              <Button
+                type="submit"
+                colorScheme="brand"
+                disabled={!(getValues()?.assignedItems?.length > 1 || !!watchUploadWO)}
+              >
                 {t('save')}
               </Button>
             </HStack>
