@@ -23,7 +23,8 @@ export const transaction = {
         newExpectedCompletionDate: 'New Expected Completion',
         paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
-        paidDateVariance: 'Paid Date Variance',
+        payDateVariance: 'Pay Date Variance',
+        invoicedDate:'Invoiced Date',
 
         // Transaction Modal
         addNewRow: 'Add New Row',
@@ -107,7 +108,7 @@ export const transaction = {
         paymentReceivedDate: 'Pago Recibido',
         invoicedDate: 'Fecha Facturada',
         paidDate: 'Fecha de Pago',
-        paidDateVariance: 'Variación de La Fecha de Pago',
+        payDateVariance: 'Variación de La Fecha de Pago',
 
         // Transaction Modal
 
