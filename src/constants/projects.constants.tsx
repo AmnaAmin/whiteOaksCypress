@@ -13,7 +13,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.contains',
-  clientDueDate: 'clientDueDate.equals',
+  clientDueDate: 'clientDueDate.lessThanOrEqual',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
   accountPayable: 'accountPayable.contains',
@@ -195,7 +195,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'projects.projectTable.vendorPayment', //Not getting this from backend at the moment
+    header: 'projects.projectTable.vendorPayment', // Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
       return isDefined(cellInfo.vendorPaymentPercentage)
