@@ -86,9 +86,10 @@ type TableProps = {
   onRowClick?: (row: any) => void
   isLoading?: boolean
   isEmpty?: boolean
+  onRightClick?: (row: any) => void
 }
 
-export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ...restProps }) => {
+export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, onRightClick, isEmpty, ...restProps }) => {
   const { t } = useTranslation()
 
   const tableInstance = useTableInstance()
@@ -214,6 +215,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
                     key={row.id}
                     onClick={() => onRowClick?.(row.original)}
                     cursor={onRowClick ? 'pointer' : 'default'}
+                    onContextMenu={() => onRightClick?.(row.original)}
                     _hover={{
                       bg: 'gray.50',
                     }}

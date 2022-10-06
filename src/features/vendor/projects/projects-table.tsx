@@ -66,7 +66,11 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const projectId = idCell?.value
 
   return (
-    <Link to={`/project-details/${projectId}`} data-testid="project-table-row">
+    <Link
+      to={`/project-details/${projectId}`}
+      data-testid="project-table-row"
+      onContextMenu={() => window.open(`/project-details/${projectId}`)}
+    >
       <Tr
         bg="white"
         _hover={{
