@@ -558,52 +558,70 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
 }
 
 export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
-  const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder?.propertyAddress ?? '' },
+  const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
     { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted ?? '' },
+    { label: 'Work Type:', value: workOrder?.skillName ?? '' },
     { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
+    { label: 'Gate Code:', value: projectData?.gateCode ?? '' },
   ]
+  /* commenting because of unclear requirements 
   const totalAward = assignedItems?.reduce(
     (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
     0,
-  )
+  ) */
   const basicFont = undefined
-  const heading = 'Work Order'
+  const summaryFont = 'Times-Roman'
+  const heading = 'Work Order # 4124'
+  const startx = 15
   doc.setFontSize(16)
   doc.setFont(basicFont, 'bold')
-  const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
-  doc.text(heading, xHeading, 35)
+  doc.text(heading, startx, 20)
   var img = new Image()
   img.src = '/vendorportal/wo-logo.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
-    doc.setFontSize(10)
-    doc.setFont(basicFont, 'normal')
-    const x = 15
+
+    doc.setFontSize(11)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Property Address:', startx, 55)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.streetAddress ?? '', startx, 60)
+    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+
+    doc.setFont(summaryFont, 'bold')
+    const centerTextX = 80
+    doc.text('FPM:', centerTextX, 55)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.projectManager ?? '', centerTextX + 15, 55)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Contact:', centerTextX, 60)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
+
+    const x = 145
     let y = 50
-    const length = 115
-    const width = 10
-    invoiceInfo.forEach(inv => {
-      doc.rect(x, y, length, width, 'D')
-      doc.text(inv.label, x + 5, y + 7)
+
+    workOrderInfo.forEach(inv => {
+      doc.setFont(summaryFont, 'bold')
+      doc.text(inv.label, x + 5, y + 5)
+      doc.setFont(summaryFont, 'normal')
       doc.text(
         inv.label === 'Start Date:' || inv.label === 'Completion Date:' ? dateFormat(inv.value) || '' : inv.value,
-        x + 45,
-        y + 7,
+        x + 35,
+        y + 5,
       )
-      y = y + 10
+      y = y + 5
     })
-    doc.rect(x + length, 50, 65, width, 'D')
-    doc.text('Square Feet:', x + length + 5, 55)
-    doc.rect(x + length, 60, 65, width, 'D')
-    doc.text('Work Type:', x + length + 5, 65)
-    doc.text(workOrder.skillName ?? '', x + length + 30, 65)
 
-    doc.rect(x, y + 15, length, width, 'D')
-    doc.text('Sub Contractor: ' + (workOrder.companyName ?? ''), x + 5, y + 22)
-    doc.rect(x + length, y + 15, 65, width, 'D')
-    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + length + 5, y + 22)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Sub Contractor:', startx, y + 20)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(workOrder.companyName ?? '', startx + 30, y + 20)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Total:', x + 5, y + 20)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 20, y + 20)
 
     autoTable(doc, {
       startY: y + 40,
@@ -614,6 +632,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         ...assignedItems.map(ai => {
           return {
             id: ai.id,
+            location: ai.location,
             sku: ai.sku,
             description: ai.description,
             quantity: ai.quantity,
@@ -621,11 +640,13 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         }),
       ],
       columnStyles: {
-        sku: { cellWidth: 40 },
-        description: { cellWidth: 100 },
-        quantity: { cellWidth: 40 },
+        location: { cellWidth: 30 },
+        sku: { cellWidth: 30 },
+        description: { cellWidth: 90 },
+        quantity: { cellWidth: 30 },
       },
       columns: [
+        { header: 'Location', dataKey: 'location' },
         { header: 'SKU', dataKey: 'sku' },
         { header: 'Description', dataKey: 'description' },
         { header: 'Quantity', dataKey: 'quantity' },
@@ -633,13 +654,6 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    const tableEndsY = doc.lastAutoTable.finalY
-    const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-    if (!hideAward) {
-      doc.setDrawColor(0, 0, 0)
-      doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
-      doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
-    }
     doc.save('Assigned Line Items.pdf')
   }
 }

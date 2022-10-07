@@ -221,6 +221,24 @@ const RemainingListTable = (props: RemainingListType) => {
       sortable: false,
     },
     {
+      Header: `${WORK_ORDER}.location`,
+      accessor: 'location',
+      Cell: ({ row, setIsFocus, isFocus }) =>
+        renderInput({
+          row: row,
+          values,
+          formControl,
+          updatedItems,
+          setUpdatedItems,
+          fieldName: 'location',
+          selectedCell,
+          setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
+        }),
+      minWidth: 200,
+    },
+    {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
       Cell: ({ row, setIsFocus, isFocus }) =>
@@ -335,7 +353,7 @@ const RemainingListTable = (props: RemainingListType) => {
   ]
 
   return (
-    <Box width="100%" height={'100%'}>
+    <Box width="100%" height={'100%'} overflowX="scroll">
       <TableWrapper
         columns={REMAINING_ITEMS_COLUMNS}
         data={remainingItems ?? []}
