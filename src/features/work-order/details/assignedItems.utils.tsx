@@ -572,7 +572,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   ) */
   const basicFont = undefined
   const summaryFont = 'Times-Roman'
-  const heading = 'Work Order # 4124'
+  const heading = 'Work Order # ' + workOrder?.id
   const startx = 15
   doc.setFontSize(16)
   doc.setFont(basicFont, 'bold')
