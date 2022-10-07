@@ -319,10 +319,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
 
-                <InformationCard
-                  title="finalSowAmount"
-                  date={finalSOWAmount}
-                />
+                <InformationCard title="finalSowAmount" date={finalSOWAmount} />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}

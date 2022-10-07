@@ -14,7 +14,7 @@ export const Performance = () => {
   return (
     <>
       <InformationCardFPM chartData={chart} isLoading={isLoading} />
-      <Box mt={5} p={0} rounded="13px" flex={1} bg='#F7FAFE' border='1px solid #EAE6E6'>
+      <Box mt={5} p={0} rounded="13px" flex={1} bg="#F7FAFE" border="1px solid #EAE6E6">
         <Center mb="5px" mt="25px">
           <Text fontSize="16px" fontWeight={'600'} color="#4A5568">
             {t('Performance Per Month')}

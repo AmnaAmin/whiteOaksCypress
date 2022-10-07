@@ -53,11 +53,6 @@ export const Payable = () => {
       type: '',
     }))
 
-    if (!payableProjects.length) return
-
-    setLoading(true)
-    setIsBatchClick(true)
-
     const obj = {
       typeCode: 'AP',
       entities: payableProjects,
