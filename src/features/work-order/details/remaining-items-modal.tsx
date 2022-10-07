@@ -149,7 +149,7 @@ const RemainingItemsModal: React.FC<{
           reset({ remainingItems })
           props.onClose()
         }}
-        size="6xl"
+        size="flexible"
       >
         <ModalOverlay />
         <ModalContent>
