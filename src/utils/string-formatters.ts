@@ -38,3 +38,15 @@ export const truncateWithEllipsis = (s: string, maxLength: number) => {
   }
   return s
 }
+
+/**
+ * Divides given value by 100
+ * @param percentage (number) The percentage input
+ * @returns Formatted percentage
+ */
+export const percentageFormatter = (percentage: number) => {
+  if (percentage) {
+    return Number(percentage / 100)
+  }
+  return percentage
+}

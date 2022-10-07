@@ -1,5 +1,6 @@
 import { Box, Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Text, useToast } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
+import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 import { useState, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -10,31 +11,35 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import round from 'lodash/round'
 
 const swoPrefix = '/smartwo/api'
 
 export type LineItems = {
-  id: number | string | null
+  id?: number | string | null
   sku: string
   productName: string
-  details: string
-  description: string
+  details?: string
+  description?: string
   price?: string | number | null
-  unitPrice: string | number | null
+  unitPrice?: string | number | null
   quantity: number | string | null
-  totalPrice: string | number | null
+  totalPrice?: string | number | null
   isAssigned?: boolean
-  projectId: string | number | null
-  createdBy: string
-  createdDate: string
-  modifiedBy: string
-  modifiedDate: string
+  projectId?: string | number | null
+  createdBy?: string
+  createdDate?: string
+  modifiedBy?: string
+  modifiedDate?: string
   smartLineItemId?: string | number | null
   source?: string
   isVerified?: boolean
   isCompleted?: boolean
   action?: string
   document?: any
+  vendorAmount?: number | null
+  profit?: number | null
 }
 
 export type SWOProject = {
@@ -48,6 +53,9 @@ export type SWOProject = {
   modifiedBy: string
   modifiedDate: string
 }
+
+export type selectedCell = { id: string; value: string }
+
 export const getRemovedItems = (formValues, workOrder) => {
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
@@ -97,9 +105,9 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
   const { data: swoProject, ...rest } = useQuery<any>(
     ['fetchProjectId', projectId],
     async () => {
-      const response = await client(`projects?projectId.equals=` + projectId, {})
+      const response = await client(`projects/projectId/` + projectId, {})
 
-      if (!response?.data[0] || (response?.data?.length > 0 && response?.data[0]?.status === 'COMPLETED')) {
+      if (!response?.data || (response?.data && response?.data?.status === 'COMPLETED')) {
         setRefetchInterval(0)
       }
       return response?.data
@@ -111,7 +119,7 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
   )
 
   return {
-    swoProject: swoProject?.length > 0 ? swoProject[0] : null,
+    swoProject,
     ...rest,
   }
 }
@@ -146,6 +154,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
             description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -155,6 +164,7 @@ export const useAssignLineItems = (props: AssignArgumentType) => {
           description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -191,6 +201,7 @@ export const useCreateLineItem = (props: CreateArgumentType) => {
             description: 'Line Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -200,6 +211,7 @@ export const useCreateLineItem = (props: CreateArgumentType) => {
           description: (error.title as string) ?? 'Unable to update line items.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -225,6 +237,7 @@ export const useDeleteLineItems = swoProjectId => {
           description: 'Item Deleted Successfully',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -233,6 +246,7 @@ export const useDeleteLineItems = swoProjectId => {
           description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -257,6 +271,7 @@ export const useDeleteLineIds = () => {
           description: 'Unable to delete Line Items',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -264,35 +279,57 @@ export const useDeleteLineIds = () => {
 }
 
 export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
-  const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
-  const isAssignmentAllowed = (!workOrder || activePastDue) && swoProject?.status?.toUpperCase() === 'COMPLETED'
+  // commenting this out but this condition will be used in upcoming stories.
+  //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  const isAssignmentAllowed = !workOrder && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
 }
 
+export const calculateVendorAmount = (amount, percentage) => {
+  amount = Number(amount)
+  percentage = Number(percentage)
+  return round(amount - amount * (percentage / 100), 2)
+}
+
+export const calculateProfit = (clientAmount, vendorAmount) => {
+  return round(((clientAmount - vendorAmount) / clientAmount) * 100, 2)
+}
 /* map to remaining when user unassigns using Unassign Line Item action */
 
 export const mapToRemainingItems = item => {
   return {
     ...item,
-    totalPrice: item?.price,
+    unitPrice: item?.price,
+    totalPrice: Number(item?.price) * Number(item?.quantity),
   }
 }
 
 /* map to assigned items when user assigns using save on remaining items modal */
 
-export const mapToLineItems = item => {
+export const mapToLineItems = (item, watchPercentage?) => {
+  const amount = item.unitPrice * item.quantity
+  const percentage = watchPercentage
   return {
     ...item,
     isVerified: false,
     isCompleted: false,
-    price: item.totalPrice,
+    price: item.unitPrice,
     document: null,
+    profit: percentage,
+    clientAmount: amount,
+    vendorAmount: calculateVendorAmount(amount, percentage),
   }
 }
 
 /* mapping when line item in unassigned and saved. Any changes made to line item will also be saved in swo */
 export const mapToUnAssignItem = item => {
-  return { ...item, id: item.smartLineItemId, isAssigned: false, totalPrice: item.price }
+  return {
+    ...item,
+    unitPrice: item?.price,
+    id: item.smartLineItemId,
+    isAssigned: false,
+    totalPrice: Number(item?.price) * Number(item?.quantity),
+  }
 }
 
 export const PriceInput = props => {
@@ -308,47 +345,90 @@ type EditableCellType = {
   fieldArray: string
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
+  onChange?: (e, index) => void
+  selectedCell: selectedCell | null | undefined
+  setSelectedCell: (e) => void
+  allowEdit?: boolean
+  autoFocus?: boolean
+  setIsFocus?: (val) => void
 }
 
 export const EditableField = (props: EditableCellType) => {
-  const [selectedCell, setSelectedCell] = useState('')
-  const { index, fieldName, formControl, inputType, valueFormatter, fieldArray, updatedItems, setUpdatedItems } = props
-  const { getValues, setValue } = formControl
+  const {
+    index,
+    fieldName,
+    formControl,
+    inputType,
+    valueFormatter,
+    fieldArray,
+    updatedItems,
+    setUpdatedItems,
+    onChange,
+    selectedCell,
+    setSelectedCell,
+    allowEdit,
+    autoFocus,
+    setIsFocus,
+  } = props
+  const { getValues, setValue, control } = formControl
   const values = getValues()
+
+  const remainingItemsWatch = useWatch({ name: fieldArray, control })
+
   return (
     <>
       {values?.[fieldArray]?.length > 0 && (
         <>
-          {selectedCell !== index + '-' + fieldName ? (
+          {selectedCell?.id !== index + '-' + fieldName ? (
             <Box
-              minW={'100px'}
               minH={'20px'}
+              minW={'100px'}
               cursor={'pointer'}
               onClick={() => {
-                setSelectedCell(index + '-' + fieldName)
+                if (allowEdit) {
+                  setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
+                  setIsFocus?.(true)
+                }
               }}
             >
               {valueFormatter
-                ? valueFormatter(values?.[fieldArray][index]?.[fieldName])
-                : values?.[fieldArray][index]?.[fieldName]}
+                ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
+                : remainingItemsWatch[index]?.[fieldName]}
             </Box>
           ) : (
-            <Input
-              autoFocus
-              size="sm"
-              id="sku"
-              type={inputType ?? 'text'}
-              defaultValue={values?.[fieldArray][index]?.[fieldName]}
-              onChange={e => {
-                if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
-                  setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
-                }
-              }}
-              onBlurCapture={e => {
-                if (e.target.value !== '') setValue(`${fieldArray}.${index}.${fieldName}`, e.target.value)
-                setSelectedCell('')
-              }}
-            />
+            <FormControl>
+              <Controller
+                control={control}
+                name={`${fieldArray}.${index}.${fieldName}`}
+                render={({ field, fieldState }) => (
+                  <Input
+                    minW={'100px'}
+                    key={[fieldName] + '.' + [index]}
+                    size="sm"
+                    type={inputType}
+                    value={field.value}
+                    autoFocus={autoFocus}
+                    onChange={e => {
+                      field.onChange(e.target.value)
+                      if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
+                        setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
+                      }
+                    }}
+                    onBlur={e => {
+                      setIsFocus?.(false)
+                      setSelectedCell(null)
+                      if (e.target.value === '') {
+                        setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
+                      }
+                      onChange?.(e, index)
+                    }}
+                    onFocus={() => {
+                      setIsFocus?.(true)
+                    }}
+                  ></Input>
+                )}
+              ></Controller>
+            </FormControl>
           )}
         </>
       )}
@@ -359,26 +439,55 @@ export const EditableField = (props: EditableCellType) => {
 type InputFieldType = {
   index: number
   fieldName: string
-  formControl: any
-  inputType?: string
+  formControl: UseFormReturn<any>
   fieldArray: string
+  inputType?: string
+  onChange?: (e, index) => void
+  autoFocus?: boolean
+  setIsFocus?: (val) => void
 }
 export const InputField = (props: InputFieldType) => {
-  const { index, fieldName, formControl, inputType, fieldArray } = props
+  const {
+    index,
+    fieldName,
+    formControl,
+    fieldArray,
+    onChange: handleChange,
+    inputType = 'text',
+    autoFocus,
+    setIsFocus,
+  } = props
   const {
     formState: { errors },
-    register,
+    control,
   } = formControl
   return (
     <>
       <FormControl isInvalid={errors?.[fieldArray] && !!errors?.[fieldArray][index]?.[fieldName]?.message}>
-        <Input
-          autoFocus
-          size="sm"
-          id="now"
-          type={inputType ?? 'text'}
-          {...register(`${fieldArray}.${index}.${fieldName}`, { required: 'This is required' })}
-        />
+        <Controller
+          control={control}
+          name={`${fieldArray}.${index}.${fieldName}`}
+          rules={{ required: '*Required' }}
+          render={({ field, fieldState }) => (
+            <Input
+              key={[fieldName] + '.' + [index]}
+              size="sm"
+              type={inputType}
+              value={field.value}
+              autoFocus={autoFocus}
+              onChange={e => {
+                field.onChange(e.target.value)
+              }}
+              onBlur={e => {
+                setIsFocus?.(false)
+                handleChange?.(e, index)
+              }}
+              onFocus={() => {
+                setIsFocus?.(true)
+              }}
+            ></Input>
+          )}
+        ></Controller>
         {errors?.remainingItems && (
           <FormErrorMessage>{errors?.[fieldArray][index]?.[fieldName]?.message}</FormErrorMessage>
         )}
@@ -390,14 +499,14 @@ export const InputField = (props: InputFieldType) => {
 export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
   return (
     <Checkbox
-      isChecked={selectedItems?.map(s => s.id).includes(row.id)}
+      isChecked={selectedItems?.map(s => s.id)?.includes(row?.id)}
       onChange={e => {
         if (e.currentTarget?.checked) {
-          if (!selectedItems?.map(s => s.id).includes(row.id)) {
+          if (!selectedItems?.map(s => s.id).includes(row?.id)) {
             setSelectedItems([...selectedItems, row])
           }
         } else {
-          setSelectedItems([...selectedItems.filter(s => s.id !== row.id)])
+          setSelectedItems([...selectedItems.filter(s => s.id !== row?.id)])
         }
       }}
     />
@@ -448,50 +557,71 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
   )
 }
 
-export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => {
-  const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder.propertyAddress },
-    { label: 'Start Date:', value: workOrder.workOrderStartDate },
-    { label: 'Completion Date:', value: workOrder.workOrderDateCompleted },
-    { label: 'Lock Box Code:', value: projectData.lockBoxCode },
+export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
+  const workOrderInfo = [
+    { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
+    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted ?? '' },
+    { label: 'Work Type:', value: workOrder?.skillName ?? '' },
+    { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
+    { label: 'Gate Code:', value: projectData?.gateCode ?? '' },
   ]
-  const totalAward = assignedItems?.reduce((partialSum, a) => partialSum + Number(a?.price ?? 0), 0)
+  /* commenting because of unclear requirements 
+  const totalAward = assignedItems?.reduce(
+    (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+    0,
+  ) */
   const basicFont = undefined
-  const heading = 'Work Order'
+  const summaryFont = 'Times-Roman'
+  const heading = 'Work Order # ' + workOrder?.id
+  const startx = 15
   doc.setFontSize(16)
   doc.setFont(basicFont, 'bold')
-  const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
-  doc.text(heading, xHeading, 35)
+  doc.text(heading, startx, 20)
   var img = new Image()
   img.src = '/vendorportal/wo-logo.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
-    doc.setFontSize(10)
-    doc.setFont(basicFont, 'normal')
-    const x = 15
+
+    doc.setFontSize(11)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Property Address:', startx, 55)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.streetAddress ?? '', startx, 60)
+    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+
+    doc.setFont(summaryFont, 'bold')
+    const centerTextX = 80
+    doc.text('FPM:', centerTextX, 55)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.projectManager ?? '', centerTextX + 15, 55)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Contact:', centerTextX, 60)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
+
+    const x = 145
     let y = 50
-    const length = 115
-    const width = 10
-    invoiceInfo.forEach(inv => {
-      doc.rect(x, y, length, width, 'D')
-      doc.text(inv.label, x + 5, y + 7)
+
+    workOrderInfo.forEach(inv => {
+      doc.setFont(summaryFont, 'bold')
+      doc.text(inv.label, x + 5, y + 5)
+      doc.setFont(summaryFont, 'normal')
       doc.text(
         inv.label === 'Start Date:' || inv.label === 'Completion Date:' ? dateFormat(inv.value) || '' : inv.value,
-        x + 45,
-        y + 7,
+        x + 35,
+        y + 5,
       )
-      y = y + 10
+      y = y + 5
     })
-    doc.rect(x + length, 50, 65, width, 'D')
-    doc.text('Square Feet:', x + length + 5, 55)
-    doc.rect(x + length, 60, 65, width, 'D')
-    doc.text('Work Type:', x + length + 5, 65)
-    doc.text(workOrder.skillName, x + length + 30, 65)
 
-    doc.rect(x, y + 15, length, width, 'D')
-    doc.text('Sub Contractor: ' + workOrder.companyName, x + 5, y + 22)
-    doc.rect(x + length, y + 15, 65, width, 'D')
-    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount), x + length + 5, y + 22)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Sub Contractor:', startx, y + 20)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(workOrder.companyName ?? '', startx + 30, y + 20)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Total:', x + 5, y + 20)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 20, y + 20)
 
     autoTable(doc, {
       startY: y + 40,
@@ -501,8 +631,8 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
       body: [
         ...assignedItems.map(ai => {
           return {
-            location: ai.location,
             id: ai.id,
+            location: ai.location,
             sku: ai.sku,
             description: ai.description,
             quantity: ai.quantity,
@@ -510,10 +640,10 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
         }),
       ],
       columnStyles: {
-        location: { cellWidth: 70 },
-        id: { cellWidth: 20 },
-        description: { cellWidth: 70 },
-        quantity: { cellWidth: 20 },
+        location: { cellWidth: 30 },
+        sku: { cellWidth: 30 },
+        description: { cellWidth: 90 },
+        quantity: { cellWidth: 30 },
       },
       columns: [
         { header: 'Location', dataKey: 'location' },
@@ -524,11 +654,49 @@ export const createInvoicePdf = (doc, workOrder, projectData, assignedItems) => 
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    const tableEndsY = doc.lastAutoTable.finalY
-    const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-    doc.setDrawColor(0, 0, 0)
-    doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
-    doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
     doc.save('Assigned Line Items.pdf')
+  }
+}
+
+// !workOrder is a check for new work order modal.
+// In case of edit, workorder will be a non-nullable object.
+// In case of new work order, it will be null
+
+export const useColumnsShowDecision = ({ workOrder }) => {
+  const { isVendor } = useUserRolesSelector()
+  const showEditablePrices = !isVendor && !workOrder // Price is editable for non-vendor on new work order modal
+  const showReadOnlyPrices = !isVendor && workOrder //price is readonly for vendor and will only show if showPricing is true. Currrently price is also readonly for non-vendor in edit work modal.
+  const showVendorPrice = isVendor && workOrder.showPricing
+  const showVerification = !isVendor && workOrder
+  return {
+    showSelect: !isVendor && !workOrder,
+    showEditablePrices,
+    showReadOnlyPrices,
+    showStatus: !!workOrder,
+    showImages: !!workOrder,
+    showVerification,
+    showVendorPrice,
+  }
+}
+
+export const useActionsShowDecision = ({ workOrder }) => {
+  const { isVendor } = useUserRolesSelector()
+
+  return {
+    showPriceCheckBox: !isVendor,
+    showMarkAllIsVerified: !isVendor && workOrder,
+    showMarkAllIsComplete: isVendor,
+    showVerification: !!workOrder,
+  }
+}
+
+export const useFieldEnableDecision = ({ workOrder }) => {
+  const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
+  const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
+  const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
+
+  return {
+    statusEnabled: statusEnabled,
+    verificationEnabled: verificationEnabled,
   }
 }

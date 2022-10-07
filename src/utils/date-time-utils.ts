@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import sub from 'date-fns/sub'
 import { range } from 'lodash'
+import { GenericObjectType } from 'types/common.types'
 
 export const dateFormat = (date: string | Date) => {
   if (date === null) return ''
@@ -17,7 +18,25 @@ export const datePickerFormat = (date: string | Date) => {
 export const dateISOFormat = (date: string | Date | null) => {
   if (date === null) return null
 
-  return date ? new Date(date).toISOString() : null
+  const dateObj = new Date(date)
+
+  // check is date is valid
+  if (dateObj.toString() === 'Invalid Date') return null
+
+  return dateObj.toISOString()
+}
+
+export const dateISOFormatWithZeroTime = (date: string | Date | null) => {
+  if (date === null) return null
+
+  const dateObj = new Date(date)
+
+  // check is date is valid
+  if (dateObj.toString() === 'Invalid Date') return null
+
+  dateObj.setHours(0, 0, 0, 0)
+
+  return dateObj?.toISOString() || null
 }
 
 export const getFormattedDate = (date: Date) => {
@@ -54,7 +73,6 @@ export const monthOptions: MonthOption[] = range(12).map(n => ({
   year: format(sub(new Date(), { months: n }), 'yyyy'),
   month: format(sub(new Date(), { months: n }), 'MM'),
 }))
-
 export const convertDateTimeFromServer = (date: string) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : null
 }
@@ -75,4 +93,45 @@ export const dateFormatter = d => {
     year: 'numeric',
   })
   return formattedDate
+}
+
+export const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+export const monthsShort: GenericObjectType = {
+  January: 'Jan',
+  February: 'Feb',
+  March: 'Mar',
+  April: 'Apr',
+  May: 'May',
+  June: 'Jun',
+  July: 'Jul',
+  August: 'Aug',
+  September: 'Sep',
+  October: 'Oct',
+  November: 'Nov',
+  December: 'Dec',
+}
+
+export const getQuarterByDate = (date = new Date()) => {
+  return getQuarterByMonth(date.getMonth())
+}
+
+export const getLastQuarterByDate = (date = new Date()) => {
+  return (getQuarterByDate(date) + 2) % 3
+}
+
+export const getQuarterByMonth = (month: number) => {
+  return Math.floor(month / 3 + 1)
 }

@@ -24,10 +24,6 @@ const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
         style,
       })}
       cursor="pointer"
-      onClick={() => {
-        // @ts-ignore
-        window.open(row.original?.s3Url, '_blank')
-      }}
     >
       {row.cells.map(cell => {
         return (
@@ -75,43 +71,43 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     [
       {
         id: 'fileType',
-        Header: t('document') || '',
+        Header: t('document'),
         accessor: 'fileType',
         Cell: withPreviewCell,
       },
       {
         id: 'documentType',
-        Header: t('documentType') || '',
+        Header: t('documentType'),
         accessor: 'documentTypelabel',
         Cell: withPreviewCell,
       },
       {
-        Header: t('transactionDoc') || '',
+        Header: t('transactionDoc'),
         accessor: 'label',
         id: 'label',
         Cell: withPreviewCell,
       },
       {
         id: 'vendorName',
-        Header: t('vendorGL') || '',
+        Header: t('vendorGL'),
         accessor: 'vendorName',
         Cell: withPreviewCell,
       },
       {
         id: 'fileObjectContentType',
-        Header: t('fileType') || '',
+        Header: t('fileType'),
         accessor: 'fileObjectContentType',
         Cell: withPreviewCell,
       },
 
       {
-        Header: t('createdBy') || '',
+        Header: t('createdBy'),
         accessor: 'createdBy',
         id: 'createdBy',
         Cell: withPreviewCell,
       },
       {
-        Header: t('createdDate') || '',
+        Header: t('createdDate'),
         accessor: 'createdDate',
         id: 'createdDate',
         Cell({ value, row }) {

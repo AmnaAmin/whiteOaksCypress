@@ -115,7 +115,13 @@ export const InformationCardFPM: React.FC<{ projectId?: string; chartData: any; 
   const { nameMonthData: previousMonthData } = useMonthData(previousMonth, chartData)
 
   return (
-    <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
+    <Flex
+      py={9}
+      w="100%"
+      bg="white"
+      borderRadius="4px"
+      boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+    >
       <InfoStructureCard
         bonus="Bonus"
         newBonus={chartData?.currentBonus}

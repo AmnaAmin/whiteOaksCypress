@@ -17,6 +17,7 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     EightToTenDays = '3',
     TenToTwentyDays = '4',
     TwentyToThirdayDays = '5',
+    ThirtyToFourtyDays = '6',
   }
 
   const pastDue = data?.filter(a => a.durationCategory === PayableCardTypes.PastDue)

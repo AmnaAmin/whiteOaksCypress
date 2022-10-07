@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
   Divider,
@@ -21,7 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
-import { defaultValuesWODetails, parseWODetailValuesToPayload } from 'api/work-order'
+import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -32,11 +35,11 @@ import {
   useAllowLineItemsAssignment,
   useRemainingLineItems,
   createInvoicePdf,
-  mapToLineItems,
   mapToUnAssignItem,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
+import { WORK_ORDER } from '../workOrder.i18n'
 
 const CalenderCard = props => {
   return (
@@ -99,12 +102,11 @@ const WorkOrderDetailTab = props => {
   } = props
 
   const formReturn = useForm<FormValues>()
-  const { register, control, reset } = formReturn
+  const { register, control, reset, setValue } = formReturn
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
   })
-  const { append } = assignedItemsArray
 
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
@@ -127,6 +129,7 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
+  const { completedByVendor } = useFieldEnableDecisionDetailsTab({ workOrder, formValues })
 
   // Remaining Items handles
   const {
@@ -137,11 +140,13 @@ const WorkOrderDetailTab = props => {
 
   const downloadPdf = useCallback(() => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, assignedItemsWatch)
+    createInvoicePdf({ doc, workOrder, projectData, assignedItems: assignedItemsWatch, hideAward: false })
   }, [assignedItemsWatch, projectData, workOrder])
 
   const setAssignedItems = useCallback(
     items => {
+      /*
+      not used now, will be used in upcoming stories
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
@@ -149,13 +154,22 @@ const WorkOrderDetailTab = props => {
         }),
       ]
       append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])*/
     },
     [unassignedItems, setUnAssignedItems],
   )
 
   useEffect(() => {
-    setUnAssignedItems(remainingItems ?? [])
+    const isVerified = assignedItemsWatch?.every(item => item.isVerified && item.isCompleted)
+    if (!isVerified) {
+      setValue('workOrderDateCompleted', null)
+    }
+  }, [assignedItemsWatch])
+
+  useEffect(() => {
+    const tempAssignedItems = formValues?.assignedItems?.filter(a => !a.smartLineItemId)?.map(item => item.id)
+    const items = remainingItems?.filter?.(item => !tempAssignedItems?.includes(item.id))
+    setUnAssignedItems(items)
   }, [remainingItems])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
@@ -236,8 +250,17 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h="400px" overflow={'auto'}>
+        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <Stack pt="32px" spacing="32px" mx="32px">
+            <Box>
+              {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+                <Alert status="info" variant="custom" size="sm">
+                  <AlertIcon />
+
+                  <AlertDescription>{t(`${WORK_ORDER}.rejectedInvoiceInfo`)}</AlertDescription>
+                </Alert>
+              )}
+            </Box>
             <SimpleGrid columns={5}>
               <InformationCard title="Company Name" date={companyName} />
               <InformationCard title="Vendor Type" date={skillName} />
@@ -312,7 +335,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />
@@ -331,6 +354,7 @@ const WorkOrderDetailTab = props => {
               isAssignmentAllowed={isAssignmentAllowed}
               swoProject={swoProject}
               downloadPdf={downloadPdf}
+              workOrder={workOrder}
             />
           </Box>
         </ModalBody>

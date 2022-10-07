@@ -8,6 +8,7 @@ import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
+import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -36,13 +37,14 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
-        queryClient.invalidateQueries('accountPayable')
+        queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         if (!hideToast) {
           toast({
             title: 'Work Order',
             description: 'Work Order has been saved successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       },
@@ -54,6 +56,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         toast({
           title: 'Work Order',
           description,
+          position: 'top-left',
           status: 'error',
           isClosable: true,
         })
@@ -83,12 +86,14 @@ export const useCreateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
+        queryClient.invalidateQueries(['projectSchedule', projectId])
 
         toast({
           title: 'Work Order',
           description: 'Work Order created successfully',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -98,6 +103,7 @@ export const useCreateWorkOrderMutation = () => {
         }
         toast({
           title: 'Work Order',
+          position: 'top-left',
           description,
           status: 'error',
           isClosable: true,
@@ -126,6 +132,7 @@ export const useNoteMutation = projectId => {
           description: 'Note has been saved successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -134,6 +141,7 @@ export const useNoteMutation = projectId => {
           description: (error.title as string) ?? 'Unable to save note.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -166,16 +174,16 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     expectedPaymentDateEnabled: defaultStatus || completedState || invoicedState,
     datePaymentProcessedEnabled: defaultStatus || completedState || invoicedState,
     datePaidEnabled: defaultStatus || completedState || invoicedState,
-    clientApprovedAmountEnabled: defaultStatus,
+    invoiceAmountEnabled: defaultStatus,
     clientOriginalApprovedAmountEnabled: defaultStatus,
-    finalInvoiceAmountEnabled: defaultStatus,
+    clientApprovedAmountEnabled: defaultStatus,
   }
 }
 
 export const parsePaymentValuesToPayload = formValues => {
   return {
     dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
-    paymentTerm: formValues?.paymenTerm?.value,
+    paymentTerm: formValues?.paymentTerm?.value,
     paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
     expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
@@ -193,14 +201,24 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
     datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
     datePaid: datePickerFormat(workOrder?.datePaid),
-    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
-    finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
+    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
   }
   return defaultValues
 }
 
 /* WorkOrder Details */
+
+export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
+  const defaultStatus = false
+  const completedByVendor =
+    [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
+    formValues?.assignedItems?.every(e => e.isCompleted && e.isVerified)
+  return {
+    completedByVendor: defaultStatus || completedByVendor,
+  }
+}
 
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
@@ -241,7 +259,7 @@ export const defaultValuesWODetails = workOrder => {
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
-            return { ...e, uploadedDoc: null }
+            return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
   }

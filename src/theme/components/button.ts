@@ -42,6 +42,9 @@ const ButtonVariants = {
           _hover: {
             bg: `${props.colorScheme}.50`,
           },
+          _disabled: {
+            bg: `${props.colorScheme}.50`,
+          },
         }
       },
       link: props => {
@@ -90,6 +93,23 @@ const ButtonVariants = {
           fontWeight: 500,
           alignContent: 'right',
           rounded: 20,
+        }
+      },
+      unClickable: props => {
+        return {
+          ...chakraTheme.components.Button.variants.outline(props),
+          borderColor: `${props.colorScheme}.300`,
+          color: `${props.colorScheme}.300`,
+          _hover: {
+            bg: 'none',
+          },
+          _focus: {
+            bg: 'none',
+          },
+          _active: {
+            bg: 'none',
+          },
+          cursor: 'auto',
         }
       },
     },

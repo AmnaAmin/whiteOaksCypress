@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
+import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
 import { RowProps } from 'components/table/react-table'
 import { useAccountPayable } from 'api/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -50,11 +50,16 @@ type PayablePropsTyep = {
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
+    const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const { data: payableData, isLoading, refetch } = useAccountPayable()
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+    const [payableFilterData, setFilterPayableData] = useState()
+
+    const workOrders = payableData?.workOrders
 
     useEffect(() => {
-      if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
-        const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+      if (workOrders?.length > 0 && selectedWorkOrder?.id) {
+        const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
         if (updatedWorkOrder) {
           setSelectedWorkOrder({ ...updatedWorkOrder })
         } else {
@@ -63,17 +68,13 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       } else {
         setSelectedWorkOrder(undefined)
       }
-    }, [payableData])
-    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-
-    const payable = payableData?.workOrders
-
-    const [payableFilterData, setFilterPayableData] = useState(payable)
+    }, [workOrders])
 
     useEffect(() => {
-      if (!selectedCard && !selectedDay) setFilterPayableData(payable)
+      if (!selectedCard && !selectedDay) setFilterPayableData(workOrders)
+
       setFilterPayableData(
-        payable?.filter(
+        workOrders?.filter(
           project =>
             !selectedCard || project.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
         ),
@@ -88,22 +89,27 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
 
       if (selectedDay) {
         setFilterPayableData(
-          payable?.filter(payableValue => {
+          workOrders?.filter(payableValue => {
             return clientDate.includes(payableValue.expectedPaymentDate?.substr(0, 10))
           }),
         )
       }
-    }, [selectedCard, selectedDay, payable])
+    }, [selectedCard, selectedDay, workOrders])
+
     return (
       <Box overflow="auto" width="100%">
         <>
-          <WorkOrderDetails
-            workOrder={selectedWorkOrder as ProjectWorkOrderType}
-            onClose={() => {
-              setSelectedWorkOrder(undefined)
-              refetch()
-            }}
-          />
+          {isOpen && (
+            <WorkOrderDetails
+              workOrder={selectedWorkOrder as ProjectWorkOrderType}
+              onClose={() => {
+                setSelectedWorkOrder(undefined)
+                refetch()
+                onCloseDisclosure()
+              }}
+              isOpen={isOpen}
+            />
+          )}
           <TableWrapper
             columns={payableColumns}
             setTableInstance={setTableInstance}
@@ -113,7 +119,10 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             tableHeight="calc(100vh - 300px)"
             name="payable-table"
             defaultFlexStyle={false}
-            onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
+            onRowClick={(e, row) => {
+              setSelectedWorkOrder(row.original)
+              onOpen()
+            }}
           />
         </>
       </Box>

@@ -13,7 +13,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from 'features/common/status'
-import { ExportButton } from 'components/table-refactored/export-button'
+import { ExportCustomButton } from 'components/table-refactored/export-button'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -29,7 +29,7 @@ const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
     >
       {row.cells.map(cell => {
         return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
+          <Td {...cell.getCellProps()} p="0">
             <Flex alignItems="center" h="60px" pl="2">
               <Text
                 fontSize="14px"
@@ -124,6 +124,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
   const { exportData } = useTransactionExport(projectId)
+
   const onRowClick = useCallback(
     (_, row) => {
       const { original } = row
@@ -155,7 +156,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         </Box>
         <Flex justifyContent="flex-end">
           <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <ExportButton columns={[]} data={exportData} colorScheme="brand" />
+            <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" />
             <Divider orientation="vertical" border="1px solid" h="20px" />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </HStack>

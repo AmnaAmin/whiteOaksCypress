@@ -14,18 +14,26 @@ import {
   Text,
   Thead,
   Tr,
+  useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
-import { dateFormat } from 'utils/date-time-utils'
+import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
 import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
-import { STATUS, STATUS_CODE } from 'features/common/status'
+import { STATUS, STATUS_CODE, STATUS as WOstatus } from 'features/common/status'
+import jsPDF from 'jspdf'
+import { addDays, nextFriday } from 'date-fns'
+import { createInvoice } from 'api/vendor-projects'
+import { useUpdateWorkOrderMutation } from 'api/work-order'
+import { ConfirmationBox } from 'components/Confirmation'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
@@ -53,12 +61,25 @@ export const InvoiceTabPC = ({
   rejectInvoiceCheck,
   onSave,
   navigateToProjectDetails,
+  setTabIndex,
+  projectData,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)
   const [amountPaid, setAmountPaid] = useState(0)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
+  const toast = useToast()
+  const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
+  const { isDoc, isProjectCoordinator } = useUserRolesSelector()
+
+  const {
+    isOpen: isGenerateInvoiceOpen,
+    onClose: onGenerateInvoiceClose,
+    onOpen: onGenerateInvoiceOpen,
+  } = useDisclosure()
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
@@ -115,9 +136,93 @@ export const InvoiceTabPC = ({
       lienWaiverAccepted: false,
     })
   }
+  const prepareInvoicePayload = () => {
+    const invoiceSubmittedDate = new Date()
+    const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
+    const updatedWorkOrder = {
+      ...workOrder,
+      dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
+      expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
+      paymentTermDate: convertDateTimeToServer(paymentTermDate),
+    }
+    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
+      updatedWorkOrder.status = STATUS_CODE.INVOICED
+    }
+    return updatedWorkOrder
+  }
+
+  const generateInvoice = async () => {
+    let form = new jsPDF()
+    const updatedWorkOrder = prepareInvoicePayload()
+    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
+    const pdfUri = form.output('datauristring')
+    updateWorkOrder(
+      {
+        ...updatedWorkOrder,
+        documents: [
+          {
+            documentType: 48,
+            workOrderId: workOrder.id,
+            fileObject: pdfUri.split(',')[1],
+            fileObjectContentType: 'application/pdf',
+            fileType: 'Invoice.pdf',
+          },
+        ],
+      },
+      {
+        onError() {
+          setWorkOrderUpdating(false)
+        },
+        onSuccess() {
+          setWorkOrderUpdating(false)
+          onGenerateInvoiceClose()
+        },
+      },
+    )
+  }
+
+  const redirectToLienWaiver = (description?) => {
+    setWorkOrderUpdating(false)
+    toast({
+      title: 'Work Order',
+      description: description ?? t('saveLWError'),
+      status: 'error',
+      isClosable: true,
+    })
+    setTabIndex(1)
+    onGenerateInvoiceClose()
+  }
+  const rejectLienWaiver = () => {
+    const desc = t('updateLWError')
+    rejectLW(
+      {
+        ...workOrder,
+        lienWaiverAccepted: false,
+      },
+      {
+        onError() {
+          setWorkOrderUpdating(false)
+        },
+        onSuccess() {
+          redirectToLienWaiver(desc)
+        },
+      },
+    )
+  }
+  const generatePdf = useCallback(async () => {
+    setWorkOrderUpdating(true)
+    if (!workOrder.lienWaiverAccepted) {
+      redirectToLienWaiver()
+    } else if (Math.abs(workOrder?.amountOfCheck - workOrder?.finalInvoiceAmount) !== 0) {
+      rejectLienWaiver()
+    } else {
+      generateInvoice()
+    }
+  }, [items, workOrder, projectData])
+
   return (
     <Box>
-      <ModalBody h="400px">
+      <ModalBody h={'calc(100vh - 300px)'}>
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
@@ -133,7 +238,7 @@ export const InvoiceTabPC = ({
           <InvoiceInfo
             title={t('invoiceDate')}
             value={
-              workOrder.dateInvoiceSubmitted && !rejectInvoiceCheck
+              workOrder.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                 ? dateFormat(workOrder?.dateInvoiceSubmitted)
                 : 'mm/dd/yyyy'
             }
@@ -142,54 +247,55 @@ export const InvoiceTabPC = ({
           <InvoiceInfo
             title={t('dueDate')}
             value={
-              workOrder.paymentTermDate && !rejectInvoiceCheck ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy'
+              workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                ? dateFormat(workOrder?.paymentTermDate)
+                : 'mm/dd/yyyy'
             }
             icons={BiCalendar}
           />
         </Grid>
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
-        <Box>
-          <Box h="250px" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
-            <Table variant="simple" size="md">
-              <Thead pos="sticky" top={0}>
-                <Tr>
-                  <Td>{t('item')}</Td>
-                  <Td>{t('description')}</Td>
-                  <Td isNumeric>Total</Td>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {items.map((item, index) => {
-                  return (
-                    <Tr h="72px">
-                      <Td>{item.id}</Td>
-                      <Td>{item.name}</Td>
-                      <Td isNumeric>
-                        <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
-                      </Td>
-                    </Tr>
-                  )
-                })}
-              </Tbody>
-            </Table>
-            <VStack alignItems="end" w="98%" fontSize="14px" fontWeight={500} color="gray.600">
-              <Box>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('subTotal')}:</Text>
-                  <Text>{currencyFormatter(subTotal)}</Text>
-                </HStack>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('totalAmountPaid')}:</Text>
-                  <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
-                </HStack>
-                <HStack w={300} height="60px" justifyContent="space-between">
-                  <Text>{t('balanceDue')}</Text>
-                  <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
-                </HStack>
-              </Box>
-            </VStack>
-          </Box>
+
+        <Box h="calc(100% - 150px)" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
+          <Table variant="simple" size="md">
+            <Thead>
+              <Tr>
+                <Td>{t('item')}</Td>
+                <Td>{t('description')}</Td>
+                <Td isNumeric>Total</Td>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {items.map((item, index) => {
+                return (
+                  <Tr h="72px">
+                    <Td>{item.id}</Td>
+                    <Td>{item.name}</Td>
+                    <Td isNumeric>
+                      <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
+                    </Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+          </Table>
+          <VStack alignItems="end" w="98%" fontSize="14px" fontWeight={500} color="gray.600">
+            <Box>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('subTotal')}:</Text>
+                <Text>{currencyFormatter(subTotal)}</Text>
+              </HStack>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('totalAmountPaid')}:</Text>
+                <Text>{currencyFormatter(Math.abs(amountPaid))}</Text>
+              </HStack>
+              <HStack w={300} height="60px" justifyContent="space-between">
+                <Text>{t('balanceDue')}</Text>
+                <Text>{currencyFormatter(subTotal + amountPaid)}</Text>
+              </HStack>
+            </Box>
+          </VStack>
         </Box>
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
@@ -205,6 +311,20 @@ export const InvoiceTabPC = ({
               {t('see')} {t('invoice')}
             </Button>
           )}
+          {(isDoc || isProjectCoordinator) &&
+            workOrder.lienWaiverAccepted &&
+            [WOstatus.Declined, WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+              <Button
+                variant="outline"
+                data-testid="generateInvoice"
+                colorScheme="brand"
+                size="md"
+                leftIcon={<BiSpreadsheet />}
+                onClick={onGenerateInvoiceOpen}
+              >
+                {t('generateINV')}
+              </Button>
+            )}
           {navigateToProjectDetails && (
             <Button
               variant="outline"
@@ -233,7 +353,15 @@ export const InvoiceTabPC = ({
             </Button>
           )}
         </HStack>
-      </ModalFooter>
+      </ModalFooter>{' '}
+      <ConfirmationBox
+        title="Invoice"
+        content="Are you sure you want to generate invoice"
+        isOpen={isGenerateInvoiceOpen}
+        onClose={onGenerateInvoiceClose}
+        onConfirm={generatePdf}
+        isLoading={isWorkOrderUpdated}
+      />
     </Box>
   )
 }

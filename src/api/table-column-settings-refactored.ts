@@ -44,9 +44,9 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
 
   return tableColumns?.sort((itemA, itemB) => {
     // @ts-ignore
-    const itemAOrder = getOrder(itemA.accessKey) ?? 0
+    const itemAOrder = getOrder(itemA.accessorKey) ?? 0
     // @ts-ignore
-    const itemBOrder = getOrder(itemB.accessor) ?? 0
+    const itemBOrder = getOrder(itemB.accessorKey) ?? 0
 
     return itemAOrder - itemBOrder
   })
@@ -66,7 +66,7 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
   const settingColumns = savedColumns?.length
     ? savedColumns.map((col, index) => {
         return generateSettingColumn({
-          field: t(col.colId),
+          field: t(col.field),
           contentKey: col.contentKey as string,
           order: index,
           userId: email,
@@ -78,7 +78,7 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
         return generateSettingColumn({
           field: col.header as string,
           // @ts-ignore
-          contentKey: col.accessor as string,
+          contentKey: col.accessorKey as string,
           order: index,
           userId: email,
           type: tableName,
@@ -88,10 +88,8 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
 
   const filteredColumns = columns.filter(col => {
     return !settingColumns?.find(pCol => {
-      // console.log('column', pCol)
-
       // @ts-ignore
-      return pCol.colId === col.accessor
+      return pCol.colId === col.accessorKey
     })?.hide
   })
 

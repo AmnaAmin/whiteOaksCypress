@@ -3,6 +3,9 @@ import numeral from 'numeral'
 import React from 'react'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings'
+import { percentageFormatter } from 'utils/string-formatters'
+import { isDefined } from 'utils'
+import { useGetProjectFinancialOverview } from 'api/projects'
 
 type WorkOrderFinancialOverviewTableProps = { financialOveriewTableData: any; isLoading: boolean }
 
@@ -13,6 +16,10 @@ const getTotalOfKey = (key: string, rows) => {
 }
 
 export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrderFinancialOverviewTableProps, ref) => {
+  const { isLoading, financialOveriewTableData } = props
+  const { projectTotalCost } = useGetProjectFinancialOverview(financialOveriewTableData[0]?.projectId)
+  const projectCostValue = projectTotalCost.replace(/\$/g, '')
+  const projectCost = parseFloat(projectCostValue.replace(',', ''))
   const { tableColumns } = useTableColumnSettings(
     [
       {
@@ -134,6 +141,25 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
+        Header: 'Vendor Payment',
+        accessor: 'vendorPaymentPercentage',
+        Cell(cellInfo) {
+          return isDefined(cellInfo.value) ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
+        },
+        Footer: info => {
+          const vendorPaymentPercentage = React.useMemo(
+            () =>
+              ((Math.abs(getTotalOfKey('material', info.rows)) + Math.abs(getTotalOfKey('draw', info.rows))) /
+                projectCost) *
+              100,
+            [info.rows],
+          )
+          return isDefined(vendorPaymentPercentage)
+            ? numeral(percentageFormatter(vendorPaymentPercentage)).format('0.00%')
+            : ''
+        },
+      },
+      {
         Header: 'Invoiced Amount',
         accessor: 'accountPayable',
         Cell(cellInfo) {
@@ -160,7 +186,6 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
     ],
     TableNames.projectFinancialOverview,
   )
-  const { isLoading, financialOveriewTableData } = props
 
   return (
     <TableWrapper
@@ -169,7 +194,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
       isLoading={isLoading}
       columns={tableColumns}
       data={financialOveriewTableData}
-      tableHeight="inherit"
+      tableHeight="calc(100vh - 320px)"
       name="transaction-table"
     />
   )

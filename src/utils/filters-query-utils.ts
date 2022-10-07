@@ -1,0 +1,58 @@
+import { ColumnFiltersState } from '@tanstack/react-table'
+import { dateISOFormatWithZeroTime } from './date-time-utils'
+
+const getQueryString = (obj: { [key: string]: string | number }) => {
+  return Object.keys(obj).reduce((str, key, i) => {
+    const delimiter = i === 0 ? '' : '&'
+    const val = obj[key]
+
+    return val || val === 0 ? `${str}${delimiter}${key}=${val}` : str
+  }, '')
+}
+
+const reduceQueriesArrayToObject = (
+  columnFilters: ColumnFiltersState,
+  key: string,
+  valueKey: string,
+  queryKeyValues: { [key: string]: string },
+) => {
+  return columnFilters?.reduce((obj, item) => {
+    obj[queryKeyValues[item[key]]] = item[valueKey]
+    return obj
+  }, {})
+}
+
+export const getAPIFilterQueryString = (
+  page?: number,
+  size?: number,
+  columnFilters?: ColumnFiltersState,
+  queryAndTableColumnMapKeys?: { [key: string]: string },
+) => {
+  const dateToISOFormatFilters =
+    columnFilters?.map(filter => {
+      // change to iso format if we have date and value is not specified 0 or 1.
+      // Dates will have value 0 or 1 if we have to null check the field
+      if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
+        return {
+          ...filter,
+          value: filter.value ? dateISOFormatWithZeroTime(filter.value as string) : null,
+        }
+      }
+
+      return filter
+    }) || []
+
+  const filterKeyValues = reduceQueriesArrayToObject(
+    dateToISOFormatFilters,
+    'id',
+    'value',
+    queryAndTableColumnMapKeys || {},
+  )
+
+  return getQueryString({
+    ...filterKeyValues,
+    page: page || 0,
+    size: size || 100000,
+    sort: 'id,desc',
+  })
+}

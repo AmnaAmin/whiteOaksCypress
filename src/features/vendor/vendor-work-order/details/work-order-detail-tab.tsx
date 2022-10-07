@@ -8,6 +8,7 @@ import { useUpdateWorkOrderMutation } from 'api/work-order'
 import AssignedItems from 'features/work-order/details/assigned-items'
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
 import { createInvoicePdf, LineItems } from 'features/work-order/details/assignedItems.utils'
+import { useEffect } from 'react'
 
 const CalenderCard = props => {
   return (
@@ -35,23 +36,44 @@ interface FormValues {
 const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   const { t } = useTranslation()
   const { mutate: updateWorkOrderDetails, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({})
+  const getDefaultValues = () => {
+    return {
+      assignedItems:
+        workOrder?.assignedItems?.length > 0
+          ? workOrder?.assignedItems?.map(e => {
+              return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
+            })
+          : [],
+      showPrice: workOrder.showPricing,
+    }
+  }
 
   const formReturn = useForm<FormValues>({
-    defaultValues: {
-      assignedItems: workOrder.assignedItems,
-      showPrice: workOrder.showPricing,
-    },
+    defaultValues: getDefaultValues(),
   })
-  const { control, getValues } = formReturn
+
+  const { control, getValues, reset } = formReturn
   const values = getValues()
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
   })
 
+  useEffect(() => {
+    if (workOrder?.id) {
+      reset(getDefaultValues())
+    }
+  }, [workOrder, reset])
+
   const downloadPdf = () => {
     let doc = new jsPDF()
-    createInvoicePdf(doc, workOrder, projectData, values.assignedItems)
+    createInvoicePdf({
+      doc,
+      workOrder,
+      projectData,
+      assignedItems: values.assignedItems,
+      hideAward: true,
+    })
   }
 
   const parseAssignedItems = values => {
@@ -84,7 +106,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h="400px" overflow={'auto'}>
+        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <SimpleGrid
             columns={4}
             spacing={8}
@@ -109,6 +131,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
                 assignedItemsArray={assignedItemsArray}
                 isAssignmentAllowed={false}
                 downloadPdf={downloadPdf}
+                workOrder={workOrder}
               />
             )}
           </Box>

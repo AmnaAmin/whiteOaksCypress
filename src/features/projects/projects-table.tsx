@@ -1,332 +1,103 @@
-import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import { RowProps } from 'components/table/react-table'
-import { TableWrapper } from 'components/table/table'
-import { Link } from 'react-router-dom'
-import { useProjects, useWeekDayProjectsDue } from 'api/projects'
-import Status from 'features/common/status'
-import { Column } from 'react-table'
-import { dateFormat } from 'utils/date-time-utils'
-import numeral from 'numeral'
-
-export const PROJECT_COLUMNS = [
-  {
-    Header: 'ID',
-    accessor: 'id',
-  },
-  {
-    Header: 'General Labor',
-    accessor: 'generalLabourName',
-  },
-  {
-    Header: 'FPM',
-    accessor: 'projectManager',
-  },
-  {
-    Header: 'Status',
-    accessor: 'projectStatus',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.projectStatus} />,
-  },
-  {
-    Header: 'Address',
-    accessor: 'streetAddress',
-  },
-  {
-    Header: 'City',
-    accessor: 'city',
-  },
-  {
-    Header: 'Client Start Date',
-    accessor: 'clientStartDate',
-    Cell: ({ value }) => dateFormat(value),
-    getCellExportValue(row) {
-      return dateFormat(row.original.clientStartDate)
-    },
-  },
-  {
-    Header: 'Client Due Date',
-    accessor: 'clientDueDate',
-    Cell: ({ value }) => dateFormat(value),
-    getCellExportValue(row) {
-      return dateFormat(row.original.clientDueDate)
-    },
-  },
-  {
-    Header: 'Type',
-    accessor: 'projectTypeLabel',
-  },
-  {
-    Header: 'Project Coordinator',
-    accessor: 'projectCoordinator',
-  },
-  {
-    Header: 'Account Payable',
-    accessor: 'accountPayable',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.accountPayable).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Zip',
-    accessor: 'zipCode',
-  },
-  {
-    Header: 'Client',
-    accessor: 'clientName',
-  },
-  {
-    Header: 'SOW Final Amount',
-    accessor: 'sowOriginalContractAmount',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.sowOriginalContractAmount).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Project Cost',
-    accessor: 'projectRelatedCost',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.accountPayable).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Paid Date',
-    accessor: 'woaPaidDate',
-    Cell: ({ value }) => dateFormat(value),
-    getCellExportValue(row) {
-      return dateFormat(row.original.woaPaidDate)
-    },
-  },
-  {
-    Header: 'Invoice Number',
-    accessor: 'invoiceNumber',
-  },
-  {
-    Header: 'Invoice Date',
-    accessor: 'woaInvoiceDate',
-    Cell: ({ value }) => dateFormat(value),
-    getCellExportValue(row) {
-      return dateFormat(row.original.woaInvoiceDate)
-    },
-  },
-  {
-    Header: 'Account Receivable',
-    accessor: 'accountRecievable',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.accountRecievable).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Market',
-    accessor: 'market',
-  },
-  {
-    Header: 'State',
-    accessor: 'state',
-  },
-  {
-    Header: 'WOA Finish',
-    accessor: 'woaCompletionDate',
-    Cell: ({ value }) => dateFormat(value),
-    getCellExportValue(row) {
-      return dateFormat(row.original.woaCompletionDate)
-    },
-  },
-  {
-    Header: 'Region',
-    accessor: 'region',
-  },
-  {
-    Header: 'Partial Payment',
-    accessor: 'partialPayment',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.partialPayment).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Expected Payment',
-    accessor: 'expectedPaymentDate',
-    Cell: ({ value }) => dateFormat(value),
-    getCellExportValue(row) {
-      return dateFormat(row.original.expectedPaymentDate)
-    },
-  },
-  {
-    Header: 'Profit Margins',
-    accessor: 'profitPercentage',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value / 100).format('0,0.00%')
-    },
-    getCellExportValue(row) {
-      return `${row.original.profitPercentage}%`
-    },
-  },
-  {
-    Header: 'Profits',
-    accessor: 'profitTotal',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.profitTotal).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Material Cost',
-    accessor: 'materialCost',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.materialCost).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'Draw Amount',
-    accessor: 'drawAmount',
-    Cell(cellInfo) {
-      return numeral(cellInfo.value).format('$0,0.00')
-    },
-    getCellExportValue(row) {
-      return numeral(row.original.drawAmount).format('$0,0.00')
-    },
-  },
-  {
-    Header: 'WO Number',
-    accessor: 'woNumber',
-  },
-  {
-    Header: 'PO Number',
-    accessor: 'poNumber',
-  },
-]
-
-const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
-  const idCell = row.cells.find(cell => cell.column.id === 'id')
-  const projectId = idCell?.value
-
-  return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: '#eee',
-        '& > td > a': {
-          color: '#333',
-        },
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-    >
-      {row.cells.map((cell, index) => {
-        return (
-          <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-            <Link to={`/project-details/${projectId}`}>
-              <Flex alignItems="center" h="72px" pl="3">
-                <Text
-                  noOfLines={1}
-                  title={cell.value}
-                  padding="0 15px"
-                  color="gray.600"
-                  mb="20px"
-                  mt="10px"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  fontWeight="400"
-                >
-                  {cell.render('Cell')}
-                </Text>
-              </Flex>
-            </Link>
-          </Td>
-        )
-      })}
-    </Tr>
-  )
-}
+import React, { useState } from 'react'
+import { Box } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
+import { useGetAllProjects, useProjects } from 'api/projects'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import Table from 'components/table-refactored/table'
+import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ExportButton } from 'components/table-refactored/export-button'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentPageWithTotal,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { TableNames } from 'types/table-column.types'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { PaginationState } from '@tanstack/react-table'
+import { PROJECT_COLUMNS } from 'constants/projects.constants'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
 
 type ProjectProps = {
   selectedCard: string
   selectedDay: string
-  projectColumns: Column[]
-  resizeElementRef: any
-  setTableInstance: (tableInstance: any) => void
-  usersId?: number[]
+  userIds?: number[]
   selectedFPM?: any
 }
-export const ProjectsTable: React.FC<ProjectProps> = ({
-  setTableInstance,
-  projectColumns,
-  resizeElementRef,
-  selectedCard,
-  selectedDay,
-  usersId,
-  selectedFPM,
-}) => {
-  const { projects, isLoading } = useProjects()
-  const [filterProjects, setFilterProjects] = useState(projects)
-  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
-  useEffect(() => {
-    // To get pastDue Ids
-    const pastDueIds = projects?.filter(project => project?.pastDue)
-    const idPastDue = pastDueIds?.map(project => project?.id)
-    if (!selectedCard && !selectedDay) setFilterProjects(projects)
-    setFilterProjects(
-      projects?.filter(
-        project =>
-          (!selectedCard ||
-            project.projectStatus?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase() ||
-            (selectedCard === 'pastDue' && idPastDue?.includes(project?.id))) &&
-          (!usersId?.length || usersId.includes(project.projectManagerId as number)),
-      ),
-    )
+export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
+  const navigate = useNavigate()
 
-    // Due Project Weekly Filter
-    const getDates = days?.filter(day => {
-      if (selectedDay === 'All' || selectedDay === day.dayName) {
-        return true
-      }
-      return false
-    })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+    pagination,
+    setPagination,
+    selectedCard,
+    selectedDay,
+    selectedFPM,
+    userIds,
+  })
 
-    const clientDate = getDates?.map(dates => {
-      var date = dates?.dueDate
-      return date.substr(0, 10)
-    })
-    if (selectedDay) {
-      setFilterProjects(projects?.filter(project => clientDate?.includes(project?.clientDueDate?.substr(0, 10))))
-    }
-  }, [selectedCard, selectedDay, projects, usersId])
+  const { projects, isLoading, totalPages } = useProjects(fitlersQueryString, pagination.pageIndex, pagination.pageSize)
+
+  const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+    selectedCard,
+    selectedDay,
+    selectedFPM,
+    userIds,
+  })
+  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(filterQueryStringWithoutPagination)
+
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+
+  const onSave = (columns: any) => {
+    postGridColumn(columns)
+  }
+
+  const onRowClick = rowData => {
+    navigate(`/project-details/${rowData.id}`)
+  }
 
   return (
-    <Box overflowX={'auto'} overflowY="hidden" height="100%">
-      <TableWrapper
-        isLoading={isLoading}
-        columns={projectColumns}
-        data={filterProjects || []}
-        TableRow={ProjectRow}
-        name="my-table"
-        setTableInstance={setTableInstance}
-        tableHeight={'inherit'}
-        enablePagination={true}
-        sortBy={{ id: 'id', desc: true }}
-        defaultFlexStyle={false}
-      />
+    <Box overflow={'auto'} height="calc(100vh - 100px)">
+      <TableContextProvider
+        data={projects}
+        columns={tableColumns}
+        pagination={pagination}
+        setPagination={setPagination}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+        totalPages={totalPages}
+      >
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
+        <TableFooter position="sticky" bottom="0" left="0" right="0">
+          <ButtonsWrapper>
+            <ExportButton
+              columns={tableColumns}
+              data={allProjects}
+              refetch={refetch}
+              isLoading={isExportDataLoading}
+              colorScheme="brand"
+              fileName="projects.xlsx"
+            />
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </ButtonsWrapper>
+          <TablePagination>
+            <ShowCurrentPageWithTotal />
+            <GotoFirstPage />
+            <GotoPreviousPage />
+            <GotoNextPage />
+            <GotoLastPage />
+          </TablePagination>
+        </TableFooter>
+      </TableContextProvider>
     </Box>
   )
 }

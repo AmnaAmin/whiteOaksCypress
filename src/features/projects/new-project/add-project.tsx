@@ -85,6 +85,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       clientName: '',
       client: null,
       superLastName: '',
+      superFirstName: '',
       superEmailAddress: '',
       superPhoneNumber: '',
       superPhoneNumberExtension: '',
@@ -97,7 +98,10 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
     },
   })
 
-  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(methods.control)
+  const isProjectInfoNextButtonDisabled = useProjectInformationNextButtonDisabled(
+    methods.control,
+    methods?.formState?.errors,
+  )
   const isPropertyInformationNextButtonDisabled = usePropertyInformationNextDisabled(
     methods.control,
     isDuplicateAddress,
@@ -148,6 +152,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         clientName: values.client?.label,
         clientId: values.client?.value,
         superLastName: values.superLastName,
+        superFirstName: values.superFirstName,
         superEmailAddress: values.superEmailAddress,
         superPhoneNumber: values.superPhoneNumber,
         superPhoneNumberExtension: values.superPhoneNumberExtension,

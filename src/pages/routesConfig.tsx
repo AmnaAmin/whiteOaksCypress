@@ -13,6 +13,7 @@ import { Markets } from 'pages/vendor-manager/markets'
 
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Performance } from './fpm/performance'
+import { PerformanceTab } from 'features/performance/performance'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -53,6 +54,7 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'vendors', element: Vendors },
         { path: 'reports', element: Reports },
+        { path: 'performance', element: PerformanceTab },
       ]
 
     case isVendor:

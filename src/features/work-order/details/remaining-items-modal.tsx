@@ -26,7 +26,7 @@ import {
   useRemainingLineItems,
 } from './assignedItems.utils'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { AddIcon } from '@chakra-ui/icons'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -64,13 +64,16 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset } = formControl
+  const { handleSubmit, control, reset, clearErrors, setValue } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
   })
+  const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
 
-  const { prepend } = remainingFieldArray
+  useEffect(() => {
+    reset({ remainingItems })
+  }, [remainingItems])
 
   useEffect(() => {
     if (swoProject?.status?.toLocaleUpperCase() === 'COMPLETED') {
@@ -78,12 +81,8 @@ const RemainingItemsModal: React.FC<{
     }
   }, [swoProject])
 
-  useEffect(() => {
-    reset({ remainingItems })
-  }, [remainingItems])
-
   const onSubmit = async values => {
-    const newLineItems = values.remainingItems.filter(r => r.action === 'new')
+    const newLineItems = values.remainingItems.filter(r => r?.action === 'new')
     const updatedLineItems = [...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))]
 
     if (updatedLineItems?.length > 0 && newLineItems?.length > 0) {
@@ -142,54 +141,69 @@ const RemainingItemsModal: React.FC<{
 
   return (
     <Box>
-      <Modal variant="custom" isOpen={props.isOpen} onClose={props.onClose} size="6xl">
+      <Modal
+        variant="custom"
+        isOpen={props.isOpen}
+        onClose={() => {
+          setSelectedItems([])
+          reset({ remainingItems })
+          props.onClose()
+        }}
+        size="flexible"
+      >
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
             <ModalHeader fontSize="16px" fontWeight={500} color="gray.600">
               <HStack>
                 <span>{t(`${WORK_ORDER}.remainingList`)}</span>
-                <Box pl="2" pr="1">
-                  <Divider size="lg" orientation="vertical" h="25px" />
-                </Box>
-                {isAssignmentAllowed && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    colorScheme="brand"
-                    leftIcon={<Icon as={AddIcon} boxSize={3} />}
-                    onClick={() =>
-                      prepend({
-                        sku: '',
-                        productName: '',
-                        description: '',
-                        quantity: '',
-                        unitPrice: '',
-                        totalPrice: '',
-                        action: 'new',
-                      })
-                    }
-                  >
-                    {t(`${WORK_ORDER}.addNewItem`)}
-                  </Button>
-                )}
-                <Box pl="2" pr="1">
-                  <Divider size="lg" orientation="vertical" h="25px" />
-                </Box>
-                <Button
-                  data-testid="delete-row-button"
-                  variant="ghost"
-                  disabled={selectedItems?.length < 1}
-                  colorScheme="brand"
-                  onClick={onDeleteConfirmationModalOpen}
-                  leftIcon={<RiDeleteBinLine color="#4E87F8" />}
-                >
-                  {t('deleteRow')}
-                </Button>
               </HStack>
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-            <ModalBody h="450px" overflow={'auto'}>
+            <ModalBody>
+              <HStack mb="10px">
+                {isAssignmentAllowed && (
+                  <>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      colorScheme="brand"
+                      leftIcon={<Icon as={AddIcon} boxSize={2} />}
+                      onClick={() => {
+                        setValue('remainingItems', [
+                          {
+                            sku: '',
+                            productName: '',
+                            description: '',
+                            quantity: '',
+                            unitPrice: '',
+                            totalPrice: '',
+                            action: 'new',
+                            id: '',
+                          },
+                          ...remainingItemsWatch,
+                        ])
+                        clearErrors()
+                      }}
+                    >
+                      {t(`${WORK_ORDER}.addRow`)}
+                    </Button>
+                    <Box pl="2" pr="1">
+                      <Divider size="lg" orientation="vertical" h="25px" />
+                    </Box>
+                    <Button
+                      data-testid="delete-row-button"
+                      variant="ghost"
+                      disabled={selectedItems?.length < 1}
+                      colorScheme="brand"
+                      onClick={onDeleteConfirmationModalOpen}
+                      leftIcon={<RiDeleteBinLine color="#4E87F8" />}
+                    >
+                      {t(`${WORK_ORDER}.deleteRows`)}
+                    </Button>
+                  </>
+                )}
+              </HStack>
               <RemainingListTable
                 formControl={formControl}
                 remainingFieldArray={remainingFieldArray}
@@ -208,6 +222,7 @@ const RemainingItemsModal: React.FC<{
                   colorScheme="brand"
                   onClick={() => {
                     setSelectedItems([])
+                    reset({ remainingItems })
                     props.onClose()
                   }}
                 >

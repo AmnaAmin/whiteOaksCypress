@@ -1,5 +1,5 @@
 import React from 'react'
-import { Task } from 'gantt-task-react'
+import { Task } from './task-types.ds'
 import { Flex } from '@chakra-ui/react'
 import ProjectScheduleDetails from './project-schedule-details'
 
@@ -10,8 +10,8 @@ export const ProjectSchedule: React.FC<{
   return (
     <Flex
       direction={'column'}
-      px="30px"
-      py={4}
+      px="0px"
+      py={0}
       gap={4}
       w="100%"
       h={{ base: 'unset', xl: '500px' }}
@@ -19,7 +19,7 @@ export const ProjectSchedule: React.FC<{
       borderRadius="4px"
       box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
     >
-      {!isLoading && data.length > 0 ? <ProjectScheduleDetails data={data} /> : null}
+      {!isLoading ? <ProjectScheduleDetails data={data} /> : null}
     </Flex>
   )
 }
