@@ -353,7 +353,7 @@ const RemainingListTable = (props: RemainingListType) => {
   ]
 
   return (
-    <Box width="100%" height={'100%'} overflowX="scroll">
+    <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
       <TableWrapper
         columns={REMAINING_ITEMS_COLUMNS}
         data={remainingItems ?? []}
