@@ -215,7 +215,7 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
   const defaultStatus = false
   const completedByVendor =
     [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
-    formValues?.assignedItems?.every(e => e.isCompleted && e.isVerified)
+    formValues?.assignedItems?.length < 1
   return {
     completedByVendor: defaultStatus || completedByVendor,
   }

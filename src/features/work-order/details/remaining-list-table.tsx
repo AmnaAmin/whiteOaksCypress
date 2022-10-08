@@ -34,7 +34,8 @@ type CellInputType = {
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
   autoFocus?: boolean
-  setIsFocus?: any
+  setIsFocus?: (val) => void
+  rules?: any
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -51,6 +52,7 @@ const renderInput = (props: CellInputType) => {
     setSelectedCell,
     autoFocus,
     setIsFocus,
+    rules,
   } = props
 
   const isNew = values?.remainingItems[row?.index]?.action === 'new'
@@ -66,6 +68,7 @@ const renderInput = (props: CellInputType) => {
           onChange={handleChange}
           autoFocus={autoFocus}
           setIsFocus={setIsFocus}
+          rules={rules}
         ></InputField>
       ) : (
         <EditableField
@@ -127,6 +130,7 @@ const CellComp = ({ cell, row }) => {
           fontWeight="400"
           maxHeight={'60px'}
           overflow="hidden"
+          width={'100%'}
         >
           {cell.render('Cell', { isFocus, setIsFocus })}
         </Box>
@@ -271,6 +275,7 @@ const RemainingListTable = (props: RemainingListType) => {
           setSelectedCell,
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       minWidth: 200,
     },
@@ -289,6 +294,7 @@ const RemainingListTable = (props: RemainingListType) => {
           setSelectedCell,
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       minWidth: 300,
     },
@@ -311,6 +317,7 @@ const RemainingListTable = (props: RemainingListType) => {
           },
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       width: 120,
     },
@@ -334,6 +341,7 @@ const RemainingListTable = (props: RemainingListType) => {
           },
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       width: 120,
     },
