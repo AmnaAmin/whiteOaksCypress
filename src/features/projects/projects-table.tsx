@@ -71,7 +71,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
         ? `/project-details/${rowData.id}`
         : `/vendorPortal/project-details/${rowData.id}`
 
-    window.open(`/project-details/${redirectPath}`)
+    window.open(redirectPath)
   }
 
   return (
