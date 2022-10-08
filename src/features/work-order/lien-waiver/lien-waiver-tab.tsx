@@ -31,6 +31,7 @@ import { head } from 'lodash'
 import { readFileContent } from 'api/vendor-details'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { STATUS as WOstatus } from 'features/common/status'
+import { WORK_ORDER } from '../workOrder.i18n'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -196,7 +197,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <HStack spacing="16px">
                   <InputView
                     controlStyle={{ w: '207px' }}
-                    label="Date of signature"
+                    label={t(`${WORK_ORDER}.dateOfSignature`)}
                     InputElem={
                       <>
                         {workOrder?.lienWaiverAccepted && workOrder?.dateOfSignature
@@ -207,7 +208,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   />
                   <InputView
                     controlStyle={{ w: '207px' }}
-                    label="Claimant Signature"
+                    label={t(`${WORK_ORDER}.claimantSignature`)}
                     InputElem={
                       workOrder?.lienWaiverAccepted && claimantsSignature ? (
                         <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />

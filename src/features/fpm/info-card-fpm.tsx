@@ -6,6 +6,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { useMonthData } from './hooks'
 import { format } from 'date-fns'
 import { enAU } from 'date-fns/locale'
+import { FPM_CARDS } from './fpmCards.i18n'
 
 const InfoStructureCard: React.FC<
   {
@@ -123,30 +124,30 @@ export const InformationCardFPM: React.FC<{ projectId?: string; chartData: any; 
       boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
     >
       <InfoStructureCard
-        bonus="Bonus"
+        bonus={t(`${FPM_CARDS}.bonus`)} 
         newBonus={chartData?.currentBonus}
-        profit="Profit"
-        revenue={'revenue'}
+        profit={t(`${FPM_CARDS}.profit`)}
+        revenue={t(`${FPM_CARDS}.revenue`)} 
         amount={currentMonthData}
-        title={t('Current Month')}
+        title={t(`${FPM_CARDS}.currentMonth`)} 
         isLoading={isLoading}
       />
       <InfoStructureCard
-        bonus="Bonus"
+        bonus={t(`${FPM_CARDS}.bonus`)} 
         previousBonus={chartData?.previousBonus}
-        profit="Profit"
-        revenue={'Revenue'}
+        profit={t(`${FPM_CARDS}.profit`)} 
+        revenue={t(`${FPM_CARDS}.revenue`)} 
         amount={previousMonthData}
         isLoading={isLoading}
-        title={t('Previous Month')}
+        title={t(`${FPM_CARDS}.previousMonth`)}
       />
       <InfoStructureCard
-        bonus="Bonus%"
-        goals="Goals"
-        target="Target"
+        bonus= {t(`${FPM_CARDS}.bonus`) + '%'} 
+        goals={t(`${FPM_CARDS}.goals`)}
+        target={t(`${FPM_CARDS}.target`)}
         amount={chartData}
         isLoading={isLoading}
-        title={t('Goals')}
+        title={t(`${FPM_CARDS}.goals`)}
       />
     </Flex>
   )

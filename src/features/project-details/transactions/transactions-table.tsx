@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import numeral from 'numeral'
 import Status from 'features/common/status'
 import { ExportCustomButton } from 'components/table-refactored/export-button'
+import { TRANSACTION } from './transactions.i18n'
 
 const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -67,15 +68,15 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         accessor: 'name',
       },
       {
-        Header: t('type') as string,
+        Header: t(`${TRANSACTION}.type`),
         accessor: 'transactionTypeLabel',
       },
       {
-        Header: t('trade') as string,
+        Header: t(`${TRANSACTION}.trade`),
         accessor: 'skillName',
       },
       {
-        Header: t('vendorGL') as string,
+        Header: t(`${TRANSACTION}.vendorGL`),
         accessor: 'parentWorkOrderId',
         Cell(cellInfo) {
           return cellInfo.value ? cellInfo?.row?.original?.vendor || '' : 'Project SOW'
@@ -85,7 +86,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('totalAmount') as string,
+        Header: t(`${TRANSACTION}.totalAmount`), 
         accessor: 'transactionTotal',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -95,12 +96,12 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('transactionStatus') as string,
+        Header: t(`${TRANSACTION}.transactionStatus`),
         accessor: 'status',
         Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
       },
       {
-        Header: t('submit') as string,
+        Header: t(`${TRANSACTION}.submit`),
         accessor: 'modifiedDate',
         Cell({ value }) {
           return <Box>{dateFormat(value)}</Box>
@@ -110,7 +111,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t('approvedBy') as string,
+        Header: t(`${TRANSACTION}.approvedBy`),
         accessor: 'approvedBy',
       },
     ],

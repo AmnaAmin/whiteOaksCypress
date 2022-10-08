@@ -262,25 +262,25 @@ const WorkOrderDetailTab = props => {
               )}
             </Box>
             <SimpleGrid columns={5}>
-              <InformationCard title="Company Name" date={companyName} />
-              <InformationCard title="Vendor Type" date={skillName} />
-              <InformationCard title="Email" date={businessEmailAddress} />
-              <InformationCard title=" Phone" date={businessPhoneNumber} />
+              <InformationCard title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+              <InformationCard title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+              <InformationCard title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+              <InformationCard title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
 
             <SimpleGrid columns={5}>
-              <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
+              <CalenderCard title={t(`${WORK_ORDER}.woIssued`)} date={dateFormat(workOrderIssueDate)} />
               <CalenderCard
-                title="LW Submitted "
+                title={t(`${WORK_ORDER}.lwSubmitted`)}
                 date={
                   dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
                 }
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
+              <CalenderCard title={t(`${WORK_ORDER}.completionVariance`)} date={workOrderCompletionDateVariance ?? '0'} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
