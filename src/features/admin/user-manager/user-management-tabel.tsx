@@ -2,12 +2,10 @@ import React, { useState } from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
-import { Clients } from 'types/client.type'
-import Client from 'features/clients/client-modal'
 import { TableWrapper } from 'components/table/table'
-import { useTranslation } from 'react-i18next'
+import { VendorManagerEdit } from './Vendor-Manager -edit'
 
-const userManagerTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
+const userManagementTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -38,50 +36,56 @@ const userManagerTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => 
   )
 }
 
-export const UserManagerTabel = React.forwardRef((props: any, ref) => {
-  // const { data: clients } = useClients()
-  const [selectedClient, setSelectedClient] = useState<Clients>()
-  const { t } = useTranslation()
+const data = [
+  {
+    id: 'id',
+    address: 'address',
+    teleNumber: 'teleNumber',
+  },
+]
+
+export const UserManagementTabel = React.forwardRef((props: any, ref) => {
+  const [selectedVendorManager, setSelectedVendorManager] = useState(false)
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: t('email'),
-        accessor: 'email',
+        Header: 'userManagementTranslation.userManagementTable.email',
+        accessor: 'id',
       },
       {
-        Header: t('firstName'),
+        Header: 'userManagementTranslation.userManagementTable.firstName',
         accessor: 'firstName',
       },
       {
-        Header: t('lastName'),
+        Header: 'userManagementTranslation.userManagementTable.lastName',
         accessor: 'Last Name',
       },
       {
-        Header: t('account'),
+        Header: 'userManagementTranslation.userManagementTable.account',
         accessor: 'Account',
       },
       {
-        Header: t('language'),
-        accessor: 'Language',
+        Header: 'userManagementTranslation.userManagementTable.language',
+        accessor: 'teleNumber',
         // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
-        Header: t('status'),
+        Header: 'userManagementTranslation.userManagementTable.status',
         accessor: 'Status',
       },
       {
-        Header: t('createdDate'),
+        Header: 'userManagementTranslation.userManagementTable.createdDate',
         accessor: 'Created  Date',
       },
 
       {
-        Header: t('modifiedBy'),
+        Header: 'userManagementTranslation.userManagementTable.modifiedBy',
         accessor: 'Modified By',
         // Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: t('modified Date'),
+        Header: 'userManagementTranslation.userManagementTable.modifiedDate',
         accessor: 'Modified  Date',
         // Cell: ({ value }) => dateFormat(value),
       },
@@ -91,20 +95,18 @@ export const UserManagerTabel = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <Client
-        clientDetails={selectedClient as Clients}
-        onClose={() => {
-          setSelectedClient(undefined)
-        }}
+      <VendorManagerEdit
+        selectedVendorManager={selectedVendorManager}
+        onClose={() => setSelectedVendorManager(!selectedVendorManager)}
       />
 
       <TableWrapper
         columns={columns}
-        data={[]}
-        TableRow={userManagerTableRow}
+        data={data || []}
+        TableRow={userManagementTableRow}
         tableHeight="calc(100vh - 200px)"
         name="clients-table"
-        onRowClick={(e, row) => setSelectedClient(row.original)}
+        onRowClick={() => setSelectedVendorManager(!selectedVendorManager)}
       />
     </Box>
   )

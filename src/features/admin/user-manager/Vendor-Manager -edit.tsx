@@ -1,3 +1,5 @@
+import React, { useCallback, useEffect } from 'react'
+
 import {
   Button,
   Checkbox,
@@ -17,13 +19,29 @@ import {
 import ReactSelect from 'components/form/react-select'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { PasswordField } from './password-field'
 
-export const AddUserMadal = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+export const VendorManagerEdit: React.FC<{ selectedVendorManager: any; onClose: () => void }> = ({
+  selectedVendorManager,
+  onClose: close,
+}) => {
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { t } = useTranslation()
+
+  const onClose = useCallback(() => {
+    onCloseDisclosure()
+    close()
+  }, [close, onCloseDisclosure])
+
+  useEffect(() => {
+    if (selectedVendorManager) {
+      onOpen()
+    } else {
+      onCloseDisclosure()
+    }
+  }, [onCloseDisclosure, onOpen, selectedVendorManager])
+
   const {
     register,
     handleSubmit,
@@ -45,6 +63,7 @@ export const AddUserMadal = () => {
     telephone: string | number
     ext: string
     employeeID: string
+    id: string
   }>()
 
   const formValues = useWatch({ control })
@@ -54,34 +73,32 @@ export const AddUserMadal = () => {
     !formValues?.lastName ||
     !formValues?.accountType ||
     !formValues?.address ||
-    !formValues?.telephone
+    !formValues?.telephone ||
+    !formValues?.id ||
+    !formValues?.language
 
   const onSubmit = value => {
     console.log('FormValue', value)
   }
   return (
     <>
-      <Button colorScheme="brand" onClick={onOpen} leftIcon={<BiAddToQueue />}>
-        {t('userManagementTranslation.managementModals.addUser')}
-      </Button>
-
-      <Modal
-        isOpen={isOpen}
-        onClose={() => {
-          onClose()
-          reset()
-        }}
-        size="6xl"
-      >
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl">
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0" fontSize="16px" fontWeight={500} color="#4A5568">
-              {t('userManagementTranslation.managementModals.newUser')}
+              {t('userManagementTranslation.managementModals.vendorManagerUser')}
             </ModalHeader>
             <ModalCloseButton onClick={() => reset()} />
             <ModalBody>
               <HStack mt="30px" spacing={15}>
+                <FormControl w={215}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t('userManagementTranslation.managementModals.id')}
+                  </FormLabel>
+                  <Input borderLeft="2.5px solid #4E87F8" type="text" placeholder="ID" {...register('id')} />
+                </FormControl>
+
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
                     {t('userManagementTranslation.managementModals.email')}
@@ -143,7 +160,7 @@ export const AddUserMadal = () => {
                     name="language"
                     render={({ field }) => (
                       <>
-                        <ReactSelect {...field} options={[]} />
+                        <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={[]} />
                       </>
                     )}
                   />

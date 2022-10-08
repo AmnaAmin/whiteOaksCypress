@@ -163,12 +163,6 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiUserPlus,
       color: '#ECC94B',
     },
-    // {
-    //   pathTo: '/performance',
-    //   title: 'Performance',
-    //   Icon: BiLineChart,
-    //   color: '#68D391',
-    // },
   ],
 }
 

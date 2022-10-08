@@ -1,7 +1,5 @@
 import {
-  Box,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Icon,
   Input,
@@ -47,9 +45,9 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
   const handleClickSecond = () => setPassword(!password)
 
   return (
-    <FormControl isInvalid={!!errors.password} w="215px">
+    <FormControl w="215px">
       <FormLabel variant="strong-label" size="md">
-        {t('password')}
+        {t('userManagementTranslation.managementModals.password')}
       </FormLabel>
       <InputGroup size="md">
         <Input
@@ -76,13 +74,10 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
           />
         </InputRightElement>
       </InputGroup>
-      <Box>
-        <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
-      </Box>
 
       <FormControl height={29} mt={2}>
         <FormLabel fontStyle="normal" fontSize="10px" fontWeight={400} lineHeight="15px" color="#374151">
-          {t('passwordStrength')}
+          {t('userManagementTranslation.managementModals.passwordStrength')}
         </FormLabel>
         <SimpleGrid columns={3} row={1} gap={2} w="215px">
           <Progress
