@@ -21,7 +21,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Controller, FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload, BiXCircle } from 'react-icons/bi'
@@ -46,6 +46,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { readFileContent } from 'api/vendor-details'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { RiErrorWarningLine } from 'react-icons/ri'
+import { datePickerFormat } from 'utils/date-time-utils'
 
 const headerStyle = {
   textTransform: 'none',
@@ -120,13 +121,22 @@ const AssignedItems = (props: AssignedItemType) => {
     downloadPdf,
     workOrder,
   } = props
-  const { control, register, getValues, setValue } = formControl
+  const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
 
   const values = getValues()
   const lineItems = useWatch({ name: 'assignedItems', control })
+  const watchUploadWO = watch('uploadWO')
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
+
+  useEffect(() => {
+    const allVerified = lineItems?.length > 0 && lineItems.every(l => l.isCompleted && l.isVerified)
+    if (allVerified) {
+      setValue('workOrderDateCompleted', datePickerFormat(new Date()))
+    }
+  }, [lineItems])
+
   const {
     showEditablePrices,
     showReadOnlyPrices,
@@ -170,6 +180,7 @@ const AssignedItems = (props: AssignedItemType) => {
                   variant="ghost"
                   colorScheme="brand"
                   onClick={onOpenRemainingItemsModal}
+                  disabled={!!watchUploadWO}
                   leftIcon={<Icon as={AddIcon} boxSize={2} />}
                 >
                   {t(`${WORK_ORDER}.addNewItem`)}

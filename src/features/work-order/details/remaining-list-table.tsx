@@ -4,6 +4,7 @@ import { TableWrapper } from 'components/table/table'
 import { difference } from 'lodash'
 import { memo, useEffect, useState } from 'react'
 import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
@@ -34,7 +35,8 @@ type CellInputType = {
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
   autoFocus?: boolean
-  setIsFocus?: any
+  setIsFocus?: (val) => void
+  rules?: any
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -51,6 +53,7 @@ const renderInput = (props: CellInputType) => {
     setSelectedCell,
     autoFocus,
     setIsFocus,
+    rules,
   } = props
 
   const isNew = values?.remainingItems[row?.index]?.action === 'new'
@@ -66,6 +69,7 @@ const renderInput = (props: CellInputType) => {
           onChange={handleChange}
           autoFocus={autoFocus}
           setIsFocus={setIsFocus}
+          rules={rules}
         ></InputField>
       ) : (
         <EditableField
@@ -127,6 +131,7 @@ const CellComp = ({ cell, row }) => {
           fontWeight="400"
           maxHeight={'60px'}
           overflow="hidden"
+          width={'100%'}
         >
           {cell.render('Cell', { isFocus, setIsFocus })}
         </Box>
@@ -134,6 +139,7 @@ const CellComp = ({ cell, row }) => {
     </Td>
   )
 }
+
 const RemainingListTable = (props: RemainingListType) => {
   const {
     selectedItems,
@@ -150,6 +156,13 @@ const RemainingListTable = (props: RemainingListType) => {
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
   const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
+  const { t } = useTranslation()
+
+  const requiredStyle = {
+    color: 'red.500',
+    fontWeight: 800,
+    fontSize: '18px',
+  }
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -271,11 +284,19 @@ const RemainingListTable = (props: RemainingListType) => {
           setSelectedCell,
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       minWidth: 200,
     },
     {
-      Header: `${WORK_ORDER}.details`,
+      Header: () => {
+        return (
+          <Flex>
+            <Box sx={requiredStyle}>*</Box>
+            <Box>{t(`${WORK_ORDER}.details`)}</Box>
+          </Flex>
+        )
+      },
       accessor: 'description',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
@@ -289,11 +310,19 @@ const RemainingListTable = (props: RemainingListType) => {
           setSelectedCell,
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       minWidth: 300,
     },
     {
-      Header: `${WORK_ORDER}.quantity`,
+      Header: () => {
+        return (
+          <Flex>
+            <Box sx={requiredStyle}>*</Box>
+            <Box>{t(`${WORK_ORDER}.quantity`)}</Box>
+          </Flex>
+        )
+      },
       accessor: 'quantity',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
@@ -311,11 +340,19 @@ const RemainingListTable = (props: RemainingListType) => {
           },
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       width: 120,
     },
     {
-      Header: `${WORK_ORDER}.unitPrice`,
+      Header: () => {
+        return (
+          <Flex>
+            <Box sx={requiredStyle}>*</Box>
+            <Box>{t(`${WORK_ORDER}.unitPrice`)}</Box>
+          </Flex>
+        )
+      },
       accessor: 'unitPrice',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
@@ -334,6 +371,7 @@ const RemainingListTable = (props: RemainingListType) => {
           },
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       width: 120,
     },

@@ -313,7 +313,7 @@ export const mapToLineItems = (item, watchPercentage?) => {
     ...item,
     isVerified: false,
     isCompleted: false,
-    price: item.unitPrice,
+    price: !item.unitPrice || item.unitPrice === '' ? '0' : item.unitPrice,
     document: null,
     profit: percentage,
     clientAmount: amount,
@@ -391,7 +391,9 @@ export const EditableField = (props: EditableCellType) => {
                 }
               }}
             >
-              {valueFormatter
+              {valueFormatter &&
+              remainingItemsWatch[index]?.[fieldName] &&
+              remainingItemsWatch[index]?.[fieldName] !== ''
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
                 : remainingItemsWatch[index]?.[fieldName]}
             </Box>
@@ -445,6 +447,7 @@ type InputFieldType = {
   onChange?: (e, index) => void
   autoFocus?: boolean
   setIsFocus?: (val) => void
+  rules?: any
 }
 export const InputField = (props: InputFieldType) => {
   const {
@@ -456,6 +459,7 @@ export const InputField = (props: InputFieldType) => {
     inputType = 'text',
     autoFocus,
     setIsFocus,
+    rules,
   } = props
   const {
     formState: { errors },
@@ -467,7 +471,7 @@ export const InputField = (props: InputFieldType) => {
         <Controller
           control={control}
           name={`${fieldArray}.${index}.${fieldName}`}
-          rules={{ required: '*Required' }}
+          rules={rules}
           render={({ field, fieldState }) => (
             <Input
               key={[fieldName] + '.' + [index]}
