@@ -55,6 +55,12 @@ const headerStyle = {
   color: '#4A5568',
 }
 
+const requiredStyle = {
+  color: 'red.500',
+  fontWeight: 800,
+  fontSize: '18px',
+}
+
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
 
@@ -283,14 +289,23 @@ const AssignedItems = (props: AssignedItemType) => {
                       {t(`${WORK_ORDER}.productName`)}
                     </Th>
                     <Th sx={headerStyle} minW="250px">
+                      <Box as="span" sx={requiredStyle}>
+                        *
+                      </Box>
                       {t(`${WORK_ORDER}.details`)}
                     </Th>
                     <Th sx={headerStyle} w="100px">
+                      <Box as="span" sx={requiredStyle}>
+                        *
+                      </Box>
                       {t(`${WORK_ORDER}.quantity`)}
                     </Th>
                     {(showReadOnlyPrices || showEditablePrices) && (
                       <>
                         <Th sx={headerStyle} w="120px">
+                          <Box as="span" sx={requiredStyle}>
+                            *
+                          </Box>
                           {t(`${WORK_ORDER}.price`)}
                         </Th>
                         <Th sx={headerStyle} w="150px">

@@ -17,6 +17,7 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { useGetProjectFinancialOverview } from 'api/projects'
@@ -103,6 +104,9 @@ type NewWorkOrderType = {
   assignedItems: LineItems[]
   uploadWO: any
 }
+const isValidAndNonEmpty = item => {
+  return item !== null && item !== undefined && item?.trim() !== ''
+}
 
 const NewWorkOrder: React.FC<{
   projectData: Project
@@ -165,7 +169,7 @@ const NewWorkOrder: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-
+  const toast = useToast()
   const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
@@ -234,6 +238,20 @@ const NewWorkOrder: React.FC<{
 
   const onSubmit = async values => {
     if (values?.assignedItems?.length > 0) {
+      const isValid = values?.assignedItems?.every(
+        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
+      )
+      if (!isValid) {
+        toast({
+          title: 'Assigned Items',
+          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return
+      }
       assignLineItems(
         [
           ...values?.assignedItems?.map(a => {

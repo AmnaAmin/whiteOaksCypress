@@ -564,7 +564,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
 export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
-    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted ?? '' },
+    { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
     { label: 'Work Type:', value: workOrder?.skillName ?? '' },
     { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
     { label: 'Gate Code:', value: projectData?.gateCode ?? '' },
@@ -594,7 +594,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
 
     doc.setFont(summaryFont, 'bold')
-    const centerTextX = 80
+    const centerTextX = 75
     doc.text('FPM:', centerTextX, 55)
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.projectManager ?? '', centerTextX + 15, 55)
@@ -603,7 +603,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
 
-    const x = 145
+    const x = 140
     let y = 50
 
     workOrderInfo.forEach(inv => {
@@ -611,8 +611,8 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
       doc.text(inv.label, x + 5, y + 5)
       doc.setFont(summaryFont, 'normal')
       doc.text(
-        inv.label === 'Start Date:' || inv.label === 'Completion Date:' ? dateFormat(inv.value) || '' : inv.value,
-        x + 35,
+        inv.label === 'Start Date:' || inv.label === 'Expected Completion:' ? dateFormat(inv.value) || '' : inv.value,
+        x + 45,
         y + 5,
       )
       y = y + 5
@@ -638,6 +638,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
             id: ai.id,
             location: ai.location,
             sku: ai.sku,
+            product: ai.productName,
             description: ai.description,
             quantity: ai.quantity,
           }
@@ -646,12 +647,14 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
       columnStyles: {
         location: { cellWidth: 30 },
         sku: { cellWidth: 30 },
-        description: { cellWidth: 90 },
+        product: { cellWidth: 40 },
+        description: { cellWidth: 50 },
         quantity: { cellWidth: 30 },
       },
       columns: [
         { header: 'Location', dataKey: 'location' },
         { header: 'SKU', dataKey: 'sku' },
+        { header: 'Product Name', dataKey: 'productName' },
         { header: 'Description', dataKey: 'description' },
         { header: 'Quantity', dataKey: 'quantity' },
       ],
