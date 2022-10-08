@@ -18,7 +18,7 @@ export const workOrder = {
         invoicedDate: 'Invoiced Date',
         addNewItem: 'Add New Item',
         addRow: 'Add Row',
-        details: 'Details',
+        details: 'Description',
         status: 'Status',
         verification: 'Verification',
         showPrice: 'Show Price to Vendor',
@@ -40,7 +40,7 @@ export const workOrder = {
         itemsLoading: 'Items Loading...',
         uploadWO: 'Upload WO',
         requiredLineItemsToast:
-          'Please fill required fields in selected Line Items. Details, Qty, Price are mandatory fields for each item.',
+          'Please fill required fields in Assigned Line Items. Details, Qty & Price are mandatory for each item.',
         rejectedInvoiceInfo:
           'Invoice and Lien Waiver have been declined. Please update Lien Waiver and regenerate Invoice.',
       },
@@ -62,7 +62,7 @@ export const workOrder = {
         unitPrice: 'Precio unitario',
         images: 'Imágenes',
         addNewItem: 'Agregar ítem nuevo',
-        details: 'Detalles',
+        details: 'Descripción',
         status: 'Estado',
         verification: 'Verificación',
         showPrice: 'Mostrar precio al vendedor',
@@ -84,7 +84,7 @@ export const workOrder = {
         itemsLoading: 'Cargando artículos...',
         uploadWO: 'Subir WO',
         requiredLineItemsToast:
-          'Complete los campos obligatorios en las líneas de pedido seleccionadas. Los detalles, la cantidad y el precio son campos obligatorios para cada artículo.',
+          'Complete los campos obligatorios en Elementos de línea asignados. Los detalles, la cantidad y el precio son obligatorios para cada artículo.',
         rejectedInvoiceInfo:
           'Se han rechazado la factura y la exención de gravamen. Actualice la exención de gravamen y regenere la factura.',
       },

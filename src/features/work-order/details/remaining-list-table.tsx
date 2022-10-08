@@ -4,7 +4,6 @@ import { TableWrapper } from 'components/table/table'
 import { difference } from 'lodash'
 import { memo, useEffect, useState } from 'react'
 import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
@@ -156,13 +155,6 @@ const RemainingListTable = (props: RemainingListType) => {
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
   const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
-  const { t } = useTranslation()
-
-  const requiredStyle = {
-    color: 'red.500',
-    fontWeight: 800,
-    fontSize: '18px',
-  }
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -204,7 +196,7 @@ const RemainingListTable = (props: RemainingListType) => {
       },
       disableSortBy: true,
       accessor: 'assigned',
-      canFilter: false,
+      filterable: false,
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index]?.action === 'new'
         return (
@@ -250,6 +242,7 @@ const RemainingListTable = (props: RemainingListType) => {
           setIsFocus,
         }),
       minWidth: 200,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.sku`,
@@ -268,6 +261,7 @@ const RemainingListTable = (props: RemainingListType) => {
           setIsFocus,
         }),
       width: 100,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.productName`,
@@ -287,16 +281,10 @@ const RemainingListTable = (props: RemainingListType) => {
           rules: { required: '*Required' },
         }),
       minWidth: 200,
+      filterable: true,
     },
     {
-      Header: () => {
-        return (
-          <Flex>
-            <Box sx={requiredStyle}>*</Box>
-            <Box>{t(`${WORK_ORDER}.details`)}</Box>
-          </Flex>
-        )
-      },
+      Header: `${WORK_ORDER}.details`,
       accessor: 'description',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
@@ -313,16 +301,10 @@ const RemainingListTable = (props: RemainingListType) => {
           rules: { required: '*Required' },
         }),
       minWidth: 300,
+      filterable: true,
     },
     {
-      Header: () => {
-        return (
-          <Flex>
-            <Box sx={requiredStyle}>*</Box>
-            <Box>{t(`${WORK_ORDER}.quantity`)}</Box>
-          </Flex>
-        )
-      },
+      Header: `${WORK_ORDER}.quantity`,
       accessor: 'quantity',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
@@ -343,16 +325,10 @@ const RemainingListTable = (props: RemainingListType) => {
           rules: { required: '*Required' },
         }),
       width: 120,
+      filterable: true,
     },
     {
-      Header: () => {
-        return (
-          <Flex>
-            <Box sx={requiredStyle}>*</Box>
-            <Box>{t(`${WORK_ORDER}.unitPrice`)}</Box>
-          </Flex>
-        )
-      },
+      Header: `${WORK_ORDER}.unitPrice`,
       accessor: 'unitPrice',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
@@ -374,9 +350,11 @@ const RemainingListTable = (props: RemainingListType) => {
           rules: { required: '*Required' },
         }),
       width: 120,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.total`,
+      accessor: 'totalPrice',
       Cell: ({ row }) => {
         return (
           <>
@@ -387,6 +365,7 @@ const RemainingListTable = (props: RemainingListType) => {
         )
       },
       width: 150,
+      filterable: true,
     },
   ]
 
@@ -400,7 +379,7 @@ const RemainingListTable = (props: RemainingListType) => {
         tableHeight="calc(100vh - 325px)"
         name="remaining-items-table"
         defaultFlexStyle={false}
-        disableFilter={true}
+        disableFilter={false}
         rowHeight={80}
       />
     </Box>

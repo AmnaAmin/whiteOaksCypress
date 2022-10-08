@@ -200,7 +200,7 @@ export const TableHeader = ({ headerGroups, disableFilter }: TableExtraProps) =>
             <Tr key={`th_${headerGroup.id}`} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
                 <Th key={`th_td_${column.id}`} {...column.getHeaderProps()} py={4} px={4}>
-                  {column.canFilter ? column.render('Filter') : null}
+                  {column.canFilter && column.filterable ? column.render('Filter') : null}
                 </Th>
               ))}
             </Tr>
