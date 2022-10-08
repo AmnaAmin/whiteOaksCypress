@@ -33,6 +33,8 @@ export const project = {
           overpayment: 'Overpayment',
           remainingPayment: 'Remaining Payment',
           payment: 'Payment',
+          originalSOW: 'Original SOW',
+          invoice: 'Invoice',
 
           // Contacts
           contacts: 'Contacts',
@@ -71,6 +73,10 @@ export const project = {
           payDateVariance: 'Pay Date Variance',
           payVariance: 'Pay Variance',
           woaPaid: 'WOA Paid',
+
+          save:'Save',
+          cancel: 'Cancel',
+          seeProjectDetails: 'See Project Details',
         },
       },
     },
@@ -106,6 +112,8 @@ export const project = {
           overpayment: 'Sobrepago',
           remainingPayment: 'Pago restante',
           payment: 'Pago',
+          originalSOW: 'SOW original',
+          invoice: 'Factura',
 
           // Contacts
           contacts: 'Contactos',
@@ -144,6 +152,11 @@ export const project = {
           payDateVariance: 'Variación de la fecha de pago',
           payVariance: 'Variación de pago',
           woaPaid: 'WOA pagado',
+
+          
+          save:'Ahorrar',
+          cancel: 'Cancelar',
+          seeProjectDetails: 'Ver detalles del proyecto',
         },
       },
     },

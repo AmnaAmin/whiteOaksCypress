@@ -789,7 +789,7 @@ i18n.use(initReactI18next).init({
         vendorGL: 'Vendedor',
         transactionDoc: 'Transacción',
         createdDate: 'Fecha de creación',
-        createdBy: 'creado por',
+        createdBy: 'Creado por',
         uploadFile: 'Subir archivo',
         // Project - Alerts
         value: 'Valor',
