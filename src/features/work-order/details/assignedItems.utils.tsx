@@ -638,7 +638,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
             id: ai.id,
             location: ai.location,
             sku: ai.sku,
-            product: ai.productName,
+            productName: ai.productName,
             description: ai.description,
             quantity: ai.quantity,
           }
@@ -647,7 +647,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
       columnStyles: {
         location: { cellWidth: 30 },
         sku: { cellWidth: 30 },
-        product: { cellWidth: 40 },
+        productName: { cellWidth: 40 },
         description: { cellWidth: 50 },
         quantity: { cellWidth: 30 },
       },
