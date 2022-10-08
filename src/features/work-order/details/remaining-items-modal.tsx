@@ -81,7 +81,24 @@ const RemainingItemsModal: React.FC<{
     }
   }, [swoProject])
 
+  const isValidAndNonEmpty = item => {
+    return item !== null && item !== undefined && item?.trim() !== ''
+  }
   const onSubmit = async values => {
+    const isValid = selectedItems?.every(
+      l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.unitPrice),
+    )
+    if (!isValid) {
+      toast({
+        title: 'Assigned Items',
+        description: t(`${WORK_ORDER}.requiredLineItemsToast`),
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+      return
+    }
     const newLineItems = values.remainingItems.filter(r => r?.action === 'new')
     const updatedLineItems = [...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))]
 

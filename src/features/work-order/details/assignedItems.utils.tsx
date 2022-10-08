@@ -391,7 +391,9 @@ export const EditableField = (props: EditableCellType) => {
                 }
               }}
             >
-              {valueFormatter
+              {valueFormatter &&
+              remainingItemsWatch[index]?.[fieldName] &&
+              remainingItemsWatch[index]?.[fieldName] !== ''
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
                 : remainingItemsWatch[index]?.[fieldName]}
             </Box>

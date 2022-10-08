@@ -17,7 +17,6 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
-  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { useGetProjectFinancialOverview } from 'api/projects'
@@ -163,7 +162,6 @@ const NewWorkOrder: React.FC<{
   const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
     setValue,
   })
-  const toast = useToast()
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
@@ -234,26 +232,8 @@ const NewWorkOrder: React.FC<{
     }
   }, [isSuccess, onClose])
 
-  const isValidAndNonEmpty = item => {
-    return item !== null && item !== undefined && item?.trim() !== ''
-  }
-
   const onSubmit = async values => {
     if (values?.assignedItems?.length > 0) {
-      const isValid = values?.assignedItems?.every(
-        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
-      )
-      if (!isValid) {
-        toast({
-          title: 'Assigned Items',
-          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        return
-      }
       assignLineItems(
         [
           ...values?.assignedItems?.map(a => {
