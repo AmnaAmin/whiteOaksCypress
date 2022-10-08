@@ -99,7 +99,7 @@ const InvoiceAndPayments: React.FC = () => {
           <VStack alignItems="end" spacing="0px" position="relative">
             <FormControl w="215px" isInvalid={!!errors.originalSOWAmount}>
               <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
-              {t(`project.projectDetails.originalSowAmount`)}
+                {t(`project.projectDetails.originalSowAmount`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -134,7 +134,7 @@ const InvoiceAndPayments: React.FC = () => {
                 top="76px"
               >
                 <Icon as={BiDownload} fontSize="14px" />
-                <Text ml="1">Original SOW</Text>
+                <Text ml="1">{t(`project.projectDetails.originalSOW`)}</Text>
               </Link>
             )}
           </VStack>
@@ -142,7 +142,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.finalSOWAmount}>
             <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
-            {t(`project.projectDetails.finalSowAmount`)}
+              {t(`project.projectDetails.finalSowAmount`)}
             </FormLabel>
             <Controller
               control={control}
@@ -167,7 +167,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.invoiceNumber}>
             <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
-            {t(`project.projectDetails.invoiceNo`)}
+              {t(`project.projectDetails.invoiceNo`)}
             </FormLabel>
             <Input id="invoiceNo" {...register('invoiceNumber')} />
             <FormErrorMessage>{errors?.invoiceNumber?.message}</FormErrorMessage>
@@ -177,7 +177,7 @@ const InvoiceAndPayments: React.FC = () => {
           <VStack alignItems="end" spacing="0px" position="relative">
             <FormControl isInvalid={!!errors?.invoiceAttachment}>
               <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.uploadInvoice`)}
+                {t(`project.projectDetails.uploadInvoice`)}
               </FormLabel>
               <Controller
                 name="invoiceAttachment"
@@ -221,7 +221,7 @@ const InvoiceAndPayments: React.FC = () => {
                 top={'76px'}
               >
                 <Icon as={BiDownload} fontSize="14px" />
-                <Text ml="1">Invoice</Text>
+                <Text ml="1">{t(`project.projectDetails.invoice`)}</Text>
               </Link>
             )}
           </VStack>
@@ -229,7 +229,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors?.invoiceBackDate}>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.invoiceBackDate`)}
+              {t(`project.projectDetails.invoiceBackDate`)}
             </FormLabel>
 
             <Input
@@ -248,7 +248,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.paymentTerms}>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.paymentTerms`)}
+              {t(`project.projectDetails.paymentTerms`)}
             </FormLabel>
             <Controller
               control={control}
@@ -276,7 +276,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.woaInvoiceDate}>
             <FormLabel htmlFor="woaInvoiceDate" variant="strong-label" size="md">
-            {t(`project.projectDetails.woaInvoiceDate`)}
+              {t(`project.projectDetails.woaInvoiceDate`)}
             </FormLabel>
             <Input
               isDisabled={isWOAInvoiceDateDisabled}
@@ -294,7 +294,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors?.woaExpectedPayDate}>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.woaExpectedPay`)}
+              {t(`project.projectDetails.woaExpectedPay`)}
             </FormLabel>
 
             <Input
@@ -310,7 +310,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.overPayment}>
             <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
-            {t(`project.projectDetails.overpayment`)}
+              {t(`project.projectDetails.overpayment`)}
             </FormLabel>
 
             <Controller
@@ -335,7 +335,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.remainingPayment}>
             <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
-            {t(`project.projectDetails.remainingPayment`)}
+              {t(`project.projectDetails.remainingPayment`)}
             </FormLabel>
 
             <Controller
@@ -359,7 +359,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.payment}>
             <FormLabel htmlFor="payment" variant="strong-label" size="md">
-            {t(`project.projectDetails.payment`)}
+              {t(`project.projectDetails.payment`)}
             </FormLabel>
             <Controller
               control={control}

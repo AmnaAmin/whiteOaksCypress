@@ -108,15 +108,9 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
               {t(`project.projectDetails.invoicingPayment`)}
             </TabCustom>
-            <TabCustom>
-              {t(`project.projectDetails.contacts`)}
-            </TabCustom>
-            <TabCustom>
-              {t(`project.projectDetails.location`)}
-            </TabCustom>
-            <TabCustom>
-              {t(`project.projectDetails.misc`)}
-            </TabCustom>
+            <TabCustom>{t(`project.projectDetails.contacts`)}</TabCustom>
+            <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>
+            <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
           </TabList>
 
           <TabPanels mt="31px">
@@ -163,7 +157,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               fontSize="16px"
               disabled={isSubmitting}
             >
-              Save
+              {t(`project.projectDetails.save`)}
             </Button>
             {onClose && (
               <>
@@ -176,7 +170,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   variant="outline"
                   colorScheme="brand"
                 >
-                  Cancel
+                  {t(`project.projectDetails.cancel`)}
                 </Button>
                 <Button
                   mt="8px"
@@ -187,7 +181,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   colorScheme="brand"
                   leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
                 >
-                  See Project Details
+                  {t(`project.projectDetails.seeProjectDetails`)}
                 </Button>
               </>
             )}
