@@ -264,6 +264,9 @@ const AssignedItems = (props: AssignedItemType) => {
                         ></Icon>
                       </Th>
                     )}
+                    <Th sx={headerStyle} minW="150px" maxW="150px">
+                      {t(`${WORK_ORDER}.location`)}
+                    </Th>
                     <Th sx={headerStyle} minW="100px" maxW="150px">
                       {t(`${WORK_ORDER}.sku`)}
                     </Th>
@@ -464,6 +467,18 @@ export const AssignedLineItems = props => {
                 ></Icon>
               </Td>
             )}
+            <Td>
+              <EditableField
+                index={index}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={props.formControl}
+                inputType="text"
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                allowEdit={allowEdit}
+              />
+            </Td>
             <Td>
               <EditableField
                 index={index}
