@@ -177,10 +177,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                       />
 
                       <Input
+                        {...register('finalInvoiceAmount')}
                         h="35px"
                         m={0}
                         pl={2}
-                        value={workOrder.finalInvoiceAmount}
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={400}
