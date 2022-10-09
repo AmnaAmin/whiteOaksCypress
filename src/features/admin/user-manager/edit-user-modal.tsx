@@ -21,7 +21,7 @@ import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { PasswordField } from './password-field'
 
-export const AddUserMadal = () => {
+export const EditUserMadal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
   const {

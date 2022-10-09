@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
-import { VendorManagerEdit } from './Vendor-Manager -edit'
 
 const userManagementTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -36,17 +35,7 @@ const userManagementTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) 
   )
 }
 
-const data = [
-  {
-    id: 'id',
-    address: 'address',
-    teleNumber: 'teleNumber',
-  },
-]
-
 export const UserManagementTabel = React.forwardRef((props: any, ref) => {
-  const [selectedVendorManager, setSelectedVendorManager] = useState(false)
-
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
@@ -95,18 +84,12 @@ export const UserManagementTabel = React.forwardRef((props: any, ref) => {
 
   return (
     <Box ref={resizeElementRef}>
-      <VendorManagerEdit
-        selectedVendorManager={selectedVendorManager}
-        onClose={() => setSelectedVendorManager(!selectedVendorManager)}
-      />
-
       <TableWrapper
         columns={columns}
-        data={data || []}
+        data={[]}
         TableRow={userManagementTableRow}
         tableHeight="calc(100vh - 200px)"
         name="clients-table"
-        onRowClick={() => setSelectedVendorManager(!selectedVendorManager)}
       />
     </Box>
   )
