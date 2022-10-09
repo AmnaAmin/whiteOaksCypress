@@ -4,6 +4,7 @@ import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { VendorManagerEdit } from './Vendor-Manager -edit'
+import { useTranslation } from 'react-i18next'
 
 const userManagementTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -46,46 +47,47 @@ const data = [
 
 export const UserManagementTabel = React.forwardRef((props: any, ref) => {
   const [selectedVendorManager, setSelectedVendorManager] = useState(false)
+  const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: 'userManagementTranslation.userManagementTable.email',
+        Header: t('userManagementTranslation.userManagementTable.email'),
         accessor: 'id',
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.firstName',
+        Header: t('userManagementTranslation.userManagementTable.firstName'),
         accessor: 'firstName',
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.lastName',
+        Header: t('userManagementTranslation.userManagementTable.lastName'),
         accessor: 'Last Name',
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.account',
+        Header: t('userManagementTranslation.userManagementTable.account'),
         accessor: 'Account',
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.language',
+        Header: t('userManagementTranslation.userManagementTable.language'),
         accessor: 'teleNumber',
         // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.status',
+        Header: t('userManagementTranslation.userManagementTable.status'),
         accessor: 'Status',
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.createdDate',
+        Header: t('userManagementTranslation.userManagementTable.createdDate'),
         accessor: 'Created  Date',
       },
 
       {
-        Header: 'userManagementTranslation.userManagementTable.modifiedBy',
+        Header: t('userManagementTranslation.userManagementTable.modifiedBy'),
         accessor: 'Modified By',
         // Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: 'userManagementTranslation.userManagementTable.modifiedDate',
+        Header: t('userManagementTranslation.userManagementTable.modifiedDate'),
         accessor: 'Modified  Date',
         // Cell: ({ value }) => dateFormat(value),
       },
