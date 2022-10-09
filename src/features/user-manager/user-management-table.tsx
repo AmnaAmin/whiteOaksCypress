@@ -35,7 +35,7 @@ const userManagementTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) 
   )
 }
 
-export const UserManagementTabel = React.forwardRef((props: any, ref) => {
+export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {

@@ -1,5 +1,3 @@
-export const USERMANAGEMENT = 'UserManagementTranslation'
-
 export const userManagementTranslation = {
   en: {
     translation: {

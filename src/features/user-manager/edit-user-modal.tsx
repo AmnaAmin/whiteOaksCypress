@@ -21,7 +21,7 @@ import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { PasswordField } from './password-field'
 
-export const EditUserMadal = () => {
+export const EditUserModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
   const {
@@ -56,9 +56,7 @@ export const EditUserMadal = () => {
     !formValues?.address ||
     !formValues?.telephone
 
-  const onSubmit = value => {
-    console.log('FormValue', value)
-  }
+  const onSubmit = value => {}
   return (
     <>
       <Button colorScheme="brand" onClick={onOpen} leftIcon={<BiAddToQueue />}>

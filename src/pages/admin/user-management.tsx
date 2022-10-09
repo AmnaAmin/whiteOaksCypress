@@ -1,6 +1,6 @@
 import { Box, HStack, Text } from '@chakra-ui/react'
-import { EditUserMadal } from 'features/user-manager/edit-user-modal'
-import { UserManagementTabel } from 'features/user-manager/user-management-table'
+import { EditUserModal } from 'features/user-manager/edit-user-modal'
+import { UserManagementTable } from 'features/user-manager/user-management-table'
 import { useTranslation } from 'react-i18next'
 
 export const UserManagement = () => {
@@ -11,9 +11,9 @@ export const UserManagement = () => {
         <Text fontSize="18px" fontWeight={600} color="#4A5568">
           {t('userManagement.managementTable.user')}
         </Text>
-        <EditUserMadal />
+        <EditUserModal />
       </HStack>
-      <UserManagementTabel />
+      <UserManagementTable />
     </Box>
   )
 }
