@@ -25,12 +25,13 @@ import { BiCaretDown, BiCaretUp, BiDownload, BiSpreadsheet, BiUpload } from 'rea
 import { GetHelpText } from 'utils/lien-waiver'
 import { useTranslation } from 'react-i18next'
 import { dateFormat } from 'utils/date-time-utils'
-import { useUpdateWorkOrderMutation } from 'api/work-order'
+import { defaultValuesLienWaiver, useUpdateWorkOrderMutation } from 'api/work-order'
 import { MdOutlineCancel } from 'react-icons/md'
 import { head } from 'lodash'
 import { readFileContent } from 'api/vendor-details'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { STATUS as WOstatus } from 'features/common/status'
+import { WORK_ORDER } from '../workOrder.i18n'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -42,7 +43,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { mutate: updateLienWaiver } = useUpdateWorkOrderMutation({})
 
   const { register, handleSubmit, setValue, control } = useForm({
-    // defaultValues: defaultValuesLienWaiver(workOrder),
+    defaultValues: defaultValuesLienWaiver(workOrder),
   })
   const { leanwieverLink } = props.workOrder
 
@@ -78,7 +79,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           documentType: 26,
           workOrderId: workOrder.id,
           fileObject: fileContents,
-          fileObjectContentType: document.type,
+          fileObjectContentType: document?.type,
           fileType: `LW${workOrder?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.${fileExtension}`,
         },
       ],
@@ -196,7 +197,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <HStack spacing="16px">
                   <InputView
                     controlStyle={{ w: '207px' }}
-                    label="Date of signature"
+                    label={t(`${WORK_ORDER}.dateOfSignature`)}
                     InputElem={
                       <>
                         {workOrder?.lienWaiverAccepted && workOrder?.dateOfSignature
@@ -207,7 +208,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   />
                   <InputView
                     controlStyle={{ w: '207px' }}
-                    label="Claimant Signature"
+                    label={t(`${WORK_ORDER}.claimantSignature`)}
                     InputElem={
                       workOrder?.lienWaiverAccepted && claimantsSignature ? (
                         <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />

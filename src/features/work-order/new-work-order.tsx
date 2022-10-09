@@ -468,7 +468,7 @@ const NewWorkOrder: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
                       <Controller

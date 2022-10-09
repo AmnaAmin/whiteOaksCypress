@@ -92,7 +92,7 @@ const PerformanceModal = ({
                 performanceDetails={performanceDetails}
                 formControl={formReturn as UseFormReturn<any>}
               />
-              <Box mt={5} overflow={'auto'} height={'300px'} >
+              <Box mt={5} overflow={'auto'} height={'300px'}>
                 <PerformanceGraph chartData={fpmData} isLoading={isLoading} />
               </Box>
             </ModalBody>
