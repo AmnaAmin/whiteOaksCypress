@@ -69,7 +69,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
     <Link
       to={`/project-details/${projectId}`}
       data-testid="project-table-row"
-      onContextMenu={() => window.open(`${process.env.PUBLIC_URL}project-details/${projectId}`)}
+      onContextMenu={() => window.open(`${process.env.PUBLIC_URL}/project-details/${projectId}`)}
     >
       <Tr
         bg="white"

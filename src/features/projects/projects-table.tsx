@@ -66,7 +66,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   const onRightClick = rowData => {
-    window.open(`${process.env.PUBLIC_URL}project-details/${rowData.id}`)
+    window.open(`${process.env.PUBLIC_URL}/project-details/${rowData.id}`)
   }
 
   return (
