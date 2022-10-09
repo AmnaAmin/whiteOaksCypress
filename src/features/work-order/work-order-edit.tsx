@@ -96,7 +96,7 @@ const WorkOrderDetails = ({
     navigate(`/project-details/${workOrder.projectId}`)
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'}>
+    <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
         <>
@@ -190,6 +190,7 @@ const WorkOrderDetails = ({
                       swoProject={swoProject}
                       rejectInvoiceCheck={rejectInvoice}
                       projectData={projectData}
+                      documentsData={documentsData}
                     />
                   </TabPanel>
                   <TabPanel p={0}>

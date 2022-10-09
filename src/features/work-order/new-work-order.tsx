@@ -17,16 +17,18 @@ import {
   SimpleGrid,
   Text,
   useDisclosure,
+  useToast,
+  VStack,
 } from '@chakra-ui/react'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import Select from 'components/form/react-select'
 import { t } from 'i18next'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
-import { BiCalendar } from 'react-icons/bi'
+import { BiCalendar, BiUpload } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
-import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
+import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
@@ -45,6 +47,8 @@ import {
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
+import { WORK_ORDER } from './workOrder.i18n'
+import { MdOutlineCancel } from 'react-icons/md'
 
 const CalenderCard = props => {
   return (
@@ -98,6 +102,10 @@ type NewWorkOrderType = {
   clientApprovedAmount: string | number | null
   percentage: string | number | null
   assignedItems: LineItems[]
+  uploadWO: any
+}
+const isValidAndNonEmpty = item => {
+  return item !== null && item !== undefined && item?.trim() !== ''
 }
 
 const NewWorkOrder: React.FC<{
@@ -130,8 +138,9 @@ const NewWorkOrder: React.FC<{
       workOrderStartsDate: undefined,
       invoiceAmount: null,
       clientApprovedAmount: null,
-      percentage: null,
+      percentage: 0,
       assignedItems: [],
+      uploadWO: null,
     }
   }
   // Hook form initialization
@@ -154,29 +163,21 @@ const NewWorkOrder: React.FC<{
     control,
     name: 'assignedItems',
   })
-
+  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
+    setValue,
+  })
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-
-  const [woStartDate, watchPercentage, watchClientApprovedAmount, watchInvoiceAmount] = watch([
-    'workOrderStartDate',
-    'percentage',
-    'clientApprovedAmount',
-    'invoiceAmount',
-  ])
+  const toast = useToast()
+  const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
-  const { percentage } = usePercentageCalculation({
-    clientApprovedAmount: watchClientApprovedAmount,
-    vendorWOAmount: watchInvoiceAmount,
-  })
-
   useEffect(() => {
-    if (percentage !== null) setValue('percentage', percentage)
-    if (percentage === 0) {
+    if (watchPercentage === 0) {
       resetLineItemsProfit(0)
     }
-  }, [percentage])
+  }, [watchPercentage])
 
   useEffect(() => {
     const clientAmount = formValues.assignedItems?.reduce(
@@ -235,8 +236,22 @@ const NewWorkOrder: React.FC<{
     }
   }, [isSuccess, onClose])
 
-  const onSubmit = values => {
+  const onSubmit = async values => {
     if (values?.assignedItems?.length > 0) {
+      const isValid = values?.assignedItems?.every(
+        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
+      )
+      if (!isValid) {
+        toast({
+          title: 'Assigned Items',
+          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return
+      }
       assignLineItems(
         [
           ...values?.assignedItems?.map(a => {
@@ -244,14 +259,14 @@ const NewWorkOrder: React.FC<{
           }),
         ],
         {
-          onSuccess: () => {
-            const payload = parseNewWoValuesToPayload(values, projectData.id)
+          onSuccess: async () => {
+            const payload = await parseNewWoValuesToPayload(values, projectData.id)
             createWorkOrder(payload as any)
           },
         },
       )
     } else {
-      const payload = parseNewWoValuesToPayload(values, projectData.id)
+      const payload = await parseNewWoValuesToPayload(values, projectData.id)
       createWorkOrder(payload as any)
     }
   }
@@ -276,6 +291,12 @@ const NewWorkOrder: React.FC<{
     setVendorOptions(option)
   }, [vendors])
 
+  const resetAmounts = () => {
+    setValue('invoiceAmount', 0)
+    setValue('clientApprovedAmount', 0)
+    setValue('percentage', 0)
+  }
+
   /*  commenting as requirement yet to be confirmed 
   useEffect(() => {
     const subscription = watch(values => {
@@ -294,6 +315,7 @@ const NewWorkOrder: React.FC<{
       }}
       size="flexible"
       variant="custom"
+      closeOnOverlayClick={false}
     >
       <ModalOverlay />
       <form
@@ -399,9 +421,10 @@ const NewWorkOrder: React.FC<{
                                 thousandSeparator
                                 customInput={CustomRequiredInput}
                                 prefix={'$'}
-                                disabled
+                                disabled={!watchUploadWO}
                                 onValueChange={e => {
-                                  field.onChange(e.floatValue)
+                                  field.onChange(e.floatValue ?? '')
+                                  onApprovedAmountChange(e.floatValue)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -429,6 +452,7 @@ const NewWorkOrder: React.FC<{
                                 suffix={'%'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue ?? '')
+                                  onPercentageChange(e.floatValue)
                                 }}
                                 onBlur={e => {
                                   resetLineItemsProfit(removePercentageFormat(e.target.value))
@@ -459,7 +483,11 @@ const NewWorkOrder: React.FC<{
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
-                                disabled
+                                disabled={!watchUploadWO}
+                                onValueChange={e => {
+                                  field.onChange(e.floatValue ?? '')
+                                  onInoviceAmountChange(e.floatValue)
+                                }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -525,6 +553,73 @@ const NewWorkOrder: React.FC<{
           </ModalBody>
 
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+            <HStack justifyContent="start" w="100%">
+              <Controller
+                name="uploadWO"
+                control={control}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <input
+                        type="file"
+                        ref={inputRef}
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const file = e.target?.files?.[0]
+                          if (file) {
+                            if (formValues.assignedItems?.length > 0) {
+                              setUnAssignedItems([...formValues.assignedItems, ...unassignedItems])
+                            }
+                            setValue('assignedItems', [])
+                            setValue('percentage', 0)
+                            field.onChange(file)
+                          } else {
+                            field.onChange(null)
+                          }
+                        }}
+                        accept="application/pdf, image/png, image/jpg, image/jpeg"
+                      />
+                      {formValues.uploadWO ? (
+                        <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                          <HStack spacing="5px" h="38px" padding="10px" align="center">
+                            <Text
+                              as="span"
+                              maxW="120px"
+                              isTruncated
+                              title={formValues.uploadWO?.name || formValues.uploadWO?.fileType}
+                            >
+                              {formValues.uploadWO?.name || formValues.uploadWO?.fileType}
+                            </Text>
+                            <MdOutlineCancel
+                              cursor="pointer"
+                              onClick={() => {
+                                setValue('uploadWO', null)
+                                resetAmounts()
+                                if (inputRef.current) inputRef.current.value = ''
+                              }}
+                            />
+                          </HStack>
+                        </Box>
+                      ) : (
+                        <Button
+                          onClick={e => {
+                            if (inputRef.current) {
+                              inputRef.current.click()
+                            }
+                          }}
+                          leftIcon={<BiUpload />}
+                          variant="outline"
+                          size="md"
+                          colorScheme="brand"
+                        >
+                          {t(`${WORK_ORDER}.uploadWO`)}
+                        </Button>
+                      )}
+                    </VStack>
+                  )
+                }}
+              />
+            </HStack>
             <HStack spacing="16px">
               <Button
                 onClick={() => {
@@ -536,7 +631,11 @@ const NewWorkOrder: React.FC<{
               >
                 {t('cancel')}
               </Button>
-              <Button type="submit" colorScheme="brand" disabled={getValues()?.assignedItems?.length < 1}>
+              <Button
+                type="submit"
+                colorScheme="brand"
+                disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO)}
+              >
                 {t('save')}
               </Button>
             </HStack>

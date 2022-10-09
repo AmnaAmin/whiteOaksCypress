@@ -9,6 +9,7 @@ import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
+import { readFileContent } from './vendor-details'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -214,7 +215,7 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
   const defaultStatus = false
   const completedByVendor =
     [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
-    formValues?.assignedItems?.every(e => e.isCompleted && e.isVerified)
+    formValues?.assignedItems?.length < 1
   return {
     completedByVendor: defaultStatus || completedByVendor,
   }
@@ -286,9 +287,9 @@ export const defaultValuesLienWaiver = lienWaiverData => {
 }
 /* New Work Order */
 
-export const parseNewWoValuesToPayload = (formValues, projectId) => {
+export const parseNewWoValuesToPayload = async (formValues, projectId) => {
   const selectedCapacity = 1
-  const arr = [] as any
+  var documents = [] as any
   const assignedItems = [
     ...formValues?.assignedItems?.map(a => {
       if (a.document) {
@@ -304,6 +305,16 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
       return assignedItem
     }),
   ]
+
+  if (formValues?.uploadWO) {
+    const fileContents = await readFileContent(formValues?.uploadWO)
+    documents.push({
+      fileObjectContentType: formValues?.uploadWO?.type,
+      fileType: formValues?.uploadWO?.name,
+      fileObject: fileContents ?? '',
+      documentType: 16,
+    })
+  }
   return {
     workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
     workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
@@ -315,7 +326,7 @@ export const parseNewWoValuesToPayload = (formValues, projectId) => {
     // new work-order have hardcoded capacity
     capacity: selectedCapacity,
     assignedItems: formValues?.assignedItems?.length > 0 ? assignedItems : [],
-    documents: arr,
+    documents,
     status: 34,
     showPricing: formValues.showPrice,
     projectId: projectId,
