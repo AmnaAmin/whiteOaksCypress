@@ -7,7 +7,7 @@ import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
 import { workOrder } from 'features/work-order/workOrder.i18n'
 import { transaction } from 'features/project-details/transactions/transactions.i18n'
 import { projects } from 'features/projects/projects.i18n'
-import { userManagementTranslation } from 'features/admin/user-manager/user-translation.i8n'
+import { userManagementTranslation } from 'features/user-manager/user-translation.i8n'
 import { project } from 'features/update-project-details/project-details.i18n'
 import { fpmCards } from 'features/fpm/fpmCards.i18n'
 
