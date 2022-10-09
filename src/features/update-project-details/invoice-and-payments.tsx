@@ -87,6 +87,7 @@ const InvoiceAndPayments: React.FC = () => {
     if (isStatusInvoiced && !formValues.woaInvoiceDate) {
       setValue('woaInvoiceDate', datePickerFormat(new Date()))
     }
+    setValue('remainingPayment',  getValues().overPayment ? 0 : getValues().remainingPayment)
   }, [isStatusInvoiced])
 
   return (
@@ -322,6 +323,7 @@ const InvoiceAndPayments: React.FC = () => {
                     customInput={Input}
                     thousandSeparator={true}
                     prefix={'$'}
+                    decimalScale={2}
                   />
                 )
               }}
