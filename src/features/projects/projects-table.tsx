@@ -69,7 +69,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     const redirectPath =
       process.env.NODE_ENV === 'development'
         ? `/project-details/${rowData.id}`
-        : `/vendorPortal/project-details/${rowData.id}`
+        : `/vendorportal/project-details/${rowData.id}`
 
     window.open(redirectPath)
   }

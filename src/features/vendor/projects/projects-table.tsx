@@ -68,13 +68,13 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const redirectPath =
     process.env.NODE_ENV === 'development'
       ? `/project-details/${projectId}`
-      : `/vendorPortal/project-details/${projectId}`
+      : `/vendorportal/project-details/${projectId}`
 
   return (
     <Link
       to={`/project-details/${projectId}`}
       data-testid="project-table-row"
-      onContextMenu={() => window?.open(redirectPath)}
+      onContextMenu={() => window.open(redirectPath)}
     >
       <Tr
         bg="white"
