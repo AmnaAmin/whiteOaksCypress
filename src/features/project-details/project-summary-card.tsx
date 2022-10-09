@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, FormLabel } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, FormLabel, Tooltip } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
 import { Project } from 'types/project.type'
@@ -8,14 +8,17 @@ import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
 import { useState } from 'react'
 import { ProjectSummaryCardDetails } from './project-summary-card-details'
 import { Button } from 'components/button/button'
+import { useTranslation } from 'react-i18next'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500" width={'100px'}>
-        <FormLabel variant="strong-label" size="md">
-          {title}
-        </FormLabel>
+        <Tooltip label={title} color="black" placement="top">
+          <FormLabel variant="strong-label" size="md" noOfLines={1}>
+            {title}
+          </FormLabel>
+        </Tooltip>
         {isLoading ? <BlankSlate size="sm" /> : children}
       </Box>
     </Center>
@@ -29,6 +32,7 @@ export const ProjectSummaryCard: React.FC<{
   const [isSeeMore, setSeeMore] = useState(true)
   const [isSeeLess, setSeeLess] = useState(false)
   const [isShowMoreDetails, setShowMoreDetails] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <>
@@ -42,12 +46,12 @@ export const ProjectSummaryCard: React.FC<{
         marginBottom={isShowMoreDetails ? '-32px' : ''}
         borderBottom={isShowMoreDetails ? '1px solid #E5E5E5' : 'none'}
       >
-        <InfoStructureCard title={'Project ID'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md">
             {projectData?.id}{' '}
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={'Status'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md">
             <Box>
               {projectData?.projectStatus ? (
@@ -58,27 +62,27 @@ export const ProjectSummaryCard: React.FC<{
             </Box>
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={'Client'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.client')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
             {projectData?.clientName}
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={'Project Due'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {dateFormat(projectData?.clientDueDate as string)}
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={'FPM Name'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.fpmName')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
             {projectData?.projectManager}
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={'FPM Contact'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.fpmContact')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManagerPhoneNumber}`}>
             {projectData?.projectManagerPhoneNumber}
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={'Address'} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.address')} isLoading={isLoading}>
           <FormLabel
             variant="light-label"
             size="md"
@@ -102,7 +106,7 @@ export const ProjectSummaryCard: React.FC<{
                 setShowMoreDetails(true)
               }}
             >
-              See more <BiCaretDown />
+              {t('projects.projectSummary.seeMore')} <BiCaretDown />
             </Button>
           )}
           {isSeeLess && (
@@ -118,7 +122,7 @@ export const ProjectSummaryCard: React.FC<{
                 setShowMoreDetails(false)
               }}
             >
-              See less <BiCaretUp />
+              {t('projects.projectSummary.seeLess')} <BiCaretUp />
             </Button>
           )}
         </InfoStructureCard>

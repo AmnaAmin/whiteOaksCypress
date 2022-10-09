@@ -65,6 +65,15 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     navigate(`/project-details/${rowData.id}`)
   }
 
+  const onRightClick = rowData => {
+    const redirectPath =
+      process.env.NODE_ENV === 'development'
+        ? `/project-details/${rowData.id}`
+        : `/vendorportal/project-details/${rowData.id}`
+
+    window.open(redirectPath)
+  }
+
   return (
     <Box overflow={'auto'} height="calc(100vh - 100px)">
       <TableContextProvider
@@ -76,7 +85,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
+        <Table
+          isLoading={isLoading}
+          onRowClick={onRowClick}
+          isEmpty={!isLoading && !projects?.length}
+          onRightClick={onRightClick}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

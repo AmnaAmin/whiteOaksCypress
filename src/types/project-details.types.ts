@@ -125,11 +125,11 @@ export type ProjectDetailsAPIPayload = {
 
   // Contacts payload
   projectCordinatorId: number | null
-  projectCoordinatorPhoneNumber: string | null
-  projectCoordinatorPhoneNumberExtension: string | null
+  pcPhoneNumber: string | null
+  pcPhoneNumberExtension: string | null
   projectManagerId: number | null
   projectManagerPhoneNumber: string | null
-  projectManagerPhoneNumberExtension: string | null
+  pmPhoneNumberExtension: string | null
   superFirstName: string | null
   superLastName: string | null
   superPhoneNumber: string | null

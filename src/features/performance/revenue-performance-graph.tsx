@@ -18,7 +18,28 @@ type GraphData = {
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
-  const barColors = ["#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2", "#F6AD55","#68B8EF", "#F7685B", "#949AC2"]
+  const barColors = [
+    '#F6AD55',
+    '#68B8EF',
+    '#F7685B',
+    '#949AC2',
+    '#F6AD55',
+    '#68B8EF',
+    '#F7685B',
+    '#949AC2',
+    '#F6AD55',
+    '#68B8EF',
+    '#F7685B',
+    '#949AC2',
+    '#F6AD55',
+    '#68B8EF',
+    '#F7685B',
+    '#949AC2',
+    '#F6AD55',
+    '#68B8EF',
+    '#F7685B',
+    '#949AC2',
+  ]
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>

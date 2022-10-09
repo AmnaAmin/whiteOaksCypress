@@ -67,7 +67,7 @@ export const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible">
+    <Modal isOpen={isOpen} onClose={onClose} size="flexible" closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
         <ModalContent rounded={[0]} borderTop="2px solid #4E87F8">

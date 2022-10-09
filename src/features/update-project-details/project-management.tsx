@@ -11,9 +11,9 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { t } from 'i18next'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { SelectOption } from 'types/transaction.type'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -26,6 +26,7 @@ type ProjectManagerProps = {
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
   const dateToday = new Date().toISOString().split('T')[0]
   const { isFPM } = useUserRolesSelector()
+  const { t } = useTranslation()
 
   const {
     formState: { errors },
@@ -67,7 +68,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>
               <FormLabel variant="strong-label" size="md">
-                Status
+                {t(`project.projectDetails.status`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -93,7 +94,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.type}>
               <FormLabel variant="strong-label" size="md">
-                Type
+              {t(`project.projectDetails.type`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -111,7 +112,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.woNumber} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="woNumber">
-                WO Number
+              {t(`project.projectDetails.woNumber`)}
               </FormLabel>
               <Input id="woNumber" {...register('woNumber')} autoComplete="off" />
               <FormErrorMessage>{errors.woNumber && errors.woNumber.message}</FormErrorMessage>
@@ -120,7 +121,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.poNumber} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="poNumber">
-                PO Number
+              {t(`project.projectDetails.poNumber`)}
               </FormLabel>
               <Input id="poNumber" {...register('poNumber')} autoComplete="off" />
               <FormErrorMessage>{errors.poNumber && errors.poNumber.message}</FormErrorMessage>
@@ -129,7 +130,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.projectName} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
-                Project Name
+              {t(`project.projectDetails.projectName`)}
               </FormLabel>
               <Input placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
@@ -138,7 +139,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientStartDate}>
               <FormLabel variant="strong-label" size="md">
-                Client Start
+              {t(`project.projectDetails.clientStart`)}
               </FormLabel>
               <Input
                 variant="required-field"
@@ -152,8 +153,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors?.clientDueDate}>
-              <FormLabel variant="strong-label" size="md">
-                Client Due
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
+              {t(`project.projectDetails.clientDue`)}
               </FormLabel>
               <Input
                 variant="required-field"
@@ -170,7 +171,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.woaStartDate}>
               <FormLabel variant="strong-label" size="md">
-                WOA Start
+              {t(`project.projectDetails.woaStart`)}
               </FormLabel>
               <Input
                 type="date"
@@ -184,7 +185,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.woaCompletionDate}>
               <FormLabel variant="strong-label" size="md">
-                WOA Completion
+              {t(`project.projectDetails.woaCompletion`)}
               </FormLabel>
               <Input
                 type="date"
@@ -201,7 +202,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
-                Client Walkthrough
+              {t(`project.projectDetails.clientWalkthrough`)}
               </FormLabel>
               <Input
                 type="date"
@@ -218,7 +219,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientSignOffDate}>
               <FormLabel variant="strong-label" size="md">
-                Client Sign Off
+              {t(`project.projectDetails.clientSignOff`)}
               </FormLabel>
               <Input
                 type="date"
