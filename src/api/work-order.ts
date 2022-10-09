@@ -282,6 +282,7 @@ export const defaultValuesLienWaiver = lienWaiverData => {
     claimantTitle: lienWaiverData?.claimantTitle,
     dateOfSignature: lienWaiverData?.dateOfSignature,
     lienWaiverAccepted: !lienWaiverData?.lienWaiverAccepted,
+    uploadLW: null as any,
   }
   return defaultValues
 }
