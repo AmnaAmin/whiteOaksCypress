@@ -66,12 +66,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   const onRightClick = rowData => {
-    const redirectPath =
-      process.env.NODE_ENV === 'development'
-        ? `/project-details/${rowData.id}`
-        : `/vendorportal/project-details/${rowData.id}`
-
-    window.open(redirectPath)
+    window.open(`${process.env.PUBLIC_URL}project-details/${rowData.id}`)
   }
 
   return (
