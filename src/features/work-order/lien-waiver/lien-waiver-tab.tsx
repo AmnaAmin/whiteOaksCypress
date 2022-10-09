@@ -25,7 +25,7 @@ import { BiCaretDown, BiCaretUp, BiDownload, BiSpreadsheet, BiUpload } from 'rea
 import { GetHelpText } from 'utils/lien-waiver'
 import { useTranslation } from 'react-i18next'
 import { dateFormat } from 'utils/date-time-utils'
-import { useUpdateWorkOrderMutation } from 'api/work-order'
+import { defaultValuesLienWaiver, useUpdateWorkOrderMutation } from 'api/work-order'
 import { MdOutlineCancel } from 'react-icons/md'
 import { head } from 'lodash'
 import { readFileContent } from 'api/vendor-details'
@@ -43,7 +43,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { mutate: updateLienWaiver } = useUpdateWorkOrderMutation({})
 
   const { register, handleSubmit, setValue, control } = useForm({
-    // defaultValues: defaultValuesLienWaiver(workOrder),
+    defaultValues: defaultValuesLienWaiver(workOrder),
   })
   const { leanwieverLink } = props.workOrder
 
@@ -79,7 +79,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           documentType: 26,
           workOrderId: workOrder.id,
           fileObject: fileContents,
-          fileObjectContentType: document.type,
+          fileObjectContentType: document?.type,
           fileType: `LW${workOrder?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.${fileExtension}`,
         },
       ],
