@@ -319,10 +319,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
 
-                <InformationCard
-                  title="finalSowAmount"
-                  date={finalSOWAmount}
-                />
+                <InformationCard title="finalSowAmount" date={finalSOWAmount} />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
@@ -447,7 +444,7 @@ const NewWorkOrder: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
                       <Controller

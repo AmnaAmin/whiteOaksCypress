@@ -8,6 +8,8 @@ import { workOrder } from 'features/work-order/workOrder.i18n'
 import { transaction } from 'features/project-details/transactions/transactions.i18n'
 import { projects } from 'features/projects/projects.i18n'
 import { userManagementTranslation } from 'features/admin/user-manager/user-translation.i8n'
+import { project } from 'features/update-project-details/project-details.i18n'
+import { fpmCards } from 'features/fpm/fpmCards.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -24,6 +26,8 @@ i18n.use(initReactI18next).init({
         ...projects.en.translation,
         ...userManagementTranslation.en.translation,
 
+        ...project.en.translation,
+        ...fpmCards.en.translation,
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -478,6 +482,9 @@ i18n.use(initReactI18next).init({
         //Reports
         rptPageTitle: 'Reports',
         rptBackBtnLabel: 'Back',
+
+        //Notifications
+        viewAllNotification: 'View All Notifications',
       },
     },
     es: {
@@ -492,6 +499,8 @@ i18n.use(initReactI18next).init({
         ...transaction.es.translation,
         ...projects.es.translation,
         ...userManagementTranslation.es.translation,
+        ...project.es.translation,
+        ...fpmCards.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -784,7 +793,7 @@ i18n.use(initReactI18next).init({
         vendorGL: 'Vendedor',
         transactionDoc: 'Transacción',
         createdDate: 'Fecha de creación',
-        createdBy: 'creado por',
+        createdBy: 'Creado por',
         uploadFile: 'Subir archivo',
         // Project - Alerts
         value: 'Valor',
@@ -931,6 +940,9 @@ i18n.use(initReactI18next).init({
         //Reports
         rptPageTitle: 'Reports',
         rptBackBtnLabel: 'Back',
+
+        //Notifications
+        viewAllNotification: 'Ver todas las notificaciones',
       },
     },
   },

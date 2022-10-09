@@ -2,6 +2,7 @@ import { FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack 
 
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
@@ -22,13 +23,15 @@ const Location: React.FC = () => {
     isLockBoxCodeDisabled,
   } = useFieldsDisabled(control)
 
+  const { t } = useTranslation()
+
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
         <GridItem>
           <FormControl isInvalid={!!errors.address} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="address">
-              Address
+              {t(`project.projectDetails.address`)}
             </FormLabel>
             <Input isDisabled={isAddressDisabled} id="address" {...register('address')} />
             <FormErrorMessage>{errors?.address?.message}</FormErrorMessage>
@@ -37,7 +40,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.city} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="city">
-              City
+              {t(`project.projectDetails.city`)}
             </FormLabel>
             <Input isDisabled={isCityDisabled} id="city" {...register('city')} />
             <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
@@ -46,7 +49,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.state} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="state">
-              State
+              {t(`project.projectDetails.state`)}
             </FormLabel>
             <Input isDisabled={isCityDisabled} id="state" {...register('state')} />
           </FormControl>
@@ -54,7 +57,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.zip} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="zip">
-              Zip
+              {t(`project.projectDetails.zip`)}
             </FormLabel>
             <Input isDisabled={isZipDisabled} id="zip" {...register('zip')} />
             <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
@@ -63,7 +66,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.market} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="market">
-              Market
+              {t(`project.projectDetails.market`)}
             </FormLabel>
             <Input isDisabled={isMarketDisabled} id="market" {...register('market')} />
           </FormControl>
@@ -71,7 +74,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.gateCode} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="gateCode">
-              Gate Code
+              {t(`project.projectDetails.gateCode`)}
             </FormLabel>
             <Input border=" 1px solid #E2E8F0" disabled={isGateCodeDisabled} id="gateCode" {...register('gateCode')} />
             <FormErrorMessage>{errors.gateCode && errors.gateCode.message}</FormErrorMessage>
@@ -80,7 +83,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.lockBoxCode} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="lockBoxCode">
-              Lock Box Code
+              {t(`project.projectDetails.lockBoxCode`)}
             </FormLabel>
             <Input
               border=" 1px solid #E2E8F0"
@@ -95,7 +98,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.hoaContactPhoneNumber} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber">
-              HOA Contact Phone
+              {t(`project.projectDetails.hoaContactPhone`)}
             </FormLabel>
             <Controller
               control={control}
@@ -121,7 +124,7 @@ const Location: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.hoaContactExtension} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="hoaContactExtension">
-              Ext
+              {t(`project.projectDetails.ext`)}
             </FormLabel>
             <Input border=" 1px solid #E2E8F0" id="hoaContactExtension" {...register('hoaContactExtension')} />
             <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
@@ -129,8 +132,8 @@ const Location: React.FC = () => {
         </GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.hoaContactEmail} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail">
-              HOA Contact Email
+            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
+              {t(`project.projectDetails.hoaContactEmail`)}
             </FormLabel>
             <Input border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
             <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>

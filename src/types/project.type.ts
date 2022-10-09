@@ -45,6 +45,9 @@ export type Project = {
   paymentTerm: string | null
   pendingTransactions: number | null
   poNumber: string | null
+  pcPhoneNumber: string | null
+  pcPhoneNumberExtension: string | null
+  pmPhoneNumberExtension: string | null
   profitPercentage: number | null
   profitTotal: number | null
   projectClosedDate: string | null
