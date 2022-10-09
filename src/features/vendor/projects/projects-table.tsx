@@ -65,11 +65,16 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const idCell = row.cells.find(cell => cell.column.id === 'id')
   const projectId = idCell?.value
 
+  const redirectPath =
+    process.env.NODE_ENV === 'development'
+      ? `/project-details/${projectId}`
+      : `/vendorPortal/project-details/${projectId}`
+
   return (
     <Link
       to={`/project-details/${projectId}`}
       data-testid="project-table-row"
-      onContextMenu={() => window.open(`/project-details/${projectId}`)}
+      onContextMenu={() => window?.open(redirectPath)}
     >
       <Tr
         bg="white"
