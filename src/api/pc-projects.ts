@@ -455,8 +455,8 @@ export const usePercentageCalculation = ({ clientApprovedAmount, vendorWOAmount 
 }
 
 export const usePercentageAndInoviceChange = ({ setValue }) => {
-  const [approvedAmount, setApprovedAmount] = useState<number | null>()
-  const [percentageField, setPercentageField] = useState<number | null>()
+  const [approvedAmount, setApprovedAmount] = useState<number | null>(0)
+  const [percentageField, setPercentageField] = useState<number | null>(0)
   const fieldUpdating = useRef<string | null>(null)
 
   const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {

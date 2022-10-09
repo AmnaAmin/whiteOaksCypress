@@ -48,20 +48,20 @@ export const Payable = () => {
   }, [loading])
 
   const Submit = formValues => {
-    const payloadData = compact(formValues.id).map(id => ({
+    const payableProjects = compact(formValues.id).map(id => ({
       id: parseInt(id as string),
       type: '',
     }))
 
-    if (!payloadData.length) return
+    const obj = {
+      typeCode: 'AP',
+      entities: payableProjects,
+    }
+
+    if (payableProjects.length === 0) return
 
     setLoading(true)
     setIsBatchClick(true)
-
-    const obj = {
-      typeCode: 'AP',
-      entities: payloadData,
-    }
 
     batchCall(obj as any, {
       onSuccess: () => {

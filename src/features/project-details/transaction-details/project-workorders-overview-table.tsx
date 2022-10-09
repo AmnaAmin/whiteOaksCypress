@@ -6,6 +6,7 @@ import { useTableColumnSettings } from 'api/table-column-settings'
 import { percentageFormatter } from 'utils/string-formatters'
 import { isDefined } from 'utils'
 import { useGetProjectFinancialOverview } from 'api/projects'
+import { TRANSACTION } from '../transactions/transactions.i18n'
 
 type WorkOrderFinancialOverviewTableProps = { financialOveriewTableData: any; isLoading: boolean }
 
@@ -20,20 +21,21 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
   const { projectTotalCost } = useGetProjectFinancialOverview(financialOveriewTableData[0]?.projectId)
   const projectCostValue = projectTotalCost.replace(/\$/g, '')
   const projectCost = parseFloat(projectCostValue.replace(',', ''))
+
   const { tableColumns } = useTableColumnSettings(
     [
       {
-        Header: 'Vendor',
+        Header: `${TRANSACTION}.vendor`,
         Footer: '',
         accessor: 'vendorName',
       },
       {
-        Header: 'Trade',
+        Header: `${TRANSACTION}.trade`,
         Footer: 'Total',
         accessor: 'skillName',
       },
       {
-        Header: 'Client Approved Amount',
+        Header: `${TRANSACTION}.clientApprovedAmount`,
         accessor: 'originalAmount',
         Footer: info => {
           const total = React.useMemo(() => getTotalOfKey('originalAmount', info.rows), [info.rows])
@@ -45,7 +47,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Final Client Approved Amount',
+        Header: `${TRANSACTION}.finalClientApprovedAmount`, 
         accessor: 'newAmount',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -57,7 +59,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Original Vendor WOs',
+        Header: `${TRANSACTION}.originalVendorWO`,
         accessor: 'workOrderOriginalAmount',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -69,7 +71,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Revised Vendor WOs',
+        Header: `${TRANSACTION}.revisedVendorWO`,
         accessor: 'revisedVendorWorkOrder',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -81,7 +83,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'COs',
+        Header: `${TRANSACTION}.COs`, 
         accessor: 'changeOrder',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -93,7 +95,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Revised COs',
+        Header: `${TRANSACTION}.revisedCOs`, 
         accessor: 'revisedChangeOrder',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -105,7 +107,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Final Vendor WOs',
+        Header: `${TRANSACTION}.finalVendorWOs`, 
         accessor: 'workOrderNewAmount',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -117,7 +119,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Draws',
+        Header: `${TRANSACTION}.draws`,
         accessor: 'draw',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -129,7 +131,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Materials',
+        Header: `${TRANSACTION}.materials`, 
         accessor: 'material',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -141,7 +143,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Vendor Payment',
+        Header: `${TRANSACTION}.vendorPayment`, 
         accessor: 'vendorPaymentPercentage',
         Cell(cellInfo) {
           return isDefined(cellInfo.value) ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
@@ -160,7 +162,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Invoiced Amount',
+        Header: `${TRANSACTION}.invoicedAmount`, 
         accessor: 'accountPayable',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')
@@ -172,7 +174,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        Header: 'Profit',
+        Header: `${TRANSACTION}.profit`, 
         accessor: 'profit',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')

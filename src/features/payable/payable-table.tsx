@@ -52,10 +52,14 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   ({ setTableInstance, payableColumns, selectedCard, selectedDay, weekDayFilters }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const { data: payableData, isLoading, refetch } = useAccountPayable()
+    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+    const [payableFilterData, setFilterPayableData] = useState()
+
+    const workOrders = payableData?.workOrders
 
     useEffect(() => {
-      if (payableData?.workOrders.length > 0 && selectedWorkOrder?.id) {
-        const updatedWorkOrder = payableData?.workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
+      if (workOrders?.length > 0 && selectedWorkOrder?.id) {
+        const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
         if (updatedWorkOrder) {
           setSelectedWorkOrder({ ...updatedWorkOrder })
         } else {
@@ -64,17 +68,13 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       } else {
         setSelectedWorkOrder(undefined)
       }
-    }, [payableData])
-    const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-
-    const payable = payableData?.workOrders
-
-    const [payableFilterData, setFilterPayableData] = useState(payable)
+    }, [workOrders])
 
     useEffect(() => {
-      if (!selectedCard && !selectedDay) setFilterPayableData(payable)
+      if (!selectedCard && !selectedDay) setFilterPayableData(workOrders)
+
       setFilterPayableData(
-        payable?.filter(
+        workOrders?.filter(
           project =>
             !selectedCard || project.durationCategory?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
         ),
@@ -89,12 +89,13 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
 
       if (selectedDay) {
         setFilterPayableData(
-          payable?.filter(payableValue => {
+          workOrders?.filter(payableValue => {
             return clientDate.includes(payableValue.expectedPaymentDate?.substr(0, 10))
           }),
         )
       }
-    }, [selectedCard, selectedDay, payable])
+    }, [selectedCard, selectedDay, workOrders])
+
     return (
       <Box overflow="auto" width="100%">
         <>

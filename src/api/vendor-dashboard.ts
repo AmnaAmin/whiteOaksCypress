@@ -6,7 +6,7 @@ export const useVendorCards = () => {
   const client = useClient()
 
   return useQuery('vendorCards', async () => {
-    const response = await client(`vendorCards`, {})
+    const response = await client(`vendor-wo-Cards`, {})
 
     return response?.data
   })

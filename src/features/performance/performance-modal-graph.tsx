@@ -60,16 +60,16 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
 
   return (
     <>
-      <Box bg='#F7FAFE' border='1px solid #EAE6E6' rounded={'13px'}>
+      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
         <Flex mb={5}>
           <Box mt={5} flex={1} mb={5}>
             <HStack>
-              <Flex ml={'230px'} justifyContent={'center'} width='300px'>
+              <Flex ml={'230px'} justifyContent={'center'} width="300px">
                 <FormLabel width={'200px'} variant="strong-label" size="lg">
                   Performance Per Month
                 </FormLabel>
               </Flex>
-              <Box width={'150px'} >
+              <Box width={'150px'}>
                 <ReactSelect
                   name={`monthsDropdown`}
                   options={Month}
@@ -82,11 +82,11 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
           </Box>
         </Flex>
         <Box mb={5}>
-        {isLoading ? (
-          <BlankSlate size="sm" />
-        ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={380} hasUsers={false} />
-        )}
+          {isLoading ? (
+            <BlankSlate size="sm" />
+          ) : (
+            <OverviewGraph vendorData={graphData} width="98%" height={380} hasUsers={false} />
+          )}
         </Box>
       </Box>
     </>

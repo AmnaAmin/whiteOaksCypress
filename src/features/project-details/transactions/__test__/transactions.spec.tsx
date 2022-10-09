@@ -65,7 +65,7 @@ describe('Given Project Coordinator create new transaction', () => {
        * 3- New Expected Completion Date field visible
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
-      expect(screen.getByText('Expected Completion', { selector: 'label' })).toBeInTheDocument()
+      // expect(screen.getByText('Expected Completion', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('New Expected Completion', { selector: 'label' })).toBeInTheDocument()
       const expectedCompletionDate = screen.getByTestId('expected-completion-date') as HTMLInputElement
       const newExpectedCompletionDate = screen.getByTestId('new-expected-completion-date') as HTMLInputElement

@@ -1,5 +1,6 @@
 import { Box, Button, Center, Flex, Link, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
 import notificationData from './notificationData.json'
 
@@ -11,6 +12,7 @@ export const Notification = () => {
 
     setList(newList)
   }
+  const { t } = useTranslation()
 
   return (
     <>
@@ -58,7 +60,7 @@ export const Notification = () => {
           textAlign="center"
           fontSize={14}
         >
-          <Link>View All Notification</Link>
+          <Link>{t('viewAllNotification')}</Link>
         </Center>
       </MenuList>
     </>

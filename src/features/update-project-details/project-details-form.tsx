@@ -25,6 +25,8 @@ import { DevTool } from '@hookform/devtools'
 import { Link } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
 import { useProjectExtraAttributes } from 'api/pc-projects'
+// import { PROJECT_DETAILS } from './projectDetails.i18n'
+import { useTranslation } from 'react-i18next'
 
 type tabProps = {
   projectData: Project
@@ -87,6 +89,8 @@ const ProjectDetailsTab = (props: tabProps) => {
     setTabIndex(index)
   }
 
+  const { t } = useTranslation()
+
   return (
     <FormProvider {...formReturn}>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
@@ -98,11 +102,15 @@ const ProjectDetailsTab = (props: tabProps) => {
             ml={style?.marginLeft || ''}
             mr={style?.marginRight || ''}
           >
-            <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>Project Management</TabCustom>
-            <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>Invoicing & payment</TabCustom>
-            <TabCustom>Contacts</TabCustom>
-            <TabCustom>Location</TabCustom>
-            <TabCustom>Misc</TabCustom>
+            <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
+              {t(`project.projectDetails.projectManagement`)}
+            </TabCustom>
+            <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
+              {t(`project.projectDetails.invoicingPayment`)}
+            </TabCustom>
+            <TabCustom>{t(`project.projectDetails.contacts`)}</TabCustom>
+            <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>
+            <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
           </TabList>
 
           <TabPanels mt="31px">
@@ -149,7 +157,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               fontSize="16px"
               disabled={isSubmitting}
             >
-              Save
+              {t(`project.projectDetails.save`)}
             </Button>
             {onClose && (
               <>
@@ -162,7 +170,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   variant="outline"
                   colorScheme="brand"
                 >
-                  Cancel
+                  {t(`project.projectDetails.cancel`)}
                 </Button>
                 <Button
                   mt="8px"
@@ -173,7 +181,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   colorScheme="brand"
                   leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
                 >
-                  See Project Details
+                  {t(`project.projectDetails.seeProjectDetails`)}
                 </Button>
               </>
             )}
