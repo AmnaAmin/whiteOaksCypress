@@ -154,6 +154,39 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#68D391',
     },
   ],
+  [UserTypes.accounting]: [
+    {
+      pathTo: '/projects',
+      title: 'Projects',
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+    {
+      pathTo: '/payable',
+      title: 'Payable',
+      Icon: BiCreditCard,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/receivable',
+      title: 'Receivable',
+      Icon: BiDollarCircle,
+      color: '#4299E1',
+    },
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+    {
+      pathTo: '/clients',
+      title: 'Clients',
+      Icon: BiGroup,
+      color: '#0BC5EA',
+    },
+  ],
+
 }
 
 export const useRoleBasedMenu = (): Array<Menu> => {
