@@ -272,7 +272,8 @@ export const InvoiceTab = ({
               <Tr>
                 <Td>{t('item')}</Td>
                 <Td>{t('description')}</Td>
-                <Td w={300} pr={14} textAlign={'end'}>
+                <Td>{t('type')}</Td>
+                <Td w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>
               </Tr>
@@ -284,7 +285,8 @@ export const InvoiceTab = ({
                     <Td maxWidth={300} w={300}>
                       {item.id}
                     </Td>
-                    <Td maxWidth={400}>{item.name}</Td>
+                    <Td width={400}>{item.name}</Td>
+                    <Td width={400}>{item.transactionTypeLabel}</Td>
                     <Td pr={12} textAlign={'end'}>
                       <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
                     </Td>
@@ -294,7 +296,8 @@ export const InvoiceTab = ({
               <Tr>
                 <Td></Td>
                 <Td></Td>
-                <Td pr={12}>
+                <Td></Td>
+                <Td pr={12} borderLeft="1px solid #EDF2F7">
                   <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
                     <Box>
                       <HStack w={300} height="60px" justifyContent="space-between">
