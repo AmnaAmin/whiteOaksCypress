@@ -3,43 +3,17 @@ import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
-import { useToast } from '@chakra-ui/react'
+import { usePaginationQuery } from 'api/index'
 
-type ProjectsWithTotalCount = {
-  projects: Project[]
-  totalCount: number
-}
 export const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = (filterQueryString?: string, page?: number, size?: number) => {
-  const toast = useToast()
-  const client = useClient()
+  const queryKey = [PROJECTS_QUERY_KEY, filterQueryString]
+  const endpoint = `v1/projects?${filterQueryString || ''}`
 
-  const { data, ...rest } = useQuery<ProjectsWithTotalCount>(
-    [PROJECTS_QUERY_KEY, filterQueryString],
-    async () => {
-      const response = await client(`v1/projects?${filterQueryString || ''}`, {})
-      const total = response?.headers?.get('X-Total-Count') || 0
-
-      return { projects: response?.data, totalCount: size ? Math.ceil(Number(total) / size) : 0 }
-    },
-    {
-      // keepPreviousData: true,
-      onError: (error: any) => {
-        console.log('error', error)
-        toast({
-          title: 'Error',
-          description: error?.response?.data?.message || 'Something went wrong',
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
-    },
-  )
+  const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10)
 
   return {
-    projects: data?.projects,
+    projects: data?.data,
     totalPages: data?.totalCount,
     ...rest,
   }
