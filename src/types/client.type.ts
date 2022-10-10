@@ -47,3 +47,31 @@ export type Contact = {
   modifiedDate: string | null
   comments?: string
 }
+
+export type ClientFormValues = {
+  id?: number
+  companyName?: string
+  contact?: string
+  phoneNumber?: string
+  emailAddress?: string
+  accountPayableContact?: string
+  accountPayablePhoneNumber?: string
+  accountPayableEmailAddress?: string
+  dateCreated?: string
+  dateUpdated?: string
+  streetAddress?: string
+  city?: string
+  state?: number
+  zipCode?: string
+  invoiceEmailAddress?: string
+  contacts?: Contact[]
+  accountPayableContactInfos?: Contact[]
+  createdBy?: string
+  createdDate?: string
+  modifiedBy?: string
+  modifiedDate?: string
+  paymentTerm?: string
+  markets?: Market[]
+  comments?: string
+  paymentMethod?: string
+}

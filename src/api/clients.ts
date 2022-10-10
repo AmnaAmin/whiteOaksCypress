@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 
 export const useClients = () => {
@@ -23,4 +23,23 @@ export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
     notes,
     ...rest,
   }
+}
+
+export const useCreateClientMutation = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (clientDetails: any) => {
+      return client('clients', {
+        data: clientDetails,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('clients')
+      },
+    },
+  )
 }

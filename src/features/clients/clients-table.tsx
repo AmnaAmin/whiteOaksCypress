@@ -4,7 +4,7 @@ import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { useClients } from 'api/clients'
 import { Clients } from 'types/client.type'
-import Client from 'features/clients/client-modal'
+import Client from 'features/clients/selected-client-modal'
 import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
 
