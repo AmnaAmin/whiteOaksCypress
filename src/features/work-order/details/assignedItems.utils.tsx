@@ -415,14 +415,15 @@ export const EditableField = (props: EditableCellType) => {
                       if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
                         setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                       }
+                      onChange?.(e, index)
                     }}
                     onBlur={e => {
                       setIsFocus?.(false)
                       setSelectedCell(null)
                       if (e.target.value === '') {
                         setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
+                        onChange?.({ target: { value: selectedCell?.value } }, index)
                       }
-                      onChange?.(e, index)
                     }}
                     onFocus={() => {
                       setIsFocus?.(true)
@@ -481,10 +482,10 @@ export const InputField = (props: InputFieldType) => {
               autoFocus={autoFocus}
               onChange={e => {
                 field.onChange(e.target.value)
+                handleChange?.(e, index)
               }}
               onBlur={e => {
                 setIsFocus?.(false)
-                handleChange?.(e, index)
               }}
               onFocus={() => {
                 setIsFocus?.(true)

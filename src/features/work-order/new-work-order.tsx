@@ -180,18 +180,25 @@ const NewWorkOrder: React.FC<{
 
   useEffect(() => {
     const clientAmount = watchLineItems?.reduce(
-      (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+      (partialSum, a) =>
+        partialSum +
+        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
       0,
     )
-    const vendorAmount = watchLineItems?.reduce((partialSum, a) => partialSum + Number(a?.vendorAmount ?? 0), 0)
+    const vendorAmount = watchLineItems?.reduce(
+      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+      0,
+    )
     setValue('clientApprovedAmount', round(clientAmount, 2))
     setValue('invoiceAmount', round(vendorAmount, 2))
     setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
   }, [watchLineItems])
 
   const resetLineItemsProfit = profit => {
-    watchLineItems?.forEach((item, index) => {
-      const clientAmount = Number(watchLineItems?.[index]?.price ?? 0) * Number(watchLineItems?.[index]?.quantity ?? 0)
+    formValues.assignedItems?.forEach((item, index) => {
+      const clientAmount =
+        Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
+        Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
       setValue(`assignedItems.${index}.profit`, profit)
       setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
     })
@@ -453,7 +460,9 @@ const NewWorkOrder: React.FC<{
                                 suffix={'%'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue ?? '')
-                                  onPercentageChange(e.floatValue)
+                                  if (!!watchUploadWO) {
+                                    onPercentageChange(e.floatValue)
+                                  }
                                 }}
                                 onBlur={e => {
                                   resetLineItemsProfit(removePercentageFormat(e.target.value))
