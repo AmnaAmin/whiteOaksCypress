@@ -40,7 +40,7 @@ export const workOrder = {
         itemsLoading: 'Items Loading...',
         uploadWO: 'Upload WO',
         requiredLineItemsToast:
-          'Please fill required fields in Assigned Line Items. Details, Qty & Price are mandatory for each item.',
+          'Complete los campos obligatorios en Elementos de línea asignados. La descripción, la cantidad y el precio son obligatorios para cada artículo',
         rejectedInvoiceInfo:
           'Invoice and Lien Waiver have been declined. Please update Lien Waiver and regenerate Invoice.',
         companyName: 'Company Name',
