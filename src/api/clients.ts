@@ -27,41 +27,6 @@ export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
   }
 }
 
-export const contactsDefaultFormValues = (clientDetails): Contact[] => {
-  const contactsDetails: Contact[] = []
-  clientDetails?.contacts &&
-    clientDetails?.contacts.forEach(c => {
-      const contactsObject = {
-        id: c.id,
-        contact: c.contact,
-        phoneNumber: c.phoneNumber,
-        emailAddress: c.emailAddress,
-        market: c.market,
-        ...clientDetails,
-      }
-      contactsDetails.push(contactsObject)
-    })
-
-  return contactsDetails
-}
-
-export const accPayInfoDefaultFormValues = (clientDetails): Contact[] => {
-  const accPayInfo: Contact[] = []
-  clientDetails?.contacts &&
-    clientDetails?.contacts.forEach(a => {
-      const accPayInfoObject = {
-        id: a.id,
-        contact: a.contact,
-        phoneNumber: a.phoneNumber,
-        comments: a.comments,
-        ...clientDetails,
-      }
-      accPayInfo.push(accPayInfoObject)
-    })
-
-  return accPayInfo
-}
-
 export const useUpdateClientDetails = () => {
   const client = useClient()
   const queryClient = useQueryClient()

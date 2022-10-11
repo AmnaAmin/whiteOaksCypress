@@ -7,7 +7,7 @@ import { Market } from 'features/clients/client-market-tab'
 import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ClientFormValues, Contact } from 'types/client.type'
-import { accPayInfoDefaultFormValues, contactsDefaultFormValues, useUpdateClientDetails } from 'api/clients'
+import { useUpdateClientDetails } from 'api/clients'
 import { useStates } from 'api/pc-projects'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
@@ -26,8 +26,6 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const clientDetails = props?.clientDetails
   const { mutate: updateNewClientDetails } = useUpdateClientDetails()
   const { states } = useStates()
-  const contactValues = contactsDefaultFormValues(props?.clientDetails)
-  const accPayInfoValues = accPayInfoDefaultFormValues(props?.clientDetails)
 
   // Setting Dropdown values
   const stateSelect = states?.map(state => ({ value: state?.id, label: state?.name })) || []
@@ -35,57 +33,17 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
 
-  // const Contacts: Contact[] = []
-  // props?.clientDetails?.contacts &&
-  //   props?.clientDetails?.contacts.forEach(c => {
-  //     const contactsObject = {
-  //       id: c.id,
-  //       contact: c.contact,
-  //       phoneNumber: c.phoneNumber,
-  //       emailAddress: c.emailAddress,
-  //       market: c.market,
-  //       phoneNumberExtension: '',
-  //       createdBy: '',
-  //       createdDate: '',
-  //       modifiedBy: '',
-  //       modifiedDate: '',
-  //     }
-  //     Contacts.push(contactsObject)
-  //   })
-
-  // const AccPayInfos: Contact[] = []
-  // props?.clientDetails?.accountPayableContactInfos &&
-  //   props?.clientDetails?.accountPayableContactInfos.forEach(a => {
-  //     const accPayInfoObject = {
-  //       id: a.id,
-  //       contact: a.contact,
-  //       phoneNumber: a.phoneNumber,
-  //       emailAddress: a.emailAddress,
-  //       comments: a.comments,
-  //       market: a.market?.value,
-  //       phoneNumberExtension: '',
-  //       createdBy: '',
-  //       createdDate: '',
-  //       modifiedBy: '',
-  //       modifiedDate: '',
-  //     }
-  //     AccPayInfos.push(accPayInfoObject)
-  //   })
-
   const methods = useForm<ClientFormValues>({
     defaultValues: {
-      companyName: props?.clientDetails?.companyName,
+      ...clientDetails,
       paymentTerm: paymentTermsValue,
       paymentMethod: '',
-      streetAddress: props?.clientDetails?.streetAddress,
-      city: props?.clientDetails?.city,
       state: stateValue,
-      zipCode: props?.clientDetails?.zipCode,
-      contacts: props?.clientDetails ? contactValues : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
-      accountPayablePhoneNumber: props?.clientDetails?.accountPayablePhoneNumber,
-      accountPayableContact: props?.clientDetails?.accountPayableContact,
-      accountPayableContactInfos: props?.clientDetails
-        ? accPayInfoValues
+      contacts: clientDetails?.contacts?.length
+        ? clientDetails?.contacts
+        : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
+      accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
+        ? clientDetails?.accountPayableContactInfos
         : [{ contact: '', phoneNumber: '', city: '', comments: '' }],
     },
   })
@@ -97,50 +55,21 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
       const queryOptions = {
         onSuccess() {},
       }
-
-      const newContact: Contact[] = []
-      values?.contacts &&
-        values?.contacts.forEach(c => {
-          const newContactObject = {
-            id: '',
-            contact: c.contact,
-            phoneNumber: c.phoneNumber,
-            emailAddress: c.emailAddress,
+      if (values?.id) {
+        ///new Client Api
+      } else {
+        const newClientPayload = {
+          ...values,
+          paymentTerm: values.paymentTerm?.value,
+          state: `${values.state?.value}`,
+          contacts: values.contacts?.map(c => ({
+            ...c,
             market: c.market?.value,
-            ...values?.contacts,
-          }
-          newContact.push(newContactObject)
-        })
+          })),
+        }
 
-      const newAccPayInfo: Contact[] = []
-      values?.contacts &&
-        values?.contacts.forEach(a => {
-          const newAccPayInfoObject = {
-            id: '',
-            contact: a.contact,
-            phoneNumber: a.phoneNumber,
-            comments: a.comments,
-            ...values?.contacts,
-          }
-          newAccPayInfo.push(newAccPayInfoObject)
-        })
-
-      const newClientPayload = {
-        companyName: values.companyName,
-        paymentTerm: values.paymentTerm?.value,
-        paymentAch: values.paymentAch,
-        paymentCheck: values.paymentCheck,
-        paymentCreditCard: values.paymentCreditCard,
-        streetAddress: values.streetAddress,
-        city: values.city,
-        state: `${values.state?.value}`,
-        zipCode: values.zipCode,
-        contacts: newContact,
-        accountPayableContactInfos: newAccPayInfo,
+        updateNewClientDetails(newClientPayload, queryOptions)
       }
-      console.log('newClientPayload', newClientPayload)
-
-      updateNewClientDetails(newClientPayload, queryOptions)
     },
     [updateNewClientDetails],
   )
