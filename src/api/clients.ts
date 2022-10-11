@@ -1,6 +1,5 @@
 import { useToast } from '@chakra-ui/react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { Contact } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
 
 export const useClients = () => {
@@ -49,7 +48,7 @@ export const useUpdateClientDetails = () => {
           isClosable: true,
           position: 'top-left',
         })
-        queryClient.invalidateQueries('clients')
+        queryClient.invalidateQueries('client')
       },
 
       onError(error: any) {

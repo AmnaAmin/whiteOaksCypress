@@ -44,7 +44,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
   // const selectedClientMarket = markets?.find(market => market?.id === clientSelectedMarket)
   // const clientMarket = { label: selectedClientMarket?.stateName, value: selectedClientMarket?.id }
-
+  console.log(props?.clientDetails?.contacts?.map(m => m?.market))
   const disabledTextStyle = {
     color: '#2D3748',
   }
@@ -128,21 +128,15 @@ export const Details: React.FC<clientDetailProps> = props => {
                 </FormLabel>
                 <Flex dir="row" mt={3}>
                   <HStack>
-                  <Checkbox
-                      {...register(`paymentCreditCard`)}
-                      colorScheme="brand"
-                      isDisabled={isProjectCoordinator}
-                    >Credit Card</Checkbox>
-                    <Checkbox
-                      {...register(`paymentCheck`)}
-                      colorScheme="brand"
-                      isDisabled={isProjectCoordinator}
-                    >Check</Checkbox>
-                    <Checkbox
-                      {...register(`paymentAch`)}
-                      colorScheme="brand"
-                      isDisabled={isProjectCoordinator}
-                    >ACH</Checkbox>
+                    <Checkbox {...register(`paymentCreditCard`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                      Credit Card
+                    </Checkbox>
+                    <Checkbox {...register(`paymentCheck`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                      Check
+                    </Checkbox>
+                    <Checkbox {...register(`paymentAch`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                      ACH
+                    </Checkbox>
                   </HStack>
                 </Flex>
               </FormControl>
@@ -271,11 +265,12 @@ export const Details: React.FC<clientDetailProps> = props => {
                                 {...field}
                                 options={marketSelectOptions}
                                 selected={field.value}
-                                onChange={option => field.onChange(option)}
+                                onChange={option => field.onChange(option)
+                                }
                                 isDisabled={isProjectCoordinator}
                                 // value={`contacts.${index}.market`}
                                 // value={markets?.map(market => {
-                                //   if (market?.id === parseInt(contacts[index]?.market))
+                                //   if (market?.id === parseInt(contacts?.market))
                                 //     return { label: market?.stateName, value: market?.id }
                                 //   return null
                                 // })}
@@ -320,7 +315,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             mt={2}
             leftIcon={<BiAddToQueue />}
           >
-            {t('Add Contacts 1')}
+            {t('Add Contacts')}
           </Button>
         )}
         <Flex alignItems="center" py="3" mt={2}>
@@ -363,9 +358,14 @@ export const Details: React.FC<clientDetailProps> = props => {
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('city')}
+                    {t('email')}
                   </FormLabel>
-                  <Input id="city" {...register(`city`)} isDisabled={isProjectCoordinator} variant={'required-field'} />
+                  <Input
+                    id="emailAddress"
+                    {...register(`accountPayableContactInfos.${index}.emailAddress`)}
+                    isDisabled={isProjectCoordinator}
+                    variant={'required-field'}
+                  />
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -411,7 +411,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               accPayInfoAppend({
                 contact: '',
                 phoneNumber: '',
-                city: '',
+                emailAddress: '',
                 comments: '',
               })
             }
@@ -419,7 +419,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             leftIcon={<BiAddToQueue />}
             disabled={isProjectCoordinator}
           >
-            {t('Add Contacts 2')}
+            {t('Add Contacts')}
           </Button>
         )}
       </Box>

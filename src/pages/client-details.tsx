@@ -6,9 +6,8 @@ import DetailsTab from 'features/clients/client-details-tab'
 import { Market } from 'features/clients/client-market-tab'
 import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
-import { ClientFormValues, Contact } from 'types/client.type'
+import { ClientFormValues } from 'types/client.type'
 import { useUpdateClientDetails } from 'api/clients'
-import { useStates } from 'api/pc-projects'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
 
@@ -18,6 +17,7 @@ type ClientDetailsTabsProps = {
   clientModalType?: string
   clientDetails?: any
   updateClientId?: (number) => void
+  states?: any
 }
 
 export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps, ref) => {
@@ -25,14 +25,14 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
   const { mutate: updateNewClientDetails } = useUpdateClientDetails()
-  const { states } = useStates()
 
   // Setting Dropdown values
-  const stateSelect = states?.map(state => ({ value: state?.id, label: state?.name })) || []
+  const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
   const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
 
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
 
+  // Setting Default Values
   const methods = useForm<ClientFormValues>({
     defaultValues: {
       ...clientDetails,
@@ -44,7 +44,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
       accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
         ? clientDetails?.accountPayableContactInfos
-        : [{ contact: '', phoneNumber: '', city: '', comments: '' }],
+        : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
     },
   })
 

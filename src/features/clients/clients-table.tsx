@@ -7,6 +7,7 @@ import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
+import { useStates } from 'api/pc-projects'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -43,6 +44,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { t } = useTranslation()
+  const { states } = useStates()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
@@ -89,6 +91,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     <Box ref={resizeElementRef}>
       <Client
         clientDetails={selectedClient as Clients}
+        states = {states}
         onClose={() => {
           setSelectedClient(undefined)
         }}
