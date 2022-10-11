@@ -21,6 +21,10 @@ export type Clients = {
   modifiedBy?: string
   modifiedDate?: string
   markets?: Market[]
+  paymentAch?: boolean
+  paymentCheck?: boolean
+  paymentCreditCard?: boolean
+
 }
 
 export type Market = {
@@ -46,6 +50,7 @@ export type Contact = {
   modifiedBy: string | null
   modifiedDate: string | null
   comments?: string
+  city?: string
 }
 
 export type ClientFormValues = {
@@ -70,8 +75,11 @@ export type ClientFormValues = {
   createdDate?: string
   modifiedBy?: string
   modifiedDate?: string
-  paymentTerm?: string
+  paymentTerm?: any
   markets?: Market[]
   comments?: string
   paymentMethod?: string
+  paymentAch?: boolean
+  paymentCheck?: boolean
+  paymentCreditCard?: boolean
 }

@@ -1,4 +1,6 @@
+import { useToast } from '@chakra-ui/react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { Contact } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
 
 export const useClients = () => {
@@ -25,20 +27,75 @@ export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
   }
 }
 
-export const useCreateClientMutation = () => {
+export const contactsDefaultFormValues = (clientDetails): Contact[] => {
+  const contactsDetails: Contact[] = []
+  clientDetails?.contacts &&
+    clientDetails?.contacts.forEach(c => {
+      const contactsObject = {
+        id: c.id,
+        contact: c.contact,
+        phoneNumber: c.phoneNumber,
+        emailAddress: c.emailAddress,
+        market: c.market,
+        ...clientDetails,
+      }
+      contactsDetails.push(contactsObject)
+    })
+
+  return contactsDetails
+}
+
+export const accPayInfoDefaultFormValues = (clientDetails): Contact[] => {
+  const accPayInfo: Contact[] = []
+  clientDetails?.contacts &&
+    clientDetails?.contacts.forEach(a => {
+      const accPayInfoObject = {
+        id: a.id,
+        contact: a.contact,
+        phoneNumber: a.phoneNumber,
+        comments: a.comments,
+        ...clientDetails,
+      }
+      accPayInfo.push(accPayInfoObject)
+    })
+
+  return accPayInfo
+}
+
+export const useUpdateClientDetails = () => {
   const client = useClient()
   const queryClient = useQueryClient()
+  const toast = useToast()
 
   return useMutation(
     (clientDetails: any) => {
       return client('clients', {
         data: clientDetails,
-        method: 'POST',
+        method: 'PUT',
       })
     },
     {
       onSuccess() {
+        toast({
+          title: 'Update Client Details',
+          description: `client has been updated successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
         queryClient.invalidateQueries('clients')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Client Details',
+          description: (error.title as string) ?? 'Unable to save client.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
       },
     },
   )

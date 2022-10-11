@@ -49,8 +49,6 @@ const NewClientModal: React.FC<NewClientModalType> = props => {
             <ClientDetailsTabs
               onClose={props.onClose}
             />
-
-            <NewVendorTabs onClose={props.onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>

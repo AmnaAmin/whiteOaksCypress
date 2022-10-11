@@ -1,14 +1,16 @@
 import { Box, Button, Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react'
 import { ClientsTable } from 'features/clients/clients-table'
 import NewClientModal from 'features/clients/new-client-modal'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiBookAdd } from 'react-icons/bi'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const Client = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
   const { isOpen: isOpenNewClientModal, onClose: onNewClientModalClose, onOpen: onNewClientModalOpen } = useDisclosure()
+  const { isProjectCoordinator } = useUserRolesSelector()
 
   return (
     <>
@@ -17,10 +19,12 @@ export const Client = () => {
           <Text fontSize="18px" fontWeight={500} color="gray.600">
             {t('clientOverview')}
           </Text>
-          <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
-            <Icon as={BiBookAdd} fontSize="18px" mr={2} />
-            {t('New Client')}
-          </Button>
+          {!isProjectCoordinator && (
+            <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
+              <Icon as={BiBookAdd} fontSize="18px" mr={2} />
+              {t('New Client')}
+            </Button>
+          )}
         </Flex>
         <Flex
           px={7}

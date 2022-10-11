@@ -3,6 +3,7 @@ import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -13,6 +14,7 @@ type clientDetailProps = {
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { markets } = useMarkets()
   const { t } = useTranslation()
+  const { isProjectCoordinator } = useUserRolesSelector()
 
   const btnStyle = {
     alignItems: 'center',
@@ -28,7 +30,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
             return (
               <CheckboxButton
                 isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}
-                isDisabled
+                isDisabled = {isProjectCoordinator}
               >
                 {m?.metropolitanServiceArea}
               </CheckboxButton>

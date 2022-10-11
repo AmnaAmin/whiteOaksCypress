@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, useToast } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,9 +6,11 @@ import DetailsTab from 'features/clients/client-details-tab'
 import { Market } from 'features/clients/client-market-tab'
 import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
-import { ClientFormValues } from 'types/client.type'
+import { ClientFormValues, Contact } from 'types/client.type'
+import { accPayInfoDefaultFormValues, contactsDefaultFormValues, useUpdateClientDetails } from 'api/clients'
+import { useStates } from 'api/pc-projects'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
-import { useCreateClientMutation } from 'api/clients'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -22,114 +24,150 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
-  const { mutate: saveNewClientDetails } = useCreateClientMutation()
-  const toast = useToast()
+  const { mutate: updateNewClientDetails } = useUpdateClientDetails()
+  const { states } = useStates()
+  const contactValues = contactsDefaultFormValues(props?.clientDetails)
+  const accPayInfoValues = accPayInfoDefaultFormValues(props?.clientDetails)
+
+  // Setting Dropdown values
+  const stateSelect = states?.map(state => ({ value: state?.id, label: state?.name })) || []
+  const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
+
+  const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
+
+  // const Contacts: Contact[] = []
+  // props?.clientDetails?.contacts &&
+  //   props?.clientDetails?.contacts.forEach(c => {
+  //     const contactsObject = {
+  //       id: c.id,
+  //       contact: c.contact,
+  //       phoneNumber: c.phoneNumber,
+  //       emailAddress: c.emailAddress,
+  //       market: c.market,
+  //       phoneNumberExtension: '',
+  //       createdBy: '',
+  //       createdDate: '',
+  //       modifiedBy: '',
+  //       modifiedDate: '',
+  //     }
+  //     Contacts.push(contactsObject)
+  //   })
+
+  // const AccPayInfos: Contact[] = []
+  // props?.clientDetails?.accountPayableContactInfos &&
+  //   props?.clientDetails?.accountPayableContactInfos.forEach(a => {
+  //     const accPayInfoObject = {
+  //       id: a.id,
+  //       contact: a.contact,
+  //       phoneNumber: a.phoneNumber,
+  //       emailAddress: a.emailAddress,
+  //       comments: a.comments,
+  //       market: a.market?.value,
+  //       phoneNumberExtension: '',
+  //       createdBy: '',
+  //       createdDate: '',
+  //       modifiedBy: '',
+  //       modifiedDate: '',
+  //     }
+  //     AccPayInfos.push(accPayInfoObject)
+  //   })
 
   const methods = useForm<ClientFormValues>({
     defaultValues: {
-      companyName: '',
-      paymentTerm: '',
+      companyName: props?.clientDetails?.companyName,
+      paymentTerm: paymentTermsValue,
       paymentMethod: '',
-      streetAddress: '',
-      city: '',
-      state: 0,
-      zipCode: '',
-      contacts: [],
-      accountPayableContactInfos: [],
+      streetAddress: props?.clientDetails?.streetAddress,
+      city: props?.clientDetails?.city,
+      state: stateValue,
+      zipCode: props?.clientDetails?.zipCode,
+      contacts: props?.clientDetails ? contactValues : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
+      accountPayablePhoneNumber: props?.clientDetails?.accountPayablePhoneNumber,
+      accountPayableContact: props?.clientDetails?.accountPayableContact,
+      accountPayableContactInfos: props?.clientDetails
+        ? accPayInfoValues
+        : [{ contact: '', phoneNumber: '', city: '', comments: '' }],
     },
   })
 
-  const { handleSubmit } = methods
+  const { handleSubmit, control } = methods
+
   const onSubmit = useCallback(
     async values => {
-      const newContact = {
-        contact: values.contact,
-        emailAddress: values.emailAddress,
-        phoneNumber: values.phoneNumber,
-        market: values.market,
-        comments: values.comments,
+      const queryOptions = {
+        onSuccess() {},
       }
 
-      const newAccountPayableContactInfos = {
-        contact: values.contact,
-        emailAddress: values.emailAddress,
-        phoneNumber: values.phoneNumber,
-        market: values.market,
-        comments: values.comments,
-      }
+      const newContact: Contact[] = []
+      values?.contacts &&
+        values?.contacts.forEach(c => {
+          const newContactObject = {
+            id: '',
+            contact: c.contact,
+            phoneNumber: c.phoneNumber,
+            emailAddress: c.emailAddress,
+            market: c.market?.value,
+            ...values?.contacts,
+          }
+          newContact.push(newContactObject)
+        })
+
+      const newAccPayInfo: Contact[] = []
+      values?.contacts &&
+        values?.contacts.forEach(a => {
+          const newAccPayInfoObject = {
+            id: '',
+            contact: a.contact,
+            phoneNumber: a.phoneNumber,
+            comments: a.comments,
+            ...values?.contacts,
+          }
+          newAccPayInfo.push(newAccPayInfoObject)
+        })
 
       const newClientPayload = {
-        // projectType: `${values.projectType?.value}`,
         companyName: values.companyName,
-        paymentTerm: values.paymentTerm,
+        paymentTerm: values.paymentTerm?.value,
         paymentAch: values.paymentAch,
         paymentCheck: values.paymentCheck,
         paymentCreditCard: values.paymentCreditCard,
         streetAddress: values.streetAddress,
         city: values.city,
-        state: values.state,
+        state: `${values.state?.value}`,
         zipCode: values.zipCode,
         contacts: newContact,
-        accountPayableContactInfos: newAccountPayableContactInfos,
+        accountPayableContactInfos: newAccPayInfo,
       }
+      console.log('newClientPayload', newClientPayload)
 
-      saveNewClientDetails(newClientPayload, {
-        onSuccess(response) {
-          toast({
-            title: 'Client Details',
-            description: `New client has been created successfully.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          // onClose()
-        },
-        onError(error: any) {
-          toast({
-            title: 'Client Details',
-            description: (error.title as string) ?? 'Unable to save client.',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        },
-      })
+      updateNewClientDetails(newClientPayload, queryOptions)
     },
-    [saveNewClientDetails],
+    [updateNewClientDetails],
   )
 
   return (
-    <Flex>
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} id="newClientForm">
-          <Tabs
-            size="md"
-            variant="enclosed"
-            colorScheme="brand"
-            index={tabIndex}
-            onChange={index => setTabIndex(index)}
-          >
-            <TabList>
-              <Tab>{t('details')}</Tab>
-              <Tab>{t('market')}</Tab>
-              <Tab>{t('notes')}</Tab>
-            </TabList>
-            <TabPanels mt="20px">
-              <TabPanel p="0px">
-                <DetailsTab clientDetails={clientDetails} onClose={props.onClose} />
-              </TabPanel>
-              <TabPanel p="0px">
-                <Market clientDetails={clientDetails} onClose={props.onClose} />
-              </TabPanel>
-              <TabPanel p="0px">
-                <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </form>
-      </FormProvider>
-    </Flex>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} id="newClientForm">
+        <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
+          <TabList>
+            <Tab>{t('details')}</Tab>
+            <Tab>{t('market')}</Tab>
+            <Tab>{t('notes')}</Tab>
+          </TabList>
+          <TabPanels mt="20px">
+            <TabPanel p="0px">
+              <DetailsTab clientDetails={clientDetails} onClose={props.onClose} />
+            </TabPanel>
+            <TabPanel p="0px">
+              <Market clientDetails={clientDetails} onClose={props.onClose} />
+            </TabPanel>
+            <TabPanel p="0px">
+              <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </form>
+      <DevTool control={control} />
+    </FormProvider>
   )
 })

@@ -25,8 +25,6 @@ export const useUserRolesSelector = (): UserRoles => {
   const { data } = useAuth()
   const { userType } = data?.user as Account
 
-  console.log(userType)
-
   return {
     isAdmin: userType === UserTypes.admin,
     isVendor: userType === UserTypes.vendor,
