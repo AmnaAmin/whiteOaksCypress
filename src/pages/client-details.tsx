@@ -56,12 +56,11 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         onSuccess() {},
       }
       if (values?.id) {
-        ///new Client Api
-      } else {
+        console.log('values...', values)
         const newClientPayload = {
           ...values,
           paymentTerm: values.paymentTerm?.value,
-          state: `${values.state?.value}`,
+          state: values.state?.id,
           contacts: values.contacts?.map(c => ({
             ...c,
             market: c.market?.value,
@@ -69,6 +68,8 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         }
 
         updateNewClientDetails(newClientPayload, queryOptions)
+      } else {
+        ///new Client Api
       }
     },
     [updateNewClientDetails],
@@ -76,7 +77,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} id="newClientForm">
+      <form onSubmit={handleSubmit(onSubmit, err => console.log('err..', err))} id="newClientForm">
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab>{t('details')}</Tab>
