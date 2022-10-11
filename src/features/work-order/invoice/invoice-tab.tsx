@@ -272,39 +272,52 @@ export const InvoiceTab = ({
               <Tr>
                 <Td>{t('item')}</Td>
                 <Td>{t('description')}</Td>
-                <Td isNumeric>{t('total')}</Td>
+                <Td>{t('type')}</Td>
+                <Td w={300} pr={12} textAlign={'end'}>
+                  {t('total')}
+                </Td>
               </Tr>
             </Thead>
             <Tbody>
               {items.map((item, index) => {
                 return (
                   <Tr key={index} h="72px" data-testid={'invoice-items'}>
-                    <Td>{item.id}</Td>
-                    <Td>{item.name}</Td>
-                    <Td isNumeric>
+                    <Td maxWidth={300} w={300}>
+                      {item.id}
+                    </Td>
+                    <Td width={400}>{item.name}</Td>
+                    <Td width={400}>{item.transactionTypeLabel}</Td>
+                    <Td pr={12} textAlign={'end'}>
                       <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
                     </Td>
                   </Tr>
                 )
               })}
+              <Tr>
+                <Td></Td>
+                <Td></Td>
+                <Td></Td>
+                <Td pr={12} borderLeft="1px solid #EDF2F7">
+                  <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
+                    <Box>
+                      <HStack w={300} height="60px" justifyContent="space-between">
+                        <Text>{t('subTotal')}:</Text>
+                        <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
+                      </HStack>
+                      <HStack w={300} height="60px" justifyContent="space-between">
+                        <Text>{t('totalAmountPaid')}:</Text>
+                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
+                      </HStack>
+                      <HStack w={300} height="60px" justifyContent="space-between">
+                        <Text>{t('balanceDue')}</Text>
+                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
+                      </HStack>
+                    </Box>
+                  </VStack>
+                </Td>
+              </Tr>
             </Tbody>
           </Table>
-          <VStack alignItems="end" w="98%" fontSize="14px" fontWeight={500} color="gray.600">
-            <Box>
-              <HStack w={300} height="60px" justifyContent="space-between">
-                <Text>{t('subTotal')}:</Text>
-                <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
-              </HStack>
-              <HStack w={300} height="60px" justifyContent="space-between">
-                <Text>{t('totalAmountPaid')}:</Text>
-                <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
-              </HStack>
-              <HStack w={300} height="60px" justifyContent="space-between">
-                <Text>{t('balanceDue')}</Text>
-                <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
-              </HStack>
-            </Box>
-          </VStack>
         </Box>
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
