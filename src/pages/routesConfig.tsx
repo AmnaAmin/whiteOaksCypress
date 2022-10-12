@@ -22,7 +22,8 @@ const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
 
 export default function useRoutesConfig() {
-  const { isFPM, isProjectCoordinator, isVendor, isVendorManager, isDoc, isAdmin } = useUserRolesSelector()
+  const { isFPM, isProjectCoordinator, isVendor, isVendorManager, isDoc, isAccounting, isAdmin } =
+    useUserRolesSelector()
   switch (true) {
     case isFPM:
       return [
@@ -68,6 +69,15 @@ export default function useRoutesConfig() {
 
     case isAdmin:
       return [{ path: 'userManager', element: UserManagement }]
+    case isAccounting:
+      return [
+        { path: 'projects', element: Projects },
+        { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'payable', element: Payable },
+        { path: 'receivable', element: Receivable },
+        { path: 'vendors', element: Vendors },
+        { path: 'clients', element: Clients },
+      ]
 
     default:
       return []

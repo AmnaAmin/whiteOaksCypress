@@ -90,6 +90,7 @@ const PaymentInfoTab = props => {
       setValue('dateInvoiceSubmitted', null)
       setValue('paymentTermDate', null)
       setValue('expectedPaymentDate', null)
+      setValue('paymentTerm', null)
     } else {
       resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }

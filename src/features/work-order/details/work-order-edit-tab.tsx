@@ -21,7 +21,7 @@ import { STATUS } from 'features/common/status'
 import { useCallback, useEffect, useState } from 'react'
 import { useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
+import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
 import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
@@ -40,6 +40,7 @@ import {
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
 import { WORK_ORDER } from '../workOrder.i18n'
+import { downloadFile } from 'utils/file-utils'
 
 const CalenderCard = props => {
   return (
@@ -99,6 +100,7 @@ const WorkOrderDetailTab = props => {
     swoProject,
     rejectInvoiceCheck,
     projectData,
+    documentsData,
   } = props
 
   const formReturn = useForm<FormValues>()
@@ -115,6 +117,7 @@ const WorkOrderDetailTab = props => {
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
+  const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { t } = useTranslation()
 
   const {
@@ -171,6 +174,14 @@ const WorkOrderDetailTab = props => {
     const items = remainingItems?.filter?.(item => !tempAssignedItems?.includes(item.id))
     setUnAssignedItems(items)
   }, [remainingItems])
+
+  useEffect(() => {
+    if (!documentsData?.length) return
+    const uploadedWO = documentsData.find(
+      doc => parseInt(doc.documentType, 10) === 16 && workOrder.id === doc.workOrderId,
+    )
+    setUploadedWO(uploadedWO)
+  }, [documentsData])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
@@ -346,20 +357,22 @@ const WorkOrderDetailTab = props => {
               </Box>
             </HStack>
           </Box>
-          <Box mx="32px">
-            <AssignedItems
-              isLoadingLineItems={isWorkOrderUpdating}
-              onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-              unassignedItems={unassignedItems}
-              setUnAssignedItems={setUnAssignedItems}
-              formControl={formReturn as UseFormReturn<any>}
-              assignedItemsArray={assignedItemsArray}
-              isAssignmentAllowed={isAssignmentAllowed}
-              swoProject={swoProject}
-              downloadPdf={downloadPdf}
-              workOrder={workOrder}
-            />
-          </Box>
+          {!(uploadedWO && uploadedWO?.s3Url) && (
+            <Box mx="32px">
+              <AssignedItems
+                isLoadingLineItems={isWorkOrderUpdating}
+                onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+                unassignedItems={unassignedItems}
+                setUnAssignedItems={setUnAssignedItems}
+                formControl={formReturn as UseFormReturn<any>}
+                assignedItemsArray={assignedItemsArray}
+                isAssignmentAllowed={isAssignmentAllowed}
+                swoProject={swoProject}
+                downloadPdf={downloadPdf}
+                workOrder={workOrder}
+              />
+            </Box>
+          )}
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <HStack justifyContent="start" w="100%">
@@ -372,6 +385,17 @@ const WorkOrderDetailTab = props => {
                 leftIcon={<BiSpreadsheet />}
               >
                 {t('seeProjectDetails')}
+              </Button>
+            )}
+            {uploadedWO && uploadedWO?.s3Url && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={() => downloadFile(uploadedWO?.s3Url)}
+                leftIcon={<BiDownload />}
+              >
+                {t('see')} {t('workOrder')}
               </Button>
             )}
           </HStack>

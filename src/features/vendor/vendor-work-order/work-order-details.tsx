@@ -24,9 +24,9 @@ import { countInCircle } from 'theme/common-style'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
 import { useDocuments } from 'api/vendor-projects'
-import { InvoiceTab } from './invoice/invoice-tab'
+import { InvoiceTab } from '../../work-order/invoice/invoice-tab'
 import InvoicingAndPaymentTab from './payment/invoicing-and-payment-tab'
-import { LienWaiverTab } from './lien-waiver/lien-waiver-tab'
+import { LienWaiverTab } from '../../work-order/lien-waiver/lien-waiver'
 import WorkOrderDetailTab from './details/work-order-detail-tab'
 import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
@@ -67,7 +67,7 @@ export const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible">
+    <Modal isOpen={isOpen} onClose={onClose} size="flexible" closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
         <ModalContent rounded={[0]} borderTop="2px solid #4E87F8">
@@ -120,7 +120,7 @@ export const WorkOrderDetails = ({
                     <LienWaiverTab
                       documentsData={documentsData}
                       onProjectTabChange={onProjectTabChange}
-                      lienWaiverData={workOrder}
+                      workOrder={workOrder}
                       onClose={onClose}
                     />
                   )}
@@ -136,6 +136,9 @@ export const WorkOrderDetails = ({
                       transactions={transactions}
                       onClose={onClose}
                       setTabIndex={setTabIndex}
+                      rejectInvoiceCheck={null}
+                      navigateToProjectDetails={null}
+                      onSave={null}
                     />
                   )}
                 </TabPanel>

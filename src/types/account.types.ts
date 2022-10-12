@@ -7,6 +7,7 @@ export enum UserTypes {
   fpm = 'Field Project Manager',
   doc = 'Director Of Construction',
   admin = 'Admin',
+  accounting = 'Accounting',
 }
 
 export type Account = {
