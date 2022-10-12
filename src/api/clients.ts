@@ -64,3 +64,38 @@ export const useUpdateClientDetails = () => {
     },
   )
 }
+
+export const useClientNoteMutation = clientId => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (payload: any) => {
+      return client('notes', {
+        data: payload,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['notes', clientId])
+        toast({
+          title: 'Note',
+          description: 'Note has been saved successfully.',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Note',
+          description: (error.title as string) ?? 'Unable to save note.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}

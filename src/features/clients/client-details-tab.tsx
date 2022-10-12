@@ -17,19 +17,21 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { Controller, useFieldArray, useForm, useFormContext } from 'react-hook-form'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import Select from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
 import { BiAddToQueue } from 'react-icons/bi'
+import { useUpdateClientDetails } from 'api/clients'
 
 type clientDetailProps = {
   clientDetails?: any
+  states?: any
   onClose?: () => void
 }
 
@@ -37,7 +39,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { t } = useTranslation()
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
-
+  const { mutate: updateNewClientDetails } = useUpdateClientDetails()
   const { isProjectCoordinator } = useUserRolesSelector()
 
   const btnStyle = {
@@ -49,17 +51,44 @@ export const Details: React.FC<clientDetailProps> = props => {
   // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
   // const selectedClientMarket = markets?.find(market => market?.id === clientSelectedMarket)
   // const clientMarket = { label: selectedClientMarket?.stateName, value: selectedClientMarket?.id }
-  console.log(props?.clientDetails?.contacts?.map(m => m?.market))
+
   const disabledTextStyle = {
     color: '#2D3748',
   }
 
-  const {
-    register,
-    formState: { errors },
-    control,
-    watch,
-  } = useFormContext<ClientFormValues>()
+  // const {
+  //   register,
+  //   formState: { errors },
+  //   control,
+  //   watch,
+  // } = useFormContext<ClientFormValues>()
+
+  const clientDetails = props?.clientDetails
+
+
+  // Setting Dropdown values
+  const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
+  const stateValue = stateSelect?.find(b => b?.value === clientDetails?.state)
+
+  const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
+
+  // Setting Default Values
+  const formReturn = useForm<ClientFormValues>({
+    defaultValues: {
+      ...clientDetails,
+      paymentTerm: paymentTermsValue,
+      paymentMethod: '',
+      state: stateValue,
+      contacts: clientDetails?.contacts?.length
+        ? clientDetails?.contacts
+        : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
+      accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
+        ? clientDetails?.accountPayableContactInfos
+        : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
+    },
+  })
+  const { control, formState: errors, reset, register, watch } = formReturn
+
   const {
     fields: contactsFields,
     append: contactsAppend,
@@ -83,9 +112,36 @@ export const Details: React.FC<clientDetailProps> = props => {
     return () => subscription.unsubscribe()
   }, [watch, watchAllFields])
 
+  const onSubmit = useCallback(
+    async values => {
+      const queryOptions = {
+        onSuccess() {},
+      }
+      if (values?.id) {
+        console.log('values...', values)
+        const newClientPayload = {
+          ...values,
+          paymentTerm: values.paymentTerm?.value,
+          state: values.state?.id,
+          contacts: values.contacts?.map(c => ({
+            ...c,
+            market: c.market?.value,
+          })),
+        }
+
+        updateNewClientDetails(newClientPayload, queryOptions)
+      } else {
+        ///new Client Api
+      }
+    },
+    [updateNewClientDetails],
+  )
+
   return (
     <Box>
       <Box overflow={'auto'} height={400}>
+      <form onSubmit={formReturn.handleSubmit(onSubmit)} id="clientDetails">
+
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
           <GridItem>
             <FormControl>
@@ -101,7 +157,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.paymentTerm}>
+            <FormControl>
               <FormLabel variant="strong-label" size="md">
                 {t('paymentTerms')}
               </FormLabel>
@@ -427,13 +483,15 @@ export const Details: React.FC<clientDetailProps> = props => {
             {t('Add Contacts')}
           </Button>
         )}
+        </form>
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : ''} colorScheme="brand" onClick={props?.onClose}>
           {t('cancel')}
         </Button>
         {!isProjectCoordinator && (
-          <Button colorScheme="brand" type="submit" form="newClientForm" ml={2}>
+          <Button colorScheme="brand" type="submit" form="clientDetails" 
+          ml={2}>
             {t('save')}
           </Button>
         )}

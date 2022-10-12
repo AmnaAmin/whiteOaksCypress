@@ -4,7 +4,7 @@ import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useFormContext } from 'react-hook-form'
+import { useForm, useFormContext } from 'react-hook-form'
 import { ClientFormValues } from 'types/client.type'
 
 type clientDetailProps = {
@@ -29,7 +29,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
     formState: { errors },
     control,
     watch,
-  } = useFormContext<ClientFormValues>()
+  } = useForm<ClientFormValues>()
 
   return (
     <>
@@ -53,7 +53,8 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           {t('cancel')}
         </Button>
         {!isProjectCoordinator && (
-          <Button colorScheme="brand" type="submit" form="newClientForm" ml={2}>
+          <Button colorScheme="brand" type="submit" //form="newClientForm" 
+          ml={2}>
             {t('save')}
           </Button>
         )}

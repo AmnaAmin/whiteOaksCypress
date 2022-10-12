@@ -74,11 +74,9 @@
 
 
 import React, { useEffect } from 'react'
-import { useNoteMutation } from 'api/work-order'
-
 import { useAccountDetails } from 'api/vendor-details'
 import { NotesTab } from 'features/common/notes-tab'
-import { useNotes } from 'api/clients'
+import { useClientNoteMutation, useNotes } from 'api/clients'
 
 type clientNotesProps = {
   clientDetails?: any
@@ -89,7 +87,7 @@ type clientNotesProps = {
 export const ClientNotes: React.FC<clientNotesProps> = props => {
   const { setNotesCount, clientDetails} = props
 
-  const { mutate: createNotes } = useNoteMutation(clientDetails?.id)
+  const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
   const { data: account } = useAccountDetails()
 
   const { notes = [] } = useNotes({
