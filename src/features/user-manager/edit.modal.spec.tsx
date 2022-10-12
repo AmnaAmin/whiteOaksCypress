@@ -1,0 +1,26 @@
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { EditUserModal } from './edit-user-modal'
+describe('Edit User Modal Test Cases', () => {
+  test('Add User button should open edit user modal with form', async () => {
+    await render(<EditUserModal />)
+    userEvent.click(screen.getByTestId('add-user'))
+    expect(screen.getByText('userManagement.managementModals.newUser')).toBeInTheDocument()
+  })
+
+  test('click cancel button should closed edit user modal', async () => {
+    await render(<EditUserModal />)
+    userEvent.click(screen.getByTestId('add-user'))
+    userEvent.click(screen.getByText(/userManagement.managementModals.cancel/i))
+    expect(screen.getByText('userManagement.managementModals.newUser')).not.toBeVisible()
+  })
+
+  test('save button on the disabled form function is not called.', async () => {
+    // const onSubmit = jest.fn()
+    await render(<EditUserModal />)
+    screen.debug(undefined, 1000000)
+    userEvent.click(screen.getByTestId('add-user'))
+    userEvent.click(screen.getByText(/userManagement.managementModals.save/i))
+    // expect(onSubmit).toHaveBeenCalled()
+  })
+})

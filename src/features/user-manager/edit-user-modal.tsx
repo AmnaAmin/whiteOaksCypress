@@ -59,7 +59,7 @@ export const EditUserModal = () => {
   const onSubmit = value => {}
   return (
     <>
-      <Button colorScheme="brand" onClick={onOpen} leftIcon={<BiAddToQueue />}>
+      <Button data-testid="add-user" colorScheme="brand" onClick={onOpen} leftIcon={<BiAddToQueue />}>
         {t('userManagement.managementModals.addUser')}
       </Button>
 
