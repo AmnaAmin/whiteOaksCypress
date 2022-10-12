@@ -6,11 +6,14 @@ import DetailsTab from 'features/clients/client-details-tab'
 import { Market } from 'features/clients/client-market-tab'
 import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
-import { ClientFormValues } from 'types/client.type'
-import { useUpdateClientDetails } from 'api/clients'
+// import { ClientFormValues } from 'types/client.type'
+// import { useUpdateClientDetails } from 'api/clients'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
 import { useMarkets, useStates } from 'api/pc-projects'
+import { ClientFormValues } from 'types/client.type'
+import { useSaveNewClientDetails, useUpdateClientDetails } from 'api/clients'
+import { client } from 'utils/api-client'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -19,88 +22,117 @@ type ClientDetailsTabsProps = {
   clientDetails?: any
   updateClientId?: (number) => void
   states?: any
+  marketOptions?: any
 }
 
 export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps, ref) => {
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
-  // const { mutate: updateNewClientDetails } = useUpdateClientDetails()
-  // const { markets } = useMarkets()
-  const { states } = useStates()
+  const marketSelectOptions = props?.marketOptions
+  const { mutate: editClientDetails } = useUpdateClientDetails()
+  const { mutate: addNewClientDetails } = useSaveNewClientDetails()
+  const [createdClientID, setCreatedClientId] = useState(0)
 
-  // // Setting Dropdown values
-  // const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
-  // const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
+  const setNextTab = () => {
+    setTabIndex(tabIndex + 1)
+  }
 
-  // const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
+  // Setting Dropdown values
+  const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
+  const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
+console.log('...',stateValue)
+  const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
 
-  // // Setting Default Values
-  // const methods = useForm<ClientFormValues>({
-  //   defaultValues: {
-  //     ...clientDetails,
-  //     paymentTerm: paymentTermsValue,
-  //     paymentMethod: '',
-  //     state: stateValue,
-  //     contacts: clientDetails?.contacts?.length
-  //       ? clientDetails?.contacts
-  //       : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
-  //     accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
-  //       ? clientDetails?.accountPayableContactInfos
-  //       : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
-  //   },
-  // })
+  // Setting Default Values
+  const methods = useForm<ClientFormValues>({
+    defaultValues: {
+      ...clientDetails,
+      paymentTerm: paymentTermsValue || { label: '20', value: '20' },
+      state: stateValue,
+      contacts:
+        clientDetails?.contacts?.length > 0
+          ? [
+              ...clientDetails?.contacts?.map(c => {
+                const selectedMarket = marketSelectOptions?.find(m => m.id === c.market.id)
+                return {
+                  contact: c.contact,
+                  phoneNumber: c.phoneNumber,
+                  emailAddress: c.emailAddress,
+                  market: selectedMarket,
+                }
+              }),
+            ]
+          : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
 
-  // const { handleSubmit, control } = methods
+      accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
+        ? clientDetails?.accountPayableContactInfos
+        : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
+    },
+  })
 
-  // const onSubmit = useCallback(
-  //   async values => {
-  //     const queryOptions = {
-  //       onSuccess() {},
-  //     }
-  //     if (values?.id) {
-  //       console.log('values...', values)
-  //       const newClientPayload = {
-  //         ...values,
-  //         paymentTerm: values.paymentTerm?.value,
-  //         state: values.state?.id,
-  //         contacts: values.contacts?.map(c => ({
-  //           ...c,
-  //           market: c.market?.value,
-  //         })),
-  //       }
+  const { handleSubmit, control } = methods
 
-  //       updateNewClientDetails(newClientPayload, queryOptions)
-  //     } else {
-  //       ///new Client Api
-  //     }
-  //   },
-  //   [updateNewClientDetails],
-  // )
+  const onSubmit = useCallback(
+    async values => {
+      const queryOptions = {
+        onSuccess(response) {
+          console.log(response.data?.id)
+          setCreatedClientId(response.data?.id)
+          console.log('createdClientID', response.data?.id)
+        },
+      }
+      console.log('...values', values)
+      const clientPayload = {
+        ...values,
+        paymentTerm: values.paymentTerm?.value,
+        state: values.state?.id,
+        contacts: values.contacts?.map(c => ({
+          ...c,
+          market: c.market?.value,
+        })),
+      }
+      if (values?.id) {
+        editClientDetails(clientPayload, queryOptions)
+      } else {
+        addNewClientDetails(clientPayload, queryOptions)
+      }
+    },
+    [addNewClientDetails, client],
+  )
 
   return (
-    // <FormProvider {...methods}>
-    //   <form onSubmit={handleSubmit(onSubmit, err => console.log('err..', err))} id="newClientForm">
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit, err => console.log('err..', err))} id="clientDetails">
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab>{t('details')}</Tab>
             <Tab>{t('market')}</Tab>
-            <Tab>{t('notes')}</Tab>
+            <Tab
+            //isDisabled={!clientDetails?.id}
+            >
+              {t('notes')}
+            </Tab>
           </TabList>
           <TabPanels mt="20px">
             <TabPanel p="0px">
-              <DetailsTab clientDetails={clientDetails} states={props?.states} onClose={props.onClose} />
+              <DetailsTab
+                clientDetails={clientDetails}
+                states={props?.states}
+                onClose={props.onClose}
+                setNextTab={setNextTab}
+              />
             </TabPanel>
             <TabPanel p="0px">
-              <Market clientDetails={clientDetails} onClose={props.onClose} />
+              <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
             </TabPanel>
             <TabPanel p="0px">
               <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
             </TabPanel>
           </TabPanels>
         </Tabs>
-    //   </form>
-    //   <DevTool control={control} />
-    // </FormProvider>
+      </form>
+      <DevTool control={control} />
+    </FormProvider>
   )
 })

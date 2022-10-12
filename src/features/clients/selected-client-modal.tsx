@@ -16,7 +16,7 @@ import { ClientDetailsTabs } from 'pages/client-details'
 import { useCallback, useEffect } from 'react'
 import { ClientFormValues } from 'types/client.type'
 
-const Client = ({ clientDetails, states, onClose: close }: { states, clientDetails: ClientFormValues; onClose: () => void }) => {
+const Client = ({ clientDetails, states, marketOptions, onClose: close, isOpen: open }: { states, marketOptions, clientDetails: ClientFormValues; onClose: () => void; isOpen: boolean }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {
@@ -31,6 +31,7 @@ const Client = ({ clientDetails, states, onClose: close }: { states, clientDetai
       onCloseDisclosure()
     }
   }, [onCloseDisclosure, onOpen, clientDetails])
+
   return (
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
@@ -51,7 +52,7 @@ const Client = ({ clientDetails, states, onClose: close }: { states, clientDetai
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} states={states} onClose={onClose} />
+              <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} states={states} marketOptions={marketOptions} onClose={onClose} />
             </Box>
           </ModalBody>
         </ModalContent>

@@ -1,5 +1,7 @@
 import { useToast } from '@chakra-ui/react'
+import { Control, useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
 
 export const useClients = () => {
@@ -42,7 +44,7 @@ export const useUpdateClientDetails = () => {
       onSuccess() {
         toast({
           title: 'Update Client Details',
-          description: `client has been updated successfully.`,
+          description: `Client has been updated successfully.`,
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -97,5 +99,56 @@ export const useClientNoteMutation = clientId => {
         })
       },
     },
+  )
+}
+
+export const useSaveNewClientDetails = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (clientDetails: any) => {
+      return client('clients', {
+        data: clientDetails,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'New Client Details',
+          description: `New client has been added successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('client')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Client Details',
+          description: (error.title as string) ?? 'Unable to save client.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const useClientDetailsSaveButtonDisabled = (control: Control<ClientFormValues>, errors): boolean => {
+  const formValues = useWatch({ control })
+
+  return (
+    !formValues?.companyName ||
+    !formValues?.paymentTerm ||
+    !formValues?.streetAddress ||
+    !formValues?.city ||
+    !formValues?.contact
   )
 }

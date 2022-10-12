@@ -36,7 +36,7 @@
 //     control,
 //     watch,
 //   } = useFormContext<ClientFormValues>()
-  
+
 //   return (
 //     <>
 //       <Box p={0} height="400px" overflow={'auto'}>
@@ -72,11 +72,11 @@
 // })
 // export default ClientNotes
 
-
 import React, { useEffect } from 'react'
 import { useAccountDetails } from 'api/vendor-details'
 import { NotesTab } from 'features/common/notes-tab'
-import { useClientNoteMutation, useNotes } from 'api/clients'
+import { useClientNoteMutation, useClients, useNotes } from 'api/clients'
+import { Box } from '@chakra-ui/react'
 
 type clientNotesProps = {
   clientDetails?: any
@@ -85,20 +85,17 @@ type clientNotesProps = {
 }
 
 export const ClientNotes: React.FC<clientNotesProps> = props => {
-  const { setNotesCount, clientDetails} = props
-
+  const { setNotesCount, clientDetails } = props
   const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
   const { data: account } = useAccountDetails()
-
-  const { notes = [] } = useNotes({
-    clientId: clientDetails?.id,
-  })
+  const { data: clients, refetch } = useClients()
+  const { notes = [] } = useNotes({ clientId: clientDetails?.id || 0 })
 
   useEffect(() => {
     if (notes?.length > 0 && setNotesCount) {
       setNotesCount(notes.filter((note: any) => note.createdBy !== account.login)?.length)
     }
-  }, [notes])
+  }, [notes, clients, refetch])
 
   const saveNote = data => {
     const payload = {
@@ -108,12 +105,14 @@ export const ClientNotes: React.FC<clientNotesProps> = props => {
     createNotes(payload)
   }
   return (
-    <NotesTab
-      saveNote={saveNote}
-      notes={notes}
-      contentStyle={{ padding: '25px', maxHeight: '400px' }}
-      pageLayoutStyle={{ bg: 'white', rounded: 16, pb: 2 }}
-    />
+    <Box h="495px">
+      <NotesTab
+        saveNote={saveNote}
+        notes={notes}
+        contentStyle={{ padding: '25px', maxHeight: '400px' }}
+        pageLayoutStyle={{ bg: 'white', rounded: 16, pb: 2 }}
+      />
+    </Box>
   )
 }
 

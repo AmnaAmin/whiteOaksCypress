@@ -198,10 +198,6 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#68D391',
     },
   ],
-<<<<<<< HEAD
-
-=======
->>>>>>> woa-4506
 }
 
 export const useRoleBasedMenu = (): Array<Menu> => {
