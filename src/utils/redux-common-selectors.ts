@@ -8,7 +8,7 @@ type UserRoles = {
   isVendorManager: boolean
   isFPM: boolean
   isDoc: boolean
-  isAccounting: boolean
+  isAccounting : boolean
 }
 
 enum UserTypes {
@@ -33,7 +33,6 @@ export const useUserRolesSelector = (): UserRoles => {
     isFPM: userType === UserTypes.fieldProjectManager,
     isDoc: userType === UserTypes.directorOfConstruction,
     isAccounting: userType === UserTypes.accounting,
-
   }
 }
 
