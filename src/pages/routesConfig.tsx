@@ -77,6 +77,8 @@ export default function useRoutesConfig() {
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },
+        { path: 'reports', element: Reports },
+        { path: 'performance', element: PerformanceTab },
       ]
 
     default:

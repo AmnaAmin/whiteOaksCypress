@@ -195,6 +195,18 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiGroup,
       color: '#0BC5EA',
     },
+    {
+      pathTo: '/reports',
+      title: 'Reports',
+      Icon: BiBarChartSquare,
+      color: '#FC8181',
+    },
+    {
+      pathTo: '/performance',
+      title: 'Performance',
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
   ],
 }
 
