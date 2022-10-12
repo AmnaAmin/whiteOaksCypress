@@ -154,7 +154,6 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#68D391',
     },
   ],
-
   [UserTypes.accounting]: [
     {
       pathTo: '/projects',

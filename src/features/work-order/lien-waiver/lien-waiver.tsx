@@ -240,7 +240,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             {workOrder?.leanWaiverSubmitted && !workOrder?.lienWaiverAccepted && isVendor && (
               <Alert data-testid="lienWaiverRejectInfo" status="info" variant="custom" size="sm">
                 <AlertIcon />
-                <AlertDescription>{t('lienWaiverRejectInfo')}</AlertDescription>
+                <AlertDescription>{workOrder?.rejectedUserRole + ' ' + t('lienWaiverRejectInfo')}</AlertDescription>
                 <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
               </Alert>
             )}
