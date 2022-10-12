@@ -3,6 +3,9 @@ import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useForm, useFormContext } from 'react-hook-form'
+import { ClientFormValues } from 'types/client.type'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -13,12 +16,20 @@ type clientDetailProps = {
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { markets } = useMarkets()
   const { t } = useTranslation()
+  const { isProjectCoordinator } = useUserRolesSelector()
 
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
     borderTop: '1px solid #CBD5E0',
   }
+
+  const {
+    register,
+    formState: { errors },
+    control,
+    watch,
+  } = useForm<ClientFormValues>()
 
   return (
     <>
@@ -27,8 +38,9 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           {markets?.map(m => {
             return (
               <CheckboxButton
+                {...register(m?.metropolitanServiceArea)}
                 isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}
-                isDisabled
+                isDisabled={isProjectCoordinator}
               >
                 {m?.metropolitanServiceArea}
               </CheckboxButton>
@@ -36,10 +48,16 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           })}
         </Flex>
       </Box>
-      <Flex style={btnStyle} py={4} pt={5}>
-        <Button colorScheme="brand" onClick={props.onClose}>
+      <Flex style={btnStyle} py="4" pt={5} mt={4}>
+        <Button variant={!isProjectCoordinator ? 'outline' : ''} colorScheme="brand" onClick={props?.onClose}>
           {t('cancel')}
         </Button>
+        {!isProjectCoordinator && (
+          <Button colorScheme="brand" type="submit" //form="newClientForm" 
+          ml={2}>
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </>
   )

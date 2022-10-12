@@ -14,9 +14,9 @@ import { useTranslation } from 'react-i18next'
 
 import { ClientDetailsTabs } from 'pages/client-details'
 import { useCallback, useEffect } from 'react'
-import { Clients } from 'types/client.type'
+import { ClientFormValues } from 'types/client.type'
 
-const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onClose: () => void }) => {
+const Client = ({ clientDetails, states, onClose: close }: { states, clientDetails: ClientFormValues; onClose: () => void }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {
@@ -51,7 +51,7 @@ const Client = ({ clientDetails, onClose: close }: { clientDetails: Clients; onC
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="detail" clientDetails={clientDetails} onClose={onClose} />
+              <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} states={states} onClose={onClose} />
             </Box>
           </ModalBody>
         </ModalContent>

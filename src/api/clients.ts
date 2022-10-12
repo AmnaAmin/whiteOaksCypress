@@ -1,4 +1,5 @@
-import { useQuery } from 'react-query'
+import { useToast } from '@chakra-ui/react'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 
 export const useClients = () => {
@@ -23,4 +24,78 @@ export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
     notes,
     ...rest,
   }
+}
+
+export const useUpdateClientDetails = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (clientDetails: any) => {
+      return client('clients', {
+        data: clientDetails,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Update Client Details',
+          description: `client has been updated successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('client')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Client Details',
+          description: (error.title as string) ?? 'Unable to save client.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const useClientNoteMutation = clientId => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (payload: any) => {
+      return client('notes', {
+        data: payload,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['notes', clientId])
+        toast({
+          title: 'Note',
+          description: 'Note has been saved successfully.',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Note',
+          description: (error.title as string) ?? 'Unable to save note.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
 }

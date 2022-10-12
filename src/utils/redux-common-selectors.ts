@@ -33,7 +33,6 @@ export const useUserRolesSelector = (): UserRoles => {
     isFPM: userType === UserTypes.fieldProjectManager,
     isDoc: userType === UserTypes.directorOfConstruction,
     isAccounting: userType === UserTypes.accounting,
-
   }
 }
 
