@@ -10,6 +10,7 @@ import { ClientFormValues } from 'types/client.type'
 import { useUpdateClientDetails } from 'api/clients'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
+import { useMarkets } from 'api/pc-projects'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -25,7 +26,8 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
   const { mutate: updateNewClientDetails } = useUpdateClientDetails()
-
+  const { markets } = useMarkets()
+  
   // Setting Dropdown values
   const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
   const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)

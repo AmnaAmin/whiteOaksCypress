@@ -40,6 +40,11 @@ export const Details: React.FC<clientDetailProps> = props => {
 
   const { isProjectCoordinator } = useUserRolesSelector()
 
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
   // To get Contact Market
   // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
   // const selectedClientMarket = markets?.find(market => market?.id === clientSelectedMarket)
@@ -423,7 +428,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           </Button>
         )}
       </Box>
-      <Flex justifyContent={'end'} borderTop="1px solid #CBD5E0" py="4" pt={5} mt={4}>
+      <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : ''} colorScheme="brand" onClick={props?.onClose}>
           {t('cancel')}
         </Button>

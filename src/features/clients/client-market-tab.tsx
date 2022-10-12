@@ -4,6 +4,8 @@ import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useFormContext } from 'react-hook-form'
+import { ClientFormValues } from 'types/client.type'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -22,6 +24,13 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
     borderTop: '1px solid #CBD5E0',
   }
 
+  const {
+    register,
+    formState: { errors },
+    control,
+    watch,
+  } = useFormContext<ClientFormValues>()
+
   return (
     <>
       <Box h="400px" overflow="auto">
@@ -29,8 +38,9 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           {markets?.map(m => {
             return (
               <CheckboxButton
+                {...register(m?.metropolitanServiceArea)}
                 isChecked={props?.clientDetails?.markets?.find(market => m?.id === market?.id)}
-                isDisabled = {isProjectCoordinator}
+                isDisabled={isProjectCoordinator}
               >
                 {m?.metropolitanServiceArea}
               </CheckboxButton>
@@ -38,10 +48,15 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           })}
         </Flex>
       </Box>
-      <Flex style={btnStyle} py={4} pt={5}>
-        <Button colorScheme="brand" onClick={props.onClose}>
+      <Flex style={btnStyle} py="4" pt={5} mt={4}>
+        <Button variant={!isProjectCoordinator ? 'outline' : ''} colorScheme="brand" onClick={props?.onClose}>
           {t('cancel')}
         </Button>
+        {!isProjectCoordinator && (
+          <Button colorScheme="brand" type="submit" form="newClientForm" ml={2}>
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </>
   )
