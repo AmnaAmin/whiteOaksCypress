@@ -13,6 +13,7 @@ import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import round from 'lodash/round'
+import { isValidAndNonEmpty } from 'utils'
 
 const swoPrefix = '/smartwo/api'
 
@@ -287,11 +288,12 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
 
 export const calculateVendorAmount = (amount, percentage) => {
   amount = Number(amount)
-  percentage = Number(percentage)
+  percentage = Number(!percentage || percentage === '' ? 0 : percentage)
   return round(amount - amount * (percentage / 100), 2)
 }
 
 export const calculateProfit = (clientAmount, vendorAmount) => {
+  if (clientAmount === 0 && vendorAmount === 0) return 0
   return round(((clientAmount - vendorAmount) / clientAmount) * 100, 2)
 }
 /* map to remaining when user unassigns using Unassign Line Item action */
@@ -391,9 +393,7 @@ export const EditableField = (props: EditableCellType) => {
                 }
               }}
             >
-              {valueFormatter &&
-              remainingItemsWatch[index]?.[fieldName] &&
-              remainingItemsWatch[index]?.[fieldName] !== ''
+              {valueFormatter && isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
                 : remainingItemsWatch[index]?.[fieldName]}
             </Box>
@@ -415,14 +415,15 @@ export const EditableField = (props: EditableCellType) => {
                       if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
                         setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                       }
+                      onChange?.(e, index)
                     }}
                     onBlur={e => {
                       setIsFocus?.(false)
                       setSelectedCell(null)
                       if (e.target.value === '') {
                         setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
+                        onChange?.({ target: { value: selectedCell?.value } }, index)
                       }
-                      onChange?.(e, index)
                     }}
                     onFocus={() => {
                       setIsFocus?.(true)
@@ -481,10 +482,10 @@ export const InputField = (props: InputFieldType) => {
               autoFocus={autoFocus}
               onChange={e => {
                 field.onChange(e.target.value)
+                handleChange?.(e, index)
               }}
               onBlur={e => {
                 setIsFocus?.(false)
-                handleChange?.(e, index)
               }}
               onFocus={() => {
                 setIsFocus?.(true)
