@@ -8,7 +8,7 @@ type UserRoles = {
   isVendorManager: boolean
   isFPM: boolean
   isDoc: boolean
-  isAccounting: boolean
+  isAccounting : boolean
 }
 
 enum UserTypes {
