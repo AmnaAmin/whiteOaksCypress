@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { PasswordField } from './password-field'
+import { USER_MANAGEMENT } from './user-management.i8n'
 
 export const EditUserModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -60,7 +61,7 @@ export const EditUserModal = () => {
   return (
     <>
       <Button data-testid="add-user" colorScheme="brand" onClick={onOpen} leftIcon={<BiAddToQueue />}>
-        {t('userManagement.managementModals.addUser')}
+        {t(`${USER_MANAGEMENT}.modal.addUser`)}
       </Button>
 
       <Modal
@@ -75,21 +76,21 @@ export const EditUserModal = () => {
           <ModalOverlay />
           <ModalContent>
             <ModalHeader borderBottom="1px solid #E2E8F0" fontSize="16px" fontWeight={500} color="#4A5568">
-              {t('userManagement.managementModals.newUser')}
+              {t(`${USER_MANAGEMENT}.modal.newUser`)}
             </ModalHeader>
             <ModalCloseButton onClick={() => reset()} />
             <ModalBody>
               <HStack mt="30px" spacing={15}>
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.email')}
+                    {t(`${USER_MANAGEMENT}.modal.email`)}
                   </FormLabel>
                   <Input borderLeft="2.5px solid #4E87F8" type="email" placeholder="Email" {...register('email')} />
                 </FormControl>
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.firstName')}
+                    {t(`${USER_MANAGEMENT}.modal.firstName`)}
                   </FormLabel>
                   <Input
                     borderLeft="2.5px solid #4E87F8"
@@ -101,7 +102,7 @@ export const EditUserModal = () => {
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.lastName')}
+                    {t(`${USER_MANAGEMENT}.modal.lastName`)}
                   </FormLabel>
                   <Input
                     borderLeft="2.5px solid #4E87F8"
@@ -119,7 +120,7 @@ export const EditUserModal = () => {
               <HStack mt="30px" spacing={15}>
                 <FormControl w="215px">
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.accountType')}
+                    {t(`${USER_MANAGEMENT}.modal.accountType`)}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -134,7 +135,7 @@ export const EditUserModal = () => {
 
                 <FormControl w="215px">
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.language')}
+                    {t(`${USER_MANAGEMENT}.modal.language`)}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -149,7 +150,7 @@ export const EditUserModal = () => {
 
                 <FormControl w={215}>
                   <Checkbox mt="25px" fontSize="16px" fontWeight={400} color="#718096" {...register('activated')}>
-                    {t('userManagement.managementModals.activated')}
+                    {t(`${USER_MANAGEMENT}.modal.activated`)}
                   </Checkbox>
                 </FormControl>
               </HStack>
@@ -157,28 +158,28 @@ export const EditUserModal = () => {
               <HStack mt="30px" spacing={15}>
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.address')}
+                    {t(`${USER_MANAGEMENT}.modal.address`)}
                   </FormLabel>
                   <Input borderLeft="2.5px solid #4E87F8" type="text" placeholder="Address" {...register('address')} />
                 </FormControl>
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.city')}
+                    {t(`${USER_MANAGEMENT}.modal.city`)}
                   </FormLabel>
                   <Input type="text" placeholder="City" {...register('city')} />
                 </FormControl>
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.state')}
+                    {t(`${USER_MANAGEMENT}.modal.state`)}
                   </FormLabel>
                   <Input type="text" placeholder="State" {...register('state')} />
                 </FormControl>
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.zipcode')}
+                    {t(`${USER_MANAGEMENT}.modal.zipcode`)}
                   </FormLabel>
                   <Input type="number" {...register('zipCode')} />
                 </FormControl>
@@ -187,7 +188,7 @@ export const EditUserModal = () => {
               <HStack mt="30px" spacing={15}>
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.telephone')}
+                    {t(`${USER_MANAGEMENT}.modal.telephone`)}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -212,14 +213,14 @@ export const EditUserModal = () => {
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.ext')}
+                    {t(`${USER_MANAGEMENT}.modal.ext`)}
                   </FormLabel>
                   <Input type="text" placeholder="Ext" {...register('ext')} />
                 </FormControl>
 
                 <FormControl w={215}>
                   <FormLabel variant="strong-label" size="md">
-                    {t('userManagement.managementModals.employeeID')}
+                    {t(`${USER_MANAGEMENT}.modal.employeeID`)}
                   </FormLabel>
                   <Input type="text" {...register('employeeID')} />
                 </FormControl>
@@ -236,10 +237,10 @@ export const EditUserModal = () => {
                   reset()
                 }}
               >
-                {t('userManagement.managementModals.cancel')}
+                {t(`${USER_MANAGEMENT}.modal.cancel`)}
               </Button>
               <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField}>
-                {t('userManagement.managementModals.save')}
+                {t(`${USER_MANAGEMENT}.modal.save`)}
               </Button>
             </ModalFooter>
           </ModalContent>

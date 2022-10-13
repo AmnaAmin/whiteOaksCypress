@@ -3,6 +3,7 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
+import { USER_MANAGEMENT } from './user-management.i8n'
 
 const userManagementTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -39,42 +40,42 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: 'userManagement.managementTable.email',
+        Header: `${USER_MANAGEMENT}.table.email`,
         accessor: 'id',
       },
       {
-        Header: 'userManagement.managementTable.firstName',
+        Header: `${USER_MANAGEMENT}.table.firstName`,
         accessor: 'firstName',
       },
       {
-        Header: 'userManagement.managementTable.lastName',
+        Header: `${USER_MANAGEMENT}.table.lastName`,
         accessor: 'Last Name',
       },
       {
-        Header: 'userManagement.managementTable.account',
+        Header: `${USER_MANAGEMENT}.table.account`,
         accessor: 'Account',
       },
       {
-        Header: 'userManagement.managementTable.language',
+        Header: `${USER_MANAGEMENT}.table.language`,
         accessor: 'teleNumber',
         // Cell: ({ value }) => PROJECT_CATEGORY[value],
       },
       {
-        Header: 'userManagement.managementTable.status',
+        Header: `${USER_MANAGEMENT}.table.status`,
         accessor: 'Status',
       },
       {
-        Header: 'userManagement.managementTable.createdDate',
+        Header: `${USER_MANAGEMENT}.table.createdDate`,
         accessor: 'Created  Date',
       },
 
       {
-        Header: 'userManagement.managementTable.modifiedBy',
+        Header: `${USER_MANAGEMENT}.table.modifiedBy`,
         accessor: 'Modified By',
         // Cell: ({ value }) => dateFormat(value),
       },
       {
-        Header: 'userManagement.managementTable.modifiedDate',
+        Header: `${USER_MANAGEMENT}.table.modifiedDate`,
         accessor: 'Modified  Date',
         // Cell: ({ value }) => dateFormat(value),
       },

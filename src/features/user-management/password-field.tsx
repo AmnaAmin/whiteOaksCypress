@@ -12,6 +12,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import zxcvbn from 'zxcvbn'
+import { USER_MANAGEMENT } from './user-management.i8n'
 
 export const PasswordField: React.FC<{ errors: any; register: any }> = ({ register, errors }) => {
   const [password, setPassword] = useState(false)
@@ -47,7 +48,7 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
   return (
     <FormControl w="215px">
       <FormLabel variant="strong-label" size="md">
-        {t('userManagement.managementModals.password')}
+        {t(`${USER_MANAGEMENT}.modal.password`)}
       </FormLabel>
       <InputGroup size="md">
         <Input
@@ -77,7 +78,7 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
 
       <FormControl height={29} mt={2}>
         <FormLabel fontStyle="normal" fontSize="10px" fontWeight={400} lineHeight="15px" color="#374151">
-          {t('userManagement.managementModals.passwordStrength')}
+          {t(`${USER_MANAGEMENT}.modal.passwordStrength`)}
         </FormLabel>
         <SimpleGrid columns={3} row={1} gap={2} w="215px">
           <Progress

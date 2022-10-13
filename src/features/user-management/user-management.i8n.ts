@@ -1,8 +1,10 @@
+export const USER_MANAGEMENT = 'userManagement'
+
 export const userManagementTranslation = {
   en: {
     translation: {
-      userManagement: {
-        managementTable: {
+      [USER_MANAGEMENT]: {
+        table: {
           email: 'Email',
           firstName: 'First Name',
           lastName: 'Last Name',
@@ -14,7 +16,7 @@ export const userManagementTranslation = {
           modifiedDate: 'Modified Date',
           user: 'User',
         },
-        managementModals: {
+        modal: {
           vendorManagerUser: 'Vendor Manager User',
           newUser: 'New User',
           addUser: 'Add User',
@@ -42,8 +44,8 @@ export const userManagementTranslation = {
   },
   es: {
     translation: {
-      userManagement: {
-        managementTable: {
+      [USER_MANAGEMENT]: {
+        table: {
           email: 'Correo electrónico',
           firstName: 'Primer nombre',
           lastName: 'Apellido',
@@ -55,7 +57,7 @@ export const userManagementTranslation = {
           modifiedDate: 'Fecha de modificación',
           user: 'Usuaria',
         },
-        managementModals: {
+        modal: {
           vendorManagerUser: 'Usuario administrador de proveedores',
           newUser: 'Nueva usuaria',
           addUser: 'Agregar usuario',
