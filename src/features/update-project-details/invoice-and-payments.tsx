@@ -12,7 +12,7 @@ import {
   VStack,
   Text,
 } from '@chakra-ui/react'
-import NumberFormat, { NumberFormatValues } from 'react-number-format'
+import { NumberFormatValues } from 'react-number-format'
 import addDays from 'date-fns/addDays'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
@@ -25,6 +25,7 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { SelectOption } from 'types/transaction.type'
+import { NumberResInput } from 'components/input/input'
 
 const InvoiceAndPayments: React.FC = () => {
   const {
@@ -63,11 +64,11 @@ const InvoiceAndPayments: React.FC = () => {
   }
 
   const onPaymentTermChange = (option: SelectOption) => {
-    const { invoiceBackDate, woaInvoiceDate } = getValues();
+    const { invoiceBackDate, woaInvoiceDate } = getValues()
     const date = new Date(
-      invoiceBackDate === null || invoiceBackDate === '' ? woaInvoiceDate as string: invoiceBackDate as string
-    );
-    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+      invoiceBackDate === null || invoiceBackDate === '' ? (woaInvoiceDate as string) : (invoiceBackDate as string),
+    )
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
     const paymentTerm = Number(option.value)
 
     // Do not calculated WOA expect date if payment term is not selected
@@ -84,7 +85,7 @@ const InvoiceAndPayments: React.FC = () => {
   }
 
   useEffect(() => {
-    if(isStatusInvoiced && !formValues.woaInvoiceDate) {
+    if (isStatusInvoiced && !formValues.woaInvoiceDate) {
       setValue('woaInvoiceDate', datePickerFormat(new Date()))
     }
   }, [isStatusInvoiced])
@@ -103,7 +104,7 @@ const InvoiceAndPayments: React.FC = () => {
                 name="originalSOWAmount"
                 render={({ field, fieldState }) => {
                   return (
-                    <NumberFormat
+                    <NumberResInput
                       value={field.value}
                       onChange={event => {
                         field.onChange(event)
@@ -146,7 +147,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="finalSOWAmount"
               render={({ field }) => {
                 return (
-                  <NumberFormat
+                  <NumberResInput
                     value={field.value}
                     onChange={event => {
                       field.onChange(event)
@@ -315,7 +316,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="overPayment"
               render={({ field }) => {
                 return (
-                  <NumberFormat
+                  <NumberResInput
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isOverPaymentDisalbed}
@@ -339,7 +340,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="remainingPayment"
               render={({ field }) => {
                 return (
-                  <NumberFormat
+                  <NumberResInput
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isRemainingPaymentDisabled}
@@ -362,7 +363,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="payment"
               render={({ field, fieldState }) => {
                 return (
-                  <NumberFormat
+                  <NumberResInput
                     value={field.value}
                     onValueChange={(values: NumberFormatValues) => {
                       onPaymentValueChange(values)

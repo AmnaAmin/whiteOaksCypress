@@ -30,8 +30,7 @@ import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
-import NumberFormat from 'react-number-format'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomRequiredInput, NumberResInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
 import {
@@ -319,10 +318,7 @@ const NewWorkOrder: React.FC<{
 
                 <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
 
-                <InformationCard
-                  title="finalSowAmount"
-                  date={finalSOWAmount}
-                />
+                <InformationCard title="finalSowAmount" date={finalSOWAmount} />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
@@ -397,7 +393,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberResInput
                                 value={field.value}
                                 thousandSeparator
                                 customInput={CustomRequiredInput}
@@ -426,7 +422,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberResInput
                                 value={field.value}
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
@@ -457,7 +453,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberResInput
                                 value={field.value}
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
