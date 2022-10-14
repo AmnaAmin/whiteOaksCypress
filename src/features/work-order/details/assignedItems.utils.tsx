@@ -1120,7 +1120,7 @@ export const useGetLineItemsColumn = ({
         }
       },
       accessor: 'vendorAmount',
-      width: 100,
+      width: 150,
       Cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
