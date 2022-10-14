@@ -96,7 +96,12 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t(`${TRANSACTION}.createdBy`)} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.createdBy`)}
+          name="createdBy"
+          value={formValues.createdBy as string}
+          Icon={BiDetail}
+        />
       </GridItem>
 
       <GridItem>
@@ -602,7 +607,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
-                      {t(`${TRANSACTION}.paymentReceivedDate`)}
+                        {t(`${TRANSACTION}.paymentReceivedDate`)}
                       </FormLabel>
                       <Input
                         data-testid="payment-received-date"

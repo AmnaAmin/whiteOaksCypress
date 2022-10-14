@@ -14,7 +14,9 @@ const InfoStructureCard: React.FC<{ amount; isLoading: boolean } & CenterProps> 
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
       <Box fontSize="16px" fontWeight={400} color="gray.500">
-        <Text color="gray.600" noOfLines={1}>{title}</Text>
+        <Text color="gray.600" noOfLines={1}>
+          {title}
+        </Text>
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
@@ -36,11 +38,24 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
   return (
     <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
       <InfoStructureCard amount={finalSOWAmount} title={t('projects.projectAmount.finalSOW')} isLoading={isLoading} />
-      <InfoStructureCard amount={accountPayable} isLoading={isLoading} title={t('projects.projectAmount.accountPayable')} />
-      <InfoStructureCard amount={projectTotalCost} isLoading={isLoading} title={t('projects.projectAmount.projectCost')} />
+      <InfoStructureCard
+        amount={accountPayable}
+        isLoading={isLoading}
+        title={t('projects.projectAmount.accountPayable')}
+      />
+      <InfoStructureCard
+        amount={projectTotalCost}
+        isLoading={isLoading}
+        title={t('projects.projectAmount.projectCost')}
+      />
       <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} />
       <InfoStructureCard amount={profits} isLoading={isLoading} title={t('projects.projectAmount.profits')} />
-      <InfoStructureCard amount={profitMargin} isLoading={isLoading} title={t('projects.projectAmount.profitMargins')} border="none" />
+      <InfoStructureCard
+        amount={profitMargin}
+        isLoading={isLoading}
+        title={t('projects.projectAmount.profitMargins')}
+        border="none"
+      />
     </Flex>
   )
 }

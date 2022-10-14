@@ -291,7 +291,10 @@ const WorkOrderDetailTab = props => {
                 }
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-              <CalenderCard title={t(`${WORK_ORDER}.completionVariance`)} date={workOrderCompletionDateVariance ?? '0'} />
+              <CalenderCard
+                title={t(`${WORK_ORDER}.completionVariance`)}
+                date={workOrderCompletionDateVariance ?? '0'}
+              />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />

@@ -87,7 +87,7 @@ const InvoiceAndPayments: React.FC = () => {
     if (isStatusInvoiced && !formValues.woaInvoiceDate) {
       setValue('woaInvoiceDate', datePickerFormat(new Date()))
     }
-    setValue('remainingPayment',  getValues().overPayment ? 0 : getValues().remainingPayment)
+    setValue('remainingPayment', getValues().overPayment ? 0 : getValues().remainingPayment)
   }, [isStatusInvoiced])
 
   const { t } = useTranslation()

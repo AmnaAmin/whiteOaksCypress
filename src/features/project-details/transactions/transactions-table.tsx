@@ -86,7 +86,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         },
       },
       {
-        Header: t(`${TRANSACTION}.totalAmount`), 
+        Header: t(`${TRANSACTION}.totalAmount`),
         accessor: 'transactionTotal',
         Cell(cellInfo) {
           return numeral(cellInfo.value).format('$0,0.00')

@@ -143,7 +143,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
           <GridItem>
             <FormControl isInvalid={!formValues?.claimantsSignature}>
               <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
-              {t(`${TRANSACTION}.claimantsSignature`)}
+                {t(`${TRANSACTION}.claimantsSignature`)}
               </FormLabel>
               <Button
                 pos="relative"
