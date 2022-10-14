@@ -22,14 +22,12 @@ const Client = ({
   marketOptions,
   onClose: close,
   isOpen: open,
-  setSelectedClient,
 }: {
   states
   marketOptions
   clientDetails: ClientFormValues
   onClose: () => void
   isOpen: boolean
-  setSelectedClient: (value) => void
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -72,7 +70,6 @@ const Client = ({
                 states={states}
                 marketOptions={marketOptions}
                 onClose={onClose}
-                setSelectedClient={setSelectedClient}
               />
             </Box>
           </ModalBody>

@@ -48,9 +48,8 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { marketSelectOptions } = useMarkets()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
-  console.log('selectedClient', selectedClient)
   useEffect(() => {
-    if (clients && clients.length > 0 && !selectedClient?.id) {
+    if (clients && clients.length > 0 && selectedClient?.id) {
       const updatedClient = clients?.find(c => c.id === selectedClient?.id)
       if (updatedClient) {
         setSelectedClient({ ...updatedClient })
@@ -104,7 +103,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
           clientDetails={selectedClient as Clients}
           states={states}
           marketOptions={marketSelectOptions}
-          setSelectedClient={setSelectedClient}
           onClose={() => {
             refetch()
             setSelectedClient(undefined)

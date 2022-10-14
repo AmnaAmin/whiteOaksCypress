@@ -32,11 +32,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
     borderTop: '1px solid #CBD5E0',
   }
 
-  const {
-    register,
-    control,
-    reset,
-  } = useForm()
+  const { register, control, reset } = useForm()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -80,12 +76,12 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             </Box>
           )}
           {!isProjectCoordinator && (
-          <FormControl {...textAreaStyle}>
-            <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-              {t('enterNewNote')}
-            </FormLabel>
-            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
-          </FormControl>
+            <FormControl {...textAreaStyle}>
+              <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
+                {t('enterNewNote')}
+              </FormLabel>
+              <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
+            </FormControl>
           )}
         </form>
       </Box>

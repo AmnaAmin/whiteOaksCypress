@@ -1,5 +1,5 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import DetailsTab from 'features/clients/client-details-tab'
@@ -20,7 +20,7 @@ type ClientDetailsTabsProps = {
   updateClientId?: (number) => void
   states?: any
   marketOptions?: any
-  setSelectedClient?: (val) => void
+  setCreatedClientId?: (val) => void
 }
 
 export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps, ref) => {
@@ -41,8 +41,12 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
 
   // Setting Default Values
-  const methods = useForm<ClientFormValues>({
-    defaultValues: {
+  const methods = useForm<ClientFormValues>()
+
+  const { handleSubmit: handleSubmit2, control, reset } = methods
+
+  useEffect(() => {
+    reset({
       ...clientDetails,
       paymentTerm: paymentTermsValue || { label: '20', value: '20' },
       state: stateValue,
@@ -64,17 +68,14 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
       accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
         ? clientDetails?.accountPayableContactInfos
         : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
-    },
-  })
-
-  const { handleSubmit: handleSubmit2, control } = methods
+    })
+  }, [clientDetails])
 
   const onSubmit = useCallback(
     async values => {
       const queryOptions = {
         onSuccess(response) {
-          console.log(response.data?.id)
-          props?.setSelectedClient?.(response.data?.id)
+          props?.setCreatedClientId?.(response.data?.id)
         },
       }
       const clientPayload = {

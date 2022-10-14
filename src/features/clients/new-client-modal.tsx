@@ -9,34 +9,28 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react'
 import { t } from 'i18next'
-import React, { useState } from 'react'
-import { useClients } from 'api/clients'
+import React from 'react'
 import { ClientDetailsTabs } from 'pages/client-details'
-
-export const NewVendorTabs: React.FC<{ onClose: () => void }> = props => {
-  const [clientId, setClientId] = useState(0)
-  const { data: clients, refetch } = useClients()
-
-  return (
-    <ClientDetailsTabs
-      clientModalType="editClient"
-      clientDetails={clientId ? clients : undefined}
-      refetch={refetch}
-      onClose={props.onClose}
-      updateClientId={setClientId}
-    />
-  )
-}
 
 type NewClientModalType = {
   isOpen: boolean
   onClose: () => void
+  setCreatedClientId: (val) => void
+  createdClient: any
 }
 
 const NewClientModal: React.FC<NewClientModalType> = props => {
   return (
     <Box>
-      <Modal onClose={props.onClose} isOpen={props.isOpen} size="6xl">
+      <Modal
+        closeOnOverlayClick={false}
+        onClose={() => {
+          props.setCreatedClientId(null)
+          props.onClose()
+        }}
+        isOpen={props.isOpen}
+        size="6xl"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader mb="5px" borderBottom="2px solid #E2E8F0">
@@ -47,7 +41,12 @@ const NewClientModal: React.FC<NewClientModalType> = props => {
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody>
             <ClientDetailsTabs
-              onClose={props.onClose}
+              clientDetails={props.createdClient}
+              setCreatedClientId={props.setCreatedClientId}
+              onClose={() => {
+                props.setCreatedClientId(null)
+                props.onClose()
+              }}
             />
           </ModalBody>
         </ModalContent>
