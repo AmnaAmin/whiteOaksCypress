@@ -15,6 +15,7 @@ import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
+import { CLIENTS } from './clients.i18n'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -46,7 +47,7 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('name')}
+              {t(`${CLIENTS}.name`)} 
               </FormLabel>
               <Input
                 width="215px"
