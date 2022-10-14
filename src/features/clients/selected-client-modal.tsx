@@ -16,7 +16,21 @@ import { ClientDetailsTabs } from 'pages/client-details'
 import { useCallback, useEffect } from 'react'
 import { ClientFormValues } from 'types/client.type'
 
-const Client = ({ clientDetails, states, marketOptions, onClose: close, isOpen: open }: { states, marketOptions, clientDetails: ClientFormValues; onClose: () => void; isOpen: boolean }) => {
+const Client = ({
+  clientDetails,
+  states,
+  marketOptions,
+  onClose: close,
+  isOpen: open,
+  setSelectedClient,
+}: {
+  states
+  marketOptions
+  clientDetails: ClientFormValues
+  onClose: () => void
+  isOpen: boolean
+  setSelectedClient: (value) => void
+}) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const onClose = useCallback(() => {
@@ -52,7 +66,14 @@ const Client = ({ clientDetails, states, marketOptions, onClose: close, isOpen: 
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} states={states} marketOptions={marketOptions} onClose={onClose} />
+              <ClientDetailsTabs
+                clientModalType="editClient"
+                clientDetails={clientDetails}
+                states={states}
+                marketOptions={marketOptions}
+                onClose={onClose}
+                setSelectedClient={setSelectedClient}
+              />
             </Box>
           </ModalBody>
         </ModalContent>

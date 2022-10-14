@@ -105,6 +105,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
           clientDetails={selectedClient as Clients}
           states={states}
           marketOptions={marketSelectOptions}
+          setSelectedClient={setSelectedClient}
           onClose={() => {
             refetch()
             setSelectedClient(undefined)
@@ -121,7 +122,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         tableHeight="calc(100vh - 225px)"
         name="clients-table"
         onRowClick={(e, row) => {
-          setSelectedClient(row.original) 
+          setSelectedClient(row.original)
           onOpen()
         }}
       />

@@ -23,6 +23,7 @@ type ClientDetailsTabsProps = {
   updateClientId?: (number) => void
   states?: any
   marketOptions?: any
+  setSelectedClient?: (val) => void
 }
 
 export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps, ref) => {
@@ -32,7 +33,6 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const marketSelectOptions = props?.marketOptions
   const { mutate: editClientDetails } = useUpdateClientDetails()
   const { mutate: addNewClientDetails } = useSaveNewClientDetails()
-  const [createdClientID, setCreatedClientId] = useState(0)
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -41,7 +41,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   // Setting Dropdown values
   const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
   const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
-console.log('...',stateValue)
+  console.log('...', stateValue)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
 
   // Setting Default Values
@@ -78,8 +78,7 @@ console.log('...',stateValue)
       const queryOptions = {
         onSuccess(response) {
           console.log(response.data?.id)
-          setCreatedClientId(response.data?.id)
-          console.log('createdClientID', response.data?.id)
+          props?.setSelectedClient?.(response.data?.id)
         },
       }
       console.log('...values', values)
