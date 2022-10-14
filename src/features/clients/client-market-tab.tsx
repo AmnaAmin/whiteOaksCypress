@@ -1,12 +1,11 @@
 import { Box, Flex, Button } from '@chakra-ui/react'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useForm, useFormContext } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 import { ClientFormValues } from 'types/client.type'
-import { useSaveNewClientDetails, useUpdateClientDetails } from 'api/clients'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -19,8 +18,6 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
   const { markets } = useMarkets()
   const { t } = useTranslation()
   const { isProjectCoordinator } = useUserRolesSelector()
-  const { mutate: editClientDetails } = useUpdateClientDetails()
-  const { mutate: addNewClientDetails } = useSaveNewClientDetails()
 
   const btnStyle = {
     alignItems: 'center',
@@ -28,34 +25,13 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
     borderTop: '1px solid #CBD5E0',
   }
 
-  const formReturn = useForm<ClientFormValues>()
-  const { register } = formReturn
-
-  const onSubmit = useCallback(
-    async values => {
-      const queryOptions = {
-        onSuccess() {},
-      }
-      if (values?.id) {
-        const editMarketPayload = {
-          ...values,
-        }
-        editClientDetails(editMarketPayload, queryOptions)
-      } else {
-        const newMarketPayload = {
-          ...values,
-        }
-        console.log('newMarketPayload...', newMarketPayload)
-        addNewClientDetails(newMarketPayload, queryOptions)
-      }
-    },
-    [addNewClientDetails],
-  )
+  const {
+    register,
+  } = useFormContext<ClientFormValues>()
 
   return (
     <>
       <Box h="400px" overflow="auto">
-        <form onSubmit={formReturn.handleSubmit(onSubmit)} id="marketDetails">
           <Flex maxW="800px" wrap="wrap" gridGap={3} pl={4}>
             {markets?.map(m => {
               return (
@@ -70,10 +46,9 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
               )
             })}
           </Flex>
-        </form>
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isProjectCoordinator ? 'outline' : ''} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
           {t('cancel')}
         </Button>
         {!isProjectCoordinator && (

@@ -57,8 +57,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     }
   }, [clients])
 
-  console.log('selectedClient', selectedClient)
-
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {

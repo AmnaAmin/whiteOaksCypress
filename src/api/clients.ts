@@ -1,4 +1,5 @@
 import { useToast } from '@chakra-ui/react'
+import { reset } from 'numeral'
 import { Control, useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
@@ -88,6 +89,7 @@ export const useClientNoteMutation = clientId => {
           isClosable: true,
           position: 'top-left',
         })
+        reset()
       },
       onError(error: any) {
         toast({

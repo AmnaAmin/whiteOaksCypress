@@ -6,11 +6,8 @@ import DetailsTab from 'features/clients/client-details-tab'
 import { Market } from 'features/clients/client-market-tab'
 import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
-// import { ClientFormValues } from 'types/client.type'
-// import { useUpdateClientDetails } from 'api/clients'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
-import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
 import { useSaveNewClientDetails, useUpdateClientDetails } from 'api/clients'
 import { client } from 'utils/api-client'
@@ -41,7 +38,6 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   // Setting Dropdown values
   const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
   const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
-  console.log('...', stateValue)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
 
   // Setting Default Values
@@ -71,17 +67,16 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     },
   })
 
-  const { handleSubmit, control } = methods
+  const { handleSubmit: handleSubmit2, control } = methods
 
   const onSubmit = useCallback(
     async values => {
       const queryOptions = {
         onSuccess(response) {
-          console.log(response.data?.id)
+          // console.log(response.data?.id)
           props?.setSelectedClient?.(response.data?.id)
         },
       }
-      console.log('...values', values)
       const clientPayload = {
         ...values,
         paymentTerm: values.paymentTerm?.value,
@@ -102,7 +97,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit, err => console.log('err..', err))} id="clientDetails">
+      <form onSubmit={handleSubmit2(onSubmit, err => console.log('err..', err))} id="clientDetails">
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <Tab>{t('details')}</Tab>
