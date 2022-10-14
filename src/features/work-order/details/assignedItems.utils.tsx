@@ -741,6 +741,24 @@ export const useFieldEnableDecision = ({ workOrder }) => {
   }
 }
 
+const setColumnsByConditions = (columns, workOrder, isVendor) => {
+  if (workOrder) {
+    columns = columns.filter(c => !['assigned'].includes(c.accessor))
+    if (isVendor) {
+      if (workOrder.showPricing) {
+        columns = columns.filter(
+          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessor),
+        )
+      } else {
+        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessor))
+      }
+    }
+  } else {
+    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessor))
+  }
+  return columns
+}
+
 export const useGetLineItemsColumn = ({
   unassignedItems,
   setUnAssignedItems,
@@ -1221,21 +1239,6 @@ export const useGetLineItemsColumn = ({
       },
     },
   ]
-
-  if (workOrder) {
-    columns = columns.filter(c => !['assigned'].includes(c.accessor))
-    if (isVendor) {
-      if (workOrder.showPricing) {
-        columns = columns.filter(
-          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessor),
-        )
-      } else {
-        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessor))
-      }
-    }
-  } else {
-    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessor))
-  }
-
+  columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }
