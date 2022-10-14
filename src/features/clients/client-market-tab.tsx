@@ -55,7 +55,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           <Button
             colorScheme="brand"
             type="submit"
-            form="marketDetails" //onClick={props.setNextTab}
+            form="clientDetails" //onClick={props.setNextTab}
             ml={2}
           >
             {t('save')}

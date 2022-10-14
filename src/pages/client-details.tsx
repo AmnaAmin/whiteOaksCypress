@@ -73,7 +73,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     async values => {
       const queryOptions = {
         onSuccess(response) {
-          // console.log(response.data?.id)
+          console.log(response.data?.id)
           props?.setSelectedClient?.(response.data?.id)
         },
       }

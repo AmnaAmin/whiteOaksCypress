@@ -48,6 +48,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { marketSelectOptions } = useMarkets()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
+  console.log('selectedClient', selectedClient)
   useEffect(() => {
     if (clients && clients.length > 0 && !selectedClient?.id) {
       const updatedClient = clients?.find(c => c.id === selectedClient?.id)

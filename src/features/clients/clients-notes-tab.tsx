@@ -23,7 +23,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
   const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
 
   const { notes = [] } = useNotes({
-    clientId: clientDetails?.id,
+    clientId: clientDetails ? clientDetails?.id : 0,
   })
 
   const btnStyle = {
