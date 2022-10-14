@@ -82,6 +82,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         ...values,
         paymentTerm: values.paymentTerm?.value,
         state: values.state?.id,
+        markets: values.markets.filter(market => market && market.id).map(market => ({ id: market.id })),
         contacts: values.contacts?.map(c => ({
           ...c,
           market: c.market?.value,
