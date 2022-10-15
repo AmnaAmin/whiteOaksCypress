@@ -1119,7 +1119,7 @@ export const useGetLineItemsColumn = ({
         }
       },
       accessorKey: 'vendorAmount',
-      size: 150,
+      size: 160,
       cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
