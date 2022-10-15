@@ -67,7 +67,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
         columnFilters: columnFiltersState,
       }
     : {}
-  console.log('columnFilterState', columnFilterState)
+
   const tableInstance = useReactTable({
     data: data ?? emptyRows,
     columns,
