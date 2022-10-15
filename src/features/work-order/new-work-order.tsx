@@ -44,6 +44,7 @@ import {
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
 
 const CalenderCard = props => {
   return (
@@ -422,7 +423,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberInput
+                              <NumberFormat
                                 value={field.value}
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
