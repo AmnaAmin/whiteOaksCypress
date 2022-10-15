@@ -12,7 +12,7 @@ import {
   VStack,
   Text,
 } from '@chakra-ui/react'
-import NumberFormat, { NumberFormatValues } from 'react-number-format'
+import { NumberFormatValues } from 'react-number-format'
 import addDays from 'date-fns/addDays'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
@@ -25,6 +25,7 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { SelectOption } from 'types/transaction.type'
+import { NumberInput } from 'components/input/input'
 
 const InvoiceAndPayments: React.FC = () => {
   const {
@@ -104,7 +105,7 @@ const InvoiceAndPayments: React.FC = () => {
                 name="originalSOWAmount"
                 render={({ field, fieldState }) => {
                   return (
-                    <NumberFormat
+                    <NumberInput
                       value={field.value}
                       onChange={event => {
                         field.onChange(event)
@@ -147,7 +148,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="finalSOWAmount"
               render={({ field }) => {
                 return (
-                  <NumberFormat
+                  <NumberInput
                     value={field.value}
                     onChange={event => {
                       field.onChange(event)
@@ -316,7 +317,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="overPayment"
               render={({ field }) => {
                 return (
-                  <NumberFormat
+                  <NumberInput
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isOverPaymentDisalbed}
@@ -341,7 +342,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="remainingPayment"
               render={({ field }) => {
                 return (
-                  <NumberFormat
+                  <NumberInput
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isRemainingPaymentDisabled}
@@ -364,7 +365,7 @@ const InvoiceAndPayments: React.FC = () => {
               name="payment"
               render={({ field, fieldState }) => {
                 return (
-                  <NumberFormat
+                  <NumberInput
                     value={field.value}
                     onValueChange={(values: NumberFormatValues) => {
                       onPaymentValueChange(values)
