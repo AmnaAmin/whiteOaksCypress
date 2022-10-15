@@ -50,7 +50,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     pagination.pageSize,
   )
 
-  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
+  const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
@@ -93,7 +93,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
           <ButtonsWrapper>
             <ExportButton
               columns={tableColumns}
-              data={allProjects}
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"

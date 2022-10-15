@@ -41,6 +41,24 @@ export const usePaginatedAccountPayable = (queryString: string, pageSize: number
   }
 }
 
+const GET_ALL_WORKORDERS_QUERY_KEY = 'all_workorders_api_key'
+// This hook of getting workorders from backend is only for export button of payable table
+export const useGetAllWorkOrders = (queryString: string) => {
+  const client = useClient()
+  const apiQueryString = getPayableQueryString(queryString)
+
+  return useQuery(
+    [GET_ALL_WORKORDERS_QUERY_KEY, apiQueryString],
+    async () => {
+      const response = await client(`all_workorders?${apiQueryString}`, {})
+      return response?.data?.workOrders
+    },
+    {
+      enabled: false,
+    },
+  )
+}
+
 export const useBatchProcessingMutation = () => {
   const client = useClient()
   return useMutation(id => {

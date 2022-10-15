@@ -32,7 +32,7 @@ export const Payable = () => {
   const { handleSubmit, register, reset, control } = useForm()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
+  const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
     pagination,
     setPagination,
@@ -119,6 +119,7 @@ export const Payable = () => {
             setPagination={setPagination}
             setColumnFilters={setColumnFilters}
             queryStringWithPagination={queryStringWithPagination}
+            queryStringWithoutPagination={queryStringWithoutPagination}
           />
         </Box>
       ) : (
