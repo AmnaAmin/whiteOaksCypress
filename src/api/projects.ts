@@ -179,6 +179,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     revenue: numeral(finalSOWAmount).format('$0,0.00'),
     profits: numeral(finalSOWAmount - projectTotalCost).format('$0,0.00'),
     profitMargin: numeral(profitMargin).format('0.00%'),
+    projectTotalCostNumber: projectTotalCost,
     financialOveriewTableData:
       [firstFinancialRecord]?.map(fo => ({
         ...fo,

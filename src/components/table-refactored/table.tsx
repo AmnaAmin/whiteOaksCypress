@@ -1,7 +1,7 @@
 import React from 'react'
 import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
 
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Box } from '@chakra-ui/react'
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Box, Tfoot } from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -86,13 +86,22 @@ type TableProps = {
   onRowClick?: (row: any) => void
   isLoading?: boolean
   isEmpty?: boolean
+  isHideFilters?: boolean
+  isShowFooter?: boolean
 }
 
-export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ...restProps }) => {
+export const Table: React.FC<TableProps> = ({
+  isLoading,
+  onRowClick,
+  isEmpty,
+  isHideFilters,
+  isShowFooter,
+  ...restProps
+}) => {
   const { t } = useTranslation()
 
   const tableInstance = useTableInstance()
-  const { getHeaderGroups, getRowModel } = tableInstance
+  const { getHeaderGroups, getRowModel, getFooterGroups } = tableInstance
 
   const getColumnMaxMinWidths = (column: any) => {
     const columnWidth = column?.getSize() + 'px'
@@ -104,7 +113,7 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
   }
 
   return (
-    <Stack display="table" minH="calc(100% - 42px)" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative">
+    <Stack display="table" minH="100%" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative">
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
           {getHeaderGroups().map(headerGroup => (
@@ -160,27 +169,32 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
           ))}
 
           {/** Header Filter Input Field for each column */}
-          {getHeaderGroups().map(headerGroup => (
-            <Tr key={`th_${headerGroup.id}`}>
-              {headerGroup.headers.map(header => (
-                <Th
-                  key={`th_td_${header.id}`}
-                  py="3"
-                  position="sticky"
-                  top="40px"
-                  borderTop="1px solid #ddd"
-                  bg="#F7FAFC"
-                  {...getColumnMaxMinWidths(header.column)}
-                >
-                  {header.column.getCanFilter() ? (
-                    <div>
-                      <Filter column={header.column} table={tableInstance} />
-                    </div>
-                  ) : null}
-                </Th>
-              ))}
-            </Tr>
-          ))}
+          {!isHideFilters &&
+            getHeaderGroups().map(headerGroup => {
+              return (
+                <Tr key={`th_${headerGroup.id}`}>
+                  {headerGroup.headers.map(header => {
+                    return (
+                      <Th
+                        key={`th_td_${header.id}`}
+                        py="3"
+                        position="sticky"
+                        top="40px"
+                        borderTop="1px solid #ddd"
+                        bg="#F7FAFC"
+                        {...getColumnMaxMinWidths(header.column)}
+                      >
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={tableInstance} />
+                          </div>
+                        ) : null}
+                      </Th>
+                    )
+                  })}
+                </Tr>
+              )
+            })}
         </Thead>
 
         {isEmpty ? (
@@ -194,47 +208,68 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, isEmpty, ..
             </Tr>
           </Tbody>
         ) : (
-          <Tbody>
-            {isLoading
-              ? getRowModel().rows.map(row => {
-                  return (
-                    <Tr key={row.id}>
+          <>
+            <Tbody>
+              {isLoading
+                ? getRowModel().rows.map(row => {
+                    return (
+                      <Tr key={row.id}>
+                        {row.getVisibleCells().map(cell => {
+                          return (
+                            <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
+                              <BlankSlate size="sm" width="100%" />
+                            </Td>
+                          )
+                        })}
+                      </Tr>
+                    )
+                  })
+                : getRowModel().rows.map(row => (
+                    <Tr
+                      key={row.id}
+                      onClick={() => onRowClick?.(row.original)}
+                      cursor={onRowClick ? 'pointer' : 'default'}
+                      _hover={{
+                        bg: 'gray.50',
+                      }}
+                    >
                       {row.getVisibleCells().map(cell => {
+                        const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+
                         return (
-                          <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
-                            <BlankSlate size="sm" width="100%" />
+                          <Td
+                            key={cell.id}
+                            isTruncated
+                            title={cell.getContext()?.getValue() as string}
+                            {...getColumnMaxMinWidths(cell.column)}
+                          >
+                            {value}
+                          </Td>
+                        )
+                      })}
+                    </Tr>
+                  ))}
+            </Tbody>
+
+            {isShowFooter && (
+              <Tfoot>
+                {getFooterGroups().map(footerGroup => {
+                  return (
+                    <Tr>
+                      {footerGroup.headers.map(footer => {
+                        const footerValue = flexRender(footer.column.columnDef.footer, footer.getContext())
+                        return (
+                          <Td pos="sticky" bottom="0" fontWeight={'bold'} py="4">
+                            {footerValue}
                           </Td>
                         )
                       })}
                     </Tr>
                   )
-                })
-              : getRowModel().rows.map(row => (
-                  <Tr
-                    key={row.id}
-                    onClick={() => onRowClick?.(row.original)}
-                    cursor={onRowClick ? 'pointer' : 'default'}
-                    _hover={{
-                      bg: 'gray.50',
-                    }}
-                  >
-                    {row.getVisibleCells().map(cell => {
-                      const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-
-                      return (
-                        <Td
-                          key={cell.id}
-                          isTruncated
-                          title={cell.getContext()?.getValue() as string}
-                          {...getColumnMaxMinWidths(cell.column)}
-                        >
-                          {value}
-                        </Td>
-                      )
-                    })}
-                  </Tr>
-                ))}
-          </Tbody>
+                })}
+              </Tfoot>
+            )}
+          </>
         )}
       </ChakraTable>
     </Stack>
