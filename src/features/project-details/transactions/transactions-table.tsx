@@ -34,13 +34,17 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
+  const { columnFilters, setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: TRANSACTION_TABLE_QUERIES_KEY,
     pagination,
     setPagination,
   })
 
-  const { transactions, isLoading, totalPages } = useTransactions(fitlersQueryString, pagination.pageSize, projectId)
+  const { transactions, isLoading, totalPages } = useTransactions(
+    queryStringWithPagination,
+    pagination.pageSize,
+    projectId,
+  )
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {

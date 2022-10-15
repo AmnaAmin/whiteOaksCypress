@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from '../utils/auth-context'
 import { orderBy } from 'lodash'
 import { useState } from 'react'
+import { usePaginationQuery } from 'api'
 declare global {
   interface Window {
     batchTimer?: any
@@ -20,6 +21,26 @@ export const useAccountPayable = () => {
   })
 }
 
+const getPayableQueryString = (filterQueryString: string) => {
+  return filterQueryString ? filterQueryString + `&sort=expectedPaymentDate,asc` : 'sort=expectedPaymentDate,asc'
+}
+type PayableResponse = { workOrders: Array<any> }
+export const usePaginatedAccountPayable = (queryString: string, pageSize: number) => {
+  const apiQueryString = getPayableQueryString(queryString)
+
+  const { data, ...rest } = usePaginationQuery<PayableResponse>(
+    [ACCONT_PAYABLE_API_KEY, apiQueryString],
+    `all_workorders?${apiQueryString}`,
+    pageSize,
+  )
+
+  return {
+    workOrders: data?.data?.workOrders,
+    totalPages: data?.totalCount,
+    ...rest,
+  }
+}
+
 export const useBatchProcessingMutation = () => {
   const client = useClient()
   return useMutation(id => {
@@ -30,10 +51,11 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, loading) => {
+export const useCheckBatch = (setLoading, loading, queryString) => {
   const [isAPIEnabled, setAPIEnabled] = useState(false)
   const client = useClient()
   const queryClient = useQueryClient()
+  const apiQueryString = getPayableQueryString(queryString)
 
   return useQuery(
     ['accountPayableBatchCheck'],
@@ -48,7 +70,7 @@ export const useCheckBatch = (setLoading, loading) => {
           setLoading(false)
           setAPIEnabled(false)
 
-          queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
+          queryClient.invalidateQueries([ACCONT_PAYABLE_API_KEY, apiQueryString])
         }
       },
       enabled: loading && isAPIEnabled,
