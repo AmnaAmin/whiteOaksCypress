@@ -3,6 +3,7 @@ import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { STATUS } from 'features/common/status'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { dateFormat } from 'utils/date-time-utils'
 
@@ -28,13 +29,15 @@ const Misc: React.FC = () => {
     status,
   } = getValues()
 
+  const { t } = useTranslation()
+
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Created
+              {t(`project.projectDetails.created`)}
             </FormLabel>
 
             <DatePickerInput value={dateCreated ? dateFormat(dateCreated) : 'mm/dd/yyyy'} disable />
@@ -45,7 +48,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Active
+              {t(`project.projectDetails.active`)}
             </FormLabel>
 
             <DatePickerInput value={activeDate ? dateFormat(activeDate) : 'mm/dd/yyyy'} disable />
@@ -56,7 +59,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Punch
+              {t(`project.projectDetails.punch`)}
             </FormLabel>
 
             <DatePickerInput value={punchDate ? dateFormat(punchDate) : 'mm/dd/yyyy'} disable />
@@ -67,7 +70,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Closed
+              {t(`project.projectDetails.closed`)}
             </FormLabel>
 
             <DatePickerInput value={closedDate ? dateFormat(closedDate) : 'mm/dd/yyyy'} disable />
@@ -78,7 +81,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Client Paid
+              {t(`project.projectDetails.clientPaid`)}
             </FormLabel>
 
             <DatePickerInput value={clientPaidDate ? dateFormat(clientPaidDate) : 'mm/dd/yyyy'} disable />
@@ -89,7 +92,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Collection
+              {t(`project.projectDetails.collection`)}
             </FormLabel>
 
             <DatePickerInput
@@ -103,7 +106,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              Disputed
+              {t(`project.projectDetails.disputed`)}
             </FormLabel>
 
             <DatePickerInput
@@ -118,7 +121,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-              WOA Paid
+              {t(`project.projectDetails.woaPaid`)}
             </FormLabel>
 
             <DatePickerInput value={woaPaidDate ? dateFormat(woaPaidDate) : 'mm/dd/yyyy'} disable />
@@ -128,8 +131,8 @@ const Misc: React.FC = () => {
         </GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.dueDateVariance} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance">
-              Due Date Variance
+            <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance" noOfLines={1}>
+              {t(`project.projectDetails.dueDateVariance`)}
             </FormLabel>
             <Input value={dueDateVariance as number} isDisabled id="dueDate" {...register('dueDateVariance')} />
             <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
@@ -138,7 +141,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.payDateVariance} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="payDateVariance">
-              Pay Date Variance
+              {t(`project.projectDetails.payDateVariance`)}
             </FormLabel>
 
             <Input value={payDateVariance as number} isDisabled id="payDateVariance" />
@@ -147,7 +150,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
-              Pay Variance
+              {t(`project.projectDetails.payVariance`)}
             </FormLabel>
             <Input value={payVariance as number} isDisabled id="payVariance" />
           </FormControl>

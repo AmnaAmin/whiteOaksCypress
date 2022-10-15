@@ -107,9 +107,6 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
 
   // Vendor
   const rightMarginX = doc.internal.pageSize.getWidth() - 80 /* starting point of right margin text */
-  doc.setFontSize(12).setFont(baseFont)
-  doc.text('Vendor', 15, 20)
-  doc.text(workOrder?.companyName, 15, 25)
 
   // Heading
   doc.setFontSize(22).setFont(baseFont, 'bold')
@@ -120,6 +117,9 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   doc.text(woAddress?.companyName, 15, 45)
   doc.text(woAddress?.streetAddress, 15, 50)
   doc.text(woAddress?.city + ', ' + woAddress?.state + ' ' + woAddress?.zipCode, 15, 55)
+
+  doc.text('Vendor', 15, 65)
+  doc.text(workOrder?.companyName, 15, 70)
 
   // Specifications
   doc.setFont(baseFont, 'bold')

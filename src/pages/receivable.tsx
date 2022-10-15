@@ -35,7 +35,7 @@ export const Receivable = () => {
   const setProjectTableInstance = tableInstance => {
     setInstance(tableInstance)
   }
-  const { handleSubmit, register, control, reset } = useForm()
+  const { handleSubmit, register, control, reset, setValue } = useForm()
 
   const formValues = useWatch({ control })
 
@@ -49,19 +49,23 @@ export const Receivable = () => {
   }, [loading])
 
   const Submit = formValues => {
-    const payloadData = compact(formValues.id).map(id => ({
-      id: parseInt(id as string),
-      type: 'draw',
+    const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
+      id: row?.projectId,
+      type: row?.type,
     }))
-
-    if (!payloadData.length) return
+    if (!receivableProjects?.length) return
 
     setLoading(true)
     setIsBatchClick(true)
     const obj = {
       typeCode: 'AR',
-      entities: payloadData,
+      entities: receivableProjects,
     }
+
+    if (receivableProjects.length === 0) return
+
+    setLoading(true)
+    setIsBatchClick(true)
 
     batchCall(obj as any, {
       onSuccess: () => {
@@ -158,6 +162,7 @@ export const Receivable = () => {
         Header: t('checkbox'),
         accessor: 'checkbox',
         Cell: ({ row }) => {
+          const onChange = { ...register(`id.${row.index}`) }.onChange
           return (
             <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
               <Checkbox
@@ -165,6 +170,10 @@ export const Receivable = () => {
                 variant="link"
                 value={row.original?.projectId}
                 {...register(`id.${row.index}`)}
+                onChange={e => {
+                  onChange(e)
+                  setValue(`selected.${row.index}`, e.target.checked ? row.original : null)
+                }}
                 isChecked={!!formValues?.id?.[row.index]}
               />
             </Flex>

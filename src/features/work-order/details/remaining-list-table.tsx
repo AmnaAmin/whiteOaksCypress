@@ -34,7 +34,8 @@ type CellInputType = {
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
   autoFocus?: boolean
-  setIsFocus?: any
+  setIsFocus?: (val) => void
+  rules?: any
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -51,6 +52,7 @@ const renderInput = (props: CellInputType) => {
     setSelectedCell,
     autoFocus,
     setIsFocus,
+    rules,
   } = props
 
   const isNew = values?.remainingItems[row?.index]?.action === 'new'
@@ -66,6 +68,7 @@ const renderInput = (props: CellInputType) => {
           onChange={handleChange}
           autoFocus={autoFocus}
           setIsFocus={setIsFocus}
+          rules={rules}
         ></InputField>
       ) : (
         <EditableField
@@ -127,6 +130,7 @@ const CellComp = ({ cell, row }) => {
           fontWeight="400"
           maxHeight={'60px'}
           overflow="hidden"
+          width={'100%'}
         >
           {cell.render('Cell', { isFocus, setIsFocus })}
         </Box>
@@ -134,6 +138,7 @@ const CellComp = ({ cell, row }) => {
     </Td>
   )
 }
+
 const RemainingListTable = (props: RemainingListType) => {
   const {
     selectedItems,
@@ -156,15 +161,11 @@ const RemainingListTable = (props: RemainingListType) => {
   }, [total])
 
   const handleQuantityChange = (e, index) => {
-    if (e?.target?.value !== '') {
-      setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.unitPrice) })
-    }
+    setTotal({ index, value: Number(e?.target?.value * Number(remainingItemsWatch[index]?.unitPrice)) })
   }
 
   const handleUnitPriceChange = (e, index) => {
-    if (e?.target?.value !== '') {
-      setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
-    }
+    setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
   }
 
   const REMAINING_ITEMS_COLUMNS = [
@@ -191,7 +192,7 @@ const RemainingListTable = (props: RemainingListType) => {
       },
       disableSortBy: true,
       accessor: 'assigned',
-      canFilter: false,
+      filterable: false,
       Cell: ({ row }) => {
         const isNew = values?.remainingItems[row?.index]?.action === 'new'
         return (
@@ -221,6 +222,25 @@ const RemainingListTable = (props: RemainingListType) => {
       sortable: false,
     },
     {
+      Header: `${WORK_ORDER}.location`,
+      accessor: 'location',
+      Cell: ({ row, setIsFocus, isFocus }) =>
+        renderInput({
+          row: row,
+          values,
+          formControl,
+          updatedItems,
+          setUpdatedItems,
+          fieldName: 'location',
+          selectedCell,
+          setSelectedCell,
+          autoFocus: isFocus,
+          setIsFocus,
+        }),
+      minWidth: 200,
+      filterable: true,
+    },
+    {
       Header: `${WORK_ORDER}.sku`,
       accessor: 'sku',
       Cell: ({ row, setIsFocus, isFocus }) =>
@@ -237,6 +257,7 @@ const RemainingListTable = (props: RemainingListType) => {
           setIsFocus,
         }),
       width: 100,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.productName`,
@@ -253,8 +274,10 @@ const RemainingListTable = (props: RemainingListType) => {
           setSelectedCell,
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       minWidth: 200,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.details`,
@@ -271,8 +294,10 @@ const RemainingListTable = (props: RemainingListType) => {
           setSelectedCell,
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       minWidth: 300,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.quantity`,
@@ -293,8 +318,10 @@ const RemainingListTable = (props: RemainingListType) => {
           },
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       width: 120,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.unitPrice`,
@@ -316,11 +343,14 @@ const RemainingListTable = (props: RemainingListType) => {
           },
           autoFocus: isFocus,
           setIsFocus,
+          rules: { required: '*Required' },
         }),
       width: 120,
+      filterable: true,
     },
     {
       Header: `${WORK_ORDER}.total`,
+      accessor: 'totalPrice',
       Cell: ({ row }) => {
         return (
           <>
@@ -331,11 +361,12 @@ const RemainingListTable = (props: RemainingListType) => {
         )
       },
       width: 150,
+      filterable: true,
     },
   ]
 
   return (
-    <Box width="100%" height={'100%'}>
+    <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
       <TableWrapper
         columns={REMAINING_ITEMS_COLUMNS}
         data={remainingItems ?? []}
@@ -344,7 +375,7 @@ const RemainingListTable = (props: RemainingListType) => {
         tableHeight="calc(100vh - 325px)"
         name="remaining-items-table"
         defaultFlexStyle={false}
-        disableFilter={true}
+        disableFilter={false}
         rowHeight={80}
       />
     </Box>
