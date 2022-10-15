@@ -36,7 +36,7 @@ import {
   TRANSACTION_FEILD_DEFAULT,
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
 import { usePaginationQuery } from 'api'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'

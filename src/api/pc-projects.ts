@@ -455,8 +455,8 @@ export const usePercentageCalculation = ({ clientApprovedAmount, vendorWOAmount 
 }
 
 export const usePercentageAndInoviceChange = ({ setValue }) => {
-  const [approvedAmount, setApprovedAmount] = useState<number | null>()
-  const [percentageField, setPercentageField] = useState<number | null>()
+  const [approvedAmount, setApprovedAmount] = useState<number | null>(0)
+  const [percentageField, setPercentageField] = useState<number | null>(0)
   const fieldUpdating = useRef<string | null>(null)
 
   const updatePercentageAndApprovedAmount = (approvedAmount, percentageField) => {
@@ -490,7 +490,7 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
     if (fieldUpdating.current) return
   }
 
-  const onInoviceAmountChange = invoiceAmount => {
+  const onInvoiceAmountChange = invoiceAmount => {
     if (fieldUpdating.current && fieldUpdating.current !== 'invoiceAmount') {
       fieldUpdating.current = null
       return
@@ -502,5 +502,5 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
     setValue('percentage', percentageField)
     fieldUpdating.current = 'invoiceAmount'
   }
-  return { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange }
+  return { onPercentageChange, onApprovedAmountChange, onInvoiceAmountChange }
 }

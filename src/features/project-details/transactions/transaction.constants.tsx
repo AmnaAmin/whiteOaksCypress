@@ -3,6 +3,7 @@ import { TransactionMarkAsValues, TransactionStatusValues } from 'types/transact
 import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat } from 'utils/date-time-utils'
+import { TRANSACTION } from './transactions.i18n'
 
 export const CHANGE_ORDER_DEFAULT_VALUE = '0'
 export const CHANGE_ORDER_DEFAULT_OPTION = {
@@ -69,29 +70,29 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'name',
   },
   {
-    header: 'type',
+    header: `${TRANSACTION}.type`,
     accessorKey: 'transactionTypeLabel',
   },
   {
-    header: 'trade',
+    header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
   },
   {
-    header: 'vendorGL',
+    header: `${TRANSACTION}.vendorGL`,
     accessorKey: 'parentWorkOrderId',
     accessorFn: cellInfo => {
       return cellInfo.parentWorkOrderId ? cellInfo?.row?.original?.vendor || '' : 'Project SOW'
     },
   },
   {
-    header: 'totalAmount',
+    header: `${TRANSACTION}.totalAmount`,
     accessorKey: 'transactionTotal',
     accessorFn: cellInfo => {
       return numeral(cellInfo.transactionTotal).format('$0,0.00')
     },
   },
   {
-    header: 'transactionStatus',
+    header: `${TRANSACTION}.transactionStatus`,
     accessorKey: 'status',
     cell: row => {
       const value = row.cell.getValue() as string
@@ -99,14 +100,14 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'submit',
+    header: `${TRANSACTION}.submit`,
     accessorKey: 'modifiedDate',
     accessorFn: cellInfo => {
       return dateFormat(cellInfo.modifiedDate)
     },
   },
   {
-    header: 'approvedBy',
+    header: `${TRANSACTION}.approvedBy`,
     accessorKey: 'approvedBy',
   },
 ]

@@ -23,7 +23,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
 
 beforeAll(() => {
   setToken('pc')
@@ -65,7 +65,7 @@ describe('Given Project Coordinator create new transaction', () => {
        * 3- New Expected Completion Date field visible
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
-      expect(screen.getByText('Expected Completion', { selector: 'label' })).toBeInTheDocument()
+      // expect(screen.getByText('Expected Completion', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('New Expected Completion', { selector: 'label' })).toBeInTheDocument()
       const expectedCompletionDate = screen.getByTestId('expected-completion-date') as HTMLInputElement
       const newExpectedCompletionDate = screen.getByTestId('new-expected-completion-date') as HTMLInputElement

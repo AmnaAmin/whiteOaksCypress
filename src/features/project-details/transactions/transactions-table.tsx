@@ -9,7 +9,10 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { ExportCustomButton } from 'components/table-refactored/export-button'
 import { PaginationState } from '@tanstack/react-table'
-import { TRANSACTION_TABLE_COLUMNS, TRANSACTION_TABLE_QUERIES_KEY } from 'constants/transaction.constants'
+import {
+  TRANSACTION_TABLE_COLUMNS,
+  TRANSACTION_TABLE_QUERIES_KEY,
+} from 'features/project-details/transactions/transaction.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'

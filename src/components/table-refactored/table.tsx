@@ -84,6 +84,7 @@ function DebouncedInput({
 
 type TableProps = {
   onRowClick?: (row: any) => void
+  onRightClick?: (row: any) => void
   isLoading?: boolean
   isEmpty?: boolean
   isHideFilters?: boolean
@@ -93,6 +94,7 @@ type TableProps = {
 export const Table: React.FC<TableProps> = ({
   isLoading,
   onRowClick,
+  onRightClick,
   isEmpty,
   isHideFilters,
   isShowFooter,
@@ -229,6 +231,7 @@ export const Table: React.FC<TableProps> = ({
                       key={row.id}
                       onClick={() => onRowClick?.(row.original)}
                       cursor={onRowClick ? 'pointer' : 'default'}
+                      onContextMenu={() => onRightClick?.(row.original)}
                       _hover={{
                         bg: 'gray.50',
                       }}
