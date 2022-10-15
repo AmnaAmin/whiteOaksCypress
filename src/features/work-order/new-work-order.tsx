@@ -33,7 +33,7 @@ import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
 import NumberFormat from 'react-number-format'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
 import {
@@ -416,7 +416,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberInput
                                 value={field.value}
                                 thousandSeparator
                                 customInput={CustomRequiredInput}
@@ -478,7 +478,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberInput
                                 value={field.value}
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
