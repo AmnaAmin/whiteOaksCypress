@@ -9,7 +9,7 @@ export const CustomInput = props => {
   return <Input {...props} variant="outline" />
 }
 
-export const NumberResInput = ({ ...rest }) => {
+export const NumberInput = ({ ...rest }) => {
   // 9999999 for 7 digits condition
   return <NumberFormat isAllowed={({ value }) => Number(value) <= 9999999} {...rest} />
 }

@@ -18,7 +18,7 @@ import ReactSelect from 'components/form/react-select'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useTranslation } from 'react-i18next'
 import { useProjectTypeSelectOptions } from 'api/pc-projects'
-import { CustomRequiredInput, NumberResInput } from 'components/input/input'
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { useProjectInformationNextButtonDisabled, useWOStartDateMin } from './hooks'
 
@@ -165,7 +165,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                 render={({ field, fieldState }) => {
                   return (
                     <>
-                      <NumberResInput
+                      <NumberInput
                         value={field.value}
                         onValueChange={values => {
                           const { floatValue } = values

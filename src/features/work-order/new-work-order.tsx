@@ -30,7 +30,7 @@ import { useFilteredVendors, usePercentageCalculation } from 'api/pc-projects'
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
-import { CustomRequiredInput, NumberResInput } from 'components/input/input'
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
 import {
@@ -393,7 +393,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberResInput
+                              <NumberInput
                                 value={field.value}
                                 thousandSeparator
                                 customInput={CustomRequiredInput}
@@ -422,7 +422,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberResInput
+                              <NumberInput
                                 value={field.value}
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
@@ -453,7 +453,7 @@ const NewWorkOrder: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberResInput
+                              <NumberInput
                                 value={field.value}
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
