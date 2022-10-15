@@ -743,18 +743,18 @@ export const useFieldEnableDecision = ({ workOrder }) => {
 
 const setColumnsByConditions = (columns, workOrder, isVendor) => {
   if (workOrder) {
-    columns = columns.filter(c => !['assigned'].includes(c.accessor))
+    columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
     if (isVendor) {
       if (workOrder.showPricing) {
         columns = columns.filter(
-          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessor),
+          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
         )
       } else {
-        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessor))
+        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey))
       }
     }
   } else {
-    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessor))
+    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessorKey))
   }
   return columns
 }
@@ -851,7 +851,7 @@ export const useGetLineItemsColumn = ({
 
   let columns = [
     {
-      Header: () => {
+      header: () => {
         return (
           <Icon
             as={CgPlayListRemove}
@@ -873,11 +873,10 @@ export const useGetLineItemsColumn = ({
           ></Icon>
         )
       },
-      width: 80,
+      size: 80,
       enableSorting: false,
-      isVisible: false,
-      accessor: 'assigned',
-      Cell: ({ row }) => {
+      accessorKey: 'assigned',
+      cell: ({ row }) => {
         const index = row?.index
         return (
           <Box paddingLeft={'6px'}>
@@ -898,9 +897,9 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.location`,
-      accessor: 'location',
-      Cell: ({ row }) => {
+      header: `${WORK_ORDER}.location`,
+      accessorKey: 'location',
+      cell: ({ row }) => {
         const index = row?.index
         return (
           <Box>
@@ -919,9 +918,9 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.sku`,
-      accessor: 'sku',
-      Cell: cellInfo => {
+      header: `${WORK_ORDER}.sku`,
+      accessorKey: 'sku',
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -940,9 +939,9 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.productName`,
-      accessor: 'productName',
-      Cell: cellInfo => {
+      header: `${WORK_ORDER}.productName`,
+      accessorKey: 'productName',
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -959,10 +958,10 @@ export const useGetLineItemsColumn = ({
           </Box>
         )
       },
-      minWidth: 200,
+      size: 200,
     },
     {
-      Header: () => {
+      header: () => {
         return (
           <>
             <Box as="span" sx={requiredStyle}>
@@ -972,8 +971,8 @@ export const useGetLineItemsColumn = ({
           </>
         )
       },
-      accessor: 'description',
-      Cell: cellInfo => {
+      accessorKey: 'description',
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -990,10 +989,10 @@ export const useGetLineItemsColumn = ({
           </Box>
         )
       },
-      minWidth: 250,
+      size: 250,
     },
     {
-      Header: () => {
+      header: () => {
         return (
           <>
             <Box as="span" sx={requiredStyle}>
@@ -1003,9 +1002,9 @@ export const useGetLineItemsColumn = ({
           </>
         )
       },
-      width: 100,
-      accessor: 'quantity',
-      Cell: cellInfo => {
+      size: 100,
+      accessorKey: 'quantity',
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -1027,7 +1026,7 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: () => {
+      header: () => {
         return (
           <>
             <Box as="span" sx={requiredStyle}>
@@ -1037,9 +1036,9 @@ export const useGetLineItemsColumn = ({
           </>
         )
       },
-      width: 100,
-      accessor: 'price',
-      Cell: cellInfo => {
+      size: 100,
+      accessorKey: 'price',
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -1062,10 +1061,10 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.clientAmount`,
-      accessor: 'clientAmount',
-      width: 150,
-      Cell: cellInfo => {
+      header: `${WORK_ORDER}.clientAmount`,
+      accessorKey: 'clientAmount',
+      size: 150,
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <EditableField
@@ -1083,10 +1082,10 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.profit`,
-      accessor: 'profit',
-      width: 100,
-      Cell: cellInfo => {
+      header: `${WORK_ORDER}.profit`,
+      accessorKey: 'profit',
+      size: 100,
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -1112,16 +1111,16 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: () => {
+      header: () => {
         if (!isVendor) {
           return <>{t(`${WORK_ORDER}.vendorAmount`)}</>
         } else {
           return <>{t(`${WORK_ORDER}.amount`)}</>
         }
       },
-      accessor: 'vendorAmount',
-      width: 150,
-      Cell: cellInfo => {
+      accessorKey: 'vendorAmount',
+      size: 150,
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Box>
@@ -1144,10 +1143,10 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.status`,
-      accessor: 'isCompleted',
+      header: `${WORK_ORDER}.status`,
+      accessorKey: 'isCompleted',
       enableSorting: false,
-      Cell: cellInfo => {
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <HStack justifyContent={'center'} h="50px">
@@ -1173,10 +1172,10 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.images`,
-      accessor: 'images',
+      header: `${WORK_ORDER}.images`,
+      accessorKey: 'images',
       enableSorting: false,
-      Cell: cellInfo => {
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <Controller
@@ -1213,10 +1212,10 @@ export const useGetLineItemsColumn = ({
       },
     },
     {
-      Header: `${WORK_ORDER}.verification`,
-      accessor: 'isVerified',
+      header: `${WORK_ORDER}.verification`,
+      accessorKey: 'isVerified',
       enableSorting: false,
-      Cell: cellInfo => {
+      cell: cellInfo => {
         const index = cellInfo?.row?.index
         return (
           <HStack justifyContent={'center'} h="50px">

@@ -17,8 +17,8 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { datePickerFormat } from 'utils/date-time-utils'
-import { TableWrapper } from 'components/table/table'
-import { LineItemsRow } from './remaining-list-table'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import Table from 'components/table-refactored/table'
 
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
@@ -213,17 +213,9 @@ const AssignedItems = (props: AssignedItemType) => {
         </Stack>
 
         <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
-          <TableWrapper
-            columns={ASSIGNED_ITEMS_COLUMNS}
-            data={values.assignedItems ?? []}
-            isLoading={isLoadingLineItems}
-            TableRow={LineItemsRow}
-            tableHeight="calc(100vh - 350px)"
-            name="line-items-table"
-            defaultFlexStyle={false}
-            disableFilter={false}
-            rowHeight={80}
-          />
+          <TableContextProvider data={values.assignedItems ?? []} columns={ASSIGNED_ITEMS_COLUMNS}>
+            <Table isLoading={isLoadingLineItems} isEmpty={!isLoadingLineItems && !values.assignedItems?.length} />
+          </TableContextProvider>
         </Box>
       </>
     </Box>
