@@ -79,8 +79,8 @@ export const SimpleSlider: React.FC<{
               ))}
             </Slider>
           ) : (
-            <Flex marginTop="25px" justifyContent="center" alignItems="center" fontSize="15px" fontWeight="normal">
-              <RiErrorWarningFill fontSize="30px" color="#718096" />
+            <Flex mx={{ base: 'unset', '2xl': '4' }} alignItems="center" fontSize="15px" fontWeight="normal">
+              <RiErrorWarningFill fontSize="30px" color="#A0AEC0" />
               <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
                 {t('errorWarning')} {props.heading}
               </Text>
@@ -112,3 +112,24 @@ const SliderItem: React.FC<{ title: string; date: string; testId?: string }> = (
     </Flex>
   )
 }
+
+// {slider.length > 0 ? (
+//   <Slider {...settings}>
+//     {slider.map((slide, i) => (
+//       <Box key={i} textAlign="start" fontSize="16px" fontStyle="normal" fontWeight={400} color="#4A5568">
+//         {slide?.map((item: any) => (
+//           <SliderItem key={item.title} title={item.title} date={item.date} testId={item.testId} />
+//         ))}
+//       </Box>
+//     ))}
+//   </Slider>
+// ) : (
+//   <Flex mx={{ base: 'unset', '2xl': '4' }} alignItems="center" fontSize="15px" fontWeight="normal">
+//     <RiErrorWarningFill fontSize="30px" color="#A0AEC0" />
+//     <Text ml="10px" fontWeight={400} fontSize="14px" fontStyle="normal" color=" #2D3748">
+//       {t('errorWarning')} {props.heading}
+//     </Text>
+//   </Flex>
+// )}
+// </Box>
+// )}
