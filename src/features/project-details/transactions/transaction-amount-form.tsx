@@ -26,6 +26,7 @@ import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import numeral from 'numeral'
+import { TRANSACTION } from './transactions.i18n'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -153,7 +154,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               onClick={addRow}
               leftIcon={<AiOutlinePlus color="#4E87F8" />}
             >
-              {t('addNewRow')}
+              {t(`${TRANSACTION}.addNewRow`)}
             </Button>
             <Button
               data-testid="delete-row-button"
@@ -178,7 +179,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               onClick={onDeleteConfirmationModalOpen}
               isDisabled={!someChecked}
             >
-              {t('deleteRow')}
+              {t(`${TRANSACTION}.deleteRow`)}
             </Button>
           </Box>
         )}
@@ -218,7 +219,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     <BiDownload fontSize="sm" />
                   </Box>
                   <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal" maxW="110px" isTruncated>
-                    Lien Waiver
+                    {t(`${TRANSACTION}.lienWaiver`)}
                   </Text>
                 </Flex>
               </a>
@@ -280,7 +281,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 colorScheme="brand"
                 isDisabled={isApproved}
               >
-                {t('attachment')}
+                {t(`${TRANSACTION}.attachment`)}
               </Button>
             ))}
         </HStack>
@@ -316,8 +317,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               />
             </GridItem>
           )}
-          <GridItem>{t('description')}</GridItem>
-          <GridItem>{t('amount')}</GridItem>
+          <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
+          <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
         </Grid>
         <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
           {transactionFields.map((transactionField, index) => {

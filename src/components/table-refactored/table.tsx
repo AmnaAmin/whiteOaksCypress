@@ -140,9 +140,9 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, onRightClic
                         // lineHeight="20px"
                         isTruncated
                         display="inline-block"
-                        title={title as string}
+                        title={typeof title === 'string' ? t(title as string) : ''}
                       >
-                        {t(title as string)}
+                        {typeof title === 'string' ? t(title as string) : title}
                       </Text>
                       {isSortable ? (
                         sortedDesc ? (
@@ -215,10 +215,10 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, onRightClic
                     key={row.id}
                     onClick={() => onRowClick?.(row.original)}
                     cursor={onRowClick ? 'pointer' : 'default'}
+                    onContextMenu={() => onRightClick?.(row.original)}
                     _hover={{
                       bg: 'gray.50',
                     }}
-                    onContextMenu={() => onRightClick?.(row.original)}
                   >
                     {row.getVisibleCells().map(cell => {
                       const value = flexRender(cell.column.columnDef.cell, cell.getContext())

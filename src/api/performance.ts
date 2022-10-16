@@ -123,35 +123,29 @@ export const useMutatePerformance = (FPMId: number) => {
 }
 
 export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, errors): boolean => {
-    const formValues = useWatch({ control })
-  
-    return (
-      !formValues?.newBonus ||
-      !formValues?.newTarget ||
-      !formValues?.badge ||
-      !formValues?.ignoreQuota
-    )
-  }
+  const formValues = useWatch({ control })
 
-  // Performance Graph
-  export const MonthOptionTypes = {
-    all: 'all',
-    lastMonth: 'lastMonth',
-    thisMonth: 'thisMonth',
-    currentQuarter: 'currentQuarter',
-    pastQuarter: 'pastQuarter',
-  };
-  
- export const MonthOption = [
-    { value: MonthOptionTypes.thisMonth, label: 'This Month' },
-    { value: MonthOptionTypes.lastMonth, label: 'Last Month' },
-    { value: MonthOptionTypes.currentQuarter, label: 'Current Quarter' },
-    { value: MonthOptionTypes.pastQuarter, label: 'Past Quarter' },
-    { value: MonthOptionTypes.all, label: 'All' },
-  ];
+  return !formValues?.newBonus || !formValues?.newTarget || !formValues?.badge || !formValues?.ignoreQuota
+}
 
-  export const Month = [
-    { value: MonthOptionTypes.thisMonth, label: 'This Month' },
-    { value: MonthOptionTypes.all, label: 'All' },
-  ];
+// Performance Graph
+export const MonthOptionTypes = {
+  all: 'all',
+  lastMonth: 'lastMonth',
+  thisMonth: 'thisMonth',
+  currentQuarter: 'currentQuarter',
+  pastQuarter: 'pastQuarter',
+}
 
+export const MonthOption = [
+  { value: MonthOptionTypes.thisMonth, label: 'This Month' },
+  { value: MonthOptionTypes.lastMonth, label: 'Last Month' },
+  { value: MonthOptionTypes.currentQuarter, label: 'Current Quarter' },
+  { value: MonthOptionTypes.pastQuarter, label: 'Past Quarter' },
+  { value: MonthOptionTypes.all, label: 'All' },
+]
+
+export const Month = [
+  { value: MonthOptionTypes.thisMonth, label: 'This Month' },
+  { value: MonthOptionTypes.all, label: 'All' },
+]

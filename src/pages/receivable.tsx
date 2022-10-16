@@ -49,20 +49,20 @@ export const Receivable = () => {
   }, [loading])
 
   const Submit = formValues => {
-    const recievableProjects = compact(formValues.selected)?.map((row: any) => ({
+    const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
       id: row?.projectId,
       type: row?.type,
     }))
-    if (!recievableProjects?.length) return
+    if (!receivableProjects?.length) return
 
     setLoading(true)
     setIsBatchClick(true)
     const obj = {
       typeCode: 'AR',
-      entities: recievableProjects,
+      entities: receivableProjects,
     }
 
-    if (recievableProjects.length === 0) return
+    if (receivableProjects.length === 0) return
 
     setLoading(true)
     setIsBatchClick(true)

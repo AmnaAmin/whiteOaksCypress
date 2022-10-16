@@ -44,11 +44,13 @@ import {
   useAllowLineItemsAssignment,
   mapToLineItems,
   calculateVendorAmount,
+  calculateProfit,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
 import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
+import { isValidAndNonEmpty } from 'utils'
 
 const CalenderCard = props => {
   return (
@@ -104,9 +106,6 @@ type NewWorkOrderType = {
   assignedItems: LineItems[]
   uploadWO: any
 }
-const isValidAndNonEmpty = item => {
-  return item !== null && item !== undefined && item?.trim() !== ''
-}
 
 const NewWorkOrder: React.FC<{
   projectData: Project
@@ -136,8 +135,8 @@ const NewWorkOrder: React.FC<{
       vendorId: null,
       workOrderExpectedCompletionDate: null,
       workOrderStartsDate: undefined,
-      invoiceAmount: null,
-      clientApprovedAmount: null,
+      invoiceAmount: 0,
+      clientApprovedAmount: 0,
       percentage: 0,
       assignedItems: [],
       uploadWO: null,
@@ -163,7 +162,7 @@ const NewWorkOrder: React.FC<{
     control,
     name: 'assignedItems',
   })
-  const { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange } = usePercentageAndInoviceChange({
+  const { onPercentageChange, onApprovedAmountChange, onInvoiceAmountChange } = usePercentageAndInoviceChange({
     setValue,
   })
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -180,22 +179,26 @@ const NewWorkOrder: React.FC<{
   }, [watchPercentage])
 
   useEffect(() => {
-    const clientAmount = formValues.assignedItems?.reduce(
-      (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
+    const clientAmount = watchLineItems?.reduce(
+      (partialSum, a) =>
+        partialSum +
+        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
       0,
     )
-    const vendorAmount = formValues.assignedItems?.reduce(
-      (partialSum, a) => partialSum + Number(a?.vendorAmount ?? 0),
+    const vendorAmount = watchLineItems?.reduce(
+      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
       0,
     )
     setValue('clientApprovedAmount', round(clientAmount, 2))
     setValue('invoiceAmount', round(vendorAmount, 2))
+    setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
   }, [watchLineItems])
 
   const resetLineItemsProfit = profit => {
-    formValues?.assignedItems?.forEach((item, index) => {
+    formValues.assignedItems?.forEach((item, index) => {
       const clientAmount =
-        Number(formValues.assignedItems?.[index]?.price ?? 0) * Number(formValues.assignedItems?.[index]?.quantity ?? 0)
+        Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
+        Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
       setValue(`assignedItems.${index}.profit`, profit)
       setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
     })
@@ -411,7 +414,10 @@ const NewWorkOrder: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This is required' }}
+                        rules={{
+                          required: 'This is required',
+                          min: { value: 1, message: 'Enter a valid amount' },
+                        }}
                         name="clientApprovedAmount"
                         render={({ field, fieldState }) => {
                           return (
@@ -424,7 +430,9 @@ const NewWorkOrder: React.FC<{
                                 disabled={!watchUploadWO}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue ?? '')
-                                  onApprovedAmountChange(e.floatValue)
+                                  if (!!watchUploadWO) {
+                                    onApprovedAmountChange(e.floatValue)
+                                  }
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -452,7 +460,9 @@ const NewWorkOrder: React.FC<{
                                 suffix={'%'}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue ?? '')
-                                  onPercentageChange(e.floatValue)
+                                  if (!!watchUploadWO) {
+                                    onPercentageChange(e.floatValue)
+                                  }
                                 }}
                                 onBlur={e => {
                                   resetLineItemsProfit(removePercentageFormat(e.target.value))
@@ -468,7 +478,7 @@ const NewWorkOrder: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
                       <Controller
@@ -486,7 +496,9 @@ const NewWorkOrder: React.FC<{
                                 disabled={!watchUploadWO}
                                 onValueChange={e => {
                                   field.onChange(e.floatValue ?? '')
-                                  onInoviceAmountChange(e.floatValue)
+                                  if (!!watchUploadWO) {
+                                    onInvoiceAmountChange(e.floatValue)
+                                  }
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

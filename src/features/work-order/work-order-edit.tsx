@@ -18,11 +18,11 @@ import {
   Center,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
-import { LienWaiverTab } from './lien-waiver/lien-waiver-tab'
+import { LienWaiverTab } from './lien-waiver/lien-waiver'
 import { useTranslation } from 'react-i18next'
 // import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment/payment-tab'
-import { InvoiceTabPC } from './invoice/invoice-tab'
+import { InvoiceTab } from './invoice/invoice-tab'
 import Status, { STATUS } from 'features/common/status'
 import WorkOrderNotes from './notes/work-order-notes'
 import WorkOrderDetailTab from './details/work-order-edit-tab'
@@ -211,7 +211,7 @@ const WorkOrderDetails = ({
                     {isDocumentsLoading || isTransLoading ? (
                       <BlankSlate />
                     ) : (
-                      <InvoiceTabPC
+                      <InvoiceTab
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         rejectInvoiceCheck={rejectInvoice}
                         transactions={transactions}

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
 import { WORK_ORDERS, DOCUMENTS, TRANSACTIONS } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen, act } from 'utils/test-utils'
-import { InvoiceTab } from '../invoice/invoice-tab'
+import { InvoiceTab } from '../../../work-order/invoice/invoice-tab'
 import { Modal } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
 import { TransactionStatusValues as TSV } from 'types/transaction.type'
@@ -19,6 +19,9 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
         projectData={null}
         transactions={transactions}
         setTabIndex={setTabIndex}
+        rejectInvoiceCheck={null}
+        onSave={null}
+        navigateToProjectDetails={null}
       />
     </Modal>,
     {

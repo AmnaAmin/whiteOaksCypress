@@ -27,6 +27,7 @@ import { BiCalendar, BiUser } from 'react-icons/bi'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
+import { TRANSACTION } from './transactions.i18n'
 
 type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
 type AddNewTransactionProps = CustomModalProps & {
@@ -81,27 +82,38 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
           <VStack alignItems="left" mt="5">
             <Grid templateColumns="repeat(5,1fr)" pb={6} borderBottom="1px solid #E2E8F0" mb="14">
               <GridItem>
-                <InfoCard title={t('transactionType')} subTitle={transaction?.transactionTypeLabel as string} />
+                <InfoCard
+                  title={t(`${TRANSACTION}.transactionType`)}
+                  subTitle={transaction?.transactionTypeLabel as string}
+                />
               </GridItem>
               <GridItem>
                 <InfoCard
-                  title={t('dateCreated')}
+                  title={t(`${TRANSACTION}.dateCreated`)}
                   subTitle={dateFormat(transaction?.createdDate as string)}
                   Icon={BiCalendar}
                 />
               </GridItem>
               <GridItem>
-                <InfoCard title={t('createdBy')} subTitle={transaction?.createdBy as string} Icon={BiUser} />
+                <InfoCard
+                  title={t(`${TRANSACTION}.createdBy`)}
+                  subTitle={transaction?.createdBy as string}
+                  Icon={BiUser}
+                />
               </GridItem>
               <GridItem>
                 <InfoCard
-                  title={t('dateModified')}
+                  title={t(`${TRANSACTION}.dateModified`)}
                   subTitle={dateFormat(transaction?.modifiedDate as string)}
                   Icon={BiCalendar}
                 />
               </GridItem>
               <GridItem>
-                <InfoCard title={t('modifiedBy')} subTitle={transaction?.modifiedBy as string} Icon={BiUser} />
+                <InfoCard
+                  title={t(`${TRANSACTION}.modifiedBy`)}
+                  subTitle={transaction?.modifiedBy as string}
+                  Icon={BiUser}
+                />
               </GridItem>
             </Grid>
           </VStack>
@@ -114,10 +126,10 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
               <Thead bg="gray.50">
                 <Tr>
                   <Th fontSize="14px" fontWeight={500} color="gray.600" textTransform="capitalize">
-                    {t('description')}
+                    {t(`${TRANSACTION}.description`)}
                   </Th>
                   <Th fontSize="14px" fontWeight={500} color="gray.600" textTransform="capitalize">
-                    {t('amount')}
+                    {t(`${TRANSACTION}.amount`)}
                   </Th>
                 </Tr>
               </Thead>
@@ -141,7 +153,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
           <Button onClick={onClose} colorScheme="brand">
-            {t('close')}
+            {t(`${TRANSACTION}.close`)}
           </Button>
         </ModalFooter>
       </ModalContent>
