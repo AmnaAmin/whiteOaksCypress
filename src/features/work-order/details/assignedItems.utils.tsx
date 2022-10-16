@@ -1,12 +1,24 @@
-import { Box, Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Text, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormErrorMessage,
+  HStack,
+  Icon,
+  Input,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { BiUpload } from 'react-icons/bi'
+import { BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
@@ -14,6 +26,9 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import round from 'lodash/round'
 import { isValidAndNonEmpty } from 'utils'
+import { CgPlayListRemove } from 'react-icons/cg'
+import { CustomCheckBox } from './assigned-items'
+import { readFileContent } from 'api/vendor-details'
 
 const swoPrefix = '/smartwo/api'
 
@@ -374,6 +389,13 @@ export const EditableField = (props: EditableCellType) => {
   } = props
   const { getValues, setValue, control } = formControl
   const values = getValues()
+  const inputRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (selectedCell?.id === index + '-' + fieldName) {
+      inputRef?.current?.focus()
+    }
+  }, [selectedCell])
 
   const remainingItemsWatch = useWatch({ name: fieldArray, control })
 
@@ -385,7 +407,10 @@ export const EditableField = (props: EditableCellType) => {
             <Box
               minH={'20px'}
               minW={'100px'}
-              cursor={'pointer'}
+              cursor={allowEdit ? 'pointer' : 'default'}
+              overflow="hidden"
+              textOverflow={'ellipsis'}
+              whiteSpace="nowrap"
               onClick={() => {
                 if (allowEdit) {
                   setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
@@ -404,10 +429,11 @@ export const EditableField = (props: EditableCellType) => {
                 name={`${fieldArray}.${index}.${fieldName}`}
                 render={({ field, fieldState }) => (
                   <Input
-                    minW={'100px'}
+                    minW={'80px'}
                     key={[fieldName] + '.' + [index]}
                     size="sm"
                     type={inputType}
+                    ref={inputRef}
                     value={field.value}
                     autoFocus={autoFocus}
                     onChange={e => {
@@ -698,6 +724,12 @@ export const useActionsShowDecision = ({ workOrder }) => {
   }
 }
 
+const requiredStyle = {
+  color: 'red.500',
+  fontWeight: 800,
+  fontSize: '18px',
+}
+
 export const useFieldEnableDecision = ({ workOrder }) => {
   const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
   const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
@@ -707,4 +739,505 @@ export const useFieldEnableDecision = ({ workOrder }) => {
     statusEnabled: statusEnabled,
     verificationEnabled: verificationEnabled,
   }
+}
+
+const setColumnsByConditions = (columns, workOrder, isVendor) => {
+  if (workOrder) {
+    columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
+    if (isVendor) {
+      if (workOrder.showPricing) {
+        columns = columns.filter(
+          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
+        )
+      } else {
+        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey))
+      }
+    }
+  } else {
+    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessorKey))
+  }
+  return columns
+}
+
+export const useGetLineItemsColumn = ({
+  unassignedItems,
+  setUnAssignedItems,
+  formControl,
+  allowEdit,
+  assignedItemsArray,
+  workOrder,
+}) => {
+  const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
+  const { t } = useTranslation()
+  const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
+  const { setValue, getValues, watch, control } = formControl
+  const values = getValues()
+  const watchFieldArray = watch('assignedItems')
+  const { isVendor } = useUserRolesSelector()
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
+  const controlledAssignedItems = assignedItems.map((field, index) => {
+    return {
+      ...field,
+      ...watchFieldArray[index],
+    }
+  })
+
+  const handleItemQtyChange = useCallback(
+    (e, index) => {
+      const price = Number(controlledAssignedItems?.[index]?.price ?? 0)
+      const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
+      const newQuantity = Number(e.target.value)
+      const vendorAmount = calculateVendorAmount(price * newQuantity, profit)
+      setValue(`assignedItems.${index}.clientAmount`, price * newQuantity)
+      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+    },
+    [controlledAssignedItems],
+  )
+  const handleItemPriceChange = useCallback(
+    (e, index) => {
+      const newPrice = Number(e.target.value ?? 0)
+      const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
+      const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
+      const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
+      setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
+      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+    },
+    [controlledAssignedItems],
+  )
+
+  const handleItemProfitChange = useCallback(
+    (e, index) => {
+      const newProfit = e.target.value ?? 0
+      const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
+      const vendorAmount = calculateVendorAmount(clientAmount, newProfit)
+      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+    },
+    [controlledAssignedItems],
+  )
+
+  const handleItemVendorAmountChange = useCallback(
+    (e, index) => {
+      const vendorAmount = e.target.value ?? 0
+      const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
+      const profit = calculateProfit(clientAmount, vendorAmount)
+      setValue(`assignedItems.${index}.profit`, profit)
+    },
+    [controlledAssignedItems],
+  )
+
+  const onFileChange = async file => {
+    const fileContents = await readFileContent(file)
+    const documentFile = {
+      fileObjectContentType: file?.type,
+      fileType: file?.name,
+      fileObject: fileContents ?? '',
+      documentType: 39,
+    }
+    return documentFile
+  }
+
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} target="_blank" rel="noreferrer" download style={{ marginTop: '5px', color: '#4E87F8' }}>
+        <HStack>
+          <Icon as={BiDownload} size="sm" />
+          <Text fontSize="12px" fontStyle="normal" maxW="100px" isTruncated>
+            {text}
+          </Text>
+        </HStack>
+      </a>
+    )
+  }
+
+  let columns = [
+    {
+      header: () => {
+        return (
+          <Icon
+            as={CgPlayListRemove}
+            boxSize={7}
+            color="brand.300"
+            title="UnAssign All"
+            onClick={() => {
+              if (setUnAssignedItems && unassignedItems) {
+                setUnAssignedItems([
+                  ...values.assignedItems?.map(i => {
+                    return mapToRemainingItems(i)
+                  }),
+                  ...unassignedItems,
+                ])
+                removeAssigned()
+              }
+            }}
+            cursor="pointer"
+          ></Icon>
+        )
+      },
+      size: 80,
+      enableSorting: false,
+      accessorKey: 'assigned',
+      cell: ({ row }) => {
+        const index = row?.index
+        return (
+          <Box paddingLeft={'6px'}>
+            <Icon
+              as={BiXCircle}
+              boxSize={5}
+              color="brand.300"
+              onClick={() => {
+                if (setUnAssignedItems && unassignedItems) {
+                  setUnAssignedItems([{ ...mapToRemainingItems(values?.assignedItems[index]) }, ...unassignedItems])
+                  removeAssigned(index)
+                }
+              }}
+              cursor="pointer"
+            ></Icon>
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.location`,
+      accessorKey: 'location',
+      cell: ({ row }) => {
+        const index = row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="location"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.sku`,
+      accessorKey: 'sku',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="sku"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.productName`,
+      accessorKey: 'productName',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="productName"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+      size: 200,
+    },
+    {
+      header: () => {
+        return (
+          <>
+            <Box as="span" sx={requiredStyle}>
+              *
+            </Box>
+            {t(`${WORK_ORDER}.details`)}
+          </>
+        )
+      },
+      accessorKey: 'description',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="description"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+      size: 250,
+    },
+    {
+      header: () => {
+        return (
+          <>
+            <Box as="span" sx={requiredStyle}>
+              *
+            </Box>
+            {t(`${WORK_ORDER}.quantity`)}
+          </>
+        )
+      },
+      size: 100,
+      accessorKey: 'quantity',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="quantity"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+              onChange={e => {
+                handleItemQtyChange(e, index)
+              }}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: () => {
+        return (
+          <>
+            <Box as="span" sx={requiredStyle}>
+              *
+            </Box>
+            {t(`${WORK_ORDER}.price`)}
+          </>
+        )
+      },
+      size: 100,
+      accessorKey: 'price',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              fieldName="price"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={currencyFormatter}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={allowEdit}
+              onChange={e => {
+                handleItemPriceChange(e, index)
+              }}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.clientAmount`,
+      accessorKey: 'clientAmount',
+      size: 150,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <EditableField
+            index={index}
+            fieldName="clientAmount"
+            formControl={formControl}
+            inputType="number"
+            fieldArray="assignedItems"
+            valueFormatter={currencyFormatter}
+            selectedCell={selectedCell}
+            setSelectedCell={setSelectedCell}
+            allowEdit={false}
+          ></EditableField>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.profit`,
+      accessorKey: 'profit',
+      size: 100,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              fieldName="profit"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={val => {
+                if (val !== null && val !== '') return val + '%'
+                else return val
+              }}
+              onChange={e => {
+                handleItemProfitChange(e, index)
+              }}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: () => {
+        if (!isVendor) {
+          return <>{t(`${WORK_ORDER}.vendorAmount`)}</>
+        } else {
+          return <>{t(`${WORK_ORDER}.amount`)}</>
+        }
+      },
+      accessorKey: 'vendorAmount',
+      size: 160,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              fieldName="vendorAmount"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={currencyFormatter}
+              onChange={e => {
+                handleItemVendorAmountChange(e, index)
+              }}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.status`,
+      accessorKey: 'isCompleted',
+      enableSorting: false,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <HStack justifyContent={'center'} h="50px">
+            <Controller
+              control={control}
+              name={`assignedItems.${index}.isCompleted`}
+              render={({ field, fieldState }) => (
+                <CustomCheckBox
+                  text="Completed"
+                  isChecked={field.value}
+                  disabled={!statusEnabled}
+                  onChange={e => {
+                    if (!e.target.checked) {
+                      setValue(`assignedItems.${index}.isVerified`, false)
+                    }
+                    field.onChange(e.currentTarget.checked)
+                  }}
+                ></CustomCheckBox>
+              )}
+            ></Controller>
+          </HStack>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.images`,
+      accessorKey: 'images',
+      enableSorting: false,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Controller
+            name={`assignedItems.${index}.uploadedDoc`}
+            control={control}
+            render={({ field, fieldState }) => {
+              return (
+                <VStack gap="1px">
+                  <Box>
+                    <UploadImage
+                      label={`upload`}
+                      value={field?.value?.fileType}
+                      onChange={async (file: any) => {
+                        const document = await onFileChange(file)
+                        field.onChange(document)
+                      }}
+                      onClear={() => setValue(field.name, null)}
+                    ></UploadImage>
+                  </Box>
+
+                  {assignedItems[index]?.document?.s3Url && (
+                    <Box>
+                      {downloadDocument(
+                        values.assignedItems[index]?.document?.s3Url,
+                        values.assignedItems[index]?.document?.fileType,
+                      )}
+                    </Box>
+                  )}
+                </VStack>
+              )
+            }}
+          />
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.verification`,
+      accessorKey: 'isVerified',
+      enableSorting: false,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <HStack justifyContent={'center'} h="50px">
+            <Controller
+              control={control}
+              name={`assignedItems.${index}.isVerified`}
+              render={({ field, fieldState }) => (
+                <CustomCheckBox
+                  text="Verified"
+                  disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
+                  isChecked={field.value}
+                  onChange={e => {
+                    field.onChange(e.currentTarget.checked)
+                  }}
+                ></CustomCheckBox>
+              )}
+            ></Controller>
+          </HStack>
+        )
+      },
+    },
+  ]
+  columns = setColumnsByConditions(columns, workOrder, isVendor)
+  return columns
 }

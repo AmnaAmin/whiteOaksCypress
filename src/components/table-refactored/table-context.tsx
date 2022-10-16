@@ -48,9 +48,9 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   children,
 }) => {
   const emptyRowsLength = 3
-
   const emptyRows = Array(emptyRowsLength).fill({})
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
 
   // Create pagination state in case pagination object enabled
   const paginationState: { pagination: PaginationState } | {} = React.useMemo(() => {
@@ -63,6 +63,11 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
         }
       : {}
   }, [pagination?.pageIndex, pagination?.pageSize])
+  const columnFilterState = !setColumnFilters
+    ? {
+        columnFilters: columnFiltersState,
+      }
+    : {}
 
   const filtersConfigurations: any = setColumnFilters
     ? {
@@ -77,9 +82,11 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     columns,
     state: {
       ...paginationState,
+      ...columnFilterState,
       sorting,
     },
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -87,8 +94,8 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     manualPagination: true,
     pageCount: totalPages ?? -1,
     onPaginationChange: setPagination,
+    onColumnFiltersChange: setColumnFilters ?? setColumnFiltersState,
   })
-
   return <TableContext.Provider value={{ tableInstance }}>{children}</TableContext.Provider>
 }
 
