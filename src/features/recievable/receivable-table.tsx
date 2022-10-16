@@ -131,11 +131,13 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         name="alerts-table"
         defaultFlexStyle={false}
       />
-      <AccountReceivableModal
-        projectId={selectedProjectId}
-        isOpen={isAccountReceivableModal}
-        onClose={onAccountReceivableModalClose}
-      />
+      {isAccountReceivableModal && (
+        <AccountReceivableModal
+          projectId={selectedProjectId}
+          isOpen={isAccountReceivableModal}
+          onClose={onAccountReceivableModalClose}
+        />
+      )}
       <UpdateTransactionModal
         isOpen={isOpenTransactionModal}
         onClose={onTransactionModalClose}
