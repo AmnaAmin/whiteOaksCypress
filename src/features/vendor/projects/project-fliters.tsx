@@ -82,6 +82,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
               onSelectCard={onSelectCard}
               selectedCard={selectedCard}
               isLoading={isLoading}
+              disabled={card.number === 0}
             />
           )
         })}

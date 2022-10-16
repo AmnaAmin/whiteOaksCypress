@@ -24,7 +24,6 @@ export const ProjectCard = ({
   isLoading,
   IconElement,
 }: ProjectCardProps) => {
-  const Disabled = number === 0
   return (
     <Box as="label" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
       <Flex
@@ -34,12 +33,12 @@ export const ProjectCard = ({
         bg="#FFFFFF"
         alignItems="center"
         transition="0.3s all"
-        cursor={Disabled ? 'not-allowed' : 'pointer'}
+        cursor={disabled ? 'not-allowed' : 'pointer'}
         justifyContent="space-between"
         border="1px solid transparent"
         borderTop="4px solid transparent"
-        pointerEvents={disabled ? 'none' : 'auto'}
-        onClick={() => !Disabled && onSelectCard(selectedCard !== value && value)}
+        // pointerEvents={disabled ? 'none' : 'auto'}
+        onClick={() => !disabled && onSelectCard(selectedCard !== value && value)}
         borderColor={selectedCard === value ? '#4E87F8' : ''}
         _hover={{ bg: 'blue.50' }}
       >
