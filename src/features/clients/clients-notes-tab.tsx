@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'api/vendor-details'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useForm, useWatch } from 'react-hook-form'
+import { CLIENTS } from './clients.i18n'
 
 type clientNotesProps = {
   clientDetails?: any
@@ -82,7 +83,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
           {!isProjectCoordinator && (
           <FormControl {...textAreaStyle}>
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-              {t('enterNewNote')}
+            {t(`${CLIENTS}.enterNewNote`)}
             </FormLabel>
             <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
           </FormControl>
@@ -91,11 +92,11 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
-          {t('cancel')}
+        {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
           <Button colorScheme="brand" ml={2} isDisabled={!message} onClick={Submit}>
-            {t('save')}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>
@@ -103,79 +104,3 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
   )
 })
 export default ClientNotes
-
-// import React, { useEffect } from 'react'
-// import { useAccountDetails } from 'api/vendor-details'
-// import { NotesTab } from 'features/common/notes-tab'
-// import { useClientNoteMutation, useClients, useNotes } from 'api/clients'
-// import { Box, Button, Flex } from '@chakra-ui/react'
-// import { useUserRolesSelector } from 'utils/redux-common-selectors'
-// import { useTranslation } from 'react-i18next'
-
-// type clientNotesProps = {
-//   clientDetails?: any
-//   setNotesCount?: any
-//   onClose: () => void
-// }
-
-// export const ClientNotes: React.FC<clientNotesProps> = props => {
-//   const { setNotesCount, clientDetails } = props
-//   const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
-//   const { data: account } = useAccountDetails()
-//   const { data: clients, refetch } = useClients()
-//   const { notes = [] } = useNotes({ clientId: clientDetails?.id || 0 })
-//   const { isProjectCoordinator } = useUserRolesSelector()
-//   const { t } = useTranslation()
-
-//   useEffect(() => {
-//     if (notes?.length > 0 && setNotesCount) {
-//       setNotesCount(notes.filter((note: any) => note.createdBy !== account.login)?.length)
-//     }
-//   }, [notes, clients, refetch])
-
-//   const saveNote = data => {
-//     const payload = {
-//       comment: data.message,
-//       clientId: clientDetails?.id,
-//     }
-//     createNotes(payload)
-//   }
-
-//   const btnStyle = {
-//     alignItems: 'center',
-//     justifyContent: 'end',
-//     borderTop: '1px solid #CBD5E0',
-//   }
-
-//   return (
-//     <>
-//       <Box h="495px">
-//         <NotesTab
-//           saveNote={saveNote}
-//           notes={notes}
-//           contentStyle={{ padding: '25px', maxHeight: '400px' }}
-//           pageLayoutStyle={{ bg: 'white', rounded: 16, pb: 2 }}
-//         />
-//       </Box>
-//       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-//         <Button variant={!isProjectCoordinator ? 'outline' : ''} colorScheme="brand" onClick={props?.onClose}>
-//           {t('cancel')}
-//         </Button>
-//         {!isProjectCoordinator && (
-//           <Button
-//             // disabled={isClientDetailsSaveButtonDisabled}
-//             colorScheme="brand"
-//             type="submit"
-//             form="clientDetails"
-//             ml={2}
-//             onClick={saveNote}
-//           >
-//             {t('save')}
-//           </Button>
-//         )}
-//       </Flex>
-//     </>
-//   )
-// }
-
-// export default ClientNotes

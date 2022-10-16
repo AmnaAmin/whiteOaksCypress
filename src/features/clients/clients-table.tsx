@@ -8,6 +8,7 @@ import Client from 'features/clients/selected-client-modal'
 import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
+import { CLIENTS } from './clients.i18n'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -41,14 +42,13 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { data: clients, refetch } = useClients()
+  const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { t } = useTranslation()
   const { states } = useStates()
   const { marketSelectOptions } = useMarkets()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
-  console.log('selectedClient', selectedClient)
   useEffect(() => {
     if (clients && clients.length > 0 && !selectedClient?.id) {
       const updatedClient = clients?.find(c => c.id === selectedClient?.id)
@@ -61,36 +61,36 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { columns, resizeElementRef } = useColumnWidthResize(
     [
       {
-        Header: t('name' as string),
+        Header: t(`${CLIENTS}.name`),
         accessor: 'companyName',
       },
       {
-        Header: t('contact'),
+        Header: t(`${CLIENTS}.contact`),
         accessor: 'contacts[0].contact',
       },
       {
-        Header: t('address'),
+        Header: t(`${CLIENTS}.address`),
         accessor: 'streetAddress',
       },
       {
-        Header: t('phone'),
+        Header: t(`${CLIENTS}.phone`),
         accessor: 'contacts[0].phoneNumber',
       },
       {
-        Header: t('email'),
+        Header: t(`${CLIENTS}.email`),
         accessor: 'contacts[0].emailAddress',
       },
       {
-        Header: t('contact'),
+        Header: t(`${CLIENTS}.contact`),
         accessor: 'accountPayableContactInfos[0].contact',
       },
       {
-        Header: t('email'),
+        Header: t(`${CLIENTS}.email`),
         accessor: 'accountPayableContactInfos[0].emailAddress',
       },
 
       {
-        Header: t('phone'),
+        Header: t(`${CLIENTS}.phone`),
         accessor: 'accountPayableContactInfos[0].phoneNumber',
       },
     ],
@@ -117,6 +117,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       <TableWrapper
         columns={columns}
         data={clients || []}
+        isLoading={isLoading}
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 225px)"
         name="clients-table"
