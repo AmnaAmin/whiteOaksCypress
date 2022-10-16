@@ -140,9 +140,9 @@ export const Table: React.FC<TableProps> = ({ isLoading, onRowClick, onRightClic
                         // lineHeight="20px"
                         isTruncated
                         display="inline-block"
-                        title={title as string}
+                        title={typeof title === 'string' ? t(title as string) : ''}
                       >
-                        {t(title as string)}
+                        {typeof title === 'string' ? t(title as string) : title}
                       </Text>
                       {isSortable ? (
                         sortedDesc ? (
