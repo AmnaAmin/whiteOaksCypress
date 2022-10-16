@@ -12,11 +12,11 @@ import { PROJECTS_QUERY_KEY } from './projects'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
-
+  const date = new Date()
   const { data: projectData, ...rest } = useQuery<Project>(
     ['project', projectId],
     async () => {
-      const response = await client(`projects/${projectId}`, {})
+      const response = await client(`projects/${projectId}?cacheBuster=${date.valueOf()}`, {})
 
       return response?.data
     },
