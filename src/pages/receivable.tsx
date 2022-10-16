@@ -41,7 +41,7 @@ export const Receivable = () => {
   })
 
   const { mutate: batchCall } = useBatchProcessingMutation()
-  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
+  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination, queryStringWithoutPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register)
   const { weekDayFilters } = useWeeklyCount()
 
@@ -110,7 +110,7 @@ export const Receivable = () => {
             </Button>
           </Flex>
           <Divider border="2px solid #E2E8F0" />
-          <Box mt={2}>
+          <Box mt={2} pb="4">
             {loading && <ViewLoader />}
             <ReceivableTable
               receivableColumns={receivableTableColumns}
@@ -121,28 +121,6 @@ export const Receivable = () => {
               queryStringWithoutPagination={queryStringWithoutPagination}
             />
           </Box>
-
-          {/* <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5} pb={4}>
-            <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
-              <Button
-                m={0}
-                colorScheme="brand"
-                variant="ghost"
-                onClick={() => {
-                  if (projectTableInstance) {
-                    projectTableInstance?.exportData('xlsx', false)
-                  }
-                }}
-              >
-                <Icon as={BiExport} fontSize="18px" mr={1} />
-                {t('export')}
-              </Button>
-              <Center>
-                <Divider orientation="vertical" height="25px" border="1px solid" />
-              </Center>
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-            </Flex>
-          </Stack> */}
         </Box>
         <ConfirmationBox
           title="Batch processing"
