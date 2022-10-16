@@ -69,7 +69,7 @@ export const useGetAllProjects = (filterQueryString: string) => {
 export const useProject = (projectId?: string) => {
   const client = useClient()
 
-  const { data: projectData, ...rest } = useQuery<Project>(['project', projectId], async () => {
+  const { data: projectData, ...rest } = useQuery<Project>(['vendorProject', projectId], async () => {
     const response = await client(`projects/${projectId}/vendor`, {})
 
     return response?.data
