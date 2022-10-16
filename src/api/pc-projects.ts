@@ -12,11 +12,10 @@ import { PROJECTS_QUERY_KEY } from './projects'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
-
   const { data: projectData, ...rest } = useQuery<Project>(
     ['project', projectId],
     async () => {
-      const response = await client(`projects/${projectId}`, {})
+      const response = await client(`projects/${projectId}?cacheBuster=${new Date().valueOf()}`, {})
 
       return response?.data
     },
@@ -490,7 +489,7 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
     if (fieldUpdating.current) return
   }
 
-  const onInoviceAmountChange = invoiceAmount => {
+  const onInvoiceAmountChange = invoiceAmount => {
     if (fieldUpdating.current && fieldUpdating.current !== 'invoiceAmount') {
       fieldUpdating.current = null
       return
@@ -502,5 +501,5 @@ export const usePercentageAndInoviceChange = ({ setValue }) => {
     setValue('percentage', percentageField)
     fieldUpdating.current = 'invoiceAmount'
   }
-  return { onPercentageChange, onApprovedAmountChange, onInoviceAmountChange }
+  return { onPercentageChange, onApprovedAmountChange, onInvoiceAmountChange }
 }
