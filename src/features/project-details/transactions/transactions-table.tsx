@@ -8,23 +8,10 @@ import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { ExportCustomButton } from 'components/table-refactored/export-button'
-import { PaginationState } from '@tanstack/react-table'
-import {
-  TRANSACTION_TABLE_COLUMNS,
-  TRANSACTION_TABLE_QUERIES_KEY,
-} from 'features/project-details/transactions/transaction.constants'
-import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
-import {
-  GotoFirstPage,
-  GotoLastPage,
-  GotoNextPage,
-  GotoPreviousPage,
-  ShowCurrentPageWithTotal,
-  TablePagination,
-} from 'components/table-refactored/pagination'
 
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -33,14 +20,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: TRANSACTION_TABLE_QUERIES_KEY,
-    pagination,
-    setPagination,
-  })
-
-  const { transactions, isLoading, totalPages } = useTransactions(fitlersQueryString, pagination.pageSize, projectId)
+  const { transactions, isLoading } = useTransactions(projectId)
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
@@ -67,15 +47,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   return (
     <>
       <Box h="500px" overflow={'auto'}>
-        <TableContextProvider
-          data={transactions}
-          columns={tableColumns}
-          pagination={pagination}
-          setPagination={setPagination}
-          columnFilters={columnFilters}
-          setColumnFilters={setColumnFilters}
-          totalPages={totalPages}
-        >
+        <TableContextProvider data={transactions} columns={tableColumns}>
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
@@ -83,13 +55,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
-            <TablePagination>
-              <ShowCurrentPageWithTotal />
-              <GotoFirstPage />
-              <GotoPreviousPage />
-              <GotoNextPage />
-              <GotoLastPage />
-            </TablePagination>
           </TableFooter>
         </TableContextProvider>
       </Box>

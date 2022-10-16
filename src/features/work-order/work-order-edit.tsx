@@ -30,7 +30,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'api/pc-projects'
 import { useDocuments } from 'api/vendor-projects'
-import { useGetAllTransactions } from 'api/transactions'
+import { useTransactions } from 'api/transactions'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { useFetchProjectId } from './details/assignedItems.utils'
 
@@ -57,7 +57,7 @@ const WorkOrderDetails = ({
   })
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
-  const { transactions = [], isLoading: isTransLoading } = useGetAllTransactions(projId)
+  const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
   const [isWorkOrderUpdating, setWorkOrderUpdating] = useState(false)
 
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
