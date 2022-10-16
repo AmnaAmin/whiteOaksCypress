@@ -47,6 +47,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
                         const checked = event.target.checked
                         onChange({ ...market, id: checked ? market.id : null })
                       }}
+                      isDisabled={isProjectCoordinator}
                     >
                       {market.metropolitanServiceArea}
                     </CheckboxButton>
@@ -65,7 +66,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           <Button
             colorScheme="brand"
             type="submit"
-            form="clientDetails" //onClick={props.setNextTab}
+            form="clientDetails" 
             ml={2}
           >
             {t('save')}

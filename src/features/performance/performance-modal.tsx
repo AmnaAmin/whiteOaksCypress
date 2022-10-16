@@ -45,7 +45,7 @@ const PerformanceModal = ({
   const bonusValue = bonus?.find(b => b?.value === fpmData?.newBonus)
   const badgeValue = badges?.find(b => b?.value === fpmData?.badge)
   const quotaValue = ignorePerformance?.find(b => b?.value === fpmData?.ignoreQuota)
-console.log('quotaValue', quotaValue)
+
   useEffect(() => {
     reset({
       newTarget: fpmData?.newTarget || '0.00',

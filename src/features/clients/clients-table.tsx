@@ -41,7 +41,7 @@ const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 }
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { data: clients, refetch } = useClients()
+  const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { t } = useTranslation()
   const { stateSelectOptions } = useStates()
@@ -119,6 +119,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       <TableWrapper
         columns={columns}
         data={clients || []}
+        isLoading={isLoading}
         TableRow={clientsTableRow}
         tableHeight="calc(100vh - 225px)"
         name="clients-table"
