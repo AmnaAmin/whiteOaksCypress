@@ -61,7 +61,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             notes && (
               <Box>
                 {notes.map(note => {
-                  return note === account.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
+                  return note === account?.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
                 })}
                 <div ref={messagesEndRef} />
               </Box>

@@ -44,7 +44,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { t } = useTranslation()
-  const { states } = useStates()
+  const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
@@ -101,7 +101,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       {isOpen && (
         <Client
           clientDetails={selectedClient as Clients}
-          states={states}
+          states={stateSelectOptions}
           marketOptions={marketSelectOptions}
           onClose={() => {
             refetch()

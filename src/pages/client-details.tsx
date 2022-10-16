@@ -9,7 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { DevTool } from '@hookform/devtools'
 import { ClientFormValues } from 'types/client.type'
-import { useSaveNewClientDetails, useUpdateClientDetails } from 'api/clients'
+import { useSaveNewClientDetails, useUpdateClientDetails, clientDetailsDefaultValues } from 'api/clients'
 import { client } from 'utils/api-client'
 
 type ClientDetailsTabsProps = {
@@ -27,6 +27,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
   const clientDetails = props?.clientDetails
+  const stateSelectOptions = props?.states
   const marketSelectOptions = props?.marketOptions
   const { mutate: editClientDetails } = useUpdateClientDetails()
   const { mutate: addNewClientDetails } = useSaveNewClientDetails()
@@ -36,40 +37,33 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   }
 
   // Setting Dropdown values
-  const stateSelect = props?.states?.map(state => ({ value: state?.id, label: state?.name })) || []
-  const stateValue = stateSelect?.find(b => b?.value === props?.clientDetails?.state)
+  const stateValue = stateSelectOptions?.find(b => b?.id === clientDetails?.state)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === props?.clientDetails?.paymentTerm)
+  const contactsMarketsValue =
+    clientDetails?.contacts?.length > 0
+      ? [
+          ...clientDetails?.contacts?.map(c => {
+            const selectedMarket = marketSelectOptions?.find(m => m.id === c.market.id)
+            return {
+              contact: c.contact,
+              phoneNumber: c.phoneNumber,
+              emailAddress: c.emailAddress,
+              market: selectedMarket,
+            }
+          }),
+        ]
+      : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
 
   // Setting Default Values
   const methods = useForm<ClientFormValues>()
 
-  const { handleSubmit: handleSubmit2, control, reset } = methods
+  const { handleSubmit: handleSubmit2, control, reset, setValue } = methods
 
   useEffect(() => {
-    reset({
-      ...clientDetails,
-      paymentTerm: paymentTermsValue || { label: '20', value: '20' },
-      state: stateValue,
-      contacts:
-        clientDetails?.contacts?.length > 0
-          ? [
-              ...clientDetails?.contacts?.map(c => {
-                const selectedMarket = marketSelectOptions?.find(m => m.id === c.market.id)
-                return {
-                  contact: c.contact,
-                  phoneNumber: c.phoneNumber,
-                  emailAddress: c.emailAddress,
-                  market: selectedMarket,
-                }
-              }),
-            ]
-          : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
-
-      accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
-        ? clientDetails?.accountPayableContactInfos
-        : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
-    })
-  }, [clientDetails])
+    reset(clientDetailsDefaultValues(clientDetails, paymentTermsValue, stateValue, contactsMarketsValue))
+    setValue('state', stateValue)
+    setValue('markets', contactsMarketsValue)
+  }, [reset, clientDetails])
 
   const onSubmit = useCallback(
     async values => {
@@ -104,11 +98,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           <TabList>
             <Tab>{t('details')}</Tab>
             <Tab>{t('market')}</Tab>
-            <Tab
-            //isDisabled={!clientDetails?.id}
-            >
-              {t('notes')}
-            </Tab>
+            <Tab isDisabled={!clientDetails?.id}>{t('notes')}</Tab>
           </TabList>
           <TabPanels mt="20px">
             <TabPanel p="0px">

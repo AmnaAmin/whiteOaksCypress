@@ -68,6 +68,19 @@ export const useUpdateClientDetails = () => {
   )
 }
 
+export const clientDetailsDefaultValues = (clientDetails, paymentTermsValue, stateValue, contactsMarketsValue) => {
+  const defaultValues = {
+    ...clientDetails,
+    paymentTerm: paymentTermsValue || { label: '20', value: '20' },
+    state: stateValue || [],
+    contacts: contactsMarketsValue,
+    accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
+      ? clientDetails?.accountPayableContactInfos
+      : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
+  }
+  return defaultValues
+}
+
 export const useClientNoteMutation = clientId => {
   const client = useClient()
   const toast = useToast()
@@ -127,6 +140,7 @@ export const useSaveNewClientDetails = () => {
           position: 'top-left',
         })
         queryClient.invalidateQueries('client')
+        reset()
       },
 
       onError(error: any) {

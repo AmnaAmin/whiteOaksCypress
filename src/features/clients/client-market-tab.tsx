@@ -1,5 +1,5 @@
 import { Box, Flex, Button } from '@chakra-ui/react'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
@@ -46,6 +46,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...market, id: checked ? market.id : null })
+                        console.log('checked', checked)
                       }}
                     >
                       {market.metropolitanServiceArea}
