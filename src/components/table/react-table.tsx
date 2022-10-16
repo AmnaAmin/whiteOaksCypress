@@ -24,6 +24,7 @@ import {
   FormLabel,
   Center,
   Tfoot,
+  TableContainer,
 } from '@chakra-ui/react'
 import { AutoSizer, List } from 'react-virtualized'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
@@ -270,7 +271,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
 
 export const TFooter: React.FC<TableInstance> = ({ footerGroups }) => {
   return (
-    <Tfoot bg="#F7FAFC" rounded="md" fontWeight="bold">
+    <Tfoot bg="#F7FAFC" fontWeight="bold">
       {footerGroups.map(group => (
         <Tr {...group.getFooterGroupProps()}>
           {group.headers.map(column => (
@@ -321,17 +322,18 @@ export const Table: React.FC<{ tableInstance: any; tableHeight: string | number 
   }
 
   return (
-    <ChakraTable
-      {...defaultStyles()}
-      w="100%"
-      bg="#FFFFFF"
-      h={tableHeight}
-      boxShadow="sm"
-      rounded="md"
-      {...tableInstance.getTableProps()}
-    >
-      {children}
-    </ChakraTable>
+    <TableContainer h="100%" roundedTop="lg" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+      <ChakraTable
+        {...defaultStyles()}
+        w="100%"
+        bg="#FFFFFF"
+        h={tableHeight}
+        boxShadow="sm"
+        {...tableInstance.getTableProps()}
+      >
+        {children}
+      </ChakraTable>
+    </TableContainer>
   )
 }
 

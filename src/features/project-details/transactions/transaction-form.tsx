@@ -11,9 +11,6 @@ import {
   Box,
   HStack,
   Button,
-  InputGroup,
-  InputRightElement,
-  Icon,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -301,7 +298,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
               <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -433,17 +430,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                       >
                         {t('expectedCompletion')}
                       </FormLabel>
-                      <InputGroup>
-                        <Input
-                          data-testid="expected-completion-date"
-                          id="expectedCompletionDate"
-                          size="md"
-                          isDisabled={true}
-                          css={calendarIcon}
-                          {...register('expectedCompletionDate')}
-                        />
-                        <InputRightElement children={<Icon as={BiCalendar} boxSize="5" color="gray.400" mr="11px" />} />
-                      </InputGroup>
+                      <Input
+                        data-testid="expected-completion-date"
+                        id="expectedCompletionDate"
+                        size="md"
+                        isDisabled={true}
+                        css={calendarIcon}
+                        {...register('expectedCompletionDate')}
+                      />
 
                       <FormErrorMessage>{errors?.expectedCompletionDate?.message}</FormErrorMessage>
                     </FormControl>

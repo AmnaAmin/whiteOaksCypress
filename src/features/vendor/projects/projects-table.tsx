@@ -98,7 +98,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
                   fontStyle="normal"
                   fontWeight="400"
                 >
-                  {cell.render('Cell')}
+                  {cell.render('Cell')} _ _ _
                 </Text>
               </Flex>
             </Td>
@@ -136,7 +136,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, projects])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box w="100%" ref={resizeElementRef}>
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
@@ -144,7 +144,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         TableRow={ProjectRow}
         name="my-table"
         setTableInstance={setTableInstance}
-        tableHeight={'inherit'}
+        tableHeight="calc(100vh - 270px)"
         sortBy={{ id: 'id', desc: true }}
       />
     </Box>

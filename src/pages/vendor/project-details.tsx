@@ -1,4 +1,4 @@
-import { useDisclosure, Text } from '@chakra-ui/react'
+import { useDisclosure, Text, Flex } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -43,17 +43,19 @@ const ProjectDetails: React.FC = props => {
         <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
 
         <Stack spacing={5}>
-          <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
-            <TabList>
-              <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
+          <Tabs index={tabIndex} variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
+            <TabList h={'50px'} alignItems="end">
+              <Flex h={'40px'}>
+                <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
 
-              <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
+                <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
 
-              <Tab aria-labelledby="documents-tab">{t('documents')}</Tab>
+                <Tab aria-labelledby="documents-tab">{t('documents')}</Tab>
 
-              <Tab>{t('alerts')}</Tab>
+                <Tab>{t('alerts')}</Tab>
+              </Flex>
 
-              <Box w="100%" h="40px" display="flex" justifyContent="end" position="relative">
+              <Box w="100%" h="50px" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 && (
                   <Button onClick={onDocumentModalOpen} colorScheme="brand" leftIcon={<BiUpload fontSize="16px" />}>
                     {t('upload')}

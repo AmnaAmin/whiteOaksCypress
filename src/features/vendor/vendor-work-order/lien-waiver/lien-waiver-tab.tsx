@@ -377,17 +377,24 @@ export const LienWaiverTab: React.FC<any> = props => {
           )}
         </Flex>
         <HStack spacing="16px" justifyContent="end">
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
-            {t('cancel')}
-          </Button>
           {[STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
             lienWaiverData?.statusLabel?.toLocaleLowerCase(),
-          ) &&
+          ) ? (
             !(lienWaiverData.leanWaiverSubmitted && lienWaiverData.lienWaiverAccepted) && (
-              <Button colorScheme="brand" type="submit" data-testid="save-lien-waiver">
-                {t('save')}
-              </Button>
-            )}
+              <>
+                <Button variant="outline" colorScheme="brand" onClick={onClose}>
+                  {t('cancel')}
+                </Button>
+                <Button colorScheme="brand" type="submit" data-testid="save-lien-waiver">
+                  {t('save')}
+                </Button>
+              </>
+            )
+          ) : (
+            <Button colorScheme="brand" onClick={onClose}>
+              {t('cancel')}
+            </Button>
+          )}
         </HStack>
       </ModalFooter>
       <ConfirmationBox
