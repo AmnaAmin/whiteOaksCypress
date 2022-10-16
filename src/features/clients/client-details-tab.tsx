@@ -79,7 +79,11 @@ export const Details: React.FC<clientDetailProps> = props => {
   })
 
   const state = useWatch({ name: 'state', control })
+  const contact = useWatch({ name: 'contact', control })
+
   console.log('watch state', state)
+  console.log('watch contact', contact)
+
 
   return (
     <Box>

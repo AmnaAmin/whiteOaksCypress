@@ -58,11 +58,13 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const methods = useForm<ClientFormValues>()
 
   const { handleSubmit: handleSubmit2, control, reset, setValue } = methods
-
+  setValue('state', stateValue)
+  setValue('contacts', contactsMarketsValue)
+  
   useEffect(() => {
     reset(clientDetailsDefaultValues(clientDetails, paymentTermsValue, stateValue, contactsMarketsValue))
     setValue('state', stateValue)
-    setValue('markets', contactsMarketsValue)
+    setValue('contacts', contactsMarketsValue)
   }, [reset, clientDetails])
 
   const onSubmit = useCallback(

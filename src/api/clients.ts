@@ -72,7 +72,7 @@ export const clientDetailsDefaultValues = (clientDetails, paymentTermsValue, sta
   const defaultValues = {
     ...clientDetails,
     paymentTerm: paymentTermsValue || { label: '20', value: '20' },
-    state: stateValue || [],
+    state: stateValue,
     contacts: contactsMarketsValue,
     accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
       ? clientDetails?.accountPayableContactInfos
@@ -140,7 +140,6 @@ export const useSaveNewClientDetails = () => {
           position: 'top-left',
         })
         queryClient.invalidateQueries('client')
-        reset()
       },
 
       onError(error: any) {

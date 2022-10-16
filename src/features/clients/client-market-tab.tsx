@@ -46,7 +46,6 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
                       onChange={event => {
                         const checked = event.target.checked
                         onChange({ ...market, id: checked ? market.id : null })
-                        console.log('checked', checked)
                       }}
                     >
                       {market.metropolitanServiceArea}
