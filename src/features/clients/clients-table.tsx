@@ -53,7 +53,11 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       const updatedClient = clients?.find(c => c.id === selectedClient?.id)
       if (updatedClient) {
         setSelectedClient({ ...updatedClient })
+      } else {
+        setSelectedClient(undefined)
       }
+    } else {
+      setSelectedClient(undefined)
     }
   }, [clients])
 
