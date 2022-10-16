@@ -30,7 +30,7 @@ export const usePaginatedAccountPayable = (queryString: string, pageSize: number
 
   const { data, ...rest } = usePaginationQuery<PayableResponse>(
     [ACCONT_PAYABLE_API_KEY, apiQueryString],
-    `all_workorders?${apiQueryString}`,
+    `all-payables?${apiQueryString}`,
     pageSize,
   )
 
@@ -41,7 +41,7 @@ export const usePaginatedAccountPayable = (queryString: string, pageSize: number
   }
 }
 
-const GET_ALL_WORKORDERS_QUERY_KEY = 'all_workorders_api_key'
+const GET_ALL_WORKORDERS_QUERY_KEY = 'all_payable_api_key'
 // This hook of getting workorders from backend is only for export button of payable table
 export const useGetAllWorkOrders = (queryString: string) => {
   const client = useClient()
@@ -50,7 +50,7 @@ export const useGetAllWorkOrders = (queryString: string) => {
   return useQuery(
     [GET_ALL_WORKORDERS_QUERY_KEY, apiQueryString],
     async () => {
-      const response = await client(`all_workorders?${apiQueryString}`, {})
+      const response = await client(`all-payables?${apiQueryString}`, {})
       return response?.data?.workOrders
     },
     {

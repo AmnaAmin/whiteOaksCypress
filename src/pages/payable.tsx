@@ -17,6 +17,7 @@ import { usePayableColumns } from '../features/payable/hooks'
 import { PaginationState } from '@tanstack/react-table'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
+import { DevTool } from '@hookform/devtools'
 
 export const Payable = () => {
   const [loading, setLoading] = useState(false)
@@ -134,6 +135,7 @@ export const Payable = () => {
         yesButtonText="Cancel"
         showNoButton={false}
       />
+      <DevTool control={control} />
     </form>
   )
 }

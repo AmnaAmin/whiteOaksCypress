@@ -124,7 +124,7 @@ export const usePayableColumns = (control, register) => {
           return (
             <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
               <Spacer w="20px" />
-              <Checkbox value={projectId} {...register(`id.${row.id}`)} isChecked={!!formValues?.id?.[row.id]} />
+              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[projectId]} />
             </Flex>
           )
         },
