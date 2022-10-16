@@ -33,8 +33,7 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
 }
 
-const CustomTooltip = ({ payload, label }: any) => {
-  // console.log(payload?.map(e => e))
+const OverViewCustomTooltip = ({ payload, label }: any) => {
   return (
     <Box bg="white" p={3} rounded="6px" border="1px solid #CBD5E0" className="recharts-custom-tooltip">
       <Text fontWeight={900}>{monthsFull[label]}</Text>
@@ -89,7 +88,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           />
 
           {/* <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} /> */}
-          <Tooltip content={<CustomTooltip />} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
+          <Tooltip content={<OverViewCustomTooltip />} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
 
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />

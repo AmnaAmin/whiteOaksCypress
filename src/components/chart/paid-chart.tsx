@@ -1,7 +1,7 @@
 import { usePaidWOAmountByYearAndMonth } from 'api/vendor-dashboard'
 import { round } from 'lodash'
 import React from 'react'
-import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Label } from 'recharts'
 
 type FilterChart = {
   month: string
@@ -53,7 +53,17 @@ export const PaidChartGraph = ({ data, width, height }) => {
             fontStyle: 'normal',
           }}
           tickMargin={20}
-        />
+        >
+          {data?.length === 0 && (
+            <Label
+              value="There is currently no data available for the month selected"
+              offset={180}
+              position="insideBottom"
+              fill="#A0AEC0"
+              fontStyle="italic"
+            />
+          )}
+        </XAxis>
         <YAxis
           hide={false}
           type="number"
@@ -71,7 +81,7 @@ export const PaidChartGraph = ({ data, width, height }) => {
             return ` ${'$' + round(tick / 1000, 2) + 'k'} `
           }}
         />
-        <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />
+        {data?.length && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
 
         <Bar dataKey="count" fill="url(#colorUv)" radius={[5, 5, 0, 0]} />
       </BarChart>
