@@ -1,4 +1,10 @@
+import React from 'react'
+import { ColumnDef } from '@tanstack/react-table'
 import { useAccountPayable } from 'api/account-payable'
+import { useMemo } from 'react'
+import { useWatch } from 'react-hook-form'
+import { RECEIVABLE_TABLE_COLUMNS } from './receivable.constants'
+import { Checkbox, Flex, Spacer } from '@chakra-ui/react'
 
 const WEEK_FILTERS = [
   {
@@ -103,4 +109,33 @@ export const usePayableWeeklyCount = () => {
   return {
     weekDayFilters,
   }
+}
+
+export const useReceivableTableColumns = (control, register) => {
+  const formValues = useWatch({ control })
+
+  const columns: ColumnDef<any>[] = useMemo(
+    () => [
+      ...RECEIVABLE_TABLE_COLUMNS,
+      {
+        header: 'checkbox',
+        accessorKey: 'checkbox',
+        Cell: cellInfo => {
+          const { row } = cellInfo
+          const projectId = row.original.id
+
+          return (
+            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
+              <Spacer w="20px" />
+              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[row.id]} />
+            </Flex>
+          )
+        },
+        disableExport: true,
+      },
+    ],
+    [register, formValues],
+  )
+
+  return columns
 }
