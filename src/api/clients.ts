@@ -106,9 +106,6 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
     state: stateValue,
     contacts: contactsMarketsValue,
     accountPayableContactInfos: accPayInfoValue,
-    // clientDetails?.accountPayableContactInfos?.length
-    //   ? clientDetails?.accountPayableContactInfos
-    //   : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
   return defaultValues
 }
