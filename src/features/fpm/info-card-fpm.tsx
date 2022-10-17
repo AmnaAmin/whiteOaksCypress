@@ -124,25 +124,25 @@ export const InformationCardFPM: React.FC<{ projectId?: string; chartData: any; 
       boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
     >
       <InfoStructureCard
-        bonus={t(`${FPM_CARDS}.bonus`)} 
+        bonus={t(`${FPM_CARDS}.bonus`)}
         newBonus={chartData?.currentBonus}
         profit={t(`${FPM_CARDS}.profit`)}
-        revenue={t(`${FPM_CARDS}.revenue`)} 
+        revenue={t(`${FPM_CARDS}.revenue`)}
         amount={currentMonthData}
-        title={t(`${FPM_CARDS}.currentMonth`)} 
+        title={t(`${FPM_CARDS}.currentMonth`)}
         isLoading={isLoading}
       />
       <InfoStructureCard
-        bonus={t(`${FPM_CARDS}.bonus`)} 
+        bonus={t(`${FPM_CARDS}.bonus`)}
         previousBonus={chartData?.previousBonus}
-        profit={t(`${FPM_CARDS}.profit`)} 
-        revenue={t(`${FPM_CARDS}.revenue`)} 
+        profit={t(`${FPM_CARDS}.profit`)}
+        revenue={t(`${FPM_CARDS}.revenue`)}
         amount={previousMonthData}
         isLoading={isLoading}
         title={t(`${FPM_CARDS}.previousMonth`)}
       />
       <InfoStructureCard
-        bonus= {t(`${FPM_CARDS}.bonus`) + '%'} 
+        bonus={t(`${FPM_CARDS}.bonus`) + '%'}
         goals={t(`${FPM_CARDS}.goals`)}
         target={t(`${FPM_CARDS}.target`)}
         amount={chartData}

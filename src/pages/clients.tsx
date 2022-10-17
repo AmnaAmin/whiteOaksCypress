@@ -1,8 +1,9 @@
 import { Box, Button, Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react'
+import { useClients } from 'api/clients'
 import { ClientsTable } from 'features/clients/clients-table'
 import { CLIENTS } from 'features/clients/clients.i18n'
 import NewClientModal from 'features/clients/new-client-modal'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiBookAdd } from 'react-icons/bi'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -10,8 +11,22 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 export const Client = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
+  const { data: clients } = useClients()
   const { isOpen: isOpenNewClientModal, onClose: onNewClientModalClose, onOpen: onNewClientModalOpen } = useDisclosure()
   const { isProjectCoordinator } = useUserRolesSelector()
+  const [createdClientId, setCreatedClientId] = useState<string | null | undefined>(null)
+  const [selectedClient, setSelectedClient] = useState<string | null | undefined>(null)
+
+  useEffect(() => {
+    if (clients && clients.length > 0 && !!createdClientId) {
+      const updatedClient = clients?.find(c => c.id === createdClientId)
+      if (updatedClient) {
+        setSelectedClient({ ...updatedClient })
+      }
+    } else {
+      setSelectedClient(null)
+    }
+  }, [clients, createdClientId])
 
   return (
     <>
@@ -47,10 +62,17 @@ export const Client = () => {
           </Text>
         </Flex>
         <Box>
-          <ClientsTable ref={tabsContainerRef} />
+          <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} />
         </Box>
       </Box>
-      <NewClientModal isOpen={isOpenNewClientModal} onClose={onNewClientModalClose} />
+      {isOpenNewClientModal && (
+        <NewClientModal
+          setCreatedClientId={setCreatedClientId}
+          isOpen={isOpenNewClientModal}
+          onClose={onNewClientModalClose}
+          createdClient={selectedClient}
+        />
+      )}
     </>
   )
 }

@@ -27,13 +27,11 @@ import Select from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
 import { BiAddToQueue } from 'react-icons/bi'
-// import { useClientDetailsSaveButtonDisabled, useSaveNewClientDetails, useUpdateClientDetails } from 'api/clients'
 import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 
 type clientDetailProps = {
   clientDetails?: any
-  states?: any
   onClose?: () => void
   setNextTab: () => void
 }
@@ -64,8 +62,6 @@ export const Details: React.FC<clientDetailProps> = props => {
   const companyName = useWatch({ name: 'companyName', control })
   const streetAddress = useWatch({ name: 'streetAddress', control })
   const city = useWatch({ name: 'city', control })
-
-  // const isClientDetailsSaveButtonDisabled = useClientDetailsSaveButtonDisabled(control, errors)
 
   const {
     fields: contactsFields,
@@ -188,6 +184,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       options={stateSelectOptions}
                       selected={field.value}
                       onChange={option => field.onChange(option)}
+                      selectProps={{ isBorderLeft: true }}
                       isDisabled={isProjectCoordinator}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -275,6 +272,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                                 selected={field.value}
                                 onChange={option => field.onChange(option)}
                                 isDisabled={isProjectCoordinator}
+                                selectProps={{ isBorderLeft: true }}
                                 // value={markets?.map(market => {
                                 //   if (market?.id === parseInt(contacts?.market))
                                 //     return { label: market?.stateName, value: market?.id }
@@ -340,7 +338,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="contact"
-                    {...register(`accountPayableContactInfos.${index}.contact`)}
+                    {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' })}
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
@@ -355,7 +353,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="phoneNumber"
-                    {...register(`accountPayableContactInfos.${index}.phoneNumber`)}
+                    {...register(`accountPayableContactInfos.${index}.phoneNumber`, { required: 'This is required' })}
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
@@ -370,7 +368,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="emailAddress"
-                    {...register(`accountPayableContactInfos.${index}.emailAddress`)}
+                    {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
                   />
@@ -387,7 +385,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <Box width={'215px'}>
                       <Input
                         id="comments"
-                        {...register(`accountPayableContactInfos.${index}.comments`)}
+                        {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
                         style={disabledTextStyle}
                         isDisabled={isProjectCoordinator}
                         variant={'required-field'}

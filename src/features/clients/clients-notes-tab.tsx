@@ -33,11 +33,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
     borderTop: '1px solid #CBD5E0',
   }
 
-  const {
-    register,
-    control,
-    reset,
-  } = useForm()
+  const { register, control, reset } = useForm()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -66,7 +62,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             notes && (
               <Box>
                 {notes.map(note => {
-                  return note === account.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
+                  return note === account?.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
                 })}
                 <div ref={messagesEndRef} />
               </Box>

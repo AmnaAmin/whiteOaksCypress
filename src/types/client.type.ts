@@ -11,7 +11,7 @@ export type Clients = {
   dateUpdated?: string
   streetAddress?: string
   city?: string
-  state?: number
+  state?: any
   zipCode?: string
   invoiceEmailAddress?: string
   contacts?: Contact[]
@@ -66,7 +66,7 @@ export type ClientFormValues = {
   dateUpdated?: string
   streetAddress?: string
   city?: string
-  state?: number
+  state?: any
   zipCode?: string
   invoiceEmailAddress?: string
   contacts?: Contact[]

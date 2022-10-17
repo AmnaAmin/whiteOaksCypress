@@ -8,6 +8,7 @@ import {
   BiStats,
   BiUser,
   BiUserPin,
+  BiUserPlus,
 } from 'react-icons/bi'
 
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
@@ -152,6 +153,15 @@ export const MENU_ROLE_BASED: Menus = {
       title: 'Performance',
       Icon: BiLineChart,
       color: '#68D391',
+    },
+  ],
+
+  [UserTypes.admin]: [
+    {
+      pathTo: '/userManager',
+      title: 'User Mgmt',
+      Icon: BiUserPlus,
+      color: '#ECC94B',
     },
   ],
   [UserTypes.accounting]: [
