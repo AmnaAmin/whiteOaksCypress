@@ -258,8 +258,8 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
-        <Box h="calc(100% - 150px)" overflow="auto" border="1px solid #E2E8F0">
-          <Table variant="simple" size="md">
+        <Box h="calc(100% - 200px)" overflow="auto" border="1px solid #E2E8F0" roundedTop={6}>
+          <Table variant="simple" size="md" roundedTop={6}>
             <Thead pos="sticky" top={0}>
               <Tr>
                 <Td>{t('item')}</Td>
@@ -400,7 +400,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           </Table>
         </Box>
       </ModalBody>
-      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5} bg="white">
         <HStack justifyContent="start" w="100%">
           {[WOstatus.Invoiced, WOstatus.Paid, WOstatus.Completed].includes(
             workOrder?.statusLabel?.toLocaleLowerCase(),
@@ -435,7 +435,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           )}
         </HStack>
         <HStack justifyContent="end">
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+          <Button colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
         </HStack>

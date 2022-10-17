@@ -141,7 +141,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   return (
     <>
-      <Flex justifyContent="space-between" w="100%" mt="30px" mb="15px">
+      <Flex justifyContent="space-between" w="100%" mt="10px" mb="15px">
         {!isApproved && (
           <Box flex="1">
             <Button
@@ -153,7 +153,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               onClick={addRow}
               leftIcon={<AiOutlinePlus color="#4E87F8" />}
             >
-              {t('addNewRow')}
+              {t('newRow')}
             </Button>
             <Button
               data-testid="delete-row-button"
@@ -293,6 +293,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         flex="1"
         pos="relative"
         flexDirection="column"
+        roundedTop={6}
       >
         <Grid
           gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
@@ -305,6 +306,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           borderWidth="0 0 1px 0"
           borderStyle="solid"
           borderColor="gray.200"
+          roundedTop={6}
         >
           {isShowCheckboxes && (
             <GridItem id="all-checkbox">

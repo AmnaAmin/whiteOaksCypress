@@ -20,7 +20,6 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { countInCircle } from 'theme/common-style'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
 import { useDocuments } from 'api/vendor-projects'
@@ -46,7 +45,6 @@ export const WorkOrderDetails = ({
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [notesCount, setNotesCount] = useState(0)
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [], isLoading } = useDocuments({
     projectId,
@@ -101,13 +99,7 @@ export const WorkOrderDetails = ({
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                 <Tab data-testid="invoice">{t('invoice')}</Tab>
                 <Tab data-testid="payments">{t('payments')}</Tab>
-                <Tab data-testid="notes">
-                  {t('notes')}
-
-                  <Box ml="5px" style={countInCircle}>
-                    {notesCount}
-                  </Box>
-                </Tab>
+                <Tab data-testid="notes">{t('notes')}</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel p={0}>
@@ -159,7 +151,7 @@ export const WorkOrderDetails = ({
                   />
                 </TabPanel>
                 <TabPanel p={0}>
-                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} setNotesCount={setNotesCount} />
+                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

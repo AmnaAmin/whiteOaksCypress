@@ -130,8 +130,9 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
             columns={4}
             spacing={8}
             borderBottom="1px solid  #E2E8F0"
-            minH="80px"
+            minH="60px"
             m="30px"
+            mb="20px"
             alignItems={'left'}
           >
             <CalenderCard title={t('WOIssued')} value={dateFormat(workOrder.workOrderIssueDate)} />

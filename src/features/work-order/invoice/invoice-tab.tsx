@@ -366,7 +366,7 @@ export const InvoiceTabPC = ({
             </Button>
           )}
         </HStack>
-      </ModalFooter>{' '}
+      </ModalFooter>
       <ConfirmationBox
         title="Invoice"
         content="Are you sure you want to generate invoice"
