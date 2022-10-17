@@ -30,7 +30,9 @@ describe('Charts testcases', () => {
   })
 
   test('PaidChart graph test case', async () => {
-    const { container } = render(<PaidChartGraph width={400} height={300} data={PAID_BY_YEAR_AND_MONTH} />)
+    const { container } = render(
+      <PaidChartGraph width={400} height={300} data={PAID_BY_YEAR_AND_MONTH} filters={undefined} />,
+    )
 
     expect(container.getElementsByClassName('recharts-xAxis').length).toBe(1)
     expect(container.getElementsByClassName('recharts-yAxis').length).toBe(1)
