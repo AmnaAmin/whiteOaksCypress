@@ -43,5 +43,10 @@ describe('New Work Order modal showing project specific details', () => {
     )
     expect(screen.getByTestId('profitPercentage')).toBeInTheDocument()
     expect(screen.getByTestId('finalSowAmount')).toBeInTheDocument()
+    expect(screen.getByTestId('clientApprovedAmount')).toHaveAttribute('disabled')
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('disabled')
+    screen.debug(undefined, 10000000000000000000000000000000000)
   })
 })
+
+describe('New Work Order modal showing project specific details', () => {})

@@ -464,6 +464,7 @@ export const NewWorkOrderForm: React.FC<{
                               <NumberFormat
                                 value={field.value}
                                 thousandSeparator
+                                data-testid="clientApprovedAmount"
                                 customInput={CustomRequiredInput}
                                 prefix={'$'}
                                 disabled={!watchUploadWO}
@@ -529,6 +530,7 @@ export const NewWorkOrderForm: React.FC<{
                             <>
                               <NumberFormat
                                 value={field.value}
+                                data-testid="vendorWorkOrderAmount"
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
