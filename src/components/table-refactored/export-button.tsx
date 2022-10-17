@@ -12,7 +12,6 @@ import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
-  data: any
   isLoading?: boolean
   refetch?: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
@@ -23,14 +22,7 @@ type ExportButtonProps = ButtonProps & {
 /*
    This is used when exporting full CSV data from the server side pagination table        
 */
-export const ExportButton: React.FC<ExportButtonProps> = ({
-  data,
-  children,
-  fileName,
-  refetch,
-  isLoading,
-  ...rest
-}) => {
+export const ExportButton: React.FC<ExportButtonProps> = ({ children, fileName, refetch, isLoading, ...rest }) => {
   const { t } = useTranslation()
   const { tableInstance } = useTableContext()
 
@@ -76,7 +68,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
         <Flex justifyContent="center">
           <BiExport fontSize={'18px'} />
 
-          <Text ml="2.88">Export</Text>
+          <Text ml="2.88">{t('projects.export')}</Text>
         </Flex>
       )}
     </Button>
@@ -95,13 +87,14 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({ data, ch
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1')
     XLSX.writeFile(wb, fileName ?? 'export.csv')
   }
+  const { t } = useTranslation()
 
   return (
     <Button variant="ghost" onClick={handleExport} {...rest}>
       {children ?? (
         <Flex justifyContent="center">
           <BiExport fontSize={'18px'} />
-          <Text ml="2.88">Export</Text>
+          <Text ml="2.88">{t('projects.export')}</Text>
         </Flex>
       )}
     </Button>

@@ -11,9 +11,6 @@ import {
   Box,
   HStack,
   Button,
-  InputGroup,
-  InputRightElement,
-  Icon,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -69,7 +66,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
@@ -88,7 +85,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
     >
       <GridItem>
         <ReadOnlyInput
-          label={t('dateCreated')}
+          label={t(`${TRANSACTION}.dateCreated`)}
           name={'dateCreated'}
           value={formValues.dateCreated as string}
           Icon={BiCalendar}
@@ -96,12 +93,17 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t('createdBy')} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.createdBy`)}
+          name="createdBy"
+          value={formValues.createdBy as string}
+          Icon={BiDetail}
+        />
       </GridItem>
 
       <GridItem>
         <ReadOnlyInput
-          label={t('dateModified')}
+          label={t(`${TRANSACTION}.dateModified`)}
           name={'dateModified'}
           value={(formValues.modifiedDate as string) || '----'}
           Icon={BiCalendar}
@@ -109,7 +111,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
       <GridItem>
         <ReadOnlyInput
-          label={t('modifiedBy')}
+          label={t(`${TRANSACTION}.modifiedBy`)}
           name={'modifiedBy'}
           value={(formValues.modifiedBy as string) || '----'}
           Icon={BiDetail}
@@ -301,11 +303,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
               <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
-                      {t('transactionType')}
+                      {t(`${TRANSACTION}.transactionType`)}
                     </FormLabel>
                     <Controller
                       rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
@@ -339,7 +341,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 <GridItem>
                   <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
                     <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
-                      {t('against')}
+                      {t(`${TRANSACTION}.against`)}
                     </FormLabel>
                     <Controller
                       control={control}
@@ -368,7 +370,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                   <GridItem>
                     <FormControl isInvalid={!!errors.workOrder} data-testid="work-order-select">
                       <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
-                        {t('workOrder')}
+                        {t(`${TRANSACTION}.workOrder`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -398,7 +400,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                   <GridItem>
                     <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
                       <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
-                        {t('changeOrder')}
+                        {t(`${TRANSACTION}.changeOrder`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -431,19 +433,16 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="expectedCompletionDate"
                         whiteSpace="nowrap"
                       >
-                        {t('expectedCompletion')}
+                        {t(`${TRANSACTION}.expectedCompletion`)}
                       </FormLabel>
-                      <InputGroup>
-                        <Input
-                          data-testid="expected-completion-date"
-                          id="expectedCompletionDate"
-                          size="md"
-                          isDisabled={true}
-                          css={calendarIcon}
-                          {...register('expectedCompletionDate')}
-                        />
-                        <InputRightElement children={<Icon as={BiCalendar} boxSize="5" color="gray.400" mr="11px" />} />
-                      </InputGroup>
+                      <Input
+                        data-testid="expected-completion-date"
+                        id="expectedCompletionDate"
+                        size="md"
+                        isDisabled={true}
+                        css={calendarIcon}
+                        {...register('expectedCompletionDate')}
+                      />
 
                       <FormErrorMessage>{errors?.expectedCompletionDate?.message}</FormErrorMessage>
                     </FormControl>
@@ -461,7 +460,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="newExpectedCompletionDate"
                         whiteSpace="nowrap"
                       >
-                        {t('newExpectedCompletionDate')}
+                        {t(`${TRANSACTION}.newExpectedCompletionDate`)}
                       </FormLabel>
 
                       <Input
@@ -484,7 +483,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                     <GridItem>
                       <FormControl isInvalid={!!errors.paymentTerm} data-testid="payment-term-select">
                         <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.600" fontWeight={500}>
-                          {t('paymentTerm')}
+                          {t(`${TRANSACTION}.paymentTerm`)}
                         </FormLabel>
                         <Controller
                           control={control}
@@ -518,7 +517,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           htmlFor="invoicedDate"
                           whiteSpace="nowrap"
                         >
-                          {t('invoicedDate')}
+                          {t(`${TRANSACTION}.invoicedDate`)}
                         </FormLabel>
                         <Input
                           data-testid="invoice-date"
@@ -545,7 +544,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           htmlFor="paidDate"
                           whiteSpace="nowrap"
                         >
-                          {t('paidDate')}
+                          {t(`${TRANSACTION}.paidDate`)}
                         </FormLabel>
                         <Input
                           data-testid="paid-date"
@@ -573,7 +572,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
-                          {t('payDateVariance')}
+                          {t(`${TRANSACTION}.payDateVariance`)}
                         </FormLabel>
                         <Input
                           data-testid="pay-date-variance"
@@ -602,7 +601,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
-                        {t('paymentReceivedDate')}
+                        {t(`${TRANSACTION}.paymentReceivedDate`)}
                       </FormLabel>
                       <Input
                         data-testid="payment-received-date"
@@ -683,7 +682,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                   <GridItem>
                     <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
                       <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
-                        {t('status')}
+                        {t(`${TRANSACTION}.status`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -732,7 +731,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
       <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
         {isShowLienWaiver ? (
           <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="brand">
-            {t('back')}
+            {t(`${TRANSACTION}.back`)}
           </Button>
         ) : (
           <Button
@@ -741,7 +740,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             colorScheme="brand"
             data-testid="close-transaction-form"
           >
-            {t('Cancel')}
+            {t(`${TRANSACTION}.cancel`)}
           </Button>
         )}
 
@@ -759,7 +758,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
               })
             }}
           >
-            {t('next')}
+            {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
           !isApproved && (
@@ -771,7 +770,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 colorScheme="brand"
                 variant="solid"
               >
-                {t('save')}
+                {t(`${TRANSACTION}.save`)}
               </Button>
             </>
           )

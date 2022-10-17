@@ -36,17 +36,39 @@ import {
   TRANSACTION_FEILD_DEFAULT,
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
+import { usePaginationQuery } from 'api'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
-export const useTransactions = (projectId?: string) => {
+export const useTransactions = (queryString: string, pageSize: number, projectId?: string) => {
+  const apiQueryString = queryString + `&projectId.equals=${projectId}&sort=modifiedDate,asc`
+
+  const { data, ...rest } = usePaginationQuery<Array<TransactionType>>(
+    [GET_TRANSACTIONS_API_KEY, apiQueryString],
+    `change-orders?${apiQueryString}`,
+    pageSize,
+    { enabled: !!projectId },
+  )
+
+  return {
+    transactions: data?.data,
+    totalPages: data?.totalCount,
+    ...rest,
+  }
+}
+
+export const useGetAllTransactions = (projectId?: string, filtersQueryString = '') => {
   const client = useClient()
+  const transactionsSpecificQueryString = `projectId.equals=${projectId}&sort=modifiedDate,asc`
+  const apiQueryString = filtersQueryString
+    ? filtersQueryString + `&${transactionsSpecificQueryString}`
+    : transactionsSpecificQueryString
 
   const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
     [GET_TRANSACTIONS_API_KEY, projectId],
     async () => {
-      const response = await client(`change-orders?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
+      const response = await client(`change-orders?${apiQueryString}`, {})
 
       return response?.data
     },

@@ -1,18 +1,34 @@
-import { Box, Button, Checkbox, FormControl, FormErrorMessage, HStack, Input, Text, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormErrorMessage,
+  HStack,
+  Icon,
+  Input,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { BiUpload } from 'react-icons/bi'
+import { BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import round from 'lodash/round'
+import { isValidAndNonEmpty } from 'utils'
+import { CgPlayListRemove } from 'react-icons/cg'
+import { CustomCheckBox } from './assigned-items'
+import { readFileContent } from 'api/vendor-details'
 
 const swoPrefix = '/smartwo/api'
 
@@ -81,7 +97,7 @@ export const useRemainingLineItems = (swoProjectId?: string | number | null) => 
     ['remainingItems', swoProjectId],
     async () => {
       const response = await client(
-        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=modifiedDate,desc&page=0`,
+        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=sortOrder,asc&page=0`,
         {},
       )
 
@@ -287,11 +303,12 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
 
 export const calculateVendorAmount = (amount, percentage) => {
   amount = Number(amount)
-  percentage = Number(percentage)
+  percentage = Number(!percentage || percentage === '' ? 0 : percentage)
   return round(amount - amount * (percentage / 100), 2)
 }
 
 export const calculateProfit = (clientAmount, vendorAmount) => {
+  if (clientAmount === 0 && vendorAmount === 0) return 0
   return round(((clientAmount - vendorAmount) / clientAmount) * 100, 2)
 }
 /* map to remaining when user unassigns using Unassign Line Item action */
@@ -313,7 +330,7 @@ export const mapToLineItems = (item, watchPercentage?) => {
     ...item,
     isVerified: false,
     isCompleted: false,
-    price: item.unitPrice,
+    price: !item.unitPrice || item.unitPrice === '' ? '0' : item.unitPrice,
     document: null,
     profit: percentage,
     clientAmount: amount,
@@ -372,6 +389,13 @@ export const EditableField = (props: EditableCellType) => {
   } = props
   const { getValues, setValue, control } = formControl
   const values = getValues()
+  const inputRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (selectedCell?.id === index + '-' + fieldName) {
+      inputRef?.current?.focus()
+    }
+  }, [selectedCell])
 
   const remainingItemsWatch = useWatch({ name: fieldArray, control })
 
@@ -383,7 +407,10 @@ export const EditableField = (props: EditableCellType) => {
             <Box
               minH={'20px'}
               minW={'100px'}
-              cursor={'pointer'}
+              cursor={allowEdit ? 'pointer' : 'default'}
+              overflow="hidden"
+              textOverflow={'ellipsis'}
+              whiteSpace="nowrap"
               onClick={() => {
                 if (allowEdit) {
                   setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
@@ -391,7 +418,7 @@ export const EditableField = (props: EditableCellType) => {
                 }
               }}
             >
-              {valueFormatter
+              {valueFormatter && isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
                 : remainingItemsWatch[index]?.[fieldName]}
             </Box>
@@ -402,10 +429,11 @@ export const EditableField = (props: EditableCellType) => {
                 name={`${fieldArray}.${index}.${fieldName}`}
                 render={({ field, fieldState }) => (
                   <Input
-                    minW={'100px'}
+                    minW={'80px'}
                     key={[fieldName] + '.' + [index]}
                     size="sm"
                     type={inputType}
+                    ref={inputRef}
                     value={field.value}
                     autoFocus={autoFocus}
                     onChange={e => {
@@ -413,14 +441,15 @@ export const EditableField = (props: EditableCellType) => {
                       if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
                         setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                       }
+                      onChange?.(e, index)
                     }}
                     onBlur={e => {
                       setIsFocus?.(false)
                       setSelectedCell(null)
                       if (e.target.value === '') {
                         setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
+                        onChange?.({ target: { value: selectedCell?.value } }, index)
                       }
-                      onChange?.(e, index)
                     }}
                     onFocus={() => {
                       setIsFocus?.(true)
@@ -445,6 +474,7 @@ type InputFieldType = {
   onChange?: (e, index) => void
   autoFocus?: boolean
   setIsFocus?: (val) => void
+  rules?: any
 }
 export const InputField = (props: InputFieldType) => {
   const {
@@ -456,6 +486,7 @@ export const InputField = (props: InputFieldType) => {
     inputType = 'text',
     autoFocus,
     setIsFocus,
+    rules,
   } = props
   const {
     formState: { errors },
@@ -467,7 +498,7 @@ export const InputField = (props: InputFieldType) => {
         <Controller
           control={control}
           name={`${fieldArray}.${index}.${fieldName}`}
-          rules={{ required: '*Required' }}
+          rules={rules}
           render={({ field, fieldState }) => (
             <Input
               key={[fieldName] + '.' + [index]}
@@ -477,10 +508,10 @@ export const InputField = (props: InputFieldType) => {
               autoFocus={autoFocus}
               onChange={e => {
                 field.onChange(e.target.value)
+                handleChange?.(e, index)
               }}
               onBlur={e => {
                 setIsFocus?.(false)
-                handleChange?.(e, index)
               }}
               onFocus={() => {
                 setIsFocus?.(true)
@@ -558,55 +589,76 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
 }
 
 export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
-  const invoiceInfo = [
-    { label: 'Property Address:', value: workOrder?.propertyAddress ?? '' },
+  const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
-    { label: 'Completion Date:', value: workOrder?.workOrderDateCompleted ?? '' },
+    { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
     { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
+    { label: 'Gate Code:', value: projectData?.gateCode ?? '' },
   ]
+  /* commenting because of unclear requirements 
   const totalAward = assignedItems?.reduce(
     (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
     0,
-  )
+  ) */
   const basicFont = undefined
-  const heading = 'Work Order'
+  const summaryFont = 'Times-Roman'
+  const heading = 'Work Order # ' + workOrder?.id
+  const startx = 15
   doc.setFontSize(16)
   doc.setFont(basicFont, 'bold')
-  const xHeading = (doc.internal.pageSize.getWidth() - doc.getTextWidth(heading)) / 2
-  doc.text(heading, xHeading, 35)
+  doc.text(heading, startx, 20)
   var img = new Image()
   img.src = '/vendorportal/wo-logo.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
-    doc.setFontSize(10)
-    doc.setFont(basicFont, 'normal')
-    const x = 15
-    let y = 50
-    const length = 115
-    const width = 10
-    invoiceInfo.forEach(inv => {
-      doc.rect(x, y, length, width, 'D')
-      doc.text(inv.label, x + 5, y + 7)
-      doc.text(
-        inv.label === 'Start Date:' || inv.label === 'Completion Date:' ? dateFormat(inv.value) || '' : inv.value,
-        x + 45,
-        y + 7,
-      )
-      y = y + 10
-    })
-    doc.rect(x + length, 50, 65, width, 'D')
-    doc.text('Square Feet:', x + length + 5, 55)
-    doc.rect(x + length, 60, 65, width, 'D')
-    doc.text('Work Type:', x + length + 5, 65)
-    doc.text(workOrder.skillName ?? '', x + length + 30, 65)
 
-    doc.rect(x, y + 15, length, width, 'D')
-    doc.text('Sub Contractor: ' + (workOrder.companyName ?? ''), x + 5, y + 22)
-    doc.rect(x + length, y + 15, 65, width, 'D')
-    doc.text('Total: ' + currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + length + 5, y + 22)
+    doc.setFontSize(11)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Property Address:', startx, 55)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.streetAddress ?? '', startx, 60)
+    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+
+    doc.setFont(summaryFont, 'bold')
+    const centerTextX = 75
+    doc.text('FPM:', centerTextX, 55)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.projectManager ?? '', centerTextX + 15, 55)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Contact:', centerTextX, 60)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
+
+    const x = 140
+    let y = 50
+
+    workOrderInfo.forEach(inv => {
+      doc.setFont(summaryFont, 'bold')
+      doc.text(inv.label, x + 5, y + 5)
+      doc.setFont(summaryFont, 'normal')
+      doc.text(
+        inv.label === 'Start Date:' || inv.label === 'Expected Completion:' ? dateFormat(inv.value) || '' : inv.value,
+        x + 45,
+        y + 5,
+      )
+      y = y + 5
+    })
+
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Work Type:', startx, y + 20)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(workOrder?.skillName ?? '', startx + 30, y + 20)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Sub Contractor:', startx, y + 25)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(workOrder.companyName ?? '', startx + 30, y + 25)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Total:', x + 5, y + 25)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 20, y + 25)
 
     autoTable(doc, {
-      startY: y + 40,
+      startY: y + 35,
       headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
       theme: 'grid',
       bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
@@ -614,32 +666,31 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         ...assignedItems.map(ai => {
           return {
             id: ai.id,
+            location: ai.location,
             sku: ai.sku,
+            productName: ai.productName,
             description: ai.description,
             quantity: ai.quantity,
           }
         }),
       ],
       columnStyles: {
-        sku: { cellWidth: 40 },
-        description: { cellWidth: 100 },
-        quantity: { cellWidth: 40 },
+        location: { cellWidth: 30 },
+        sku: { cellWidth: 30 },
+        productName: { cellWidth: 40 },
+        description: { cellWidth: 50 },
+        quantity: { cellWidth: 30 },
       },
       columns: [
+        { header: 'Location', dataKey: 'location' },
         { header: 'SKU', dataKey: 'sku' },
+        { header: 'Product Name', dataKey: 'productName' },
         { header: 'Description', dataKey: 'description' },
         { header: 'Quantity', dataKey: 'quantity' },
       ],
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    const tableEndsY = doc.lastAutoTable.finalY
-    const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
-    if (!hideAward) {
-      doc.setDrawColor(0, 0, 0)
-      doc.rect(summaryX - 5, tableEndsY, 79, 10, 'D')
-      doc.text('Total Award: ' + currencyFormatter(totalAward), summaryX, tableEndsY + 7)
-    }
     doc.save('Assigned Line Items.pdf')
   }
 }
@@ -676,6 +727,12 @@ export const useActionsShowDecision = ({ workOrder }) => {
   }
 }
 
+const requiredStyle = {
+  color: 'red.500',
+  fontWeight: 800,
+  fontSize: '18px',
+}
+
 export const useFieldEnableDecision = ({ workOrder }) => {
   const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
   const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
@@ -685,4 +742,505 @@ export const useFieldEnableDecision = ({ workOrder }) => {
     statusEnabled: statusEnabled,
     verificationEnabled: verificationEnabled,
   }
+}
+
+const setColumnsByConditions = (columns, workOrder, isVendor) => {
+  if (workOrder) {
+    columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
+    if (isVendor) {
+      if (workOrder.showPricing) {
+        columns = columns.filter(
+          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
+        )
+      } else {
+        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey))
+      }
+    }
+  } else {
+    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessorKey))
+  }
+  return columns
+}
+
+export const useGetLineItemsColumn = ({
+  unassignedItems,
+  setUnAssignedItems,
+  formControl,
+  allowEdit,
+  assignedItemsArray,
+  workOrder,
+}) => {
+  const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
+  const { t } = useTranslation()
+  const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
+  const { setValue, getValues, watch, control } = formControl
+  const values = getValues()
+  const watchFieldArray = watch('assignedItems')
+  const { isVendor } = useUserRolesSelector()
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
+  const controlledAssignedItems = assignedItems.map((field, index) => {
+    return {
+      ...field,
+      ...watchFieldArray[index],
+    }
+  })
+
+  const handleItemQtyChange = useCallback(
+    (e, index) => {
+      const price = Number(controlledAssignedItems?.[index]?.price ?? 0)
+      const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
+      const newQuantity = Number(e.target.value)
+      const vendorAmount = calculateVendorAmount(price * newQuantity, profit)
+      setValue(`assignedItems.${index}.clientAmount`, price * newQuantity)
+      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+    },
+    [controlledAssignedItems],
+  )
+  const handleItemPriceChange = useCallback(
+    (e, index) => {
+      const newPrice = Number(e.target.value ?? 0)
+      const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
+      const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
+      const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
+      setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
+      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+    },
+    [controlledAssignedItems],
+  )
+
+  const handleItemProfitChange = useCallback(
+    (e, index) => {
+      const newProfit = e.target.value ?? 0
+      const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
+      const vendorAmount = calculateVendorAmount(clientAmount, newProfit)
+      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+    },
+    [controlledAssignedItems],
+  )
+
+  const handleItemVendorAmountChange = useCallback(
+    (e, index) => {
+      const vendorAmount = e.target.value ?? 0
+      const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
+      const profit = calculateProfit(clientAmount, vendorAmount)
+      setValue(`assignedItems.${index}.profit`, profit)
+    },
+    [controlledAssignedItems],
+  )
+
+  const onFileChange = async file => {
+    const fileContents = await readFileContent(file)
+    const documentFile = {
+      fileObjectContentType: file?.type,
+      fileType: file?.name,
+      fileObject: fileContents ?? '',
+      documentType: 39,
+    }
+    return documentFile
+  }
+
+  const downloadDocument = (link, text) => {
+    return (
+      <a href={link} target="_blank" rel="noreferrer" download style={{ marginTop: '5px', color: '#4E87F8' }}>
+        <HStack>
+          <Icon as={BiDownload} size="sm" />
+          <Text fontSize="12px" fontStyle="normal" maxW="100px" isTruncated>
+            {text}
+          </Text>
+        </HStack>
+      </a>
+    )
+  }
+
+  let columns = [
+    {
+      header: () => {
+        return (
+          <Icon
+            as={CgPlayListRemove}
+            boxSize={7}
+            color="brand.300"
+            title="UnAssign All"
+            onClick={() => {
+              if (setUnAssignedItems && unassignedItems) {
+                setUnAssignedItems([
+                  ...values.assignedItems?.map(i => {
+                    return mapToRemainingItems(i)
+                  }),
+                  ...unassignedItems,
+                ])
+                removeAssigned()
+              }
+            }}
+            cursor="pointer"
+          ></Icon>
+        )
+      },
+      size: 80,
+      enableSorting: false,
+      accessorKey: 'assigned',
+      cell: ({ row }) => {
+        const index = row?.index
+        return (
+          <Box paddingLeft={'6px'}>
+            <Icon
+              as={BiXCircle}
+              boxSize={5}
+              color="brand.300"
+              onClick={() => {
+                if (setUnAssignedItems && unassignedItems) {
+                  setUnAssignedItems([{ ...mapToRemainingItems(values?.assignedItems[index]) }, ...unassignedItems])
+                  removeAssigned(index)
+                }
+              }}
+              cursor="pointer"
+            ></Icon>
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.location`,
+      accessorKey: 'location',
+      cell: ({ row }) => {
+        const index = row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="location"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.sku`,
+      accessorKey: 'sku',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="sku"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.productName`,
+      accessorKey: 'productName',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="productName"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+      size: 200,
+    },
+    {
+      header: () => {
+        return (
+          <>
+            <Box as="span" sx={requiredStyle}>
+              *
+            </Box>
+            {t(`${WORK_ORDER}.details`)}
+          </>
+        )
+      },
+      accessorKey: 'description',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="description"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+      size: 250,
+    },
+    {
+      header: () => {
+        return (
+          <>
+            <Box as="span" sx={requiredStyle}>
+              *
+            </Box>
+            {t(`${WORK_ORDER}.quantity`)}
+          </>
+        )
+      },
+      size: 100,
+      accessorKey: 'quantity',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              fieldName="quantity"
+              fieldArray="assignedItems"
+              formControl={formControl}
+              inputType="text"
+              allowEdit={allowEdit}
+              onChange={e => {
+                handleItemQtyChange(e, index)
+              }}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: () => {
+        return (
+          <>
+            <Box as="span" sx={requiredStyle}>
+              *
+            </Box>
+            {t(`${WORK_ORDER}.price`)}
+          </>
+        )
+      },
+      size: 100,
+      accessorKey: 'price',
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              fieldName="price"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={currencyFormatter}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={allowEdit}
+              onChange={e => {
+                handleItemPriceChange(e, index)
+              }}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.clientAmount`,
+      accessorKey: 'clientAmount',
+      size: 150,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <EditableField
+            index={index}
+            fieldName="clientAmount"
+            formControl={formControl}
+            inputType="number"
+            fieldArray="assignedItems"
+            valueFormatter={currencyFormatter}
+            selectedCell={selectedCell}
+            setSelectedCell={setSelectedCell}
+            allowEdit={false}
+          ></EditableField>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.profit`,
+      accessorKey: 'profit',
+      size: 100,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              fieldName="profit"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={val => {
+                if (val !== null && val !== '') return val + '%'
+                else return val
+              }}
+              onChange={e => {
+                handleItemProfitChange(e, index)
+              }}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: () => {
+        if (!isVendor) {
+          return <>{t(`${WORK_ORDER}.vendorAmount`)}</>
+        } else {
+          return <>{t(`${WORK_ORDER}.amount`)}</>
+        }
+      },
+      accessorKey: 'vendorAmount',
+      size: 160,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Box>
+            <EditableField
+              index={index}
+              fieldName="vendorAmount"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={currencyFormatter}
+              onChange={e => {
+                handleItemVendorAmountChange(e, index)
+              }}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={allowEdit}
+            />
+          </Box>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.status`,
+      accessorKey: 'isCompleted',
+      enableSorting: false,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <HStack justifyContent={'center'} h="50px">
+            <Controller
+              control={control}
+              name={`assignedItems.${index}.isCompleted`}
+              render={({ field, fieldState }) => (
+                <CustomCheckBox
+                  text="Completed"
+                  isChecked={field.value}
+                  disabled={!statusEnabled}
+                  onChange={e => {
+                    if (!e.target.checked) {
+                      setValue(`assignedItems.${index}.isVerified`, false)
+                    }
+                    field.onChange(e.currentTarget.checked)
+                  }}
+                ></CustomCheckBox>
+              )}
+            ></Controller>
+          </HStack>
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.images`,
+      accessorKey: 'images',
+      enableSorting: false,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <Controller
+            name={`assignedItems.${index}.uploadedDoc`}
+            control={control}
+            render={({ field, fieldState }) => {
+              return (
+                <VStack gap="1px">
+                  <Box>
+                    <UploadImage
+                      label={`upload`}
+                      value={field?.value?.fileType}
+                      onChange={async (file: any) => {
+                        const document = await onFileChange(file)
+                        field.onChange(document)
+                      }}
+                      onClear={() => setValue(field.name, null)}
+                    ></UploadImage>
+                  </Box>
+
+                  {assignedItems[index]?.document?.s3Url && (
+                    <Box>
+                      {downloadDocument(
+                        values.assignedItems[index]?.document?.s3Url,
+                        values.assignedItems[index]?.document?.fileType,
+                      )}
+                    </Box>
+                  )}
+                </VStack>
+              )
+            }}
+          />
+        )
+      },
+    },
+    {
+      header: `${WORK_ORDER}.verification`,
+      accessorKey: 'isVerified',
+      enableSorting: false,
+      cell: cellInfo => {
+        const index = cellInfo?.row?.index
+        return (
+          <HStack justifyContent={'center'} h="50px">
+            <Controller
+              control={control}
+              name={`assignedItems.${index}.isVerified`}
+              render={({ field, fieldState }) => (
+                <CustomCheckBox
+                  text="Verified"
+                  disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
+                  isChecked={field.value}
+                  onChange={e => {
+                    field.onChange(e.currentTarget.checked)
+                  }}
+                ></CustomCheckBox>
+              )}
+            ></Controller>
+          </HStack>
+        )
+      },
+    },
+  ]
+  columns = setColumnsByConditions(columns, workOrder, isVendor)
+  return columns
 }

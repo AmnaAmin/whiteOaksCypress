@@ -1,7 +1,4 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Box,
   Divider,
   Flex,
@@ -31,7 +28,7 @@ import { jsPDF } from 'jspdf'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet, BiXCircle } from 'react-icons/bi'
+import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { TransactionStatusValues as TSV, TransactionType, TransactionTypeValues } from 'types/transaction.type'
 import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
@@ -232,20 +229,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
     }
   }, [items, workOrder, projectData])
 
-  const DeleteItems = Id => {
-    const deleteValue = items.filter((value, id) => id !== Id)
-    setItems(deleteValue)
-  }
-
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'} pl="25px" pr="25px">
-        {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
-          <Alert status="info" variant="custom" size="sm">
-            <AlertIcon />
-            <AlertDescription>{t('rejectedInvoiceInfo')}</AlertDescription>
-          </Alert>
-        )}
+      <ModalBody h={'calc(100vh - 300px)'} pl="25px" pr="25px" pt="25px">
         <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
@@ -272,34 +258,56 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
-        <Box h="calc(100% - 150px)" overflow="auto" border="1px solid #E2E8F0">
-          <Table variant="simple" size="md">
+        <Box h="calc(100% - 200px)" overflow="auto" border="1px solid #E2E8F0" roundedTop={6}>
+          <Table variant="simple" size="md" roundedTop={6}>
             <Thead pos="sticky" top={0}>
               <Tr>
                 <Td>{t('item')}</Td>
                 <Td>{t('description')}</Td>
-                <Td>{t('total')}</Td>
+                <Td>{t('type')}</Td>
+                <Td w={300} pr={12} textAlign={'end'}>
+                  {t('total')}
+                </Td>
               </Tr>
             </Thead>
             <Tbody>
               {items.map((item, index) => {
                 return (
                   <Tr key={index} data-testid={'invoice-items'} h="72px">
-                    <Td>{item.id}</Td>
-                    <Td>{item.name}</Td>
-                    <Td>
-                      <Flex justifyContent="space-between" alignItems="center">
-                        <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
-                        {allowManualEntry && (
-                          <Text>
-                            <BiXCircle fontSize={20} color="#4E87F8" onClick={() => DeleteItems(index)} />
-                          </Text>
-                        )}
-                      </Flex>
+                    <Td maxWidth={300} w={300}>
+                      {item.id}
+                    </Td>
+                    <Td width={400}>{item.name}</Td>
+                    <Td width={400}>{item.transactionTypeLabel}</Td>
+                    <Td pr={12} textAlign={'end'}>
+                      <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
                     </Td>
                   </Tr>
                 )
               })}
+              <Tr>
+                <Td></Td>
+                <Td></Td>
+                <Td></Td>
+                <Td pr={12} borderLeft="1px solid #EDF2F7">
+                  <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
+                    <Box>
+                      <HStack w={300} height="60px" justifyContent="space-between">
+                        <Text>{t('subTotal')}:</Text>
+                        <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
+                      </HStack>
+                      <HStack w={300} height="60px" justifyContent="space-between">
+                        <Text>{t('totalAmountPaid')}:</Text>
+                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
+                      </HStack>
+                      <HStack w={300} height="60px" justifyContent="space-between">
+                        <Text>{t('balanceDue')}</Text>
+                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
+                      </HStack>
+                    </Box>
+                  </VStack>
+                </Td>
+              </Tr>
             </Tbody>
             <form>
               <>
@@ -390,26 +398,9 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               </>
             </form>
           </Table>
-
-          <VStack alignItems="end" w="93%" fontSize="14px" fontWeight={500} color="gray.600">
-            <Box>
-              <HStack w={300} height="60px" justifyContent="space-between">
-                <Text>{t('subTotal')}:</Text>
-                <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
-              </HStack>
-              <HStack w={300} height="60px" justifyContent="space-between">
-                <Text>{t('totalAmountPaid')}:</Text>
-                <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
-              </HStack>
-              <HStack w={300} height="60px" justifyContent="space-between">
-                <Text>{t('balanceDue')}</Text>
-                <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
-              </HStack>
-            </Box>
-          </VStack>
         </Box>
       </ModalBody>
-      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5} bg="white">
         <HStack justifyContent="start" w="100%">
           {[WOstatus.Invoiced, WOstatus.Paid, WOstatus.Completed].includes(
             workOrder?.statusLabel?.toLocaleLowerCase(),
@@ -444,7 +435,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
           )}
         </HStack>
         <HStack justifyContent="end">
-          <Button variant="outline" colorScheme="brand" onClick={onClose}>
+          <Button colorScheme="brand" onClick={onClose}>
             {t('cancel')}
           </Button>
         </HStack>

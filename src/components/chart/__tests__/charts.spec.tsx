@@ -24,13 +24,15 @@ describe('Charts testcases', () => {
     expect(container.getElementsByClassName('recharts-yAxis').length).toBe(1)
     /* Jan-Dec (12 x axis ticks) & [0,2,4] (3 y axis ticks) */
     expect(container.getElementsByClassName('recharts-cartesian-axis-tick').length).toBe(15)
-    expect(container.getElementsByClassName('recharts-default-tooltip').length).toBe(1)
+    expect(container.getElementsByClassName('recharts-custom-tooltip').length).toBe(1)
     expect(container.getElementsByClassName('recharts-bar').length).toBeGreaterThan(0)
     expect(container.getElementsByClassName('recharts-bar-rectangle').length).toBe(vendorData.length * 4)
   })
 
   test('PaidChart graph test case', async () => {
-    const { container } = render(<PaidChartGraph width={400} height={300} data={PAID_BY_YEAR_AND_MONTH} />)
+    const { container } = render(
+      <PaidChartGraph width={400} height={300} data={PAID_BY_YEAR_AND_MONTH} filters={undefined} />,
+    )
 
     expect(container.getElementsByClassName('recharts-xAxis').length).toBe(1)
     expect(container.getElementsByClassName('recharts-yAxis').length).toBe(1)

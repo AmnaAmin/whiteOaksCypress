@@ -18,19 +18,19 @@ import {
   Center,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
-import { LienWaiverTab } from './lien-waiver/lien-waiver-tab'
+import { LienWaiverTab } from './lien-waiver/lien-waiver'
 import { useTranslation } from 'react-i18next'
 // import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment/payment-tab'
-import { InvoiceTabPC } from './invoice/invoice-tab'
-import Status, { STATUS } from 'features/common/status'
+import { InvoiceTab } from './invoice/invoice-tab'
+import Status, { STATUS, STATUS_CODE } from 'features/common/status'
 import WorkOrderNotes from './notes/work-order-notes'
 import WorkOrderDetailTab from './details/work-order-edit-tab'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'api/pc-projects'
 import { useDocuments } from 'api/vendor-projects'
-import { useTransactions } from 'api/transactions'
+import { useGetAllTransactions } from 'api/transactions'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { useFetchProjectId } from './details/assignedItems.utils'
 
@@ -57,7 +57,7 @@ const WorkOrderDetails = ({
   })
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
-  const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
+  const { transactions = [], isLoading: isTransLoading } = useGetAllTransactions(projId)
   const [isWorkOrderUpdating, setWorkOrderUpdating] = useState(false)
 
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
@@ -83,7 +83,14 @@ const WorkOrderDetails = ({
   const onSave = values => {
     const payload = { ...workOrder, ...values }
     updateWorkOrder(payload, {
-      onSuccess: () => {
+      onSuccess: res => {
+        if (res?.data) {
+          const workOrder = res?.data
+          if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
+            onClose()
+            setTabIndex(0)
+          }
+        }
         setWorkOrderUpdating(false)
       },
       onError: () => {
@@ -96,7 +103,7 @@ const WorkOrderDetails = ({
     navigate(`/project-details/${workOrder.projectId}`)
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'}>
+    <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
         <>
@@ -190,6 +197,7 @@ const WorkOrderDetails = ({
                       swoProject={swoProject}
                       rejectInvoiceCheck={rejectInvoice}
                       projectData={projectData}
+                      documentsData={documentsData}
                     />
                   </TabPanel>
                   <TabPanel p={0}>
@@ -210,7 +218,7 @@ const WorkOrderDetails = ({
                     {isDocumentsLoading || isTransLoading ? (
                       <BlankSlate />
                     ) : (
-                      <InvoiceTabPC
+                      <InvoiceTab
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         rejectInvoiceCheck={rejectInvoice}
                         transactions={transactions}

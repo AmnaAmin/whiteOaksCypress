@@ -33,26 +33,24 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-    pagination,
-    setPagination,
-    selectedCard,
-    selectedDay,
-    selectedFPM,
-    userIds,
-  })
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+      pagination,
+      setPagination,
+      selectedCard,
+      selectedDay,
+      selectedFPM,
+      userIds,
+    })
 
-  const { projects, isLoading, totalPages } = useProjects(fitlersQueryString, pagination.pageIndex, pagination.pageSize)
+  const { projects, isLoading, totalPages } = useProjects(
+    queryStringWithPagination,
+    pagination.pageIndex,
+    pagination.pageSize,
+  )
 
-  const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-    selectedCard,
-    selectedDay,
-    selectedFPM,
-    userIds,
-  })
-  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(filterQueryStringWithoutPagination)
+  const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
@@ -63,6 +61,10 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
 
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.id}`)
+  }
+
+  const onRightClick = rowData => {
+    window.open(`${process.env.PUBLIC_URL}/project-details/${rowData.id}`)
   }
 
   return (
@@ -76,12 +78,16 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
+        <Table
+          isLoading={isLoading}
+          onRowClick={onRowClick}
+          isEmpty={!isLoading && !projects?.length}
+          onRightClick={onRightClick}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
               columns={tableColumns}
-              data={allProjects}
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"

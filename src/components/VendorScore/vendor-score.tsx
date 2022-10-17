@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack } from '@chakra-ui/react'
+import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack, Center, Spinner } from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -55,18 +55,19 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
         display="grid"
         gridTemplateColumns={{ base: '1fr', lg: '2fr', xl: '1fr 2fr' }}
         alignItems="center"
-        mb="10px"
       >
         <Card h={156} rounded="2xl">
           <Flex h="99%" w="100%">
-            {isLoading ? (
-              <BlankSlate width="100%" />
-            ) : (
-              <>
-                <HStack w="100%">
-                  <Flex h="100%" alignItems="end">
-                    <CircularProgress color="#4E87F8" capIsRound value={scoreProgress} size="91px">
-                      <CircularProgressLabel h="57%">
+            <>
+              <HStack w="100%">
+                <Flex h="100%" alignItems="end">
+                  <CircularProgress color="#4E87F8" capIsRound value={scoreProgress} size="91px">
+                    <CircularProgressLabel h="57%">
+                      {isLoading ? (
+                        <Center>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
                         <Box alignItems="center">
                           <Text fontSize="18px" fontWeight={700} color="gray.600" data-testid="vendor-score">
                             {vendorEntity?.score}
@@ -75,35 +76,36 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                             {t('outOf')} 5
                           </Text>
                         </Box>
-                      </CircularProgressLabel>
-                      <Text textAlign="center" fontSize="12px" fontWeight={500} color="gray.600" fontStyle="normal">
-                        {t('vendorScore')}
-                      </Text>
-                    </CircularProgress>
-                  </Flex>
-                  <Box h="100%" w="100%">
-                    <HStack justifyContent="end">
-                      <Text color="gray.600" fontWeight={500} fontSize="12px">
-                        {t('vendorStatus')}
-                      </Text>
-                      {isLoading ? (
-                        <BlankSlate width="60px" h="8px" />
-                      ) : (
-                        <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
                       )}
-                    </HStack>
-                    <Box mt="18px" ml="30px ">
+                    </CircularProgressLabel>
+                    <Text textAlign="center" fontSize="12px" fontWeight={500} color="gray.600" fontStyle="normal">
+                      {t('score')}
+                    </Text>
+                  </CircularProgress>
+                </Flex>
+                <Box h="100%" w="100%">
+                  <HStack justifyContent="end">
+                    {isLoading ? (
+                      <BlankSlate width="60px" h="15px" />
+                    ) : (
+                      <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
+                    )}
+                  </HStack>
+                  <Box mt="18px" ml="30px ">
+                    {isLoading ? (
+                      <BlankSlate width="200px" h="20px" />
+                    ) : (
                       <Text fontSize="18px" color="gray.600" fontWeight={700}>
                         {ammount}
                       </Text>
-                      <Text fontSize="18px" color="gray.600" fontWeight={500}>
-                        {t('upcomingPayment')}
-                      </Text>
-                    </Box>
+                    )}
+                    <Text fontSize="18px" color="gray.600" fontWeight={500}>
+                      {t('upcomingPayment')}
+                    </Text>
                   </Box>
-                </HStack>
-              </>
-            )}
+                </Box>
+              </HStack>
+            </>
           </Flex>
         </Card>
 

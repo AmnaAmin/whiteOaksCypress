@@ -1,120 +1,49 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Divider } from '@chakra-ui/react'
-import { RowProps } from 'components/table/react-table'
+import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { TableWrapper } from 'components/table/table'
 import { useTransactionExport, useTransactions } from 'api/transactions'
 import { useParams } from 'react-router'
-import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
-import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings'
-import { useTranslation } from 'react-i18next'
-import numeral from 'numeral'
-import Status from 'features/common/status'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { ExportCustomButton } from 'components/table-refactored/export-button'
-
-const TransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
-  return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: 'gray.50',
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-      onClick={event => onRowClick(event, row)}
-    >
-      {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} p="0">
-            <Flex alignItems="center" h="60px" pl="2">
-              <Text
-                fontSize="14px"
-                fontStyle="normal"
-                fontWeight={400}
-                noOfLines={1}
-                title={cell.value}
-                mt="10px"
-                mb="10px"
-                padding="0 15px"
-                color="#4A5568"
-              >
-                {cell.render('Cell')}
-              </Text>
-            </Flex>
-          </Td>
-        )
-      })}
-    </Tr>
-  )
-}
+import { PaginationState } from '@tanstack/react-table'
+import {
+  TRANSACTION_TABLE_COLUMNS,
+  TRANSACTION_TABLE_QUERIES_KEY,
+} from 'features/project-details/transactions/transaction.constants'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { Table } from 'components/table-refactored/table'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentPageWithTotal,
+  TablePagination,
+} from 'components/table-refactored/pagination'
 
 export const TransactionsTable = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  // const [transactionTableInstance, setTransactionTableInstance] = useState<any>(null)
-  const { transactions = [], isLoading } = useTransactions(projectId)
-  const { t } = useTranslation()
-  const { tableColumns, settingColumns } = useTableColumnSettings(
-    [
-      {
-        Header: 'ID',
-        accessor: 'name',
-      },
-      {
-        Header: t('type') as string,
-        accessor: 'transactionTypeLabel',
-      },
-      {
-        Header: t('trade') as string,
-        accessor: 'skillName',
-      },
-      {
-        Header: t('vendorGL') as string,
-        accessor: 'parentWorkOrderId',
-        Cell(cellInfo) {
-          return cellInfo.value ? cellInfo?.row?.original?.vendor || '' : 'Project SOW'
-        },
-        getCellExportValue(row) {
-          return row.original.parentWorkOrderId ? row.original?.vendor || '' : 'Project SOW'
-        },
-      },
-      {
-        Header: t('totalAmount') as string,
-        accessor: 'transactionTotal',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-        getCellExportValue(row) {
-          return numeral(row.original.transactionTotal).format('$0,0.00')
-        },
-      },
-      {
-        Header: t('transactionStatus') as string,
-        accessor: 'status',
-        Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
-      },
-      {
-        Header: t('submit') as string,
-        accessor: 'modifiedDate',
-        Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
-        },
-        getCellExportValue(row) {
-          return dateFormat(row.original.modifiedDate)
-        },
-      },
-      {
-        Header: t('approvedBy') as string,
-        accessor: 'approvedBy',
-      },
-    ],
-    TableNames.transaction,
+  const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
+
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { columnFilters, setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: TRANSACTION_TABLE_QUERIES_KEY,
+    pagination,
+    setPagination,
+  })
+
+  const { transactions, isLoading, totalPages } = useTransactions(
+    queryStringWithPagination,
+    pagination.pageSize,
+    projectId,
   )
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
@@ -126,7 +55,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const { exportData } = useTransactionExport(projectId)
 
   const onRowClick = useCallback(
-    (_, row) => {
+    row => {
       const { original } = row
       setSelectedTransactionName(original.name)
       setSelectedTransactionId(original.id)
@@ -141,27 +70,34 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Box>
-        <Box h="100%" overflow={'auto'}>
-          <TableWrapper
-            isLoading={isLoading}
-            columns={tableColumns}
-            data={transactions}
-            TableRow={TransactionRow}
-            tableHeight="calc(100vh - 300px)"
-            setTableInstance={() => {}}
-            name="transaction-table"
-            onRowClick={onRowClick}
-          />
-        </Box>
-        <Flex justifyContent="flex-end">
-          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" />
-            <Divider orientation="vertical" border="1px solid" h="20px" />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-          </HStack>
-        </Flex>
+      <Box h="500px" overflow={'auto'}>
+        <TableContextProvider
+          data={transactions}
+          columns={tableColumns}
+          pagination={pagination}
+          setPagination={setPagination}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+          totalPages={totalPages}
+        >
+          <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
+          <TableFooter position="sticky" bottom="0" left="0" right="0">
+            <ButtonsWrapper>
+              <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" />
+
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </ButtonsWrapper>
+            <TablePagination>
+              <ShowCurrentPageWithTotal />
+              <GotoFirstPage />
+              <GotoPreviousPage />
+              <GotoNextPage />
+              <GotoLastPage />
+            </TablePagination>
+          </TableFooter>
+        </TableContextProvider>
       </Box>
+
       <UpdateTransactionModal
         isOpen={isOpenEditModal}
         onClose={onEditModalClose}
