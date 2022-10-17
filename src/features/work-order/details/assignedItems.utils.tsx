@@ -603,7 +603,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
 
-    const x = 140
+    const x = 130
     let y = 50
 
     workOrderInfo.forEach(inv => {
