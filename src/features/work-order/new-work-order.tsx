@@ -32,7 +32,6 @@ import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projec
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
-import NumberFormat from 'react-number-format'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
@@ -48,6 +47,7 @@ import {
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
 import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
 import { isValidAndNonEmpty } from 'utils'
@@ -195,7 +195,7 @@ const NewWorkOrder: React.FC<{
   }, [watchLineItems])
 
   const resetLineItemsProfit = profit => {
-    formValues?.assignedItems?.forEach((item, index) => {
+    formValues.assignedItems?.forEach((item, index) => {
       const clientAmount =
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
@@ -478,7 +478,7 @@ const NewWorkOrder: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
                       <Controller

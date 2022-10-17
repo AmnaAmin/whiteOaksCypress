@@ -10,34 +10,73 @@ import {
   Checkbox,
   Grid,
   GridItem,
+  HStack,
+  FormErrorMessage,
+  VStack,
+  Center,
+  Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
+import { ClientFormValues } from 'types/client.type'
+import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import Select from 'components/form/react-select'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { MdOutlineCancel } from 'react-icons/md'
+import { BiAddToQueue } from 'react-icons/bi'
+import { paymentsTerms } from 'api/vendor-projects'
+import { CLIENTS } from './clients.i18n'
 
 type clientDetailProps = {
   clientDetails?: any
   onClose?: () => void
+  setNextTab: () => void
 }
 
-export const Details = React.forwardRef((props: clientDetailProps) => {
+export const Details: React.FC<clientDetailProps> = props => {
   const { t } = useTranslation()
-  const { markets } = useMarkets()
-  const { states } = useStates()
+  const { stateSelectOptions } = useStates()
+  const { marketSelectOptions } = useMarkets()
 
-  // To get Contact Market
-  // const clientSelectedMarket = parseInt(props?.clientDetails?.contacts?.map(m => m?.market))
-  // const selectedClientMarket = markets?.find(market => market?.id === clientSelectedMarket)
-  // const clientMarket = { label: selectedClientMarket?.stateName, value: selectedClientMarket?.id }
+  const { isProjectCoordinator } = useUserRolesSelector()
 
-  // To get Client State
-  const selectedClientState = states?.find(state => state?.id === props?.clientDetails?.state)
-  const clientState = { label: selectedClientState?.name, value: selectedClientState?.id }
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
 
   const disabledTextStyle = {
     color: '#2D3748',
   }
+
+  const {
+    register,
+    formState: { errors },
+    control,
+  } = useFormContext<ClientFormValues>()
+
+  const companyName = useWatch({ name: 'companyName', control })
+  const streetAddress = useWatch({ name: 'streetAddress', control })
+  const city = useWatch({ name: 'city', control })
+
+  const {
+    fields: contactsFields,
+    append: contactsAppend,
+    remove: contactsRemove,
+  } = useFieldArray({ control, name: 'contacts' })
+
+  const {
+    fields: accPayInfoFields,
+    append: accPayInfoAppend,
+    remove: accPayInfoRemove,
+  } = useFieldArray({
+    control,
+    name: 'accountPayableContactInfos',
+  })
 
   return (
     <Box>
@@ -46,234 +85,365 @@ export const Details = React.forwardRef((props: clientDetailProps) => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('name')}
+                {t(`${CLIENTS}.name`)}
               </FormLabel>
               <Input
-                width="215px"
-                variant="required-field"
-                style={disabledTextStyle}
-                value={props?.clientDetails?.companyName}
-                isDisabled
+                id="companyName"
+                {...register('companyName', { required: 'This is required' })}
+                isDisabled={isProjectCoordinator}
+                variant={'required-field'}
               />
+              <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('paymentTerms')}
+                {t(`${CLIENTS}.paymentTerms`)}
               </FormLabel>
-              <Input
-                width="215px"
-                variant="required-field"
-                style={disabledTextStyle}
-                value={props?.clientDetails?.paymentTerm}
-                isDisabled
+              <Controller
+                control={control}
+                name="paymentTerm"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      options={PAYMENT_TERMS_OPTIONS}
+                      menuPosition="fixed"
+                      maxMenuHeight={80}
+                      {...field}
+                      selectProps={{ isBorderLeft: true }}
+                      isDisabled={isProjectCoordinator}
+                    />
+                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
               />
             </FormControl>
           </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('paymentMethod')}
-              </FormLabel>
-              <Flex dir="row">
-                <Checkbox
-                  variant="required-field"
-                  pr={1}
-                  mt={4}
-                  isChecked={props?.clientDetails?.paymentCreditCard}
-                  style={disabledTextStyle}
-                  isDisabled
-                >
-                  {t('creditCard')}
-                </Checkbox>
-                <Checkbox
-                  variant="required-field"
-                  pr={1}
-                  mt={4}
-                  isChecked={props?.clientDetails?.paymentCheck}
-                  style={disabledTextStyle}
-                  isDisabled
-                >
-                  {t('check')}
-                </Checkbox>
-                <Checkbox
-                  variant="required-field"
-                  mt={4}
-                  isChecked={props?.clientDetails?.paymentACH}
-                  style={disabledTextStyle}
-                  isDisabled
-                >
-                  {t('ach')}
-                </Checkbox>
-              </Flex>
-            </FormControl>
-          </GridItem>
+          <VStack width={'230px'}>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t(`${CLIENTS}.paymentMethod`)}
+                </FormLabel>
+                <Flex dir="row" mt={3}>
+                  <HStack>
+                    <Checkbox {...register(`paymentCreditCard`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                      {t(`${CLIENTS}.creditCard`)}
+                    </Checkbox>
+                    <Checkbox {...register(`paymentCheck`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                      {t(`${CLIENTS}.check`)}
+                    </Checkbox>
+                    <Checkbox {...register(`paymentAch`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                      {t(`${CLIENTS}.ach`)}
+                    </Checkbox>
+                  </HStack>
+                </Flex>
+              </FormControl>
+            </GridItem>
+          </VStack>
         </Grid>
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
             <FormControl height="40px">
               <FormLabel variant="strong-label" size="md">
-                {t('address')}
+                {t(`${CLIENTS}.address`)}
               </FormLabel>
               <Input
-                variant="required-field"
+                id="streetAddress"
+                {...register('streetAddress')}
                 style={disabledTextStyle}
-                value={props?.clientDetails?.streetAddress}
-                isDisabled
+                isDisabled={isProjectCoordinator}
+                variant={'required-field'}
+              />
+              <FormErrorMessage>{errors?.streetAddress && errors?.streetAddress?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${CLIENTS}.city`)}
+              </FormLabel>
+              <Input id="city" {...register('city')} isDisabled={isProjectCoordinator} variant={'required-field'} />
+              <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${CLIENTS}.state`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`state`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={stateSelectOptions}
+                      selected={field.value}
+                      onChange={option => field.onChange(option)}
+                      selectProps={{ isBorderLeft: true }}
+                      isDisabled={isProjectCoordinator}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
               />
             </FormControl>
           </GridItem>
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('city')}
-              </FormLabel>
-              <Input variant="required-field" style={disabledTextStyle} value={props?.clientDetails?.city} isDisabled />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('state')}
-              </FormLabel>
-              <ReactSelect
-                option={states}
-                value={clientState}
-                selectProps={{ isBorderLeft: true }}
-                style={{ disabledTextStyle }}
-                isDisabled
-              />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('zipCode')}
+                {t(`${CLIENTS}.zipCode`)}
               </FormLabel>
               <Input
-                variant="required-field"
+                id="zipCode"
+                {...register('zipCode')}
                 style={disabledTextStyle}
-                value={props?.clientDetails?.zipCode}
-                isDisabled
+                isDisabled={isProjectCoordinator}
               />
             </FormControl>
           </GridItem>
         </Grid>
-        {props.clientDetails?.contacts.map(contact => {
+        {contactsFields.map((contacts, index) => {
           return (
-            <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
-              <GridItem>
-                <FormControl height="40px">
-                  <FormLabel variant="strong-label" size="md">
-                    {t('contact')}
-                  </FormLabel>
-                  <Input variant="required-field" style={disabledTextStyle} value={contact?.contact} isDisabled />
-                </FormControl>
-              </GridItem>
-              <GridItem>
-                <FormControl>
-                  <FormLabel variant="strong-label" size="md">
-                    {t('phoneNo')}
-                  </FormLabel>
-                  <Input variant="required-field" style={disabledTextStyle} value={contact?.phoneNumber} isDisabled />
-                </FormControl>
-              </GridItem>
-              <GridItem>
-                <FormControl>
-                  <FormLabel variant="strong-label" size="md">
-                    {t('email')}
-                  </FormLabel>
-                  <Input variant="required-field" style={disabledTextStyle} value={contact?.emailAddress} isDisabled />
-                </FormControl>
-              </GridItem>
-              <GridItem>
-                <FormControl>
-                  <FormLabel variant="strong-label" size="md">
-                    {t('market')}
-                  </FormLabel>
-                  <ReactSelect
-                    option={markets}
-                    value={markets?.map(market => {
-                      if (market?.id === parseInt(contact?.market))
-                        return { label: market?.stateName, value: market?.id }
-                      return null
-                    })}
-                    selectProps={{ isBorderLeft: true }}
-                    isDisabled
-                  />
-                </FormControl>
-              </GridItem>
-            </Grid>
+            <>
+              <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+                <GridItem>
+                  <FormControl height="40px">
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${CLIENTS}.contact`)}
+                    </FormLabel>
+                    <Input
+                      id="contact"
+                      {...register(`contacts.${index}.contact`)}
+                      style={disabledTextStyle}
+                      isDisabled={isProjectCoordinator}
+                      variant={'required-field'}
+                    />
+                    <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
+                  </FormControl>
+                </GridItem>
+                <GridItem>
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${CLIENTS}.phoneNumber`)}
+                    </FormLabel>
+                    <Input
+                      id="phoneNumber"
+                      {...register(`contacts.${index}.phoneNumber`)}
+                      style={disabledTextStyle}
+                      isDisabled={isProjectCoordinator}
+                    />
+                    <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
+                  </FormControl>
+                </GridItem>
+                <GridItem>
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${CLIENTS}.email`)}
+                    </FormLabel>
+                    <Input
+                      id="emailAddress"
+                      {...register(`contacts.${index}.emailAddress`)}
+                      style={disabledTextStyle}
+                      isDisabled={isProjectCoordinator}
+                    />
+                    <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
+                  </FormControl>
+                </GridItem>
+                <GridItem>
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${CLIENTS}.market`)}
+                    </FormLabel>
+                    <HStack width={'300px'}>
+                      <Box width={'215px'}>
+                        <Controller
+                          control={control}
+                          name={`contacts.${index}.market`}
+                          render={({ field, fieldState }) => (
+                            <>
+                              <Select
+                                {...field}
+                                options={marketSelectOptions}
+                                selected={field.value}
+                                onChange={option => field.onChange(option)}
+                                isDisabled={isProjectCoordinator}
+                                selectProps={{ isBorderLeft: true }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )}
+                        />
+                      </Box>
+                      {!isProjectCoordinator && (
+                        <Box color="barColor.100" fontSize="15px">
+                          <Center>
+                            <Icon
+                              as={MdOutlineCancel}
+                              onClick={() => contactsRemove(index)}
+                              cursor="pointer"
+                              boxSize={5}
+                              mt="6px"
+                            />
+                          </Center>
+                        </Box>
+                      )}
+                    </HStack>
+                  </FormControl>
+                </GridItem>
+              </Grid>
+            </>
           )
         })}
-        <Flex alignItems="center" py="3">
+        {!isProjectCoordinator && (
+          <Button
+            variant="outline"
+            colorScheme="brand"
+            onClick={() =>
+              contactsAppend({
+                contact: '',
+                phoneNumber: '',
+                emailAddress: '',
+                market: '',
+              })
+            }
+            mt={2}
+            leftIcon={<BiAddToQueue />}
+          >
+            {t(`${CLIENTS}.addContact`)}
+          </Button>
+        )}
+        <Flex alignItems="center" py="3" mt={2}>
           <Text fontSize="16px" color="gray.600" fontWeight={500} w={'370px'}>
-            {t('accPayConInfo')}
+            {t(`${CLIENTS}.accPayConInfo`)}
           </Text>
           <Divider border="1px solid #E2E8F0" mt={1} />
         </Flex>
-        {props.clientDetails?.accountPayableContactInfos.map(accPayConInfo => {
+        {accPayInfoFields.map((accountPayableContactInfos, index) => {
           return (
             <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="4">
               <GridItem>
                 <FormControl height="40px">
                   <FormLabel variant="strong-label" size="md">
-                    {t('contact')}
+                    {t(`${CLIENTS}.contact`)}
                   </FormLabel>
-                  <Input variant="required-field" style={disabledTextStyle} value={accPayConInfo?.contact} isDisabled />
+                  <Input
+                    id="contact"
+                    {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' })}
+                    style={disabledTextStyle}
+                    isDisabled={isProjectCoordinator}
+                    variant={'required-field'}
+                  />
+                  <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('phoneNo')}
+                    {t(`${CLIENTS}.phoneNumber`)}
                   </FormLabel>
                   <Input
-                    variant="required-field"
+                    id="phoneNumber"
+                    {...register(`accountPayableContactInfos.${index}.phoneNumber`, { required: 'This is required' })}
                     style={disabledTextStyle}
-                    value={accPayConInfo?.phoneNumber}
-                    isDisabled
+                    isDisabled={isProjectCoordinator}
+                    variant={'required-field'}
                   />
+                  <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('city')}
+                    {t(`${CLIENTS}.email`)}
                   </FormLabel>
                   <Input
-                    variant="required-field"
-                    style={disabledTextStyle}
-                    value={props?.clientDetails?.city}
-                    isDisabled
+                    id="emailAddress"
+                    {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
+                    isDisabled={isProjectCoordinator}
+                    variant={'required-field'}
                   />
+                  <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('comment')}
+                    {t(`${CLIENTS}.comment`)}
                   </FormLabel>
-                  <Input
-                    variant="required-field"
-                    style={disabledTextStyle}
-                    value={accPayConInfo?.comments}
-                    isDisabled
-                  />
+
+                  <HStack width={'300px'}>
+                    <Box width={'215px'}>
+                      <Input
+                        id="comments"
+                        {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
+                        style={disabledTextStyle}
+                        isDisabled={isProjectCoordinator}
+                        variant={'required-field'}
+                      />
+                      <FormErrorMessage>{errors?.comments && errors?.comments?.message}</FormErrorMessage>
+                    </Box>
+                    {!isProjectCoordinator && (
+                      <Box color="barColor.100" fontSize="15px">
+                        <Center>
+                          <Icon
+                            as={MdOutlineCancel}
+                            onClick={() => accPayInfoRemove(index)}
+                            cursor="pointer"
+                            boxSize={5}
+                            mt="6px"
+                          />
+                        </Center>
+                      </Box>
+                    )}
+                  </HStack>
                 </FormControl>
               </GridItem>
             </Grid>
           )
         })}
+        {!isProjectCoordinator && (
+          <Button
+            variant="outline"
+            colorScheme="brand"
+            onClick={() =>
+              accPayInfoAppend({
+                contact: '',
+                phoneNumber: '',
+                emailAddress: '',
+                comments: '',
+              })
+            }
+            mt={2}
+            leftIcon={<BiAddToQueue />}
+            disabled={isProjectCoordinator}
+          >
+            {t(`${CLIENTS}.addContact`)}
+          </Button>
+        )}
       </Box>
-      <Flex justifyContent={'end'} borderTop="1px solid #CBD5E0" py="4" pt={5}>
-        <Button colorScheme="brand" onClick={props?.onClose}>
-          {t('cancel')}
+      <Flex style={btnStyle} py="4" pt={5} mt={4}>
+        <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+          {t(`${CLIENTS}.cancel`)}
         </Button>
+        {!isProjectCoordinator && (
+          <Button
+            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city}
+            colorScheme="brand"
+            type="submit"
+            form="clientDetails"
+            ml={2}
+          >
+            {t(`${CLIENTS}.save`)}
+          </Button>
+        )}
       </Flex>
     </Box>
   )
-})
+}
 
 export default Details

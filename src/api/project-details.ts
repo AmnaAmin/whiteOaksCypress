@@ -341,11 +341,11 @@ export const parseFormValuesFromAPIData = ({
 
     // Contacts form values
     projectCoordinator: findOptionByValue(projectCoordinatorSelectOptions, project.projectCoordinatorId),
-    projectCoordinatorPhoneNumber: '',
-    projectCoordinatorExtension: '',
+    projectCoordinatorPhoneNumber: project.pcPhoneNumber,
+    projectCoordinatorExtension: project.pcPhoneNumberExtension,
     fieldProjectManager: findOptionByValue(projectManagerSelectOptions, project.projectManagerId),
     fieldProjectManagerPhoneNumber: project.projectManagerPhoneNumber,
-    fieldProjectManagerExtension: project.projectManagerPhoneNumberExtension,
+    fieldProjectManagerExtension: project.pmPhoneNumberExtension,
     superName: project.superLastName,
     superPhoneNumber: project.superPhoneNumber,
     superPhoneNumberExtension: project.superPhoneNumberExtension,
@@ -427,11 +427,11 @@ export const parseProjectDetailsPayloadFromFormData = async (
 
     // Contacts payload
     projectCordinatorId: formValues?.projectCoordinator?.value,
-    projectCoordinatorPhoneNumber: formValues?.projectCoordinatorPhoneNumber,
-    projectCoordinatorPhoneNumberExtension: formValues?.projectCoordinatorExtension,
+    pcPhoneNumber: formValues?.projectCoordinatorPhoneNumber,
+    pcPhoneNumberExtension: formValues?.projectCoordinatorExtension,
     projectManagerId: formValues?.fieldProjectManager?.value,
     projectManagerPhoneNumber: formValues?.fieldProjectManagerPhoneNumber,
-    projectManagerPhoneNumberExtension: formValues?.fieldProjectManagerExtension,
+    pmPhoneNumberExtension: formValues?.fieldProjectManagerExtension,
     superFirstName: formValues?.superName,
     superLastName: '',
     superPhoneNumber: formValues?.superPhoneNumber,

@@ -150,6 +150,7 @@ const RemainingItemsModal: React.FC<{
           props.onClose()
         }}
         size="flexible"
+        closeOnOverlayClick={false}
       >
         <ModalOverlay />
         <ModalContent>
