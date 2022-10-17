@@ -67,12 +67,19 @@ export type MonthOption = {
   year: string
 }
 
-export const monthOptions: MonthOption[] = range(12).map(n => ({
+export const monthOptions: MonthOption[] = range(13).map(n => ({
   value: n,
   label: format(sub(new Date(), { months: n }), 'MMMM'),
   year: format(sub(new Date(), { months: n }), 'yyyy'),
   month: format(sub(new Date(), { months: n }), 'MM'),
 }))
+
+monthOptions.unshift({
+  value: 13,
+  label: 'All',
+  year: '-1',
+  month: '-1',
+})
 export const convertDateTimeFromServer = (date: string) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : null
 }
