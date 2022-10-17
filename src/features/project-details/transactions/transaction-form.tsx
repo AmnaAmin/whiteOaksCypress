@@ -66,7 +66,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
