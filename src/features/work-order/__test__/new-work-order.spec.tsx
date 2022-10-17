@@ -45,6 +45,8 @@ describe('New Work Order modal showing project specific details', () => {
     expect(screen.getByTestId('finalSowAmount')).toBeInTheDocument()
     expect(screen.getByTestId('clientApprovedAmount')).toHaveAttribute('disabled')
     expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('disabled')
+    await selectOption(screen.getByTestId('vendorSkillId'), 'Appliances')
+    await selectOption(screen.getByTestId('vendorId'), 'WhiteOaks Aligned')
     screen.debug(undefined, 10000000000000000000000000000000000)
   })
 })

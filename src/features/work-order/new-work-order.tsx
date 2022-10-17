@@ -391,7 +391,7 @@ export const NewWorkOrderForm: React.FC<{
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
                   <Box>
-                    <FormControl height="40px" isInvalid={!!errors.vendorSkillId}>
+                    <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         {t('type')}
                       </FormLabel>
@@ -422,7 +422,7 @@ export const NewWorkOrderForm: React.FC<{
                     </FormControl>
                   </Box>
                   <Box>
-                    <FormControl isInvalid={!!errors.vendorSkillId}>
+                    <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         {t('companyName')}
                       </FormLabel>
@@ -496,6 +496,7 @@ export const NewWorkOrderForm: React.FC<{
                             <>
                               <NumberFormat
                                 value={field.value}
+                                data-testid="percentage"
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
                                 onValueChange={e => {
@@ -556,6 +557,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Input
                         id="workOrderStartDate"
+                        data-testid="workOrderStartDate"
                         type="date"
                         height="40px"
                         borderLeft="2px solid #4E87F8"
@@ -578,6 +580,7 @@ export const NewWorkOrderForm: React.FC<{
                         id="workOrderExpectedCompletionDate"
                         type="date"
                         height="40px"
+                        data-testid="workOrderExpectedCompletionDate"
                         borderLeft="2px solid #4E87F8"
                         min={woStartDate}
                         focusBorderColor="none"
