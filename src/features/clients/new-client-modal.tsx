@@ -11,6 +11,7 @@ import {
 import { t } from 'i18next'
 import React from 'react'
 import { ClientDetailsTabs } from 'pages/client-details'
+import { CLIENTS } from './clients.i18n'
 
 type NewClientModalType = {
   isOpen: boolean
@@ -35,7 +36,7 @@ const NewClientModal: React.FC<NewClientModalType> = props => {
         <ModalContent>
           <ModalHeader mb="5px" borderBottom="2px solid #E2E8F0">
             <FormLabel variant="strong-label" size="lg">
-              {t('New Client')}
+            {t(`${CLIENTS}.newClient`)}
             </FormLabel>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />

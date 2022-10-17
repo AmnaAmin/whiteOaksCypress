@@ -28,6 +28,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
 import { BiAddToQueue } from 'react-icons/bi'
 import { paymentsTerms } from 'api/vendor-projects'
+import { CLIENTS } from './clients.i18n'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -84,7 +85,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('name')}
+                {t(`${CLIENTS}.name`)}
               </FormLabel>
               <Input
                 id="companyName"
@@ -98,7 +99,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('paymentTerms')}
+                {t(`${CLIENTS}.paymentTerms`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -124,18 +125,18 @@ export const Details: React.FC<clientDetailProps> = props => {
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
-                  {t('paymentMethod')}
+                  {t(`${CLIENTS}.paymentMethod`)}
                 </FormLabel>
                 <Flex dir="row" mt={3}>
                   <HStack>
                     <Checkbox {...register(`paymentCreditCard`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
-                      Credit Card
+                      {t(`${CLIENTS}.creditCard`)}
                     </Checkbox>
                     <Checkbox {...register(`paymentCheck`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
-                      Check
+                      {t(`${CLIENTS}.check`)}
                     </Checkbox>
                     <Checkbox {...register(`paymentAch`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
-                      ACH
+                      {t(`${CLIENTS}.ach`)}
                     </Checkbox>
                   </HStack>
                 </Flex>
@@ -147,7 +148,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           <GridItem>
             <FormControl height="40px">
               <FormLabel variant="strong-label" size="md">
-                {t('address')}
+                {t(`${CLIENTS}.address`)}
               </FormLabel>
               <Input
                 id="streetAddress"
@@ -162,7 +163,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('city')}
+                {t(`${CLIENTS}.city`)}
               </FormLabel>
               <Input id="city" {...register('city')} isDisabled={isProjectCoordinator} variant={'required-field'} />
               <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
@@ -171,7 +172,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('State')}
+                {t(`${CLIENTS}.state`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -195,7 +196,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('zipCode')}
+                {t(`${CLIENTS}.zipCode`)}
               </FormLabel>
               <Input
                 id="zipCode"
@@ -213,7 +214,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 <GridItem>
                   <FormControl height="40px">
                     <FormLabel variant="strong-label" size="md">
-                      {t('contact')}
+                      {t(`${CLIENTS}.contact`)}
                     </FormLabel>
                     <Input
                       id="contact"
@@ -228,7 +229,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 <GridItem>
                   <FormControl>
                     <FormLabel variant="strong-label" size="md">
-                      {t('phoneNo')}
+                      {t(`${CLIENTS}.phoneNumber`)}
                     </FormLabel>
                     <Input
                       id="phoneNumber"
@@ -242,7 +243,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 <GridItem>
                   <FormControl>
                     <FormLabel variant="strong-label" size="md">
-                      {t('email')}
+                      {t(`${CLIENTS}.email`)}
                     </FormLabel>
                     <Input
                       id="emailAddress"
@@ -256,7 +257,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 <GridItem>
                   <FormControl>
                     <FormLabel variant="strong-label" size="md">
-                      {t('market')}
+                      {t(`${CLIENTS}.market`)}
                     </FormLabel>
                     <HStack width={'300px'}>
                       <Box width={'215px'}>
@@ -318,12 +319,12 @@ export const Details: React.FC<clientDetailProps> = props => {
             mt={2}
             leftIcon={<BiAddToQueue />}
           >
-            {t('Add Contacts')}
+            {t(`${CLIENTS}.addContact`)}
           </Button>
         )}
         <Flex alignItems="center" py="3" mt={2}>
           <Text fontSize="16px" color="gray.600" fontWeight={500} w={'370px'}>
-            {t('accPayConInfo')}
+            {t(`${CLIENTS}.accPayConInfo`)}
           </Text>
           <Divider border="1px solid #E2E8F0" mt={1} />
         </Flex>
@@ -333,7 +334,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <GridItem>
                 <FormControl height="40px">
                   <FormLabel variant="strong-label" size="md">
-                    {t('contact')}
+                    {t(`${CLIENTS}.contact`)}
                   </FormLabel>
                   <Input
                     id="contact"
@@ -348,7 +349,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('phoneNo')}
+                    {t(`${CLIENTS}.phoneNumber`)}
                   </FormLabel>
                   <Input
                     id="phoneNumber"
@@ -363,7 +364,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('email')}
+                    {t(`${CLIENTS}.email`)}
                   </FormLabel>
                   <Input
                     id="emailAddress"
@@ -377,7 +378,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <GridItem>
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('comment')}
+                    {t(`${CLIENTS}.comment`)}
                   </FormLabel>
 
                   <HStack width={'300px'}>
@@ -426,13 +427,13 @@ export const Details: React.FC<clientDetailProps> = props => {
             leftIcon={<BiAddToQueue />}
             disabled={isProjectCoordinator}
           >
-            {t('Add Contacts')}
+            {t(`${CLIENTS}.addContact`)}
           </Button>
         )}
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
-          {t('cancel')}
+          {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
           <Button
@@ -443,7 +444,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             ml={2}
             // onClick={props?.setNextTab}
           >
-            {t('save')}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>

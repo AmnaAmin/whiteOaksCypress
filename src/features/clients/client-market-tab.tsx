@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ClientFormValues } from 'types/client.type'
+import { CLIENTS } from './clients.i18n'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -60,7 +61,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
-          {t('cancel')}
+        {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
           <Button
@@ -69,7 +70,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
             form="clientDetails" 
             ml={2}
           >
-            {t('save')}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>
