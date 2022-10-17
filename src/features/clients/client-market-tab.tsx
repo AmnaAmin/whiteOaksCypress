@@ -61,15 +61,10 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
-        {t(`${CLIENTS}.cancel`)}
+          {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
-          <Button
-            colorScheme="brand"
-            type="submit"
-            form="clientDetails" 
-            ml={2}
-          >
+          <Button colorScheme="brand" type="submit" form="clientDetails" ml={2}>
             {t(`${CLIENTS}.save`)}
           </Button>
         )}

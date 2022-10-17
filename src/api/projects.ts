@@ -55,12 +55,11 @@ export const useProject = (projectId?: string) => {
   }
 }
 
-export const useProjectWorkOrders = (projectId, filterQueryString?: string) => {
+export const useProjectWorkOrders = projectId => {
   const client = useClient()
-  const apiQueryString = filterQueryString ? `?${filterQueryString}` : ''
 
-  return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId, apiQueryString], async () => {
-    const response = await client(`project/${projectId}/workorders${apiQueryString}`, {})
+  return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
+    const response = await client(`project/${projectId}/workorders`, {})
 
     return orderBy(
       response?.data,

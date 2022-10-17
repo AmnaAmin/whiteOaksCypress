@@ -7,11 +7,7 @@ import WorkOrderDetails from 'features/work-order/work-order-edit'
 import { useGanttChart } from 'api/pc-projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
-import {
-  WORK_ORDER_TABLE_COLUMNS,
-  WORK_ORDER_TABLE_QUERY_KEYS,
-} from 'features/vendor/vendor-work-order/work-order.constants'
-import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { WORK_ORDER_TABLE_COLUMNS } from 'features/vendor/vendor-work-order/work-order.constants'
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -19,11 +15,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-  const { setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: WORK_ORDER_TABLE_QUERY_KEYS,
-  })
-
-  const { data: workOrders, refetch, isFetching } = useProjectWorkOrders(projectId, fitlersQueryString)
+  const { data: workOrders, refetch, isFetching } = useProjectWorkOrders(projectId)
   const { refetch: refetchGantt } = useGanttChart(projectId)
 
   // Do not show WO which have been cancelled
@@ -58,12 +50,8 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
         />
       )}
 
-      <Box overflow={'auto'} w="100%" maxH="350px" position="relative">
-        <TableContextProvider
-          data={workOrdersNotCancelled}
-          columns={WORK_ORDER_TABLE_COLUMNS}
-          setColumnFilters={setColumnFilters}
-        >
+      <Box overflow={'auto'} w="100%" h="350px" position="relative">
+        <TableContextProvider data={workOrdersNotCancelled} columns={WORK_ORDER_TABLE_COLUMNS}>
           <Table
             isLoading={isFetching}
             isEmpty={!isFetching && !workOrdersNotCancelled?.length}

@@ -24,7 +24,6 @@ export type Clients = {
   paymentAch?: boolean
   paymentCheck?: boolean
   paymentCreditCard?: boolean
-
 }
 
 export type Market = {

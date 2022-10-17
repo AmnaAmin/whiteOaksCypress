@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Spinner, Center } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { useGetAllTransactions } from 'api/transactions'
+import { useTransactions } from 'api/transactions'
 import { useProjectWorkOrders } from 'api/projects'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from './work-order-details'
 import { Project } from 'types/project.type'
-import { WORK_ORDER_TABLE_COLUMNS, WORK_ORDER_TABLE_QUERY_KEYS } from './work-order.constants'
+import { WORK_ORDER_TABLE_COLUMNS } from './work-order.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
-import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 interface PropType {
   onTabChange?: any
   projectData: Project
@@ -17,12 +16,9 @@ interface PropType {
 export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-  const { transactions = [] } = useGetAllTransactions(projectId)
+  const { transactions = [] } = useTransactions(projectId)
 
-  const { setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: WORK_ORDER_TABLE_QUERY_KEYS,
-  })
-  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId, fitlersQueryString)
+  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
   // Do not show WO which have been cancelled
   const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35)
 
@@ -57,12 +53,8 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
         </Center>
       )}
       {workOrders && (
-        <Box overflow={'auto'} w="100%" maxH="350px" position="relative">
-          <TableContextProvider
-            data={workOrdersNotCancelled}
-            columns={WORK_ORDER_TABLE_COLUMNS}
-            setColumnFilters={setColumnFilters}
-          >
+        <Box overflow={'auto'} w="100%" h="350px" position="relative">
+          <TableContextProvider data={workOrdersNotCancelled} columns={WORK_ORDER_TABLE_COLUMNS}>
             <Table
               isLoading={isLoading}
               isEmpty={!isLoading && !workOrdersNotCancelled?.length}

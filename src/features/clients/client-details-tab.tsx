@@ -432,7 +432,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Button>
         {!isProjectCoordinator && (
           <Button
-            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city} 
+            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city}
             colorScheme="brand"
             type="submit"
             form="clientDetails"
