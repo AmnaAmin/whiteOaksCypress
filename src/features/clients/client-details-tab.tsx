@@ -273,11 +273,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                                 onChange={option => field.onChange(option)}
                                 isDisabled={isProjectCoordinator}
                                 selectProps={{ isBorderLeft: true }}
-                                // value={markets?.map(market => {
-                                //   if (market?.id === parseInt(contacts?.market))
-                                //     return { label: market?.stateName, value: market?.id }
-                                //   return null
-                                // })}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -437,12 +432,11 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Button>
         {!isProjectCoordinator && (
           <Button
-            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city} //{isClientDetailsSaveButtonDisabled}
+            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city} 
             colorScheme="brand"
             type="submit"
             form="clientDetails"
             ml={2}
-            // onClick={props?.setNextTab}
           >
             {t(`${CLIENTS}.save`)}
           </Button>

@@ -8,7 +8,7 @@ import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import { ClientFormValues } from 'types/client.type'
-import { useSaveNewClientDetails, useUpdateClientDetails, clientDetailsDefaultValues } from 'api/clients'
+import { useSaveNewClientDetails, useUpdateClientDetails, clientDetailsDefaultValues, clientDefault } from 'api/clients'
 import { useMarkets, useStates } from 'api/pc-projects'
 
 type ClientDetailsTabsProps = {
@@ -43,7 +43,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     if (clientDetails) {
       reset(clientDetailsDefaultValues({ clientDetails, marketOptions, statesOptions }))
     } else {
-      reset()
+      reset(clientDefault())
     }
   }, [reset, clientDetails, statesOptions?.length, marketOptions?.length])
 

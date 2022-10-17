@@ -86,15 +86,34 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
           }),
         ]
       : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
+  const accPayInfoValue =
+    clientDetails?.accountPayableContactInfos?.length > 0
+      ? [
+          ...clientDetails?.accountPayableContactInfos?.map(c => {
+            return {
+              contact: c.contact,
+              phoneNumber: c.phoneNumber,
+              emailAddress: c.emailAddress,
+              comments: c.comments,
+            }
+          }),
+        ]
+      : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }]
 
   const defaultValues = {
     ...clientDetails,
     paymentTerm: paymentTermsValue || { label: '20', value: '20' },
     state: stateValue,
     contacts: contactsMarketsValue,
-    accountPayableContactInfos: clientDetails?.accountPayableContactInfos?.length
-      ? clientDetails?.accountPayableContactInfos
-      : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
+    accountPayableContactInfos: accPayInfoValue,
+  }
+  return defaultValues
+}
+
+export const clientDefault = () => {
+  const defaultValues = {
+    contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
+    accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
   return defaultValues
 }
