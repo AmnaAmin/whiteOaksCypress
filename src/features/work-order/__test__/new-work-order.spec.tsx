@@ -1,31 +1,47 @@
 import { render } from '@testing-library/react'
 import { Providers } from 'providers'
-import { PROJECTS } from 'mocks/api/workorder/data'
+import { PROJECTS, SWO_PROJECT } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen, selectOption } from 'utils/test-utils'
+import { NewWorkOrderForm } from '../new-work-order'
+import { dateFormat } from 'utils/date-time-utils'
 
-export const renderNewWorkOrder = async ({ onClose, isOpen, projectData }: any) => {
-  /*await render(
+export const renderNewWorkOrder = async ({ onClose, isOpen, projectData, swoProject, onSubmit }: any) => {
+  await render(
     <NewWorkOrderForm
       projectData={projectData}
       isOpen={isOpen}
       onClose={onClose}
       isSuccess={false}
-      onSubmit={() => {}}
-      swoProject={}
+      onSubmit={onSubmit}
+      swoProject={swoProject}
     />,
     {
       wrapper: Providers,
     },
   )
-  await waitForLoadingToFinish()*/
+  await waitForLoadingToFinish()
 }
 
 jest.setTimeout(150000)
-describe('Work Order modal showing work order specific details', () => {
+describe('New Work Order modal showing project specific details', () => {
   test('Verify work order details in active state', async () => {
     const onClose = jest.fn()
-    const projectData = PROJECTS[0]
-    await renderNewWorkOrder({ isOpen: true, onClose, projectData })
-    screen.debug(undefined, 1000000000000000000000)
+    const onSubmit = jest.fn()
+    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+    await renderNewWorkOrder({
+      isOpen: true,
+      onClose,
+      projectData: projectData,
+      swoProject: { SWO_PROJECT },
+      onSubmit,
+    })
+    expect(screen.getByTestId('clientStart').textContent).toEqual(
+      projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy',
+    )
+    expect(screen.getByTestId('clientEnd').textContent).toEqual(
+      projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy',
+    )
+    expect(screen.getByTestId('profitPercentage')).toBeInTheDocument()
+    expect(screen.getByTestId('finalSowAmount')).toBeInTheDocument()
   })
 })

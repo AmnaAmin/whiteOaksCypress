@@ -45,6 +45,7 @@ import {
   mapToLineItems,
   calculateVendorAmount,
   calculateProfit,
+  SWOProject,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
@@ -62,7 +63,15 @@ const CalenderCard = props => {
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text minH="20px" whiteSpace="nowrap" color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          data-testid={props?.testId}
+          minH="20px"
+          whiteSpace="nowrap"
+          color="gray.500"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+        >
           {props.date}
         </Text>
       </Box>
@@ -87,6 +96,7 @@ const InformationCard = props => {
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
+          data-testid={props?.testId}
         >
           {props.date}
         </Text>
@@ -107,11 +117,72 @@ type NewWorkOrderType = {
   uploadWO: any
 }
 
-const NewWorkOrder: React.FC<{
+export const NewWorkOrder: React.FC<{
   projectData: Project
   isOpen: boolean
   onClose: () => void
 }> = ({ projectData, isOpen, onClose }) => {
+  const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
+  const { swoProject } = useFetchProjectId(projectData?.id)
+  const toast = useToast()
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
+
+  const onSubmit = async values => {
+    if (values?.assignedItems?.length > 0) {
+      const isValid = values?.assignedItems?.every(
+        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
+      )
+      if (!isValid) {
+        toast({
+          title: 'Assigned Items',
+          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return
+      }
+      assignLineItems(
+        [
+          ...values?.assignedItems?.map(a => {
+            return { ...a, isAssigned: true }
+          }),
+        ],
+        {
+          onSuccess: async () => {
+            const payload = await parseNewWoValuesToPayload(values, projectData.id)
+            createWorkOrder(payload as any)
+          },
+        },
+      )
+    } else {
+      const payload = await parseNewWoValuesToPayload(values, projectData.id)
+      createWorkOrder(payload as any)
+    }
+  }
+
+  return (
+    <NewWorkOrderForm
+      projectData={projectData}
+      isOpen={isOpen}
+      onClose={onClose}
+      isSuccess={isSuccess}
+      onSubmit={onSubmit}
+      swoProject={swoProject}
+    />
+  )
+}
+
+export const NewWorkOrderForm: React.FC<{
+  projectData: Project
+  isOpen: boolean
+  onClose: () => void
+  isSuccess: boolean
+  onSubmit: (values) => void
+  swoProject: SWOProject
+}> = props => {
+  const { projectData, isOpen, onClose, isSuccess, onSubmit, swoProject } = props
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
@@ -123,9 +194,7 @@ const NewWorkOrder: React.FC<{
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
-  const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
-  const { swoProject } = useFetchProjectId(projectData?.id)
-  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
+
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
@@ -168,7 +237,6 @@ const NewWorkOrder: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const toast = useToast()
   const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
@@ -239,41 +307,6 @@ const NewWorkOrder: React.FC<{
     }
   }, [isSuccess, onClose])
 
-  const onSubmit = async values => {
-    if (values?.assignedItems?.length > 0) {
-      const isValid = values?.assignedItems?.every(
-        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
-      )
-      if (!isValid) {
-        toast({
-          title: 'Assigned Items',
-          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        return
-      }
-      assignLineItems(
-        [
-          ...values?.assignedItems?.map(a => {
-            return { ...a, isAssigned: true }
-          }),
-        ],
-        {
-          onSuccess: async () => {
-            const payload = await parseNewWoValuesToPayload(values, projectData.id)
-            createWorkOrder(payload as any)
-          },
-        },
-      )
-    } else {
-      const payload = await parseNewWoValuesToPayload(values, projectData.id)
-      createWorkOrder(payload as any)
-    }
-  }
-
   useEffect(() => {
     const option = [] as any
     if (trades && trades?.length > 0) {
@@ -335,16 +368,22 @@ const NewWorkOrder: React.FC<{
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard
                   title="Client Start"
+                  testId="clientStart"
                   date={projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy'}
                 />
                 <CalenderCard
-                  title="Client End "
+                  title="Client End"
+                  testId="clientEnd"
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
 
-                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
+                <InformationCard
+                  title="profitPercentage"
+                  testId="profitPercentage"
+                  date={profitMargin ? `${profitMargin}` : '0%'}
+                />
 
-                <InformationCard title="finalSowAmount" date={finalSOWAmount} />
+                <InformationCard title="finalSowAmount" testId="finalSowAmount" date={finalSOWAmount} />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
