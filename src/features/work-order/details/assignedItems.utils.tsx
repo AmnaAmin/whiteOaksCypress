@@ -97,7 +97,7 @@ export const useRemainingLineItems = (swoProjectId?: string | number | null) => 
     ['remainingItems', swoProjectId],
     async () => {
       const response = await client(
-        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=modifiedDate,desc&page=0`,
+        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=sortOrder,asc&page=0`,
         {},
       )
 
