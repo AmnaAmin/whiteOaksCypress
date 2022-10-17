@@ -136,7 +136,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, projects])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box w="100%" ref={resizeElementRef}>
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
@@ -144,7 +144,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         TableRow={ProjectRow}
         name="my-table"
         setTableInstance={setTableInstance}
-        tableHeight={'inherit'}
+        tableHeight="calc(100vh - 270px)"
         sortBy={{ id: 'id', desc: true }}
       />
     </Box>

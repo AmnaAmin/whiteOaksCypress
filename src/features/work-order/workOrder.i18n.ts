@@ -93,7 +93,7 @@ export const workOrder = {
         itemsLoading: 'Cargando artículos...',
         uploadWO: 'Subir WO',
         requiredLineItemsToast:
-          'Complete los campos obligatorios en Elementos de línea asignados. Los detalles, la cantidad y el precio son obligatorios para cada artículo.',
+          'Complete los campos obligatorios en Elementos de línea asignados. La descripción, la cantidad y el precio son obligatorios para cada artículo.',
         rejectedInvoiceInfo:
           'Se han rechazado la factura y la exención de gravamen. Actualice la exención de gravamen y regenere la factura.',
         companyName: 'Nombre de empresa',
