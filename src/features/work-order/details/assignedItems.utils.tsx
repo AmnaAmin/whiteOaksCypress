@@ -629,7 +629,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.setFont(summaryFont, 'bold')
     doc.text('Total:', x + 5, y + 25)
     doc.setFont(summaryFont, 'normal')
-    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 20, y + 25)
+    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 45, y + 25)
 
     autoTable(doc, {
       startY: y + 35,
