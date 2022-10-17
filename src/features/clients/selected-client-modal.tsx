@@ -18,13 +18,9 @@ import { ClientFormValues } from 'types/client.type'
 
 const Client = ({
   clientDetails,
-  states,
-  marketOptions,
   onClose: close,
   isOpen: open,
 }: {
-  states
-  marketOptions
   clientDetails: ClientFormValues
   onClose: () => void
   isOpen: boolean
@@ -64,13 +60,7 @@ const Client = ({
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px">
-              <ClientDetailsTabs
-                clientModalType="editClient"
-                clientDetails={clientDetails}
-                states={states}
-                marketOptions={marketOptions}
-                onClose={onClose}
-              />
+              <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} onClose={onClose} />
             </Box>
           </ModalBody>
         </ModalContent>

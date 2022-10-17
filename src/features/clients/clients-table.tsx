@@ -7,7 +7,6 @@ import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
-import { useMarkets, useStates } from 'api/pc-projects'
 
 const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -44,8 +43,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { t } = useTranslation()
-  const { stateSelectOptions } = useStates()
-  const { marketSelectOptions } = useMarkets()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   useEffect(() => {
@@ -105,8 +102,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       {isOpen && (
         <Client
           clientDetails={selectedClient as Clients}
-          states={stateSelectOptions}
-          marketOptions={marketSelectOptions}
           onClose={() => {
             refetch()
             setSelectedClient(undefined)

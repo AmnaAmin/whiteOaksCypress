@@ -22,6 +22,8 @@ export const Client = () => {
       if (updatedClient) {
         setSelectedClient({ ...updatedClient })
       }
+    } else {
+      setSelectedClient(null)
     }
   }, [clients, createdClientId])
 
@@ -60,12 +62,14 @@ export const Client = () => {
           <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} />
         </Box>
       </Box>
-      <NewClientModal
-        setCreatedClientId={setCreatedClientId}
-        isOpen={isOpenNewClientModal}
-        onClose={onNewClientModalClose}
-        createdClient={selectedClient}
-      />
+      {isOpenNewClientModal && (
+        <NewClientModal
+          setCreatedClientId={setCreatedClientId}
+          isOpen={isOpenNewClientModal}
+          onClose={onNewClientModalClose}
+          createdClient={selectedClient}
+        />
+      )}
     </>
   )
 }

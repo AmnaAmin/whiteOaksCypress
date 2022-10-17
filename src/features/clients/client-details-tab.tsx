@@ -31,7 +31,6 @@ import { paymentsTerms } from 'api/vendor-projects'
 
 type clientDetailProps = {
   clientDetails?: any
-  states?: any
   onClose?: () => void
   setNextTab: () => void
 }
@@ -77,9 +76,6 @@ export const Details: React.FC<clientDetailProps> = props => {
     control,
     name: 'accountPayableContactInfos',
   })
-
-  const state = useWatch({ name: 'state', control })
-  console.log('watch state', state)
 
   return (
     <Box>

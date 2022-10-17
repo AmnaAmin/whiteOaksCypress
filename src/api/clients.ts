@@ -1,4 +1,5 @@
 import { useToast } from '@chakra-ui/react'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { reset } from 'numeral'
 import { Control, useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -68,7 +69,24 @@ export const useUpdateClientDetails = () => {
   )
 }
 
-export const clientDetailsDefaultValues = (clientDetails, paymentTermsValue, stateValue, contactsMarketsValue) => {
+export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marketOptions }) => {
+  const stateValue = statesOptions?.find(b => b?.id === clientDetails?.state)
+  const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
+  const contactsMarketsValue =
+    clientDetails?.contacts?.length > 0
+      ? [
+          ...clientDetails?.contacts?.map(c => {
+            const selectedMarket = marketOptions?.find(m => m.id === c.market.id)
+            return {
+              contact: c.contact,
+              phoneNumber: c.phoneNumber,
+              emailAddress: c.emailAddress,
+              market: selectedMarket,
+            }
+          }),
+        ]
+      : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
+
   const defaultValues = {
     ...clientDetails,
     paymentTerm: paymentTermsValue || { label: '20', value: '20' },
