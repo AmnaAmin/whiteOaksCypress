@@ -11,7 +11,7 @@ interface InputViewProps {
 
 const InputView = ({ label, InputElem, showDivider = true, controlStyle = {} }: InputViewProps) => {
   return (
-    <Box {...controlStyle} pt={6}>
+    <Box {...controlStyle}>
       <Stack>
         <Heading color="gray.600" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
           {label}

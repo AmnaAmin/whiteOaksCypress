@@ -1,43 +1,47 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
+  FormControl,
+  FormErrorMessage,
   Grid,
   HStack,
   Icon,
+  Input,
   ModalBody,
   ModalFooter,
   Table,
   Tbody,
   Td,
   Text,
+  Tfoot,
   Thead,
   Tr,
   useDisclosure,
   useToast,
   VStack,
 } from '@chakra-ui/react'
-import { currencyFormatter } from 'utils/string-formatters'
-import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
-
-import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
-import { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
-import { orderBy } from 'lodash'
-import { downloadFile } from 'utils/file-utils'
-import { STATUS, STATUS_CODE, STATUS as WOstatus } from 'features/common/status'
-import jsPDF from 'jspdf'
+import { Button } from 'components/button/button'
+import { ConfirmationBox } from 'components/Confirmation'
 import { addDays, nextFriday } from 'date-fns'
+import { jsPDF } from 'jspdf'
+import { useCallback, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
+import { TransactionStatusValues as TSV, TransactionType, TransactionTypeValues } from 'types/transaction.type'
+import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
+import { downloadFile } from 'utils/file-utils'
+import { currencyFormatter } from 'utils/string-formatters'
 import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
-import { ConfirmationBox } from 'components/Confirmation'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../../../common/status'
+
+import * as _ from 'lodash'
 
 const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
   return (
-    <Flex justifyContent="center">
+    <Flex justifyContent="start">
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -60,54 +64,23 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTab = ({
-  onClose,
-  workOrder,
-  transactions,
-  documentsData,
-  rejectInvoiceCheck,
-  onSave,
-  navigateToProjectDetails,
-  setTabIndex,
-  projectData,
-}) => {
+export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, documentsData, setTabIndex }) => {
+  const [allowManualEntry] = useState(false) /* change requirement woa-3034 to unallow manual entry for vendor */
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const [subTotal, setSubTotal] = useState(0)
   const [amountPaid, setAmountPaid] = useState(0)
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
-  const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
-  const { isVendor } = useUserRolesSelector()
 
   const {
     isOpen: isGenerateInvoiceOpen,
     onClose: onGenerateInvoiceClose,
     onOpen: onGenerateInvoiceOpen,
   } = useDisclosure()
-
-  useEffect(() => {
-    if (documentsData && documentsData.length > 0) {
-      let invoices = documentsData.filter(d => d.documentType === 48 && d.workOrderId === workOrder.id)
-      if (invoices.length > 0) {
-        /* sorting invoices by created datetime to fetch latest */
-        invoices = orderBy(
-          invoices,
-          [
-            item => {
-              const createdDate = new Date(item.createdDate)
-              return createdDate
-            },
-          ],
-          ['desc'],
-        )
-        const recentInvoice = invoices[0]
-        setRecentInvoice({ s3Url: recentInvoice.s3Url, fileType: recentInvoice.fileType })
-      }
-    }
-  }, [documentsData])
 
   useEffect(() => {
     if (transactions && transactions.length > 0) {
@@ -137,14 +110,69 @@ export const InvoiceTab = ({
     }
   }, [transactions])
 
-  const rejectInvoice = () => {
-    if (onSave) {
-      onSave({
-        status: STATUS_CODE.DECLINED,
-        lienWaiverAccepted: false,
-      })
+  const {
+    register,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      item: '',
+      description: '',
+      unitPrice: '',
+      quantity: '',
+      amount: '',
+    },
+  })
+
+  useEffect(() => {
+    if (documentsData && documentsData.length > 0) {
+      let invoices = documentsData.filter(d => d.documentType === 48 && d.workOrderId === workOrder.id)
+      if (invoices.length > 0) {
+        /* sorting invoices by created datetime to fetch latest */
+        invoices = _.orderBy(
+          invoices,
+          [
+            item => {
+              const createdDate = new Date(item.createdDate)
+              return createdDate
+            },
+          ],
+          ['desc'],
+        )
+        const recentInvoice = invoices[0]
+        setRecentInvoice({ s3Url: recentInvoice.s3Url, fileType: recentInvoice.fileType })
+      }
     }
+  }, [documentsData])
+
+  const redirectToLienWaiver = (description?) => {
+    setWorkOrderUpdating(false)
+    toast({
+      title: 'Work Order',
+      description: description ?? t('saveLWError'),
+      status: 'error',
+      isClosable: true,
+    })
+    setTabIndex(1)
+    onGenerateInvoiceClose()
   }
+  const rejectLienWaiver = () => {
+    const desc = t('updateLWError')
+    rejectLW(
+      {
+        ...workOrder,
+        lienWaiverAccepted: false,
+      },
+      {
+        onError() {
+          setWorkOrderUpdating(false)
+        },
+        onSuccess() {
+          redirectToLienWaiver(desc)
+        },
+      },
+    )
+  }
+
   const prepareInvoicePayload = () => {
     const invoiceSubmittedDate = new Date()
     const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
@@ -190,34 +218,6 @@ export const InvoiceTab = ({
     )
   }
 
-  const redirectToLienWaiver = (description?) => {
-    setWorkOrderUpdating(false)
-    toast({
-      title: 'Work Order',
-      description: description ?? t('saveLWError'),
-      status: 'error',
-      isClosable: true,
-    })
-    setTabIndex(1)
-    onGenerateInvoiceClose()
-  }
-  const rejectLienWaiver = () => {
-    const desc = t('updateLWError')
-    rejectLW(
-      {
-        ...workOrder,
-        lienWaiverAccepted: false,
-      },
-      {
-        onError() {
-          setWorkOrderUpdating(false)
-        },
-        onSuccess() {
-          redirectToLienWaiver(desc)
-        },
-      },
-    )
-  }
   const generatePdf = useCallback(async () => {
     setWorkOrderUpdating(true)
     if (!workOrder.lienWaiverAccepted) {
@@ -231,8 +231,8 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'}>
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
+      <ModalBody h={'calc(100vh - 300px)'} pl="25px" pr="25px" pt="25px">
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={t('finalInvoice')}
@@ -246,29 +246,21 @@ export const InvoiceTab = ({
           />
           <InvoiceInfo
             title={t('invoiceDate')}
-            value={
-              workOrder.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                ? dateFormat(workOrder?.dateInvoiceSubmitted)
-                : 'mm/dd/yy'
-            }
+            value={workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yy'}
             icons={BiCalendar}
           />
           <InvoiceInfo
             title={t('dueDate')}
-            value={
-              workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                ? dateFormat(workOrder?.paymentTermDate)
-                : 'mm/dd/yy'
-            }
+            value={workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yy'}
             icons={BiCalendar}
           />
         </Grid>
 
         <Divider border="1px solid gray" mb={5} color="gray.200" />
 
-        <Box h="calc(100% - 150px)" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
-          <Table variant="simple" size="md">
-            <Thead>
+        <Box h="calc(100% - 200px)" overflow="auto" border="1px solid #E2E8F0" roundedTop={6}>
+          <Table variant="simple" size="md" roundedTop={6}>
+            <Thead pos="sticky" top={0}>
               <Tr>
                 <Td>{t('item')}</Td>
                 <Td>{t('description')}</Td>
@@ -281,7 +273,7 @@ export const InvoiceTab = ({
             <Tbody>
               {items.map((item, index) => {
                 return (
-                  <Tr key={index} h="72px" data-testid={'invoice-items'}>
+                  <Tr key={index} data-testid={'invoice-items'} h="72px">
                     <Td maxWidth={300} w={300}>
                       {item.id}
                     </Td>
@@ -317,22 +309,99 @@ export const InvoiceTab = ({
                 </Td>
               </Tr>
             </Tbody>
+            <form>
+              <>
+                {allowManualEntry && (
+                  <Tfoot>
+                    <Tr>
+                      <Td pt="0" pb={6}>
+                        <Button
+                          type="submit"
+                          size="xs"
+                          variant="ghost"
+                          my={0.5}
+                          fontSize="14px"
+                          fontWeight={600}
+                          color="#4E87F8"
+                        >
+                          +{t('addNewItem')}
+                        </Button>
+
+                        <FormControl isInvalid={!!errors.item?.message}>
+                          <Input
+                            w={165}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="item"
+                            {...register('item', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.item?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+
+                      <Td>
+                        <FormControl isInvalid={!!errors.description?.message}>
+                          <Input
+                            w={149}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="description"
+                            {...register('description', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.description?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.unitPrice?.message}>
+                          <Input
+                            w={149}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="unitPrice"
+                            {...register('unitPrice', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.unitPrice?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.quantity?.message}>
+                          <Input
+                            w={84}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="quantity"
+                            {...register('quantity', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.quantity?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                      <Td>
+                        <FormControl isInvalid={!!errors.amount?.message}>
+                          <Input
+                            w={84}
+                            type="text"
+                            h="28px"
+                            bg="gray.50"
+                            // id="amount"
+                            {...register('amount', { required: 'This field is required.' })}
+                          />
+                          <FormErrorMessage position="absolute">{errors.amount?.message}</FormErrorMessage>
+                        </FormControl>
+                      </Td>
+                    </Tr>
+                  </Tfoot>
+                )}
+              </>
+            </form>
           </Table>
         </Box>
       </ModalBody>
-      <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={5} bg="white">
         <HStack justifyContent="start" w="100%">
-          {navigateToProjectDetails && (
-            <Button
-              variant="outline"
-              colorScheme="brand"
-              size="md"
-              onClick={navigateToProjectDetails}
-              leftIcon={<BiSpreadsheet />}
-            >
-              {t('seeProjectDetails')}
-            </Button>
-          )}
           {[WOstatus.Invoiced, WOstatus.Paid, WOstatus.Completed].includes(
             workOrder?.statusLabel?.toLocaleLowerCase(),
           ) && recentInvoice ? (
@@ -366,20 +435,9 @@ export const InvoiceTab = ({
           )}
         </HStack>
         <HStack justifyContent="end">
-          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && !isVendor ? (
-            <>
-              <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
-                {t('save')}
-              </Button>
-              <Button onClick={onClose} colorScheme="brand" variant="outline">
-                {t('cancel')}
-              </Button>
-            </>
-          ) : (
-            <Button onClick={onClose} colorScheme="brand">
-              {t('cancel')}
-            </Button>
-          )}
+          <Button colorScheme="brand" onClick={onClose}>
+            {t('cancel')}
+          </Button>
         </HStack>
       </ModalFooter>
       <ConfirmationBox

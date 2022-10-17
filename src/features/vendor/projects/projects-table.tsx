@@ -65,16 +65,11 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
   const idCell = row.cells.find(cell => cell.column.id === 'id')
   const projectId = idCell?.value
 
-  const redirectPath =
-    process.env.NODE_ENV === 'development'
-      ? `/project-details/${projectId}`
-      : `/vendorportal/project-details/${projectId}`
-
   return (
     <Link
       to={`/project-details/${projectId}`}
       data-testid="project-table-row"
-      onContextMenu={() => window.open(redirectPath)}
+      onContextMenu={() => window.open(`${process.env.PUBLIC_URL}/project-details/${projectId}`)}
     >
       <Tr
         bg="white"
@@ -141,7 +136,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }, [selectedCard, projects])
 
   return (
-    <Box ref={resizeElementRef} height="100%">
+    <Box w="100%" ref={resizeElementRef}>
       <TableWrapper
         isLoading={isLoading}
         columns={projectColumns}
@@ -149,7 +144,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         TableRow={ProjectRow}
         name="my-table"
         setTableInstance={setTableInstance}
-        tableHeight={'inherit'}
+        tableHeight="calc(100vh - 270px)"
         sortBy={{ id: 'id', desc: true }}
       />
     </Box>
