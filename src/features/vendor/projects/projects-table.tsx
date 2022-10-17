@@ -98,7 +98,7 @@ const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
                   fontStyle="normal"
                   fontWeight="400"
                 >
-                  {cell.render('Cell')} _ _ _
+                  {cell.render('Cell')}
                 </Text>
               </Flex>
             </Td>
