@@ -62,7 +62,11 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             notes && (
               <Box>
                 {notes.map(note => {
-                  return note === account?.login ? <MessagesTypes userNote={note} /> : <MessagesTypes otherNote={note} />
+                  return note === account?.login ? (
+                    <MessagesTypes userNote={note} />
+                  ) : (
+                    <MessagesTypes otherNote={note} />
+                  )
                 })}
                 <div ref={messagesEndRef} />
               </Box>
@@ -77,18 +81,18 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             </Box>
           )}
           {!isProjectCoordinator && (
-          <FormControl {...textAreaStyle}>
-            <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
-            {t(`${CLIENTS}.enterNewNote`)}
-            </FormLabel>
-            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
-          </FormControl>
+            <FormControl {...textAreaStyle}>
+              <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
+                {t(`${CLIENTS}.enterNewNote`)}
+              </FormLabel>
+              <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
+            </FormControl>
           )}
         </form>
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
         <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
-        {t(`${CLIENTS}.cancel`)}
+          {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
           <Button colorScheme="brand" ml={2} isDisabled={!message} onClick={Submit}>

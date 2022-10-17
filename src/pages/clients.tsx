@@ -33,7 +33,7 @@ export const Client = () => {
       <Box>
         <Flex h="52px" alignItems="center" justifyContent="space-between" px={2}>
           <Text fontSize="18px" fontWeight={500} color="gray.600">
-          {t(`${CLIENTS}.clientOverview`)}
+            {t(`${CLIENTS}.clientOverview`)}
           </Text>
           {!isProjectCoordinator && (
             <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
@@ -53,12 +53,10 @@ export const Client = () => {
           fontWeight={500}
           color="gray.600"
         >
-          <Text flex={1}>
-          {t(`${CLIENTS}.businessName`)}
-          </Text>
+          <Text flex={1}>{t(`${CLIENTS}.businessName`)}</Text>
           <Divider orientation="vertical" border="1px solid" />
           <Text pl={5} flex={1}>
-          {t(`${CLIENTS}.accountPayable`)}
+            {t(`${CLIENTS}.accountPayable`)}
           </Text>
         </Flex>
         <Box>
