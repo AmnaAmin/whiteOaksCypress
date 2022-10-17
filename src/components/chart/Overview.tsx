@@ -1,9 +1,9 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { useVendorsPerMonth } from 'api/vendor-dashboard'
 import React from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { values } from 'lodash'
-import { months, monthsShort } from 'utils/date-time-utils'
+import { months, monthsFull, monthsShort } from 'utils/date-time-utils'
 
 export enum WORK_ORDER_STATUS {
   Paid = 68,
@@ -31,6 +31,17 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
+}
+
+const OverViewCustomTooltip = ({ payload, label }: any) => {
+  return (
+    <Box bg="white" p={3} rounded="6px" border="1px solid #CBD5E0" className="recharts-custom-tooltip">
+      <Text fontWeight={900}>{monthsFull[label]}</Text>
+      {payload?.map(e => {
+        return <Text my={1} color={e.fill}>{`${e.name} : ${e.value}`}</Text>
+      })}
+    </Box>
+  )
 }
 
 export const OverviewGraph = ({ vendorData, width, height }) => {
@@ -76,7 +87,8 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             }}
           />
 
-          <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
+          {/* <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} /> */}
+          <Tooltip content={<OverViewCustomTooltip />} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
 
           <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
           <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />

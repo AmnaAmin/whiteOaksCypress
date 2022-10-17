@@ -28,6 +28,7 @@ export const transaction = {
 
         // Transaction Modal
         addNewRow: 'Add New Row',
+        newRow: 'New Row',
         deleteRow: 'Delete Row',
         attachment: 'Attachment',
         dateCreated: 'Date Created',
@@ -113,6 +114,7 @@ export const transaction = {
         // Transaction Modal
 
         addNewRow: 'Añadir Nueva Fila',
+        newRow: 'Fila nueva',
         deleteRow: 'Borrar Fila',
         attachment: 'Adjunto Archivo',
         dateCreated: 'Fecha de Creacion',

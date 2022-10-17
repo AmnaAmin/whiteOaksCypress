@@ -1,4 +1,4 @@
-import { Box, Button, Center, Divider, Flex, Stack, VStack } from '@chakra-ui/react'
+import { Box, Button, Center, Divider, Flex, HStack, VStack } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BsBoxArrowUp } from 'react-icons/bs'
@@ -36,20 +36,17 @@ const Projects = () => {
 
   return (
     <>
-      <VStack w="100%" h="calc(100vh - 160px)">
-        <Box mb={2} w="100%">
-          <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
-        </Box>
-
-        <Box w="100%" h={500} flex={1} boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+      <VStack spacing="14px" w="100%">
+        <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
+        <Box w="100%">
           <ProjectsTable
             selectedCard={selectedCard as string}
             setTableInstance={setProjectTableInstance}
             resizeElementRef={resizeElementRef}
             projectColumns={tableColumns}
           />
-          <Stack w={{ base: '971px', xl: '100%' }} direction="row" justify="flex-end" spacing={5}>
-            <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0">
+          <HStack justify="flex-end">
+            <Flex borderRadius="0 0 6px 6px" bg="#F7FAFC" border="1px solid #E2E8F0" mt="2px">
               {isLoading ? (
                 <>
                   <BlankSlate size="md" />
@@ -58,7 +55,6 @@ const Projects = () => {
               ) : (
                 <>
                   <Button
-                    mr="1"
                     variant="ghost"
                     colorScheme="brand"
                     onClick={() => {
@@ -81,7 +77,7 @@ const Projects = () => {
                 </>
               )}
             </Flex>
-          </Stack>
+          </HStack>
         </Box>
       </VStack>
     </>

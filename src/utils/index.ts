@@ -15,6 +15,7 @@ export const isValidAndNonEmptyObject = (object: {} | undefined | null) => {
 export const isValidAndNonEmpty = item => {
   return item !== null && item !== undefined && item?.toString()?.trim() !== ''
 }
+
 export function numberWithCommas(x: number) {
   return x?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }

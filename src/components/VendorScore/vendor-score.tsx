@@ -55,7 +55,6 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
         display="grid"
         gridTemplateColumns={{ base: '1fr', lg: '2fr', xl: '1fr 2fr' }}
         alignItems="center"
-        mb="10px"
       >
         <Card h={156} rounded="2xl">
           <Flex h="99%" w="100%">
@@ -80,7 +79,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                       )}
                     </CircularProgressLabel>
                     <Text textAlign="center" fontSize="12px" fontWeight={500} color="gray.600" fontStyle="normal">
-                      {t('vendorScore')}
+                      {t('score')}
                     </Text>
                   </CircularProgress>
                 </Flex>
