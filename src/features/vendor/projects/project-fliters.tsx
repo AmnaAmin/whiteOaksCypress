@@ -72,7 +72,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
           sm: 'repeat(auto-fit, minmax(125px,1fr))',
           md: 'repeat(auto-fit, minmax(205px,1fr))',
         }}
-        gridGap="5px"
+        gridGap="14px"
       >
         {cards.map(card => {
           return (
@@ -82,6 +82,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
               onSelectCard={onSelectCard}
               selectedCard={selectedCard}
               isLoading={isLoading}
+              disabled={card.number === 0}
             />
           )
         })}

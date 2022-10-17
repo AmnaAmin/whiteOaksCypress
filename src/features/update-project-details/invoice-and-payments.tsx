@@ -17,7 +17,6 @@ import addDays from 'date-fns/addDays'
 import ChooseFileField from 'components/choose-file/choose-file'
 import ReactSelect from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
-import { t } from 'i18next'
 import React, { ChangeEvent, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BiDownload } from 'react-icons/bi'
@@ -26,6 +25,7 @@ import { useFieldsDisabled } from './hooks'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { SelectOption } from 'types/transaction.type'
 import { NumberInput } from 'components/input/input'
+import { useTranslation } from 'react-i18next'
 
 const InvoiceAndPayments: React.FC = () => {
   const {
@@ -91,6 +91,8 @@ const InvoiceAndPayments: React.FC = () => {
     setValue('remainingPayment', getValues().overPayment ? 0 : getValues().remainingPayment)
   }, [isStatusInvoiced])
 
+  const { t } = useTranslation()
+
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" w="908px" columnGap="16px">
@@ -98,7 +100,7 @@ const InvoiceAndPayments: React.FC = () => {
           <VStack alignItems="end" spacing="0px" position="relative">
             <FormControl w="215px" isInvalid={!!errors.originalSOWAmount}>
               <FormLabel htmlFor="originSowAmount" variant="strong-label" size="md">
-                {t('originalSowAmount')}
+                {t(`project.projectDetails.originalSowAmount`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -133,7 +135,7 @@ const InvoiceAndPayments: React.FC = () => {
                 top="76px"
               >
                 <Icon as={BiDownload} fontSize="14px" />
-                <Text ml="1">Original SOW</Text>
+                <Text ml="1">{t(`project.projectDetails.originalSOW`)}</Text>
               </Link>
             )}
           </VStack>
@@ -141,7 +143,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.finalSOWAmount}>
             <FormLabel variant="strong-label" size="md" htmlFor="finalSowAmount">
-              {t('finalSowAmount')}
+              {t(`project.projectDetails.finalSowAmount`)}
             </FormLabel>
             <Controller
               control={control}
@@ -166,7 +168,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.invoiceNumber}>
             <FormLabel htmlFor="invoiceNo" variant="strong-label" size="md">
-              {t('invoiceNo')}
+              {t(`project.projectDetails.invoiceNo`)}
             </FormLabel>
             <Input id="invoiceNo" {...register('invoiceNumber')} />
             <FormErrorMessage>{errors?.invoiceNumber?.message}</FormErrorMessage>
@@ -176,7 +178,7 @@ const InvoiceAndPayments: React.FC = () => {
           <VStack alignItems="end" spacing="0px" position="relative">
             <FormControl isInvalid={!!errors?.invoiceAttachment}>
               <FormLabel variant="strong-label" size="md">
-                {t('uploadInvoice')}
+                {t(`project.projectDetails.uploadInvoice`)}
               </FormLabel>
               <Controller
                 name="invoiceAttachment"
@@ -220,7 +222,7 @@ const InvoiceAndPayments: React.FC = () => {
                 top={'76px'}
               >
                 <Icon as={BiDownload} fontSize="14px" />
-                <Text ml="1">Invoice</Text>
+                <Text ml="1">{t(`project.projectDetails.invoice`)}</Text>
               </Link>
             )}
           </VStack>
@@ -228,7 +230,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors?.invoiceBackDate}>
             <FormLabel variant="strong-label" size="md">
-              {t('invoiceBackDate')}
+              {t(`project.projectDetails.invoiceBackDate`)}
             </FormLabel>
 
             <Input
@@ -247,7 +249,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.paymentTerms}>
             <FormLabel variant="strong-label" size="md">
-              {t('paymentsTerms')}
+              {t(`project.projectDetails.paymentTerms`)}
             </FormLabel>
             <Controller
               control={control}
@@ -275,7 +277,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.woaInvoiceDate}>
             <FormLabel htmlFor="woaInvoiceDate" variant="strong-label" size="md">
-              {t('woaInvoiceDate')}
+              {t(`project.projectDetails.woaInvoiceDate`)}
             </FormLabel>
             <Input
               isDisabled={isWOAInvoiceDateDisabled}
@@ -293,7 +295,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors?.woaExpectedPayDate}>
             <FormLabel variant="strong-label" size="md">
-              {t('woaExpectedPay')}
+              {t(`project.projectDetails.woaExpectedPay`)}
             </FormLabel>
 
             <Input
@@ -309,7 +311,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.overPayment}>
             <FormLabel htmlFor="overPayment" variant="strong-label" size="md">
-              {t('overpayment')}
+              {t(`project.projectDetails.overpayment`)}
             </FormLabel>
 
             <Controller
@@ -334,7 +336,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.remainingPayment}>
             <FormLabel htmlFor="remainingPayment" variant="strong-label" size="md">
-              {t('remainingPayment')}
+              {t(`project.projectDetails.remainingPayment`)}
             </FormLabel>
 
             <Controller
@@ -358,7 +360,7 @@ const InvoiceAndPayments: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.payment}>
             <FormLabel htmlFor="payment" variant="strong-label" size="md">
-              {t('payment')}
+              {t(`project.projectDetails.payment`)}
             </FormLabel>
             <Controller
               control={control}

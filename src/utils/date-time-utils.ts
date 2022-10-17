@@ -124,6 +124,21 @@ export const monthsShort: GenericObjectType = {
   December: 'Dec',
 }
 
+export const monthsFull: GenericObjectType = {
+  Jan: 'January',
+  Feb: 'February',
+  Mar: 'March',
+  Apr: 'April',
+  May: 'May',
+  Jun: 'June',
+  Jul: 'July',
+  Aug: 'August',
+  Sep: 'September',
+  Oct: 'October',
+  Nov: 'November',
+  Dec: 'December',
+}
+
 export const getQuarterByDate = (date = new Date()) => {
   return getQuarterByMonth(date.getMonth())
 }

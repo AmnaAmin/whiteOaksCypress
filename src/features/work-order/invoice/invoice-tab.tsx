@@ -45,7 +45,14 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
         <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {title}
         </Text>
-        <Text color="gray.500" lineHeight="20px" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          data-testid={title}
+          color="gray.500"
+          lineHeight="20px"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+        >
           {value}
         </Text>
       </Box>
@@ -53,7 +60,7 @@ const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.Element
   )
 }
 
-export const InvoiceTabPC = ({
+export const InvoiceTab = ({
   onClose,
   workOrder,
   transactions,
@@ -73,7 +80,7 @@ export const InvoiceTabPC = ({
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
-  const { isDoc, isProjectCoordinator } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
 
   const {
     isOpen: isGenerateInvoiceOpen,
@@ -131,10 +138,12 @@ export const InvoiceTabPC = ({
   }, [transactions])
 
   const rejectInvoice = () => {
-    onSave({
-      status: STATUS_CODE.DECLINED,
-      lienWaiverAccepted: false,
-    })
+    if (onSave) {
+      onSave({
+        status: STATUS_CODE.DECLINED,
+        lienWaiverAccepted: false,
+      })
+    }
   }
   const prepareInvoicePayload = () => {
     const invoiceSubmittedDate = new Date()
@@ -240,7 +249,7 @@ export const InvoiceTabPC = ({
             value={
               workOrder.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                 ? dateFormat(workOrder?.dateInvoiceSubmitted)
-                : 'mm/dd/yyyy'
+                : 'mm/dd/yy'
             }
             icons={BiCalendar}
           />
@@ -249,7 +258,7 @@ export const InvoiceTabPC = ({
             value={
               workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                 ? dateFormat(workOrder?.paymentTermDate)
-                : 'mm/dd/yyyy'
+                : 'mm/dd/yy'
             }
             icons={BiCalendar}
           />
@@ -272,7 +281,7 @@ export const InvoiceTabPC = ({
             <Tbody>
               {items.map((item, index) => {
                 return (
-                  <Tr h="72px">
+                  <Tr key={index} h="72px" data-testid={'invoice-items'}>
                     <Td maxWidth={300} w={300}>
                       {item.id}
                     </Td>
@@ -313,31 +322,6 @@ export const InvoiceTabPC = ({
       </ModalBody>
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
-          {recentInvoice && ![STATUS.Declined].includes(workOrder.statusLabel?.toLocaleLowerCase()) && (
-            <Button
-              variant="outline"
-              colorScheme="brand"
-              size="md"
-              onClick={() => downloadFile(recentInvoice?.s3Url)}
-              leftIcon={<BiDownload />}
-            >
-              {t('see')} {t('invoice')}
-            </Button>
-          )}
-          {(isDoc || isProjectCoordinator) &&
-            workOrder.lienWaiverAccepted &&
-            [WOstatus.Declined, WOstatus.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
-              <Button
-                variant="outline"
-                data-testid="generateInvoice"
-                colorScheme="brand"
-                size="md"
-                leftIcon={<BiSpreadsheet />}
-                onClick={onGenerateInvoiceOpen}
-              >
-                {t('generateINV')}
-              </Button>
-            )}
           {navigateToProjectDetails && (
             <Button
               variant="outline"
@@ -349,9 +333,40 @@ export const InvoiceTabPC = ({
               {t('seeProjectDetails')}
             </Button>
           )}
+          {[WOstatus.Invoiced, WOstatus.Paid, WOstatus.Completed].includes(
+            workOrder?.statusLabel?.toLocaleLowerCase(),
+          ) && recentInvoice ? (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              data-testid="seeInvoice"
+              onClick={() => downloadFile(recentInvoice?.s3Url)}
+              leftIcon={<BiDownload />}
+            >
+              {t('see')} {t('invoice')}
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              data-testid="generateInvoice"
+              disabled={
+                !(
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
+                )
+              }
+              colorScheme="brand"
+              size="md"
+              leftIcon={<BiSpreadsheet />}
+              onClick={onGenerateInvoiceOpen}
+            >
+              {t('generateINV')}
+            </Button>
+          )}
         </HStack>
         <HStack justifyContent="end">
-          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced ? (
+          {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && !isVendor ? (
             <>
               <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
                 {t('save')}

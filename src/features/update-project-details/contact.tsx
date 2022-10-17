@@ -50,7 +50,7 @@ const Contact: React.FC<ContactProps> = ({
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
-            <InputLabel title={'projectCoordinator'} htmlFor={'projectCoordinator'} />
+            <InputLabel title={'project.projectDetails.projectCoordinator'} htmlFor={'projectCoordinator'} />
             <Controller
               control={control}
               name="projectCoordinator"
@@ -72,7 +72,7 @@ const Contact: React.FC<ContactProps> = ({
 
         <Box h="40px">
           <FormControl isInvalid={!!errors?.projectCoordinatorPhoneNumber}>
-            <InputLabel title={'phone'} htmlFor={'projectCoordinatorPhoneNumber'} />
+            <InputLabel title={'project.projectDetails.phone'} htmlFor={'projectCoordinatorPhoneNumber'} />
             <Input
               placeholder="098-987-2233"
               id="projectCoordinatorPhoneNumber"
@@ -86,7 +86,7 @@ const Contact: React.FC<ContactProps> = ({
 
         <Box h="40px">
           <FormControl isInvalid={!!errors.projectCoordinatorExtension}>
-            <InputLabel title={'ext'} htmlFor={'projectCoordinatorExtension'}>
+            <InputLabel title={'project.projectDetails.ext'} htmlFor={'projectCoordinatorExtension'}>
               Ext
             </InputLabel>
             <Input
@@ -103,7 +103,7 @@ const Contact: React.FC<ContactProps> = ({
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.fieldProjectManager}>
-            <InputLabel title={'fieldProjectManager'} htmlFor={'fieldProjectManager'} />
+            <InputLabel title={'project.projectDetails.fieldProjectManager'} htmlFor={'fieldProjectManager'} />
             <Controller
               control={control}
               name="fieldProjectManager"
@@ -125,7 +125,7 @@ const Contact: React.FC<ContactProps> = ({
 
         <Box h="40px">
           <FormControl isInvalid={!!errors?.fieldProjectManagerPhoneNumber}>
-            <InputLabel title={'phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
+            <InputLabel title={'project.projectDetails.phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
             <Input
               placeholder="098-987-2233"
               isDisabled={isFieldProjectManagerPhoneNumberDisabled}
@@ -139,7 +139,7 @@ const Contact: React.FC<ContactProps> = ({
 
         <Box h="40px">
           <FormControl isInvalid={!!errors?.fieldProjectManagerExtension}>
-            <InputLabel title={'ext'} htmlFor={'fieldProjectManagerExtension'} />
+            <InputLabel title={'project.projectDetails.ext'} htmlFor={'fieldProjectManagerExtension'} />
             <Input
               id="fieldProjectManagerExtension"
               isDisabled={isFieldProjectManagerExtensionDisabled}
@@ -154,7 +154,7 @@ const Contact: React.FC<ContactProps> = ({
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superName}>
-            <InputLabel title={'superName'} htmlFor={'superName'} />
+            <InputLabel title={'project.projectDetails.superName'} htmlFor={'superName'} />
             <Input id="superName" {...register('superName')} w="215px" />
             <FormErrorMessage>{errors?.superName?.message}</FormErrorMessage>
           </FormControl>
@@ -162,7 +162,7 @@ const Contact: React.FC<ContactProps> = ({
 
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumber}>
-            <InputLabel title={'superPhone'} htmlFor={'superPhoneNumber'} />
+            <InputLabel title={'project.projectDetails.superPhone'} htmlFor={'superPhoneNumber'} />
             <Controller
               control={control}
               name="superPhoneNumber"
@@ -186,7 +186,7 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
-            <InputLabel title={'ext'} htmlFor={'superPhoneNumberExtension'} />
+            <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
             <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" />
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
@@ -194,7 +194,7 @@ const Contact: React.FC<ContactProps> = ({
 
         <Box h="40px">
           <FormControl isInvalid={!!errors.superEmail}>
-            <InputLabel title={'superEmail'} htmlFor={'superEmail'} />
+            <InputLabel title={'project.projectDetails.superEmail'} htmlFor={'superEmail'} />
             <Input id="superEmail" {...register('superEmail')} w="215px" />
             <FormErrorMessage>{errors?.superEmail?.message}</FormErrorMessage>
           </FormControl>
@@ -203,7 +203,7 @@ const Contact: React.FC<ContactProps> = ({
 
       <Box h="40px">
         <FormControl w="215px" isInvalid={!!errors.client}>
-          <InputLabel title={'client'} htmlFor={'client'} />
+          <InputLabel title={'project.projectDetails.client'} htmlFor={'client'} />
           <Controller
             control={control}
             name="client"

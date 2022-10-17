@@ -34,7 +34,7 @@ export const vendor_manager = {
         newMarket: 'Nuevo mercado',
         metroServiceArea: 'Área de servicio metropolitano',
         modifiedDateSubmit: 'Fecha de modificación',
-        createdBy: 'creado por',
+        createdBy: 'Creado por',
         createdDate: 'Fecha de creación',
         modifiedBy: 'Modificado Por',
         cancel: 'Cancelar',

@@ -195,7 +195,7 @@ const NewWorkOrder: React.FC<{
   }, [watchLineItems])
 
   const resetLineItemsProfit = profit => {
-    formValues?.assignedItems?.forEach((item, index) => {
+    formValues.assignedItems?.forEach((item, index) => {
       const clientAmount =
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
@@ -478,7 +478,7 @@ const NewWorkOrder: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
                       <Controller
