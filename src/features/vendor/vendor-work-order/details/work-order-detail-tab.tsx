@@ -1,4 +1,15 @@
-import { Box, HStack, Flex, SimpleGrid, FormLabel, ModalFooter, ModalBody } from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  Flex,
+  SimpleGrid,
+  FormLabel,
+  ModalFooter,
+  ModalBody,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+} from '@chakra-ui/react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
@@ -9,6 +20,8 @@ import AssignedItems from 'features/work-order/details/assigned-items'
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
 import { createInvoicePdf, LineItems } from 'features/work-order/details/assignedItems.utils'
 import { useEffect } from 'react'
+import { STATUS } from '../../../common/status'
+import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 
 const CalenderCard = props => {
   return (
@@ -107,12 +120,19 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
+          {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
+            <Alert m="25px" status="info" variant="custom" size="sm">
+              <AlertIcon />
+              <AlertDescription>{t(`${WORK_ORDER}.rejectedInvoiceInfo`)}</AlertDescription>
+            </Alert>
+          )}
           <SimpleGrid
             columns={4}
             spacing={8}
             borderBottom="1px solid  #E2E8F0"
-            minH="80px"
+            minH="60px"
             m="30px"
+            mb="20px"
             alignItems={'left'}
           >
             <CalenderCard title={t('WOIssued')} value={dateFormat(workOrder.workOrderIssueDate)} />

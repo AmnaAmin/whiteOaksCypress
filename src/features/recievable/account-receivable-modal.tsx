@@ -12,16 +12,23 @@ import {
 } from '@chakra-ui/react'
 import { ViewLoader } from 'components/page-level-loader'
 import ProjectDetailsTab from 'features/update-project-details/project-details-form'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Project } from 'types/project.type'
 import { usePCProject } from 'api/pc-projects'
+import { STATUS } from 'features/common/status'
 
 const AccountReceivableModal: React.FC<{
   isOpen: boolean
   onClose: () => void
   projectId?: string
 }> = props => {
-  const { projectData, isLoading } = usePCProject(props.projectId)
+  const { projectData, isLoading } = usePCProject(`${props?.projectId}`)
+
+  useEffect(() => {
+    if (projectData && ![STATUS.Invoiced].includes(projectData?.projectStatus?.toLocaleLowerCase() as STATUS)) {
+      props?.onClose()
+    }
+  }, [projectData])
 
   return (
     <Modal onClose={props.onClose} size="5xl" isOpen={props.isOpen} variant="custom">

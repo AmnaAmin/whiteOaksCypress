@@ -17,7 +17,7 @@ import { TableNames } from 'types/table-column.types'
 import { useBatchProcessingMutation, useCheckBatch } from 'api/account-receivable'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings'
-import { useWeeklyCount } from './hooks'
+import { useWeeklyCount } from 'features/payable/hooks'
 
 export const Receivable = () => {
   const [projectTableInstance, setInstance] = useState<any>(null)

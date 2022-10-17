@@ -33,26 +33,24 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { columnFilters, setColumnFilters, fitlersQueryString } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-    pagination,
-    setPagination,
-    selectedCard,
-    selectedDay,
-    selectedFPM,
-    userIds,
-  })
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+      pagination,
+      setPagination,
+      selectedCard,
+      selectedDay,
+      selectedFPM,
+      userIds,
+    })
 
-  const { projects, isLoading, totalPages } = useProjects(fitlersQueryString, pagination.pageIndex, pagination.pageSize)
+  const { projects, isLoading, totalPages } = useProjects(
+    queryStringWithPagination,
+    pagination.pageIndex,
+    pagination.pageSize,
+  )
 
-  const { fitlersQueryString: filterQueryStringWithoutPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
-    selectedCard,
-    selectedDay,
-    selectedFPM,
-    userIds,
-  })
-  const { allProjects, refetch, isLoading: isExportDataLoading } = useGetAllProjects(filterQueryStringWithoutPagination)
+  const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
@@ -66,12 +64,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   const onRightClick = rowData => {
-    const redirectPath =
-      process.env.NODE_ENV === 'development'
-        ? `/project-details/${rowData.id}`
-        : `/vendorportal/project-details/${rowData.id}`
-
-    window.open(redirectPath)
+    window.open(`${process.env.PUBLIC_URL}/project-details/${rowData.id}`)
   }
 
   return (
@@ -95,7 +88,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
           <ButtonsWrapper>
             <ExportButton
               columns={tableColumns}
-              data={allProjects}
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"

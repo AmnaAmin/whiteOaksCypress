@@ -43,6 +43,7 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
     </Flex>
   )
 }
+
 type NotesProps = {
   notes: Array<any>
   saveNote?: (note) => void

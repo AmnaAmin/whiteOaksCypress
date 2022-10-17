@@ -10,6 +10,7 @@ import { projects } from 'features/projects/projects.i18n'
 import { userManagementTranslation } from 'features/user-management/user-management.i8n'
 import { project } from 'features/update-project-details/project-details.i18n'
 import { fpmCards } from 'features/fpm/fpmCards.i18n'
+import { clients } from 'features/clients/clients.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -28,6 +29,8 @@ i18n.use(initReactI18next).init({
 
         ...project.en.translation,
         ...fpmCards.en.translation,
+        ...clients.en.translation,
+
         // DASHBOARD
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
@@ -154,6 +157,8 @@ i18n.use(initReactI18next).init({
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
         addNewRow: 'Add New Row',
+        newRow: 'New Row',
+        rejectedInvoiceInfo: 'Rejected Invoice Info',
         deleteRow: 'Delete Row',
         attachment: 'Attachment',
         dateCreated: 'Date Created',
@@ -501,6 +506,7 @@ i18n.use(initReactI18next).init({
         ...userManagementTranslation.es.translation,
         ...project.es.translation,
         ...fpmCards.es.translation,
+        ...clients.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -694,6 +700,8 @@ i18n.use(initReactI18next).init({
         paidDate: 'Fecha de Pago',
         paidDateVariance: 'Variación de La Fecha de Pago',
         addNewRow: 'Añadir Nueva Fila',
+        newRow: 'Fila nueva',
+        rejectedInvoiceInfo: 'Información de factura rechazada',
         deleteRow: 'Borrar Fila',
         attachment: 'Adjunto Archivo',
         dateCreated: 'Fecha de Creacion',

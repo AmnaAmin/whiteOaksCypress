@@ -51,7 +51,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" />
+              <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions.csv" />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>

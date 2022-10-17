@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 // import WorkOrderDetailTab from './work-order-edit-tab'
 import PaymentInfoTab from './payment/payment-tab'
 import { InvoiceTab } from './invoice/invoice-tab'
-import Status, { STATUS } from 'features/common/status'
+import Status, { STATUS, STATUS_CODE } from 'features/common/status'
 import WorkOrderNotes from './notes/work-order-notes'
 import WorkOrderDetailTab from './details/work-order-edit-tab'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -83,7 +83,14 @@ const WorkOrderDetails = ({
   const onSave = values => {
     const payload = { ...workOrder, ...values }
     updateWorkOrder(payload, {
-      onSuccess: () => {
+      onSuccess: res => {
+        if (res?.data) {
+          const workOrder = res?.data
+          if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
+            onClose()
+            setTabIndex(0)
+          }
+        }
         setWorkOrderUpdating(false)
       },
       onError: () => {

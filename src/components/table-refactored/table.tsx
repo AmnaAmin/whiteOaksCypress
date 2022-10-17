@@ -136,6 +136,7 @@ export const Table: React.FC<TableProps> = ({
                     top="0"
                     py="3"
                     bg="#F7FAFC"
+                    zIndex={1}
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
@@ -181,6 +182,7 @@ export const Table: React.FC<TableProps> = ({
                         key={`th_td_${header.id}`}
                         py="3"
                         position="sticky"
+                        zIndex={1}
                         top="40px"
                         borderTop="1px solid #ddd"
                         bg="#F7FAFC"

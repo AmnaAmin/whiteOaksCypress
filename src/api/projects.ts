@@ -86,16 +86,10 @@ export const useProjectAlerts = (projectId, login) => {
 
 export const useWeekDayProjectsDue = (id?: string) => {
   const client = useClient()
-  return useQuery(
-    ['weekDayFilters', id],
-    async () => {
-      const response = await client(`projects-due-this-week/${id ?? ''}`, {})
-      return response?.data
-    },
-    {
-      enabled: !!id,
-    },
-  )
+  return useQuery(['weekDayFilters', id], async () => {
+    const response = await client(`projects-due-this-week/${id ?? ''}`, {})
+    return response?.data
+  })
 }
 
 export const useProjectNotes = ({ projectId }: { projectId: number | undefined }) => {
