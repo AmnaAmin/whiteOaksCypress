@@ -39,9 +39,9 @@ export const ProjectSummaryCardDetails: React.FC<{
         borderRadius="4px"
         box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
       >
-        <InfoStructureCard title={t('projects.projectSummary.projectName')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.lockBoxCode')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1}>
-            {projectData?.name ? projectData?.name : '-----------'}
+            {projectData?.lockBoxCode ? projectData?.lockBoxCode : '-----------'}
           </FormLabel>
         </InfoStructureCard>
 
