@@ -74,17 +74,15 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
   const contactsMarketsValue =
     clientDetails?.contacts?.length > 0
-      ? [
-          ...clientDetails?.contacts?.map(c => {
-            const selectedMarket = marketOptions?.find(m => m.id === c.market.id)
-            return {
-              contact: c.contact,
-              phoneNumber: c.phoneNumber,
-              emailAddress: c.emailAddress,
-              market: selectedMarket,
-            }
-          }),
-        ]
+      ? clientDetails?.contacts?.map(c => {
+          const selectedMarket = marketOptions?.find(m => m.value === Number(c.market))
+          return {
+            contact: c.contact,
+            phoneNumber: c.phoneNumber,
+            emailAddress: c.emailAddress,
+            market: selectedMarket,
+          }
+        })
       : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
   const accPayInfoValue =
     clientDetails?.accountPayableContactInfos?.length > 0
