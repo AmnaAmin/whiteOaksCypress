@@ -1,176 +1,48 @@
-import { Box, Button, Divider, Flex, HStack, Icon, Spacer, Td, Text, Tr } from '@chakra-ui/react'
-import { RowProps } from 'components/table/react-table'
-import { TableWrapper } from 'components/table/table'
+import { Box } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { BiDownArrowCircle, BiExport } from 'react-icons/bi'
+import React from 'react'
 import { useParams } from 'react-router'
 import { TableNames } from 'types/table-column.types'
-import { dateFormat } from 'utils/date-time-utils'
-import { downloadFile, downloadFileOnly } from 'utils/file-utils'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { useDocuments } from 'api/vendor-projects'
-
-const vendorDocumentRow: React.FC<RowProps> = ({ row, style }) => {
-  return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: 'gray.50',
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-      cursor="pointer"
-    >
-      {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} p="0">
-            {/** @ts-ignore */}
-            <Flex alignItems="center" h="60px">
-              <Text
-                title={cell.value}
-                padding="0 15px"
-                fontWeight={400}
-                fontStyle="normal"
-                mt="10px"
-                mb="10px"
-                fontSize="14px"
-                color="#4A5568"
-                isTruncated
-              >
-                {cell.render('Cell')}
-              </Text>
-            </Flex>
-          </Td>
-        )
-      })}
-    </Tr>
-  )
-}
-
-const withPreviewCell = ({ value, row }) => {
-  const s3Url = row.original?.s3Url
-  return <Text onClick={() => downloadFile(s3Url)}>{value}</Text>
-}
+import { DOCUMENTS_TABLE_COLUMNS } from 'constants/documents.constants'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { Table } from 'components/table-refactored/table'
+import { ExportCustomButton } from 'components/table-refactored/export-button'
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
-  const [documentTableInstance, setInstance] = useState<any>(null)
-  const setDocumentTableInstance = tableInstance => {
-    setInstance(tableInstance)
-  }
-  const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
   const { documents = [] } = useDocuments({
     projectId,
   })
 
-  const { columns: documentColumns } = useColumnWidthResize(
-    [
-      {
-        id: 'fileType',
-        Header: t('document'),
-        accessor: 'fileType',
-        Cell: withPreviewCell,
-      },
-      {
-        id: 'documentType',
-        Header: t('documentType'),
-        accessor: 'documentTypelabel',
-        Cell: withPreviewCell,
-      },
-      {
-        Header: t('transactionDoc'),
-        accessor: 'label',
-        id: 'label',
-        Cell: withPreviewCell,
-      },
-      {
-        id: 'vendorName',
-        Header: t('vendorGL'),
-        accessor: 'vendorName',
-        Cell: withPreviewCell,
-      },
-      {
-        id: 'fileObjectContentType',
-        Header: t('fileType'),
-        accessor: 'fileObjectContentType',
-        Cell: withPreviewCell,
-      },
-
-      {
-        Header: t('createdBy'),
-        accessor: 'createdBy',
-        id: 'createdBy',
-        Cell: withPreviewCell,
-      },
-      {
-        Header: t('createdDate'),
-        accessor: 'createdDate',
-        id: 'createdDate',
-        Cell({ value, row }) {
-          // @ts-ignore
-          return (
-            <Flex>
-              <Box mr={2}>{dateFormat(value)}</Box>
-              <Spacer w="90px" />
-              <Icon
-                as={BiDownArrowCircle}
-                color="#4E87F8"
-                fontSize={24}
-                onClick={() => {
-                  downloadFileOnly(row.original)
-                }}
-              />
-            </Flex>
-          )
-        },
-        getCellExportValue(row) {
-          return dateFormat(row.original.createdDate)
-        },
-      },
-    ],
-    ref,
-  )
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.document)
-  const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(documentColumns, TableNames.document)
+  const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(
+    DOCUMENTS_TABLE_COLUMNS,
+    TableNames.document,
+  )
 
   const onSave = columns => {
     postDocumentColumn(columns)
   }
+
+  const onRowClick = row => {}
+
   return (
     <Box>
-      <TableWrapper
-        disableFilter={true}
-        columns={tableColumns}
-        data={documents}
-        TableRow={vendorDocumentRow}
-        tableHeight="calc(100vh - 300px)"
-        name="vendor-document-table"
-        setTableInstance={setDocumentTableInstance}
-      />
+      <Box h="calc(100vh - 300px)" overflow={'auto'}>
+        <TableContextProvider data={documents} columns={tableColumns}>
+          <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
+          <TableFooter position="sticky" bottom="0" left="0" right="0">
+            <ButtonsWrapper>
+              <ExportCustomButton columns={[]} data={documents} colorScheme="brand" fileName="documents.csv" />
 
-      <Flex justifyContent="end">
-        <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-          <Button
-            m={0}
-            colorScheme="brand"
-            variant="ghost"
-            onClick={() => {
-              if (documentTableInstance) {
-                documentTableInstance?.exportData('mm/dd/yy', false)
-              }
-            }}
-          >
-            <Icon as={BiExport} fontSize="18px" mr={1} />
-            {t('export')}
-          </Button>
-          <Divider orientation="vertical" border="1px solid" h="20px" />
-          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-        </HStack>
-      </Flex>
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </ButtonsWrapper>
+          </TableFooter>
+        </TableContextProvider>
+      </Box>
     </Box>
   )
 })
