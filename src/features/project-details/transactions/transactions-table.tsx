@@ -32,9 +32,8 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
   const onRowClick = useCallback(
     row => {
-      const { original } = row
-      setSelectedTransactionName(original.name)
-      setSelectedTransactionId(original.id)
+      setSelectedTransactionName(row.name)
+      setSelectedTransactionId(row.id)
 
       onEditModalOpen()
     },
