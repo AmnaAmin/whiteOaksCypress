@@ -48,7 +48,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
 
   const onRowClick = useCallback(
     row => {
-      if (row.original.type === 'draw') {
+      if (row.type === 'draw') {
         setSelectedTransactionId(row.changeOrderId)
         setSelectedProjectId(row.projectId)
         onEditModalOpen()
@@ -63,6 +63,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     queryStringWithPagination,
     pagination.pageSize,
   )
+
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)

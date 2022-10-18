@@ -120,14 +120,14 @@ export const useReceivableTableColumns = (control, register) => {
       {
         header: 'checkbox',
         accessorKey: 'checkbox',
-        Cell: cellInfo => {
+        cell: cellInfo => {
           const { row } = cellInfo
-          const projectId = row.original.id
+          const projectId = row.original.projectId
 
           return (
             <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
               <Spacer w="20px" />
-              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[row.id]} />
+              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[projectId]} />
             </Flex>
           )
         },
