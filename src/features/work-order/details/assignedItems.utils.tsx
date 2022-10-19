@@ -297,6 +297,7 @@ export const useDeleteLineIds = () => {
 export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   // commenting this out but this condition will be used in upcoming stories.
   //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+
   const isAssignmentAllowed = !workOrder && swoProject?.status?.toUpperCase() === 'COMPLETED'
   return { isAssignmentAllowed }
 }
@@ -411,6 +412,7 @@ export const EditableField = (props: EditableCellType) => {
               overflow="hidden"
               textOverflow={'ellipsis'}
               whiteSpace="nowrap"
+              data-testid={`cell-` + index + '-' + fieldName}
               onClick={() => {
                 if (allowEdit) {
                   setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
@@ -430,6 +432,7 @@ export const EditableField = (props: EditableCellType) => {
                 render={({ field, fieldState }) => (
                   <Input
                     minW={'80px'}
+                    data-testid={`editableField-` + index + '-' + fieldName}
                     key={[fieldName] + '.' + [index]}
                     size="sm"
                     type={inputType}

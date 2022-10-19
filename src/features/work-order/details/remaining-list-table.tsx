@@ -173,6 +173,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Header: () => {
         return (
           <Checkbox
+            data-testid="checkAllItems"
             isChecked={
               values?.remainingItems?.length > 0 &&
               difference(

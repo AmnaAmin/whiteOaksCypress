@@ -145,6 +145,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 </Box>
                 <Button
                   variant="ghost"
+                  data-testid="addItemsBtn"
                   colorScheme="brand"
                   onClick={onOpenRemainingItemsModal}
                   disabled={!!watchUploadWO}
@@ -157,13 +158,14 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
           <HStack spacing="16px">
             {showPriceCheckBox && (
-              <Checkbox size="md" {...register('showPrice')}>
+              <Checkbox data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
             {showMarkAllIsVerified && (
               <HStack spacing={'2px'}>
                 <Checkbox
+                  data-testid="showMarkAllIsVerified"
                   size="md"
                   disabled={!verificationEnabled}
                   onChange={e => {
@@ -186,6 +188,7 @@ const AssignedItems = (props: AssignedItemType) => {
             )}
             {showMarkAllIsComplete && (
               <Checkbox
+                data-testid="showMarkAllIsComplete"
                 size="lg"
                 disabled={!statusEnabled}
                 isChecked={markAllCompleted}
@@ -201,6 +204,7 @@ const AssignedItems = (props: AssignedItemType) => {
             {downloadPdf && (
               <Button
                 variant="outline"
+                data-testid="downloadPdf"
                 onClick={downloadPdf}
                 colorScheme="brand"
                 disabled={assignedItems?.length < 1}

@@ -124,6 +124,9 @@ export const NewWorkOrder: React.FC<{
 }> = ({ projectData, isOpen, onClose }) => {
   const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
   const { swoProject } = useFetchProjectId(projectData?.id)
+  const { data: trades } = useTrades()
+  const [vendorSkillId, setVendorSkillId] = useState(null)
+  const { vendors } = useFilteredVendors(vendorSkillId)
   const toast = useToast()
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
 
@@ -170,6 +173,9 @@ export const NewWorkOrder: React.FC<{
       isSuccess={isSuccess}
       onSubmit={onSubmit}
       swoProject={swoProject}
+      trades={trades}
+      vendors={vendors}
+      setVendorSkillId={setVendorSkillId}
     />
   )
 }
@@ -181,11 +187,11 @@ export const NewWorkOrderForm: React.FC<{
   isSuccess: boolean
   onSubmit: (values) => void
   swoProject: SWOProject
+  trades: any
+  vendors: any
+  setVendorSkillId: (val) => void
 }> = props => {
-  const { projectData, isOpen, onClose, isSuccess, onSubmit, swoProject } = props
-  const { data: trades } = useTrades()
-  const [vendorSkillId, setVendorSkillId] = useState(null)
-  const { vendors } = useFilteredVendors(vendorSkillId)
+  const { projectData, isOpen, onClose, isSuccess, onSubmit, swoProject, trades, vendors, setVendorSkillId } = props
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const { projectId } = useParams<{ projectId: string }>()
@@ -203,7 +209,7 @@ export const NewWorkOrderForm: React.FC<{
       vendorSkillId: null,
       vendorId: null,
       workOrderExpectedCompletionDate: null,
-      workOrderStartsDate: undefined,
+      workOrderStartDate: undefined,
       invoiceAmount: 0,
       clientApprovedAmount: 0,
       percentage: 0,
@@ -617,6 +623,7 @@ export const NewWorkOrderForm: React.FC<{
                   return (
                     <VStack alignItems="baseline">
                       <input
+                        data-testid="uploadWO"
                         type="file"
                         ref={inputRef}
                         style={{ display: 'none' }}
@@ -641,6 +648,7 @@ export const NewWorkOrderForm: React.FC<{
                             <Text
                               as="span"
                               maxW="120px"
+                              data-testid="uploadedSOW"
                               isTruncated
                               title={formValues.uploadWO?.name || formValues.uploadWO?.fileType}
                             >
@@ -648,6 +656,7 @@ export const NewWorkOrderForm: React.FC<{
                             </Text>
                             <MdOutlineCancel
                               cursor="pointer"
+                              data-testid="removeSOW"
                               onClick={() => {
                                 setValue('uploadWO', null)
                                 resetAmounts()
@@ -689,6 +698,7 @@ export const NewWorkOrderForm: React.FC<{
               </Button>
               <Button
                 type="submit"
+                data-testid="saveWorkOrder"
                 colorScheme="brand"
                 disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO)}
               >
