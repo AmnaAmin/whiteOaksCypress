@@ -1,145 +1,93 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import { TableWrapper } from 'components/table/table'
-import { RowProps } from 'components/table/react-table'
+import { Box } from '@chakra-ui/react'
 import { useVendor } from 'api/pc-projects'
-import { Column } from 'react-table'
 import Status from 'features/common/status'
 import Vendor from 'features/vendors/selected-vendor-modal'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
+import { ColumnDef } from '@tanstack/react-table'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { Table } from 'components/table-refactored/table'
+import { ExportCustomButton } from 'components/table-refactored/export-button'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import TableColumnSettings from 'components/table/table-column-settings'
 
-export const VENDOR_COLUMNS = [
+export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
-    Header: 'Status',
-    accessor: 'statusLabel',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
+    header: 'Status',
+    accessorKey: 'statusLabel',
+    cell: cellInfo => {
+      const value = cellInfo.getValue() as string
+
+      return <Status value={value} id={cellInfo.row.original.statusLabel} />
+    },
   },
 
   {
-    Header: 'Name',
-    accessor: 'companyName',
+    header: 'Name',
+    accessorKey: 'companyName',
   },
   {
-    Header: 'Region',
-    accessor: 'region',
+    header: 'Region',
+    accessorKey: 'region',
   },
   {
-    Header: 'Primary Contact',
-    accessor: 'ownerName',
+    header: 'Primary Contact',
+    accessorKey: 'ownerName',
   },
   {
-    Header: 'State',
-    accessor: 'state',
+    header: 'State',
+    accessorKey: 'state',
   },
   {
-    Header: 'Active Date',
-    accessor: 'createdDate',
-    Cell({ value }) {
-      return dateFormat(value)
-    },
-    getCellExportValue(row) {
-      return dateFormat(row.original.createdDate)
+    header: 'Active Date',
+    accessorKey: 'createdDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.createdDate)
     },
   },
   {
-    Header: 'COI-GL Expiration Date',
-    accessor: 'coiglExpirationDate',
-    Cell({ value }) {
-      return dateFormat(value)
-    },
-    getCellExportValue(row) {
-      return dateFormat(row.original.coiglExpirationDate)
+    header: 'COI-GL Expiration Date',
+    accessorKey: 'coiglExpirationDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.coiglExpirationDate)
     },
   },
   {
-    Header: 'COI-WC Expiration Date',
-    accessor: 'coiWcExpirationDate',
-    Cell({ value }) {
-      return dateFormat(value)
-    },
-    getCellExportValue(row) {
-      return dateFormat(row.original.coiWcExpirationDate)
+    header: 'COI-WC Expiration Date',
+    accessorKey: 'coiWcExpirationDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.coiWcExpirationDate)
     },
   },
   {
-    Header: 'EIN/SSN',
-    accessor: 'einNumber',
+    header: 'EIN/SSN',
+    accessorKey: 'einNumber',
   },
   {
-    Header: 'Total Capacity',
-    accessor: 'capacity',
+    header: 'Total Capacity',
+    accessorKey: 'capacity',
   },
   {
-    Header: 'Available Capacity',
-    accessor: 'availableCapacity',
+    header: 'Available Capacity',
+    accessorKey: 'availableCapacity',
   },
   {
-    Header: 'Construction Trade',
-    accessor: 'skills',
+    header: 'Construction Trade',
+    accessorKey: 'skills',
   },
   {
-    Header: 'Market',
-    accessor: 'market',
+    header: 'Market',
+    accessorKey: 'market',
   },
 ]
 
-const VendorRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
-  return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: 'gray.100',
-        '& > td > a': {
-          color: '#333',
-        },
-      }}
-      onClick={e => {
-        if (onRowClick) {
-          onRowClick(e, row)
-        }
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-    >
-      {row.cells.map((cell, index) => {
-        return (
-          <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-            <Flex alignItems="center" h="72px" pl="3">
-              <Text
-                noOfLines={2}
-                title={cell.value}
-                padding="0 15px"
-                color="gray.600"
-                mb="20px"
-                mt="10px"
-                fontSize="14px"
-                fontStyle="normal"
-                fontWeight="400"
-              >
-                {cell.render('Cell')}
-              </Text>
-            </Flex>
-          </Td>
-        )
-      })}
-    </Tr>
-  )
-}
-
 type ProjectProps = {
   selectedCard: string
-  projectColumns: Column[]
-  resizeElementRef: any
-  setTableInstance: (tableInstance: any) => void
 }
-export const VendorTable: React.FC<ProjectProps> = ({
-  setTableInstance,
-  projectColumns,
-  resizeElementRef,
-  selectedCard,
-}) => {
+export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { vendors, isLoading } = useVendor()
 
   const [filterVendors, setFilterVendors] = useState(vendors)
@@ -153,6 +101,13 @@ export const VendorTable: React.FC<ProjectProps> = ({
   }, [selectedCard, vendors])
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
+  const { tableColumns, settingColumns } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+
+  const onSave = columns => {
+    postGridColumn(columns)
+  }
+
   return (
     <Box overflow="auto">
       {selectedWorkOrder && (
@@ -164,17 +119,22 @@ export const VendorTable: React.FC<ProjectProps> = ({
         />
       )}
 
-      <TableWrapper
-        isLoading={isLoading}
-        columns={projectColumns}
-        data={filterVendors ? filterVendors : []}
-        TableRow={VendorRow}
-        name="vendor-table"
-        tableHeight="calc(100vh - 350px)"
-        setTableInstance={setTableInstance}
-        onRowClick={(e, row) => setSelectedWorkOrder(row.original)}
-        sortBy={{ id: 'id', desc: true }}
-      />
+      <Box overflow={'auto'} h="calc(100vh - 320px)">
+        <TableContextProvider data={filterVendors} columns={tableColumns}>
+          <Table
+            onRowClick={row => setSelectedWorkOrder(row)}
+            isLoading={isLoading}
+            isEmpty={!isLoading && !filterVendors?.length}
+          />
+          <TableFooter position="sticky" bottom="0" left="0" right="0">
+            <ButtonsWrapper>
+              <ExportCustomButton columns={[]} data={filterVendors} colorScheme="brand" fileName="documents.csv" />
+
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </ButtonsWrapper>
+          </TableFooter>
+        </TableContextProvider>
+      </Box>
     </Box>
   )
 }
