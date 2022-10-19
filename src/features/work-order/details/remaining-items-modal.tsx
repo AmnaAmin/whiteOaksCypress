@@ -129,11 +129,11 @@ const RemainingItemsModal: React.FC<{
   }
 
   const assignAndReset = () => {
-    onClose()
     setAssignedItems(selectedItems)
     reset()
     setSelectedItems([])
     setUpdatedItems([])
+    onClose()
   }
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -229,7 +229,7 @@ const RemainingItemsModal: React.FC<{
                 >
                   {t('cancel')}
                 </Button>
-                <Button variant="solid" colorScheme="brand" type="submit">
+                <Button variant="solid" colorScheme="brand" type="submit" data-testid="saveListItems">
                   {t('save')}
                 </Button>
               </HStack>
