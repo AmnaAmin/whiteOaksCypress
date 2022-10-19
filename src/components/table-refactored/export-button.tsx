@@ -12,7 +12,6 @@ import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
-  data: any
   isLoading?: boolean
   refetch?: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
@@ -23,14 +22,7 @@ type ExportButtonProps = ButtonProps & {
 /*
    This is used when exporting full CSV data from the server side pagination table        
 */
-export const ExportButton: React.FC<ExportButtonProps> = ({
-  data,
-  children,
-  fileName,
-  refetch,
-  isLoading,
-  ...rest
-}) => {
+export const ExportButton: React.FC<ExportButtonProps> = ({ children, fileName, refetch, isLoading, ...rest }) => {
   const { t } = useTranslation()
   const { tableInstance } = useTableContext()
 

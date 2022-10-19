@@ -11,7 +11,7 @@ export type Clients = {
   dateUpdated?: string
   streetAddress?: string
   city?: string
-  state?: number
+  state?: any
   zipCode?: string
   invoiceEmailAddress?: string
   contacts?: Contact[]
@@ -21,6 +21,9 @@ export type Clients = {
   modifiedBy?: string
   modifiedDate?: string
   markets?: Market[]
+  paymentAch?: boolean
+  paymentCheck?: boolean
+  paymentCreditCard?: boolean
 }
 
 export type Market = {
@@ -46,4 +49,36 @@ export type Contact = {
   modifiedBy: string | null
   modifiedDate: string | null
   comments?: string
+  city?: string
+}
+
+export type ClientFormValues = {
+  id?: number
+  companyName?: string
+  contact?: string
+  phoneNumber?: string
+  emailAddress?: string
+  accountPayableContact?: string
+  accountPayablePhoneNumber?: string
+  accountPayableEmailAddress?: string
+  dateCreated?: string
+  dateUpdated?: string
+  streetAddress?: string
+  city?: string
+  state?: any
+  zipCode?: string
+  invoiceEmailAddress?: string
+  contacts?: Contact[]
+  accountPayableContactInfos?: Contact[]
+  createdBy?: string
+  createdDate?: string
+  modifiedBy?: string
+  modifiedDate?: string
+  paymentTerm?: any
+  markets?: Market[]
+  comments?: string
+  paymentMethod?: string
+  paymentAch?: boolean
+  paymentCheck?: boolean
+  paymentCreditCard?: boolean
 }

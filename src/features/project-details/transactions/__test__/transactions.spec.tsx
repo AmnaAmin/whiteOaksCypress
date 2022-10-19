@@ -23,7 +23,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
 
 beforeAll(() => {
   setToken('pc')

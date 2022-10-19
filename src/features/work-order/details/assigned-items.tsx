@@ -119,9 +119,11 @@ const AssignedItems = (props: AssignedItemType) => {
   return (
     <Box>
       <>
-        <Stack direction="row" mt="32px" justifyContent="space-between">
-          <HStack>
-            <Text>{t(`${WORK_ORDER}.assignedLineItems`)}</Text>
+        <Stack direction="row" justifyContent="space-between">
+          <HStack alignItems="end">
+            <Text fontWeight={600} color="gray.500">
+              {t(`${WORK_ORDER}.assignedLineItems`)}
+            </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
               <>
                 <Box pl="2" pr="1">
@@ -151,12 +153,12 @@ const AssignedItems = (props: AssignedItemType) => {
                   disabled={!!watchUploadWO}
                   leftIcon={<Icon as={AddIcon} boxSize={2} />}
                 >
-                  {t(`${WORK_ORDER}.addNewItem`)}
+                  {t(`${WORK_ORDER}.newItem`)}
                 </Button>
               </>
             )}
           </HStack>
-          <HStack spacing="16px">
+          <HStack spacing="16px" alignItems="end">
             {showPriceCheckBox && (
               <Checkbox data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
@@ -189,7 +191,6 @@ const AssignedItems = (props: AssignedItemType) => {
             {showMarkAllIsComplete && (
               <Checkbox
                 data-testid="showMarkAllIsComplete"
-                size="lg"
                 disabled={!statusEnabled}
                 isChecked={markAllCompleted}
                 onChange={e => {
@@ -198,7 +199,7 @@ const AssignedItems = (props: AssignedItemType) => {
                   })
                 }}
               >
-                {t(`${WORK_ORDER}.markAllCompleted`)}
+                <Text fontSize="16px">{t(`${WORK_ORDER}.markAllCompleted`)}</Text>
               </Checkbox>
             )}
             {downloadPdf && (

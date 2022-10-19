@@ -97,7 +97,7 @@ export const useRemainingLineItems = (swoProjectId?: string | number | null) => 
     ['remainingItems', swoProjectId],
     async () => {
       const response = await client(
-        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=modifiedDate,desc&page=0`,
+        `line-items?isAssigned.equals=false&projectId.equals=${swoProjectId}&size=5000&sort=sortOrder,asc&page=0`,
         {},
       )
 
@@ -595,7 +595,6 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
     { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
-    { label: 'Work Type:', value: workOrder?.skillName ?? '' },
     { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
     { label: 'Gate Code:', value: projectData?.gateCode ?? '' },
   ]
@@ -633,7 +632,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
 
-    const x = 140
+    const x = 130
     let y = 50
 
     workOrderInfo.forEach(inv => {
@@ -649,16 +648,20 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     })
 
     doc.setFont(summaryFont, 'bold')
-    doc.text('Sub Contractor:', startx, y + 20)
+    doc.text('Work Type:', startx, y + 20)
     doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder.companyName ?? '', startx + 30, y + 20)
+    doc.text(workOrder?.skillName ?? '', startx + 30, y + 20)
     doc.setFont(summaryFont, 'bold')
-    doc.text('Total:', x + 5, y + 20)
+    doc.text('Sub Contractor:', startx, y + 25)
     doc.setFont(summaryFont, 'normal')
-    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 20, y + 20)
+    doc.text(workOrder.companyName ?? '', startx + 30, y + 25)
+    doc.setFont(summaryFont, 'bold')
+    doc.text('Total:', x + 5, y + 25)
+    doc.setFont(summaryFont, 'normal')
+    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 45, y + 25)
 
     autoTable(doc, {
-      startY: y + 40,
+      startY: y + 35,
       headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
       theme: 'grid',
       bodyStyles: { lineColor: '#000000', minCellHeight: 15 },

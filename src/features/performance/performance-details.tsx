@@ -16,8 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
 import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance'
 import { Controller, UseFormReturn } from 'react-hook-form'
-import NumberFormat from 'react-number-format'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import Select from 'components/form/react-select'
 
 type FieldInfoCardProps = {
@@ -118,7 +117,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                 render={({ field, fieldState }) => {
                   return (
                     <>
-                      <NumberFormat
+                      <NumberInput
                         value={field.value}
                         onValueChange={values => {
                           const { floatValue } = values

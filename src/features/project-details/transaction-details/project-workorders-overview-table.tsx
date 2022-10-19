@@ -1,186 +1,185 @@
-import { TableWrapper } from 'components/table/table'
 import numeral from 'numeral'
 import React from 'react'
 import { TableNames } from 'types/table-column.types'
-import { useTableColumnSettings } from 'api/table-column-settings'
+import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { percentageFormatter } from 'utils/string-formatters'
 import { isDefined } from 'utils'
-import { useGetProjectFinancialOverview } from 'api/projects'
+import { Box } from '@chakra-ui/react'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import Table from 'components/table-refactored/table'
 import { TRANSACTION } from '../transactions/transactions.i18n'
 
-type WorkOrderFinancialOverviewTableProps = { financialOveriewTableData: any; isLoading: boolean }
+type WorkOrderFinancialOverviewTableProps = {
+  financialOveriewTableData: any
+  projectTotalCostNumber: number
+  isLoading: boolean
+}
 
-const getTotalOfKey = (key: string, rows) => {
-  return rows.reduce((sum, row) => {
-    return row.original[key] + sum
+const getTotalOfKey = (key: string, financialOveriewTableData) => {
+  return financialOveriewTableData.reduce((sum, row) => {
+    return row[key] + sum
   }, 0)
 }
 
 export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrderFinancialOverviewTableProps, ref) => {
-  const { isLoading, financialOveriewTableData } = props
-  const { projectTotalCost } = useGetProjectFinancialOverview(financialOveriewTableData[0]?.projectId)
-  const projectCostValue = projectTotalCost.replace(/\$/g, '')
-  const projectCost = parseFloat(projectCostValue.replace(',', ''))
-
+  const { isLoading, financialOveriewTableData, projectTotalCostNumber } = props
   const { tableColumns } = useTableColumnSettings(
     [
       {
-        Header: `${TRANSACTION}.vendor`,
-        Footer: '',
-        accessor: 'vendorName',
+        header: `${TRANSACTION}.vendor`,
+        footer: '',
+        accessorKey: 'vendorName',
       },
       {
-        Header: `${TRANSACTION}.trade`,
-        Footer: 'Total',
-        accessor: 'skillName',
+        header: `${TRANSACTION}.trade`,
+        footer: 'Total',
+        accessorKey: 'skillName',
       },
       {
-        Header: `${TRANSACTION}.clientApprovedAmount`,
-        accessor: 'originalAmount',
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('originalAmount', info.rows), [info.rows])
-
-          return numeral(total).format('$0,0.00')
+        header: `${TRANSACTION}.clientApprovedAmount`,
+        accessorKey: 'originalAmount',
+        accessorFn(row) {
+          return numeral(row.originalAmount).format('$0,0.00')
         },
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-      },
-      {
-        Header: `${TRANSACTION}.finalClientApprovedAmount`, 
-        accessor: 'newAmount',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('newAmount', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('originalAmount', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.originalVendorWO`,
-        accessor: 'workOrderOriginalAmount',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.finalClientApprovedAmount`,
+        accessorKey: 'newAmount',
+        accessorFn(row) {
+          return numeral(row.newAmount).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('workOrderOriginalAmount', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('newAmount', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.revisedVendorWO`,
-        accessor: 'revisedVendorWorkOrder',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.originalVendorWO`,
+        accessorKey: 'workOrderOriginalAmount',
+        accessorFn(row) {
+          return numeral(row.workOrderOriginalAmount).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('revisedVendorWorkOrder', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('workOrderOriginalAmount', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.COs`, 
-        accessor: 'changeOrder',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.revisedVendorWO`,
+        accessorKey: 'revisedVendorWorkOrder',
+        accessorFn(row) {
+          return numeral(row.revisedVendorWorkOrder).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('changeOrder', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('revisedVendorWorkOrder', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.revisedCOs`, 
-        accessor: 'revisedChangeOrder',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.COs`,
+        accessorKey: 'changeOrder',
+        accessorFn(row) {
+          return numeral(row.changeOrder).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('revisedChangeOrder', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('changeOrder', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.finalVendorWOs`, 
-        accessor: 'workOrderNewAmount',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.revisedCOs`,
+        accessorKey: 'revisedChangeOrder',
+        accessorFn(row) {
+          return numeral(row.revisedChangeOrder).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('workOrderNewAmount', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('revisedChangeOrder', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.draws`,
-        accessor: 'draw',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.finalVendorWOs`,
+        accessorKey: 'workOrderNewAmount',
+        accessorFn(row) {
+          return numeral(row.workOrderNewAmount).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('draw', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('workOrderNewAmount', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.materials`, 
-        accessor: 'material',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.draws`,
+        accessorKey: 'draw',
+        accessorFn(row) {
+          return numeral(row.draw).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('material', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('draw', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.vendorPayment`, 
-        accessor: 'vendorPaymentPercentage',
-        Cell(cellInfo) {
-          return isDefined(cellInfo.value) ? numeral(percentageFormatter(cellInfo.value)).format('0.00%') : ''
+        header: `${TRANSACTION}.materials`,
+        accessorKey: 'material',
+        accessorFn(row) {
+          return numeral(row.material).format('$0,0.00')
         },
-        Footer: info => {
-          const vendorPaymentPercentage = React.useMemo(
-            () =>
-              ((Math.abs(getTotalOfKey('material', info.rows)) + Math.abs(getTotalOfKey('draw', info.rows))) /
-                projectCost) *
-              100,
-            [info.rows],
-          )
+        footer: props => {
+          const total = getTotalOfKey('material', financialOveriewTableData)
+
+          return numeral(total).format('$0,0.00')
+        },
+      },
+      {
+        header: `${TRANSACTION}.vendorPayment`,
+        accessorKey: 'vendorPaymentPercentage',
+        accessorFn(row) {
+          return isDefined(row.vendorPaymentPercentage) ? numeral(percentageFormatter(row.value)).format('0.00%') : ''
+        },
+        footer: props => {
+          const vendorPaymentPercentage =
+            ((Math.abs(getTotalOfKey('material', financialOveriewTableData)) +
+              Math.abs(getTotalOfKey('draw', financialOveriewTableData))) /
+              projectTotalCostNumber) *
+            100
           return isDefined(vendorPaymentPercentage)
             ? numeral(percentageFormatter(vendorPaymentPercentage)).format('0.00%')
             : ''
         },
       },
       {
-        Header: `${TRANSACTION}.invoicedAmount`, 
-        accessor: 'accountPayable',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.invoicedAmount`,
+        accessorKey: 'accountPayable',
+        accessorFn(row) {
+          return numeral(row.accountPayable).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('accountPayable', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('accountPayable', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
       },
       {
-        Header: `${TRANSACTION}.profit`, 
-        accessor: 'profit',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
+        header: `${TRANSACTION}.profit`,
+        accessorKey: 'profit',
+        accessorFn(row) {
+          return numeral(row.profit).format('$0,0.00')
         },
-        Footer: info => {
-          const total = React.useMemo(() => getTotalOfKey('profit', info.rows), [info.rows])
+        footer: props => {
+          const total = getTotalOfKey('profit', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
         },
@@ -190,14 +189,15 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
   )
 
   return (
-    <TableWrapper
-      disableFilter
-      isShowFooter={true}
-      isLoading={isLoading}
-      columns={tableColumns}
-      data={financialOveriewTableData}
-      tableHeight="calc(100vh - 320px)"
-      name="transaction-table"
-    />
+    <Box overflow={'auto'} w="100%" maxH="350px" position="relative">
+      <TableContextProvider data={financialOveriewTableData} columns={tableColumns}>
+        <Table
+          isLoading={isLoading}
+          isEmpty={!isLoading && !financialOveriewTableData?.length}
+          isHideFilters
+          isShowFooter
+        />
+      </TableContextProvider>
+    </Box>
   )
 })

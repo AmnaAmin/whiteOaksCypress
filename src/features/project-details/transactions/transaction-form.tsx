@@ -11,9 +11,6 @@ import {
   Box,
   HStack,
   Button,
-  InputGroup,
-  InputRightElement,
-  Icon,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -69,7 +66,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
-} from 'constants/transaction.constants'
+} from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
@@ -96,7 +93,12 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       </GridItem>
 
       <GridItem>
-        <ReadOnlyInput label={t(`${TRANSACTION}.createdBy`)} name="createdBy" value={formValues.createdBy as string} Icon={BiDetail} />
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.createdBy`)}
+          name="createdBy"
+          value={formValues.createdBy as string}
+          Icon={BiDetail}
+        />
       </GridItem>
 
       <GridItem>
@@ -301,7 +303,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
               <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="10" pb="4">
+              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
@@ -433,17 +435,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                       >
                         {t(`${TRANSACTION}.expectedCompletion`)}
                       </FormLabel>
-                      <InputGroup>
-                        <Input
-                          data-testid="expected-completion-date"
-                          id="expectedCompletionDate"
-                          size="md"
-                          isDisabled={true}
-                          css={calendarIcon}
-                          {...register('expectedCompletionDate')}
-                        />
-                        <InputRightElement children={<Icon as={BiCalendar} boxSize="5" color="gray.400" mr="11px" />} />
-                      </InputGroup>
+                      <Input
+                        data-testid="expected-completion-date"
+                        id="expectedCompletionDate"
+                        size="md"
+                        isDisabled={true}
+                        css={calendarIcon}
+                        {...register('expectedCompletionDate')}
+                      />
 
                       <FormErrorMessage>{errors?.expectedCompletionDate?.message}</FormErrorMessage>
                     </FormControl>
@@ -602,7 +601,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
-                      {t(`${TRANSACTION}.paymentReceivedDate`)}
+                        {t(`${TRANSACTION}.paymentReceivedDate`)}
                       </FormLabel>
                       <Input
                         data-testid="payment-received-date"

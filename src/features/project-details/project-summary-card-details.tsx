@@ -81,7 +81,11 @@ export const ProjectSummaryCardDetails: React.FC<{
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.pcContact')} isLoading={isLoading} borderRight="1px solid white">
+        <InfoStructureCard
+          title={t('projects.projectSummary.pcContact')}
+          isLoading={isLoading}
+          borderRight="1px solid white"
+        >
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {account?.telephoneNumber}
           </FormLabel>

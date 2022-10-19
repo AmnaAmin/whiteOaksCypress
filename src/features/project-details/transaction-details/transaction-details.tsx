@@ -7,18 +7,19 @@ import { WorkOrderFinancialOverviewTable } from './project-workorders-overview-t
 
 export const TransactionDetails = React.forwardRef((props, ref) => {
   const { projectId } = useParams<'projectId'>()
-  const { isLoading, financialOveriewTableData, workOrderFinancialOverviews } =
+  const { isLoading, financialOveriewTableData, workOrderFinancialOverviews, projectTotalCostNumber } =
     useGetProjectFinancialOverview(projectId)
 
   return (
     <>
-      <Flex overflow={'auto'} mb="5" h="170px">
+      <Flex overflow={'auto'} mb="5">
         <FinancialOverviewTable ref={ref} financialOveriewTableData={financialOveriewTableData} isLoading={isLoading} />
       </Flex>
-      <Flex overflow={'auto'} mb="5" h="350px">
+      <Flex overflow={'auto'} mb="5">
         <WorkOrderFinancialOverviewTable
           ref={ref}
           financialOveriewTableData={workOrderFinancialOverviews}
+          projectTotalCostNumber={projectTotalCostNumber}
           isLoading={isLoading}
         />
       </Flex>

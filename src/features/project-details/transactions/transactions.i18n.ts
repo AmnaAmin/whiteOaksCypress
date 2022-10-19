@@ -24,10 +24,11 @@ export const transaction = {
         paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
         payDateVariance: 'Pay Date Variance',
-        invoicedDate:'Invoiced Date',
+        invoicedDate: 'Invoiced Date',
 
         // Transaction Modal
         addNewRow: 'Add New Row',
+        newRow: 'New Row',
         deleteRow: 'Delete Row',
         attachment: 'Attachment',
         dateCreated: 'Date Created',
@@ -47,13 +48,13 @@ export const transaction = {
 
         // Project WO Overview Table
         vendor: 'Vendor',
-        clientApprovedAmount: 'Client Approved Amount', 
+        clientApprovedAmount: 'Client Approved Amount',
         finalClientApprovedAmount: 'Final Client Approved Amount',
         originalVendorWO: 'Original Vendor WO',
         revisedVendorWO: 'Revised Vendor WO',
         COs: 'COs',
-        revisedCOs: 'Revised COs', 
-        finalVendorWOs: 'Final Vendor WOs', 
+        revisedCOs: 'Revised COs',
+        finalVendorWOs: 'Final Vendor WOs',
         draws: 'Draws',
         materials: 'Materials',
         vendorPayment: 'Vendor Payment',
@@ -66,7 +67,7 @@ export const transaction = {
         revisedSOWAmount: 'Revised SOW Amount',
         adjustment: 'Adjustment for SOW',
         finalSOWAmount: 'Final SOW Amount',
-        partialPayments: 'Partial Payments', 
+        partialPayments: 'Partial Payments',
         AR: 'Account Receivable',
       },
     },
@@ -113,6 +114,7 @@ export const transaction = {
         // Transaction Modal
 
         addNewRow: 'Añadir Nueva Fila',
+        newRow: 'Fila nueva',
         deleteRow: 'Borrar Fila',
         attachment: 'Adjunto Archivo',
         dateCreated: 'Fecha de Creacion',
@@ -134,13 +136,13 @@ export const transaction = {
 
         // Project WO Overview Table
         vendor: 'Vendedor',
-        clientApprovedAmount: 'Monto aprobado por el cliente', 
+        clientApprovedAmount: 'Monto aprobado por el cliente',
         finalClientApprovedAmount: 'Cantidad final aprobada por el cliente',
         originalVendorWO: 'Proveedor original WO',
         revisedVendorWO: 'Proveedor revisado WO',
         COs: 'COs',
-        revisedCOs: 'CO Revisados', 
-        finalVendorWOs: 'WOs Vendedor final', 
+        revisedCOs: 'CO Revisados',
+        finalVendorWOs: 'WOs Vendedor final',
         draws: 'Sorteos',
         materials: 'Materiales',
         vendorPayment: 'Pago del proveedor',
@@ -153,7 +155,7 @@ export const transaction = {
         revisedSOWAmount: 'Cantidad SOW revisada',
         adjustment: 'Ajuste por SOW',
         finalSOWAmount: 'Importe de la SOW final',
-        partialPayments: 'Pagos Parciales', 
+        partialPayments: 'Pagos Parciales',
         AR: 'Cuenta por cobrar',
       },
     },

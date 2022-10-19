@@ -37,7 +37,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.created`)}
+              {t(`project.projectDetails.created`)}
             </FormLabel>
 
             <DatePickerInput value={dateCreated ? dateFormat(dateCreated) : 'mm/dd/yyyy'} disable />
@@ -48,8 +48,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.active`)}
-
+              {t(`project.projectDetails.active`)}
             </FormLabel>
 
             <DatePickerInput value={activeDate ? dateFormat(activeDate) : 'mm/dd/yyyy'} disable />
@@ -60,7 +59,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.punch`)}
+              {t(`project.projectDetails.punch`)}
             </FormLabel>
 
             <DatePickerInput value={punchDate ? dateFormat(punchDate) : 'mm/dd/yyyy'} disable />
@@ -71,7 +70,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.closed`)}
+              {t(`project.projectDetails.closed`)}
             </FormLabel>
 
             <DatePickerInput value={closedDate ? dateFormat(closedDate) : 'mm/dd/yyyy'} disable />
@@ -82,7 +81,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.clientPaid`)}
+              {t(`project.projectDetails.clientPaid`)}
             </FormLabel>
 
             <DatePickerInput value={clientPaidDate ? dateFormat(clientPaidDate) : 'mm/dd/yyyy'} disable />
@@ -93,7 +92,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.collection`)}
+              {t(`project.projectDetails.collection`)}
             </FormLabel>
 
             <DatePickerInput
@@ -107,7 +106,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.disputed`)}
+              {t(`project.projectDetails.disputed`)}
             </FormLabel>
 
             <DatePickerInput
@@ -122,8 +121,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
-            {t(`project.projectDetails.woaPaid`)}
-
+              {t(`project.projectDetails.woaPaid`)}
             </FormLabel>
 
             <DatePickerInput value={woaPaidDate ? dateFormat(woaPaidDate) : 'mm/dd/yyyy'} disable />
@@ -134,7 +132,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.dueDateVariance} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance" noOfLines={1}>
-            {t(`project.projectDetails.dueDateVariance`)}
+              {t(`project.projectDetails.dueDateVariance`)}
             </FormLabel>
             <Input value={dueDateVariance as number} isDisabled id="dueDate" {...register('dueDateVariance')} />
             <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
@@ -143,7 +141,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl isInvalid={!!errors.payDateVariance} w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="payDateVariance">
-            {t(`project.projectDetails.payDateVariance`)}
+              {t(`project.projectDetails.payDateVariance`)}
             </FormLabel>
 
             <Input value={payDateVariance as number} isDisabled id="payDateVariance" />
@@ -152,7 +150,7 @@ const Misc: React.FC = () => {
         <GridItem>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="payVariance">
-            {t(`project.projectDetails.payVariance`)}
+              {t(`project.projectDetails.payVariance`)}
             </FormLabel>
             <Input value={payVariance as number} isDisabled id="payVariance" />
           </FormControl>

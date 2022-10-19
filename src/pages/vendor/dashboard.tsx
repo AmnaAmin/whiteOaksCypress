@@ -29,13 +29,13 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <VStack w="100%" zIndex={2}>
+    <VStack w="100%" zIndex={2} spacing="14px">
       <Box w={{ base: '100%' }}>
         <VendorScore vendorId={vendorId} />
       </Box>
 
       <Box w="100%">
-        <Box mb={2} w="100%">
+        <Box w="100%">
           <ProjectFilters onSelectCard={onCardClick} selectedCard={selectedCard} />
         </Box>
       </Box>

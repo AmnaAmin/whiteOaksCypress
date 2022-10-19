@@ -94,7 +94,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.type}>
               <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.type`)}
+                {t(`project.projectDetails.type`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -112,7 +112,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.woNumber} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="woNumber">
-              {t(`project.projectDetails.woNumber`)}
+                {t(`project.projectDetails.woNumber`)}
               </FormLabel>
               <Input id="woNumber" {...register('woNumber')} autoComplete="off" />
               <FormErrorMessage>{errors.woNumber && errors.woNumber.message}</FormErrorMessage>
@@ -121,7 +121,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.poNumber} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="poNumber">
-              {t(`project.projectDetails.poNumber`)}
+                {t(`project.projectDetails.poNumber`)}
               </FormLabel>
               <Input id="poNumber" {...register('poNumber')} autoComplete="off" />
               <FormErrorMessage>{errors.poNumber && errors.poNumber.message}</FormErrorMessage>
@@ -130,7 +130,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.projectName} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
-              {t(`project.projectDetails.projectName`)}
+                {t(`project.projectDetails.projectName`)}
               </FormLabel>
               <Input placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
@@ -139,7 +139,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientStartDate}>
               <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.clientStart`)}
+                {t(`project.projectDetails.clientStart`)}
               </FormLabel>
               <Input
                 variant="required-field"
@@ -154,7 +154,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientDueDate}>
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
-              {t(`project.projectDetails.clientDue`)}
+                {t(`project.projectDetails.clientDue`)}
               </FormLabel>
               <Input
                 variant="required-field"
@@ -171,7 +171,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.woaStartDate}>
               <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.woaStart`)}
+                {t(`project.projectDetails.woaStart`)}
               </FormLabel>
               <Input
                 type="date"
@@ -185,7 +185,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.woaCompletionDate}>
               <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.woaCompletion`)}
+                {t(`project.projectDetails.woaCompletion`)}
               </FormLabel>
               <Input
                 type="date"
@@ -202,7 +202,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
-              {t(`project.projectDetails.clientWalkthrough`)}
+                {t(`project.projectDetails.clientWalkthrough`)}
               </FormLabel>
               <Input
                 type="date"
@@ -219,7 +219,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors?.clientSignOffDate}>
               <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.clientSignOff`)}
+                {t(`project.projectDetails.clientSignOff`)}
               </FormLabel>
               <Input
                 type="date"

@@ -51,6 +51,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   const emptyRows = Array(emptyRowsLength).fill({})
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
+
   // Create pagination state in case pagination object enabled
   const paginationState: { pagination: PaginationState } | {} = React.useMemo(() => {
     return pagination
@@ -67,7 +68,16 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
         columnFilters: columnFiltersState,
       }
     : {}
+
+  const filtersConfigurations: any = setColumnFilters
+    ? {
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
+      }
+    : {}
+
   const tableInstance = useReactTable({
+    ...filtersConfigurations,
     data: data ?? emptyRows,
     columns,
     state: {

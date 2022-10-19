@@ -32,8 +32,7 @@ import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projec
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
-import NumberFormat from 'react-number-format'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
 import {
@@ -49,6 +48,7 @@ import {
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
 import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
 import { isValidAndNonEmpty } from 'utils'
@@ -467,7 +467,7 @@ export const NewWorkOrderForm: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberInput
                                 value={field.value}
                                 thousandSeparator
                                 data-testid="clientApprovedAmount"
@@ -535,7 +535,7 @@ export const NewWorkOrderForm: React.FC<{
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <NumberFormat
+                              <NumberInput
                                 value={field.value}
                                 data-testid="vendorWorkOrderAmount"
                                 customInput={CustomRequiredInput}
