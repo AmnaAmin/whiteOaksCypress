@@ -1,6 +1,7 @@
 import { usePaginationQuery } from 'api'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { ReceivableTableData } from 'types/receivable.types'
 import { useClient } from '../utils/auth-context'
 
 declare global {
@@ -28,14 +29,14 @@ export const usePCRecievable = () => {
 
 const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
 export const usePaginatedAccountReceivables = (queryString: string, pageSize: number) => {
-  const { data, ...rest } = usePaginationQuery<any[]>(
+  const { data, ...rest } = usePaginationQuery<ReceivableTableData>(
     [GET_PAGINATED_RECEIVABLE_QUERY_KEY, queryString],
-    `all-receivables?${queryString}`,
+    `account_receivable?${queryString}`,
     pageSize,
   )
 
   return {
-    receivables: data?.data,
+    receivables: data?.data?.arList,
     totalPages: data?.totalCount,
     ...rest,
   }
@@ -45,14 +46,14 @@ const GET_ALL_RECEIVABLE_QUERY_KEY = 'get_all_receivable_api_key'
 export const useGetAllAccountReceivables = (queryString: string) => {
   const client = useClient()
 
-  const { data: allReceivables, ...rest } = useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
-    const response = await client(`all-receivables?${queryString}`, {})
+  const { data: receivableData, ...rest } = useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
+    const response = await client(`account_receivable?${queryString}`, {})
 
     return response?.data
   })
 
   return {
-    allReceivables,
+    allReceivables: receivableData?.arList,
     ...rest,
   }
 }
