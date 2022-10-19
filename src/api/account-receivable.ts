@@ -31,7 +31,7 @@ const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
 export const usePaginatedAccountReceivables = (queryString: string, pageSize: number) => {
   const { data, ...rest } = usePaginationQuery<ReceivableTableData>(
     [GET_PAGINATED_RECEIVABLE_QUERY_KEY, queryString],
-    `account_receivable?${queryString}`,
+    `account-receivables?${queryString}`,
     pageSize,
   )
 
@@ -47,7 +47,7 @@ export const useGetAllAccountReceivables = (queryString: string) => {
   const client = useClient()
 
   const { data: receivableData, ...rest } = useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
-    const response = await client(`account_receivable?${queryString}`, {})
+    const response = await client(`account-receivables?${queryString}`, {})
 
     return response?.data
   })
