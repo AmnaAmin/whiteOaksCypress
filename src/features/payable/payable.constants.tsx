@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
+import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat } from 'utils/date-time-utils'
 
@@ -76,5 +77,51 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.workOrderIssueDate)
     },
+  },
+]
+
+export const PAYABLE_OVERPAYMENT_TABLE_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: 'ID',
+    accessorKey: 'name',
+  },
+  {
+    header: 'Project ID' as string,
+    accessorKey: 'projectId',
+  },
+  {
+    header: 'Type' as string,
+    accessorKey: 'transactionTypeLabel',
+  },
+  {
+    header: 'Trade' as string,
+    accessorKey: 'skillName',
+  },
+  {
+    header: 'Total Amount' as string,
+    accessorKey: 'transactionTotal',
+    accessorFn(cellInfo) {
+      return numeral(cellInfo.transactionTotal).format('$0,0.00')
+    },
+  },
+  {
+    header: 'Transaction Status' as string,
+    accessorKey: 'status',
+    cell: cellInfo => {
+      const value = cellInfo.getValue() as string
+
+      return <Status value={value} id={value} />
+    },
+  },
+  {
+    header: 'Submit' as string,
+    accessorKey: 'modifiedDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.modifiedDate)
+    },
+  },
+  {
+    header: 'Approved By' as string,
+    accessorKey: 'approvedBy',
   },
 ]
