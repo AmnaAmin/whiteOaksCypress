@@ -1,49 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure } from '@chakra-ui/react'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
-import { RowProps } from 'components/table/react-table'
+import { Box, useDisclosure } from '@chakra-ui/react'
 import { useClients } from 'api/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
-import { TableWrapper } from 'components/table/table'
-import { useTranslation } from 'react-i18next'
 import { CLIENTS } from './clients.i18n'
-
-const clientsTableRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
-  return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: '#eee',
-      }}
-      onClick={e => {
-        if (onRowClick) {
-          onRowClick(e, row)
-        }
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-    >
-      {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} p="0">
-            <Flex alignItems="center" h="60px">
-              <Text isTruncated title={cell.value} padding="0 15px">
-                {cell.render('Cell')}
-              </Text>
-            </Flex>
-          </Td>
-        )
-      })}
-    </Tr>
-  )
-}
+import { ColumnDef } from '@tanstack/react-table'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { Table } from 'components/table-refactored/table'
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
-  const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   useEffect(() => {
@@ -59,47 +26,51 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     }
   }, [clients])
 
-  const { columns, resizeElementRef } = useColumnWidthResize(
-    [
-      {
-        Header: t(`${CLIENTS}.name`),
-        accessor: 'companyName',
-      },
-      {
-        Header: t(`${CLIENTS}.contact`),
-        accessor: 'contacts[0].contact',
-      },
-      {
-        Header: t(`${CLIENTS}.address`),
-        accessor: 'streetAddress',
-      },
-      {
-        Header: t(`${CLIENTS}.phone`),
-        accessor: 'contacts[0].phoneNumber',
-      },
-      {
-        Header: t(`${CLIENTS}.email`),
-        accessor: 'contacts[0].emailAddress',
-      },
-      {
-        Header: t(`${CLIENTS}.contact`),
-        accessor: 'accountPayableContactInfos[0].contact',
-      },
-      {
-        Header: t(`${CLIENTS}.email`),
-        accessor: 'accountPayableContactInfos[0].emailAddress',
-      },
+  const columns: ColumnDef<any>[] = [
+    {
+      header: `${CLIENTS}.name`,
+      accessorKey: 'companyName',
+    },
+    {
+      header: `${CLIENTS}.contact`,
+      accessorKey: 'contacts[0].contact',
+      accessorFn: row => row.contacts?.[0]?.contact,
+    },
+    {
+      header: `${CLIENTS}.address`,
+      accessorKey: 'streetAddress',
+      accessorFn: row => row.streetAddress,
+    },
+    {
+      header: `${CLIENTS}.phone`,
+      accessorKey: 'contacts[0].phoneNumber',
+      accessorFn: row => row.contacts?.[0]?.phoneNumber,
+    },
+    {
+      header: `${CLIENTS}.email`,
+      accessorKey: 'contacts[0].emailAddress',
+      accessorFn: row => row.contacts?.[0]?.emailAddress,
+    },
+    {
+      header: `${CLIENTS}.contact`,
+      accessorKey: 'accountPayableContactInfos[0].contact',
+      accessorFn: row => row.accountPayableContactInfos?.[0]?.contact,
+    },
+    {
+      header: `${CLIENTS}.email`,
+      accessorKey: 'accountPayableContactInfos[0].emailAddress',
+      accessorFn: row => row.accountPayableContactInfos?.[0]?.emailAddress,
+    },
 
-      {
-        Header: t(`${CLIENTS}.phone`),
-        accessor: 'accountPayableContactInfos[0].phoneNumber',
-      },
-    ],
-    ref,
-  )
+    {
+      header: `${CLIENTS}.phone`,
+      accessorKey: 'accountPayableContactInfos[0].phoneNumber',
+      accessorFn: row => row.accountPayableContactInfos?.[0]?.phoneNumber,
+    },
+  ]
 
   return (
-    <Box ref={resizeElementRef}>
+    <Box>
       {isOpen && (
         <Client
           clientDetails={selectedClient as Clients}
@@ -112,18 +83,18 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         />
       )}
 
-      <TableWrapper
-        columns={columns}
-        data={clients || []}
-        isLoading={isLoading}
-        TableRow={clientsTableRow}
-        tableHeight="calc(100vh - 225px)"
-        name="clients-table"
-        onRowClick={(e, row) => {
-          setSelectedClient(row.original)
-          onOpen()
-        }}
-      />
+      <Box overflow={'auto'} h="calc(100vh - 225px)">
+        <TableContextProvider data={clients} columns={columns}>
+          <Table
+            onRowClick={row => {
+              setSelectedClient(row)
+              onOpen()
+            }}
+            isLoading={isLoading}
+            isEmpty={!isLoading && !clients?.length}
+          />
+        </TableContextProvider>
+      </Box>
     </Box>
   )
 })
