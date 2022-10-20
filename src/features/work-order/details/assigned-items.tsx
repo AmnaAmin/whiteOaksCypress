@@ -153,7 +153,7 @@ const AssignedItems = (props: AssignedItemType) => {
                   disabled={!!watchUploadWO}
                   leftIcon={<Icon as={AddIcon} boxSize={2} />}
                 >
-                  {t(`${WORK_ORDER}.newItem`)}
+                  {t(`${WORK_ORDER}.addNewItem`)}
                 </Button>
               </>
             )}
