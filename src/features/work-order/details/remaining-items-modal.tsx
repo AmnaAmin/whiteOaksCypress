@@ -174,6 +174,7 @@ const RemainingItemsModal: React.FC<{
                         setValue('remainingItems', [
                           {
                             sku: '',
+                            location: '',
                             productName: '',
                             description: '',
                             quantity: '',
