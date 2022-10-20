@@ -7,7 +7,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const { isFPM, isProjectCoordinator, isDoc } = useUserRolesSelector()
+  const { isFPM, isProjectCoordinator, isDoc, isAccounting } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -87,8 +87,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isStateDisabled: isAllTimeDisabled,
     isZipDisabled: isAllTimeDisabled,
     isMarketDisabled: isAllTimeDisabled,
-    isGateCodeDisabled: isDoc || isProjectCoordinator ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
-    isLockBoxCodeDisabled: isDoc || isProjectCoordinator ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+    isGateCodeDisabled:
+      isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+    isLockBoxCodeDisabled:
+      isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
   }
 }
 
