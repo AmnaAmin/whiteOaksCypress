@@ -37,6 +37,13 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'vendorName',
     cell: withPreviewCell,
   },
+
+  {
+    id: 'workOrderName',
+    header: 'trade',
+    accessorKey: 'workOrderName',
+    cell: withPreviewCell,
+  },
   {
     id: 'fileObjectContentType',
     header: 'fileType',
