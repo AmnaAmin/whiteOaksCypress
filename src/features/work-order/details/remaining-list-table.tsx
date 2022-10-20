@@ -128,9 +128,8 @@ const CellComp = ({ cell, row }) => {
           fontStyle="normal"
           fontWeight="400"
           maxHeight={'60px'}
-          overflow="hidden"
           width={'100%'}
-          padding="10px 15px 10px 10px"
+          padding="0px 15px 0px 10px"
         >
           {cell.render('Cell', { isFocus, setIsFocus })}
         </Box>
