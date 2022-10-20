@@ -29,6 +29,7 @@ import { MdOutlineCancel } from 'react-icons/md'
 import { BiAddToQueue } from 'react-icons/bi'
 import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
+import NumberFormat from 'react-number-format'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -222,6 +223,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
+                      type='text'
                     />
                     <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                   </FormControl>
@@ -231,13 +233,33 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.phoneNumber`)}
                     </FormLabel>
-                    <Input
-                      id="phoneNumber"
-                      {...register(`contacts.${index}.phoneNumber`)}
-                      style={disabledTextStyle}
-                      isDisabled={isProjectCoordinator}
+                    <Controller
+                      control={control}
+                      name={`contacts.${index}.phoneNumber`}
+                      rules={{
+                        pattern: {
+                          value: /^[0-9\b]+$/,
+                          message: 'Enter Valid Phone Number.',
+                        },
+                      }}
+                      render={({ field }) => {
+                        return (
+                          <>
+                            <NumberFormat
+                              id="phoneNumber"
+                              customInput={Input}
+                              value={field.value}
+                              onChange={e => field.onChange(e)}
+                              format="(###)-###-####"
+                              mask="_"
+                              placeholder="(___)-___-____"
+                              isDisabled={isProjectCoordinator}
+                            />
+                            <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
+                          </>
+                        )
+                      }}
                     />
-                    <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem>
@@ -250,6 +272,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {...register(`contacts.${index}.emailAddress`)}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
+                      type='email'
                     />
                     <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                   </FormControl>
@@ -337,12 +360,43 @@ export const Details: React.FC<clientDetailProps> = props => {
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
+                    type='text'
                   />
                   <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${CLIENTS}.phoneNumber`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name={`accountPayableContactInfos.${index}.phoneNumber`}
+                    rules={{
+                      required: 'This is required',
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            id="phoneNumber"
+                            customInput={Input}
+                            value={field.value}
+                            onChange={e => field.onChange(e)}
+                            format="(###)-###-####"
+                            mask="_"
+                            placeholder="(___)-___-____"
+                            isDisabled={isProjectCoordinator}
+                            variant={'required-field'}
+                          />
+                          <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
+                  />
+                </FormControl>
+                {/* <FormControl>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${CLIENTS}.phoneNumber`)}
                   </FormLabel>
@@ -354,7 +408,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     variant={'required-field'}
                   />
                   <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
-                </FormControl>
+                </FormControl> */}
               </GridItem>
               <GridItem>
                 <FormControl>
@@ -366,6 +420,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
+                    type='email'
                   />
                   <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                 </FormControl>
