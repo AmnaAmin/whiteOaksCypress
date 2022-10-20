@@ -56,6 +56,7 @@ export type LineItems = {
   document?: any
   vendorAmount?: number | null
   profit?: number | null
+  location?: string | null
 }
 
 export type SWOProject = {
