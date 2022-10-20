@@ -46,16 +46,11 @@ const GET_ALL_RECEIVABLE_QUERY_KEY = 'get_all_receivable_api_key'
 export const useGetAllAccountReceivables = (queryString: string) => {
   const client = useClient()
 
-  const { data: receivableData, ...rest } = useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
+  return useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
     const response = await client(`account-receivables?${queryString}`, {})
 
-    return response?.data
+    return response?.data?.arList
   })
-
-  return {
-    allReceivables: receivableData?.arList,
-    ...rest,
-  }
 }
 
 export const useBatchProcessingMutation = () => {
