@@ -1,7 +1,6 @@
 import { Box, Flex, Button } from '@chakra-ui/react'
 import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useMarkets } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'

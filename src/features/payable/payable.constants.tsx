@@ -16,6 +16,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   workOrderDateCompleted: 'workOrderDateCompleted.equals',
   workOrderIssueDate: 'workOrderIssueDate.equals',
   durationCategory: 'durationCategory.equals',
+  type: 'type.contains',
 }
 
 export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
