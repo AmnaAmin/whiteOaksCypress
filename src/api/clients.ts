@@ -69,9 +69,14 @@ export const useUpdateClientDetails = () => {
   )
 }
 
-export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marketOptions }) => {
+export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marketOptions, markets }) => {
   const stateValue = statesOptions?.find(b => b?.id === clientDetails?.state)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
+  const marketsId = clientDetails?.markets.map(m => m.id)
+  markets = markets?.map(market => ({
+    ...market,
+    checked: marketsId.includes(market.id),
+  }))
   const contactsMarketsValue =
     clientDetails?.contacts?.length > 0
       ? clientDetails?.contacts?.map(c => {
@@ -102,6 +107,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
     ...clientDetails,
     paymentTerm: paymentTermsValue || { label: '20', value: '20' },
     state: stateValue,
+    markets,
     contacts: contactsMarketsValue,
     accountPayableContactInfos: accPayInfoValue,
   }

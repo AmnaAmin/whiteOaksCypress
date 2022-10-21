@@ -29,7 +29,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { mutate: editClientDetails } = useUpdateClientDetails()
   const { mutate: addNewClientDetails } = useSaveNewClientDetails()
   const { stateSelectOptions: statesOptions } = useStates()
-  const { marketSelectOptions: marketOptions } = useMarkets()
+  const { marketSelectOptions: marketOptions, markets } = useMarkets()
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -41,7 +41,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
   useEffect(() => {
     if (clientDetails) {
-      reset(clientDetailsDefaultValues({ clientDetails, marketOptions, statesOptions }))
+      reset(clientDetailsDefaultValues({ clientDetails, marketOptions, statesOptions, markets }))
     } else {
       reset(clientDefault())
     }
@@ -58,7 +58,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         ...values,
         paymentTerm: values.paymentTerm?.value,
         state: values.state?.id,
-        markets: values.markets.filter(market => market && market.id).map(market => ({ id: market.id })),
+        markets: values.markets.filter(market => market && market.checked).map(market => ({ id: market.id })),
         contacts: values.contacts?.map(c => ({
           ...c,
           market: c.market?.value,

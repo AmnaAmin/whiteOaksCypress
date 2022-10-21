@@ -223,7 +223,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
-                      type='text'
+                      type="text"
                     />
                     <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                   </FormControl>
@@ -236,12 +236,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <Controller
                       control={control}
                       name={`contacts.${index}.phoneNumber`}
-                      rules={{
-                        pattern: {
-                          value: /^[0-9\b]+$/,
-                          message: 'Enter Valid Phone Number.',
-                        },
-                      }}
                       render={({ field }) => {
                         return (
                           <>
@@ -272,7 +266,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {...register(`contacts.${index}.emailAddress`)}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
-                      type='email'
+                      type="email"
                     />
                     <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                   </FormControl>
@@ -360,7 +354,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
-                    type='text'
+                    type="text"
                   />
                   <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                 </FormControl>
@@ -420,7 +414,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
-                    type='email'
+                    type="email"
                   />
                   <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                 </FormControl>
