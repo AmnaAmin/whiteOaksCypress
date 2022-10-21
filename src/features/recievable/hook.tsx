@@ -111,7 +111,7 @@ export const usePayableWeeklyCount = () => {
   }
 }
 
-export const useReceivableTableColumns = (control, register) => {
+export const useReceivableTableColumns = (control, register, setValue) => {
   const formValues = useWatch({ control })
 
   const columns: ColumnDef<any>[] = useMemo(
@@ -122,12 +122,21 @@ export const useReceivableTableColumns = (control, register) => {
         accessorKey: 'checkbox',
         cell: cellInfo => {
           const { row } = cellInfo
-          const projectId = row.original.projectId
+
+          const onChange = { ...register(`id.${row.index}`) }.onChange
 
           return (
             <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
               <Spacer w="20px" />
-              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[projectId]} />
+              <Checkbox
+                value={row.original?.projectId}
+                {...register(`id.${row.index}`)}
+                onChange={e => {
+                  onChange(e)
+                  setValue(`selected.${row.index}`, e.target.checked ? row.original : null)
+                }}
+                isChecked={!!formValues?.id?.[row.index]}
+              />
             </Flex>
           )
         },
