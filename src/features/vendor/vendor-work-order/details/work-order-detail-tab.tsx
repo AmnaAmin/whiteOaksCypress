@@ -25,7 +25,7 @@ import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 
 const CalenderCard = props => {
   return (
-    <Flex justifyContent={'left'}>
+    <Flex justifyContent={'left'} pb={'20px'}>
       <Box pr={4}>
         <BiCalendar size={23} color="#718096" />
       </Box>
@@ -143,7 +143,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
             />
             <CalenderCard title={t('completedByVendor')} value={dateFormat(workOrder.workOrderDateCompleted)} />
           </SimpleGrid>
-          <Box mx="32px">
+          <Box mx="32px" mt={8}>
             {values?.assignedItems && values?.assignedItems?.length > 0 && (
               <AssignedItems
                 isLoadingLineItems={isWorkOrderUpdating}
