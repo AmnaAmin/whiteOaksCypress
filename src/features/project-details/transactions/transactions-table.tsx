@@ -40,6 +40,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )
   const onSave = columns => {
+    console.log('on trans save ')
     postGridColumn(columns)
   }
 
