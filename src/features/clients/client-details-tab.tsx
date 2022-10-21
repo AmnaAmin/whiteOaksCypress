@@ -63,6 +63,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   const companyName = useWatch({ name: 'companyName', control })
   const streetAddress = useWatch({ name: 'streetAddress', control })
   const city = useWatch({ name: 'city', control })
+  const contacts = useWatch({ name: 'contacts.0.contact', control })
 
   const {
     fields: contactsFields,
@@ -152,7 +153,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="streetAddress"
-                {...register('streetAddress')}
+                {...register('streetAddress', { required: 'This is required' })}
                 style={disabledTextStyle}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
@@ -165,7 +166,12 @@ export const Details: React.FC<clientDetailProps> = props => {
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.city`)}
               </FormLabel>
-              <Input id="city" {...register('city')} isDisabled={isProjectCoordinator} variant={'required-field'} />
+              <Input
+                id="city"
+                {...register('city', { required: 'This is required' })}
+                isDisabled={isProjectCoordinator}
+                variant={'required-field'}
+              />
               <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -177,6 +183,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <Controller
                 control={control}
                 name={`state`}
+                rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
                     <Select
@@ -512,7 +519,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Button>
         {!isProjectCoordinator && (
           <Button
-            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city}
+            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city || !contacts}
             colorScheme="brand"
             type="submit"
             form="clientDetails"
