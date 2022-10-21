@@ -120,8 +120,8 @@ const AssignedItems = (props: AssignedItemType) => {
     <Box>
       <>
         <Stack direction="row" justifyContent="space-between">
-          <HStack alignItems="center">
-            <Text fontWeight={600} color="gray.500">
+          <HStack alignItems="center" ml={1} mb={2}>
+            <Text fontWeight={500} color="gray.600">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (

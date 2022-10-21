@@ -600,16 +600,18 @@ export const NewWorkOrderForm: React.FC<{
                     </FormControl>
                   </Box>
                 </SimpleGrid>
-                <AssignedItems
-                  onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-                  unassignedItems={unassignedItems}
-                  setUnAssignedItems={setUnAssignedItems}
-                  formControl={formReturn as UseFormReturn<any>}
-                  assignedItemsArray={assignedItemsArray}
-                  isAssignmentAllowed={isAssignmentAllowed}
-                  swoProject={swoProject}
-                  workOrder={null}
-                />
+                <Box mt={6}>
+                  <AssignedItems
+                    onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+                    unassignedItems={unassignedItems}
+                    setUnAssignedItems={setUnAssignedItems}
+                    formControl={formReturn as UseFormReturn<any>}
+                    assignedItemsArray={assignedItemsArray}
+                    isAssignmentAllowed={isAssignmentAllowed}
+                    swoProject={swoProject}
+                    workOrder={null}
+                  />
+                </Box>
               </Box>
             </Box>
           </ModalBody>

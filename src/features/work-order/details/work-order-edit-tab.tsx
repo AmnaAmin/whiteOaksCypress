@@ -262,7 +262,7 @@ const WorkOrderDetailTab = props => {
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
-          <Stack pt="32px" spacing="32px" mx="32px">
+          <Stack spacing="32px" m="25px">
             <Box>
               {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
@@ -358,7 +358,7 @@ const WorkOrderDetailTab = props => {
             </HStack>
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
-            <Box mx="32px">
+            <Box mx="32px" mt={10}>
               <AssignedItems
                 isLoadingLineItems={isWorkOrderUpdating}
                 onOpenRemainingItemsModal={onOpenRemainingItemsModal}

@@ -977,9 +977,11 @@ export const useGetLineItemsColumn = ({
       header: () => {
         return (
           <>
-            <Box as="span" sx={requiredStyle}>
-              *
-            </Box>
+            {!isVendor && !workOrder && (
+              <Box as="span" sx={requiredStyle}>
+                *
+              </Box>
+            )}
             {t(`${WORK_ORDER}.details`)}
           </>
         )
@@ -1008,9 +1010,11 @@ export const useGetLineItemsColumn = ({
       header: () => {
         return (
           <>
-            <Box as="span" sx={requiredStyle}>
-              *
-            </Box>
+            {!isVendor && !workOrder && (
+              <Box as="span" sx={requiredStyle}>
+                *
+              </Box>
+            )}
             {t(`${WORK_ORDER}.quantity`)}
           </>
         )
@@ -1042,9 +1046,11 @@ export const useGetLineItemsColumn = ({
       header: () => {
         return (
           <>
-            <Box as="span" sx={requiredStyle}>
-              *
-            </Box>
+            {!isVendor && !workOrder && (
+              <Box as="span" sx={requiredStyle}>
+                *
+              </Box>
+            )}
             {t(`${WORK_ORDER}.price`)}
           </>
         )
