@@ -26,7 +26,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import Select from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
-import { BiAddToQueue } from 'react-icons/bi'
+import { BiPlus } from 'react-icons/bi'
 import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
@@ -70,7 +70,6 @@ export const Details: React.FC<clientDetailProps> = props => {
     append: contactsAppend,
     remove: contactsRemove,
   } = useFieldArray({ control, name: 'contacts' })
-
   const {
     fields: accPayInfoFields,
     append: accPayInfoAppend,
@@ -85,7 +84,7 @@ export const Details: React.FC<clientDetailProps> = props => {
       <Box overflow={'auto'} height={400}>
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.companyName}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.name`)}
               </FormLabel>
@@ -95,11 +94,11 @@ export const Details: React.FC<clientDetailProps> = props => {
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
               />
-              <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
+              <FormErrorMessage>{errors?.companyName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.paymentTerm}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.paymentTerms`)}
               </FormLabel>
@@ -148,7 +147,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Grid>
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
-            <FormControl height="40px">
+            <FormControl isInvalid={!!errors?.streetAddress}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.address`)}
               </FormLabel>
@@ -163,7 +162,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.city}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.city`)}
               </FormLabel>
@@ -173,11 +172,11 @@ export const Details: React.FC<clientDetailProps> = props => {
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
               />
-              <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
+              <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.state}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.state`)}
               </FormLabel>
@@ -215,12 +214,18 @@ export const Details: React.FC<clientDetailProps> = props => {
             </FormControl>
           </GridItem>
         </Grid>
+        <Flex alignItems="center" py="3" mt={2}>
+          <Text fontSize="16px" color="gray.600" fontWeight={500} whiteSpace="nowrap" pr="10px">
+            {t(`${CLIENTS}.contact`)}
+          </Text>
+          <Divider border="1px solid #E2E8F0" mt={1} />
+        </Flex>
         {contactsFields.map((contacts, index) => {
           return (
             <>
-              <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+              <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 215px)" gap={'1rem 1.5rem'} py="3">
                 <GridItem>
-                  <FormControl height="40px">
+                  <FormControl isInvalid={!!errors?.contacts?.[index]?.contact}>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.contact`)}
                     </FormLabel>
@@ -232,7 +237,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       variant={'required-field'}
                       type="text"
                     />
-                    <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
+                    <FormErrorMessage>{errors?.contacts?.[index]?.contact?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem>
@@ -243,12 +248,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <Controller
                       control={control}
                       name={`contacts.${index}.phoneNumber`}
-                      rules={{
-                        pattern: {
-                          value: /^[0-9\b]+$/,
-                          message: 'Enter Valid Phone Number.',
-                        },
-                      }}
                       render={({ field }) => {
                         return (
                           <>
@@ -262,11 +261,26 @@ export const Details: React.FC<clientDetailProps> = props => {
                               placeholder="(___)-___-____"
                               isDisabled={isProjectCoordinator}
                             />
-                            <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
+                            <FormErrorMessage>{errors?.contacts?.[index]?.phoneNumber?.message}</FormErrorMessage>
                           </>
                         )
                       }}
                     />
+                  </FormControl>
+                </GridItem>
+                <GridItem>
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${CLIENTS}.ext`)}
+                    </FormLabel>
+                    <Input
+                      id="phoneNumberExtension"
+                      {...register(`contacts.${index}.phoneNumberExtension`)}
+                      style={disabledTextStyle}
+                      isDisabled={isProjectCoordinator}
+                      type="number"
+                    />
+                    <FormErrorMessage>{errors?.contacts?.[index]?.phoneNumberExtension?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem>
@@ -281,7 +295,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       isDisabled={isProjectCoordinator}
                       type="email"
                     />
-                    <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
+                    <FormErrorMessage>{errors?.contacts?.[index]?.emailAddress?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem>
@@ -289,8 +303,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.market`)}
                     </FormLabel>
-                    <HStack width={'300px'}>
-                      <Box width={'215px'}>
+                    <HStack>
+                      <Box width={'180px'}>
                         <Controller
                           control={control}
                           name={`contacts.${index}.market`}
@@ -310,7 +324,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                           )}
                         />
                       </Box>
-                      {!isProjectCoordinator && (
+                      {!isProjectCoordinator && index > 0 && (
                         <Box color="barColor.100" fontSize="15px">
                           <Center>
                             <Icon
@@ -343,22 +357,22 @@ export const Details: React.FC<clientDetailProps> = props => {
               })
             }
             mt={2}
-            leftIcon={<BiAddToQueue />}
+            leftIcon={<BiPlus />}
           >
             {t(`${CLIENTS}.addContact`)}
           </Button>
         )}
         <Flex alignItems="center" py="3" mt={2}>
-          <Text fontSize="16px" color="gray.600" fontWeight={500} w={'370px'}>
+          <Text fontSize="16px" color="gray.600" fontWeight={500} whiteSpace="nowrap" pr="10px">
             {t(`${CLIENTS}.accPayConInfo`)}
           </Text>
           <Divider border="1px solid #E2E8F0" mt={1} />
         </Flex>
         {accPayInfoFields.map((accountPayableContactInfos, index) => {
           return (
-            <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="4">
+            <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 215px)" gap={'1rem 1.5rem'} py="4">
               <GridItem>
-                <FormControl height="40px">
+                <FormControl>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${CLIENTS}.contact`)}
                   </FormLabel>
@@ -370,7 +384,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     variant={'required-field'}
                     type="text"
                   />
-                  <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
+                  <FormErrorMessage>{errors?.accountPayableContactInfos?.[index]?.contact?.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -398,25 +412,31 @@ export const Details: React.FC<clientDetailProps> = props => {
                             isDisabled={isProjectCoordinator}
                             variant={'required-field'}
                           />
-                          <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
+                          <FormErrorMessage>
+                            {errors?.accountPayableContactInfos?.[index]?.phoneNumber?.message}
+                          </FormErrorMessage>
                         </>
                       )
                     }}
                   />
                 </FormControl>
-                {/* <FormControl>
+              </GridItem>
+              <GridItem>
+                <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t(`${CLIENTS}.phoneNumber`)}
+                    {t(`${CLIENTS}.ext`)}
                   </FormLabel>
                   <Input
-                    id="phoneNumber"
-                    {...register(`accountPayableContactInfos.${index}.phoneNumber`, { required: 'This is required' })}
+                    id="phoneNumberExtension"
+                    {...register(`accountPayableContactInfos.${index}.phoneNumberExtension`)}
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
-                    variant={'required-field'}
+                    type="number"
                   />
-                  <FormErrorMessage>{errors?.phoneNumber && errors?.phoneNumber?.message}</FormErrorMessage>
-                </FormControl> */}
+                  <FormErrorMessage>
+                    {errors?.accountPayableContactInfos?.[index]?.phoneNumberExtension?.message}
+                  </FormErrorMessage>
+                </FormControl>
               </GridItem>
               <GridItem>
                 <FormControl>
@@ -430,7 +450,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                     variant={'required-field'}
                     type="email"
                   />
-                  <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
+                  <FormErrorMessage>
+                    {errors?.accountPayableContactInfos?.[index]?.emailAddress?.message}
+                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -439,8 +461,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {t(`${CLIENTS}.comment`)}
                   </FormLabel>
 
-                  <HStack width={'300px'}>
-                    <Box width={'215px'}>
+                  <HStack>
+                    <Box width={'180px'}>
                       <Input
                         id="comments"
                         {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
@@ -448,9 +470,11 @@ export const Details: React.FC<clientDetailProps> = props => {
                         isDisabled={isProjectCoordinator}
                         variant={'required-field'}
                       />
-                      <FormErrorMessage>{errors?.comments && errors?.comments?.message}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {errors?.accountPayableContactInfos?.[index]?.comments?.message}
+                      </FormErrorMessage>
                     </Box>
-                    {!isProjectCoordinator && (
+                    {!isProjectCoordinator && index > 0 && (
                       <Box color="barColor.100" fontSize="15px">
                         <Center>
                           <Icon
@@ -482,7 +506,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               })
             }
             mt={2}
-            leftIcon={<BiAddToQueue />}
+            leftIcon={<BiPlus />}
             disabled={isProjectCoordinator}
           >
             {t(`${CLIENTS}.addContact`)}

@@ -19,15 +19,12 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
   const { isProjectCoordinator } = useUserRolesSelector()
   const { control } = useFormContext<ClientFormValues>()
-  const selectedMarkets = useWatch({ control, name: 'markets' })
-  const { markets } = useMarkets()
-
+  const markets = useWatch({ control, name: 'markets' })
   const btnStyle = {
     alignItems: 'center',
     justifyContent: 'end',
     borderTop: '1px solid #CBD5E0',
   }
-
   return (
     <>
       <Box h="400px" overflow="auto">
@@ -43,10 +40,10 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
                     <CheckboxButton
                       name={name}
                       key={name}
-                      isChecked={!!selectedMarkets?.find(m => m?.id === market.id)}
+                      isChecked={market?.checked}
                       onChange={event => {
                         const checked = event.target.checked
-                        onChange({ ...market, id: checked ? market.id : null })
+                        onChange({ ...market, checked })
                       }}
                       isDisabled={isProjectCoordinator}
                     >

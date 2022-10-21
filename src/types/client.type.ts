@@ -35,6 +35,7 @@ export type Market = {
   modifiedDate: string | null
   stateId: number
   stateName: string
+  checked?: boolean
 }
 
 export type Contact = {
