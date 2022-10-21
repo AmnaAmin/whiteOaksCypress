@@ -36,6 +36,7 @@ type CellInputType = {
   autoFocus?: boolean
   setIsFocus?: (val) => void
   rules?: any
+  maxLength?: number
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -53,6 +54,7 @@ const renderInput = (props: CellInputType) => {
     autoFocus,
     setIsFocus,
     rules,
+    maxLength,
   } = props
 
   const isNew = values?.remainingItems[row?.index]?.action === 'new'
@@ -60,6 +62,7 @@ const renderInput = (props: CellInputType) => {
     <Box pl={'5px'}>
       {isNew ? (
         <InputField
+          maxLength={maxLength}
           index={row?.index}
           fieldName={fieldName}
           formControl={formControl}
@@ -72,6 +75,7 @@ const renderInput = (props: CellInputType) => {
         ></InputField>
       ) : (
         <EditableField
+          maxLength={maxLength}
           index={row?.index}
           fieldName={fieldName}
           formControl={formControl}
@@ -284,6 +288,7 @@ const RemainingListTable = (props: RemainingListType) => {
       accessor: 'description',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
+          maxLength: 2000,
           row,
           values,
           formControl,
