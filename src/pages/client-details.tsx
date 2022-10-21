@@ -45,7 +45,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     } else {
       reset(clientDefault())
     }
-  }, [reset, clientDetails, statesOptions?.length, marketOptions?.length])
+  }, [reset, clientDetails, statesOptions?.length, marketOptions?.length, markets?.length])
 
   const onSubmit = useCallback(
     async values => {

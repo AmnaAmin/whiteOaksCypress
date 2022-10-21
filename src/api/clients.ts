@@ -73,7 +73,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
   const stateValue = statesOptions?.find(b => b?.id === clientDetails?.state)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
   const marketsId = clientDetails?.markets.map(m => m.id)
-  markets = markets?.map(market => ({
+  const marketList = markets?.map(market => ({
     ...market,
     checked: marketsId.includes(market.id),
   }))
@@ -86,6 +86,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
             phoneNumber: c.phoneNumber,
             emailAddress: c.emailAddress,
             market: selectedMarket,
+            phoneNumberExtension: c.phoneNumberExtension,
           }
         })
       : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
@@ -98,6 +99,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
               phoneNumber: c.phoneNumber,
               emailAddress: c.emailAddress,
               comments: c.comments,
+              phoneNumberExtension: c.phoneNumberExtension,
             }
           }),
         ]
@@ -107,7 +109,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
     ...clientDetails,
     paymentTerm: paymentTermsValue || { label: '20', value: '20' },
     state: stateValue,
-    markets,
+    markets: marketList,
     contacts: contactsMarketsValue,
     accountPayableContactInfos: accPayInfoValue,
   }
