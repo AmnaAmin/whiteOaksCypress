@@ -63,6 +63,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   const companyName = useWatch({ name: 'companyName', control })
   const streetAddress = useWatch({ name: 'streetAddress', control })
   const city = useWatch({ name: 'city', control })
+  const contacts = useWatch({ name: 'contacts.0.contact', control })
 
   const {
     fields: contactsFields,
@@ -153,7 +154,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="streetAddress"
-                {...register('streetAddress')}
+                {...register('streetAddress', { required: 'This is required' })}
                 style={disabledTextStyle}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
@@ -166,7 +167,12 @@ export const Details: React.FC<clientDetailProps> = props => {
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.city`)}
               </FormLabel>
-              <Input id="city" {...register('city')} isDisabled={isProjectCoordinator} variant={'required-field'} />
+              <Input
+                id="city"
+                {...register('city', { required: 'This is required' })}
+                isDisabled={isProjectCoordinator}
+                variant={'required-field'}
+              />
               <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -178,6 +184,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <Controller
                 control={control}
                 name={`state`}
+                rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
                     <Select
@@ -219,11 +226,11 @@ export const Details: React.FC<clientDetailProps> = props => {
                     </FormLabel>
                     <Input
                       id="contact"
-                      {...register(`contacts.${index}.contact`)}
+                      {...register(`contacts.${index}.contact`, { required: 'This is required' })}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
-                      type='text'
+                      type="text"
                     />
                     <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                   </FormControl>
@@ -272,7 +279,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {...register(`contacts.${index}.emailAddress`)}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
-                      type='email'
+                      type="email"
                     />
                     <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                   </FormControl>
@@ -287,6 +294,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                         <Controller
                           control={control}
                           name={`contacts.${index}.market`}
+                          rules={{ required: 'This is required' }}
                           render={({ field, fieldState }) => (
                             <>
                               <Select
@@ -360,7 +368,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
-                    type='text'
+                    type="text"
                   />
                   <FormErrorMessage>{errors?.contact && errors?.contact?.message}</FormErrorMessage>
                 </FormControl>
@@ -420,7 +428,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
-                    type='email'
+                    type="email"
                   />
                   <FormErrorMessage>{errors?.emailAddress && errors?.emailAddress?.message}</FormErrorMessage>
                 </FormControl>
@@ -487,7 +495,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Button>
         {!isProjectCoordinator && (
           <Button
-            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city}
+            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city || !contacts}
             colorScheme="brand"
             type="submit"
             form="clientDetails"
