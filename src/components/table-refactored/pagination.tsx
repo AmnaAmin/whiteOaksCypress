@@ -148,9 +148,9 @@ export const ShowCurrentPageWithTotal: React.FC = () => {
   return (
     <Flex gap="1" alignItems="center">
       <Text color="blackAlpha.800">
-        {pageIndex + 1} - {pageSize}
+        {pageIndex * pageSize + 1} - {pageIndex * pageSize + pageSize}
       </Text>
-      <Text color="blackAlpha.600">of {tableInstance.getPageCount()}</Text>
+      <Text color="blackAlpha.600">of {tableInstance.getTotalSize()}</Text>
     </Flex>
   )
 }
