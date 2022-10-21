@@ -45,6 +45,15 @@ export const transaction = {
         next: 'Next',
         back: 'Back',
         cancel: 'Cancel',
+        nameofClaimant: 'Name of Claimant',
+        jobLocation: 'Job Location',
+        makerOfCheck: 'Maker of Check',
+        amountOfCheck: 'Amount of Check $',
+        claimantsTitle: "Claimant's Title",
+        claimantsSignature: 'Claimant’s Signature',
+        dateOfSignature: 'Date of signature',
+        readMore: 'Read More',
+        readLess: 'Read Less',
 
         // Project WO Overview Table
         vendor: 'Vendor',
@@ -133,6 +142,15 @@ export const transaction = {
         cancel: 'Cancelar',
         markAs: 'Marcar como',
         paidBackDate: 'Pagado',
+        nameofClaimant: 'Nombre del reclamante',
+        jobLocation: 'locación de trabajo',
+        makerOfCheck: 'fabricante de cheque',
+        amountOfCheck: 'Monto del cheque $',
+        claimantsTitle: 'Título del reclamante',
+        claimantsSignature: 'Firma del reclamante',
+        dateOfSignature: 'Fecha de la firma',
+        readMore: 'Lee mas',
+        readLess: 'Leer menos',
 
         // Project WO Overview Table
         vendor: 'Vendedor',
