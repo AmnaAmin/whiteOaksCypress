@@ -120,7 +120,7 @@ const AssignedItems = (props: AssignedItemType) => {
     <Box>
       <>
         <Stack direction="row" justifyContent="space-between">
-          <HStack alignItems="end">
+          <HStack alignItems="center">
             <Text fontWeight={600} color="gray.500">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
@@ -158,7 +158,7 @@ const AssignedItems = (props: AssignedItemType) => {
               </>
             )}
           </HStack>
-          <HStack spacing="16px" alignItems="end">
+          <HStack spacing="16px" alignItems="center">
             {showPriceCheckBox && (
               <Checkbox data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
