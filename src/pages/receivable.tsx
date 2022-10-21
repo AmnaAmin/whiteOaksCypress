@@ -29,7 +29,7 @@ export const Receivable = () => {
     setSelectedDay('')
   }
 
-  const { handleSubmit, register, reset, control } = useForm()
+  const { handleSubmit, register, reset, control, setValue } = useForm()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
@@ -42,7 +42,7 @@ export const Receivable = () => {
 
   const { mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination, queryStringWithoutPagination)
-  const receivableTableColumns = useReceivableTableColumns(control, register)
+  const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   const { weekDayFilters } = useWeeklyCount()
 
   useEffect(() => {
@@ -52,9 +52,9 @@ export const Receivable = () => {
   }, [loading])
 
   const Submit = formValues => {
-    const receivableProjects = compact(formValues.id).map(id => ({
-      id: parseInt(id as string),
-      type: 'Remaining Payments',
+    const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
+      id: row?.projectId,
+      type: row?.type,
     }))
 
     const obj = {
