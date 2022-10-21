@@ -370,6 +370,7 @@ type EditableCellType = {
   allowEdit?: boolean
   autoFocus?: boolean
   setIsFocus?: (val) => void
+  maxLength?: number
 }
 
 export const EditableField = (props: EditableCellType) => {
@@ -388,6 +389,7 @@ export const EditableField = (props: EditableCellType) => {
     allowEdit,
     autoFocus,
     setIsFocus,
+    maxLength,
   } = props
   const { getValues, setValue, control } = formControl
   const values = getValues()
@@ -432,6 +434,7 @@ export const EditableField = (props: EditableCellType) => {
                 name={`${fieldArray}.${index}.${fieldName}`}
                 render={({ field, fieldState }) => (
                   <Input
+                    maxLength={maxLength}
                     minW={'80px'}
                     data-testid={`editableField-` + index + '-' + fieldName}
                     key={[fieldName] + '.' + [index]}
@@ -479,6 +482,7 @@ type InputFieldType = {
   autoFocus?: boolean
   setIsFocus?: (val) => void
   rules?: any
+  maxLength?: number
 }
 export const InputField = (props: InputFieldType) => {
   const {
@@ -491,6 +495,7 @@ export const InputField = (props: InputFieldType) => {
     autoFocus,
     setIsFocus,
     rules,
+    maxLength,
   } = props
   const {
     formState: { errors },
@@ -505,6 +510,7 @@ export const InputField = (props: InputFieldType) => {
           rules={rules}
           render={({ field, fieldState }) => (
             <Input
+              maxLength={maxLength}
               key={[fieldName] + '.' + [index]}
               size="sm"
               type={inputType}
