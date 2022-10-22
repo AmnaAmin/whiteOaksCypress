@@ -1,5 +1,16 @@
 import React from 'react'
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  HStack,
+  Input,
+} from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import ReactSelect from 'components/form/react-select'
@@ -34,7 +45,7 @@ export const ManageProject: React.FC<{
 
   return (
     <Flex flexDir="column" minH="420px">
-      <Box flex="1">
+      <Box flex="1" mx={6}>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl>
@@ -50,7 +61,7 @@ export const ManageProject: React.FC<{
                       options={fieldProjectManagerByMarketOptions}
                       size="md"
                       value={field.value}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '250px' }}
                       onChange={option => {
                         field.onChange(option)
                       }}
@@ -75,7 +86,7 @@ export const ManageProject: React.FC<{
                       options={projectCoordinatorSelectOptions}
                       selected={value}
                       onChange={setPC}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '250px' }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -99,7 +110,7 @@ export const ManageProject: React.FC<{
                       options={clientSelectOptions}
                       selected={value}
                       onChange={setClient}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '250px' }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -160,7 +171,7 @@ export const ManageProject: React.FC<{
           </GridItem>
         </Grid>
       </Box>
-      <Flex justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
+      <HStack spacing="15px" pr={6} justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
         <Button onClick={props.onClose} variant="outline" size="md" colorScheme="brand">
           {t(`${NEW_PROJECT}.cancel`)}
         </Button>
@@ -169,12 +180,11 @@ export const ManageProject: React.FC<{
           disabled={isProjectManagementSaveButtonDisabled}
           form="newProjectForm"
           colorScheme="brand"
-          ml="3"
           size="md"
         >
           {t(`${NEW_PROJECT}.save`)}
         </Button>
-      </Flex>
+      </HStack>
     </Flex>
   )
 }

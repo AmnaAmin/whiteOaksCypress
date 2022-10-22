@@ -79,7 +79,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       // templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
       templateColumns="repeat(4, 1fr)"
       gap={'1rem 20px'}
-      borderBottom="2px solid"
+      borderBottom="1px solid"
       borderColor="gray.200"
       py="5"
     >

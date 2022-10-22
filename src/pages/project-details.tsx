@@ -93,31 +93,33 @@ export const ProjectDetails: React.FC = props => {
 
   return (
     <>
-      <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
+      <Stack w={{ base: '971px', xl: '100%' }} spacing="16px" ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         {formattedGanttData?.length > 0 ? <ProjectSchedule isLoading={isLoading} data={formattedGanttData} /> : null}
         <AmountDetailsCard projectId={projectId} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
-          <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
-            <TabList>
-              <Tab>{t('projects.projectDetails.transactions')}</Tab>
-              <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
-              <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
-              <Tab>{t('projects.projectDetails.documents')}</Tab>
-              {/* <Tab>{t('alerts')}</Tab> */}
-              <Tab>
-                {t('projects.projectDetails.notes')}
-                {/* Figma update */}
+          <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
+            <TabList h={'50px'} alignItems="end">
+              <Flex h={'40px'}>
+                <Tab>{t('projects.projectDetails.transactions')}</Tab>
+                <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
+                <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
+                <Tab>{t('projects.projectDetails.documents')}</Tab>
+                {/* <Tab>{t('alerts')}</Tab> */}
+                <Tab>
+                  {t('projects.projectDetails.notes')}
+                  {/* Figma update */}
 
-                {/* <Box ml="5px" style={countInCircle}>
+                  {/* <Box ml="5px" style={countInCircle}>
                   {notesCount}
                 </Box> */}
 
-                {/* Figma update */}
-              </Tab>
+                  {/* Figma update */}
+                </Tab>
+              </Flex>
 
-              <Box w="100%" display="flex" justifyContent="end" position="relative">
+              <Flex w="100%" h="50px" justifyContent="end" position="relative">
                 {tabIndex === 2 &&
                   ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
                     projectStatus as STATUS,
@@ -144,7 +146,7 @@ export const ProjectDetails: React.FC = props => {
                 )} */}
                 {tabIndex === 0 && (
                   <HStack spacing="16px">
-                    <Box>
+                    <Box mt={3}>
                       <FormControl display="flex" alignItems="center">
                         <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
                           {t('projects.projectDetails.viewDetails')}
@@ -154,6 +156,7 @@ export const ProjectDetails: React.FC = props => {
                           id="view-details"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
+                          onFocus={Switch}
                         />
                       </FormControl>
                     </Box>
@@ -169,7 +172,7 @@ export const ProjectDetails: React.FC = props => {
                     </Button>
                   </HStack>
                 )}
-              </Box>
+              </Flex>
             </TabList>
 
             <TabPanels h="100%">

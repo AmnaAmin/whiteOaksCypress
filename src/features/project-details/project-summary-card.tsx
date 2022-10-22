@@ -37,7 +37,7 @@ export const ProjectSummaryCard: React.FC<{
   return (
     <>
       <Flex
-        py={6}
+        py={'16px'}
         h={{ base: 'unset', xl: '97px' }}
         w="100%"
         bg="white"
