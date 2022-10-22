@@ -15,7 +15,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId })
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
-        <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
+        <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
           <TransactionForm onClose={onClose} projectId={projectId} />

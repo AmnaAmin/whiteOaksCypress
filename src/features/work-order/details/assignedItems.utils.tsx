@@ -540,7 +540,6 @@ export const InputField = (props: InputFieldType) => {
 export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
   return (
     <Checkbox
-      variant="normal"
       isChecked={selectedItems?.map(s => s.id)?.includes(row?.id)}
       onChange={e => {
         if (e.currentTarget?.checked) {
