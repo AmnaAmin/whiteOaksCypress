@@ -41,10 +41,19 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-    const { workOrders, isLoading, totalPages } = usePaginatedAccountPayable(
-      queryStringWithPagination,
-      pagination.pageSize,
-    )
+    const {
+      workOrders,
+      isLoading,
+      totalPages,
+      dataCount,
+      isSuccess: isSuccessData,
+    } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
+
+    useEffect(() => {
+      if (isSuccessData && !pagination.totalRowCount) {
+        setPagination({ ...pagination, totalRowCount: dataCount ?? 0 })
+      }
+    }, [isSuccessData])
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
 

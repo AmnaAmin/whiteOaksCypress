@@ -59,10 +59,11 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
           pagination: {
             pageIndex: pagination?.pageIndex ?? 0,
             pageSize: pagination?.pageSize ?? 10,
+            totalRowCount: pagination?.totalRowCount,
           },
         }
       : {}
-  }, [pagination?.pageIndex, pagination?.pageSize])
+  }, [pagination?.pageIndex, pagination?.pageSize, pagination?.totalRowCount])
   const columnFilterState = !setColumnFilters
     ? {
         columnFilters: columnFiltersState,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useGetAllProjects, useProjects } from 'api/projects'
@@ -32,7 +32,7 @@ type ProjectProps = {
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
   const navigate = useNavigate()
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20, totalRowCount: 0 })
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
       queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
@@ -44,11 +44,13 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
       userIds,
     })
 
-  const { projects, isLoading, totalPages } = useProjects(
-    queryStringWithPagination,
-    pagination.pageIndex,
-    pagination.pageSize,
-  )
+  const {
+    projects,
+    isLoading,
+    isSuccess: isSuccessData,
+    totalPages,
+    dataCount,
+  } = useProjects(queryStringWithPagination, pagination.pageIndex, pagination.pageSize)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
 
@@ -66,6 +68,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const onRightClick = rowData => {
     window.open(`${process.env.PUBLIC_URL}/project-details/${rowData.id}`)
   }
+
+  useEffect(() => {
+    if (isSuccessData && !pagination.totalRowCount) {
+      setPagination({ ...pagination, totalRowCount: dataCount ?? 0 })
+    }
+  }, [isSuccessData])
 
   return (
     <Box overflow={'auto'} height="calc(100vh - 100px)">

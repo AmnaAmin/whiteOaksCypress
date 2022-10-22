@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react'
 import { PaginationState } from '@tanstack/react-table'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TableNames } from 'types/table-column.types'
 import { ExportCustomButton } from './export-button'
 import {
@@ -31,10 +31,16 @@ export default {
 }
 
 export const WithAllComponents = () => {
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-  const { isLoading, users, totalPages } = useTodos(pagination)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10, totalRowCount: 0 })
+  const { isLoading, users, totalPages, dataCount, isSuccess } = useTodos(pagination)
   const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(columnsWithPagination, TableNames.project)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.project)
+
+  useEffect(() => {
+    if (isSuccess && !pagination?.totalRowCount) {
+      setPagination({ ...pagination, totalRowCount: dataCount })
+    }
+  }, [isSuccess])
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -84,8 +90,14 @@ export const Defualt = () => {
 }
 
 export const WithPagination = () => {
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-  const { isLoading, users, totalPages } = useTodos(pagination)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10, totalRowCount: 0 })
+  const { isLoading, users, totalPages, dataCount, isSuccess } = useTodos(pagination)
+
+  useEffect(() => {
+    if (isSuccess && !pagination?.totalRowCount) {
+      setPagination({ ...pagination, totalRowCount: dataCount })
+    }
+  }, [isSuccess])
 
   return (
     <TableContextProvider

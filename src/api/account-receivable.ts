@@ -38,6 +38,7 @@ export const usePaginatedAccountReceivables = (queryString: string, pageSize: nu
   return {
     receivables: data?.data?.arList,
     totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
     ...rest,
   }
 }

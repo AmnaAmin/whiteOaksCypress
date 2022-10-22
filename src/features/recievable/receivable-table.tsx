@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import AccountReceivableModal from 'features/recievable/account-receivable-modal'
 import { usePaginatedAccountReceivables, useGetAllAccountReceivables } from 'api/account-receivable'
@@ -59,10 +59,19 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     },
     [onAccountReceivableModalOpen],
   )
-  const { receivables, isLoading, totalPages } = usePaginatedAccountReceivables(
-    queryStringWithPagination,
-    pagination.pageSize,
-  )
+  const {
+    receivables,
+    isLoading,
+    totalPages,
+    dataCount,
+    isSuccess: isSuccessData,
+  } = usePaginatedAccountReceivables(queryStringWithPagination, pagination.pageSize)
+
+  useEffect(() => {
+    if (isSuccessData && !pagination.totalRowCount) {
+      setPagination({ ...pagination, totalRowCount: dataCount ?? 0 })
+    }
+  }, [isSuccessData])
 
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 

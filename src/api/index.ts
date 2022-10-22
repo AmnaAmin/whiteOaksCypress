@@ -7,17 +7,17 @@ export function usePaginationQuery<TData>(
   endpoint,
   size: number,
   options?: any,
-): UseQueryResult<{ data: TData | undefined; totalCount: number }> {
+): UseQueryResult<{ data: TData | undefined; totalCount: number; dataCount: number }> {
   const toast = useToast()
   const client = useClient()
 
-  return useQuery<{ data: TData | undefined; totalCount: number }>(
+  return useQuery(
     queryKey,
     async () => {
       const response = await client(endpoint, {})
       const total = response?.headers?.get('X-Total-Count') || 0
 
-      return { data: response?.data, totalCount: size ? Math.ceil(Number(total) / size) : 0 }
+      return { data: response?.data, totalCount: size ? Math.ceil(Number(total) / size) : 0, dataCount: total }
     },
     {
       onError: (error: any) => {

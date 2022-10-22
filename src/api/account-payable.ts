@@ -37,6 +37,7 @@ export const usePaginatedAccountPayable = (queryString: string, pageSize: number
   return {
     workOrders: data?.data?.workOrders,
     totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
     ...rest,
   }
 }
