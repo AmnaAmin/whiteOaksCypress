@@ -185,7 +185,7 @@ export const Table: React.FC<TableProps> = ({
                         py="3"
                         position="sticky"
                         zIndex={1}
-                        top="40px"
+                        top="38px"
                         borderTop="1px solid #ddd"
                         bg="#F7FAFC"
                         {...getColumnMaxMinWidths(header.column)}
