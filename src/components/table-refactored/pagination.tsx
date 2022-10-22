@@ -144,12 +144,13 @@ export const GotoLastPage: React.FC<ButtonProps> = () => {
 export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
   const tableInstance = useTableInstance()
   const { pageIndex, pageSize } = tableInstance.getState().pagination
+  const lastRecordCount = pageIndex * pageSize + pageSize
 
   return (
     <Flex gap="1" alignItems="center">
       <>
         <Text color="blackAlpha.800">
-          {pageIndex * pageSize + 1} - {pageIndex * pageSize + pageSize}
+          {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}
         </Text>
         {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
       </>
