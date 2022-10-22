@@ -8,6 +8,7 @@ import {
   FormLabel,
   Grid,
   GridItem,
+  HStack,
   Input,
   VStack,
 } from '@chakra-ui/react'
@@ -60,8 +61,8 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   return (
     <Flex flexDir="column" minH="420px">
-      <Box flex="1">
-        <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
+      <Box flex="1" mx={6}>
+        <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3" w="100%">
           <GridItem>
             <FormControl isInvalid={!!errors?.name}>
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
@@ -86,7 +87,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                       id="projectType"
                       options={projectTypeSelectOptions}
                       selected={value}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '250px' }}
                       onChange={option => onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -227,7 +228,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </Grid>
       </Box>
 
-      <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
+      <HStack spacing="15px" pr={6} justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
         <Button variant="outline" size="md" colorScheme="brand" onClick={props.onClose}>
           {t(`${NEW_PROJECT}.cancel`)}
         </Button>
@@ -235,12 +236,11 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
           disabled={isProjectInformationNextButtonDisabled}
           colorScheme="CustomPrimaryColor"
           size="md"
-          ml="3"
           onClick={props.setNextTab}
         >
           {t(`${NEW_PROJECT}.next`)}
         </Button>
-      </Flex>
+      </HStack>
     </Flex>
   )
 })

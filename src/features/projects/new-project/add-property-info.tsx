@@ -12,6 +12,7 @@ import {
   Input,
   Flex,
   Box,
+  HStack,
 } from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { AddressInfo, ProjectFormValues } from 'types/project.type'
@@ -112,7 +113,7 @@ export const AddPropertyInfo: React.FC<{
   return (
     <>
       <Flex flexDir="column" minH="420px">
-        <Box flex="1">
+        <Box flex="1" mx={6}>
           {isDuplicateAddress && (
             <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
               <AlertIcon />
@@ -196,7 +197,7 @@ export const AddPropertyInfo: React.FC<{
                         options={stateSelectOptions}
                         size="md"
                         value={field.value}
-                        selectProps={{ isBorderLeft: true }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '250px' }}
                         onChange={option => {
                           setAddressInfo({ ...addressInfo, state: option?.value })
                           field.onChange(option)
@@ -245,7 +246,7 @@ export const AddPropertyInfo: React.FC<{
                         options={marketSelectOptions}
                         size="md"
                         value={field.value}
-                        selectProps={{ isBorderLeft: true }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                         onChange={option => {
                           setValue('projectManager', null)
                           field.onChange(option)
@@ -324,13 +325,12 @@ export const AddPropertyInfo: React.FC<{
           </Grid>
         </Box>
 
-        <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
+        <HStack pr={6} spacing="15px" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
           <Button onClick={props.onClose} variant="outline" size="md" colorScheme="brand">
             {t('cancel')}
           </Button>
           <Button
             colorScheme="brand"
-            ml="3"
             size="md"
             disabled={isNextButtonDisabled}
             onClick={() => {
@@ -344,7 +344,7 @@ export const AddPropertyInfo: React.FC<{
           >
             {t('next')}
           </Button>
-        </Flex>
+        </HStack>
       </Flex>
 
       <AddressVerificationModal
