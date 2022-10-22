@@ -141,16 +141,31 @@ export const GotoLastPage: React.FC<ButtonProps> = () => {
   )
 }
 
-export const ShowCurrentPageWithTotal: React.FC = () => {
+export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
   const tableInstance = useTableInstance()
-  const { pageIndex, pageSize, totalRowCount } = tableInstance.getState().pagination
+  const { pageIndex, pageSize } = tableInstance.getState().pagination
 
   return (
     <Flex gap="1" alignItems="center">
+      <>
+        <Text color="blackAlpha.800">
+          {pageIndex * pageSize + 1}` - {pageIndex * pageSize + pageSize}
+        </Text>
+        {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
+      </>
+    </Flex>
+  )
+}
+
+export const ShowCurrentPageWithTotal: React.FC = () => {
+  const tableInstance = useTableInstance()
+  const { pageIndex, pageSize } = tableInstance.getState().pagination
+  return (
+    <Flex gap="1" alignItems="center">
       <Text color="blackAlpha.800">
-        {pageIndex * pageSize + 1} - {pageIndex * pageSize + pageSize}
+        {pageIndex + 1} - {pageSize}
       </Text>
-      <Text color="blackAlpha.600">of {totalRowCount}</Text>
+      <Text color="blackAlpha.600">of {tableInstance.getPageCount()}</Text>
     </Flex>
   )
 }

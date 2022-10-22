@@ -15,7 +15,7 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
-  ShowCurrentPageWithTotal,
+  ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { ExportButton } from 'components/table-refactored/export-button'
@@ -41,19 +41,10 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-    const {
-      workOrders,
-      isLoading,
-      totalPages,
-      dataCount,
-      isSuccess: isSuccessData,
-    } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
-
-    useEffect(() => {
-      if (isSuccessData && !pagination.totalRowCount) {
-        setPagination({ ...pagination, totalRowCount: dataCount ?? 0 })
-      }
-    }, [isSuccessData])
+    const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
+      queryStringWithPagination,
+      pagination.pageSize,
+    )
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
 
@@ -121,7 +112,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                 )}
               </ButtonsWrapper>
               <TablePagination>
-                <ShowCurrentPageWithTotal />
+                <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
                 <GotoFirstPage />
                 <GotoPreviousPage />
                 <GotoNextPage />

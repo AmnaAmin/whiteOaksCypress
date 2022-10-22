@@ -71,7 +71,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
   useEffect(() => {
     if (!pagination) return
 
-    if (selectedCard || selectedDay || userIds) {
+    if (selectedCard || selectedDay || userIds || columnFilters?.length > 0) {
       setPagination?.({ ...pagination, pageIndex: 0 })
     }
   }, [columnFilters, selectedCard, selectedDay, userIds])

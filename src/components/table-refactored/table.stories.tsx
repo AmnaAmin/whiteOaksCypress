@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react'
 import { PaginationState } from '@tanstack/react-table'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { TableNames } from 'types/table-column.types'
 import { ExportCustomButton } from './export-button'
 import {
@@ -19,6 +19,7 @@ import {
   GotoNextPage,
   GotoPreviousPage,
   ShowCurrentPageWithTotal,
+  ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from './pagination'
 import Table from './table'
@@ -31,16 +32,10 @@ export default {
 }
 
 export const WithAllComponents = () => {
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10, totalRowCount: 0 })
-  const { isLoading, users, totalPages, dataCount, isSuccess } = useTodos(pagination)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const { isLoading, users, totalPages, dataCount } = useTodos(pagination)
   const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(columnsWithPagination, TableNames.project)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.project)
-
-  useEffect(() => {
-    if (isSuccess && !pagination?.totalRowCount) {
-      setPagination({ ...pagination, totalRowCount: dataCount })
-    }
-  }, [isSuccess])
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -62,7 +57,7 @@ export const WithAllComponents = () => {
         </ButtonsWrapper>
 
         <TablePagination>
-          <ShowCurrentPageWithTotal />
+          <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
           <GotoFirstPage />
           <GotoPreviousPage />
           <GotoNextPage />
@@ -90,14 +85,8 @@ export const Defualt = () => {
 }
 
 export const WithPagination = () => {
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10, totalRowCount: 0 })
-  const { isLoading, users, totalPages, dataCount, isSuccess } = useTodos(pagination)
-
-  useEffect(() => {
-    if (isSuccess && !pagination?.totalRowCount) {
-      setPagination({ ...pagination, totalRowCount: dataCount })
-    }
-  }, [isSuccess])
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const { isLoading, users, totalPages, dataCount } = useTodos(pagination)
 
   return (
     <TableContextProvider
@@ -110,7 +99,7 @@ export const WithPagination = () => {
       <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0" justifyContent={'end'} py="2">
         <TablePagination>
-          <ShowCurrentPageWithTotal />
+          <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
           <GotoFirstPage />
           <GotoPreviousPage />
           <GotoNextPage />
