@@ -11,7 +11,7 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
-  ShowCurrentPageWithTotal,
+  ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -44,7 +44,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
       userIds,
     })
 
-  const { projects, isLoading, totalPages } = useProjects(
+  const { projects, isLoading, totalPages, dataCount } = useProjects(
     queryStringWithPagination,
     pagination.pageIndex,
     pagination.pageSize,
@@ -96,7 +96,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
-            <ShowCurrentPageWithTotal />
+            <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
             <GotoFirstPage />
             <GotoPreviousPage />
             <GotoNextPage />

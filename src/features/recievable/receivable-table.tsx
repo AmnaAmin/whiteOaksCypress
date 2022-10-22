@@ -14,7 +14,7 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
-  ShowCurrentPageWithTotal,
+  ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
@@ -59,7 +59,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     },
     [onAccountReceivableModalOpen],
   )
-  const { receivables, isLoading, totalPages } = usePaginatedAccountReceivables(
+  const { receivables, isLoading, totalPages, dataCount } = usePaginatedAccountReceivables(
     queryStringWithPagination,
     pagination.pageSize,
   )
@@ -96,7 +96,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
-            <ShowCurrentPageWithTotal />
+            <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
             <GotoFirstPage />
             <GotoPreviousPage />
             <GotoNextPage />

@@ -15,6 +15,7 @@ export const useProjects = (filterQueryString?: string, page?: number, size?: nu
   return {
     projects: data?.data,
     totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
     ...rest,
   }
 }
