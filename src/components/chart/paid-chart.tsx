@@ -26,9 +26,6 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
     count: value?.count,
   }))
 
-  const counts = data?.filter(value => value?.count)
-  const showMessage = counts?.length === 0
-
   return (
     <ResponsiveContainer width={width} height={height}>
       <BarChart
@@ -64,7 +61,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
           }}
           tickMargin={15}
         >
-          {showMessage && (
+          {data?.length === 0 && (
             <Label
               value="There is currently no data available for the month selected"
               offset={180}
@@ -91,7 +88,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             return ` ${'$' + round(tick / 1000, 2) + 'k'} `
           }}
         />
-        {!showMessage && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
+        {data?.length && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
 
         <Bar dataKey="count" fill="url(#colorUv)" radius={[5, 5, 0, 0]} />
       </BarChart>
