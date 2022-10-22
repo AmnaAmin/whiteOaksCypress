@@ -43,7 +43,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     if (clientDetails) {
       reset(clientDetailsDefaultValues({ clientDetails, marketOptions, statesOptions, markets }))
     } else {
-      reset(clientDefault())
+      reset(clientDefault({ markets }))
     }
   }, [reset, clientDetails, statesOptions?.length, marketOptions?.length, markets?.length])
 

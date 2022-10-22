@@ -299,7 +299,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormControl>
                 </GridItem>
                 <GridItem>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors?.contacts?.[index]?.market?.message}>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.market`)}
                     </FormLabel>
@@ -372,7 +372,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           return (
             <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 215px)" gap={'1rem 1.5rem'} py="4">
               <GridItem>
-                <FormControl>
+                <FormControl isInvalid={!!errors?.accountPayableContactInfos?.[index]?.contact}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${CLIENTS}.contact`)}
                   </FormLabel>
@@ -388,16 +388,13 @@ export const Details: React.FC<clientDetailProps> = props => {
                 </FormControl>
               </GridItem>
               <GridItem>
-                <FormControl>
+                <FormControl isInvalid={!!errors?.accountPayableContactInfos?.[index]?.phoneNumber}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${CLIENTS}.phoneNumber`)}
                   </FormLabel>
                   <Controller
                     control={control}
                     name={`accountPayableContactInfos.${index}.phoneNumber`}
-                    rules={{
-                      required: 'This is required',
-                    }}
                     render={({ field }) => {
                       return (
                         <>
@@ -410,7 +407,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                             mask="_"
                             placeholder="(___)-___-____"
                             isDisabled={isProjectCoordinator}
-                            variant={'required-field'}
                           />
                           <FormErrorMessage>
                             {errors?.accountPayableContactInfos?.[index]?.phoneNumber?.message}
@@ -439,7 +435,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 </FormControl>
               </GridItem>
               <GridItem>
-                <FormControl>
+                <FormControl isInvalid={!!errors?.accountPayableContactInfos?.[index]?.emailAddress}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${CLIENTS}.email`)}
                   </FormLabel>
@@ -462,7 +458,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
 
                   <HStack>
-                    <Box width={'180px'}>
+                    <FormControl width={'180px'} isInvalid={!!errors?.accountPayableContactInfos?.[index]?.comments}>
                       <Input
                         id="comments"
                         {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
@@ -473,7 +469,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       <FormErrorMessage>
                         {errors?.accountPayableContactInfos?.[index]?.comments?.message}
                       </FormErrorMessage>
-                    </Box>
+                    </FormControl>
                     {!isProjectCoordinator && index > 0 && (
                       <Box color="barColor.100" fontSize="15px">
                         <Center>

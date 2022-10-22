@@ -116,8 +116,9 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
   return defaultValues
 }
 
-export const clientDefault = () => {
+export const clientDefault = ({ markets }) => {
   const defaultValues = {
+    markets,
     contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
     accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
