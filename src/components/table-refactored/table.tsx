@@ -155,15 +155,17 @@ export const Table: React.FC<TableProps> = ({
                       >
                         {typeof title === 'string' ? t(title as string) : title}
                       </Text>
-                      {isSortable ? (
-                        sortedDesc ? (
-                          <AiOutlineArrowUp fontSize="17px" />
+
+                      {sortedBy &&
+                        (isSortable ? (
+                          sortedDesc ? (
+                            <AiOutlineArrowUp fontSize="17px" />
+                          ) : (
+                            <AiOutlineArrowDown fontSize="17px" />
+                          )
                         ) : (
-                          <AiOutlineArrowDown fontSize="17px" />
-                        )
-                      ) : (
-                        ''
-                      )}
+                          ''
+                        ))}
                     </Flex>
                   </Th>
                 )
