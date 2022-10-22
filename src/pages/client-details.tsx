@@ -25,7 +25,7 @@ type ClientDetailsTabsProps = {
 export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps, ref) => {
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
-  const { clientDetails } = props
+  const { clientDetails, onClose } = props
   const { mutate: editClientDetails } = useUpdateClientDetails()
   const { mutate: addNewClientDetails } = useSaveNewClientDetails()
   const { stateSelectOptions: statesOptions } = useStates()
@@ -67,7 +67,11 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
       if (values?.id) {
         editClientDetails(clientPayload, queryOptions)
       } else {
-        addNewClientDetails(clientPayload, queryOptions)
+        addNewClientDetails(clientPayload, {
+          onSuccess() {
+            onClose()
+          },
+        })
       }
     },
     [addNewClientDetails],
