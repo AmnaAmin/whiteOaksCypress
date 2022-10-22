@@ -17,6 +17,7 @@ import { PaginationState } from '@tanstack/react-table'
 import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useReceivableTableColumns } from 'features/recievable/hook'
+import { ACCOUNTS } from 'pages/accounts.i18n'
 
 export const Receivable = () => {
   const [loading, setLoading] = useState(false)
@@ -83,7 +84,7 @@ export const Receivable = () => {
       <form onSubmit={handleSubmit(Submit)}>
         <Box>
           <FormLabel variant="strong-label" size="lg">
-            {t('Account Receivable')}
+            {t(`${ACCOUNTS}.accountReceivable`)}
           </FormLabel>
           <Box mb={2}>
             <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
@@ -106,7 +107,7 @@ export const Receivable = () => {
               type="submit"
             >
               <Icon as={BiSync} fontSize="18px" mr={2} />
-              {!loading ? 'Batch Process' : 'Processing...'}
+              {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
             </Button>
           </Flex>
           <Divider border="2px solid #E2E8F0" />
@@ -123,12 +124,12 @@ export const Receivable = () => {
           </Box>
         </Box>
         <ConfirmationBox
-          title="Batch processing"
-          content="Batch Process has been completed successfully."
+          title={t(`${ACCOUNTS}.batchProcess`)}
+          content={t(`${ACCOUNTS}.batchSuccess`)}
           isOpen={!loading && isBatchClick}
           onClose={onNotificationClose}
           onConfirm={onNotificationClose}
-          yesButtonText="Cancel"
+          yesButtonText={t(`${ACCOUNTS}.close`)}
           showNoButton={false}
         />
       </form>
