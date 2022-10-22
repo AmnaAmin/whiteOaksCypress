@@ -160,7 +160,7 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
           <HStack spacing="16px" alignItems="center">
             {showPriceCheckBox && (
-              <Checkbox data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
+              <Checkbox variant="normal" data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}

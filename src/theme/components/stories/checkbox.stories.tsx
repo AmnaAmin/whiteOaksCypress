@@ -25,7 +25,7 @@ export const CheckboxSizes = () => {
 export const CheckboxVariants = () => {
   return (
     <Stack spacing={[1, 5]} direction={['column', 'row']}>
-      <Checkbox size="md" colorScheme="brand" defaultChecked variant="link">
+      <Checkbox size="md" colorScheme="brand" defaultChecked variant="normal">
         Link Variants
       </Checkbox>
     </Stack>

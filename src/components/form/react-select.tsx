@@ -160,7 +160,6 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
 const MenuList: React.FC<any> = props => {
   const { children } = props
-
   function rowRenderer({
     key, // Unique key within array of rows
     index, // Index of row within collection

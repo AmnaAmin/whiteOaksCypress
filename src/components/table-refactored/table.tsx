@@ -205,7 +205,7 @@ export const Table: React.FC<TableProps> = ({
           <Tbody>
             <Tr>
               <Td colSpan={100} border="0">
-                <Center pos="sticky" top="0" left="calc(50% - 200px)" mt="200px" w="300px" fontStyle="italic">
+                <Center pos="sticky" top="0" left="calc(50% - 200px)" mt="100px" w="300px" fontStyle="italic">
                   There is no data to display.
                 </Center>
               </Td>
