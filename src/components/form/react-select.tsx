@@ -53,9 +53,8 @@ export const chakraStyles = {
   }),
   menuList: (provided: any, state: any) => {
     const menuHeight = state.selectProps?.selectProps?.menuHeight || ''
-    console.log(menuHeight)
 
-    return { ...provided, maxH: menuHeight }
+    return { ...provided, height: menuHeight }
   },
   option: (provider: any, state: any) => {
     const {
@@ -123,7 +122,6 @@ export const chakraStyles = {
 type SelectProps = any & {
   selectProps: {
     isBorderLeft: boolean
-    menuHeight: string
     now: string
   }
 }
@@ -160,6 +158,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
 const MenuList: React.FC<any> = props => {
   const { children } = props
+
   function rowRenderer({
     key, // Unique key within array of rows
     index, // Index of row within collection
@@ -172,7 +171,7 @@ const MenuList: React.FC<any> = props => {
     )
   }
 
-  return <List width={300} height={250} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
+  return <List width={300} height={300} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
 }
 
 export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (

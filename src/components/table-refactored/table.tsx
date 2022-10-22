@@ -1,7 +1,7 @@
 import React from 'react'
 import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
 
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Tfoot, Center } from '@chakra-ui/react'
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Box, Tfoot } from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -115,7 +115,7 @@ export const Table: React.FC<TableProps> = ({
   }
 
   return (
-    <Stack display="table" minH="100%" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative">
+    <Stack display="table" minH="100%" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative" zIndex={0}>
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
           {getHeaderGroups().map(headerGroup => (
@@ -207,9 +207,9 @@ export const Table: React.FC<TableProps> = ({
           <Tbody>
             <Tr>
               <Td colSpan={100} border="0">
-                <Center pos="sticky" top="0" left="calc(50% - 200px)" mt="100px" w="300px" fontStyle="italic">
+                <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
                   There is no data to display.
-                </Center>
+                </Box>
               </Td>
             </Tr>
           </Tbody>
@@ -250,13 +250,7 @@ export const Table: React.FC<TableProps> = ({
                             title={cell.getContext()?.getValue() as string}
                             {...getColumnMaxMinWidths(cell.column)}
                           >
-                            {cell.getContext()?.getValue() ? (
-                              value
-                            ) : (
-                              <Text color="gray.400" fontWeight={500} ml={2}>
-                                _ _ _
-                              </Text>
-                            )}
+                            {value}
                           </Td>
                         )
                       })}

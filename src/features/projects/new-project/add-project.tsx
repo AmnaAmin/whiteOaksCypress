@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalBody,
   Button,
+  Grid,
   ModalProps,
   ModalCloseButton,
   Stack,
@@ -170,7 +171,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             status: 'success',
             duration: 9000,
             isClosable: true,
-            position: 'top',
+            position: 'top-left',
           })
           onClose()
 
@@ -187,7 +188,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             status: 'error',
             duration: 9000,
             isClosable: true,
-            position: 'top',
+            position: 'top-left',
           })
         },
       })
@@ -198,46 +199,48 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   return (
     <>
       <Flex>
-        <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
-              <Tabs
-                colorScheme="brand"
-                variant="enclosed"
-                index={tabIndex}
-                onChange={index => setTabIndex(index)}
-                mt="7"
-              >
-                <TabList color="#4A5568" mx={6}>
-                  <Tab>{t(`${NEW_PROJECT}.projectInformation`)}</Tab>
-                  <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_PROJECT}.propertyInformation`)}</Tab>
-                  <Tab isDisabled={isPropertyInformationNextButtonDisabled}>
-                    {t(`${NEW_PROJECT}.projectManagement`)}
-                  </Tab>
-                </TabList>
-                <TabPanels mt="31px" h="100%">
-                  <TabPanel p="0px" h="100%">
-                    <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
-                  </TabPanel>
-                  <TabPanel p="0px" h="100%">
-                    <AddPropertyInfo
-                      isLoading={false}
-                      setNextTab={setNextTab}
-                      onClose={onClose}
-                      isDuplicateAddress={isDuplicateAddress}
-                      setIsDuplicateAddress={setIsDuplicateAddress}
-                    />
-                  </TabPanel>
-                  <TabPanel p="0px" h="100%">
-                    <ManageProject isLoading={false} onClose={onClose} />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </form>
+        <Grid templateColumns="repeat(4, 1fr)" gap={'1rem 0.5rem'}>
+          <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
+                <Tabs
+                  colorScheme="brand"
+                  variant="enclosed"
+                  index={tabIndex}
+                  onChange={index => setTabIndex(index)}
+                  mt="7"
+                >
+                  <TabList color="#4A5568">
+                    <Tab>{t(`${NEW_PROJECT}.projectInformation`)}</Tab>
+                    <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_PROJECT}.propertyInformation`)}</Tab>
+                    <Tab isDisabled={isPropertyInformationNextButtonDisabled}>
+                      {t(`${NEW_PROJECT}.projectManagement`)}
+                    </Tab>
+                  </TabList>
+                  <TabPanels mt="31px" h="100%">
+                    <TabPanel p="0px" h="100%">
+                      <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
+                    </TabPanel>
+                    <TabPanel p="0px" h="100%">
+                      <AddPropertyInfo
+                        isLoading={false}
+                        setNextTab={setNextTab}
+                        onClose={onClose}
+                        isDuplicateAddress={isDuplicateAddress}
+                        setIsDuplicateAddress={setIsDuplicateAddress}
+                      />
+                    </TabPanel>
+                    <TabPanel p="0px" h="100%">
+                      <ManageProject isLoading={false} onClose={onClose} />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </form>
 
-            <DevTool control={methods.control} />
-          </FormProvider>
-        </Stack>
+              <DevTool control={methods.control} />
+            </FormProvider>
+          </Stack>
+        </Grid>
       </Flex>
     </>
   )
@@ -257,7 +260,7 @@ export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClo
         <ModalContent minH="600px">
           <ModalHeader>{t(`${NEW_PROJECT}.title`)}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
-          <ModalBody px="0">
+          <ModalBody px="6">
             <AddProjectForm onClose={onClose} />
           </ModalBody>
         </ModalContent>

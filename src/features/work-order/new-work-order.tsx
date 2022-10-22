@@ -418,7 +418,7 @@ export const NewWorkOrderForm: React.FC<{
                                   setValue('vendorId', null)
                                   field.onChange(option)
                                 }}
-                                selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
+                                selectProps={{ isBorderLeft: true }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
@@ -443,7 +443,7 @@ export const NewWorkOrderForm: React.FC<{
                                 {...field}
                                 options={vendorOptions}
                                 size="md"
-                                selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
+                                selectProps={{ isBorderLeft: true }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
