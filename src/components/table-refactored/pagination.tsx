@@ -149,7 +149,7 @@ export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
     <Flex gap="1" alignItems="center">
       <>
         <Text color="blackAlpha.800">
-          {pageIndex * pageSize + 1}` - {pageIndex * pageSize + pageSize}
+          {pageIndex * pageSize + 1} - {pageIndex * pageSize + pageSize}
         </Text>
         {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
       </>
