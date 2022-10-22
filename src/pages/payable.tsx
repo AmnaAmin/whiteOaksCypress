@@ -18,6 +18,7 @@ import { PaginationState } from '@tanstack/react-table'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { DevTool } from '@hookform/devtools'
+import { ACCOUNTS } from 'pages/accounts.i18n'
 
 export const Payable = () => {
   const [loading, setLoading] = useState(false)
@@ -83,7 +84,7 @@ export const Payable = () => {
     <form onSubmit={handleSubmit(Submit)}>
       <Box>
         <FormLabel variant="strong-label" size="lg">
-          {t('Account Payable')}
+          {t(`${ACCOUNTS}.accountPayable`)}
         </FormLabel>
         <Box>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
@@ -104,7 +105,7 @@ export const Payable = () => {
           <Spacer />
           <Button alignContent="right" colorScheme="brand" type="submit" disabled={selectedCard === '6'}>
             <Icon as={BiSync} fontSize="18px" mr={2} />
-            {!loading ? 'Batch Process' : 'Processing...'}
+            {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
           </Button>
         </Flex>
         <Divider border="2px solid #E2E8F0" />
@@ -127,12 +128,12 @@ export const Payable = () => {
         <OverPaymentTransactionsTable />
       )}
       <ConfirmationBox
-        title="Batch processing"
-        content="Batch Process has been completed successfully."
+        title={t(`${ACCOUNTS}.batchProcess`)}
+        content={t(`${ACCOUNTS}.batchSuccess`)}
         isOpen={!loading && isBatchClick}
         onClose={onNotificationClose}
         onConfirm={onNotificationClose}
-        yesButtonText="Cancel"
+        yesButtonText={t(`${ACCOUNTS}.close`)}
         showNoButton={false}
       />
       <DevTool control={control} />

@@ -4,7 +4,7 @@ import { useAccountPayable } from 'api/account-payable'
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
 import { RECEIVABLE_TABLE_COLUMNS } from './receivable.constants'
-import { Checkbox, Flex, Spacer } from '@chakra-ui/react'
+import { Checkbox, Flex } from '@chakra-ui/react'
 
 const WEEK_FILTERS = [
   {
@@ -126,8 +126,7 @@ export const useReceivableTableColumns = (control, register, setValue) => {
           const onChange = { ...register(`id.${row.index}`) }.onChange
 
           return (
-            <Flex justifyContent="end" onClick={e => e.stopPropagation()}>
-              <Spacer w="20px" />
+            <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
                 value={row.original?.projectId}
                 {...register(`id.${row.index}`)}
