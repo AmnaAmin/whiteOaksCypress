@@ -262,7 +262,7 @@ const WorkOrderDetailTab = props => {
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
-          <Stack pt="32px" spacing="32px" mx="32px">
+          <Stack spacing="32px" m="25px">
             <Box>
               {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
@@ -273,25 +273,28 @@ const WorkOrderDetailTab = props => {
               )}
             </Box>
             <SimpleGrid columns={5}>
-              <InformationCard title="Company Name" date={companyName} />
-              <InformationCard title="Vendor Type" date={skillName} />
-              <InformationCard title="Email" date={businessEmailAddress} />
-              <InformationCard title=" Phone" date={businessPhoneNumber} />
+              <InformationCard title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+              <InformationCard title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+              <InformationCard title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+              <InformationCard title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
 
             <SimpleGrid columns={5}>
-              <CalenderCard title="WO Issued" date={dateFormat(workOrderIssueDate)} />
+              <CalenderCard title={t(`${WORK_ORDER}.woIssued`)} date={dateFormat(workOrderIssueDate)} />
               <CalenderCard
-                title="LW Submitted "
+                title={t(`${WORK_ORDER}.lwSubmitted`)}
                 date={
                   dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
                 }
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-              <CalenderCard title=" Completion Variance" date={workOrderCompletionDateVariance ?? '0'} />
+              <CalenderCard
+                title={t(`${WORK_ORDER}.completionVariance`)}
+                date={workOrderCompletionDateVariance ?? '0'}
+              />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
@@ -355,7 +358,7 @@ const WorkOrderDetailTab = props => {
             </HStack>
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
-            <Box mx="32px">
+            <Box mx="32px" mt={10}>
               <AssignedItems
                 isLoadingLineItems={isWorkOrderUpdating}
                 onOpenRemainingItemsModal={onOpenRemainingItemsModal}

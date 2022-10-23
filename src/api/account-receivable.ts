@@ -1,5 +1,7 @@
+import { usePaginationQuery } from 'api'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { ReceivableTableData } from 'types/receivable.types'
 import { useClient } from '../utils/auth-context'
 
 declare global {
@@ -25,6 +27,33 @@ export const usePCRecievable = () => {
   }
 }
 
+const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
+export const usePaginatedAccountReceivables = (queryString: string, pageSize: number) => {
+  const { data, ...rest } = usePaginationQuery<ReceivableTableData>(
+    [GET_PAGINATED_RECEIVABLE_QUERY_KEY, queryString],
+    `account-receivables?${queryString}`,
+    pageSize,
+  )
+
+  return {
+    receivables: data?.data?.arList,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+const GET_ALL_RECEIVABLE_QUERY_KEY = 'get_all_receivable_api_key'
+export const useGetAllAccountReceivables = (queryString: string) => {
+  const client = useClient()
+
+  return useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
+    const response = await client(`account-receivables?${queryString}`, {})
+
+    return response?.data?.arList
+  })
+}
+
 export const useBatchProcessingMutation = () => {
   const client = useClient()
   return useMutation(id => {
@@ -35,7 +64,7 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (apiNumber, setLoading, loading) => {
+export const useCheckBatch = (setLoading, loading, paginatedQueryString, withoutPaginatedQueryString) => {
   const [isAPIEnabled, setAPIEnabled] = useState(false)
   const client = useClient()
   const queryClient = useQueryClient()
@@ -44,7 +73,7 @@ export const useCheckBatch = (apiNumber, setLoading, loading) => {
     ['batchCheck'],
     async data => {
       setAPIEnabled(true)
-      const response = await client(`batches/progress/${apiNumber}`, {})
+      const response = await client(`batches/progress/2`, {})
       return response?.data
     },
     {
@@ -52,6 +81,8 @@ export const useCheckBatch = (apiNumber, setLoading, loading) => {
         if (!isBatchProcessingInProgress) {
           setLoading(false)
           setAPIEnabled(false)
+          queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
+          queryClient.invalidateQueries([GET_ALL_RECEIVABLE_QUERY_KEY, withoutPaginatedQueryString])
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },

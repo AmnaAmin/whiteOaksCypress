@@ -36,6 +36,7 @@ type CellInputType = {
   autoFocus?: boolean
   setIsFocus?: (val) => void
   rules?: any
+  maxLength?: number
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -53,6 +54,7 @@ const renderInput = (props: CellInputType) => {
     autoFocus,
     setIsFocus,
     rules,
+    maxLength,
   } = props
 
   const isNew = values?.remainingItems[row?.index]?.action === 'new'
@@ -60,6 +62,7 @@ const renderInput = (props: CellInputType) => {
     <Box pl={'5px'}>
       {isNew ? (
         <InputField
+          maxLength={maxLength}
           index={row?.index}
           fieldName={fieldName}
           formControl={formControl}
@@ -72,6 +75,7 @@ const renderInput = (props: CellInputType) => {
         ></InputField>
       ) : (
         <EditableField
+          maxLength={maxLength}
           index={row?.index}
           fieldName={fieldName}
           formControl={formControl}
@@ -92,7 +96,7 @@ const renderInput = (props: CellInputType) => {
   )
 }
 
-const RemainingItemsRow: React.FC<RowProps> = memo(({ row, style, onRowClick }) => {
+export const LineItemsRow: React.FC<RowProps> = memo(({ row, style, onRowClick }) => {
   return (
     <Tr
       bg="white"
@@ -123,14 +127,13 @@ const CellComp = ({ cell, row }) => {
       <Flex alignItems={'center'} h={'100%'} w={'100%'}>
         <Box
           title={cell.value ?? ''}
-          padding="0 15px 10px 10px"
           color="gray.600"
           fontSize="14px"
           fontStyle="normal"
           fontWeight="400"
           maxHeight={'60px'}
-          overflow="hidden"
           width={'100%'}
+          padding="0px 15px 0px 10px"
         >
           {cell.render('Cell', { isFocus, setIsFocus })}
         </Box>
@@ -173,6 +176,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Header: () => {
         return (
           <Checkbox
+            data-testid="checkAllItems"
             isChecked={
               values?.remainingItems?.length > 0 &&
               difference(
@@ -284,6 +288,7 @@ const RemainingListTable = (props: RemainingListType) => {
       accessor: 'description',
       Cell: ({ row, setIsFocus, isFocus }) =>
         renderInput({
+          maxLength: 2000,
           row,
           values,
           formControl,
@@ -371,7 +376,7 @@ const RemainingListTable = (props: RemainingListType) => {
         columns={REMAINING_ITEMS_COLUMNS}
         data={remainingItems ?? []}
         isLoading={isLoading}
-        TableRow={RemainingItemsRow}
+        TableRow={LineItemsRow}
         tableHeight="calc(100vh - 325px)"
         name="remaining-items-table"
         defaultFlexStyle={false}

@@ -3,7 +3,7 @@ import { PaginationState } from '@tanstack/react-table'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { useState } from 'react'
 import { TableNames } from 'types/table-column.types'
-import { ExportButton } from './export-button'
+import { ExportCustomButton } from './export-button'
 import {
   columns,
   columnsWithPagination,
@@ -19,6 +19,7 @@ import {
   GotoNextPage,
   GotoPreviousPage,
   ShowCurrentPageWithTotal,
+  ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from './pagination'
 import Table from './table'
@@ -32,7 +33,7 @@ export default {
 
 export const WithAllComponents = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-  const { isLoading, users, totalPages } = useTodos(pagination)
+  const { isLoading, users, totalPages, dataCount } = useTodos(pagination)
   const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(columnsWithPagination, TableNames.project)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.project)
 
@@ -51,12 +52,12 @@ export const WithAllComponents = () => {
       <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
-          <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
+          <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </ButtonsWrapper>
 
         <TablePagination>
-          <ShowCurrentPageWithTotal />
+          <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
           <GotoFirstPage />
           <GotoPreviousPage />
           <GotoNextPage />
@@ -85,7 +86,7 @@ export const Defualt = () => {
 
 export const WithPagination = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-  const { isLoading, users, totalPages } = useTodos(pagination)
+  const { isLoading, users, totalPages, dataCount } = useTodos(pagination)
 
   return (
     <TableContextProvider
@@ -98,7 +99,7 @@ export const WithPagination = () => {
       <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0" justifyContent={'end'} py="2">
         <TablePagination>
-          <ShowCurrentPageWithTotal />
+          <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
           <GotoFirstPage />
           <GotoPreviousPage />
           <GotoNextPage />
@@ -123,7 +124,7 @@ export const WithExportAndColumnSettings = () => {
       <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
-          <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
+          <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </ButtonsWrapper>
       </TableFooter>
@@ -135,7 +136,7 @@ export const TableFooterComponent = () => {
   return (
     <TableFooter>
       <ButtonsWrapper>
-        <ExportButton columns={columns} data={defaultData} colorScheme="brand" />
+        <ExportCustomButton columns={columns} data={defaultData} colorScheme="brand" />
         <TableColumnSettings disabled={false} onSave={() => {}} columns={settingColumns} />
       </ButtonsWrapper>
     </TableFooter>
@@ -161,7 +162,7 @@ export const TableInsideScrollableElement = () => {
         <Table isLoading={isLoading} onRowClick={onRowClick} />
         <TableFooter position="sticky" bottom="0">
           <ButtonsWrapper>
-            <ExportButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
+            <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>

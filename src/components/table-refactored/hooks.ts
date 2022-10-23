@@ -30,6 +30,12 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       if (selectedCard === 'past due') {
         const pastDueFilters = [{ id: 'pastDue', value: '1' }]
         finalFilters = [...finalFilters, ...pastDueFilters]
+
+        // Account Payable Cards contains 1, 2, 3, 4, 5, 6, which represents
+        // past due, 7 days, 14 days, 20 days, 30 days, and overpayment
+      } else if (['1', '2', '3', '4', '5', '6'].includes(selectedCard)) {
+        const durationCategoryFilters = [{ id: 'durationCategory', value: selectedCard }]
+        finalFilters = [...finalFilters, ...durationCategoryFilters]
       } else {
         projectStatusFilter =
           selectedCard !== 'past due' ? { id: 'projectStatus', value: selectedCard } : { id: 'pastDue', value: true }
@@ -49,13 +55,23 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds.join(',') }]
     }
 
-    return getAPIFilterQueryString(pageIndex, pageSize, finalFilters, queryStringAPIFilterKeys)
-  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds])
+    const queryStringWithoutPagination = getAPIFilterQueryString(0, 10000000, finalFilters, queryStringAPIFilterKeys)
+    const queryStringWithPagination = getAPIFilterQueryString(
+      pageIndex,
+      pageSize,
+      finalFilters,
+      queryStringAPIFilterKeys,
+    )
+    return {
+      queryStringWithoutPagination,
+      queryStringWithPagination,
+    }
+  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days])
 
   useEffect(() => {
     if (!pagination) return
 
-    if (selectedCard || selectedDay || userIds) {
+    if (selectedCard || selectedDay || userIds || columnFilters?.length > 0) {
       setPagination?.({ ...pagination, pageIndex: 0 })
     }
   }, [columnFilters, selectedCard, selectedDay, userIds])
@@ -63,6 +79,6 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
   return {
     columnFilters,
     setColumnFilters,
-    fitlersQueryString,
+    ...fitlersQueryString,
   }
 }

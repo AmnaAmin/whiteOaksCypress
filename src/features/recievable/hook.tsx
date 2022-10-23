@@ -1,4 +1,10 @@
-import { usePCRecievable } from 'api/account-receivable'
+import React from 'react'
+import { ColumnDef } from '@tanstack/react-table'
+import { useAccountPayable } from 'api/account-payable'
+import { useMemo } from 'react'
+import { useWatch } from 'react-hook-form'
+import { RECEIVABLE_TABLE_COLUMNS } from './receivable.constants'
+import { Checkbox, Flex } from '@chakra-ui/react'
 
 const WEEK_FILTERS = [
   {
@@ -52,8 +58,9 @@ const WEEK_FILTERS = [
   },
 ]
 
-export const useWeeklyCount = () => {
-  const { receivableData } = usePCRecievable()
+export const usePayableWeeklyCount = () => {
+  const { data: PayableData } = useAccountPayable()
+
   const getWeekDates = () => {
     const now = new Date()
     const dayOfWeek = now.getDay() // 0-6
@@ -78,7 +85,7 @@ export const useWeeklyCount = () => {
     return false
   }
 
-  const receivableWeeeklyCount = (list, weekDays) => {
+  const payableWeeeklyCount = (list, weekDays) => {
     if (!list) return weekDays
     return weekDays.map(weekDay => {
       const listOfDaysCount = list.filter(w => {
@@ -97,8 +104,46 @@ export const useWeeklyCount = () => {
     })
   }
 
-  const weekDayFilters = receivableWeeeklyCount(receivableData?.arList, WEEK_FILTERS)
+  const weekDayFilters = payableWeeeklyCount(PayableData?.workOrders, WEEK_FILTERS)
+
   return {
     weekDayFilters,
   }
+}
+
+export const useReceivableTableColumns = (control, register, setValue) => {
+  const formValues = useWatch({ control })
+
+  const columns: ColumnDef<any>[] = useMemo(
+    () => [
+      ...RECEIVABLE_TABLE_COLUMNS,
+      {
+        header: 'checkbox',
+        accessorKey: 'checkbox',
+        cell: cellInfo => {
+          const { row } = cellInfo
+
+          const onChange = { ...register(`id.${row.index}`) }.onChange
+
+          return (
+            <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
+              <Checkbox
+                value={row.original?.projectId}
+                {...register(`id.${row.index}`)}
+                onChange={e => {
+                  onChange(e)
+                  setValue(`selected.${row.index}`, e.target.checked ? row.original : null)
+                }}
+                isChecked={!!formValues?.id?.[row.index]}
+              />
+            </Flex>
+          )
+        },
+        disableExport: true,
+      },
+    ],
+    [register, formValues],
+  )
+
+  return columns
 }

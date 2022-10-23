@@ -49,6 +49,13 @@ export const waitForLoadingToFinish = () =>
   waitForElementToBeRemoved(() => [...screen.queryAllByLabelText(/loading/i), ...screen.queryAllByText(/Loading/i)], {
     timeout: 30000,
   })
+export const waitForProgressBarToFinish = () =>
+  waitForElementToBeRemoved(
+    () => [...screen.queryAllByRole(/progressbar/i), ...screen.queryAllByRole(/progressbar/i)],
+    {
+      timeout: 30000,
+    },
+  )
 
 const customRender = async (ui, options: CustomRenderOptions) => {
   const { route = '/' } = options

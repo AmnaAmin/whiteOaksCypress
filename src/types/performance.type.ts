@@ -12,5 +12,3 @@ export type PerformanceType = {
   removeCards?: boolean
   name?: any
 }
-
-

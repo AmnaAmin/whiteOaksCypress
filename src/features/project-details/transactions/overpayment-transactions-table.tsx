@@ -1,55 +1,17 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Td, Tr, Text, Flex, useDisclosure, HStack, Divider } from '@chakra-ui/react'
-import { RowProps } from 'components/table/react-table'
+import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { TableWrapper } from 'components/table/table'
 import { useOverPaymentTransaction, useTransactionExport } from 'api/transactions'
-import { dateFormat } from 'utils/date-time-utils'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
-import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings'
-import numeral from 'numeral'
-import Status from 'features/common/status'
-import { ExportButton } from 'components/table-refactored/export-button'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { ExportCustomButton } from 'components/table-refactored/export-button'
 import { TransactionTypeValues } from 'types/transaction.type'
-
-const OverpaymentTransactionRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
-  return (
-    <Tr
-      bg="white"
-      _hover={{
-        background: 'gray.50',
-      }}
-      {...row.getRowProps({
-        style,
-      })}
-      onClick={event => onRowClick(event, row)}
-    >
-      {row.cells.map(cell => {
-        return (
-          <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
-            <Flex alignItems="center" h="60px" pl="2">
-              <Text
-                fontSize="14px"
-                fontStyle="normal"
-                fontWeight={400}
-                noOfLines={1}
-                title={cell.value}
-                mt="10px"
-                mb="10px"
-                padding="0 15px"
-                color="#4A5568"
-              >
-                {cell.render('Cell')}
-              </Text>
-            </Flex>
-          </Td>
-        )
-      })}
-    </Tr>
-  )
-}
+import { PAYABLE_OVERPAYMENT_TABLE_COLUMNS } from 'features/payable/payable.constants'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import Table from 'components/table-refactored/table'
+import { TableFooter, ButtonsWrapper } from 'components/table-refactored/table-footer'
 
 export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
@@ -58,53 +20,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { transactions = [], isLoading } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
   const { tableColumns, settingColumns } = useTableColumnSettings(
-    [
-      {
-        Header: 'ID',
-        accessor: 'name',
-      },
-      {
-        Header: 'Project ID' as string,
-        accessor: 'projectId',
-      },
-      {
-        Header: 'Type' as string,
-        accessor: 'transactionTypeLabel',
-      },
-      {
-        Header: 'Trade' as string,
-        accessor: 'skillName',
-      },
-      {
-        Header: 'Total Amount' as string,
-        accessor: 'transactionTotal',
-        Cell(cellInfo) {
-          return numeral(cellInfo.value).format('$0,0.00')
-        },
-        getCellExportValue(row) {
-          return numeral(row.original.transactionTotal).format('$0,0.00')
-        },
-      },
-      {
-        Header: 'Transaction Status' as string,
-        accessor: 'status',
-        Cell: ({ value, row }) => <Status value={value} id={row.original.status} />,
-      },
-      {
-        Header: 'Submit' as string,
-        accessor: 'modifiedDate',
-        Cell({ value }) {
-          return <Box>{dateFormat(value)}</Box>
-        },
-        getCellExportValue(row) {
-          return dateFormat(row.original.modifiedDate)
-        },
-      },
-      {
-        Header: 'Approved By' as string,
-        accessor: 'approvedBy',
-      },
-    ],
+    PAYABLE_OVERPAYMENT_TABLE_COLUMNS,
     TableNames.transaction,
   )
 
@@ -117,11 +33,10 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   const { exportData } = useTransactionExport(projectId)
 
   const onRowClick = useCallback(
-    (_, row) => {
-      const { original } = row
-      setSelectedTransactionName(original.name)
-      setSelectedTransactionId(original.id)
-      setProjectId(original.projectId)
+    row => {
+      setSelectedTransactionName(row.name)
+      setSelectedTransactionId(row.id)
+      setProjectId(row.projectId)
       onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
@@ -133,25 +48,20 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   return (
     <>
       <Box>
-        <Box h="100%" overflow={'auto'}>
-          <TableWrapper
-            isLoading={isLoading}
-            columns={tableColumns}
-            data={transactions}
-            TableRow={OverpaymentTransactionRow}
-            tableHeight="calc(100vh - 300px)"
-            setTableInstance={() => {}}
-            name="transaction-table"
-            onRowClick={onRowClick}
-          />
+        <Box h="100%" maxH="calc(100vh - 250px)" overflow={'auto'}>
+          <TableContextProvider data={transactions} columns={tableColumns}>
+            <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <ButtonsWrapper>
+                <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions.csv" />
+
+                {settingColumns && (
+                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                )}
+              </ButtonsWrapper>
+            </TableFooter>
+          </TableContextProvider>
         </Box>
-        <Flex justifyContent="flex-end">
-          <HStack bg="white" border="1px solid #E2E8F0" rounded="0 0 6px 6px" spacing={0}>
-            <ExportButton columns={[]} data={exportData} colorScheme="brand" />
-            <Divider orientation="vertical" border="1px solid" h="20px" />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-          </HStack>
-        </Flex>
       </Box>
       <UpdateTransactionModal
         isOpen={isOpenEditModal}

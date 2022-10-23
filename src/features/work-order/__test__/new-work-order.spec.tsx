@@ -1,0 +1,242 @@
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { Providers } from 'providers'
+import { PROJECTS, SWO_PROJECT, TRADES, VENDORS } from 'mocks/api/workorder/data'
+import { waitForLoadingToFinish, screen, selectOption, waitForProgressBarToFinish } from 'utils/test-utils'
+import { NewWorkOrderForm } from '../new-work-order'
+import { dateFormat } from 'utils/date-time-utils'
+import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils'
+import { setToken } from 'utils/storage.utils'
+
+const chooseFilebyTestId = (id, filename) => {
+  const inputEl = screen.getByTestId(id)
+  //   // Create dummy file then upload
+  const file = new File(['(⌐□_□)'], filename, {
+    type: 'image/png',
+  })
+
+  userEvent.upload(inputEl, file)
+
+  expect(screen.getByText(new RegExp(filename))).toBeInTheDocument()
+}
+
+export const renderNewWorkOrder = async ({
+  onClose,
+  isOpen,
+  projectData,
+  swoProject,
+  onSubmit,
+  setVendorSkillId,
+  trades,
+  vendors,
+}: any) => {
+  await render(
+    <NewWorkOrderForm
+      trades={trades}
+      vendors={vendors}
+      projectData={projectData}
+      isOpen={isOpen}
+      onClose={onClose}
+      isSuccess={false}
+      onSubmit={onSubmit}
+      swoProject={swoProject}
+      setVendorSkillId={setVendorSkillId}
+    />,
+    {
+      wrapper: Providers,
+    },
+  )
+  await waitForLoadingToFinish()
+}
+
+beforeAll(() => {
+  setToken('pc')
+})
+
+jest.setTimeout(150000)
+describe('New Work Order modal test cases', () => {
+  test('Verify new work order showing project specific details and rendering form correctly', async () => {
+    const onClose = jest.fn()
+    const onSubmit = jest.fn()
+    const setVendorSkillId = jest.fn()
+    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+    await renderNewWorkOrder({
+      isOpen: true,
+      onClose,
+      projectData: projectData,
+      swoProject: SWO_PROJECT,
+      onSubmit,
+      setVendorSkillId,
+      vendors: VENDORS,
+      trades: TRADES,
+    })
+    expect(screen.getByTestId('clientStart').textContent).toEqual(
+      projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy',
+    )
+    expect(screen.getByTestId('clientEnd').textContent).toEqual(
+      projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy',
+    )
+    //form fields
+    expect(screen.getByTestId('profitPercentage')).toBeInTheDocument()
+    expect(screen.getByTestId('finalSowAmount')).toBeInTheDocument()
+    expect(screen.getByTestId('vendorId')).toBeInTheDocument()
+    expect(screen.getByTestId('vendorSkillId')).toBeInTheDocument()
+    expect(screen.getByTestId('clientApprovedAmount')).toBeInTheDocument()
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toBeInTheDocument()
+    expect(screen.getByTestId('percentage')).toBeInTheDocument()
+    expect(screen.getByTestId('workOrderStartDate')).toBeInTheDocument()
+    expect(screen.getByTestId('workOrderExpectedCompletionDate')).toBeInTheDocument()
+
+    expect(screen.getByTestId('clientApprovedAmount')).toHaveAttribute('disabled')
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('disabled')
+
+    // Line Items Fields
+    expect(screen.getByTestId('addItemsBtn')).toBeInTheDocument()
+    expect(screen.getByTestId('uploadWO')).toBeInTheDocument()
+    expect(screen.getByTestId('showPriceCheckBox')).toBeInTheDocument()
+    expect(screen.queryByTestId('showMarkAllIsVerified')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('showMarkAllIsComplete')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('downloadPdf')).not.toBeInTheDocument()
+  })
+
+  test('Assigning Line Items to work Order and saving work order. The profit entered on the form will apply to all line items. The sum of Client Amount for Line Items is equal to client amount field in form. The sum of Vendor Amounts for Line Items is equal to vendor amount of the work order', async () => {
+    const onClose = jest.fn()
+    const onSubmit = jest.fn()
+    const setVendorSkillId = jest.fn()
+    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+    await renderNewWorkOrder({
+      isOpen: true,
+      onClose,
+      projectData: projectData,
+      swoProject: SWO_PROJECT,
+      onSubmit,
+      setVendorSkillId,
+      vendors: VENDORS,
+      trades: TRADES,
+    })
+
+    await selectOption(screen.getByTestId('vendorSkillId'), 'Appliances')
+    await selectOption(screen.getByTestId('vendorId'), 'Sibi')
+    await userEvent.type(screen.getByTestId('percentage'), '10')
+
+    await fireEvent.change(screen.getByTestId('workOrderStartDate'), { target: { value: '2022-10-01' } })
+    expect((screen.getByTestId('workOrderStartDate') as HTMLInputElement).value).toEqual('2022-10-01')
+    await fireEvent.change(screen.getByTestId('workOrderExpectedCompletionDate'), { target: { value: '2022-10-05' } })
+    expect((screen.getByTestId('workOrderExpectedCompletionDate') as HTMLInputElement).value).toEqual('2022-10-05')
+    await userEvent.click(screen.getByTestId('addItemsBtn'))
+
+    await waitForProgressBarToFinish()
+    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+    await userEvent.click(screen.getByTestId('checkAllItems'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('saveListItems'))
+    })
+    expect(screen.getByTestId('cell-0-profit').textContent).toEqual('10%')
+    expect(screen.getByTestId('cell-1-profit').textContent).toEqual('10%')
+
+    expect(screen.getByTestId('clientApprovedAmount')).toHaveAttribute('value', '$78')
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('value', '$70.2')
+
+    act(() => {
+      fireEvent.submit(screen.getByTestId('saveWorkOrder'))
+    })
+    await waitFor(() =>
+      expect(onSubmit).toBeCalledWith(
+        expect.objectContaining({
+          clientApprovedAmount: expect.any(Number),
+          invoiceAmount: expect.any(Number),
+          percentage: expect.any(Number),
+          assignedItems: expect.any(Array),
+          vendorId: expect.anything(),
+          vendorSkillId: expect.anything(),
+          showPrice: expect.any(Boolean),
+        }),
+      ),
+    )
+  })
+
+  test('Upload SOW in new work order modal and save new work order. By uploading sow, assigned items will be null and CAA and VAA will be enabled fields.', async () => {
+    const onClose = jest.fn()
+    const onSubmit = jest.fn()
+    const setVendorSkillId = jest.fn()
+    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+    await renderNewWorkOrder({
+      isOpen: true,
+      onClose,
+      projectData: projectData,
+      swoProject: SWO_PROJECT,
+      onSubmit,
+      setVendorSkillId,
+      vendors: VENDORS,
+      trades: TRADES,
+    })
+
+    await selectOption(screen.getByTestId('vendorSkillId'), 'Appliances')
+    await selectOption(screen.getByTestId('vendorId'), 'Sibi')
+
+    await fireEvent.change(screen.getByTestId('workOrderStartDate'), { target: { value: '2022-10-01' } })
+    expect((screen.getByTestId('workOrderStartDate') as HTMLInputElement).value).toEqual('2022-10-01')
+    await fireEvent.change(screen.getByTestId('workOrderExpectedCompletionDate'), { target: { value: '2022-10-05' } })
+    expect((screen.getByTestId('workOrderExpectedCompletionDate') as HTMLInputElement).value).toEqual('2022-10-05')
+
+    chooseFilebyTestId('uploadWO', 'test-sow.png')
+
+    expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
+    await userEvent.type(screen.getByTestId('clientApprovedAmount'), '100')
+    await userEvent.type(screen.getByTestId('percentage'), '10')
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('value', '$90')
+
+    act(() => {
+      fireEvent.submit(screen.getByTestId('saveWorkOrder'))
+    })
+    await waitFor(() =>
+      expect(onSubmit).toBeCalledWith(
+        expect.objectContaining({
+          clientApprovedAmount: expect.any(Number),
+          invoiceAmount: expect.any(Number),
+          percentage: expect.any(Number),
+          uploadWO: expect.anything(),
+          vendorId: expect.anything(),
+          vendorSkillId: expect.anything(),
+          showPrice: expect.any(Boolean),
+        }),
+      ),
+    )
+  })
+
+  test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
+    const onClose = jest.fn()
+    const onSubmit = jest.fn()
+    const setVendorSkillId = jest.fn()
+    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+    await renderNewWorkOrder({
+      isOpen: true,
+      onClose,
+      projectData: projectData,
+      swoProject: SWO_PROJECT,
+      onSubmit,
+      setVendorSkillId,
+      vendors: VENDORS,
+      trades: TRADES,
+    })
+
+    await userEvent.click(screen.getByTestId('addItemsBtn'))
+    await waitForProgressBarToFinish()
+    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+    await userEvent.click(screen.getByTestId('checkAllItems'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('saveListItems'))
+    })
+    expect(screen.queryByTestId('cell-0-sku')).toBeInTheDocument()
+    expect(screen.queryByTestId('cell-1-sku')).toBeInTheDocument()
+
+    chooseFilebyTestId('uploadWO', 'test-sow.png')
+    expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
+
+    expect(screen.queryByTestId('cell-0-sku')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('cell-1-sku')).not.toBeInTheDocument()
+    expect(screen.getByTestId('addItemsBtn')).toBeDisabled()
+    expect(screen.getByTestId('clientApprovedAmount')).toBeEnabled()
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toBeEnabled()
+  })
+})

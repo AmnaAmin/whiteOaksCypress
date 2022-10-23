@@ -96,20 +96,18 @@ export const ProjectDetails: React.FC = props => {
       <Stack w={{ base: '971px', xl: '100%' }} spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         {formattedGanttData?.length > 0 ? <ProjectSchedule isLoading={isLoading} data={formattedGanttData} /> : null}
-        {tabIndex === 3 ? '' : <AmountDetailsCard projectId={projectId} />}
-
-        {tabIndex === 1}
+        <AmountDetailsCard projectId={projectId} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
           <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)} mt="7">
             <TabList>
-              <Tab>{t('Transactions')}</Tab>
-              <Tab>{t('projectDetails')}</Tab>
-              <Tab>{t('vendorWorkOrders')}</Tab>
-              <Tab>{t('documents')}</Tab>
+              <Tab>{t('projects.projectDetails.transactions')}</Tab>
+              <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
+              <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
+              <Tab>{t('projects.projectDetails.documents')}</Tab>
               {/* <Tab>{t('alerts')}</Tab> */}
               <Tab>
-                {t('notes')}
+                {t('projects.projectDetails.notes')}
                 {/* Figma update */}
 
                 {/* <Box ml="5px" style={countInCircle}>
@@ -135,7 +133,7 @@ export const ProjectDetails: React.FC = props => {
                   )}
                 {tabIndex === 3 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
-                    Upload
+                    {t('projects.projectDetails.upload')}
                   </Button>
                 )}
 
@@ -149,7 +147,7 @@ export const ProjectDetails: React.FC = props => {
                     <Box>
                       <FormControl display="flex" alignItems="center">
                         <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
-                          View Details
+                          {t('projects.projectDetails.viewDetails')}
                         </FormLabel>
                         <Switch
                           size="sm"
@@ -167,7 +165,7 @@ export const ProjectDetails: React.FC = props => {
                       isDisabled={preventNewTransaction}
                       leftIcon={<BiAddToQueue />}
                     >
-                      {t('newTransaction')}
+                      {t('projects.projectDetails.newTransaction')}
                     </Button>
                   </HStack>
                 )}

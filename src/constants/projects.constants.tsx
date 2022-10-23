@@ -13,7 +13,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.contains',
-  clientDueDate: 'clientDueDate.lessThanOrEqual',
+  clientDueDate: 'clientDueDate.equals',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
   accountPayable: 'accountPayable.contains',
@@ -129,7 +129,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaPaidDate),
   },
   {
-    header: 'Invoice Number',
+    header: 'projects.projectTable.invoiceNumber',
     accessorKey: 'invoiceNumber',
   },
   {

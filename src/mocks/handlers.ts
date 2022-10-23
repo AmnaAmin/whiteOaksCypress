@@ -3,6 +3,7 @@ import { authenticationHandlers } from './api/authentication/authentication'
 import { vendorDashboardHandlers } from './api/vendor-dashboard/dashboard-handlers'
 import { vendorProfileHandlers } from './api/vendor-profile/vendor-profile-handlers'
 import { projectDetailHandlers } from './api/projects/project-details-handlers'
+import { workOrderHandlers } from './api/workorder/work-order-handlers'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -10,4 +11,5 @@ export const handlers = [
   ...vendorDashboardHandlers,
   ...vendorProfileHandlers,
   ...projectDetailHandlers,
+  ...workOrderHandlers,
 ]

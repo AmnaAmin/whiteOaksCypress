@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Grid, Text } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 const styles = { ganttTable: '_3_ygE' }
 
@@ -15,6 +16,8 @@ export const ProjectTaskList: FC<{
   fontFamily: string
   fontSize: string
 }> = props => {
+  const { t } = useTranslation()
+
   return (
     <Grid
       gridTemplateColumns="1fr 1fr 1fr 1fr"
@@ -26,11 +29,11 @@ export const ProjectTaskList: FC<{
       height={props.headerHeight}
     >
       <Text fontWeight={600} paddingLeft="13px">
-        Name
+        {t('projects.ganttChart.name')}
       </Text>
-      <Text fontWeight={600}>Trade</Text>
-      <Text fontWeight={600}>Start Date</Text>
-      <Text fontWeight={600}>End Date</Text>
+      <Text fontWeight={600}> {t('projects.ganttChart.trade')}</Text>
+      <Text fontWeight={600}> {t('projects.ganttChart.startDate')}</Text>
+      <Text fontWeight={600}> {t('projects.ganttChart.endDate')}</Text>
     </Grid>
   )
 }

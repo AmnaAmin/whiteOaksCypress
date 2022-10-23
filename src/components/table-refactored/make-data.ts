@@ -286,6 +286,7 @@ export const useTodos = (fetchOption?: PaginationState) => {
   return {
     users: users?.data,
     totalPages: users?.xTotalCount && fetchOption?.pageSize ? Math.ceil(users.xTotalCount / fetchOption?.pageSize) : 0,
+    dataCount: users?.xTotalCount,
     ...rest,
   }
 }

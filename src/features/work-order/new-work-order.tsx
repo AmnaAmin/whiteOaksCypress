@@ -32,7 +32,6 @@ import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projec
 import { removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
-import NumberFormat from 'react-number-format'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
@@ -45,9 +44,11 @@ import {
   mapToLineItems,
   calculateVendorAmount,
   calculateProfit,
+  SWOProject,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
+import NumberFormat from 'react-number-format'
 import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
 import { isValidAndNonEmpty } from 'utils'
@@ -62,7 +63,15 @@ const CalenderCard = props => {
         <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text minH="20px" whiteSpace="nowrap" color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          data-testid={props?.testId}
+          minH="20px"
+          whiteSpace="nowrap"
+          color="gray.500"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+        >
           {props.date}
         </Text>
       </Box>
@@ -87,6 +96,7 @@ const InformationCard = props => {
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
+          data-testid={props?.testId}
         >
           {props.date}
         </Text>
@@ -107,14 +117,81 @@ type NewWorkOrderType = {
   uploadWO: any
 }
 
-const NewWorkOrder: React.FC<{
+export const NewWorkOrder: React.FC<{
   projectData: Project
   isOpen: boolean
   onClose: () => void
 }> = ({ projectData, isOpen, onClose }) => {
+  const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
+  const { swoProject } = useFetchProjectId(projectData?.id)
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
   const { vendors } = useFilteredVendors(vendorSkillId)
+  const toast = useToast()
+  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
+
+  const onSubmit = async values => {
+    if (values?.assignedItems?.length > 0) {
+      const isValid = values?.assignedItems?.every(
+        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
+      )
+      if (!isValid) {
+        toast({
+          title: 'Assigned Items',
+          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return
+      }
+      assignLineItems(
+        [
+          ...values?.assignedItems?.map(a => {
+            return { ...a, isAssigned: true }
+          }),
+        ],
+        {
+          onSuccess: async () => {
+            const payload = await parseNewWoValuesToPayload(values, projectData.id)
+            createWorkOrder(payload as any)
+          },
+        },
+      )
+    } else {
+      const payload = await parseNewWoValuesToPayload(values, projectData.id)
+      createWorkOrder(payload as any)
+    }
+  }
+
+  return (
+    <NewWorkOrderForm
+      projectData={projectData}
+      isOpen={isOpen}
+      onClose={onClose}
+      isSuccess={isSuccess}
+      onSubmit={onSubmit}
+      swoProject={swoProject}
+      trades={trades}
+      vendors={vendors}
+      setVendorSkillId={setVendorSkillId}
+    />
+  )
+}
+
+export const NewWorkOrderForm: React.FC<{
+  projectData: Project
+  isOpen: boolean
+  onClose: () => void
+  isSuccess: boolean
+  onSubmit: (values) => void
+  swoProject: SWOProject
+  trades: any
+  vendors: any
+  setVendorSkillId: (val) => void
+}> = props => {
+  const { projectData, isOpen, onClose, isSuccess, onSubmit, swoProject, trades, vendors, setVendorSkillId } = props
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const { projectId } = useParams<{ projectId: string }>()
@@ -123,9 +200,7 @@ const NewWorkOrder: React.FC<{
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
-  const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
-  const { swoProject } = useFetchProjectId(projectData?.id)
-  const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
+
   const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
@@ -134,7 +209,7 @@ const NewWorkOrder: React.FC<{
       vendorSkillId: null,
       vendorId: null,
       workOrderExpectedCompletionDate: null,
-      workOrderStartsDate: undefined,
+      workOrderStartDate: undefined,
       invoiceAmount: 0,
       clientApprovedAmount: 0,
       percentage: 0,
@@ -168,7 +243,6 @@ const NewWorkOrder: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const toast = useToast()
   const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
@@ -195,7 +269,7 @@ const NewWorkOrder: React.FC<{
   }, [watchLineItems])
 
   const resetLineItemsProfit = profit => {
-    formValues?.assignedItems?.forEach((item, index) => {
+    formValues.assignedItems?.forEach((item, index) => {
       const clientAmount =
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
@@ -238,41 +312,6 @@ const NewWorkOrder: React.FC<{
       onClose()
     }
   }, [isSuccess, onClose])
-
-  const onSubmit = async values => {
-    if (values?.assignedItems?.length > 0) {
-      const isValid = values?.assignedItems?.every(
-        l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
-      )
-      if (!isValid) {
-        toast({
-          title: 'Assigned Items',
-          description: t(`${WORK_ORDER}.requiredLineItemsToast`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        return
-      }
-      assignLineItems(
-        [
-          ...values?.assignedItems?.map(a => {
-            return { ...a, isAssigned: true }
-          }),
-        ],
-        {
-          onSuccess: async () => {
-            const payload = await parseNewWoValuesToPayload(values, projectData.id)
-            createWorkOrder(payload as any)
-          },
-        },
-      )
-    } else {
-      const payload = await parseNewWoValuesToPayload(values, projectData.id)
-      createWorkOrder(payload as any)
-    }
-  }
 
   useEffect(() => {
     const option = [] as any
@@ -335,16 +374,22 @@ const NewWorkOrder: React.FC<{
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard
                   title="Client Start"
+                  testId="clientStart"
                   date={projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy'}
                 />
                 <CalenderCard
-                  title="Client End "
+                  title="Client End"
+                  testId="clientEnd"
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
 
-                <InformationCard title="profitPercentage" date={profitMargin ? `${profitMargin}` : '0%'} />
+                <InformationCard
+                  title="profitPercentage"
+                  testId="profitPercentage"
+                  date={profitMargin ? `${profitMargin}` : '0%'}
+                />
 
-                <InformationCard title="finalSowAmount" date={finalSOWAmount} />
+                <InformationCard title="finalSowAmount" testId="finalSowAmount" date={finalSOWAmount} />
                 {/*  commenting as requirement yet to be confirmed
                   <InformationCard title=" Email" date={vendorEmail} />
                 <InformationCard title=" Phone No" date={vendorPhone} />*/}
@@ -352,7 +397,7 @@ const NewWorkOrder: React.FC<{
               <Box mt={10}>
                 <SimpleGrid w="85%" columns={4} spacingX={6} spacingY={12}>
                   <Box>
-                    <FormControl height="40px" isInvalid={!!errors.vendorSkillId}>
+                    <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         {t('type')}
                       </FormLabel>
@@ -383,7 +428,7 @@ const NewWorkOrder: React.FC<{
                     </FormControl>
                   </Box>
                   <Box>
-                    <FormControl isInvalid={!!errors.vendorSkillId}>
+                    <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                         {t('companyName')}
                       </FormLabel>
@@ -425,6 +470,7 @@ const NewWorkOrder: React.FC<{
                               <NumberInput
                                 value={field.value}
                                 thousandSeparator
+                                data-testid="clientApprovedAmount"
                                 customInput={CustomRequiredInput}
                                 prefix={'$'}
                                 disabled={!watchUploadWO}
@@ -456,6 +502,7 @@ const NewWorkOrder: React.FC<{
                             <>
                               <NumberFormat
                                 value={field.value}
+                                data-testid="percentage"
                                 customInput={CustomRequiredInput}
                                 suffix={'%'}
                                 onValueChange={e => {
@@ -478,7 +525,7 @@ const NewWorkOrder: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
                         {t('vendorWorkOrderAmount')}
                       </FormLabel>
                       <Controller
@@ -490,6 +537,7 @@ const NewWorkOrder: React.FC<{
                             <>
                               <NumberInput
                                 value={field.value}
+                                data-testid="vendorWorkOrderAmount"
                                 customInput={CustomRequiredInput}
                                 thousandSeparator
                                 prefix={'$'}
@@ -515,6 +563,7 @@ const NewWorkOrder: React.FC<{
                       </FormLabel>
                       <Input
                         id="workOrderStartDate"
+                        data-testid="workOrderStartDate"
                         type="date"
                         height="40px"
                         borderLeft="2px solid #4E87F8"
@@ -537,6 +586,7 @@ const NewWorkOrder: React.FC<{
                         id="workOrderExpectedCompletionDate"
                         type="date"
                         height="40px"
+                        data-testid="workOrderExpectedCompletionDate"
                         borderLeft="2px solid #4E87F8"
                         min={woStartDate}
                         focusBorderColor="none"
@@ -550,16 +600,18 @@ const NewWorkOrder: React.FC<{
                     </FormControl>
                   </Box>
                 </SimpleGrid>
-                <AssignedItems
-                  onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-                  unassignedItems={unassignedItems}
-                  setUnAssignedItems={setUnAssignedItems}
-                  formControl={formReturn as UseFormReturn<any>}
-                  assignedItemsArray={assignedItemsArray}
-                  isAssignmentAllowed={isAssignmentAllowed}
-                  swoProject={swoProject}
-                  workOrder={null}
-                />
+                <Box mt={6}>
+                  <AssignedItems
+                    onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+                    unassignedItems={unassignedItems}
+                    setUnAssignedItems={setUnAssignedItems}
+                    formControl={formReturn as UseFormReturn<any>}
+                    assignedItemsArray={assignedItemsArray}
+                    isAssignmentAllowed={isAssignmentAllowed}
+                    swoProject={swoProject}
+                    workOrder={null}
+                  />
+                </Box>
               </Box>
             </Box>
           </ModalBody>
@@ -573,6 +625,7 @@ const NewWorkOrder: React.FC<{
                   return (
                     <VStack alignItems="baseline">
                       <input
+                        data-testid="uploadWO"
                         type="file"
                         ref={inputRef}
                         style={{ display: 'none' }}
@@ -597,6 +650,7 @@ const NewWorkOrder: React.FC<{
                             <Text
                               as="span"
                               maxW="120px"
+                              data-testid="uploadedSOW"
                               isTruncated
                               title={formValues.uploadWO?.name || formValues.uploadWO?.fileType}
                             >
@@ -604,6 +658,7 @@ const NewWorkOrder: React.FC<{
                             </Text>
                             <MdOutlineCancel
                               cursor="pointer"
+                              data-testid="removeSOW"
                               onClick={() => {
                                 setValue('uploadWO', null)
                                 resetAmounts()
@@ -645,6 +700,7 @@ const NewWorkOrder: React.FC<{
               </Button>
               <Button
                 type="submit"
+                data-testid="saveWorkOrder"
                 colorScheme="brand"
                 disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO)}
               >

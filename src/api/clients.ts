@@ -1,4 +1,9 @@
-import { useQuery } from 'react-query'
+import { useToast } from '@chakra-ui/react'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { reset } from 'numeral'
+import { Control, useWatch } from 'react-hook-form'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
 
 export const useClients = () => {
@@ -23,4 +28,186 @@ export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
     notes,
     ...rest,
   }
+}
+
+export const useUpdateClientDetails = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (clientDetails: any) => {
+      return client('clients', {
+        data: clientDetails,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Update Client Details',
+          description: `Client has been updated successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('client')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Client Details',
+          description: (error.title as string) ?? 'Unable to save client.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marketOptions, markets }) => {
+  const stateValue = statesOptions?.find(b => b?.id === clientDetails?.state)
+  const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
+  const marketsId = clientDetails?.markets.map(m => m.id)
+  const marketList = markets?.map(market => ({
+    ...market,
+    checked: marketsId.includes(market.id),
+  }))
+  const contactsMarketsValue =
+    clientDetails?.contacts?.length > 0
+      ? clientDetails?.contacts?.map(c => {
+          const selectedMarket = marketOptions?.find(m => m.value === Number(c.market))
+          return {
+            contact: c.contact,
+            phoneNumber: c.phoneNumber,
+            emailAddress: c.emailAddress,
+            market: selectedMarket,
+            phoneNumberExtension: c.phoneNumberExtension,
+          }
+        })
+      : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
+  const accPayInfoValue =
+    clientDetails?.accountPayableContactInfos?.length > 0
+      ? [
+          ...clientDetails?.accountPayableContactInfos?.map(c => {
+            return {
+              contact: c.contact,
+              phoneNumber: c.phoneNumber,
+              emailAddress: c.emailAddress,
+              comments: c.comments,
+              phoneNumberExtension: c.phoneNumberExtension,
+            }
+          }),
+        ]
+      : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }]
+
+  const defaultValues = {
+    ...clientDetails,
+    paymentTerm: paymentTermsValue || { label: '20', value: '20' },
+    state: stateValue,
+    markets: marketList,
+    contacts: contactsMarketsValue,
+    accountPayableContactInfos: accPayInfoValue,
+  }
+  return defaultValues
+}
+
+export const clientDefault = ({ markets }) => {
+  const defaultValues = {
+    markets,
+    contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
+    accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
+  }
+  return defaultValues
+}
+
+export const useClientNoteMutation = clientId => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    (payload: any) => {
+      return client('notes', {
+        data: payload,
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['notes', clientId])
+        toast({
+          title: 'Note',
+          description: 'Note has been saved successfully.',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+        reset()
+      },
+      onError(error: any) {
+        toast({
+          title: 'Note',
+          description: (error.title as string) ?? 'Unable to save note.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const useSaveNewClientDetails = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (clientDetails: any) => {
+      return client('clients', {
+        data: clientDetails,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'New Client Details',
+          description: `New client has been added successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('client')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Client Details',
+          description: (error.title as string) ?? 'Unable to save client.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const useClientDetailsSaveButtonDisabled = (control: Control<ClientFormValues>, errors): boolean => {
+  const formValues = useWatch({ control })
+
+  return (
+    !formValues?.companyName ||
+    !formValues?.paymentTerm ||
+    !formValues?.streetAddress ||
+    !formValues?.city ||
+    !formValues?.contact
+  )
 }
