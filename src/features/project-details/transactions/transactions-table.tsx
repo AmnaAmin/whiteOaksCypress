@@ -7,7 +7,7 @@ import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
-import { ExportCustomButton } from 'components/table-refactored/export-button'
+import { ExportTranscationButton } from 'components/table-refactored/export-button'
 import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
@@ -50,7 +50,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions.csv" />
+              <ExportTranscationButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions.csv" />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
