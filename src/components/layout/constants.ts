@@ -128,6 +128,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#9F7AEA',
     },
     {
+      pathTo: '/clients',
+      title: 'Clients',
+      Icon: BiGroup,
+      color: '#0BC5EA',
+    },
+    {
       pathTo: '/reports',
       title: 'Reports',
       Icon: BiBarChartSquare,

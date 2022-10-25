@@ -57,6 +57,7 @@ export default function useRoutesConfig() {
         { path: 'vendors', element: Vendors },
         { path: 'reports', element: Reports },
         { path: 'performance', element: PerformanceTab },
+        { path: 'clients', element: Clients },
       ]
 
     case isVendor:
