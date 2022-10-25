@@ -15,7 +15,7 @@ export const useAccountPayable = () => {
   const client = useClient()
 
   return useQuery(ACCONT_PAYABLE_API_KEY, async () => {
-    const response = await client(`all_workorders`, {})
+    const response = await client(`all-payables`, {})
     const workOrders = orderBy(response?.data?.workOrders || [], ['expectedPaymentDate', 'asc'])
     return { ...response?.data, workOrders }
   })
