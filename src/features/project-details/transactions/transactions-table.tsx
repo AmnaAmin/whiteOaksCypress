@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { useTransactionExport, useTransactions } from 'api/transactions'
+import { useTransactions } from 'api/transactions'
 import { useParams } from 'react-router'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
-import { ExportTranscationButton } from 'components/table-refactored/export-button'
+import { ExportButton } from 'components/table-refactored/export-button'
 import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
@@ -20,7 +20,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
 
-  const { transactions, isLoading } = useTransactions(projectId)
+  const { refetch, transactions, isLoading } = useTransactions(projectId)
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
@@ -28,7 +28,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
-  const { exportData } = useTransactionExport(projectId)
 
   const onRowClick = useCallback(
     row => {
@@ -50,7 +49,13 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportTranscationButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions.csv" />
+              <ExportButton
+                columns={tableColumns}
+                refetch={refetch}
+                isLoading={isLoading}
+                colorScheme="brand"
+                fileName="transactions.csv"
+              />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
