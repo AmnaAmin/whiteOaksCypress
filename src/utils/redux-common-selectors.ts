@@ -9,6 +9,7 @@ type UserRoles = {
   isFPM: boolean
   isDoc: boolean
   isAccounting: boolean
+  isOperations: boolean
 }
 
 enum UserTypes {
@@ -19,6 +20,7 @@ enum UserTypes {
   vendorManager = 1007,
   directorOfConstruction = 1001,
   accounting = 2,
+  operations = 38,
 }
 
 export const useUserRolesSelector = (): UserRoles => {
@@ -33,6 +35,7 @@ export const useUserRolesSelector = (): UserRoles => {
     isFPM: userType === UserTypes.fieldProjectManager,
     isDoc: userType === UserTypes.directorOfConstruction,
     isAccounting: userType === UserTypes.accounting,
+    isOperations: userType === UserTypes.operations,
   }
 }
 

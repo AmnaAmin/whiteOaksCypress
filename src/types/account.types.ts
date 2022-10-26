@@ -8,6 +8,7 @@ export enum UserTypes {
   doc = 'Director Of Construction',
   admin = 'Admin',
   accounting = 'Accounting',
+  operations = 'Operational',
 }
 
 export type Account = {
