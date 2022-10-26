@@ -6,7 +6,7 @@ export const transaction = {
       [TRANSACTION]: {
         type: 'Type',
         trade: 'Trade',
-        vendorGL: 'Vendor GL',
+        vendorGL: 'Name',
         totalAmount: 'Total Amount',
         transactionStatus: 'Transaction Status',
         markAs: 'Mark as',
@@ -85,7 +85,7 @@ export const transaction = {
     translation: {
       [TRANSACTION]: {
         type: 'Escribe',
-        vendorGL: 'Vendedor GL',
+        vendorGL: 'Nombre',
         transactionStatus: 'Transaction Status',
         updateTransaction: 'Actualizar transacción',
         newTransaction: 'Nueva Transacción',
