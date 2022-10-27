@@ -54,12 +54,12 @@ const Contact: React.FC<ContactProps> = ({
             <Controller
               control={control}
               name="projectCoordinator"
-              rules={{ required: 'This is required' }}
+              rules={{ required: !isProjectCoordinatorDisabled && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
                     {...field}
-                    selectProps={{ isBorderLeft: true }}
+                    selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled }}
                     options={projectCoordinatorSelectOptions}
                     isDisabled={isProjectCoordinatorDisabled}
                   />
