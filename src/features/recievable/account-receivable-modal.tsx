@@ -22,7 +22,7 @@ const AccountReceivableModal: React.FC<{
   onClose: () => void
   projectId?: string
 }> = props => {
-  const { projectData, isLoading } = usePCProject(props?.projectId)
+  const { projectData, isLoading } = usePCProject(props?.projectId?.toString())
 
   useEffect(() => {
     if (projectData && ![STATUS.Invoiced].includes(projectData?.projectStatus?.toLocaleLowerCase() as STATUS)) {
