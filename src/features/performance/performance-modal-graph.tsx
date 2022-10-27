@@ -203,7 +203,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             radius={[10, 10, 0, 0]}
             hide={barProps['Revenue'] === true}
           />
-          {/* { !hasUsers && */}
           <Legend
             onClick={selectBar}
             wrapperStyle={{
@@ -225,7 +224,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               )
             }}
           />
-          {/* } */}
         </BarChart>
       </ResponsiveContainer>
     </div>

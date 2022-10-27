@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, getMonth } from 'date-fns'
 import sub from 'date-fns/sub'
 import { range } from 'lodash'
 import { GenericObjectType } from 'types/common.types'
@@ -150,7 +150,7 @@ export const getQuarterByDate = (date = new Date()) => {
 }
 
 export const getLastQuarterByDate = (date = new Date()) => {
-  return (getQuarterByDate(date) + 2) % 3
+  return getQuarterByMonth(date.getMonth() - 3)
 }
 
 export const getQuarterByMonth = (month: number) => {

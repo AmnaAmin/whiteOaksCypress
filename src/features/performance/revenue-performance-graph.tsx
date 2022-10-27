@@ -8,7 +8,14 @@ import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
-import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
+import {
+  months,
+  monthsShort,
+  monthsFull,
+  getQuarterByDate,
+  getLastQuarterByDate,
+  getQuarterByMonth,
+} from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
 type GraphData = {
@@ -55,26 +62,27 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
-            angle={-45}
+            // angle={-45}
             dataKey={hasUsers ? 'username' : 'month'}
             textAnchor="end"
             axisLine={false}
             tickLine={false}
-            interval={Math.floor(vendorData.length / 60)}
-            tick={{
-              fill: '#4A5568',
-              fontSize: '12px',
-              fontWeight: 400,
-              fontStyle: 'normal',
-            }}
-            tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
-            tickMargin={20}
+            tick={false}
+            // interval={Math.floor(vendorData.length / 60)}
+            // tick={{
+            //   fill: '#4A5568',
+            //   fontSize: '12px',
+            //   fontWeight: 400,
+            //   fontStyle: 'normal',
+            // }}
+            // tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
+            tickMargin={0}
             label={{
               value: 'Field Project Manager',
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 100,
+              offset: 40,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -83,31 +91,32 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           />
           {hasUsers && (
             <XAxis
-              dataKey={'centerMonth'}
+              dataKey={'month'}
               axisLine={false}
               tickLine={false}
               tick={{
                 fill: '#4A5568',
-                fontSize: '14px',
-                fontWeight: 400,
-                fontStyle: 'normal',
+                fontSize: '12px',
+                fontWeight: 600,
+                fontStyle: 'inter',
               }}
-              tickMargin={60}
+              tickMargin={0}
               xAxisId="users"
             />
           )}
           <YAxis
-            tickLine={{ stroke: '#4F4F4F' }}
             type="number"
-            tickSize={8}
+            tickSize={55}
             tickCount={10}
             domain={[0, 'auto']}
             axisLine={false}
+            tickLine={false}
             tick={{
               fontSize: '12px',
               fontStyle: 'inter',
               fontWeight: 400,
               fill: '#4A5568',
+              textAnchor: 'left',
             }}
             tickFormatter={value => `$${value}`}
             label={{
@@ -115,7 +124,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               angle: -90,
               position: 'left',
               textAnchor: 'middle',
-              offset: 15,
+              offset: 20,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -161,21 +170,24 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 username: `${firstName} ${lastName}`,
                 month: monthsShort[month],
                 userId: Number(last(userId)),
-                quater: getQuarterByMonth(monthIndex),
+                quarter: getQuarterByMonth(monthIndex),
                 Revenue: nameMonthData[nameKey]?.revenue,
               }
             })
-            let newgraphs = graphs.map((n, i) => ({
+            console.log('graphs', graphs)
+            let newgraphs = graphs.map((n, i) => (
+              {
               ...n,
-              centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
-            }))
+              centerMonth: Math.floor(graphs.length / 3) === i ? n.month : undefined,
+            })
+            )
             return newgraphs
           }
 
           return {
             month: monthsShort[month],
             centerMonth: monthsShort[month],
-            quater: getQuarterByMonth(monthIndex),
+            quarter: getQuarterByMonth(monthIndex),
             username: '',
             userId: 0,
             Bonus: 0,
@@ -229,11 +241,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     const finalGraphData = data?.filter(
       a =>
         (!selectedMonth || a.month === selectedMonth) &&
-        (!selectedQuater || a.quater === selectedQuater) &&
+        (!selectedQuater || a.quarter === selectedQuater) &&
         (!selectedFpm.length || selectedFpm.includes(a.userId)),
     )
     setGraphData(finalGraphData)
   }
+
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
@@ -264,6 +277,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
+                    default={5}
                     isMulti
                   />
                 </Box>
