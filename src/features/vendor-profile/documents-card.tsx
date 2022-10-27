@@ -209,7 +209,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             {t('insurance')}
           </FormLabel>
 
-          <Divider borderWidth="1px" />
+          <Divider borderColor="gray.300" />
         </HStack>
         <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
