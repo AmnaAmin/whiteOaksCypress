@@ -66,8 +66,8 @@ export const projects = {
           clientEnd: 'Client End Date',
           woaStart: 'WOA Start Date',
           woaEnd: 'WOA End',
-          pcName: 'Project Coordinator Name',
-          pcContact: 'Project Coordinator Contact',
+          pcName: 'PC Name',
+          pcContact: 'PC Contact',
         },
         projectAmount: {
           finalSOW: 'Final SOW',
@@ -163,8 +163,8 @@ export const projects = {
           fpmContact: 'FPM contacto',
           seeMore: 'Ver más',
           seeLess: 'Ver menos',
-          pcName: 'Nombre del coordinador del proyecto',
-          pcContact: 'Coordinador del proyecto Contacto',
+          pcName: 'Nombre de la computadora',
+          pcContact: 'Contacto de PC',
         },
         projectAmount: {
           finalSOW: 'SOW Finale',
