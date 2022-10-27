@@ -59,7 +59,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
       <Box>
         <Flex direction="row" mt={2}>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.newBonus)} />
+            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.currentBonus)} />
           </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
             <FieldInfoCard title={t('Previous Bonus')} value={currencyFormatter(fpmData?.previousBonus)} />
