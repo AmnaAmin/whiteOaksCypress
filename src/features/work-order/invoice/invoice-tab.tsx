@@ -321,7 +321,7 @@ export const InvoiceTab = ({
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('balanceDue')}</Text>
-                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal - amountPaid)}</Text>
+                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal - Math.abs(amountPaid))}</Text>
                       </HStack>
                     </Box>
                   </VStack>
