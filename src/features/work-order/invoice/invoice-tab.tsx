@@ -128,6 +128,12 @@ export const InvoiceTab = ({
         [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
       )
 
+      // Sum of all approved (:not paid) transactions (Change Orders & Original Amount)
+      if (changeOrders && changeOrders.length > 0) {
+        setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
+      }
+
+      // Sum of all Draws (Material (+Refund), Draws and WOPaid)
       if (drawTransactions && drawTransactions.length > 0) {
         const sumOfDrawTransaction = drawTransactions
           ?.map(t => parseFloat(t.changeOrderAmount))
@@ -136,12 +142,6 @@ export const InvoiceTab = ({
         const paidTransactionAmount =
           transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
         const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
-
-        // Sum of all approved (:not paid) transactions (Change Orders)
-        if (changeOrders && changeOrders.length > 0) {
-          setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
-        }
-        // Sum of all Draws
 
         setAmountPaid(amountPaid)
       }
