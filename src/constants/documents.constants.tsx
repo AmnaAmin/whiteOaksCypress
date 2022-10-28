@@ -5,6 +5,10 @@ import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
 import { downloadFile, downloadFileOnly } from 'utils/file-utils'
 import { dateFormat } from 'utils/date-time-utils'
 
+export const DOCUMENT_TYPES = {
+  ORIGINAL_SOW: 39,
+}
+
 const withPreviewCell = cellInfo => {
   const s3Url = cellInfo.row.original?.s3Url
   const value = cellInfo.getValue()

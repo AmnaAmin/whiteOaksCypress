@@ -29,6 +29,7 @@ import ChooseFileField from 'components/choose-file/choose-file'
 import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
+import { DOCUMENT_TYPES } from 'constants/documents.constants'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -50,10 +51,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       : null
 
   const states = documentTypes
-    ? documentTypes?.map(state => ({
-        label: state?.value,
-        value: state?.id,
-      }))
+    ? documentTypes
+        ?.filter(doc => ![DOCUMENT_TYPES.ORIGINAL_SOW].includes(doc.id))
+        ?.map(state => ({
+          label: state?.value,
+          value: state?.id,
+        }))
     : null
 
   const {
