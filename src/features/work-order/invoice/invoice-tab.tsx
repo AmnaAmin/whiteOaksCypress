@@ -118,21 +118,32 @@ export const InvoiceTab = ({
       setItems(transactionItems)
 
       // Draw Transaction Type = 30
-      const changeOrders = transactionItems.filter(it => it.transactionType !== TransactionTypeValues.draw)
-      const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
+      const changeOrders = transactionItems.filter(
+        it =>
+          ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
+            it.transactionType,
+          ),
+      )
+      const drawTransactions = transactionItems?.filter(it =>
+        [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
+      )
 
-      // Sum of all approved (:not paid) transactions (Change Orders)
-      if (changeOrders && changeOrders.length > 0) {
-        setSubTotal(
-          changeOrders
-            .filter(co => co.transactionType !== TransactionTypeValues.woPaid)
-            .map(t => parseFloat(t.changeOrderAmount))
-            .reduce((sum, x) => sum + x),
-        )
-      }
-      // Sum of all Draws
       if (drawTransactions && drawTransactions.length > 0) {
-        setAmountPaid(drawTransactions.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
+        const sumOfDrawTransaction = drawTransactions
+          ?.map(t => parseFloat(t.changeOrderAmount))
+          ?.reduce((sum, x) => sum + x)
+
+        const paidTransactionAmount =
+          transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
+        const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
+
+        // Sum of all approved (:not paid) transactions (Change Orders)
+        if (changeOrders && changeOrders.length > 0) {
+          setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
+        }
+        // Sum of all Draws
+
+        setAmountPaid(amountPaid)
       }
     }
   }, [transactions])
@@ -310,7 +321,7 @@ export const InvoiceTab = ({
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('balanceDue')}</Text>
-                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
+                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal - amountPaid)}</Text>
                       </HStack>
                     </Box>
                   </VStack>
