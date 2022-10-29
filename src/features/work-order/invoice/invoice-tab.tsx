@@ -24,7 +24,7 @@ import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
+import { TransactionType, TransactionStatusValues as TSV } from 'types/transaction.type' // TransactionTypeValues
 import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import { STATUS, STATUS_CODE, STATUS as WOstatus } from 'features/common/status'
