@@ -32,7 +32,7 @@ const InfoStructureCard: React.FC<{ amount; isLoading: boolean } & CenterProps> 
 export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId }) => {
   const { t } = useTranslation()
 
-  const { isLoading, finalSOWAmount, accountPayable, projectTotalCost, revenue, profits, profitMargin } =
+  const { isLoading, finalSOWAmount, accountPayable, projectTotalCost, profits, profitMargin } = // revenue
     useGetProjectFinancialOverview(projectId)
 
   return (
@@ -48,7 +48,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         isLoading={isLoading}
         title={t('projects.projectAmount.projectCost')}
       />
-      <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} />
+      {/* <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} /> */}
       <InfoStructureCard amount={profits} isLoading={isLoading} title={t('projects.projectAmount.profits')} />
       <InfoStructureCard
         amount={profitMargin}
