@@ -117,13 +117,14 @@ export const InvoiceTab = ({
       )
       setItems(transactionItems)
 
-      // Draw Transaction Type = 30
+      // Change Orders And Original Amount
       const changeOrders = transactionItems.filter(
         it =>
           ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
             it.transactionType,
           ),
       )
+      // Draws and maetrials
       const drawTransactions = transactionItems?.filter(it =>
         [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
       )
@@ -133,18 +134,20 @@ export const InvoiceTab = ({
         setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
       }
 
-      // Sum of all Draws (Material (+Refund), Draws and WOPaid)
+      // WO Paid Transaction
+      const paidTransactionAmount =
+        transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
+
+      let sumOfDrawTransaction = 0
+
       if (drawTransactions && drawTransactions.length > 0) {
-        const sumOfDrawTransaction = drawTransactions
-          ?.map(t => parseFloat(t.changeOrderAmount))
-          ?.reduce((sum, x) => sum + x)
-
-        const paidTransactionAmount =
-          transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
-        const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
-
-        setAmountPaid(amountPaid)
+        sumOfDrawTransaction = drawTransactions?.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x)
       }
+
+      // Sum of all Draws (Material (+Refund), Draws and WOPaid)
+      const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
+
+      setAmountPaid(amountPaid)
     }
   }, [transactions])
 
