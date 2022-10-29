@@ -116,38 +116,39 @@ export const InvoiceTab = ({
         co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
       )
       setItems(transactionItems)
+      setSubTotal(workOrder.subTotal)
+      setAmountPaid(workOrder.totalAmountPaid)
 
       // Change Orders And Original Amount
-      const changeOrders = transactionItems.filter(
-        it =>
-          ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
-            it.transactionType,
-          ),
-      )
-      // Draws and maetrials
-      const drawTransactions = transactionItems?.filter(it =>
-        [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
-      )
+      // const changeOrders = transactionItems.filter(
+      //   it =>
+      //     ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
+      //       it.transactionType,
+      //     ),
+      // )
+      // // Draws and maetrials
+      // const drawTransactions = transactionItems?.filter(it =>
+      //   [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
+      // )
 
       // Sum of all approved (:not paid) transactions (Change Orders & Original Amount)
-      if (changeOrders && changeOrders.length > 0) {
-        setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
-      }
+      // if (changeOrders && changeOrders.length > 0) {
+      //   setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
+      // }
 
       // WO Paid Transaction
-      const paidTransactionAmount =
-        transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
+      // const paidTransactionAmount =
+      //   transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
 
-      let sumOfDrawTransaction = 0
+      // let sumOfDrawTransaction = 0
 
-      if (drawTransactions && drawTransactions.length > 0) {
-        sumOfDrawTransaction = drawTransactions?.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x)
-      }
+      // if (drawTransactions && drawTransactions.length > 0) {
+      //   sumOfDrawTransaction = drawTransactions?.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x)
+      // }
 
       // Sum of all Draws (Material (+Refund), Draws and WOPaid)
-      const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
-
-      setAmountPaid(amountPaid)
+      // const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
+      // setAmountPaid(amountPaid)
     }
   }, [transactions])
 
@@ -316,15 +317,15 @@ export const InvoiceTab = ({
                     <Box>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('subTotal')}:</Text>
-                        <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
+                        <Text data-testid={'subTotal'}>{currencyFormatter(workOrder.subTotal)}</Text>
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('totalAmountPaid')}:</Text>
-                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
+                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(workOrder.totalAmountPaid)}</Text>
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('balanceDue')}</Text>
-                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal - Math.abs(amountPaid))}</Text>
+                        <Text data-testid={'balanceDue'}>{currencyFormatter(workOrder.finalInvoiceAmount)}</Text>
                       </HStack>
                     </Box>
                   </VStack>
