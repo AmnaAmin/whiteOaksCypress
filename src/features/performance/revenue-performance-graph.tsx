@@ -246,7 +246,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
           <Flex>
             <Box width={'500px'} ml={5} mt={5}>
               <HStack>
-                <FormLabel width={'120px'}>Filter By Month:</FormLabel>
+                <FormLabel width={'120px'} ml={6}>Filter By Month:</FormLabel>
                 <Box width={'250px'}>
                   <ReactSelect
                     name={`monthsDropdown`}
