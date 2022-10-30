@@ -5,7 +5,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts'
 import { months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -121,6 +121,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     [barProps],
   )
 
+  console.log('ven', vendorData[0]?.bonus)
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -148,7 +149,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             }}
             tickMargin={20}
           />
-
           {hasUsers && (
             <XAxis
               dataKey={'centerMonth'}
@@ -163,7 +163,17 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               tickMargin={20}
               interval={0}
               xAxisId="users"
-            />
+            >
+              {/* {vendorData[0]?.bonus === undefined && (
+                <Label
+                  value="There is currently no data available for the month selected"
+                  offset={180}
+                  position="insideBottom"
+                  fill="#A0AEC0"
+                  fontStyle="italic"
+                />
+              )} */}
+            </XAxis>
           )}
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}
@@ -185,7 +195,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
             data-testid="tooltip-overview"
-            cursor={{ fill: '#EBF8FF' }}
+            // cursor={{ fill: 'transparent' }}
           />
 
           <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />

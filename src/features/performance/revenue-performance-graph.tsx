@@ -5,17 +5,11 @@ import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
+import _ from 'lodash'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
-import {
-  months,
-  monthsShort,
-  monthsFull,
-  getQuarterByDate,
-  getLastQuarterByDate,
-  getQuarterByMonth,
-} from 'utils/date-time-utils'
+import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
 type GraphData = {
@@ -24,7 +18,7 @@ type GraphData = {
   Revenue: any
 }[]
 
-export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
   const barColors = [
     '#F6AD55',
     '#68B8EF',
@@ -47,6 +41,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     '#F7685B',
     '#949AC2',
   ]
+
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -56,18 +51,18 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           margin={{
             top: 24,
             right: 30,
-            left: 40,
+            left: 50,
             bottom: 100,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
-            // angle={-45}
             dataKey={hasUsers ? 'username' : 'month'}
-            textAnchor="end"
             axisLine={false}
-            tickLine={false}
             tick={false}
+            tickMargin={0}
+            // -- Not sure about the requirements later so can't remove it right now -- //
+            // angle={-45}
             // interval={Math.floor(vendorData.length / 60)}
             // tick={{
             //   fill: '#4A5568',
@@ -75,14 +70,14 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             //   fontWeight: 400,
             //   fontStyle: 'normal',
             // }}
-            // tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
-            tickMargin={0}
+            // tickLine={false}
+            tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             label={{
               value: 'Field Project Manager',
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 40,
+              offset: 50,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -91,8 +86,9 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           />
           {hasUsers && (
             <XAxis
-              dataKey={'month'}
+              dataKey={['This Month', 'Last Month'].includes(monthCheck?.label) ? 'centerMonth' : 'month'}
               axisLine={false}
+              interval={['This Month', 'Last Month'].includes(monthCheck?.label) ? 0 : 5}
               tickLine={false}
               tick={{
                 fill: '#4A5568',
@@ -100,7 +96,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontWeight: 600,
                 fontStyle: 'inter',
               }}
-              tickMargin={0}
+              tickMargin={5}
               xAxisId="users"
             />
           )}
@@ -133,7 +129,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           <Tooltip
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
-            cursor={{ fill: '#EBF8FF' }}
+            cursor={{ fill: 'transparent' }}
           />
           <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
             {vendorData.map((entry, index) => (
@@ -174,13 +170,10 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 Revenue: nameMonthData[nameKey]?.revenue,
               }
             })
-            console.log('graphs', graphs)
-            let newgraphs = graphs.map((n, i) => (
-              {
+            let newgraphs = graphs.map((n, i) => ({
               ...n,
-              centerMonth: Math.floor(graphs.length / 3) === i ? n.month : undefined,
-            })
-            )
+              centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
+            }))
             return newgraphs
           }
 
@@ -277,7 +270,8 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
-                    default={5}
+                    isOptionDisabled={() => fpmOption.length >= 5}
+                    isClearable={false}
                     isMulti
                   />
                 </Box>
@@ -288,7 +282,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers monthCheck={monthOption} />
         )}
       </Box>
     </>
