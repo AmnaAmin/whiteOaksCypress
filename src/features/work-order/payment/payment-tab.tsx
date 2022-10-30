@@ -128,7 +128,7 @@ const PaymentInfoTab = props => {
             spacing={8}
             mr="30px"
             borderBottom="1px solid  #E2E8F0"
-            minH="110px"
+            minH="100px"
             alignItems={'center'}
           >
             <InformationCard

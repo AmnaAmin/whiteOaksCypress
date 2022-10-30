@@ -41,7 +41,7 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
   icons,
 }) => {
   return (
-    <Flex justifyContent="center">
+    <Flex>
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -251,8 +251,8 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'}>
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
+      <ModalBody h={'calc(100vh - 300px)'} mx="25px">
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={t('finalInvoice')}
@@ -284,9 +284,9 @@ export const InvoiceTab = ({
           />
         </Grid>
 
-        <Divider border="1px solid gray" mb={5} color="gray.200" />
+        <Divider border="1px solid gray" mb="16px" color="gray.200" w="99.8%" />
 
-        <Box h="calc(100% - 150px)" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
+        <Box h="calc(100% - 135px)" overflow="auto" border="1px solid #E2E8F0">
           <Table variant="simple" size="md">
             <Thead>
               <Tr>
