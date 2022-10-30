@@ -76,6 +76,8 @@ export const projects = {
           revenue: 'Revenue',
           profits: 'Profits',
           profitMargins: 'Profit Margins',
+          vendorPayment: 'Vendor Payment',
+          material: 'Material',
         },
         ganttChart: {
           name: 'Name',
@@ -173,6 +175,8 @@ export const projects = {
           revenue: 'Ingresos',
           profits: 'Ganancias',
           profitMargins: 'Márgenes de beneficio',
+          vendorPayment: 'Pago del proveedor',
+          material: 'Material',
         },
         ganttChart: {
           name: 'Nombre',
