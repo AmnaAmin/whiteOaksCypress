@@ -1,4 +1,4 @@
-import { format, getMonth } from 'date-fns'
+import { format } from 'date-fns'
 import sub from 'date-fns/sub'
 import { range } from 'lodash'
 import { GenericObjectType } from 'types/common.types'

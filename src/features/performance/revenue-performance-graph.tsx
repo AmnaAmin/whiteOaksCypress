@@ -5,7 +5,6 @@ import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import _ from 'lodash'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
@@ -93,7 +92,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               tick={{
                 fill: '#4A5568',
                 fontSize: '12px',
-                fontWeight: 600,
+                fontWeight: 700,
                 fontStyle: 'inter',
               }}
               tickMargin={5}

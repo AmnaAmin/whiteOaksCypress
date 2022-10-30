@@ -5,7 +5,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -164,15 +164,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               interval={0}
               xAxisId="users"
             >
-              {/* {vendorData[0]?.bonus === undefined && (
-                <Label
-                  value="There is currently no data available for the month selected"
-                  offset={180}
-                  position="insideBottom"
-                  fill="#A0AEC0"
-                  fontStyle="italic"
-                />
-              )} */}
             </XAxis>
           )}
           <YAxis
