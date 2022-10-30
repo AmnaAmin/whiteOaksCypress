@@ -121,7 +121,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     [barProps],
   )
 
-  console.log('ven', vendorData[0]?.bonus)
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
