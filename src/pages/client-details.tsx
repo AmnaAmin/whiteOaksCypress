@@ -84,7 +84,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           <TabList>
             <Tab>{t('details')}</Tab>
             <Tab>{t('market')}</Tab>
-            <Tab isDisabled={!clientDetails?.id}>{t('notes')}</Tab>
+            <Tab hidden={!clientDetails?.id}>{t('notes')}</Tab>
           </TabList>
           <TabPanels mt="20px">
             <TabPanel p="0px">

@@ -227,7 +227,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 <GridItem>
                   <FormControl isInvalid={!!errors?.contacts?.[index]?.contact}>
                     <FormLabel variant="strong-label" size="md">
-                      {t(`${CLIENTS}.contact`)}
+                      {t(`${CLIENTS}.name`)}
                     </FormLabel>
                     <Input
                       id="contact"
@@ -364,7 +364,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         )}
         <Flex alignItems="center" py="3" mt={2}>
           <Text fontSize="16px" color="gray.600" fontWeight={500} whiteSpace="nowrap" pr="10px">
-            {t(`${CLIENTS}.accPayConInfo`)}
+            {t(`${CLIENTS}.accountPayable`)}
           </Text>
           <Divider border="1px solid #E2E8F0" mt={1} />
         </Flex>
@@ -517,11 +517,12 @@ export const Details: React.FC<clientDetailProps> = props => {
           <Button
             isDisabled={!companyName || !paymentsTerms || !streetAddress || !city || !contacts}
             colorScheme="brand"
-            type="submit"
+            // type="submit"
             form="clientDetails"
             ml={2}
+            onClick = {props?.setNextTab}
           >
-            {t(`${CLIENTS}.save`)}
+            {t(`${CLIENTS}.next`)}
           </Button>
         )}
       </Flex>
