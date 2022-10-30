@@ -37,7 +37,7 @@ const ProjectScheduleDetails: React.FC<{
     <Flex className="project-details-chart" direction={'column'} gridGap={4}>
       <Gantt
         tasks={tasks}
-        headerHeight={35}
+        headerHeight={45}
         columnWidth={getColumnWidth(ViewMode.Day)}
         rowHeight={27}
         handleWidth={0}
