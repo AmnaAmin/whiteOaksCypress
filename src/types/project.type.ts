@@ -249,6 +249,7 @@ export type Market = {
 
 export type ProjectFinancialOverview = {
   changeOrderId: number
+  vendorPayment: number
   workOrderId: number | null
   projectId: number
   vendorId: number
