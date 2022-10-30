@@ -96,7 +96,6 @@ const WorkOrderDetailTab = props => {
     onSave,
     navigateToProjectDetails,
     isWorkOrderUpdating,
-    setWorkOrderUpdating,
     swoProject,
     rejectInvoiceCheck,
     projectData,
@@ -191,9 +190,6 @@ const WorkOrderDetailTab = props => {
           onSuccess: () => {
             onSave(payload)
           },
-          onError: () => {
-            setWorkOrderUpdating(false)
-          },
         },
       )
     } else {
@@ -213,7 +209,6 @@ const WorkOrderDetailTab = props => {
     const { assignments, deleted, savePayload } = lineItems
     const { assignedItems, unAssignedItems } = assignments
 
-    setWorkOrderUpdating(true)
     if (assignedItems?.length > 0 || unAssignedItems?.length > 0) {
       assignLineItems(
         [
@@ -227,9 +222,6 @@ const WorkOrderDetailTab = props => {
         {
           onSuccess: () => {
             updateWorkOrderLineItems(deleted, savePayload)
-          },
-          onError: () => {
-            setWorkOrderUpdating(false)
           },
         },
       )
@@ -403,7 +395,7 @@ const WorkOrderDetailTab = props => {
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button colorScheme="brand" type="submit">
+            <Button colorScheme="brand" type="submit" disabled={isWorkOrderUpdating}>
               {t('save')}
             </Button>
           </HStack>

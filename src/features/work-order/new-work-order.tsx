@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Progress,
   SimpleGrid,
   Text,
   useDisclosure,
@@ -122,7 +123,7 @@ export const NewWorkOrder: React.FC<{
   isOpen: boolean
   onClose: () => void
 }> = ({ projectData, isOpen, onClose }) => {
-  const { mutate: createWorkOrder, isSuccess } = useCreateWorkOrderMutation()
+  const { mutate: createWorkOrder, isSuccess, isLoading: isWorkOrderCreating } = useCreateWorkOrderMutation()
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
@@ -167,6 +168,7 @@ export const NewWorkOrder: React.FC<{
 
   return (
     <NewWorkOrderForm
+      isWorkOrderCreating={isWorkOrderCreating}
       projectData={projectData}
       isOpen={isOpen}
       onClose={onClose}
@@ -190,8 +192,20 @@ export const NewWorkOrderForm: React.FC<{
   trades: any
   vendors: any
   setVendorSkillId: (val) => void
+  isWorkOrderCreating
 }> = props => {
-  const { projectData, isOpen, onClose, isSuccess, onSubmit, swoProject, trades, vendors, setVendorSkillId } = props
+  const {
+    projectData,
+    isOpen,
+    onClose,
+    isSuccess,
+    onSubmit,
+    swoProject,
+    trades,
+    vendors,
+    setVendorSkillId,
+    isWorkOrderCreating,
+  } = props
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const { projectId } = useParams<{ projectId: string }>()
@@ -368,7 +382,7 @@ export const NewWorkOrderForm: React.FC<{
         <ModalContent h="calc(100vh - 100px)" overflow={'auto'}>
           <ModalHeader>{t('newWorkOrder')}</ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-
+          {isWorkOrderCreating && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
           <ModalBody overflow={'auto'} justifyContent="center">
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
@@ -702,7 +716,7 @@ export const NewWorkOrderForm: React.FC<{
                 type="submit"
                 data-testid="saveWorkOrder"
                 colorScheme="brand"
-                disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO)}
+                disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO) || isWorkOrderCreating}
               >
                 {t('save')}
               </Button>

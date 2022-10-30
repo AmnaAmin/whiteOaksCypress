@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Progress,
   Stack,
   Tab,
   TabList,
@@ -50,6 +51,7 @@ export const WorkOrderDetails = ({
     projectId,
   })
   const [tabIndex, setTabIndex] = useState(0)
+  const [isUpdating, setIsUpdating] = useState()
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -84,7 +86,7 @@ export const WorkOrderDetails = ({
           </ModalHeader>
 
           <ModalCloseButton m={3} _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
-
+          {isUpdating && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
           <Divider mb={3} />
           <Stack spacing={5}>
             <Tabs
@@ -103,7 +105,12 @@ export const WorkOrderDetails = ({
               </TabList>
               <TabPanels>
                 <TabPanel p={0}>
-                  <WorkOrderDetailTab projectData={projectData} workOrder={workOrder} onClose={onClose} />
+                  <WorkOrderDetailTab
+                    setIsUpdating={setIsUpdating}
+                    projectData={projectData}
+                    workOrder={workOrder}
+                    onClose={onClose}
+                  />
                 </TabPanel>
                 <TabPanel p={0}>
                   {isLoading ? (
@@ -114,6 +121,8 @@ export const WorkOrderDetails = ({
                       onProjectTabChange={onProjectTabChange}
                       workOrder={workOrder}
                       onClose={onClose}
+                      isUpdating={isUpdating}
+                      setIsUpdating={setIsUpdating}
                     />
                   )}
                 </TabPanel>
@@ -131,6 +140,7 @@ export const WorkOrderDetails = ({
                       rejectInvoiceCheck={null}
                       navigateToProjectDetails={null}
                       onSave={null}
+                      isWorkOrderUpdating={null}
                     />
                   )}
                 </TabPanel>
