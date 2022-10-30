@@ -119,7 +119,7 @@ export const ProjectDetails: React.FC = props => {
                 </Tab>
               </Flex>
 
-              <Box h="50px" w="100%" display="flex" justifyContent="end" position="relative">
+              <Box h="40px" w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 &&
                   ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
                     projectStatus as STATUS,
