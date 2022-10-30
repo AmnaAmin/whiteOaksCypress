@@ -150,11 +150,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
       return {
         vendorAccountPayable:
           final.vendorAccountPayable +
-          (curr.workOrderOriginalAmount || 0) +
-          (curr.changeOrder || 0) +
-          (curr.adjustment || 0) +
-          (curr.draw || 0) +
-          (curr.material || 0),
+          (curr.accountPayable || 0) ,
         projectTotalCost:
           final.projectTotalCost +
           (curr.workOrderOriginalAmount || 0) +
