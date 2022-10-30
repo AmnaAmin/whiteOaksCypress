@@ -166,7 +166,7 @@ export const ManageProject: React.FC<{
         </Button>
         <Button
           type="submit"
-          disabled={isProjectManagementSaveButtonDisabled}
+          disabled={isProjectManagementSaveButtonDisabled || props.isLoading}
           form="newProjectForm"
           colorScheme="brand"
           ml="3"

@@ -769,6 +769,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 data-testid="save-transaction"
                 colorScheme="brand"
                 variant="solid"
+                disabled={isFormSubmitLoading}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
