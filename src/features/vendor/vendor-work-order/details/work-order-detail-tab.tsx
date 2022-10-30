@@ -46,7 +46,7 @@ interface FormValues {
   showPrice?: boolean
 }
 
-const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
+const WorkOrderDetailTab = ({ onClose, workOrder, projectData, setIsUpdating }) => {
   const { t } = useTranslation()
   const { mutate: updateWorkOrderDetails, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({})
   const getDefaultValues = () => {
@@ -110,7 +110,18 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
 
   const onSubmit = values => {
     const updatedValues = parseAssignedItems(values)
-    updateWorkOrderDetails({ ...workOrder, ...updatedValues })
+    setIsUpdating(true)
+    updateWorkOrderDetails(
+      { ...workOrder, ...updatedValues },
+      {
+        onSuccess: () => {
+          setIsUpdating(false)
+        },
+        onError: () => {
+          setIsUpdating(false)
+        },
+      },
+    )
   }
 
   const checkKeyDown = e => {
@@ -161,7 +172,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData }) => {
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>
-            <Button type="submit" colorScheme="brand">
+            <Button type="submit" colorScheme="brand" disabled={isWorkOrderUpdating}>
               {t('save')}
             </Button>
           </HStack>

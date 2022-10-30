@@ -5,7 +5,7 @@ import { useAccountDetails } from 'api/vendor-details'
 
 export const WorkOrderNotes: React.FC<any> = props => {
   const { workOrder, onClose, setNotesCount, navigateToProjectDetails } = props
-  const { mutate: createNotes } = useNoteMutation(workOrder?.id)
+  const { mutate: createNotes, isLoading: isNotesLoading } = useNoteMutation(workOrder?.id)
   const { data: account } = useAccountDetails()
 
   const { notes = [] } = useNotes({
@@ -28,15 +28,18 @@ export const WorkOrderNotes: React.FC<any> = props => {
   }
 
   return (
-    <NotesTab
-      saveNote={saveNote}
-      notes={notes}
-      onClose={onClose}
-      navigateToProjectDetails={navigateToProjectDetails}
-      messageBoxStyle={{ resize: 'none' }}
-      contentStyle={{ padding: '25px', maxHeight: 'calc(100vh - 300px)' }}
-      pageLayoutStyle={{ overflow: 'hidden', borderRadius: '3px' }}
-    />
+    <>
+      <NotesTab
+        saveNote={saveNote}
+        isNotesLoading={isNotesLoading}
+        notes={notes}
+        onClose={onClose}
+        navigateToProjectDetails={navigateToProjectDetails}
+        messageBoxStyle={{ resize: 'none' }}
+        contentStyle={{ padding: '25px', maxHeight: 'calc(100vh - 300px)' }}
+        pageLayoutStyle={{ overflow: 'hidden', borderRadius: '3px' }}
+      />
+    </>
   )
 }
 

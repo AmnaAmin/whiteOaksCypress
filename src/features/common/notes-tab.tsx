@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Textarea, WrapItem, FormLabel, Text, HStack, FormControl } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Textarea, WrapItem, FormLabel, Text, HStack, FormControl, Progress } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -56,6 +56,7 @@ type NotesProps = {
   contentStyle?: any
   hideFooter?: boolean
   navigateToProjectDetails?: any
+  isNotesLoading?: boolean
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -71,6 +72,7 @@ export const NotesTab = (props: NotesProps) => {
     contentStyle,
     hideFooter,
     navigateToProjectDetails,
+    isNotesLoading,
   } = props
   const { handleSubmit, register, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -94,6 +96,7 @@ export const NotesTab = (props: NotesProps) => {
 
   return (
     <Box {...pageLayoutStyle}>
+      {isNotesLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
       <form onSubmit={handleSubmit(Submit)}>
         <Flex flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
           <Box {...chatListStyle} overflow="auto">
@@ -139,7 +142,7 @@ export const NotesTab = (props: NotesProps) => {
                 </Button>
               )}
               {!hideSave && (
-                <Button type="submit" colorScheme="brand" isDisabled={!message}>
+                <Button type="submit" colorScheme="brand" isDisabled={!message || !!isNotesLoading}>
                   {t('submit')}
                 </Button>
               )}

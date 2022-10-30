@@ -35,7 +35,11 @@ import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
+export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({
+  title,
+  value,
+  icons,
+}) => {
   return (
     <Flex justifyContent="center">
       <Box pr={4}>
@@ -70,6 +74,7 @@ export const InvoiceTab = ({
   navigateToProjectDetails,
   setTabIndex,
   projectData,
+  isWorkOrderUpdating,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
@@ -383,7 +388,11 @@ export const InvoiceTab = ({
         <HStack justifyContent="end">
           {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && !isVendor ? (
             <>
-              <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
+              <Button
+                disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
+                onClick={() => rejectInvoice()}
+                colorScheme="brand"
+              >
                 {t('save')}
               </Button>
               <Button onClick={onClose} colorScheme="brand" variant="outline">

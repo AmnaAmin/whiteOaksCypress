@@ -32,6 +32,7 @@ export const renderNewWorkOrder = async ({
 }: any) => {
   await render(
     <NewWorkOrderForm
+      isWorkOrderCreating={false}
       trades={trades}
       vendors={vendors}
       projectData={projectData}
