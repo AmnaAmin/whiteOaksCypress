@@ -17,7 +17,7 @@ type GraphData = {
   Revenue: any
 }[]
 
-export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
   const barColors = [
     '#F6AD55',
     '#68B8EF',
@@ -40,6 +40,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     '#F7685B',
     '#949AC2',
   ]
+
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -49,32 +50,33 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           margin={{
             top: 24,
             right: 30,
-            left: 40,
+            left: 50,
             bottom: 100,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
-            angle={-45}
             dataKey={hasUsers ? 'username' : 'month'}
-            textAnchor="end"
             axisLine={false}
-            tickLine={false}
-            interval={Math.floor(vendorData.length / 60)}
-            tick={{
-              fill: '#4A5568',
-              fontSize: '12px',
-              fontWeight: 400,
-              fontStyle: 'normal',
-            }}
+            tick={false}
+            tickMargin={0}
+            // -- Not sure about the requirements later so can't remove it right now -- //
+            // angle={-45}
+            // interval={Math.floor(vendorData.length / 60)}
+            // tick={{
+            //   fill: '#4A5568',
+            //   fontSize: '12px',
+            //   fontWeight: 400,
+            //   fontStyle: 'normal',
+            // }}
+            // tickLine={false}
             tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
-            tickMargin={20}
             label={{
               value: 'Field Project Manager',
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 100,
+              offset: 50,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -83,31 +85,33 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           />
           {hasUsers && (
             <XAxis
-              dataKey={'centerMonth'}
+              dataKey={['This Month', 'Last Month'].includes(monthCheck?.label) ? 'centerMonth' : 'month'}
               axisLine={false}
+              interval={['This Month', 'Last Month'].includes(monthCheck?.label) ? 0 : 5}
               tickLine={false}
               tick={{
                 fill: '#4A5568',
-                fontSize: '14px',
-                fontWeight: 400,
-                fontStyle: 'normal',
+                fontSize: '12px',
+                fontWeight: 700,
+                fontStyle: 'inter',
               }}
-              tickMargin={60}
+              tickMargin={5}
               xAxisId="users"
             />
           )}
           <YAxis
-            tickLine={{ stroke: '#4F4F4F' }}
             type="number"
-            tickSize={8}
+            tickSize={55}
             tickCount={10}
             domain={[0, 'auto']}
             axisLine={false}
+            tickLine={false}
             tick={{
               fontSize: '12px',
               fontStyle: 'inter',
               fontWeight: 400,
               fill: '#4A5568',
+              textAnchor: 'left',
             }}
             tickFormatter={value => `$${value}`}
             label={{
@@ -115,7 +119,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               angle: -90,
               position: 'left',
               textAnchor: 'middle',
-              offset: 15,
+              offset: 20,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -124,7 +128,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
           <Tooltip
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
-            cursor={{ fill: '#EBF8FF' }}
+            cursor={{ fill: 'transparent' }}
           />
           <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
             {vendorData.map((entry, index) => (
@@ -161,7 +165,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 username: `${firstName} ${lastName}`,
                 month: monthsShort[month],
                 userId: Number(last(userId)),
-                quater: getQuarterByMonth(monthIndex),
+                quarter: getQuarterByMonth(monthIndex),
                 Revenue: nameMonthData[nameKey]?.revenue,
               }
             })
@@ -175,7 +179,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
           return {
             month: monthsShort[month],
             centerMonth: monthsShort[month],
-            quater: getQuarterByMonth(monthIndex),
+            quarter: getQuarterByMonth(monthIndex),
             username: '',
             userId: 0,
             Bonus: 0,
@@ -229,11 +233,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     const finalGraphData = data?.filter(
       a =>
         (!selectedMonth || a.month === selectedMonth) &&
-        (!selectedQuater || a.quater === selectedQuater) &&
+        (!selectedQuater || a.quarter === selectedQuater) &&
         (!selectedFpm.length || selectedFpm.includes(a.userId)),
     )
     setGraphData(finalGraphData)
   }
+
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
@@ -241,7 +246,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
           <Flex>
             <Box width={'500px'} ml={5} mt={5}>
               <HStack>
-                <FormLabel width={'120px'}>Filter By Month:</FormLabel>
+                <FormLabel width={'120px'} ml={6}>Filter By Month:</FormLabel>
                 <Box width={'250px'}>
                   <ReactSelect
                     name={`monthsDropdown`}
@@ -264,6 +269,8 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
+                    isOptionDisabled={() => fpmOption.length >= 5}
+                    isClearable={false}
                     isMulti
                   />
                 </Box>
@@ -274,7 +281,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers />
+          <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers monthCheck={monthOption} />
         )}
       </Box>
     </>
