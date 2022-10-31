@@ -161,7 +161,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        header: `${TRANSACTION}.invoicedAmount`,
+        header: `${TRANSACTION}.balance`,
         accessorKey: 'accountPayable',
         accessorFn(row) {
           return numeral(row.accountPayable).format('$0,0.00')
