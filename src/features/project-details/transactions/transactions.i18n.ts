@@ -69,6 +69,7 @@ export const transaction = {
         materials: 'Materials',
         vendorPayment: 'Vendor Payment',
         invoicedAmount: 'Invoiced Amount',
+        balance: 'Balance',
         profit: 'Profit',
 
         // Financial Overview Table
@@ -167,6 +168,7 @@ export const transaction = {
         materials: 'Materiales',
         vendorPayment: 'Pago del proveedor',
         invoicedAmount: 'Importe facturado',
+        balance: 'Balance',
         profit: 'Lucro',
 
         // Financial Overview Table
