@@ -160,7 +160,6 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
 export const useCalculatePayDateVariance = (control: Control<FormValues, any>) => {
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const paidDate = useWatch({ name: 'paidDate', control })
-  const paymentTerm = useWatch({ name: 'paymentTerm', control })
 
-  return calculatePayDateVariance(invoicedDate, paidDate, paymentTerm?.value)
+  return calculatePayDateVariance(invoicedDate, paidDate)
 }

@@ -19,7 +19,6 @@ import { dateFormat, dateISOFormat, datePickerFormat } from 'utils/date-time-uti
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { readFileContent } from './vendor-details'
 import { useMemo, useState } from 'react'
-import addDays from 'date-fns/addDays'
 import differenceInDays from 'date-fns/differenceInDays'
 import { convertImageToDataURL } from 'components/table/util'
 import { createForm } from 'utils/lien-waiver'
@@ -425,12 +424,10 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
 
 type DateType = string | Date | null
 
-export const calculatePayDateVariance = (invoicedDate: DateType, paidDate: DateType, paymentTerm) => {
+export const calculatePayDateVariance = (invoicedDate: DateType, paidDate: DateType) => {
   if (!invoicedDate || !paidDate) return ''
 
-  const expectedPaymentDate = addDays(new Date(invoicedDate), Number(paymentTerm))
-
-  return differenceInDays(expectedPaymentDate, new Date(paidDate))?.toString() || ''
+  return differenceInDays(new Date(invoicedDate), new Date(paidDate))?.toString() || ''
 }
 
 const getLatestDocument = (documents: Document[]) => {
@@ -478,11 +475,7 @@ export const parseTransactionToFormValues = (
   const findOption = (value, options): SelectOption | null => {
     return options.find(option => option.value?.toString() === value) ?? null
   }
-  const payDateVariance = calculatePayDateVariance(
-    transaction.clientApprovedDate,
-    transaction.paidDate,
-    transaction.paymentTerm,
-  )
+  const payDateVariance = calculatePayDateVariance(transaction.clientApprovedDate, transaction.paidDate)
 
   const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
   const attachment = getLatestDocument(transaction.documents?.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
