@@ -173,7 +173,7 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     paymentTermEnabled: defaultStatus || invoicedState,
     paymentTermDateEnabled: defaultStatus,
     expectedPaymentDateEnabled: defaultStatus,
-    datePaymentProcessedEnabled: defaultStatus,
+    datePaymentProcessedEnabled: defaultStatus || invoicedState,
     datePaidEnabled: defaultStatus || invoicedState,
     invoiceAmountEnabled: defaultStatus,
     clientOriginalApprovedAmountEnabled: defaultStatus,
