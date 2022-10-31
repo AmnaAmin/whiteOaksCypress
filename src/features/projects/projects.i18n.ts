@@ -34,6 +34,7 @@ export const projects = {
           profitTotal: 'Profit Total',
           materialCost: 'Material Cost',
           draw: 'WO Draw',
+          sowDraw: 'SOW Draw',
           woNo: 'WO No',
           poNo: 'PO No',
         },
@@ -77,7 +78,7 @@ export const projects = {
           profits: 'Profits',
           profitMargins: 'Profit Margins',
           vendorPayment: 'Vendor Payment',
-          material: 'Material',
+          materials: 'Materials',
         },
         ganttChart: {
           name: 'Name',
@@ -134,6 +135,7 @@ export const projects = {
           profitTotal: 'Ganancia Total',
           materialCost: 'Costo de Material',
           draw: 'WO Dibujo',
+          sowDrow: 'SOW Sorteo',
           woNo: 'WO No',
           poNo: 'PO No',
         },
@@ -176,7 +178,7 @@ export const projects = {
           profits: 'Ganancias',
           profitMargins: 'Márgenes de beneficio',
           vendorPayment: 'Pago del proveedor',
-          material: 'Material',
+          materials: 'Materiales',
         },
         ganttChart: {
           name: 'Nombre',
