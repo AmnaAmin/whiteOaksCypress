@@ -52,6 +52,12 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         title={t('projects.projectAmount.accountPayable')}
       />
       <InfoStructureCard
+        amount={vendorPayment}
+        isLoading={isLoading}
+        title={t('projects.projectAmount.vendorPayment')}
+      />
+      <InfoStructureCard amount={material} isLoading={isLoading} title={t('projects.projectAmount.materials')} />
+      <InfoStructureCard
         amount={projectTotalCost}
         isLoading={isLoading}
         title={t('projects.projectAmount.projectCost')}
@@ -62,12 +68,6 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         amount={profitMargin}
         isLoading={isLoading}
         title={t('projects.projectAmount.profitMargins')}
-      />
-      <InfoStructureCard amount={material} isLoading={isLoading} title={t('projects.projectAmount.material')} />
-      <InfoStructureCard
-        amount={vendorPayment}
-        isLoading={isLoading}
-        title={t('projects.projectAmount.vendorPayment')}
         border="none"
       />
     </Flex>

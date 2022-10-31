@@ -204,7 +204,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'projects.projectTable.draw',
+    header: 'projects.projectTable.sowDraw',
     accessorKey: 'drawAmount',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.drawAmount).format('$0,0.00')
