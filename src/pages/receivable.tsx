@@ -1,4 +1,4 @@
-import { Box, Divider, FormLabel } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { ConfirmationBox } from 'components/Confirmation'
 import { ViewLoader } from 'components/page-level-loader'
@@ -14,6 +14,7 @@ import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
+import { BiSync } from 'react-icons/bi'
 
 export const Receivable = () => {
   const [loading, setLoading] = useState(false)
@@ -88,8 +89,8 @@ export const Receivable = () => {
 
           {/* Temp comment */}
 
-          {/* <Flex alignItems="center" py="16px">
-            <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
+          <Flex alignItems="center" py="16px">
+            {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
               {t('dueProjects')}
             </FormLabel>
             <AccountWeekDayFilters
@@ -97,7 +98,7 @@ export const Receivable = () => {
               onSelectDay={setSelectedDay}
               selectedDay={selectedDay}
               clear={clearAll}
-            />
+            /> */}
             <Spacer />
             <Button
               alignContent="right"
@@ -108,7 +109,7 @@ export const Receivable = () => {
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
             </Button>
-          </Flex> */}
+          </Flex>
           <Divider border="2px solid #E2E8F0" />
           <Box mt={2} pb="4">
             {loading && <ViewLoader />}
