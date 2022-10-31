@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from '../utils/auth-context'
-import { orderBy } from 'lodash'
 import { useState } from 'react'
 import { usePaginationQuery } from 'api'
 declare global {

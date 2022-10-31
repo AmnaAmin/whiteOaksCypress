@@ -1,10 +1,10 @@
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { useAccountPayable } from 'api/account-payable'
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
 import { RECEIVABLE_TABLE_COLUMNS } from './receivable.constants'
 import { Checkbox, Flex } from '@chakra-ui/react'
+import { useAccountPayableCard } from 'api/account-payable'
 
 const WEEK_FILTERS = [
   {
@@ -59,7 +59,7 @@ const WEEK_FILTERS = [
 ]
 
 export const usePayableWeeklyCount = () => {
-  const { data: PayableData } = useAccountPayable()
+  const { data: PayableData } = useAccountPayableCard()
 
   const getWeekDates = () => {
     const now = new Date()
