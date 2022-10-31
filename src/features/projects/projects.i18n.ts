@@ -37,6 +37,7 @@ export const projects = {
           sowDraw: 'SOW Draw',
           woNo: 'WO No',
           poNo: 'PO No',
+          invoiceDate: 'Invoice Date',
         },
         projectFilter: {
           new: 'New',
@@ -138,6 +139,7 @@ export const projects = {
           sowDrow: 'SOW Sorteo',
           woNo: 'WO No',
           poNo: 'PO No',
+          invoiceDate: 'Fecha de la factura',
         },
         projectFilter: {
           new: 'Nuevo',
