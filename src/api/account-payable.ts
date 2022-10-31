@@ -11,13 +11,12 @@ declare global {
 
 export const ACCONT_PAYABLE_API_KEY = 'account-payable'
 
-export const useAccountPayable = () => {
+export const useAccountPayableCard = () => {
   const client = useClient()
 
   return useQuery(ACCONT_PAYABLE_API_KEY, async () => {
-    const response = await client(`all-payables`, {})
-    const workOrders = orderBy(response?.data?.workOrders || [], ['expectedPaymentDate', 'asc'])
-    return { ...response?.data, workOrders }
+    const response = await client(`ap-cards`, {})
+    return { ...response?.data }
   })
 }
 

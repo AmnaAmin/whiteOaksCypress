@@ -1,15 +1,11 @@
 import { Grid } from '@chakra-ui/react'
-import { TransactionTypeValues } from 'types/transaction.type'
-import { useAccountPayable } from 'api/account-payable'
+import { useAccountPayableCard } from 'api/account-payable'
 import { currencyFormatter } from 'utils/string-formatters'
-import { useOverPaymentTransaction } from 'api/transactions'
 import { AccountFilterCard } from 'features/recievable/account-filter-card'
 
 export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
-  const { data: PayableData, isLoading } = useAccountPayable()
-  const data = PayableData?.workOrders
-  const { transactions = [] } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
-  const overPaymentCard = transactions
+  const { data, isLoading } = useAccountPayableCard()
+  const payableCards = data?.payableCards
 
   enum PayableCardTypes {
     PastDue = '1',
@@ -18,77 +14,57 @@ export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
     TenToTwentyDays = '4',
     TwentyToThirdayDays = '5',
     ThirtyToFourtyDays = '6',
+    OverPayment = '0',
   }
 
-  const pastDue = data?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
-  const sevenDays = data?.filter(a => a.durationCategory === PayableCardTypes.SevenDays)
-  const eightToTenDays = data?.filter(a => a.durationCategory === PayableCardTypes.EightToTenDays)
-  const tenToTwentyDays = data?.filter(a => a.durationCategory === PayableCardTypes.TenToTwentyDays)
-  const twentyToThirdayDays = data?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
-
-  const pastDueSum = data
-    ?.filter(a => a.durationCategory === PayableCardTypes.PastDue)
-    .map(a => a.finalInvoiceAmount)
-    .reduce((prev, current) => prev + current, 0)
-  const sevenDaysSum = data
-    ?.filter(a => a.durationCategory === PayableCardTypes.SevenDays)
-    .map(a => a.finalInvoiceAmount)
-    .reduce((sum, current) => sum + current, 0)
-  const EightToTenDaysSum = data
-    ?.filter(a => a.durationCategory === PayableCardTypes.EightToTenDays)
-    .map(a => a.finalInvoiceAmount)
-    .reduce((sum, current) => sum + current, 0)
-  const TenToTwentyDaysSum = data
-    ?.filter(a => a.durationCategory === PayableCardTypes.TenToTwentyDays)
-    .map(a => a.finalInvoiceAmount)
-    .reduce((sum, current) => sum + current, 0)
-  const TwentyToThirdayDaysSum = data
-    ?.filter(a => a.durationCategory === PayableCardTypes.TwentyToThirdayDays)
-    .map(a => a.finalInvoiceAmount)
-    .reduce((sum, current) => sum + current, 0)
-  const overpaymentSum = overPaymentCard?.map(a => a.transactionTotal)?.reduce((sum, current) => sum + current, 0)
+  const pastDue = payableCards?.find(a => a.category === PayableCardTypes.PastDue)
+  const sevenDays = payableCards?.find(a => a.category === PayableCardTypes.SevenDays)
+  const eightToTenDays = payableCards?.find(a => a.category === PayableCardTypes.EightToTenDays)
+  const tenToTwentyDays = payableCards?.find(a => a.category === PayableCardTypes.TenToTwentyDays)
+  const twentyToThirdayDays = payableCards?.find(a => a.category === PayableCardTypes.TwentyToThirdayDays)
+  const overPayment = payableCards?.find(a => a.category === PayableCardTypes.OverPayment)
 
   const payableData = [
     {
       id: '1',
       text: 'Past Due',
-      value: currencyFormatter(pastDueSum),
-      number: pastDue?.length,
+      value: currencyFormatter(pastDue?.finalAmount || 0),
+      number: pastDue?.dueCount || 0,
       iconColor: '#FEB2B2',
     },
     {
       id: '2',
       text: '7 days',
-      value: currencyFormatter(sevenDaysSum),
-      number: sevenDays?.length,
+      value: currencyFormatter(sevenDays?.finalAmount || 0),
+      number: sevenDays?.dueCount || 0,
       iconColor: '#FBD38D',
     },
     {
       id: '3',
       text: '14 Days',
-      value: currencyFormatter(EightToTenDaysSum),
-      number: eightToTenDays?.length,
+      value: currencyFormatter(eightToTenDays?.finalAmount || 0),
+      number: eightToTenDays?.dueCount || 0,
       iconColor: '#9AE6B4',
     },
     {
       id: '4',
       text: '20 Days',
-      value: currencyFormatter(TenToTwentyDaysSum),
-      number: tenToTwentyDays?.length,
+      value: currencyFormatter(tenToTwentyDays?.finalAmount || 0),
+      number: tenToTwentyDays?.dueCount || 0,
       iconColor: '#90CDF4',
     },
     {
       id: '5',
       text: '30 Days',
-      value: currencyFormatter(TwentyToThirdayDaysSum),
-      number: twentyToThirdayDays?.length,
+      value: currencyFormatter(twentyToThirdayDays?.finalAmount || 0),
+      number: twentyToThirdayDays?.dueCount || 0,
       iconColor: '#D6BCFA',
     },
     {
       id: '6',
       text: 'Overpayment',
-      value: currencyFormatter(overpaymentSum),
-      number: overPaymentCard?.length,
+      value: currencyFormatter(overPayment?.finalAmount || 0),
+      number: overPayment?.dueCount || 0,
       iconColor: '#FBB6CE',
     },
   ]
