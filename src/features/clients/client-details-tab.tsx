@@ -374,7 +374,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <GridItem>
                 <FormControl isInvalid={!!errors?.accountPayableContactInfos?.[index]?.contact}>
                   <FormLabel variant="strong-label" size="md">
-                    {t(`${CLIENTS}.contact`)}
+                    {t(`${CLIENTS}.name`)}
                   </FormLabel>
                   <Input
                     id="contact"
