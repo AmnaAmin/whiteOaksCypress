@@ -131,7 +131,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             cursor={{ fill: 'transparent' }}
           />
           <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
-            {vendorData.map((entry, index) => (
+            {vendorData?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
             ))}
           </Bar>
@@ -246,7 +246,9 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
           <Flex>
             <Box width={'500px'} ml={5} mt={5}>
               <HStack>
-                <FormLabel width={'120px'} ml={6}>Filter By Month:</FormLabel>
+                <FormLabel width={'120px'} ml={6}>
+                  Filter By Month:
+                </FormLabel>
                 <Box width={'250px'}>
                   <ReactSelect
                     name={`monthsDropdown`}

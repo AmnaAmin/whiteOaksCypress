@@ -13,7 +13,7 @@ const BADGE_COLOR = {
   [BADGE.Silver]: { color: '#2B6CB0', backgroundColor: '#EBF8FF' },
   [BADGE.Gold]: { color: '#B7791F', backgroundColor: '#FEFCBF' },
   [BADGE.Platinum]: { color: '#9F7AEA ', backgroundColor: '#FFF5F7' },
-  [BADGE.None]: { color: '#ED8936 ', backgroundColor: '#FEEBCB' },
+  [BADGE.None]: { color: 'red', backgroundColor: '#FEEBCB' },
 }
 
 const Badge = ({ value = '', id = '' }: { value?: string; id?: string }) => {
