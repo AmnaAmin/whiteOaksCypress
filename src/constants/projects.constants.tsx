@@ -133,7 +133,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'invoiceNumber',
   },
   {
-    header: 'projects.projectTable.invoice',
+    header: 'projects.projectTable.invoiceDate',
     accessorKey: 'woaInvoiceDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaInvoiceDate),
   },
@@ -204,7 +204,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'projects.projectTable.draw',
+    header: 'projects.projectTable.sowDraw',
     accessorKey: 'drawAmount',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.drawAmount).format('$0,0.00')

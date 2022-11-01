@@ -17,6 +17,7 @@ import {
   TabPanel,
   TabPanels,
   Flex,
+  Progress,
 } from '@chakra-ui/react'
 import { AddProjectInfo } from './add-project-info'
 import { AddPropertyInfo } from './add-property-info'
@@ -46,7 +47,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   const { data } = useAuth()
   const user = data?.user
 
-  const { mutate: saveProjectDetails } = useCreateProjectMutation()
+  const { mutate: saveProjectDetails, isLoading } = useCreateProjectMutation()
   const [tabIndex, setTabIndex] = useState(0)
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
   const navigate = useNavigate()
@@ -201,6 +202,17 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       <Flex>
         <Grid templateColumns="repeat(4, 1fr)" gap={'1rem 0.5rem'}>
           <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
+            {isLoading && (
+              <Progress
+                size="xs"
+                isIndeterminate
+                position="absolute"
+                top="60px"
+                left="0"
+                width="100%"
+                aria-label="loading"
+              />
+            )}
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
                 <Tabs
@@ -231,7 +243,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
                       />
                     </TabPanel>
                     <TabPanel p="0px" h="100%">
-                      <ManageProject isLoading={false} onClose={onClose} />
+                      <ManageProject isLoading={isLoading} onClose={onClose} />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

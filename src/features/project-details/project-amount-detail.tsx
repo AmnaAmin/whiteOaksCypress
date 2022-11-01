@@ -32,8 +32,16 @@ const InfoStructureCard: React.FC<{ amount; isLoading: boolean } & CenterProps> 
 export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId }) => {
   const { t } = useTranslation()
 
-  const { isLoading, finalSOWAmount, accountPayable, projectTotalCost, revenue, profits, profitMargin } =
-    useGetProjectFinancialOverview(projectId)
+  const {
+    isLoading,
+    finalSOWAmount,
+    accountPayable,
+    projectTotalCost,
+    profits,
+    profitMargin,
+    material,
+    vendorPayment,
+  } = useGetProjectFinancialOverview(projectId) // revenue
 
   return (
     <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
@@ -44,11 +52,17 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         title={t('projects.projectAmount.accountPayable')}
       />
       <InfoStructureCard
+        amount={vendorPayment}
+        isLoading={isLoading}
+        title={t('projects.projectAmount.vendorPayment')}
+      />
+      <InfoStructureCard amount={material} isLoading={isLoading} title={t('projects.projectAmount.materials')} />
+      <InfoStructureCard
         amount={projectTotalCost}
         isLoading={isLoading}
         title={t('projects.projectAmount.projectCost')}
       />
-      <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} />
+      {/* <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} /> */}
       <InfoStructureCard amount={profits} isLoading={isLoading} title={t('projects.projectAmount.profits')} />
       <InfoStructureCard
         amount={profitMargin}

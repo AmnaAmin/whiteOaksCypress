@@ -92,11 +92,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                       {...field}
                       options={bonus}
                       selected={field.value}
-                      // value={selectedBonus}
                       selectProps={{ isBorderLeft: true }}
-                      // onChange={bonus => {
-                      //   field.onChange(bonus)
-                      // }}
                       onChange={option => field.onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -176,9 +172,6 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                       options={ignorePerformance}
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
-                      // onChange={bonus => {
-                      //   field.onChange(bonus)
-                      // }}
                       onChange={option => field.onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

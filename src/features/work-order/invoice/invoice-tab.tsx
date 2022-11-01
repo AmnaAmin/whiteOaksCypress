@@ -24,7 +24,7 @@ import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TransactionType, TransactionTypeValues, TransactionStatusValues as TSV } from 'types/transaction.type'
+import { TransactionType, TransactionStatusValues as TSV } from 'types/transaction.type' // TransactionTypeValues
 import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import { STATUS, STATUS_CODE, STATUS as WOstatus } from 'features/common/status'
@@ -35,9 +35,13 @@ import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({ title, value, icons }) => {
+export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({
+  title,
+  value,
+  icons,
+}) => {
   return (
-    <Flex justifyContent="center">
+    <Flex>
       <Box pr={4}>
         <Icon as={icons} fontSize="23px" color="#718096" />
       </Box>
@@ -70,6 +74,7 @@ export const InvoiceTab = ({
   navigateToProjectDetails,
   setTabIndex,
   projectData,
+  isWorkOrderUpdating,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
@@ -116,24 +121,39 @@ export const InvoiceTab = ({
         co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
       )
       setItems(transactionItems)
+      setSubTotal(workOrder.subTotal)
+      setAmountPaid(workOrder.totalAmountPaid)
 
-      // Draw Transaction Type = 30
-      const changeOrders = transactionItems.filter(it => it.transactionType !== TransactionTypeValues.draw)
-      const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
+      // Change Orders And Original Amount
+      // const changeOrders = transactionItems.filter(
+      //   it =>
+      //     ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
+      //       it.transactionType,
+      //     ),
+      // )
+      // // Draws and maetrials
+      // const drawTransactions = transactionItems?.filter(it =>
+      //   [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
+      // )
 
-      // Sum of all approved (:not paid) transactions (Change Orders)
-      if (changeOrders && changeOrders.length > 0) {
-        setSubTotal(
-          changeOrders
-            .filter(co => co.transactionType !== TransactionTypeValues.woPaid)
-            .map(t => parseFloat(t.changeOrderAmount))
-            .reduce((sum, x) => sum + x),
-        )
-      }
-      // Sum of all Draws
-      if (drawTransactions && drawTransactions.length > 0) {
-        setAmountPaid(drawTransactions.map(t => parseFloat(t.changeOrderAmount)).reduce((sum, x) => sum + x))
-      }
+      // Sum of all approved (:not paid) transactions (Change Orders & Original Amount)
+      // if (changeOrders && changeOrders.length > 0) {
+      //   setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
+      // }
+
+      // WO Paid Transaction
+      // const paidTransactionAmount =
+      //   transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
+
+      // let sumOfDrawTransaction = 0
+
+      // if (drawTransactions && drawTransactions.length > 0) {
+      //   sumOfDrawTransaction = drawTransactions?.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x)
+      // }
+
+      // Sum of all Draws (Material (+Refund), Draws and WOPaid)
+      // const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
+      // setAmountPaid(amountPaid)
     }
   }, [transactions])
 
@@ -231,8 +251,8 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'}>
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="110px" alignItems={'center'}>
+      <ModalBody h={'calc(100vh - 300px)'} mx="25px">
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={t('finalInvoice')}
@@ -264,9 +284,9 @@ export const InvoiceTab = ({
           />
         </Grid>
 
-        <Divider border="1px solid gray" mb={5} color="gray.200" />
+        <Divider border="1px solid gray" mb="16px" color="gray.200" w="99.8%" />
 
-        <Box h="calc(100% - 150px)" overflow="auto" ml="25px" mr="25px" border="1px solid #E2E8F0">
+        <Box h="calc(100% - 135px)" overflow="auto" border="1px solid #E2E8F0">
           <Table variant="simple" size="md">
             <Thead>
               <Tr>
@@ -302,15 +322,15 @@ export const InvoiceTab = ({
                     <Box>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('subTotal')}:</Text>
-                        <Text data-testid={'subTotal'}>{currencyFormatter(subTotal)}</Text>
+                        <Text data-testid={'subTotal'}>{currencyFormatter(workOrder.subTotal)}</Text>
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('totalAmountPaid')}:</Text>
-                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(Math.abs(amountPaid))}</Text>
+                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(workOrder.totalAmountPaid)}</Text>
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
                         <Text>{t('balanceDue')}</Text>
-                        <Text data-testid={'balanceDue'}>{currencyFormatter(subTotal + amountPaid)}</Text>
+                        <Text data-testid={'balanceDue'}>{currencyFormatter(workOrder.finalInvoiceAmount)}</Text>
                       </HStack>
                     </Box>
                   </VStack>
@@ -368,7 +388,11 @@ export const InvoiceTab = ({
         <HStack justifyContent="end">
           {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && !isVendor ? (
             <>
-              <Button disabled={!rejectInvoiceCheck} onClick={() => rejectInvoice()} colorScheme="brand">
+              <Button
+                disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
+                onClick={() => rejectInvoice()}
+                colorScheme="brand"
+              >
                 {t('save')}
               </Button>
               <Button onClick={onClose} colorScheme="brand" variant="outline">

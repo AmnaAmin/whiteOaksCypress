@@ -1,10 +1,10 @@
 import { Box, Divider, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
-import { usePayableWeeklyCount } from 'features/recievable/hook'
+// import { usePayableWeeklyCount } from 'features/recievable/hook'
 import { PayableCardsFilter } from 'features/payable/payable-cards-filter'
 import { PayableTable } from 'features/payable/payable-table'
-import { AccountWeekDayFilters } from 'features/common/due-projects-weekly-filter/weekly-filter-accounts-details'
+// import { AccountWeekDayFilters } from 'features/common/due-projects-weekly-filter/weekly-filter-accounts-details'
 import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -20,16 +20,20 @@ import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { DevTool } from '@hookform/devtools'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 
+//All commented Code will be used later
 export const Payable = () => {
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
-  const [selectedDay, setSelectedDay] = useState<string>('')
+  const [
+    selectedDay,
+    // setSelectedDay
+  ] = useState<string>('')
 
-  const clearAll = () => {
-    setSelectedCard('')
-    setSelectedDay('')
-  }
+  // const clearAll = () => {
+  //   setSelectedCard('')
+  //   setSelectedDay('')
+  // }
 
   const { handleSubmit, register, reset, control } = useForm()
 
@@ -78,7 +82,7 @@ export const Payable = () => {
     setIsBatchClick(false)
   }
 
-  const { weekDayFilters } = usePayableWeeklyCount()
+  // const { weekDayFilters } = usePayableWeeklyCount({ pagination, queryStringWithPagination })
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
@@ -90,18 +94,20 @@ export const Payable = () => {
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
         </Box>
         <Flex alignItems="center" py="16px">
-          <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
+          {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
             {t('dueProjects')}
           </FormLabel>
           <Box ml="2">
             <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
-          </Box>
+          </Box> */}
+          {/*
+           This will be used in future 
           <AccountWeekDayFilters
             weekDayFilters={weekDayFilters}
             onSelectDay={setSelectedDay}
             selectedDay={selectedDay}
             clear={clearAll}
-          />
+          /> */}
           <Spacer />
           <Button alignContent="right" colorScheme="brand" type="submit" disabled={selectedCard === '6'}>
             <Icon as={BiSync} fontSize="18px" mr={2} />

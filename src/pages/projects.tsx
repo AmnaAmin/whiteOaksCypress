@@ -86,7 +86,7 @@ export const Projects = () => {
             </FormControl>
           )}
         </Flex>
-        <Box w="100%" minH="500px" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+        <Box w="100%" minH="500px">
           <ProjectsTable
             selectedCard={selectedCard as string}
             selectedDay={selectedDay as string}

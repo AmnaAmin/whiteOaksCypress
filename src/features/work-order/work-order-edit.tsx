@@ -16,6 +16,7 @@ import {
   HStack,
   Checkbox,
   Center,
+  Progress,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver/lien-waiver'
@@ -58,9 +59,11 @@ const WorkOrderDetails = ({
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
   const { transactions = [], isLoading: isTransLoading } = useTransactions(projId)
-  const [isWorkOrderUpdating, setWorkOrderUpdating] = useState(false)
 
-  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({ swoProjectId: swoProject?.id })
+  const [isUpdating, setIsUpdating] = useState(false)
+  const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
+    swoProjectId: swoProject?.id,
+  })
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -91,10 +94,6 @@ const WorkOrderDetails = ({
             setTabIndex(0)
           }
         }
-        setWorkOrderUpdating(false)
-      },
-      onError: () => {
-        setWorkOrderUpdating(false)
       },
     })
   }
@@ -124,7 +123,9 @@ const WorkOrderDetails = ({
             </ModalHeader>
 
             <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
-
+            {(isWorkOrderUpdating || isUpdating) && (
+              <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />
+            )}
             <Divider mb={3} />
             <Stack>
               <Tabs
@@ -193,7 +194,6 @@ const WorkOrderDetails = ({
                       onClose={onClose}
                       onSave={onSave}
                       isWorkOrderUpdating={isWorkOrderUpdating}
-                      setWorkOrderUpdating={setWorkOrderUpdating}
                       swoProject={swoProject}
                       rejectInvoiceCheck={rejectInvoice}
                       projectData={projectData}
@@ -205,12 +205,13 @@ const WorkOrderDetails = ({
                       <BlankSlate />
                     ) : (
                       <LienWaiverTab
+                        isUpdating={isUpdating}
+                        setIsUpdating={setIsUpdating}
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         documentsData={documentsData}
                         workOrder={workOrder}
                         onClose={onClose}
                         rejectChecked={!rejectLW}
-                        onSave={onSave}
                       />
                     )}
                   </TabPanel>
@@ -224,6 +225,7 @@ const WorkOrderDetails = ({
                         transactions={transactions}
                         documentsData={documentsData}
                         workOrder={workOrder}
+                        isWorkOrderUpdating={isWorkOrderUpdating}
                         onClose={onClose}
                         onSave={onSave}
                         setTabIndex={setTabIndex}
@@ -239,6 +241,7 @@ const WorkOrderDetails = ({
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         projectData={projectData}
                         workOrder={workOrder}
+                        isWorkOrderUpdating={isWorkOrderUpdating}
                         onClose={onClose}
                         onSave={onSave}
                         rejectInvoiceCheck={rejectInvoice}

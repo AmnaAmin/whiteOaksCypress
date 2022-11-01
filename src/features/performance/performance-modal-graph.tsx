@@ -148,7 +148,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             }}
             tickMargin={20}
           />
-
           {hasUsers && (
             <XAxis
               dataKey={'centerMonth'}
@@ -163,7 +162,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               tickMargin={20}
               interval={0}
               xAxisId="users"
-            />
+            >
+            </XAxis>
           )}
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}
@@ -185,7 +185,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
             data-testid="tooltip-overview"
-            cursor={{ fill: '#EBF8FF' }}
+            // cursor={{ fill: 'transparent' }}
           />
 
           <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />
@@ -203,7 +203,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             radius={[10, 10, 0, 0]}
             hide={barProps['Revenue'] === true}
           />
-          {/* { !hasUsers && */}
           <Legend
             onClick={selectBar}
             wrapperStyle={{
@@ -225,7 +224,6 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               )
             }}
           />
-          {/* } */}
         </BarChart>
       </ResponsiveContainer>
     </div>

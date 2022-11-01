@@ -34,8 +34,10 @@ export const projects = {
           profitTotal: 'Profit Total',
           materialCost: 'Material Cost',
           draw: 'WO Draw',
+          sowDraw: 'SOW Draw',
           woNo: 'WO No',
           poNo: 'PO No',
+          invoiceDate: 'Invoice Date',
         },
         projectFilter: {
           new: 'New',
@@ -66,8 +68,8 @@ export const projects = {
           clientEnd: 'Client End Date',
           woaStart: 'WOA Start Date',
           woaEnd: 'WOA End',
-          pcName: 'Project Coordinator Name',
-          pcContact: 'Project Coordinator Contact',
+          pcName: 'PC Name',
+          pcContact: 'PC Contact',
         },
         projectAmount: {
           finalSOW: 'Final SOW',
@@ -76,6 +78,8 @@ export const projects = {
           revenue: 'Revenue',
           profits: 'Profits',
           profitMargins: 'Profit Margins',
+          vendorPayment: 'Vendor Payment',
+          materials: 'Materials',
         },
         ganttChart: {
           name: 'Name',
@@ -132,8 +136,10 @@ export const projects = {
           profitTotal: 'Ganancia Total',
           materialCost: 'Costo de Material',
           draw: 'WO Dibujo',
+          sowDrow: 'SOW Sorteo',
           woNo: 'WO No',
           poNo: 'PO No',
+          invoiceDate: 'Fecha de la factura',
         },
         projectFilter: {
           new: 'Nuevo',
@@ -163,8 +169,8 @@ export const projects = {
           fpmContact: 'FPM contacto',
           seeMore: 'Ver más',
           seeLess: 'Ver menos',
-          pcName: 'Nombre del coordinador del proyecto',
-          pcContact: 'Coordinador del proyecto Contacto',
+          pcName: 'Nombre de la computadora',
+          pcContact: 'Contacto de PC',
         },
         projectAmount: {
           finalSOW: 'SOW Finale',
@@ -173,6 +179,8 @@ export const projects = {
           revenue: 'Ingresos',
           profits: 'Ganancias',
           profitMargins: 'Márgenes de beneficio',
+          vendorPayment: 'Pago del proveedor',
+          materials: 'Materiales',
         },
         ganttChart: {
           name: 'Nombre',

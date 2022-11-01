@@ -719,10 +719,10 @@ describe('Given update transaction', () => {
       await fireEvent.change(screen.getByTestId('paid-date'), { target: { value: '2022-07-20' } })
       expect((screen.getByTestId('paid-date') as HTMLInputElement).value).toEqual('2022-07-20')
 
-      // Check pay date variance is calculated like (invoiced date + paymentTerm) - paid date = variance
-      // (07/08/2022 + 7) - (07/20/2022) = -5
+      // Check pay date variance is calculated like (invoiced date) - paid date = variance
+      // (07/08/2022) - (07/20/2022) = -12
       const payDateVariance = screen.getByTestId('pay-date-variance') as HTMLInputElement
-      expect(payDateVariance.value).toEqual('8')
+      expect(payDateVariance.value).toEqual('-12')
 
       // Clear the description and amount field
       await userEvent.clear(descriptionField)

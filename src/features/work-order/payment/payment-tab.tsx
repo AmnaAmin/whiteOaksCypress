@@ -11,8 +11,9 @@ import {
   ModalFooter,
   ModalBody,
   HStack,
+  Icon,
 } from '@chakra-ui/react'
-import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
+import { BiCalendar, BiDollarCircle, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'api/vendor-projects'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -23,6 +24,7 @@ import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecisi
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
+import { currencyFormatter } from 'utils/string-formatters'
 
 const CalenderCard = props => {
   return (
@@ -45,6 +47,11 @@ const CalenderCard = props => {
 const InformationCard = props => {
   return (
     <Flex>
+      {props?.icon && (
+        <Box pr={4}>
+          <Icon as={props?.icon} fontSize="23px" color="#718096" />
+        </Box>
+      )}
       <Box lineHeight="20px">
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
@@ -58,7 +65,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -121,9 +128,14 @@ const PaymentInfoTab = props => {
             spacing={8}
             mr="30px"
             borderBottom="1px solid  #E2E8F0"
-            minH="110px"
+            minH="100px"
             alignItems={'center'}
           >
+            <InformationCard
+              title={t('finalInvoice')}
+              date={currencyFormatter(workOrder?.finalInvoiceAmount)}
+              icon={BiDollarCircle}
+            />
             <CalenderCard
               title={t('lwDate')}
               date={
@@ -340,7 +352,7 @@ const PaymentInfoTab = props => {
             <Button variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('close')}
             </Button>
-            <Button type="submit" colorScheme="brand">
+            <Button type="submit" colorScheme="brand" disabled={isWorkOrderUpdating}>
               {t('save')}
             </Button>
           </HStack>

@@ -40,7 +40,8 @@ import { readFileContent } from 'api/vendor-details'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { workOrder, onClose, onProjectTabChange, documentsData, navigateToProjectDetails } = props
+  const { workOrder, onClose, onProjectTabChange, documentsData, navigateToProjectDetails, isUpdating, setIsUpdating } =
+    props
   const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({})
   const [documents, setDocuments] = useState<any[]>([])
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
@@ -221,11 +222,16 @@ export const LienWaiverTab: React.FC<any> = props => {
         fileType: `LW${workOrder?.id ?? ''}_${head(first) ?? ''}${head(last) ?? ''}.${fileExtension}`,
       },
     ]
+    setIsUpdating(true)
     updateLienWaiver(
       { ...workOrder, lienWaiverAccepted: true, amountOfCheck: workOrder.finalInvoiceAmount, documents },
       {
         onSuccess: () => {
           setValue('uploadLW', null)
+          setIsUpdating(false)
+        },
+        onError: () => {
+          setIsUpdating(false)
         },
       },
     )
@@ -494,7 +500,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           </Button>
 
           {!isVendor ? (
-            <Button onClick={() => lwUpload()} colorScheme="brand" isDisabled={!document}>
+            <Button onClick={() => lwUpload()} colorScheme="brand" isDisabled={!document || isUpdating}>
               {t('save')}
             </Button>
           ) : (
@@ -503,7 +509,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 workOrder?.statusLabel?.toLocaleLowerCase(),
               ) &&
                 !(workOrder.leanWaiverSubmitted && workOrder.lienWaiverAccepted) && (
-                  <Button colorScheme="brand" type="submit" data-testid="save-lien-waiver">
+                  <Button colorScheme="brand" disabled={isUpdating} type="submit" data-testid="save-lien-waiver">
                     {t('save')}
                   </Button>
                 )}

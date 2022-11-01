@@ -21,6 +21,7 @@ export const transaction = {
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
         newExpectedCompletionDate: 'New Expected Completion',
+        expectedCompletion: 'Expected Completion',
         paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
         payDateVariance: 'Pay Date Variance',
@@ -68,6 +69,7 @@ export const transaction = {
         materials: 'Materials',
         vendorPayment: 'Vendor Payment',
         invoicedAmount: 'Invoiced Amount',
+        balance: 'Balance',
         profit: 'Profit',
 
         // Financial Overview Table
@@ -77,7 +79,7 @@ export const transaction = {
         adjustment: 'Adjustment for SOW',
         finalSOWAmount: 'Final SOW Amount',
         partialPayments: 'Partial Payments',
-        AR: 'Account Receivable',
+        AR: 'AR',
       },
     },
   },
@@ -115,6 +117,7 @@ export const transaction = {
         workOrder: 'Orden de Trabajo',
         paymentTerm: 'Plazo de Pago',
         newExpectedCompletionDate: 'Nueva Fecha de Finalización Prevista',
+        expectedCompletion: 'Expected Completion',
         paymentReceivedDate: 'Pago Recibido',
         invoicedDate: 'Fecha Facturada',
         paidDate: 'Fecha de Pago',
@@ -165,6 +168,7 @@ export const transaction = {
         materials: 'Materiales',
         vendorPayment: 'Pago del proveedor',
         invoicedAmount: 'Importe facturado',
+        balance: 'Balance',
         profit: 'Lucro',
 
         // Financial Overview Table
@@ -174,7 +178,7 @@ export const transaction = {
         adjustment: 'Ajuste por SOW',
         finalSOWAmount: 'Importe de la SOW final',
         partialPayments: 'Pagos Parciales',
-        AR: 'Cuenta por cobrar',
+        AR: 'AR',
       },
     },
   },

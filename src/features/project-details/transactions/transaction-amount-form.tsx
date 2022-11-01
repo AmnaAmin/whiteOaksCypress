@@ -312,6 +312,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           {isShowCheckboxes && (
             <GridItem id="all-checkbox">
               <Checkbox
+                variant="normal"
                 isChecked={allChecked}
                 isDisabled={isApproved}
                 isIndeterminate={isIndeterminate}
@@ -345,6 +346,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       render={({ field: { name, value, onChange } }) => {
                         return (
                           <Checkbox
+                            variant="normal"
                             py="2"
                             data-testid={`checkbox-${index}`}
                             key={name}

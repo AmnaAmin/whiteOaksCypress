@@ -71,18 +71,18 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
           return numeral(total).format('$0,0.00')
         },
       },
-      {
-        header: `${TRANSACTION}.revisedVendorWO`,
-        accessorKey: 'revisedVendorWorkOrder',
-        accessorFn(row) {
-          return numeral(row.revisedVendorWorkOrder).format('$0,0.00')
-        },
-        footer: props => {
-          const total = getTotalOfKey('revisedVendorWorkOrder', financialOveriewTableData)
+      // {
+      //   header: `${TRANSACTION}.revisedVendorWO`,
+      //   accessorKey: 'revisedVendorWorkOrder',
+      //   accessorFn(row) {
+      //     return numeral(row.revisedVendorWorkOrder).format('$0,0.00')
+      //   },
+      //   footer: props => {
+      //     const total = getTotalOfKey('revisedVendorWorkOrder', financialOveriewTableData)
 
-          return numeral(total).format('$0,0.00')
-        },
-      },
+      //     return numeral(total).format('$0,0.00')
+      //   },
+      // },
       {
         header: `${TRANSACTION}.COs`,
         accessorKey: 'changeOrder',
@@ -95,18 +95,18 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
           return numeral(total).format('$0,0.00')
         },
       },
-      {
-        header: `${TRANSACTION}.revisedCOs`,
-        accessorKey: 'revisedChangeOrder',
-        accessorFn(row) {
-          return numeral(row.revisedChangeOrder).format('$0,0.00')
-        },
-        footer: props => {
-          const total = getTotalOfKey('revisedChangeOrder', financialOveriewTableData)
+      // {
+      //   header: `${TRANSACTION}.revisedCOs`,
+      //   accessorKey: 'revisedChangeOrder',
+      //   accessorFn(row) {
+      //     return numeral(row.revisedChangeOrder).format('$0,0.00')
+      //   },
+      //   footer: props => {
+      //     const total = getTotalOfKey('revisedChangeOrder', financialOveriewTableData)
 
-          return numeral(total).format('$0,0.00')
-        },
-      },
+      //     return numeral(total).format('$0,0.00')
+      //   },
+      // },
       {
         header: `${TRANSACTION}.finalVendorWOs`,
         accessorKey: 'workOrderNewAmount',
@@ -161,7 +161,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        header: `${TRANSACTION}.invoicedAmount`,
+        header: `${TRANSACTION}.balance`,
         accessorKey: 'accountPayable',
         accessorFn(row) {
           return numeral(row.accountPayable).format('$0,0.00')

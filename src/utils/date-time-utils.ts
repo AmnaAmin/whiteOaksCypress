@@ -150,7 +150,7 @@ export const getQuarterByDate = (date = new Date()) => {
 }
 
 export const getLastQuarterByDate = (date = new Date()) => {
-  return (getQuarterByDate(date) + 2) % 3
+  return getQuarterByMonth(date.getMonth() - 3)
 }
 
 export const getQuarterByMonth = (month: number) => {

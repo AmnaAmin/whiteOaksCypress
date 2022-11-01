@@ -166,15 +166,15 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
 /* WorkOrder Payments */
 export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const defaultStatus = false
-  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
+  // not used for now -  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
-    dateInvoiceSubmittedEnabled: defaultStatus || invoicedState,
+    dateInvoiceSubmittedEnabled: defaultStatus,
     paymentTermEnabled: defaultStatus || invoicedState,
     paymentTermDateEnabled: defaultStatus,
-    expectedPaymentDateEnabled: defaultStatus || completedState || invoicedState,
-    datePaymentProcessedEnabled: defaultStatus || completedState || invoicedState,
-    datePaidEnabled: defaultStatus || completedState || invoicedState,
+    expectedPaymentDateEnabled: defaultStatus,
+    datePaymentProcessedEnabled: defaultStatus || invoicedState,
+    datePaidEnabled: defaultStatus || invoicedState,
     invoiceAmountEnabled: defaultStatus,
     clientOriginalApprovedAmountEnabled: defaultStatus,
     clientApprovedAmountEnabled: defaultStatus,

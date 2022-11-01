@@ -14,13 +14,13 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
       return numeral(row.originalAmount).format('$0,0.00')
     },
   },
-  {
-    header: `${TRANSACTION}.revisedSOWAmount`,
-    accessorKey: 'revisedSOWAmount',
-    accessorFn(row) {
-      return numeral(row.revisedSOWAmount).format('$0,0.00')
-    },
-  },
+  // {
+  //   header: `${TRANSACTION}.revisedSOWAmount`,
+  //   accessorKey: 'revisedSOWAmount',
+  //   accessorFn(row) {
+  //     return numeral(row.revisedSOWAmount).format('$0,0.00')
+  //   },
+  // },
   {
     header: `${TRANSACTION}.COs`,
     accessorKey: 'changeOrder',
@@ -28,13 +28,13 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
       return numeral(row.changeOrder).format('$0,0.00')
     },
   },
-  {
-    header: `${TRANSACTION}.revisedCOs`,
-    accessorKey: 'revisedChangeOrderAmount',
-    accessorFn(row) {
-      return numeral(row.revisedChangeOrderAmount).format('$0,0.00')
-    },
-  },
+  // {
+  //   header: `${TRANSACTION}.revisedCOs`,
+  //   accessorKey: 'revisedChangeOrderAmount',
+  //   accessorFn(row) {
+  //     return numeral(row.revisedChangeOrderAmount).format('$0,0.00')
+  //   },
+  // },
   {
     header: `${TRANSACTION}.draws`,
     accessorKey: 'draw',
@@ -42,13 +42,13 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
       return numeral(row.draw).format('$0,0.00')
     },
   },
-  {
-    header: `${TRANSACTION}.adjustment`,
-    accessorKey: 'adjustment',
-    accessorFn(row) {
-      return numeral(row.adjustment).format('$0,0.00')
-    },
-  },
+  // {
+  //   header: `${TRANSACTION}.adjustment`,
+  //   accessorKey: 'adjustment',
+  //   accessorFn(row) {
+  //     return numeral(row.adjustment).format('$0,0.00')
+  //   },
+  // },
   {
     header: `${TRANSACTION}.finalSOWAmount`,
     accessorKey: 'finalSOWAmount',

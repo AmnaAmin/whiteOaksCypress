@@ -178,7 +178,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   const summaryInfo = [
     { title: 'Subtotal', value: currencyFormatter(summary.subTotal) },
     { title: 'Amount Paid', value: currencyFormatter(Math.abs(summary.amountPaid)) },
-    { title: 'Balance Due', value: currencyFormatter(summary.subTotal + summary.amountPaid) },
+    { title: 'Balance Due', value: currencyFormatter(summary.subTotal - Math.abs(summary.amountPaid)) },
   ]
   doc.rect(14, rectY, 96, 30, 'D')
   summaryInfo.forEach(sum => {

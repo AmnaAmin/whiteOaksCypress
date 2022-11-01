@@ -82,7 +82,7 @@ const PerformanceModal = ({
         <form onSubmit={formReturn.handleSubmit(onSubmit)} id="performanceValues">
           <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
             <ModalHeader h="63px" borderBottom="1px solid #E2E8F0">
-              <Text variant="strong-label" color="gray.600">
+              <Text variant="strong-label" color="gray.600" fontSize={'16px'}>
                 {performanceDetails?.name}
               </Text>
             </ModalHeader>
