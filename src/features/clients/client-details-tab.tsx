@@ -304,7 +304,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     />
                     <FormErrorMessage>
                       {errors?.contacts?.[index]?.emailAddress && (
-                        <Text color="red.400" fontSize={'14px'} mt="2">
+                        <Text color="red.400" fontSize={'14px'} >
                           Invalid email
                         </Text>
                       )}
