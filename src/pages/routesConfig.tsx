@@ -22,8 +22,18 @@ const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
 
 export default function useRoutesConfig() {
-  const { isFPM, isProjectCoordinator, isVendor, isVendorManager, isDoc, isAccounting, isAdmin, isOperations } =
-    useUserRolesSelector()
+  const {
+    isFPM,
+    isProjectCoordinator,
+    isVendor,
+    isVendorManager,
+    isDoc,
+    isAccounting,
+    isAdmin,
+    isOperations,
+    isClientManager,
+    isConstructionOperations,
+  } = useUserRolesSelector()
   switch (true) {
     case isFPM:
       return [
@@ -42,14 +52,12 @@ export default function useRoutesConfig() {
         // { path: 'alerts', element: Alerts },
         // { path: 'pcDashboard', element: ProjectCoordinatorDashboard },
       ]
-
     case isVendorManager:
       return [
         { path: 'vendors', element: Vendors },
         { path: 'vendorSkills', element: VendorSkills },
         { path: 'markets', element: Markets },
       ]
-
     case isDoc:
       return [
         { path: 'projects', element: Projects },
@@ -67,9 +75,9 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: VendorProjectDetails },
         { path: 'vendors', element: VendorProfilePage },
       ]
-
     case isAdmin:
       return [{ path: 'userManager', element: UserManagement }]
+
     case isAccounting:
       return [
         { path: 'projects', element: Projects },
@@ -91,6 +99,15 @@ export default function useRoutesConfig() {
         { path: 'clients', element: Clients },
         { path: 'reports', element: Reports },
         { path: 'performance', element: PerformanceTab },
+      ]
+    case isClientManager:
+      return [{ path: 'clients', element: Clients }]
+
+    case isConstructionOperations:
+      return [
+        { path: 'projects', element: Projects },
+        { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'vendors', element: Vendors },
       ]
 
     default:
