@@ -21,13 +21,13 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
-import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import Select from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
 import { BiPlus } from 'react-icons/bi'
-import { paymentsTerms } from 'api/vendor-projects'
+// import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
 
@@ -60,10 +60,10 @@ export const Details: React.FC<clientDetailProps> = props => {
     control,
   } = useFormContext<ClientFormValues>()
 
-  const companyName = useWatch({ name: 'companyName', control })
-  const streetAddress = useWatch({ name: 'streetAddress', control })
-  const city = useWatch({ name: 'city', control })
-  const contacts = useWatch({ name: 'contacts.0.contact', control })
+  // const companyName = useWatch({ name: 'companyName', control })
+  // const streetAddress = useWatch({ name: 'streetAddress', control })
+  // const city = useWatch({ name: 'city', control })
+  // const contacts = useWatch({ name: 'contacts.0.contact', control })
 
   const {
     fields: contactsFields,
@@ -124,7 +124,7 @@ export const Details: React.FC<clientDetailProps> = props => {
           </GridItem>
           <VStack width={'230px'}>
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid={!!errors?.paymentCreditCard || !!errors?.paymentCheck || !!errors.paymentAch}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${CLIENTS}.paymentMethod`)}
                 </FormLabel>
@@ -141,6 +141,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     </Checkbox>
                   </HStack>
                 </Flex>
+                <FormErrorMessage>{errors?.paymentCreditCard}</FormErrorMessage>
               </FormControl>
             </GridItem>
           </VStack>
@@ -261,7 +262,10 @@ export const Details: React.FC<clientDetailProps> = props => {
                               placeholder="(___)-___-____"
                               isDisabled={isProjectCoordinator}
                             />
-                            <FormErrorMessage>{errors?.contacts?.[index]?.phoneNumber?.message}</FormErrorMessage>
+                            <FormErrorMessage>
+                              {errors?.contacts?.[index]?.phoneNumber &&
+                                errors?.contacts?.[index]?.phoneNumber?.message}
+                            </FormErrorMessage>
                           </>
                         )
                       }}
@@ -269,7 +273,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormControl>
                 </GridItem>
                 <GridItem>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors?.contacts?.[index]?.phoneNumber}>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.ext`)}
                     </FormLabel>
@@ -284,18 +288,27 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormControl>
                 </GridItem>
                 <GridItem>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors?.contacts?.[index]?.emailAddress}>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.email`)}
                     </FormLabel>
                     <Input
                       id="emailAddress"
-                      {...register(`contacts.${index}.emailAddress`)}
+                      {...register(`contacts.${index}.emailAddress`, {
+                        required: true,
+                        pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                      })}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       type="email"
                     />
-                    <FormErrorMessage>{errors?.contacts?.[index]?.emailAddress?.message}</FormErrorMessage>
+                    <FormErrorMessage>
+                      {errors?.contacts?.[index]?.emailAddress && (
+                        <Text color="red.400" fontSize={'14px'} mt="2">
+                          Invalid email
+                        </Text>
+                      )}
+                    </FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem>
@@ -309,7 +322,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                           control={control}
                           name={`contacts.${index}.market`}
                           rules={{ required: 'This is required' }}
-                          render={({ field, fieldState }) => (
+                          render={({ field }) => (
                             <>
                               <Select
                                 {...field}
@@ -319,7 +332,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                                 isDisabled={isProjectCoordinator}
                                 selectProps={{ isBorderLeft: true }}
                               />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
                             </>
                           )}
                         />
@@ -515,12 +528,11 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Button>
         {!isProjectCoordinator && (
           <Button
-            isDisabled={!companyName || !paymentsTerms || !streetAddress || !city || !contacts}
+            // isDisabled={!companyName || !paymentsTerms || !streetAddress || !city || !contacts}
             colorScheme="brand"
-            // type="submit"
             form="clientDetails"
             ml={2}
-            onClick = {props?.setNextTab}
+            onClick={props?.setNextTab}
           >
             {t(`${CLIENTS}.next`)}
           </Button>
