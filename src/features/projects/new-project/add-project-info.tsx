@@ -147,7 +147,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.woStartDate`)} size="md">
                 {t(`${NEW_PROJECT}.woStartDate`)}
               </FormLabel>
-              <Input type="date" min={woStartDateMin} {...register('woaStartDate')} />
+              <Input variant="required-field" type="date" min={woStartDateMin} {...register('woaStartDate')} />
               <FormErrorMessage>{errors.woaStartDate && errors.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
