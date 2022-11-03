@@ -5,7 +5,7 @@ export const projects = {
     translation: {
       projects: {
         projectTable: {
-          generalLabour: 'General Labour',
+          generalLabour: 'General Labor',
           projectManager: 'FPM',
           status: 'Status',
           address: 'Address',
@@ -106,7 +106,7 @@ export const projects = {
     translation: {
       projects: {
         projectTable: {
-          generalLabour: 'Trabajo General',
+          generalLabour: 'Travail Général',
           projectManager: 'FPM',
           status: 'Estado',
           address: 'Dirección',
