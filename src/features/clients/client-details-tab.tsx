@@ -17,7 +17,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
@@ -30,6 +30,7 @@ import { BiPlus } from 'react-icons/bi'
 // import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
+import { SelectCheckBox } from 'features/work-order/details/assignedItems.utils'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -41,8 +42,11 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { t } = useTranslation()
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
-
+  const [creditCardChecked, setCreditCardChecked] = useState(true)
+  const [checkChecked, setCheckChecked] = useState(true)
+  const [achChecked, setAchChecked] = useState(true)
   const { isProjectCoordinator } = useUserRolesSelector()
+  
 
   const btnStyle = {
     alignItems: 'center',
@@ -130,17 +134,52 @@ export const Details: React.FC<clientDetailProps> = props => {
                 </FormLabel>
                 <Flex dir="row" mt={3}>
                   <HStack>
-                    <Checkbox {...register(`paymentCreditCard`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                    <Checkbox
+                      {...register(`paymentCreditCard`)}
+                      colorScheme="brand"
+                      onChange={event => {
+                        const isChecked = event.target.checked
+                        setCreditCardChecked(isChecked)
+                      }}
+                      mr="2px"
+                      isInvalid = {!checkChecked && !creditCardChecked && !achChecked}
+                      isDisabled={isProjectCoordinator}
+                    >
                       {t(`${CLIENTS}.creditCard`)}
                     </Checkbox>
-                    <Checkbox {...register(`paymentCheck`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                    <Checkbox
+                      {...register(`paymentCheck`)}
+                      colorScheme="brand"
+                      onChange={event => {
+                        const checked = event.target.checked
+                        setCheckChecked(checked)
+                      }}
+                      isInvalid = {!checkChecked && !creditCardChecked && !achChecked}
+                      isDisabled={isProjectCoordinator}
+                    >
                       {t(`${CLIENTS}.check`)}
                     </Checkbox>
-                    <Checkbox {...register(`paymentAch`)} colorScheme="brand" isDisabled={isProjectCoordinator}>
+                    <Checkbox
+                      {...register(`paymentAch`)}
+                      colorScheme="brand"
+                      onChange={event => {
+                        const checked = event.target.checked
+                        setAchChecked(checked)
+                      }}
+                      isInvalid = {!checkChecked && !creditCardChecked && !achChecked}
+                      isDisabled={isProjectCoordinator}
+                    >
                       {t(`${CLIENTS}.ach`)}
                     </Checkbox>
                   </HStack>
                 </Flex>
+                {!checkChecked && !creditCardChecked && !achChecked ? (
+                  <Text color="red.400" fontSize={'14px'} mt={4}>
+                    This is required
+                  </Text>
+                ) : (
+                  ''
+                )}
                 <FormErrorMessage>{errors?.paymentCreditCard}</FormErrorMessage>
               </FormControl>
             </GridItem>
@@ -304,7 +343,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     />
                     <FormErrorMessage>
                       {errors?.contacts?.[index]?.emailAddress && (
-                        <Text color="red.400" fontSize={'14px'} >
+                        <Text color="red.400" fontSize={'14px'}>
                           Invalid email
                         </Text>
                       )}
@@ -454,6 +493,23 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="emailAddress"
+                    {...register(`accountPayableContactInfos.${index}.emailAddress`, {
+                      required: true,
+                      pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    })}
+                    style={disabledTextStyle}
+                    isDisabled={isProjectCoordinator}
+                    type="email"
+                  />
+                  <FormErrorMessage>
+                    {errors?.accountPayableContactInfos?.[index]?.emailAddress && (
+                      <Text color="red.400" fontSize={'14px'}>
+                        Invalid email
+                      </Text>
+                    )}
+                  </FormErrorMessage>
+                  {/* <Input
+                    id="emailAddress"
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
@@ -461,7 +517,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   />
                   <FormErrorMessage>
                     {errors?.accountPayableContactInfos?.[index]?.emailAddress?.message}
-                  </FormErrorMessage>
+                  </FormErrorMessage> */}
                 </FormControl>
               </GridItem>
               <GridItem>

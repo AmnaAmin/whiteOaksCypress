@@ -119,6 +119,10 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
 export const clientDefault = ({ markets }) => {
   const defaultValues = {
     markets,
+    paymentTerm: {value: 20 , label: 20},
+    paymentCreditCard : true,
+    paymentCheck: true,
+    paymentAch: true,
     contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
     accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
@@ -217,6 +221,10 @@ export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
     isClientDetailsTabErrors:
       !!errors.companyName ||
       !!errors.paymentTerm ||
+      !!errors.paymentMethod ||
+      !!errors.paymentCreditCard ||
+      !!errors.paymentCheck ||
+      !!errors.paymentAch ||
       !!errors.streetAddress ||
       !!errors.state ||
       !!errors.city ||
