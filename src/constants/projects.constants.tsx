@@ -195,7 +195,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'projects.projectTable.vendorPayment', // Not getting this from backend at the moment
+    header: 'projects.projectTable.percentagePaid', // Not getting this from backend at the moment
     accessorKey: 'vendorPaymentPercentage',
     accessorFn(cellInfo: any) {
       return isDefined(cellInfo.vendorPaymentPercentage)

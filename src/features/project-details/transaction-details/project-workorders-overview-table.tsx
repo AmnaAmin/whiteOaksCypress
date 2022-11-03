@@ -144,10 +144,12 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         },
       },
       {
-        header: `${TRANSACTION}.vendorPayment`,
+        header: `${TRANSACTION}.percentagePaid`,
         accessorKey: 'vendorPaymentPercentage',
         accessorFn(row) {
-          return isDefined(row.vendorPaymentPercentage) ? numeral(percentageFormatter(row.value)).format('0.00%') : ''
+          return isDefined(row.vendorPaymentPercentage)
+            ? numeral(percentageFormatter(row.vendorPaymentPercentage)).format('0.00%')
+            : ''
         },
         footer: props => {
           const vendorPaymentPercentage =

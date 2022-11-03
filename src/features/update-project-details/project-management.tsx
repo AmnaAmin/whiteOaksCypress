@@ -11,11 +11,13 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { STATUS } from 'features/common/status'
+import React, { useEffect } from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { SelectOption } from 'types/transaction.type'
+import { datePickerFormat } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 
@@ -25,7 +27,7 @@ type ProjectManagerProps = {
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
   const dateToday = new Date().toISOString().split('T')[0]
-  const { isFPM } = useUserRolesSelector()
+  const { isProjectCoordinator, isDoc, isOperations, isAccounting } = useUserRolesSelector()
   const { t } = useTranslation()
 
   const {
@@ -34,8 +36,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     register,
     watch,
     clearErrors,
+    setValue,
   } = useFormContext<ProjectDetailsFormValues>()
   const woaStartDate = watch('woaStartDate')
+
+  const watchStatus = useWatch({ name: 'status', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
@@ -55,10 +60,19 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
 
+  useEffect(() => {
+    if (watchStatus?.label === STATUS.Active.toUpperCase()) {
+      setValue('woaStartDate', datePickerFormat(new Date()))
+    }
+    if (watchStatus?.label === STATUS.New.toUpperCase()) {
+      setValue('woaStartDate', 'mm/dd/yyyy')
+    }
+  }, [watchStatus?.label])
+
   return (
     <Box>
       <Stack>
-        {isWOAStartDateRequired && !woaStartDate && isFPM && (
+        {isWOAStartDateRequired && !woaStartDate && !isProjectCoordinator && !isOperations && !isDoc && !isAccounting && (
           <Alert status="error" mb={5} w="98%">
             <AlertIcon />
             {t('woaStartDateMessage')}

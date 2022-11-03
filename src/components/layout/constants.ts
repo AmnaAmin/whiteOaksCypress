@@ -257,6 +257,34 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiLineChart,
       color: '#68D391',
     },
+    // {
+    //   pathTo: '/userManager',
+    //   title: 'User Mgmt',
+    //   Icon: BiUserPlus,
+    //   color: '#ECC94B',
+    // },
+  ],
+  [UserTypes.clientManager]: [
+    {
+      pathTo: '/clients',
+      title: 'Clients',
+      Icon: BiGroup,
+      color: '#0BC5EA',
+    },
+  ],
+  [UserTypes.constructionOperations]: [
+    {
+      pathTo: '/projects',
+      title: 'Projects',
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+    {
+      pathTo: '/vendors',
+      title: 'Vendors',
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
   ],
 }
 
