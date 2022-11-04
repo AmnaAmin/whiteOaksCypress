@@ -17,7 +17,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
@@ -26,11 +26,11 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import Select from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
+import { useWatch } from 'react-hook-form'
 import { BiPlus } from 'react-icons/bi'
 // import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
-import { SelectCheckBox } from 'features/work-order/details/assignedItems.utils'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -46,7 +46,6 @@ export const Details: React.FC<clientDetailProps> = props => {
   const [checkChecked, setCheckChecked] = useState(true)
   const [achChecked, setAchChecked] = useState(true)
   const { isProjectCoordinator } = useUserRolesSelector()
-  
 
   const btnStyle = {
     alignItems: 'center',
@@ -62,12 +61,23 @@ export const Details: React.FC<clientDetailProps> = props => {
     register,
     formState: { errors },
     control,
+    clearErrors,
   } = useFormContext<ClientFormValues>()
 
   // const companyName = useWatch({ name: 'companyName', control })
   // const streetAddress = useWatch({ name: 'streetAddress', control })
   // const city = useWatch({ name: 'city', control })
   // const contacts = useWatch({ name: 'contacts.0.contact', control })
+
+  const [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch] = useWatch({
+    control,
+    name: ['paymentCreditCard', 'paymentCheck', 'paymentAch'],
+  })
+  useEffect(() => {
+    if (watchPaymentCreditCard || !watchPaymentCheck || !watchPaymentAch) {
+      clearErrors(['paymentCreditCard', 'paymentCheck', 'paymentAch'])
+    }
+  }, [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch])
 
   const {
     fields: contactsFields,
@@ -134,53 +144,84 @@ export const Details: React.FC<clientDetailProps> = props => {
                 </FormLabel>
                 <Flex dir="row" mt={3}>
                   <HStack>
-                    <Checkbox
-                      {...register(`paymentCreditCard`)}
-                      colorScheme="brand"
-                      onChange={event => {
-                        const isChecked = event.target.checked
-                        setCreditCardChecked(isChecked)
+                    <Controller
+                      control={control}
+                      name="paymentCreditCard"
+                      rules={{
+                        required: !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch,
                       }}
-                      mr="2px"
-                      isInvalid = {!checkChecked && !creditCardChecked && !achChecked}
-                      isDisabled={isProjectCoordinator}
-                    >
-                      {t(`${CLIENTS}.creditCard`)}
-                    </Checkbox>
-                    <Checkbox
-                      {...register(`paymentCheck`)}
-                      colorScheme="brand"
-                      onChange={event => {
-                        const checked = event.target.checked
-                        setCheckChecked(checked)
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              setCreditCardChecked(isChecked)
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isProjectCoordinator}
+                          >
+                            {t(`${CLIENTS}.creditCard`)}
+                          </Checkbox>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="paymentCheck"
+                      rules={{
+                        required: !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch,
                       }}
-                      isInvalid = {!checkChecked && !creditCardChecked && !achChecked}
-                      isDisabled={isProjectCoordinator}
-                    >
-                      {t(`${CLIENTS}.check`)}
-                    </Checkbox>
-                    <Checkbox
-                      {...register(`paymentAch`)}
-                      colorScheme="brand"
-                      onChange={event => {
-                        const checked = event.target.checked
-                        setAchChecked(checked)
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              setCreditCardChecked(isChecked)
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isProjectCoordinator}
+                          >
+                            {t(`${CLIENTS}.check`)}
+                          </Checkbox>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="paymentAch"
+                      rules={{
+                        required: !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch,
                       }}
-                      isInvalid = {!checkChecked && !creditCardChecked && !achChecked}
-                      isDisabled={isProjectCoordinator}
-                    >
-                      {t(`${CLIENTS}.ach`)}
-                    </Checkbox>
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              setCreditCardChecked(isChecked)
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isProjectCoordinator}
+                          >
+                            {t(`${CLIENTS}.ach`)}
+                          </Checkbox>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )}
+                    />
                   </HStack>
                 </Flex>
-                {!checkChecked && !creditCardChecked && !achChecked ? (
-                  <Text color="red.400" fontSize={'14px'} mt={4}>
-                    This is required
-                  </Text>
-                ) : (
-                  ''
-                )}
-                <FormErrorMessage>{errors?.paymentCreditCard}</FormErrorMessage>
+                <FormErrorMessage>{errors?.paymentCreditCard?.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
           </VStack>
