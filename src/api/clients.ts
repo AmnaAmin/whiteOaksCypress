@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { reset } from 'numeral'
-import { Control, useWatch } from 'react-hook-form'
+import { Control, FieldErrors, useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
@@ -119,6 +119,10 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
 export const clientDefault = ({ markets }) => {
   const defaultValues = {
     markets,
+    paymentTerm: {value: 20 , label: 20},
+    paymentCreditCard : true,
+    paymentCheck: true,
+    paymentAch: true,
     contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
     accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
@@ -210,4 +214,26 @@ export const useClientDetailsSaveButtonDisabled = (control: Control<ClientFormVa
     !formValues?.city ||
     !formValues?.contact
   )
+}
+
+export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
+  return {
+    isClientDetailsTabErrors:
+      !!errors.companyName ||
+      !!errors.paymentTerm ||
+      !!errors.paymentMethod ||
+      !!errors.paymentCreditCard ||
+      !!errors.paymentCheck ||
+      !!errors.paymentAch ||
+      !!errors.streetAddress ||
+      !!errors.state ||
+      !!errors.city ||
+      !!errors?.contacts?.[0]?.contact ||
+      !!errors?.contacts?.[0]?.market ||
+      !!errors?.contacts?.[0]?.emailAddress ||
+      !!errors?.accountPayableContactInfos?.[0]?.contact ||
+      !!errors?.accountPayableContactInfos?.[0]?.emailAddress ||
+      !!errors?.accountPayableContactInfos?.[0]?.phoneNumber ||
+      !!errors?.accountPayableContactInfos?.[0]?.comments,
+  }
 }
