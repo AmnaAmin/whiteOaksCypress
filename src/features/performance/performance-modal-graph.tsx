@@ -1,12 +1,12 @@
 import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
-import { Month, MonthOption } from 'api/performance'
+import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { format } from 'date-fns'
+import { format, subMonths } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { months, monthsShort } from 'utils/date-time-utils'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts'
+import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
 type GraphData = {
@@ -21,9 +21,10 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   const [graphData, setGraphData] = useState<GraphData>()
   const currentMonth = format(new Date(), 'LLL', { locale: enUS })
   const vendors = [chartData?.chart]
+
   const vendorData = useMemo(
     () =>
-      months.map(key => {
+      months.map((key, monthIndex) => {
         const monthExistsInChart = chartData !== undefined && Object.keys(vendors[0])?.find(months => months === key)
         let nameMonthData
         if (monthExistsInChart) {
@@ -34,6 +35,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
           Bonus: nameMonthData?.bonus,
           Profit: nameMonthData?.profit,
           Revenue: nameMonthData?.revenue,
+          quarter: getQuarterByMonth(monthIndex),
         }
       }),
     [chartData],
@@ -49,12 +51,25 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
     filterGraphData(monthOption)
   }
   const filterGraphData = monthOption => {
-    let selectedMonth
+    let selectedMonth, selectedQuater
     if (monthOption?.label === 'This Month') {
       selectedMonth = format(new Date(), 'LLL', { locale: enUS })
     }
 
-    const finalGraphData = vendorData?.filter(a => !selectedMonth || a.month === selectedMonth)
+    if (monthOption?.label === 'Last Month') {
+      selectedMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
+    }
+    if (monthOption?.label === 'Current Quarter') {
+      selectedQuater = getQuarterByDate()
+    }
+    if (monthOption?.label === 'Past Quarter') {
+      selectedQuater = getLastQuarterByDate()
+    }
+
+    // const finalGraphData = vendorData?.filter(a => !selectedMonth || a.month === selectedMonth)
+    const finalGraphData = vendorData?.filter(
+      a => (!selectedMonth || a.month === selectedMonth) && (!selectedQuater || a.quarter === selectedQuater),
+    )
     setGraphData(finalGraphData)
   }
 
@@ -72,7 +87,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
               <Box width={'150px'}>
                 <ReactSelect
                   name={`monthsDropdown`}
-                  options={Month}
+                  options={MonthOption}
                   onChange={getMonthValue}
                   defaultValue={monthOption}
                   selected={setMonthOption}
@@ -147,7 +162,20 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               fontStyle: 'normal',
             }}
             tickMargin={20}
-          />
+          >
+            {vendorData &&
+              vendorData[0]?.Revenue === undefined &&
+              vendorData[0]?.Profit === undefined &&
+              vendorData[0]?.Bonus === undefined && (
+                <Label
+                  value="There is currently no data available for the month selected"
+                  offset={180}
+                  position="insideBottom"
+                  fill="#A0AEC0"
+                  fontStyle="italic"
+                />
+              )}
+          </XAxis>
           {hasUsers && (
             <XAxis
               dataKey={'centerMonth'}
@@ -162,8 +190,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
               tickMargin={20}
               interval={0}
               xAxisId="users"
-            >
-            </XAxis>
+            ></XAxis>
           )}
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}

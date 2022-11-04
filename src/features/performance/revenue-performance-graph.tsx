@@ -7,7 +7,7 @@ import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label } from 'recharts'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -84,7 +84,20 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               fontSize: '12px',
               fontColor: 'gray/600',
             }}
-          />
+          >
+            {vendorData &&
+              vendorData[0]?.Revenue === 0 &&
+              vendorData[0]?.Profit === 0 &&
+              vendorData[0]?.Bonus === 0 && (
+                <Label
+                  value="There is currently no data available for the month selected"
+                  offset={180}
+                  position="insideBottom"
+                  fill="#A0AEC0"
+                  fontStyle="italic"
+                />
+              )}
+          </XAxis>
           {hasUsers && (
             <XAxis
               dataKey={['This Month', 'Last Month'].includes(monthCheck?.label) ? 'centerMonth' : 'month'}
@@ -97,7 +110,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
                 fontWeight: 700,
                 fontStyle: 'inter',
               }}
-              tickMargin={['This Month', 'Last Month'].includes(monthCheck?.label) ? 45 : 5}
+              tickMargin={['This Month', 'Last Month'].includes(monthCheck?.label) ? 50 : 5}
               xAxisId="users"
             />
           )}
@@ -157,8 +170,9 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     () =>
       flatten(
         months.map((month, monthIndex) => {
-          const monthExistsInChart = Object.keys(chartData)?.find(months => months === month)
+          const monthExistsInChart = chartData !== undefined && Object.keys(chartData)?.find(months => months === month)
           let nameMonthData
+
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
             const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
@@ -199,6 +213,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }, [data])
 
   const onFpmOptionChange = options => {
+    console.log(options?.length)
     setFpmOption(options)
 
     filterGraphData(options, monthOption)
@@ -243,12 +258,13 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
 
   return (
     <>
-      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
-        <Box mb={15} mt={5} m={2}>
+      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'} width={'100%'}>
+        <Box mb={15} mt={5} m={2}
+        >
           <Flex>
-            <Box width={'500px'} ml={5} mt={5}>
+            <Box width={'45%'} ml={5} mt={5}>
               <HStack>
-                <FormLabel width={'120px'} ml={6}>
+                <FormLabel width={'120px'} ml={6} variant="strong-label" size="md">
                   Filter By Month:
                 </FormLabel>
                 <Box width={'250px'}>
@@ -258,13 +274,21 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                     onChange={getMonthValue}
                     defaultValue={monthOption}
                     selected={setMonthOption}
+                    variant="light-label"
+                    size="md"
                   />
                 </Box>
               </HStack>
             </Box>
-            <Box width={'650px'} ml={25} mt={5}>
+            <Box
+              width={'55%'} //width={'650px'}
+              // ml={15}
+              mt={5}
+            >
               <HStack>
-                <FormLabel width={'70px'}>Filter By:</FormLabel>
+                <FormLabel width={'60px'} variant="strong-label" size="md">
+                  Filter By:
+                </FormLabel>
                 <Box width={'530px'}>
                   <ReactSelect
                     name={`fpmDropdown`}
@@ -275,6 +299,9 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                     defaultValue={fpmOption}
                     isOptionDisabled={() => fpmOption.length >= 5}
                     isClearable={false}
+                    filterOptions = {fpmOption.length === 1}
+                    variant="light-label"
+                    size="md"
                     isMulti
                   />
                 </Box>
