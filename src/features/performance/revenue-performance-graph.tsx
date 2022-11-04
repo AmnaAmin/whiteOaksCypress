@@ -51,32 +51,34 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             top: 24,
             right: 30,
             left: 50,
-            bottom: 100,
+            bottom: 75,
           }}
         >
           <CartesianGrid stroke="#EFF3F9" />
           <XAxis
             dataKey={hasUsers ? 'username' : 'month'}
             axisLine={false}
-            tick={false}
-            tickMargin={0}
-            // -- Not sure about the requirements later so can't remove it right now -- //
-            // angle={-45}
-            // interval={Math.floor(vendorData.length / 60)}
-            // tick={{
-            //   fill: '#4A5568',
-            //   fontSize: '12px',
-            //   fontWeight: 400,
-            //   fontStyle: 'normal',
-            // }}
-            // tickLine={false}
+            tickMargin={30}
+            angle={-45}
+            interval={Math.floor(vendorData.length / 60)}
+            tick={
+              ['This Month', 'Last Month'].includes(monthCheck?.label)
+                ? {
+                    fill: '#4A5568',
+                    fontSize: '12px',
+                    fontWeight: 400,
+                    fontStyle: 'normal',
+                  }
+                : false
+            }
+            tickLine={false}
             tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             label={{
               value: 'Field Project Manager',
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 50,
+              offset: ['This Month', 'Last Month'].includes(monthCheck?.label) ? 80 : 50,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -95,7 +97,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
                 fontWeight: 700,
                 fontStyle: 'inter',
               }}
-              tickMargin={5}
+              tickMargin={['This Month', 'Last Month'].includes(monthCheck?.label) ? 45 : 5}
               xAxisId="users"
             />
           )}
