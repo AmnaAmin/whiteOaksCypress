@@ -17,7 +17,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
@@ -42,9 +42,6 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { t } = useTranslation()
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
-  const [creditCardChecked, setCreditCardChecked] = useState(true)
-  const [checkChecked, setCheckChecked] = useState(true)
-  const [achChecked, setAchChecked] = useState(true)
   const { isProjectCoordinator } = useUserRolesSelector()
 
   const btnStyle = {
@@ -157,7 +154,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                             isChecked={field.value}
                             onChange={event => {
                               const isChecked = event.target.checked
-                              setCreditCardChecked(isChecked)
                               field.onChange(isChecked)
                             }}
                             mr="2px"
@@ -182,7 +178,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                             isChecked={field.value}
                             onChange={event => {
                               const isChecked = event.target.checked
-                              setCreditCardChecked(isChecked)
                               field.onChange(isChecked)
                             }}
                             mr="2px"
@@ -207,7 +202,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                             isChecked={field.value}
                             onChange={event => {
                               const isChecked = event.target.checked
-                              setCreditCardChecked(isChecked)
                               field.onChange(isChecked)
                             }}
                             mr="2px"
