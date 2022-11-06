@@ -88,9 +88,9 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isZipDisabled: isAllTimeDisabled,
     isMarketDisabled: isAllTimeDisabled,
     isGateCodeDisabled:
-      isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+      isFPM || isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
     isLockBoxCodeDisabled:
-      isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+      isFPM || isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
   }
 }
 
