@@ -15,7 +15,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-  const { data: workOrders, refetch, isFetching } = useProjectWorkOrders(projectId)
+  const { data: workOrders, isFetching } = useProjectWorkOrders(projectId)
   const { refetch: refetchGantt } = useGanttChart(projectId)
 
   // Do not show WO which have been cancelled
@@ -42,7 +42,6 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           workOrder={selectedWorkOrder as ProjectWorkOrderType}
           onClose={() => {
             setSelectedWorkOrder(undefined)
-            refetch()
             refetchGantt()
             onCloseDisclosure()
           }}

@@ -97,7 +97,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
   useEffect(() => {
     const allVerified = lineItems?.length > 0 && lineItems.every(l => l.isCompleted && l.isVerified)
-    if (allVerified) {
+    if (allVerified && !workOrder?.workOrderDateCompleted) {
       setValue('workOrderDateCompleted', datePickerFormat(new Date()))
     }
   }, [lineItems])
