@@ -27,7 +27,7 @@ type ProjectManagerProps = {
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
   const dateToday = new Date().toISOString().split('T')[0]
-  const { isProjectCoordinator, isDoc, isOperations, isAccounting } = useUserRolesSelector()
+  const { isProjectCoordinator, isDoc, isOperations, isAccounting, isFPM } = useUserRolesSelector()
   const { t } = useTranslation()
 
   const {
@@ -72,12 +72,18 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   return (
     <Box>
       <Stack>
-        {isWOAStartDateRequired && !woaStartDate && !isProjectCoordinator && !isOperations && !isDoc && !isAccounting && (
-          <Alert status="error" mb={5} w="98%">
-            <AlertIcon />
-            {t('woaStartDateMessage')}
-          </Alert>
-        )}
+        {isWOAStartDateRequired &&
+          !woaStartDate &&
+          !isProjectCoordinator &&
+          !isOperations &&
+          !isDoc &&
+          isFPM &&
+          !isAccounting && (
+            <Alert status="error" mb={5} w="98%">
+              <AlertIcon />
+              {t('woaStartDateMessage')}
+            </Alert>
+          )}
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>
