@@ -213,7 +213,17 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }, [data])
 
   const onFpmOptionChange = options => {
-    console.log(options?.length)
+    if (!options || !options.length) {
+      if (options?.length === 1) {
+        setFpmOption([])
+        return
+      }
+      return
+    }
+
+    if (options.length > 5) {
+      return
+    }
     setFpmOption(options)
 
     filterGraphData(options, monthOption)
@@ -259,8 +269,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'} width={'100%'}>
-        <Box mb={15} mt={5} m={2}
-        >
+        <Box mb={15} mt={5} m={2}>
           <Flex>
             <Box width={'45%'} ml={5} mt={5}>
               <HStack>
@@ -280,11 +289,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 </Box>
               </HStack>
             </Box>
-            <Box
-              width={'55%'} //width={'650px'}
-              // ml={15}
-              mt={5}
-            >
+            <Box width={'55%'} mt={5}>
               <HStack>
                 <FormLabel width={'60px'} variant="strong-label" size="md">
                   Filter By:
@@ -293,13 +298,15 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                   <ReactSelect
                     name={`fpmDropdown`}
                     value={fpmOption}
+                    // styles={styles}
                     isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
                     isOptionDisabled={() => fpmOption.length >= 5}
                     isClearable={false}
-                    filterOptions = {fpmOption.length === 1}
+                    multiValueRemove={fpmOption.length === 1 ? { display: 'none' } : ''}
+                    filterOptions={fpmOption.length === 1}
                     variant="light-label"
                     size="md"
                     isMulti

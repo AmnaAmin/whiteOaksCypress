@@ -196,8 +196,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
             tickSize={8}
-            tickCount={7}
-            domain={[0]}
+            tickCount={8}
+            domain={[0, 'auto']}
             axisLine={false}
             tick={{
               fontSize: '12px',
