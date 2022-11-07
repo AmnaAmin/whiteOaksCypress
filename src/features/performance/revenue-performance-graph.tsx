@@ -41,6 +41,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
     '#949AC2',
   ]
 
+  const emptyGraph = vendorData[0]?.Revenue === 0 && vendorData[0]?.Profit === 0 && vendorData[0]?.Bonus === 0
+
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -85,18 +87,16 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               fontColor: 'gray/600',
             }}
           >
-            {vendorData &&
-              vendorData[0]?.Revenue === 0 &&
-              vendorData[0]?.Profit === 0 &&
-              vendorData[0]?.Bonus === 0 && (
-                <Label
-                  value="There is currently no data available for the month selected"
-                  offset={180}
-                  position="insideBottom"
-                  fill="#A0AEC0"
-                  fontStyle="italic"
-                />
-              )}
+            {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}
+            {emptyGraph && (
+              <Label
+                value="There is currently no data available for the month selected"
+                offset={180}
+                position="insideBottom"
+                fill="#A0AEC0"
+                fontStyle="italic"
+              />
+            )}
           </XAxis>
           {hasUsers && (
             <XAxis
@@ -243,15 +243,20 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }
   const filterGraphData = (selectedFpm, monthOption) => {
     let selectedMonth, selectedQuater
+
+    // Checks if this month is selected, then returns month in the short form like Jan, Feb
     if (monthOption?.label === 'This Month') {
       selectedMonth = format(new Date(), 'LLL', { locale: enUS })
     }
+    // Checks if last month is selected, then returns month in the short form like Jan, Feb
     if (monthOption?.label === 'Last Month') {
       selectedMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
     }
+    // Checks if current quarter is selected, then returns months for that quarter
     if (monthOption?.label === 'Current Quarter') {
       selectedQuater = getQuarterByDate()
     }
+    // Checks if past quarter is selected, then returns months for that quarter
     if (monthOption?.label === 'Past Quarter') {
       selectedQuater = getLastQuarterByDate()
     }

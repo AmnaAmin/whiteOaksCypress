@@ -52,21 +52,23 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   }
   const filterGraphData = monthOption => {
     let selectedMonth, selectedQuater
+    // Checks if this month is selected, then returns month in the short form like Jan, Feb
     if (monthOption?.label === 'This Month') {
       selectedMonth = format(new Date(), 'LLL', { locale: enUS })
     }
-
+    // Checks if last month is selected, then returns month in the short form like Jan, Feb
     if (monthOption?.label === 'Last Month') {
       selectedMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
     }
+    // Checks if current quarter is selected, then returns months for that quarter
     if (monthOption?.label === 'Current Quarter') {
       selectedQuater = getQuarterByDate()
     }
+    // Checks if past quarter is selected, then returns months for that quarter
     if (monthOption?.label === 'Past Quarter') {
       selectedQuater = getLastQuarterByDate()
     }
 
-    // const finalGraphData = vendorData?.filter(a => !selectedMonth || a.month === selectedMonth)
     const finalGraphData = vendorData?.filter(
       a => (!selectedMonth || a.month === selectedMonth) && (!selectedQuater || a.quarter === selectedQuater),
     )
@@ -136,6 +138,9 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     [barProps],
   )
 
+  const emptyGraph =
+    vendorData[0]?.Revenue === undefined && vendorData[0]?.Profit === undefined && vendorData[0]?.Bonus === undefined
+
   return (
     <div>
       <ResponsiveContainer width={width} height={height}>
@@ -163,18 +168,16 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             }}
             tickMargin={20}
           >
-            {vendorData &&
-              vendorData[0]?.Revenue === undefined &&
-              vendorData[0]?.Profit === undefined &&
-              vendorData[0]?.Bonus === undefined && (
-                <Label
-                  value="There is currently no data available for the month selected"
-                  offset={180}
-                  position="insideBottom"
-                  fill="#A0AEC0"
-                  fontStyle="italic"
-                />
-              )}
+            {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}
+            {emptyGraph && (
+              <Label
+                value="There is currently no data available for the month selected"
+                offset={180}
+                position="insideBottom"
+                fill="#A0AEC0"
+                fontStyle="italic"
+              />
+            )}
           </XAxis>
           {hasUsers && (
             <XAxis
