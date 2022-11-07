@@ -1,5 +1,4 @@
 import { ColumnFiltersState, PaginationState } from '@tanstack/react-table'
-import { useWeekDayProjectsDue } from 'api/projects'
 import { useState, useMemo, useEffect } from 'react'
 import { getAPIFilterQueryString } from 'utils/filters-query-utils'
 
