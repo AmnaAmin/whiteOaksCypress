@@ -32,7 +32,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePCProject } from 'api/pc-projects'
 import { useDocuments } from 'api/vendor-projects'
 import { useTransactions } from 'api/transactions'
-import { useUpdateWorkOrderMutation } from 'api/work-order'
+import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
 import { useFetchProjectId } from './details/assignedItems.utils'
 
 const WorkOrderDetails = ({
@@ -64,6 +64,12 @@ const WorkOrderDetails = ({
   const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
     swoProjectId: swoProject?.id,
   })
+  const {
+    workOrderAssignedItems,
+    isFetching: isFetchingLineItems,
+    isLoading: isLoadingLineItems,
+  } = useFetchWorkOrder({ workOrderId: workOrder?.id })
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -198,6 +204,9 @@ const WorkOrderDetails = ({
                       rejectInvoiceCheck={rejectInvoice}
                       projectData={projectData}
                       documentsData={documentsData}
+                      workOrderAssignedItems={workOrderAssignedItems}
+                      isFetchingLineItems={isFetchingLineItems}
+                      isLoadingLineItems={isLoadingLineItems}
                     />
                   </TabPanel>
                   <TabPanel p={0}>
