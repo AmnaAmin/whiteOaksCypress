@@ -105,6 +105,7 @@ export const Receivable = () => {
               // onClick={onNewProjectModalOpen}
               colorScheme="brand"
               type="submit"
+              minW={'140px'}
             >
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}

@@ -66,7 +66,7 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
 
   return (
     <>
-      <Stack direction="row" justify="left" alignItems="center">
+      <Stack flexWrap={'wrap'} direction="row" justify="left" alignItems="center">
         {/* Hiding All and Clear Filter for now */}
 
         {/* <Button

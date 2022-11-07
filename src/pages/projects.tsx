@@ -50,25 +50,25 @@ export const Projects = () => {
         <Box w="100%">
           <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} selectedFPM={selectedFPM} />
         </Box>
-        <Flex w="100%" py="16px">
-          <Flex alignItems="center" pl={2}>
-            <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
-              {t('projects.dueProjects')}
-            </FormLabel>
-            <Box ml="2">
-              <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
-            </Box>
+        <Flex w="100%" py="16px" alignItems={'center'}>
+          {/* <Flex alignItems="center" pl={2}> */}
+          <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
+            {t('projects.dueProjects')}
+          </FormLabel>
+          <Box ml="2">
+            <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
+          </Box>
 
-            <WeekDayFilters
-              selectedFPM={selectedFPM}
-              clear={clearAll}
-              onSelectDay={setSelectedDay}
-              selectedDay={selectedDay}
-            />
-          </Flex>
+          <WeekDayFilters
+            selectedFPM={selectedFPM}
+            clear={clearAll}
+            onSelectDay={setSelectedDay}
+            selectedDay={selectedDay}
+          />
+          {/* </Flex> */}
           <Spacer />
           {!isFPM && (
-            <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px">
+            <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
               <Icon as={BiBookAdd} fontSize="18px" mr={2} />
               {t('New Project')}
             </Button>
