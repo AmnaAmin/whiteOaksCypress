@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="14px" color="gray.500" width={'100px'}>
+      <Box fontSize="14px" color="gray.500">
         <Tooltip label={title} color="black" placement="top">
           <FormLabel variant="strong-label" size="md" noOfLines={1}>
             {title}
