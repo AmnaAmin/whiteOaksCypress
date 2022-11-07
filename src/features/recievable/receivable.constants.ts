@@ -68,3 +68,25 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'invoiceNumber',
   },
 ]
+
+export const RECEIVABLE_TABLE_QUERY_KEYS = {
+  projectId: 'projectId.equals',
+  woaInvoiceDate: 'woaInvoiceDate.equals',
+  status: 'status.contains',
+  clientName: 'clientName.contains',
+  paymentTerm: 'paymentTerm.equals',
+  expectedPaymentDate: 'expectedPaymentDate.equals',
+  amount: 'amount.equals',
+  finalInvoice: 'finalInvoice.equals',
+  marketName: 'marketName.contains',
+  workOrderStartDate: 'workOrderStartDate.equals',
+  workOrderDateCompleted: 'workOrderDateCompleted.equals',
+  workOrderIssueDate: 'workOrderIssueDate.equals',
+  propertyAddress: 'propertyAddress.contains',
+  durationCategory: 'durationCategory.equals',
+  invoiceNumber: 'invoiceNumber.contains',
+  poNumber: 'poNumber.contains',
+  woNumber: 'woNumber.contains',
+  type: 'type.contains',
+  isReceivable: 'isReceivable.equals',
+}
