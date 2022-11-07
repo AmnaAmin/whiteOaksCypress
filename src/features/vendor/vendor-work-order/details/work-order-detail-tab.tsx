@@ -9,6 +9,8 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Center,
+  Spinner,
 } from '@chakra-ui/react'
 import { BiCalendar } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -46,14 +48,23 @@ interface FormValues {
   showPrice?: boolean
 }
 
-const WorkOrderDetailTab = ({ onClose, workOrder, projectData, setIsUpdating }) => {
+const WorkOrderDetailTab = ({
+  onClose,
+  workOrder,
+  projectData,
+  setIsUpdating,
+  isUpdating,
+  workOrderAssignedItems,
+  isFetchingLineItems,
+  isLoadingLineItems,
+}) => {
   const { t } = useTranslation()
-  const { mutate: updateWorkOrderDetails, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({})
+  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
   const getDefaultValues = () => {
     return {
       assignedItems:
-        workOrder?.assignedItems?.length > 0
-          ? workOrder?.assignedItems?.map(e => {
+        workOrderAssignedItems?.length > 0
+          ? workOrderAssignedItems?.map(e => {
               return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
             })
           : [],
@@ -73,10 +84,10 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData, setIsUpdating }) 
   })
 
   useEffect(() => {
-    if (workOrder?.id) {
+    if (workOrder?.id && workOrderAssignedItems) {
       reset(getDefaultValues())
     }
-  }, [workOrder, reset])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const downloadPdf = () => {
     let doc = new jsPDF()
@@ -155,15 +166,23 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData, setIsUpdating }) 
             <CalenderCard title={t('completedByVendor')} value={dateFormat(workOrder.workOrderDateCompleted)} />
           </SimpleGrid>
           <Box mx="32px" mt={8}>
-            {values?.assignedItems && values?.assignedItems?.length > 0 && (
-              <AssignedItems
-                isLoadingLineItems={isWorkOrderUpdating}
-                formControl={formReturn as UseFormReturn<any>}
-                assignedItemsArray={assignedItemsArray}
-                isAssignmentAllowed={false}
-                downloadPdf={downloadPdf}
-                workOrder={workOrder}
-              />
+            {isLoadingLineItems ? (
+              <Center>
+                <Spinner size="lg" />
+              </Center>
+            ) : (
+              <>
+                {values?.assignedItems && values?.assignedItems?.length > 0 && (
+                  <AssignedItems
+                    isLoadingLineItems={isFetchingLineItems}
+                    formControl={formReturn as UseFormReturn<any>}
+                    assignedItemsArray={assignedItemsArray}
+                    isAssignmentAllowed={false}
+                    downloadPdf={downloadPdf}
+                    workOrder={workOrder}
+                  />
+                )}
+              </>
             )}
           </Box>
         </ModalBody>
@@ -172,7 +191,7 @@ const WorkOrderDetailTab = ({ onClose, workOrder, projectData, setIsUpdating }) 
             <Button variant="outline" colorScheme="brand" onClick={onClose}>
               {t('cancel')}
             </Button>
-            <Button type="submit" colorScheme="brand" disabled={isWorkOrderUpdating}>
+            <Button type="submit" colorScheme="brand" disabled={isUpdating || isFetchingLineItems}>
               {t('save')}
             </Button>
           </HStack>

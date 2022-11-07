@@ -2,7 +2,7 @@ import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { BiDownArrowCircle } from 'react-icons/bi'
 import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
-import { downloadFile, downloadFileOnly } from 'utils/file-utils'
+import { downloadFileOnly } from 'utils/file-utils'
 import { dateFormat } from 'utils/date-time-utils'
 
 export const DOCUMENT_TYPES = {
@@ -13,7 +13,7 @@ const withPreviewCell = cellInfo => {
   const s3Url = cellInfo.row.original?.s3Url
   const value = cellInfo.getValue()
 
-  return <Text onClick={() => downloadFile(s3Url)}>{value}</Text>
+  return <Text onClick={() => window.open(s3Url, '_blank')}>{value}</Text>
 }
 
 export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [

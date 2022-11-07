@@ -4,6 +4,7 @@ import {
   AlertIcon,
   Box,
   Button,
+  Center,
   Divider,
   Flex,
   FormControl,
@@ -13,6 +14,7 @@ import {
   ModalBody,
   ModalFooter,
   SimpleGrid,
+  Spinner,
   Stack,
   Text,
   useDisclosure,
@@ -100,6 +102,9 @@ const WorkOrderDetailTab = props => {
     rejectInvoiceCheck,
     projectData,
     documentsData,
+    workOrderAssignedItems,
+    isFetchingLineItems,
+    isLoadingLineItems,
   } = props
 
   const formReturn = useForm<FormValues>()
@@ -118,6 +123,7 @@ const WorkOrderDetailTab = props => {
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { t } = useTranslation()
+  const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
 
   const {
     skillName,
@@ -234,17 +240,17 @@ const WorkOrderDetailTab = props => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
     /* Finding out items that will be unassigned*/
-    const unAssignedItems = getUnAssignedItems(formValues, workOrder)
-    const removedItems = getRemovedItems(formValues, workOrder)
+    const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
+    const removedItems = getRemovedItems(formValues, workOrderAssignedItems)
     const payload = parseWODetailValuesToPayload(values)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
   useEffect(() => {
     if (workOrder?.id) {
-      reset(defaultValuesWODetails(workOrder))
+      reset(defaultValuesWODetails(workOrder, workOrderAssignedItems))
     }
-  }, [workOrder, reset])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -351,18 +357,24 @@ const WorkOrderDetailTab = props => {
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
-              <AssignedItems
-                isLoadingLineItems={isWorkOrderUpdating}
-                onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-                unassignedItems={unassignedItems}
-                setUnAssignedItems={setUnAssignedItems}
-                formControl={formReturn as UseFormReturn<any>}
-                assignedItemsArray={assignedItemsArray}
-                isAssignmentAllowed={isAssignmentAllowed}
-                swoProject={swoProject}
-                downloadPdf={downloadPdf}
-                workOrder={workOrder}
-              />
+              {isLoadingLineItems ? (
+                <Center>
+                  <Spinner size={'lg'} />
+                </Center>
+              ) : (
+                <AssignedItems
+                  isLoadingLineItems={isFetchingLineItems}
+                  onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+                  unassignedItems={unassignedItems}
+                  setUnAssignedItems={setUnAssignedItems}
+                  formControl={formReturn as UseFormReturn<any>}
+                  assignedItemsArray={assignedItemsArray}
+                  isAssignmentAllowed={isAssignmentAllowed}
+                  swoProject={swoProject}
+                  downloadPdf={downloadPdf}
+                  workOrder={workOrder}
+                />
+              )}
             </Box>
           )}
         </ModalBody>
@@ -395,7 +407,7 @@ const WorkOrderDetailTab = props => {
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button colorScheme="brand" type="submit" disabled={isWorkOrderUpdating}>
+            <Button colorScheme="brand" type="submit" disabled={disabledSave}>
               {t('save')}
             </Button>
           </HStack>
