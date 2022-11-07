@@ -53,7 +53,7 @@ import {
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
@@ -68,6 +68,7 @@ import {
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
+import { format } from 'date-fns'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -129,6 +130,7 @@ export type TransactionFormProps = {
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
   const { t } = useTranslation()
+  const { isAdmin } = useUserRolesSelector()
 
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -247,6 +249,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     [workOrdersKeyValues, setValue],
   )
 
+  const futureDateDisable =  !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+  
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
@@ -610,6 +614,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         type="date"
                         variant="required-field"
                         isDisabled={isApproved}
+                        max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
                       <FormErrorMessage>{errors?.paymentRecievedDate?.message}</FormErrorMessage>
