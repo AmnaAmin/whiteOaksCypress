@@ -1,4 +1,4 @@
-import { Box, Center } from '@chakra-ui/react'
+import { Center, Grid } from '@chakra-ui/react'
 import SummaryIconFirst, {
   SummaryIconFifth,
   SummaryIconForth,
@@ -113,7 +113,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selec
 
   return (
     <>
-      <Box justifyContent="space-between" w="100%" display="grid" gridTemplateColumns="repeat(5, 1fr)" gridGap="15px">
+      <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(230px,1fr))">
         {cards.map(card => {
           return (
             <ProjectCard
@@ -125,7 +125,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selec
             />
           )
         })}
-      </Box>
+      </Grid>
     </>
   )
 }
