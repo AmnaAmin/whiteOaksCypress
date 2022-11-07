@@ -525,6 +525,11 @@ export const NewWorkOrderForm: React.FC<{
                                     onPercentageChange(e.floatValue)
                                   }
                                 }}
+                                onFocus={e => {
+                                  if (removePercentageFormat(e.target.value) === '0') {
+                                    field.onChange('')
+                                  }
+                                }}
                                 onBlur={e => {
                                   resetLineItemsProfit(removePercentageFormat(e.target.value))
                                 }}
