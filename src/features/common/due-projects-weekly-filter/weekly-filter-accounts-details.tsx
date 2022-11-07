@@ -22,7 +22,7 @@ export const AccountWeekDayFilters: React.FC<WeekDayFiltersProps> = ({
 
   return (
     <>
-      <Flex>
+      <Flex flexWrap="wrap">
         {/* <Button
           bg={selectedDay === 'All' ? '#4E87F8' : 'none'}
           color={selectedDay === 'All' ? 'white' : 'black'}
