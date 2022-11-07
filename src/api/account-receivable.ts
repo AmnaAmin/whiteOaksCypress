@@ -47,11 +47,17 @@ const GET_ALL_RECEIVABLE_QUERY_KEY = 'get_all_receivable_api_key'
 export const useGetAllAccountReceivables = (queryString: string) => {
   const client = useClient()
 
-  return useQuery([GET_ALL_RECEIVABLE_QUERY_KEY, queryString], async () => {
-    const response = await client(`account-receivables?${queryString}`, {})
+  return useQuery(
+    [GET_ALL_RECEIVABLE_QUERY_KEY, queryString],
+    async () => {
+      const response = await client(`account-receivables?${queryString}`, {})
 
-    return response?.data?.arList
-  })
+      return response?.data?.arList
+    },
+    {
+      enabled: false,
+    },
+  )
 }
 
 export const useBatchProcessingMutation = () => {
@@ -64,7 +70,7 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, loading, paginatedQueryString, withoutPaginatedQueryString) => {
+export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
   const [isAPIEnabled, setAPIEnabled] = useState(false)
   const client = useClient()
   const queryClient = useQueryClient()
@@ -82,7 +88,6 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString, without
           setLoading(false)
           setAPIEnabled(false)
           queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
-          queryClient.invalidateQueries([GET_ALL_RECEIVABLE_QUERY_KEY, withoutPaginatedQueryString])
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },

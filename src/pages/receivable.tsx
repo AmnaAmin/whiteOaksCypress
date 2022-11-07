@@ -39,7 +39,7 @@ export const Receivable = () => {
   })
 
   const { mutate: batchCall } = useBatchProcessingMutation()
-  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination, queryStringWithoutPagination)
+  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   // const { weekDayFilters } = useWeeklyCount()
 
