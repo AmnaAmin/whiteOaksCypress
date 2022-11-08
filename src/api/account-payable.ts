@@ -88,7 +88,6 @@ export const useCheckBatch = (setLoading, loading, queryString) => {
           setAPIEnabled(false)
 
           queryClient.invalidateQueries([ACCONT_PAYABLE_API_KEY, apiQueryString])
-          queryClient.invalidateQueries([GET_ALL_WORKORDERS_QUERY_KEY, apiQueryString])
           queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         }
       },

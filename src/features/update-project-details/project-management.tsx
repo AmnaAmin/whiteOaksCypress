@@ -1,15 +1,4 @@
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  Stack,
-} from '@chakra-ui/react'
+import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
 import React, { useEffect } from 'react'
@@ -18,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat } from 'utils/date-time-utils'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 
 type ProjectManagerProps = {
@@ -27,18 +15,15 @@ type ProjectManagerProps = {
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
   const dateToday = new Date().toISOString().split('T')[0]
-  const { isProjectCoordinator, isDoc, isOperations, isAccounting, isFPM } = useUserRolesSelector()
   const { t } = useTranslation()
 
   const {
     formState: { errors },
     control,
     register,
-    watch,
     clearErrors,
     setValue,
   } = useFormContext<ProjectDetailsFormValues>()
-  const woaStartDate = watch('woaStartDate')
 
   const watchStatus = useWatch({ name: 'status', control })
 
@@ -72,18 +57,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   return (
     <Box>
       <Stack>
-        {isWOAStartDateRequired &&
-          !woaStartDate &&
-          !isProjectCoordinator &&
-          !isOperations &&
-          !isDoc &&
-          isFPM &&
-          !isAccounting && (
-            <Alert status="error" mb={5} w="98%">
-              <AlertIcon />
-              {t('woaStartDateMessage')}
-            </Alert>
-          )}
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>

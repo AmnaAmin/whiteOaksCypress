@@ -182,7 +182,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         name="chooseFile"
                         rules={{
                           validate: file => {
-                            return file?.name?.length > 30 ? 'File name length should be less than 30' : true
+                            return file?.name?.length > 255 ? 'File name length should be less than 255' : true
                           },
                           required: 'Document file is required',
                         }}

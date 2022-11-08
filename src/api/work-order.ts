@@ -32,10 +32,12 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
       })
     },
     {
-      onSuccess() {
+      onSuccess(res) {
+        const updatedWorkOrderId = res?.data?.id
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
+        queryClient.invalidateQueries(['WorkOrderDetails', updatedWorkOrderId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
@@ -112,6 +114,24 @@ export const useCreateWorkOrderMutation = () => {
       },
     },
   )
+}
+
+export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undefined }) => {
+  const client = useClient()
+
+  const { data: workOrder, ...rest } = useQuery(
+    ['WorkOrderDetails', workOrderId],
+    async () => {
+      const response = await client(`work-orders/${workOrderId} `, {})
+      return response?.data
+    },
+    { enabled: !!workOrderId },
+  )
+
+  return {
+    workOrderAssignedItems: workOrder?.assignedItems,
+    ...rest,
+  }
 }
 
 export const useNoteMutation = projectId => {
@@ -251,15 +271,15 @@ export const parseWODetailValuesToPayload = formValues => {
   }
 }
 
-export const defaultValuesWODetails = workOrder => {
+export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
   const defaultValues = {
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: workOrder.showPricing ?? false,
     assignedItems:
-      workOrder?.assignedItems?.length > 0
-        ? workOrder?.assignedItems?.map(e => {
+      woAssignedItems?.length > 0
+        ? woAssignedItems?.map(e => {
             return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],

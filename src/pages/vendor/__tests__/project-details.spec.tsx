@@ -67,18 +67,21 @@ describe('Porject Details: Document tab test cases', () => {
     await userEvent.click(screen.getByText(/Cancel/i))
   })
 
-  test('Upload document with longer name than 30 character validation', async () => {
+  test('Upload document with longer name than 255 character validation', async () => {
     await renderDocumentUploadModal()
 
     // Fill document form
     await selectOption(screen.getByTestId('document-type'), 'Drawings')
 
-    chooseFileByLabel(screen.getByTestId('choose-document'), 'dummy-file-with-long-name-more-than-30-characters.png')
+    chooseFileByLabel(
+      screen.getByTestId('choose-document'),
+      'dummy-file-with-long-name-more-than-255-characters-Lorem-ipsum-dolor-sit-amet-consectetur adipisicing-elito-Commodi-aeos-perspiciatisa-Id-fugit-labore-magni-quae-sit-laudantium-atque maiores-aperiam-quaerat-maxime-quisquam-ipsam-temporaa-sint-necessitatab.png',
+    )
 
     await act(async () => {
       await userEvent.click(screen.getByText(/Save/i))
     })
 
-    expect(screen.getByText(/File name length should be less than 30/i)).toBeInTheDocument()
+    expect(screen.getByText(/File name length should be less than 255/i)).toBeInTheDocument()
   })
 })

@@ -73,18 +73,18 @@ export type SWOProject = {
 
 export type selectedCell = { id: string; value: string }
 
-export const getRemovedItems = (formValues, workOrder) => {
+export const getRemovedItems = (formValues, workOrderAssignedItems) => {
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
-  const deletedItems = [...workOrder?.assignedItems?.filter(items => !formAssignedItemsIds?.includes(items.id))]
+  const deletedItems = [...workOrderAssignedItems?.filter(items => !formAssignedItemsIds?.includes(items.id))]
   return deletedItems
 }
 
-export const getUnAssignedItems = (formValues, workOrder) => {
+export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
   const unAssignedItems = [
-    ...workOrder?.assignedItems?.filter(
+    ...workOrderAssignedItems?.filter(
       items => !!items.smartLineItemId && !formAssignedItemsIds?.includes(items.smartLineItemId),
     ),
   ]
