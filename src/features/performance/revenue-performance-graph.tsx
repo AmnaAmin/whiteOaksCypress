@@ -41,7 +41,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
     '#949AC2',
   ]
 
-  const emptyGraph = vendorData[0]?.Revenue === 0 && vendorData[0]?.Profit === 0 && vendorData[0]?.Bonus === 0
+  let { Revenue, Profit, Bonus } = vendorData[0]
+  const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === 0)
 
   return (
     <div>
@@ -213,15 +214,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   }, [data])
 
   const onFpmOptionChange = options => {
-    if (!options || !options.length) {
-      if (options?.length === 1) {
-        setFpmOption([])
-        return
-      }
+    if (options?.length < 1) {
       return
     }
+    setFpmOption([])
 
-    if (options.length > 5) {
+    if (options?.length > 5) {
       return
     }
     setFpmOption(options)
@@ -303,7 +301,6 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                   <ReactSelect
                     name={`fpmDropdown`}
                     value={fpmOption}
-                    // styles={styles}
                     isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
