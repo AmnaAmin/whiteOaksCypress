@@ -97,7 +97,7 @@ const CreateATicket = () => {
             </FormLabel>
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
               <HStack spacing={3}>
-                <FormControl isInvalid={!!errors.issueType} w="215px">
+                <FormControl isInvalid={!!errors.issueType} w="215px" data-testid="issue-Type">
                   <FormLabel htmlFor="issueType" variant="strong-label" color="gray.600">
                     {t('issueType')}{' '}
                   </FormLabel>
@@ -119,7 +119,7 @@ const CreateATicket = () => {
                   />
                 </FormControl>
 
-                <FormControl isInvalid={!!errors.severity} w="215px">
+                <FormControl isInvalid={!!errors.severity} w="215px" data-testid="severity">
                   <FormLabel htmlFor="severity" variant="strong-label" color="gray.600">
                     {t('severity')}
                   </FormLabel>
@@ -154,6 +154,7 @@ const CreateATicket = () => {
                   {...register('title', {
                     required: 'This is required field',
                   })}
+                  data-testid="title-input"
                 />
                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
               </FormControl>
@@ -173,6 +174,7 @@ const CreateATicket = () => {
                 {...register('description', {
                   required: 'This is required field',
                 })}
+                data-testid="descriptions"
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>
@@ -191,6 +193,7 @@ const CreateATicket = () => {
                   <VStack alignItems="baseline">
                     <Box>
                       <ChooseFileField
+                        testId="file-Upload"
                         name={field.name}
                         value={field.value ? field.value?.name : t('chooseFile')}
                         isError={!!fieldState.error?.message}
