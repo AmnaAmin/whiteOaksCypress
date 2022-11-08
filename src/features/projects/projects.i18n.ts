@@ -5,7 +5,7 @@ export const projects = {
     translation: {
       projects: {
         projectTable: {
-          generalLabour: 'General Labour',
+          generalLabour: 'General Labor',
           projectManager: 'FPM',
           status: 'Status',
           address: 'Address',
@@ -28,7 +28,7 @@ export const projects = {
           region: 'Region',
           partialPayment: 'Partial Payment',
           expectedPayment: 'Expected Payment',
-          vendorPayment: 'Vendor Payment',
+          percentagePaid: '% Paid',
           profitMargins: 'Profit Margins',
           profitPercentage: 'Profit %',
           profitTotal: 'Profit Total',
@@ -106,7 +106,7 @@ export const projects = {
     translation: {
       projects: {
         projectTable: {
-          generalLabour: 'Trabajo General',
+          generalLabour: 'Travail Général',
           projectManager: 'FPM',
           status: 'Estado',
           address: 'Dirección',
@@ -130,7 +130,7 @@ export const projects = {
           region: 'Región',
           partialPayment: 'Pago Parcial',
           expectedPayment: 'Pago Esperado',
-          vendorPayment: 'Pago del Proveedor',
+          percentagePaid: '% Payé',
           profitMargins: 'Margen de Ganancia',
           profitPercentage: '% de Ganancia',
           profitTotal: 'Ganancia Total',

@@ -308,7 +308,7 @@ export const InvoiceTab = ({
                     <Td width={400}>{item.name}</Td>
                     <Td width={400}>{item.transactionTypeLabel}</Td>
                     <Td pr={12} textAlign={'end'}>
-                      <Text>{currencyFormatter(item.changeOrderAmount)}</Text>
+                      <Text>{currencyFormatter(item.transactionTotal)}</Text>
                     </Td>
                   </Tr>
                 )

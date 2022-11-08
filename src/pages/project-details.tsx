@@ -1,4 +1,4 @@
-import { Text, useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
+import { useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
@@ -124,13 +124,8 @@ export const ProjectDetails: React.FC = props => {
                   ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
                     projectStatus as STATUS,
                   ) && (
-                    <Button onClick={onOpen} color="white" size="md" bg="#4e87f8" _hover={{ bg: '#2A61CE' }}>
-                      <Flex alignItems="center" fontSize="14px" fontWeight={500}>
-                        <Text mr={1}>
-                          <BiAddToQueue size={14} />
-                        </Text>
-                        <Text>{t('newWorkOrder')}</Text>
-                      </Flex>
+                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
+                      {t('newWorkOrder')}
                     </Button>
                   )}
                 {tabIndex === 3 && (

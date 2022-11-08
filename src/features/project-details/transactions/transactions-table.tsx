@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { useTransactions } from 'api/transactions'
+import { useTransactionsV1} from 'api/transactions'
 import { useParams } from 'react-router'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
@@ -20,7 +20,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
 
-  const { refetch, transactions, isLoading } = useTransactions(projectId)
+  const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {

@@ -44,7 +44,11 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     onOpen: onAccountReceivableModalOpen,
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
-  const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
+  const {
+    isOpen: isOpenTransactionModal,
+    onOpen: onEditModalOpen,
+    onClose: onTransactionModalClose
+  } = useDisclosure()
 
   const onRowClick = useCallback(
     row => {
@@ -59,7 +63,13 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     },
     [onAccountReceivableModalOpen],
   )
-  const { receivables, isLoading, totalPages, dataCount } = usePaginatedAccountReceivables(
+  const {
+    refetch: refetchPaginatedAccountReceivables,
+    receivables,
+    isLoading,
+    totalPages,
+    dataCount
+  } = usePaginatedAccountReceivables(
     queryStringWithPagination,
     pagination.pageSize,
   )
@@ -107,7 +117,10 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
       <AccountReceivableModal
         projectId={selectedProjectId}
         isOpen={isAccountReceivableModal}
-        onClose={onAccountReceivableModalClose}
+        onClose={() => {
+          onAccountReceivableModalClose()
+          refetchPaginatedAccountReceivables()
+        }}
       />
       <UpdateTransactionModal
         isOpen={isOpenTransactionModal}

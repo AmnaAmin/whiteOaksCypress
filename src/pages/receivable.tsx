@@ -10,11 +10,11 @@ import { useEffect, useState } from 'react'
 import { useBatchProcessingMutation, useCheckBatch } from 'api/account-receivable'
 import { PaginationState } from '@tanstack/react-table'
 import { useForm } from 'react-hook-form'
-import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 import { BiSync } from 'react-icons/bi'
+import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
 
 export const Receivable = () => {
   const [loading, setLoading] = useState(false)
@@ -31,7 +31,7 @@ export const Receivable = () => {
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
+    queryStringAPIFilterKeys: RECEIVABLE_TABLE_QUERY_KEYS,
     pagination,
     setPagination,
     selectedCard,
@@ -39,7 +39,7 @@ export const Receivable = () => {
   })
 
   const { mutate: batchCall } = useBatchProcessingMutation()
-  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination, queryStringWithoutPagination)
+  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   // const { weekDayFilters } = useWeeklyCount()
 
@@ -105,6 +105,7 @@ export const Receivable = () => {
               // onClick={onNewProjectModalOpen}
               colorScheme="brand"
               type="submit"
+              minW={'140px'}
             >
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
