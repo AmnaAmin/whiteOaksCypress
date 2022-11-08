@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { useGetAllProjects, useProjects } from 'api/projects'
+import { useGetAllProjects, useProjects, useWeekDayProjectsDue } from 'api/projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
@@ -33,6 +33,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
+
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
       queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
@@ -42,6 +44,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
       selectedDay,
       selectedFPM,
       userIds,
+      days,
     })
 
   const { projects, isLoading, totalPages, dataCount } = useProjects(
