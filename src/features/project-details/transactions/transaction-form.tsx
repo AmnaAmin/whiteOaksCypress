@@ -249,6 +249,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     [workOrdersKeyValues, setValue],
   )
 
+  // Disable selection of future payment received date for all users expect Admin
   const futureDateDisable =  !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
   
   useEffect(() => {
