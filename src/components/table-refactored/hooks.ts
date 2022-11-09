@@ -1,5 +1,4 @@
 import { ColumnFiltersState, PaginationState } from '@tanstack/react-table'
-import { useWeekDayProjectsDue } from 'api/projects'
 import { useState, useMemo, useEffect } from 'react'
 import { getAPIFilterQueryString } from 'utils/filters-query-utils'
 
@@ -11,14 +10,13 @@ type UseColumnFiltersQueryStringProps = {
   selectedDay?: string
   selectedFPM?: any
   userIds?: number[]
+  days?: any
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
-  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, selectedFPM } =
-    options
+  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days } = options
   const { pageIndex, pageSize } = pagination || {}
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
   const fitlersQueryString = useMemo(() => {
     let projectStatusFilter

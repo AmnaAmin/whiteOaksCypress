@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Flex, Icon, Box } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,8 +8,15 @@ import ClientNotes from 'features/clients/clients-notes-tab'
 import { FormProvider, useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import { ClientFormValues } from 'types/client.type'
-import { useSaveNewClientDetails, useUpdateClientDetails, clientDetailsDefaultValues, clientDefault } from 'api/clients'
+import {
+  useSaveNewClientDetails,
+  useUpdateClientDetails,
+  clientDetailsDefaultValues,
+  clientDefault,
+  useSubFormErrors,
+} from 'api/clients'
 import { useMarkets, useStates } from 'api/pc-projects'
+import { BiErrorCircle } from 'react-icons/bi'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -37,7 +44,14 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
   const methods = useForm<ClientFormValues>()
 
-  const { handleSubmit: handleSubmit2, control, reset } = methods
+  const {
+    handleSubmit: handleSubmit2,
+    control,
+    reset,
+    formState: { errors },
+  } = methods
+
+  const { isClientDetailsTabErrors } = useSubFormErrors(errors)
 
   useEffect(() => {
     if (clientDetails) {
@@ -82,9 +96,9 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
       <form onSubmit={handleSubmit2(onSubmit, err => console.log('err..', err))} id="clientDetails">
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
-            <Tab>{t('details')}</Tab>
-            <Tab>{t('market')}</Tab>
-            <Tab hidden={!clientDetails?.id}>{t('notes')}</Tab>
+            <TabCustom isError={isClientDetailsTabErrors && tabIndex !== 0}>{t('details')}</TabCustom>
+            <TabCustom>{t('market')}</TabCustom>
+            {clientDetails?.id && <TabCustom>{t('notes')}</TabCustom>}
           </TabList>
           <TabPanels mt="20px">
             <TabPanel p="0px">
@@ -103,3 +117,20 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     </FormProvider>
   )
 })
+
+const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
+  return (
+    <Tab>
+      {isError ? (
+        <Flex alignItems="center">
+          <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
+          <Box color="red.400">{children}</Box>
+        </Flex>
+      ) : (
+        children
+      )}
+    </Tab>
+  )
+}
+
+export default ClientDetailsTabs

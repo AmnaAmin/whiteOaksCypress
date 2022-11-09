@@ -30,6 +30,7 @@ import { LienWaiverTab } from '../../work-order/lien-waiver/lien-waiver'
 import WorkOrderDetailTab from './details/work-order-detail-tab'
 import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
+import { useFetchWorkOrder } from 'api/work-order'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -50,6 +51,11 @@ export const WorkOrderDetails = ({
   const { documents: documentsData = [], isLoading } = useDocuments({
     projectId,
   })
+  const {
+    workOrderAssignedItems,
+    isFetching: isFetchingLineItems,
+    isLoading: isLoadingLineItems,
+  } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
   const [isUpdating, setIsUpdating] = useState()
 
@@ -107,9 +113,13 @@ export const WorkOrderDetails = ({
                 <TabPanel p={0}>
                   <WorkOrderDetailTab
                     setIsUpdating={setIsUpdating}
+                    isUpdating={isUpdating}
                     projectData={projectData}
                     workOrder={workOrder}
                     onClose={onClose}
+                    workOrderAssignedItems={workOrderAssignedItems}
+                    isFetchingLineItems={isFetchingLineItems}
+                    isLoadingLineItems={isLoadingLineItems}
                   />
                 </TabPanel>
                 <TabPanel p={0}>
