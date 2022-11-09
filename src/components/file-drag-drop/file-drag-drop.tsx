@@ -35,7 +35,9 @@ const readDocuments = (docs, onComplete) => {
   onComplete(documents);
 };
 
-export default function App() {
+export default function FileDragDrop({
+  onChange
+}) {
   const [files, setFiles] = useState([]);
   const [documents, setDocuments] = useState({});
 

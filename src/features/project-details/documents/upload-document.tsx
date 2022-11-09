@@ -173,7 +173,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                     </GridItem>
                   )}
 
-                  <GridItem>
+                  {/* <GridItem>
                     <FormControl isInvalid={!!errors?.chooseFile}>
                       <FormLabel htmlFor="chooseFile" variant="strong-label" size="md">
                         {t('uploadFile')}
@@ -207,7 +207,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         }}
                       />
                     </FormControl>
-                  </GridItem>
+                  </GridItem> */}
                 </Grid>
               </HStack>
             )}
