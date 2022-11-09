@@ -37,7 +37,8 @@ export const Payable = () => {
   // }
 
   const { handleSubmit, register, reset, control } = useForm()
-
+  
+  const payableColumns = usePayableColumns(control, register)
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
     pagination,
@@ -48,7 +49,6 @@ export const Payable = () => {
 
   const { mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
-  const payableColumns = usePayableColumns(control, register)
 
   useEffect(() => {
     if (!loading) {
