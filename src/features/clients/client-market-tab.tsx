@@ -18,7 +18,7 @@ type clientDetailProps = {
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
   const { isProjectCoordinator } = useUserRolesSelector()
-  const { control, register } = useFormContext<ClientFormValues>()
+  const { control } = useFormContext<ClientFormValues>()
   const markets = useWatch({ control, name: 'markets' })
   const btnStyle = {
     alignItems: 'center',
