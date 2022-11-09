@@ -29,7 +29,8 @@ export const Payable = () => {
     selectedDay,
     // setSelectedDay
   ] = useState<string>('')
-
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  
   // const clearAll = () => {
   //   setSelectedCard('')
   //   setSelectedDay('')
@@ -37,7 +38,6 @@ export const Payable = () => {
 
   const { handleSubmit, register, reset, control } = useForm()
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
     pagination,
