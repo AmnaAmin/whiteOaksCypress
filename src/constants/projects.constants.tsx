@@ -12,7 +12,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   projectStatus: 'projectStatus.equals',
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
-  clientStartDate: 'clientStartDate.contains',
+  clientStartDate: 'clientStartDate.equals',
   clientDueDate: 'clientDueDate.equals',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
