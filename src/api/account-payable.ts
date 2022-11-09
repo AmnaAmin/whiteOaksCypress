@@ -22,7 +22,7 @@ export const useAccountPayableCard = () => {
 const getPayableQueryString = (filterQueryString: string) => {
   return filterQueryString ? filterQueryString + `&sort=expectedPaymentDate,asc` : 'sort=expectedPaymentDate,asc'
 }
-type PayableResponse = { workOrders: Array<any> }
+type PayableResponse = Array<any>
 export const usePaginatedAccountPayable = (queryString: string, pageSize: number) => {
   const apiQueryString = getPayableQueryString(queryString)
 
@@ -33,7 +33,7 @@ export const usePaginatedAccountPayable = (queryString: string, pageSize: number
   )
 
   return {
-    workOrders: data?.data?.workOrders,
+    workOrders: data?.data,
     totalPages: data?.totalCount,
     dataCount: data?.dataCount,
     ...rest,
@@ -50,7 +50,7 @@ export const useGetAllWorkOrders = (queryString: string) => {
     [GET_ALL_WORKORDERS_QUERY_KEY, apiQueryString],
     async () => {
       const response = await client(`all-payables?${apiQueryString}`, {})
-      return response?.data?.workOrders
+      return response?.data
     },
     {
       enabled: false,
