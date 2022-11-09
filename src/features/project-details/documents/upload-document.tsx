@@ -26,6 +26,7 @@ import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import ChooseFileField from 'components/choose-file/choose-file'
+import FileDragDrop from 'components/file-drag-drop/file-drag-drop'
 import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
@@ -211,6 +212,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               </HStack>
             )}
           </form>
+          <FileDragDrop />
         </ModalBody>
         <ModalFooter>
           <HStack spacing="16px">
