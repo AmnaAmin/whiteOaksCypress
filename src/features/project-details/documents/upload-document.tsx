@@ -212,7 +212,9 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               </HStack>
             )}
           </form>
-          <FileDragDrop />
+          <FileDragDrop onChange={(files:any) => {
+            console.log('files - ', files);
+          }} />
         </ModalBody>
         <ModalFooter>
           <HStack spacing="16px">
