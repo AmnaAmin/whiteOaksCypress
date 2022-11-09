@@ -348,13 +348,13 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormControl>
                 </GridItem>
                 <GridItem>
-                  <FormControl>
+                  <FormControl isInvalid={!!errors?.contacts?.[index]?.phoneNumber}>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.phoneNumber`)}
                     </FormLabel>
                     <Controller
                       control={control}
-                      name={`contacts.${index}.phoneNumber`}
+                      {...register(`contacts.${index}.phoneNumber`, { required: 'This is required' })}
                       render={({ field }) => {
                         return (
                           <>
@@ -367,6 +367,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                               mask="_"
                               placeholder="(___)-___-____"
                               isDisabled={isProjectCoordinator}
+                              variant={'required-field'}
                             />
                             <FormErrorMessage>
                               {errors?.contacts?.[index]?.phoneNumber &&
@@ -379,7 +380,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormControl>
                 </GridItem>
                 <GridItem>
-                  <FormControl isInvalid={!!errors?.contacts?.[index]?.phoneNumber}>
+                  <FormControl>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${CLIENTS}.ext`)}
                     </FormLabel>
@@ -508,7 +509,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Controller
                     control={control}
-                    name={`accountPayableContactInfos.${index}.phoneNumber`}
+                    {...register(`accountPayableContactInfos.${index}.phoneNumber`, { required: 'This is required' })}
                     render={({ field }) => {
                       return (
                         <>
@@ -521,9 +522,11 @@ export const Details: React.FC<clientDetailProps> = props => {
                             mask="_"
                             placeholder="(___)-___-____"
                             isDisabled={isProjectCoordinator}
+                            variant={'required-field'}
                           />
                           <FormErrorMessage>
-                            {errors?.accountPayableContactInfos?.[index]?.phoneNumber?.message}
+                            {errors?.accountPayableContactInfos?.[index]?.phoneNumber &&
+                              errors?.accountPayableContactInfos?.[index]?.phoneNumber?.message}
                           </FormErrorMessage>
                         </>
                       )
