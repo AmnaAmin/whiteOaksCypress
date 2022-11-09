@@ -16,7 +16,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
-  const dateFlilter = column.id.includes('Date' || 'date')
+  const dateFilter = column.id.includes('Date' || 'date')
 
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
@@ -31,13 +31,13 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
         ))}
       </datalist>
       <DebouncedInput
-        type={dateFlilter ? 'date' : 'text'}
+        type={dateFilter ? 'date' : 'text'}
         value={(columnFilterValue ?? '') as string}
         onChange={value => column.setFilterValue(value)}
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
         // @ts-ignore
-        minW={dateFlilter && '127px'}
+        minW={dateFilter && '127px'}
       />
       <div className="h-1" />
     </>
