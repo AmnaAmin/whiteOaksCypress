@@ -6,6 +6,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ClientFormValues } from 'types/client.type'
 import { CLIENTS } from './clients.i18n'
+import { validateMarket } from 'pages/vendor/vendor-profile'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -17,7 +18,7 @@ type clientDetailProps = {
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
   const { isProjectCoordinator } = useUserRolesSelector()
-  const { control } = useFormContext<ClientFormValues>()
+  const { control, register } = useFormContext<ClientFormValues>()
   const markets = useWatch({ control, name: 'markets' })
   const btnStyle = {
     alignItems: 'center',
@@ -60,7 +61,13 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
-          <Button colorScheme="brand" type="submit" form="clientDetails" ml={2}>
+          <Button
+            colorScheme="brand"
+            type="submit"
+            form="clientDetails"
+            ml={2}
+            disabled={!validateMarket(markets)}
+          >
             {t(`${CLIENTS}.save`)}
           </Button>
         )}
