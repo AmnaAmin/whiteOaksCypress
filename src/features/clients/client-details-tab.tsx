@@ -66,15 +66,15 @@ export const Details: React.FC<clientDetailProps> = props => {
   // const city = useWatch({ name: 'city', control })
   // const contacts = useWatch({ name: 'contacts.0.contact', control })
 
-  const [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch] = useWatch({
+  const [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch, watchPaymentWired] = useWatch({
     control,
-    name: ['paymentCreditCard', 'paymentCheck', 'paymentAch'],
+    name: ['paymentCreditCard', 'paymentCheck', 'paymentAch', 'paymentWired'],
   })
   useEffect(() => {
-    if (watchPaymentCreditCard || !watchPaymentCheck || !watchPaymentAch) {
-      clearErrors(['paymentCreditCard', 'paymentCheck', 'paymentAch'])
+    if (watchPaymentCreditCard || !watchPaymentCheck || !watchPaymentAch || !watchPaymentWired) {
+      clearErrors(['paymentCreditCard', 'paymentCheck', 'paymentAch', 'paymentWired'])
     }
-  }, [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch])
+  }, [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch, watchPaymentWired])
 
   const {
     fields: contactsFields,
@@ -133,9 +133,13 @@ export const Details: React.FC<clientDetailProps> = props => {
               />
             </FormControl>
           </GridItem>
-          <VStack width={'230px'}>
+          <VStack width={'300px'}>
             <GridItem>
-              <FormControl isInvalid={!!errors?.paymentCreditCard || !!errors?.paymentCheck || !!errors.paymentAch}>
+              <FormControl
+                isInvalid={
+                  !!errors?.paymentCreditCard || !!errors?.paymentCheck || !!errors.paymentAch || !!errors.paymentWired
+                }
+              >
                 <FormLabel variant="strong-label" size="md">
                   {t(`${CLIENTS}.paymentMethod`)}
                 </FormLabel>
@@ -145,7 +149,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                       control={control}
                       name="paymentCreditCard"
                       rules={{
-                        required: !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch,
+                        required:
+                          !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch && !watchPaymentWired,
                       }}
                       render={({ field, fieldState }) => (
                         <>
@@ -169,7 +174,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                       control={control}
                       name="paymentCheck"
                       rules={{
-                        required: !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch,
+                        required:
+                          !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch && !watchPaymentWired,
                       }}
                       render={({ field, fieldState }) => (
                         <>
@@ -193,7 +199,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                       control={control}
                       name="paymentAch"
                       rules={{
-                        required: !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch,
+                        required:
+                          !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch && !watchPaymentWired,
                       }}
                       render={({ field, fieldState }) => (
                         <>
@@ -208,6 +215,31 @@ export const Details: React.FC<clientDetailProps> = props => {
                             isDisabled={isProjectCoordinator}
                           >
                             {t(`${CLIENTS}.ach`)}
+                          </Checkbox>
+                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="paymentWired"
+                      rules={{
+                        required:
+                          !watchPaymentCreditCard && !watchPaymentCheck && !watchPaymentAch && !watchPaymentWired,
+                      }}
+                      render={({ field, fieldState }) => (
+                        <>
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isProjectCoordinator}
+                          >
+                            {t(`${CLIENTS}.wired`)}
                           </Checkbox>
                           <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                         </>
@@ -369,20 +401,15 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <Input
                       id="emailAddress"
                       {...register(`contacts.${index}.emailAddress`, {
-                        required: true,
+                        required: 'This is required',
                         pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                       })}
+                      variant={'required-field'}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       type="email"
                     />
-                    <FormErrorMessage>
-                      {errors?.contacts?.[index]?.emailAddress && (
-                        <Text color="red.400" fontSize={'14px'}>
-                          Invalid email
-                        </Text>
-                      )}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{errors?.contacts?.[index]?.emailAddress?.message}</FormErrorMessage>
                   </FormControl>
                 </GridItem>
                 <GridItem>
@@ -529,30 +556,17 @@ export const Details: React.FC<clientDetailProps> = props => {
                   <Input
                     id="emailAddress"
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, {
-                      required: true,
+                      required: 'This is required',
                       pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                     })}
+                    variant={'required-field'}
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     type="email"
                   />
                   <FormErrorMessage>
-                    {errors?.accountPayableContactInfos?.[index]?.emailAddress && (
-                      <Text color="red.400" fontSize={'14px'}>
-                        Invalid email
-                      </Text>
-                    )}
-                  </FormErrorMessage>
-                  {/* <Input
-                    id="emailAddress"
-                    {...register(`accountPayableContactInfos.${index}.emailAddress`, { required: 'This is required' })}
-                    isDisabled={isProjectCoordinator}
-                    variant={'required-field'}
-                    type="email"
-                  />
-                  <FormErrorMessage>
                     {errors?.accountPayableContactInfos?.[index]?.emailAddress?.message}
-                  </FormErrorMessage> */}
+                  </FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
