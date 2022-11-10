@@ -70,24 +70,21 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const onSubmit = async formValues => {
     const vendorId = formValues?.against?.value?.vendorId?.toString()
     const workOrderId = formValues?.against?.value?.id?.toString()
-    const documentPayload = await createDocumentPayload(
-      formValues.chooseFile,
-      formValues?.documentTypes?.value?.toString(),
-    )
+    console.log(`formValues - `, formValues.chooseFile);
+    // const documents = formValues.
+    // documents.forEach(async file => {
+    //   const documentPayload = await createDocumentPayload(file, formValues?.documentTypes?.value?.toString())
 
-    const doc: Document = {
-      ...documentPayload,
-      projectId,
-      vendorId,
-      workOrderId,
-    }
-
-    saveDocument(doc, {
-      onSuccess() {
-        onClose()
-        reset()
-      },
-    })
+    //   const doc: Document = {
+    //     ...documentPayload,
+    //     projectId,
+    //     vendorId,
+    //     workOrderId,
+    //   }
+      // saveDocument(doc)
+    // })
+    // onClose()
+    // reset()
   }
   const watchField = useWatch({
     control,
@@ -211,10 +208,40 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                 </Grid>
               </HStack>
             )}
+            <>
+              <FormControl isInvalid={!!errors?.chooseFile}>
+                <Controller
+                  control={control}
+                  name="chooseFile"
+                  rules={{
+                    validate: files => {
+                      const fileLengthExceeded = files?.some(
+                        (file) => file?.name?.length > 255
+                      );
+                      return fileLengthExceeded ? 'File name length should be less than 255' : true;
+                    },
+                    required: 'Document file is required',
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <FileDragDrop
+                          isRequired
+                          testId="choose-document"
+                          name={field.name}
+                          onUpload={(docs: any) => {
+                            field.onChange(docs);
+                          }}
+                        />
+                        <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </>
+            
           </form>
-          <FileDragDrop onChange={(files:any) => {
-            console.log('files - ', files);
-          }} />
         </ModalBody>
         <ModalFooter>
           <HStack spacing="16px">

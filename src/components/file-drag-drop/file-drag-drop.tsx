@@ -1,52 +1,50 @@
 import {
-  Box,
   DefaultIcon,
   Divider,
   Flex,
   Text
 } from "@chakra-ui/react";
+import FileIcon from "icons/file-icon";
+import numeral from "numeral";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { BiImport } from 'react-icons/bi'
 
 const getFileSize = (byte) => {
-  return Number(byte/1000000);
+  const sizeInMB = Number(byte/1000000);
+  return numeral(sizeInMB).format('0,0.00')
 }
 
-const readDocuments = (docs, onComplete) => {
-  const documents = [...docs];
+const formatDocuments = (docs) => {
+  let documents = [...docs];
 
-  const readFile = (doc) => (event) => {
-    const arry = event.target.result.split(",");
-    let document = { ...doc, fileObject: arry[1] };
-
-    const id = document.name;
-    delete document.id;
-
-    document = { ...documents, fileObjectContentType: doc.type };
-    documents[id] = document;
-  };
-
-  docs.forEach((file) => {
+  docs.forEach((file, index) => {
     const reader = new FileReader();
-    reader.addEventListener("load", readFile(file));
     reader.readAsDataURL(file);
+    reader.onload = (event:any) => {
+      const arry = event.target.result.split(",");    
+      documents[0] = {
+        id: file.name,
+        fileObject: arry[1],
+        fileObjectContentType: file.type,
+        size: file.size,
+      };
+    };
   });
-  onComplete(documents);
+
+  return documents;
 };
 
 export default function FileDragDrop({
-  onChange
+  onUpload,
+  ...fieldProps
 }) {
   const [files, setFiles] = useState([]);
-  const [documents, setDocuments] = useState({});
 
   const handleDrop = (acceptedFiles) => {
     setFiles(acceptedFiles.map((file) => file));
-    readDocuments(acceptedFiles, (documents) => {
-      console.log(documents[0]);
-      setDocuments(documents);
-    });
+    const documents = formatDocuments(acceptedFiles);
+    onUpload(documents)
   };
 
   return (
@@ -55,8 +53,8 @@ export default function FileDragDrop({
       direction="column"
       gap="30px"
     >
-      <Dropzone onDrop={handleDrop}>
-        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject }) => {
+      <Dropzone onDrop={handleDrop} {...fieldProps}>
+        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, open }) => {
           const additionalClass = isDragAccept
             ? "accept"
             : isDragReject
@@ -77,6 +75,7 @@ export default function FileDragDrop({
                 borderRadius: "15px",
                 backgroundColor: "#F7FAFC"
               }}
+              onClick={(e) => e.stopPropagation()}
             >
               <input {...getInputProps()} />
               <Flex
@@ -97,7 +96,18 @@ export default function FileDragDrop({
                   : (
                     <>
                       <Text as="span">Drag & Drop</Text>
-                      <Text as="span" color='#718096'>Or Choose your files.</Text>
+                      <Text as="span" color='#718096'>Or{" "}
+                        <Text
+                          as="span"
+                          onClick={open}
+                          color="#4E87F8"
+                          cursor="pointer"
+                        >
+                          Choose
+                        </Text>
+                        {" "}your files.
+                      </Text>
+
                     </>
                   )
                 }
@@ -152,13 +162,16 @@ function UploadedFiles({ files }) {
                 color: "#4A5568"
               }}
             >
-              <Flex gap="10px">
-                <DefaultIcon width="24px" height="24px" />
-                <Text as="span" noOfLines={1} width="170px">
+              <Flex gap="10px" alignItems= "center">
+                <FileIcon />
+                <Text as="span" noOfLines={[1]} style = {{
+                  wordBreak: "break-all",
+                  width: "150px",
+                }}>
                   {file.name}
                 </Text>
               </Flex>
-              <Text as="span">{getFileSize(file.size)}mb</Text>
+              <Text as="span">{getFileSize(file.size)} MB</Text>
             </Flex>
           ))}
         </Flex>
