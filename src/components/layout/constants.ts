@@ -1,3 +1,5 @@
+import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import {
   BiAlignMiddle,
   BiBarChartSquare,
@@ -14,6 +16,7 @@ import {
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
+import { SIDE_NAV } from './sideNav.i18n'
 
 type Menu = {
   pathTo: string
@@ -25,6 +28,13 @@ type Menu = {
 type Menus = {
   [key in UserTypes]: Array<Menu>
 }
+
+
+// const { t } = useTranslation()
+
+// const dashboard = t(`${SIDE_NAV}.dashboard`)
+// const projects = t(`${SIDE_NAV}.projects`)
+
 
 export const MENU_ROLE_BASED: Menus = {
   [UserTypes.vendor]: [
