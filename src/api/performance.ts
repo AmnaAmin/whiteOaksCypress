@@ -147,5 +147,8 @@ export const MonthOption = [
 
 export const Month = [
   { value: MonthOptionTypes.thisMonth, label: 'This Month' },
+  { value: MonthOptionTypes.lastMonth, label: 'Last Month' },
+  { value: MonthOptionTypes.currentQuarter, label: 'Current Quarter' },
+  { value: MonthOptionTypes.pastQuarter, label: 'Past Quarter' },
   { value: MonthOptionTypes.all, label: 'All' },
 ]
