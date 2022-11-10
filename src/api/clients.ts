@@ -123,9 +123,9 @@ export const clientDefault = ({ markets }) => {
   const defaultValues = {
     markets,
     paymentTerm: {value: 20 , label: 20},
-    paymentCreditCard : true,
-    paymentCheck: true,
-    paymentAch: true,
+    // paymentCreditCard : true,
+    // paymentCheck: true,
+    // paymentAch: true,
     contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
     accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
