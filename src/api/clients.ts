@@ -120,9 +120,9 @@ export const clientDefault = ({ markets }) => {
   const defaultValues = {
     markets,
     paymentTerm: {value: 20 , label: 20},
-    paymentCreditCard : true,
-    paymentCheck: true,
-    paymentAch: true,
+    // paymentCreditCard : true,
+    // paymentCheck: true,
+    // paymentAch: true,
     contacts: [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }],
     accountPayableContactInfos: [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }],
   }
@@ -231,6 +231,7 @@ export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
       !!errors?.contacts?.[0]?.contact ||
       !!errors?.contacts?.[0]?.market ||
       !!errors?.contacts?.[0]?.emailAddress ||
+      !!errors?.contacts?.[0]?.phoneNumber ||
       !!errors?.accountPayableContactInfos?.[0]?.contact ||
       !!errors?.accountPayableContactInfos?.[0]?.emailAddress ||
       !!errors?.accountPayableContactInfos?.[0]?.phoneNumber ||
