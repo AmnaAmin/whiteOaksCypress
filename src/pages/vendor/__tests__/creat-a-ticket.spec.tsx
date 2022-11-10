@@ -22,6 +22,11 @@ test('Open Support page with form', async () => {
   const onSubmit = jest.fn()
   await renderCreateATicketForm({ onSubmit })
   expect(screen.getByText('Create a Ticket')).toBeInTheDocument()
+  expect(screen.getByText('Issue Type')).toBeInTheDocument()
+  expect(screen.getByText('Severity')).toBeInTheDocument()
+  expect(screen.getByText('Title')).toBeInTheDocument()
+  expect(screen.getByText('Description (1000 Characters)')).toBeInTheDocument()
+  expect(screen.getByText('File Upload')).toBeInTheDocument()
 })
 
 test('Create a ticket happy flow', async () => {
