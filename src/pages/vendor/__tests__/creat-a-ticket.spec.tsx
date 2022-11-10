@@ -1,10 +1,10 @@
 import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
 import { render, waitForLoadingToFinish, screen, selectOption, act, waitFor } from 'utils/test-utils'
-import CreateATicket from '../create-a-ticket'
+import CreateATicketForm from '../create-a-ticket'
 
-const renderCreateATicket = async () => {
-  render(<CreateATicket />, { wrapper: Providers })
+const renderCreateATicketForm = async ({ onSubmit }) => {
+  render(<CreateATicketForm onSubmit={onSubmit} />, { wrapper: Providers })
 
   await waitForLoadingToFinish()
 }
@@ -19,12 +19,14 @@ const chooseFileByLabel = (inputElement, fileName = 'dummy-file.png') => {
 }
 
 test('Open Support page with form', async () => {
-  await renderCreateATicket()
+  const onSubmit = jest.fn()
+  await renderCreateATicketForm({ onSubmit })
   expect(screen.getByText('Create a Ticket')).toBeInTheDocument()
 })
 
 test('Create a ticket happy flow', async () => {
-  await renderCreateATicket()
+  const onSubmit = jest.fn()
+  await renderCreateATicketForm({ onSubmit })
 
   await selectOption(screen.getByTestId('issue-Type'), 'Bug')
   await selectOption(screen.getByTestId('severity'), 'Low')
@@ -44,4 +46,6 @@ test('Create a ticket happy flow', async () => {
   await act(async () => {
     await userEvent.click(screen.getByText(/Save/i))
   })
+
+  await waitFor(() => expect(onSubmit).toBeCalled())
 })
