@@ -98,7 +98,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.accountPayable',
     accessorKey: 'accountPayable',
     accessorFn(cellInfo: any) {
-      return numeral(cellInfo.value).format('$0,0.00')
+      return numeral(cellInfo.accountPayable).format('$0,0.00')
     },
   },
   {
