@@ -66,10 +66,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     navigate(`/project-details/${rowData.id}`)
   }
 
-  const onRightClick = rowData => {
-    window.open(`${process.env.PUBLIC_URL}/project-details/${rowData.id}`)
-  }
-
   return (
     <Box overflow={'auto'} height="calc(100vh - 100px)">
       <TableContextProvider
@@ -85,7 +81,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
           isLoading={isLoading}
           onRowClick={onRowClick}
           isEmpty={!isLoading && !projects?.length}
-          onRightClick={onRightClick}
         />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
