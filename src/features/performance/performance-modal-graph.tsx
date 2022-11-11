@@ -138,7 +138,12 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     [barProps],
   )
 
-  let { Revenue, Profit, Bonus } = vendorData[0]
+  let { Revenue = undefined , Profit = undefined, Bonus = undefined } = vendorData?.length > 0 ? vendorData[0] : {
+    Revenue: undefined,
+    Profit: undefined,
+    Bonus: undefined
+  }
+
   const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
 
   return (
