@@ -50,6 +50,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'ID',
     accessorKey: 'id',
     size: 100,
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <a href={`${process.env.PUBLIC_URL}/project-details/${value}`}>{value}</a>
+    },
   },
   {
     header: 'projects.projectTable.generalLabour',
