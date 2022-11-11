@@ -587,7 +587,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
       ) : (
         <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
           <HStack spacing="5px" h="31px" padding="10px" align="center">
-            <Text as="span" maxW="120px" isTruncated title="something">
+            <Text as="span" maxW="100px" isTruncated title="something">
               {value}
             </Text>
             <MdOutlineCancel cursor="pointer" onClick={onFileClear} />
