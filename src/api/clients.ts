@@ -1,7 +1,9 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { CLIENTS } from 'features/clients/clients.i18n'
 import { reset } from 'numeral'
 import { Control, FieldErrors, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
@@ -34,6 +36,7 @@ export const useUpdateClientDetails = () => {
   const client = useClient()
   const queryClient = useQueryClient()
   const toast = useToast()
+  const { t } = useTranslation()
 
   return useMutation(
     (clientDetails: any) => {
@@ -45,8 +48,8 @@ export const useUpdateClientDetails = () => {
     {
       onSuccess() {
         toast({
-          title: 'Update Client Details',
-          description: `Client has been updated successfully.`,
+          title:t(`${CLIENTS}.updateClientDetails`),
+          description: t(`${CLIENTS}.updateClientMsg`),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -169,6 +172,7 @@ export const useSaveNewClientDetails = () => {
   const client = useClient()
   const queryClient = useQueryClient()
   const toast = useToast()
+  const { t } = useTranslation()
 
   return useMutation(
     (clientDetails: any) => {
@@ -180,8 +184,8 @@ export const useSaveNewClientDetails = () => {
     {
       onSuccess() {
         toast({
-          title: 'New Client Details',
-          description: `New client has been added successfully.`,
+          title: t(`${CLIENTS}.newClientDetails`),
+          description: t(`${CLIENTS}.newClientMsg`), 
           status: 'success',
           duration: 9000,
           isClosable: true,
