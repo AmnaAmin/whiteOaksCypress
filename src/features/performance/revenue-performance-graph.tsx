@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, HStack, SimpleGrid } from '@chakra-ui/react'
+import { Box, Flex, FormLabel, Grid, GridItem, HStack, SimpleGrid } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
 import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
@@ -273,10 +273,10 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
-        <SimpleGrid columns={2} spacing={1} m={7} width={'95%'}>
-          <Box height="40px">
+        <Grid h="40px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
+          <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2}>
             <HStack>
-              <FormLabel width={'25%'} ml={6} variant="strong-label" size="md">
+              <FormLabel ml={8} variant="strong-label" size="md">
                 Filter By Month:
               </FormLabel>
               <Box width={'50%'}>
@@ -291,13 +291,13 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 />
               </Box>
             </HStack>
-          </Box>
-          <Box height="40px" mr={5}>
+          </GridItem>
+          <GridItem colStart={2} colEnd={6}>
             <HStack>
-              <FormLabel width={'20%'} variant="strong-label" size="md">
+              <FormLabel width={'10%'} variant="strong-label" size="md">
                 Filter By:
               </FormLabel>
-              <Box width={'100%'} mr={6} maxH={'40px !important'}>
+              <Box width={'90%'} pr={8} maxHeight={'40px'}>
                 <ReactSelect
                   name={`fpmDropdown`}
                   value={fpmOption}
@@ -307,61 +307,14 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                   defaultValue={fpmOption}
                   isOptionDisabled={() => fpmOption.length >= 5}
                   isClearable={false}
-                  // hiddenOptions= {fpmOption.length > 2 ? fpmOption.slice(0, 3) : []}
                   variant="light-label"
                   size="md"
                   isMulti
                 />
               </Box>
             </HStack>
-          </Box>
-        </SimpleGrid>
-        {/* <Box mb={15} mt={5} m={2}>
-          <Flex>
-            <Box width={'45%'} ml={5} mt={5}>
-              <HStack>
-                <FormLabel width={'120px'} ml={6} variant="strong-label" size="md">
-                  Filter By Month:
-                </FormLabel>
-                <Box width={'250px'}>
-                  <ReactSelect
-                    name={`monthsDropdown`}
-                    options={MonthOption}
-                    onChange={getMonthValue}
-                    defaultValue={monthOption}
-                    selected={setMonthOption}
-                    variant="light-label"
-                    size="md"
-                  />
-                </Box>
-              </HStack>
-            </Box>
-            <Box width={'55%'} mt={5}>
-              <HStack>
-                <FormLabel width={'60px'} variant="strong-label" size="md">
-                  Filter By:
-                </FormLabel>
-                <Box width={'530px'}>
-                  <ReactSelect
-                    name={`fpmDropdown`}
-                    value={fpmOption}
-                    isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
-                    options={fieldProjectManagerOptions}
-                    onChange={onFpmOptionChange}
-                    defaultValue={fpmOption}
-                    isOptionDisabled={() => fpmOption.length >= 5}
-                    isClearable={false}
-                    multiValueRemove={fpmOption.length === 1 ? { display: 'none' } : ''}
-                    filterOptions={fpmOption.length === 1}
-                    variant="light-label"
-                    size="md"
-                    isMulti
-                  />
-                </Box>
-              </HStack>
-            </Box>
-          </Flex>
-        </Box> */}
+          </GridItem>
+        </Grid>
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
