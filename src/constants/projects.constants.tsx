@@ -1,3 +1,4 @@
+import { Link } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import Status from 'features/common/status'
 import numeral from 'numeral'
@@ -52,7 +53,18 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     size: 100,
     cell: (row: any) => {
       const value = row.cell.getValue()
-      return <a href={`${process.env.PUBLIC_URL}/project-details/${value}`}>{value}</a>
+      return (
+        <Link
+          href={`${process.env.PUBLIC_URL}/project-details/${value}`}
+          color= "#533f03"
+          fontWeight= "bold"
+          _hover={{
+            color:"#8d2638"
+          }}
+        >
+          {value}
+        </Link>
+      )
     },
   },
   {
