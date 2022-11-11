@@ -6,7 +6,7 @@ import { format, subMonths } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts'
-import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, months, monthsShort } from 'utils/date-time-utils'
+import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, monthOptions, months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
 type GraphData = {
@@ -102,7 +102,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
           {isLoading ? (
             <BlankSlate size="sm" />
           ) : (
-            <OverviewGraph vendorData={graphData} width="98%" height={380} hasUsers={false} />
+            <OverviewGraph vendorData={graphData} width="98%" height={380} hasUsers={false} monthOption ={monthOption} />
           )}
         </Box>
       </Box>
@@ -110,7 +110,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   )
 }
 
-export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption }) => {
   const labels = [
     { key: 'Bonus', color: '#FB8832' },
     { key: 'Profit', color: '#949AC2' },
@@ -140,6 +140,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
 
   let { Revenue, Profit, Bonus } = vendorData[0]
   const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
+  const currAndLast = ['This Month', 'Last Month'].includes(monthOption?.label)
 
   return (
     <div>
@@ -169,7 +170,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickMargin={20}
           >
             {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}
-            {emptyGraph && (
+            {emptyGraph && currAndLast && (
               <Label
                 value="There is currently no data available for the month selected"
                 offset={180}
