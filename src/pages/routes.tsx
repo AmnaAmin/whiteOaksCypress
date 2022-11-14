@@ -1,12 +1,12 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 
 import VendorProfilePassword from 'pages/vendor/password'
-import CreateATicket from 'pages/vendor/create-a-ticket'
 import Settings from 'pages/vendor/settings'
 import routesConfig from './routesConfig'
 import { Suspense } from 'react'
 import { ViewLoader } from 'components/page-level-loader'
 import first from 'lodash/first'
+import { CreateATicket } from './vendor/create-a-ticket'
 
 export default function ProjectCordinatorRoutes() {
   const routes = routesConfig()
