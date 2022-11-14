@@ -53,6 +53,7 @@ export const Receivable = () => {
     const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
       id: row?.projectId,
       type: row?.type,
+      transactionId: row?.changeOrderId,
     }))
 
     const obj = {
