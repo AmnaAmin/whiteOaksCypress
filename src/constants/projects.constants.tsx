@@ -56,10 +56,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
       return (
         <Link
           href={`${process.env.PUBLIC_URL}/project-details/${value}`}
-          color= "#533f03"
-          fontWeight= "bold"
+          color="#533f03"
+          fontWeight="bold"
           _hover={{
-            color:"#8d2638"
+            color: '#8d2638',
           }}
         >
           {value}
@@ -115,6 +115,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'accountPayable',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.accountPayable).format('$0,0.00')
+    },
+  },
+  {
+    header: 'projects.projectTable.woDraw',
+    accessorKey: 'drawAmountWo',
+    accessorFn(cellInfo: any) {
+      return numeral(cellInfo.drawAmountWo).format('$0,0.00')
     },
   },
   {
