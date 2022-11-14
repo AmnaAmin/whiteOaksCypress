@@ -587,7 +587,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
       ) : (
         <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
           <HStack spacing="5px" h="31px" padding="10px" align="center">
-            <Text as="span" maxW="120px" isTruncated title="something">
+            <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
             <MdOutlineCancel cursor="pointer" onClick={onFileClear} />
@@ -854,7 +854,7 @@ export const useGetLineItemsColumn = ({
       <a href={link} target="_blank" rel="noreferrer" download style={{ marginTop: '5px', color: '#4E87F8' }}>
         <HStack>
           <Icon as={BiDownload} size="sm" />
-          <Text fontSize="12px" fontStyle="normal" maxW="100px" isTruncated>
+          <Text fontSize="12px" fontStyle="normal" maxW="70px" isTruncated>
             {text}
           </Text>
         </HStack>
