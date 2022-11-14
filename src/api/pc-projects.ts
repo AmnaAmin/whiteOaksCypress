@@ -389,7 +389,7 @@ export const useVendor = () => {
   const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
     const response = await client(`view-vendors`, {})
 
-    return orderBy(response?.data || [], ['id', 'desc'])
+    return orderBy(response?.data || [], ['id'], ['desc'])
   })
 
   return {
