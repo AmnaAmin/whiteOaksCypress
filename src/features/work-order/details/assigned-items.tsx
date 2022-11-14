@@ -1,6 +1,6 @@
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { Box, Button, chakra, Checkbox, Divider, HStack, Icon, Stack, Text, useCheckbox } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
@@ -116,6 +116,24 @@ const AssignedItems = (props: AssignedItemType) => {
     workOrder,
   })
 
+  const handleOnDragEnd = useCallback(
+    result => {
+      if (!result.destination) return
+
+      const items = Array.from(values.assignedItems)
+      const {
+        source: { index: sourceIndex },
+        destination: { index: destinationIndex },
+      } = result
+
+      const [reorderedItem] = items.splice(sourceIndex, 1)
+      items.splice(destinationIndex, 0, reorderedItem)
+
+      setValue('assignedItems', items)
+    },
+    [values?.assignedItems],
+  )
+
   return (
     <Box>
       <>
@@ -219,7 +237,11 @@ const AssignedItems = (props: AssignedItemType) => {
 
         <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
           <TableContextProvider data={values.assignedItems ?? []} columns={ASSIGNED_ITEMS_COLUMNS}>
-            <Table isLoading={isLoadingLineItems} isEmpty={!isLoadingLineItems && !values.assignedItems?.length} />
+            <Table
+              handleOnDrag={handleOnDragEnd}
+              isLoading={isLoadingLineItems}
+              isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
+            />
           </TableContextProvider>
         </Box>
       </>
