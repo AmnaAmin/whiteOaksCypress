@@ -7,10 +7,12 @@ import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
 import { useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
+import { useTranslation } from 'react-i18next'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const menu = useRoleBasedMenu()
+  const { t } = useTranslation()
 
   return (
     <Box width="100%">
@@ -42,7 +44,7 @@ export const Layout: React.FC = props => {
                 <Stack align="start" spacing={3}>
                   {menu?.map(item => (
                     <Box w="201px" key={item.pathTo}>
-                      <SidebarLink pathTo={item.pathTo} title={item.title} icon={<item.Icon color={item.color} />} />
+                      <SidebarLink pathTo={item.pathTo} title={t(item.title)} icon={<item.Icon color={item.color} />} />
                     </Box>
                   ))}
                 </Stack>
