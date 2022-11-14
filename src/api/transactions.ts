@@ -617,6 +617,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(['changeOrder', projectId])
+        queryClient.invalidateQueries(['overpayment', Number(projectId)])
 
         toast({
           title: 'Update Transaction.',
