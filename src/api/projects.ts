@@ -186,3 +186,18 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     ...rest,
   }
 }
+
+export const useWorkOrders = () => {
+  const client = useClient()
+
+  const { data: workOrderData, ...rest } = useQuery(['workorder_projects'], async () => {
+    const response = await client(`vendor/workorders`, {})
+
+    return response?.data
+  })
+
+  return {
+    workOrderData,
+    ...rest,
+  }
+}
