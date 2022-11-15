@@ -33,7 +33,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       </datalist>
       <DebouncedInput
         type={dateFilter ? 'date' : 'text'}
-        value={(dateFilter ? datePickerFormat(columnFilterValue as string) ?? '' : columnFilterValue ?? '') as string}
+        value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
         onChange={value =>
           dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(value)
         }
