@@ -11,7 +11,7 @@ import { t } from 'i18next'
 
 export const PROJECT_COLUMNS = [
   {
-    Header: 'ID',
+    Header: 'projectID',
     accessor: 'id',
   },
   {
@@ -26,10 +26,6 @@ export const PROJECT_COLUMNS = [
   {
     Header: t('address'),
     accessor: 'streetAddress',
-  },
-  {
-    Header: t('region'),
-    accessor: 'region',
   },
   {
     Header: t('pendingTransactions'),
@@ -131,7 +127,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       projects?.filter(
         project =>
           !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
+          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() ===
+            selectedCard?.replace(/\s/g, '').toLowerCase(),
       ),
     )
   }, [selectedCard, projects])

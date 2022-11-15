@@ -205,7 +205,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       onChange(isChecked)
                     }}
                   >
-                    Refund material
+                    {t(`${TRANSACTION}.refund`)}
                   </Checkbox>
                 )
               }}
