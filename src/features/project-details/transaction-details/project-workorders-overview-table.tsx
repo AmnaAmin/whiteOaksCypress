@@ -186,6 +186,18 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
           return numeral(total).format('$0,0.00')
         },
       },
+      {
+        header: `${TRANSACTION}.profitPercentage`,
+        accessorKey: 'vendorProfitPercentage',
+        accessorFn(row) {
+          return numeral(row.vendorProfitPercentage).format('0.00%')
+        },
+        footer: props => {
+          const total = getTotalOfKey('vendorProfitPercentage', financialOveriewTableData)
+
+          return numeral(total).format('0.00%')
+        },
+      },
     ],
     TableNames.projectFinancialOverview,
   )
