@@ -228,9 +228,9 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.sowDraw',
-    accessorKey: 'drawAmount',
+    accessorKey: 'drawAmountSow',
     accessorFn(cellInfo: any) {
-      return numeral(cellInfo.drawAmount).format('$0,0.00')
+      return numeral(cellInfo.drawAmountSow).format('$0,0.00')
     },
   },
   {
