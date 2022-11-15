@@ -7,7 +7,6 @@ import { useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { Column } from 'react-table'
-import { t } from 'i18next'
 
 export const PROJECT_COLUMNS = [
   {
@@ -15,16 +14,16 @@ export const PROJECT_COLUMNS = [
     accessor: 'projectId',
   },
   {
-    Header: t('WOstatus'),
+    Header: 'WOstatus',
     accessor: 'statusLabel',
     Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
   },
   {
-    Header: 'WO ID',
+    Header: 'WoID',
     accessor: 'id',
   },
   {
-    Header: t('address'),
+    Header: 'address',
     accessor: 'propertyAddress',
   },
   {
@@ -32,7 +31,7 @@ export const PROJECT_COLUMNS = [
     accessor: 'skillName',
   },
   {
-    Header: t('DueDateWO'),
+    Header: 'dueDateWO',
     accessor: 'workOrderExpectedCompletionDate',
     Cell({ value }) {
       return dateFormat(value)
@@ -42,7 +41,7 @@ export const PROJECT_COLUMNS = [
     },
   },
   {
-    Header: t('expectedPaymentDate'),
+    Header: 'expectedPaymentDate',
     accessor: 'expectedPaymentDate',
     Cell({ value }) {
       return dateFormat(value)
