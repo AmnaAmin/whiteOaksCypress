@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
-import { useProjects } from 'api/projects'
+import { useProjects, useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { Column } from 'react-table'
@@ -11,37 +11,37 @@ import { t } from 'i18next'
 
 export const PROJECT_COLUMNS = [
   {
-    Header: 'ID',
+    Header: 'projectID',
+    accessor: 'projectId',
+  },
+  // {
+  //   Header: t('type'),
+  //   accessor: 'projectTypeLabel',
+  // },
+  {
+    Header: t('WOstatus'),
+    accessor: 'statusLabel',
+    Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
+  },
+  {
+    Header: 'WO ID',
     accessor: 'id',
   },
   {
-    Header: t('type'),
-    accessor: 'projectTypeLabel',
-  },
-  {
-    Header: t('WOstatus'),
-    accessor: 'vendorWOStatusValue',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.vendorWOStatusValue} />,
-  },
-  {
     Header: t('address'),
-    accessor: 'streetAddress',
+    accessor: 'vendorAddress', // or business address
   },
   {
-    Header: t('region'),
-    accessor: 'region',
-  },
-  {
-    Header: t('pendingTransactions'),
-    accessor: 'pendingTransactions',
+    Header: 'trade',
+    accessor: 'skillName',
   },
   {
     Header: t('pastDueWO'),
-    accessor: 'pastDueWorkorders',
+    accessor: '', //'pastDueWorkorders',
   },
   {
     Header: t('DueDateWO'),
-    accessor: 'clientDueDate',
+    accessor: '', //'clientDueDate',
     Cell({ value }) {
       return dateFormat(value)
     },
@@ -51,12 +51,12 @@ export const PROJECT_COLUMNS = [
   },
   {
     Header: t('expectedPaymentDate'),
-    accessor: 'vendorWOExpectedPaymentDate',
+    accessor: 'expectedPaymentDate',
     Cell({ value }) {
       return dateFormat(value)
     },
     getCellExportValue(row) {
-      return dateFormat(row.values.vendorWOExpectedPaymentDate)
+      return dateFormat(row.values.expectedPaymentDate)
     },
   },
 ]
@@ -121,20 +121,24 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
 }) => {
-  const { projects, isLoading } = useProjects()
-  const [filterProjects, setFilterProjects] = useState(projects)
+
+  const { projects } = useProjects()
+  const { workOrderData, isLoading } = useWorkOrders()
+  const [filterProjects, setFilterProjects] = useState(workOrderData)
+
+  console.log(projects)
 
   useEffect(() => {
-    if (!selectedCard) setFilterProjects(projects)
+    if (!selectedCard) setFilterProjects(workOrderData)
 
     setFilterProjects(
-      projects?.filter(
-        project =>
+      workOrderData?.filter(
+        wo =>
           !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
+          wo.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
       ),
     )
-  }, [selectedCard, projects])
+  }, [selectedCard, workOrderData])
 
   return (
     <Box w="100%" ref={resizeElementRef}>
