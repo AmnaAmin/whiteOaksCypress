@@ -12,6 +12,7 @@ import { project } from 'features/update-project-details/project-details.i18n'
 import { fpmCards } from 'features/fpm/fpmCards.i18n'
 import { clients } from 'features/clients/clients.i18n'
 import { accounts } from 'pages/accounts.i18n'
+import { sideNav } from '../components/layout/sideNav.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -31,6 +32,7 @@ i18n.use(initReactI18next).init({
         ...fpmCards.en.translation,
         ...clients.en.translation,
         ...accounts.en.translation,
+        ...sideNav.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -509,6 +511,7 @@ i18n.use(initReactI18next).init({
         ...fpmCards.es.translation,
         ...clients.es.translation,
         ...accounts.es.translation,
+        ...sideNav.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

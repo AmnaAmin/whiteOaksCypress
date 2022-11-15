@@ -126,11 +126,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 
   useEffect(() => {
     if (!selectedCard) setFilterProjects(projects)
+
     setFilterProjects(
       projects?.filter(
         project =>
           !selectedCard ||
-          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+          project.vendorWOStatusValue?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
       ),
     )
   }, [selectedCard, projects])

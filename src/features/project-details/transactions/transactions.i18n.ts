@@ -71,6 +71,7 @@ export const transaction = {
         invoicedAmount: 'Invoiced Amount',
         balance: 'Balance',
         profit: 'Profit',
+        profitPercentage: 'Profit %',
 
         // Financial Overview Table
         client: 'Client',
@@ -170,6 +171,7 @@ export const transaction = {
         invoicedAmount: 'Importe facturado',
         balance: 'Balance',
         profit: 'Lucro',
+        profitPercentage: 'Lucros %',
 
         // Financial Overview Table
         client: 'Cliente',

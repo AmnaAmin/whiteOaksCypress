@@ -30,38 +30,14 @@ import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import ReactSelect from 'components/form/react-select'
 
-const CreateATicket = () => {
-  const toast = useToast()
-  const { t } = useTranslation()
-  const { mutate: createTicket } = useCreateTicketMutation()
-  const { email } = useUserProfile() as Account
-  const defaultValues = React.useMemo(() => {
-    return getSupportFormDefaultValues(email)
-  }, [email])
-
+export const CreateATicket = () => {
   const [fileBlob, setFileBlob] = React.useState<Blob>()
+  const { mutate: createTicket } = useCreateTicketMutation()
+  const toast = useToast()
 
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
-
-  const onFileChange = (document: File) => {
-    if (!document) return
-
-    const reader = new FileReader()
-    reader.addEventListener('load', readFile)
-    reader.readAsDataURL(document)
-  }
-
-  const {
-    formState: { errors },
-    control,
-    setValue,
-    register,
-    handleSubmit,
-  } = useForm<SupportFormValues>({
-    defaultValues,
-  })
 
   const onSubmit = (formValues: SupportFormValues) => {
     const attachment: FileAttachment = {
@@ -81,6 +57,37 @@ const CreateATicket = () => {
       },
     })
   }
+  return (
+    <Box>
+      <CreateATicketForm onSubmit={onSubmit} readFile={readFile} />
+    </Box>
+  )
+}
+
+const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }> = ({ onSubmit, readFile }) => {
+  const { t } = useTranslation()
+  const { email } = useUserProfile() as Account
+  const defaultValues = React.useMemo(() => {
+    return getSupportFormDefaultValues(email)
+  }, [email])
+
+  const onFileChange = (document: File) => {
+    if (!document) return
+
+    const reader = new FileReader()
+    reader.addEventListener('load', readFile)
+    reader.readAsDataURL(document)
+  }
+
+  const {
+    formState: { errors },
+    control,
+    setValue,
+    register,
+    handleSubmit,
+  } = useForm<SupportFormValues>({
+    defaultValues,
+  })
 
   return (
     <Card py="0">
@@ -97,7 +104,7 @@ const CreateATicket = () => {
             </FormLabel>
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
               <HStack spacing={3}>
-                <FormControl isInvalid={!!errors.issueType} w="215px">
+                <FormControl isInvalid={!!errors.issueType} w="215px" data-testid="issue-Type">
                   <FormLabel htmlFor="issueType" variant="strong-label" color="gray.600">
                     {t('issueType')}{' '}
                   </FormLabel>
@@ -119,7 +126,7 @@ const CreateATicket = () => {
                   />
                 </FormControl>
 
-                <FormControl isInvalid={!!errors.severity} w="215px">
+                <FormControl isInvalid={!!errors.severity} w="215px" data-testid="severity">
                   <FormLabel htmlFor="severity" variant="strong-label" color="gray.600">
                     {t('severity')}
                   </FormLabel>
@@ -154,6 +161,7 @@ const CreateATicket = () => {
                   {...register('title', {
                     required: 'This is required field',
                   })}
+                  data-testid="title-input"
                 />
                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
               </FormControl>
@@ -173,6 +181,7 @@ const CreateATicket = () => {
                 {...register('description', {
                   required: 'This is required field',
                 })}
+                data-testid="descriptions"
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>
@@ -191,6 +200,7 @@ const CreateATicket = () => {
                   <VStack alignItems="baseline">
                     <Box>
                       <ChooseFileField
+                        testId="file-Upload"
                         name={field.name}
                         value={field.value ? field.value?.name : t('chooseFile')}
                         isError={!!fieldState.error?.message}
@@ -227,4 +237,4 @@ const CreateATicket = () => {
   )
 }
 
-export default CreateATicket
+export default CreateATicketForm
