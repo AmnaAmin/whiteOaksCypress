@@ -14,10 +14,6 @@ export const PROJECT_COLUMNS = [
     Header: 'projectID',
     accessor: 'projectId',
   },
-  // {
-  //   Header: t('type'),
-  //   accessor: 'projectTypeLabel',
-  // },
   {
     Header: t('WOstatus'),
     accessor: 'statusLabel',
@@ -29,24 +25,20 @@ export const PROJECT_COLUMNS = [
   },
   {
     Header: t('address'),
-    accessor: 'vendorAddress', // or business address
+    accessor: 'propertyAddress',
   },
   {
     Header: 'trade',
     accessor: 'skillName',
   },
   {
-    Header: t('pastDueWO'),
-    accessor: '', //'pastDueWorkorders',
-  },
-  {
     Header: t('DueDateWO'),
-    accessor: '', //'clientDueDate',
+    accessor: 'workOrderExpectedCompletionDate',
     Cell({ value }) {
       return dateFormat(value)
     },
     getCellExportValue(row) {
-      return dateFormat(row.values.clientDueDate)
+      return dateFormat(row.values.workOrderExpectedCompletionDate)
     },
   },
   {
@@ -122,11 +114,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
 }) => {
 
-  const { projects } = useProjects()
+  // const { projects } = useProjects()
   const { workOrderData, isLoading } = useWorkOrders()
   const [filterProjects, setFilterProjects] = useState(workOrderData)
-
-  console.log(projects)
 
   useEffect(() => {
     if (!selectedCard) setFilterProjects(workOrderData)
