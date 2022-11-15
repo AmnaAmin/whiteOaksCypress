@@ -3,7 +3,7 @@ import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { TableWrapper } from 'components/table/table'
 import { RowProps } from 'components/table/react-table'
 import { Link } from 'react-router-dom'
-import { useProjects, useWorkOrders } from 'api/projects'
+import { useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { Column } from 'react-table'
@@ -114,7 +114,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
 }) => {
 
-  // const { projects } = useProjects()
   const { workOrderData, isLoading } = useWorkOrders()
   const [filterProjects, setFilterProjects] = useState(workOrderData)
 
