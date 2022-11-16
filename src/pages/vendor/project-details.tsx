@@ -22,7 +22,7 @@ const ProjectDetails: React.FC = props => {
   const { projectId } = useParams<'projectId'>()
   const { projectData, isLoading } = useProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const [tabIndex, setTabIndex] = useState<number>(0)
+  const [tabIndex, setTabIndex] = useState<number>(1)
   const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,

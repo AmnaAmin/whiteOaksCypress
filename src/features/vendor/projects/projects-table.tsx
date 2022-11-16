@@ -53,7 +53,7 @@ export const PROJECT_COLUMNS = [
 ]
 
 const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
-  const idCell = row.cells.find(cell => cell.column.id === 'id')
+  const idCell = row.cells.find(cell => cell.column.id === 'projectId')
   const projectId = idCell?.value
 
   return (
@@ -112,7 +112,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resizeElementRef,
   selectedCard,
 }) => {
-
   const { workOrderData, isLoading } = useWorkOrders()
   const [filterProjects, setFilterProjects] = useState(workOrderData)
 
