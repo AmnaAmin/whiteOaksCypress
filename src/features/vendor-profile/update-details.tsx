@@ -15,12 +15,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-icons/bi'
 import { HiOutlineLocationMarker, HiOutlineMap } from 'react-icons/hi'
-import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import { parseAPIDataToFormData } from 'api/vendor-details'
+import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { useTranslation } from 'react-i18next'
@@ -141,13 +140,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
     register,
     control,
     formState: { errors },
-    reset,
-  } = useFormContext<VendorProfileDetailsFormData>()
-
-  useEffect(() => {
-    if (!vendorProfileData) return
-    reset(parseAPIDataToFormData(vendorProfileData))
-  }, [reset, vendorProfileData])
+  } = useFormContext()
 
   return (
     <>
