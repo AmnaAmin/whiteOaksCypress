@@ -250,8 +250,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   )
 
   // Disable selection of future payment received date for all users expect Admin
-  const futureDateDisable =  !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
- 
+  const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.

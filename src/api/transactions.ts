@@ -282,7 +282,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-const getFileContents = async (document: any, documentType: number) => {
+export const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
 
   if (document?.s3Url) return Promise.resolve()
@@ -725,6 +725,67 @@ export const useOverPaymentTransaction = (transactionType?: number) => {
 
   return {
     transactions,
+    ...rest,
+  }
+}
+
+export const useUploadMaterialAttachment = () => {
+  const client = useClient()
+  const toast = useToast()
+
+  return useMutation(
+    (payload: any) => {
+      return client('smart-material-scan', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Success Upload Attachment.',
+          description: 'Attachment has been uploaded successfully.',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while updating transaction.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+const swoPrefix = '/smartwo/api'
+export const useFetchMaterialItems = (correlationId?: string | null | undefined) => {
+  const client = useClient(swoPrefix)
+  const [refetchInterval, setRefetchInterval] = useState(15000)
+
+  const { data, ...rest } = useQuery<any>(
+    ['etchMaterialItems', correlationId],
+    async () => {
+      const response = await client(`material/` + correlationId, {})
+
+      if (!response?.data || (response?.data && response?.data?.length)) {
+        setRefetchInterval(0)
+      }
+      return response?.data
+    },
+    {
+      enabled: !!correlationId,
+      refetchInterval: refetchInterval,
+    },
+  )
+
+  return {
+    data,
     ...rest,
   }
 }
