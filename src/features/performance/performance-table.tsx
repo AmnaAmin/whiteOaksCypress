@@ -34,6 +34,13 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       },
     },
     {
+      header: 'Margin %',
+      accessorKey: 'marginPercentage',
+      accessorFn(row) {
+        return numeral(row.marginPercentage / 100).format('0.00%')
+      },
+    },
+    {
       header: 'Target',
       accessorKey: 'target',
       accessorFn(row) {
