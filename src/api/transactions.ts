@@ -109,6 +109,14 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.payment,
     label: 'Payment',
   },
+  {
+    value: TransactionTypeValues.lateFee,
+    label: 'Late Fee',
+  },
+  {
+    value: TransactionTypeValues.factoring,
+    label: 'Factoring',
+  },
 ]
 
 export const useTransactionTypes = () => {

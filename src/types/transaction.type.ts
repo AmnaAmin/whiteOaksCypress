@@ -91,6 +91,8 @@ export enum TransactionTypeValues {
   payment = 49,
   woPaid = 62,
   overpayment = 113,
+  lateFee = 1014,
+  factoring = 1013,
 }
 
 export enum TransactionMarkAsValues {
