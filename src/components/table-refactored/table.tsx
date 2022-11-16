@@ -7,6 +7,7 @@ import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -32,8 +33,10 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       </datalist>
       <DebouncedInput
         type={dateFilter ? 'date' : 'text'}
-        value={(columnFilterValue ?? '') as string}
-        onChange={value => column.setFilterValue(value)}
+        value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
+        onChange={value =>
+          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(value)
+        }
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
         // @ts-ignore

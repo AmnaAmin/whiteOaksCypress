@@ -12,7 +12,7 @@ export const PerformanceTab = () => {
       <Box mt={10} p={0} rounded="13px" flex={1}>
         <PerformanceGraphWithUsers isLoading={isLoading} chartData={performanceChart || []} />
       </Box>
-      <PerformanceInfoCards isLoading={false} />
+      <PerformanceInfoCards isLoading={isLoading} />
       <PerformanceTable />
     </>
   )
