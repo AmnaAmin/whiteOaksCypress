@@ -72,6 +72,8 @@ export const transaction = {
         balance: 'Balance',
         profit: 'Profit',
         profitPercentage: 'Profit %',
+        factoring: 'Factoring',
+        lateFee: 'Late Fee',
 
         // Financial Overview Table
         client: 'Client',
@@ -172,6 +174,8 @@ export const transaction = {
         balance: 'Balance',
         profit: 'Lucro',
         profitPercentage: 'Lucros %',
+        factoring: 'Factorización',
+        lateFee: 'Cargo por demora',
 
         // Financial Overview Table
         client: 'Cliente',
