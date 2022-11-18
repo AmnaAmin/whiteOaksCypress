@@ -16,18 +16,18 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 function getRefundTransactionType(type):TransactionsWithRefundType {
   if(type === TransactionTypeValues.material) return {
-    id: 'refund-material-checkbox',
+    id: 'refund material',
     name: 'refundMaterial',
     label: 'Refund material',
   };
 
   if(type === TransactionTypeValues.lateFee) return {
-    id: 'refund-late-fee-checkbox',
+    id: 'refund late fee',
     name: 'refundLateFee',
     label: 'Refund late fee',
   }
   return {
-    id: 'refund-factoring',
+    id: 'refund factoring',
     name: 'refundFactoring',
     label: 'Refund factoring',
   }
