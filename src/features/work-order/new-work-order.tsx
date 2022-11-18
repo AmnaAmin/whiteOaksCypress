@@ -257,7 +257,7 @@ export const NewWorkOrderForm: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const [woStartDate, watchPercentage, watchUploadWO, woECDate] = watch([
+  const [woStartDate, watchPercentage, watchUploadWO, woExpectedCompletionDate] = watch([
     'workOrderStartDate',
     'percentage',
     'uploadWO',
@@ -266,7 +266,7 @@ export const NewWorkOrderForm: React.FC<{
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
   useEffect(() => {
-    if (woStartDate! > woECDate!) {
+    if (woStartDate! > woExpectedCompletionDate!) {
       setValue('workOrderExpectedCompletionDate', null)
     }
   })
