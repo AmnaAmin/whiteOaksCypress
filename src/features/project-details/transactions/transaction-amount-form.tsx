@@ -72,7 +72,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   // useOnRefundMaterialCheckboxChange(control, update)
 
-  const { isShowRefundMaterialCheckbox } = useFieldShowHideDecision(control)
+  const { refundCheckbox } = useFieldShowHideDecision(control)
   const { isApproved } = useFieldDisabledEnabledDecision(control, changeOrder)
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
@@ -126,7 +126,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     [setValue],
   )
 
-  const onRefundMaterialCheckboxChange = isChecked => {
+  const onToggleRefundCheckbox = isChecked => {
     const transaction = getValues('transaction')
 
     transaction?.forEach((transactionField, index) => {
@@ -186,14 +186,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
         <HStack w={!isApproved ? 'auto' : '100%'} justifyContent="end">
-          {isShowRefundMaterialCheckbox && (
+          {refundCheckbox.isVisible && (
             <Controller
               control={control}
-              name="refundMaterial"
+              name={refundCheckbox.name}
               render={({ field: { name, value, onChange } }) => {
                 return (
                   <Checkbox
-                    data-testid="refund-material"
+                    data-testid={refundCheckbox.id}
                     name={name}
                     variant="link"
                     _focus={{ outline: 'none' }}
@@ -201,13 +201,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     isDisabled={isApproved}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
-                      onRefundMaterialCheckboxChange(isChecked)
+                      onToggleRefundCheckbox(isChecked)
                       onChange(isChecked)
                     }}
                   >
                     {t(`${TRANSACTION}.refund`)}
                   </Checkbox>
-                )
+              )
               }}
             />
           )}
@@ -405,12 +405,17 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                               onChange={event => {
                                 const inputValue = Number(event.currentTarget.value)
                                 const transactionTypeId = getValues('transactionType')?.value
-                                const isRefundMaterialCheckboxChecked = getValues('refundMaterial')
+                                const isRefundMaterial = getValues('refundMaterial')
+                                const isRefundLateFee = getValues('refundLateFee')
+                                const isRefundFactoring = getValues('refundFactoring')
+                                const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring;
 
                                 field.onChange(
                                   TransactionTypeValues.draw === transactionTypeId ||
-                                    (TransactionTypeValues.material === transactionTypeId &&
-                                      !isRefundMaterialCheckboxChecked)
+                                    ([TransactionTypeValues.material,TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
+                                      (id) => id === transactionTypeId
+                                    ) &&
+                                      !isRefund)
                                     ? -1 * Math.abs(inputValue)
                                     : inputValue,
                                 )
