@@ -212,7 +212,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled') || isUpdating
+          return !(status === 'paid' || status === 'cancelled' || status === 'invoiced') || isUpdating
         })
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, workOrder.skillName),

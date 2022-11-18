@@ -110,19 +110,6 @@ export const useCreateVendorMutation = () => {
   })
 }
 
-export const parseAPIDataToFormData = (vendorProfileData: VendorProfile): VendorProfileDetailsFormData => {
-  return {
-    primaryContact: vendorProfileData.ownerName,
-    secondaryContact: vendorProfileData.secondName,
-    businessPhoneNumber: vendorProfileData.businessPhoneNumber,
-    secondaryNumber: vendorProfileData.secondPhoneNumber,
-    businessNumberExtention: vendorProfileData.businessPhoneNumberExtension,
-    secondaryNumberExtenstion: vendorProfileData.secondPhoneNumberExtension,
-    primaryEmail: vendorProfileData.businessEmailAddress,
-    secondaryEmail: vendorProfileData.secondEmailAddress,
-  }
-}
-
 export const parseFormDataToAPIData = (
   vendorProfileData: VendorProfile,
   formValues: VendorProfileDetailsFormData,

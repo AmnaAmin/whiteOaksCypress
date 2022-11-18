@@ -55,6 +55,7 @@ export const transaction = {
         dateOfSignature: 'Date of signature',
         readMore: 'Read More',
         readLess: 'Read Less',
+        refund: 'Refund',
 
         // Project WO Overview Table
         vendor: 'Vendor',
@@ -157,6 +158,7 @@ export const transaction = {
         dateOfSignature: 'Fecha de la firma',
         readMore: 'Lee mas',
         readLess: 'Leer menos',
+        refund: 'Reembolso',
 
         // Project WO Overview Table
         vendor: 'Vendedor',

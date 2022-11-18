@@ -221,7 +221,10 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
             : ''
         },
         footer: props => {
-          const total = getTotalOfKey('vendorProfitPercentage', financialOveriewTableData)
+          const total =
+            (getTotalOfKey('profit', financialOveriewTableData) /
+              getTotalOfKey('newAmount', financialOveriewTableData)) *
+            100
           return isDefined(total) ? numeral(percentageFormatter(total)).format('0.00%') : ''
         },
       },
