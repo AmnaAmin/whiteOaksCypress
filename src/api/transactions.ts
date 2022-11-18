@@ -446,6 +446,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refundMaterial: false,
+    refundLateFee: false,
+    refundFactoring: false,
   }
 }
 

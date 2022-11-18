@@ -157,6 +157,8 @@ export interface FormValues {
   payDateVariance: string
   paymentRecievedDate: string | null
   refundMaterial: boolean | null
+  refundLateFee?: boolean | null
+  refundFactoring?: boolean | null
   lienWaiver?: LienWaiverFormValues
 }
 
@@ -244,3 +246,10 @@ export type ChangeOrderType = {
   paymentReceived: string | null
   documents: Document[]
 }
+
+export type TransactionsWithRefundType = {
+  isVisible?: boolean,
+  id: 'refund-material-checkbox' | 'refund-late-fee-checkbox' | 'refund-factoring',
+  name: 'refundMaterial' | 'refundLateFee' | 'refundFactoring',
+  label: 'Refund material' | 'Refund late fee' | 'Refund factoring'
+};
