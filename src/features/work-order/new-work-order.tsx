@@ -257,8 +257,19 @@ export const NewWorkOrderForm: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
+  const [woStartDate, watchPercentage, watchUploadWO, woECDate] = watch([
+    'workOrderStartDate',
+    'percentage',
+    'uploadWO',
+    'workOrderExpectedCompletionDate',
+  ])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
+
+  useEffect(() => {
+    if (woStartDate! > woECDate!) {
+      setValue('workOrderExpectedCompletionDate', 'mm/dd/yyy')
+    }
+  })
 
   useEffect(() => {
     if (watchPercentage === 0) {
@@ -613,6 +624,7 @@ export const NewWorkOrderForm: React.FC<{
                           required: 'This field is required.',
                         })}
                       />
+
                       <FormErrorMessage>
                         {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
                       </FormErrorMessage>
