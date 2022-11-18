@@ -405,14 +405,17 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                               onChange={event => {
                                 const inputValue = Number(event.currentTarget.value)
                                 const transactionTypeId = getValues('transactionType')?.value
-                                const isRefundMaterialCheckboxChecked = getValues('refundMaterial')
+                                const isRefundMaterial = getValues('refundMaterial')
+                                const isRefundLateFee = getValues('refundLateFee')
+                                const isRefundFactoring = getValues('refundFactoring')
+                                const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring;
 
                                 field.onChange(
                                   TransactionTypeValues.draw === transactionTypeId ||
                                     ([TransactionTypeValues.material,TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
                                       (id) => id === transactionTypeId
                                     ) &&
-                                      !isRefundMaterialCheckboxChecked)
+                                      !isRefund)
                                     ? -1 * Math.abs(inputValue)
                                     : inputValue,
                                 )
