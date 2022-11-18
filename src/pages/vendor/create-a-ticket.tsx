@@ -8,7 +8,6 @@ import {
   VStack,
   HStack,
   Textarea,
-  useToast,
   FormLabel,
   Divider,
   Input,
@@ -33,7 +32,6 @@ import ReactSelect from 'components/form/react-select'
 export const CreateATicket = () => {
   const [fileBlob, setFileBlob] = React.useState<Blob>()
   const { mutate: createTicket } = useCreateTicketMutation()
-  const toast = useToast()
 
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
@@ -46,16 +44,7 @@ export const CreateATicket = () => {
     }
 
     const payload = parseSupportFormValuesToAPIPayload(formValues, attachment)
-    createTicket(payload, {
-      onSuccess() {
-        toast({
-          title: 'Support Ticket Creation',
-          description: 'Support ticket has been created successfully.',
-          status: 'success',
-          isClosable: true,
-        })
-      },
-    })
+    createTicket(payload)
   }
   return (
     <Box>

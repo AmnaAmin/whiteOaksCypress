@@ -109,6 +109,14 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.payment,
     label: 'Payment',
   },
+  {
+    value: TransactionTypeValues.lateFee,
+    label: 'Late Fee',
+  },
+  {
+    value: TransactionTypeValues.factoring,
+    label: 'Factoring',
+  },
 ]
 
 export const useTransactionTypes = () => {
@@ -438,6 +446,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refundMaterial: false,
+    refundLateFee: false,
+    refundFactoring: false,
   }
 }
 
