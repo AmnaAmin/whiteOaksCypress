@@ -29,7 +29,12 @@ import { useTranslation } from 'react-i18next'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import numeral from 'numeral'
 import { TRANSACTION } from './transactions.i18n'
-import { getFileContents, useFetchMaterialItems, useUploadMaterialAttachment } from 'api/transactions'
+import {
+  getFileContents,
+  mapMaterialItemstoTransactions,
+  useFetchMaterialItems,
+  useUploadMaterialAttachment,
+} from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
 
 type TransactionAmountFormProps = {
@@ -64,7 +69,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
   const { data: account } = useAccountDetails()
   const [correlationId, setCorrelationId] = useState<null | string | undefined>(null)
-  const { data: materialItems, isLoading: isLoadingMaterialItems } = useFetchMaterialItems(correlationId)
+  const { materialItems, isLoading: isLoadingMaterialItems } = useFetchMaterialItems(correlationId)
 
   const checkedItems = useMemo(() => {
     return transaction?.map(item => item.checked)
@@ -81,7 +86,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   useEffect(() => {
     if (materialItems?.length) {
-      setValue('transaction', materialItems)
+      setValue('transaction', mapMaterialItemstoTransactions(materialItems))
     }
   }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)

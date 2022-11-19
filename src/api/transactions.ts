@@ -769,14 +769,14 @@ export const useFetchMaterialItems = (correlationId?: string | null | undefined)
   const [refetchInterval, setRefetchInterval] = useState(15000)
 
   const { data, ...rest } = useQuery<any>(
-    ['etchMaterialItems', correlationId],
+    ['fetchMaterialItems', correlationId],
     async () => {
-      const response = await client(`material/` + correlationId, {})
+      const response = await client(`smart-materials?correlationId.equals/` + correlationId, {})
 
-      if (!response?.data || (response?.data && response?.data?.length)) {
+      if (!response?.data || (response?.data && response?.data?.[0]?.status === 'COMPLETED')) {
         setRefetchInterval(0)
       }
-      return response?.data
+      return response?.data?.[0]
     },
     {
       enabled: !!correlationId,
@@ -785,7 +785,18 @@ export const useFetchMaterialItems = (correlationId?: string | null | undefined)
   )
 
   return {
-    data,
+    materialItems: data?.data || [],
     ...rest,
   }
+}
+
+export const mapMaterialItemstoTransactions = items => {
+  return items.map(i => {
+    return {
+      id: Date.now(),
+      description: i.description,
+      amount: i.vendorCost,
+      checked: false,
+    }
+  })
 }
