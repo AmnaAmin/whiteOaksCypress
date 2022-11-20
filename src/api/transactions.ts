@@ -771,7 +771,7 @@ export const useFetchMaterialItems = (correlationId?: string | null | undefined)
   const { data, ...rest } = useQuery<any>(
     ['fetchMaterialItems', correlationId],
     async () => {
-      const response = await client(`smart-materials?correlationId.equals/` + correlationId, {})
+      const response = await client(`smart-materials/correlation/` + correlationId, {})
 
       if (!response?.data || (response?.data && response?.data?.[0]?.status === 'COMPLETED')) {
         setRefetchInterval(0)
