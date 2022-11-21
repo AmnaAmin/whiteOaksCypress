@@ -473,6 +473,24 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             })}
           </Box>
         )}
+        <Box position="absolute" left="0" right="0" bottom="0" zIndex={1}>
+          <Grid
+            gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+            fontSize="14px"
+            color="gray.600"
+            columnGap="4rem"
+            borderWidth="1px 0 0 0"
+            borderStyle="solid"
+            borderColor="gray.200"
+            bg="white"
+          >
+            {isShowCheckboxes && <GridItem />}
+            <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
+            <GridItem py="4" fontWeight="bold" data-testid="total-amount">
+              {t('total')}: {totalAmount}
+            </GridItem>
+          </Grid>
+        </Box>
       </Flex>
 
       <ConfirmationBox
