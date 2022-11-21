@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form'
 import { FormValues } from 'types/transaction.type'
 import { transactionDefaultFormValues } from 'api/transactions'
 import { TransactionAmountForm } from '../transaction-amount-form'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 const TransactionForm = () => {
+  const queryClient = new QueryClient({})
   const defaultValues: FormValues = useMemo(() => {
     return transactionDefaultFormValues('test@test.com')
   }, [])
@@ -15,7 +17,11 @@ const TransactionForm = () => {
     defaultValues,
   })
 
-  return <TransactionAmountForm formReturn={form} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TransactionAmountForm formReturn={form} />
+    </QueryClientProvider>
+  )
 }
 
 const FIELD_CHECKBOX_SELECTOR = '#amounts-list input[type=checkbox]'
@@ -56,7 +62,7 @@ describe('Transaction amount adding/removing interactions test cases', () => {
     // screen.debug(undefined, 10000)
   })
 
-  test('Check one of checkbox should change AllCheckbox state to indeterminate', async () => {
+  test('Check one of checkbox should change AllCheckbox state to indeterminate. Transaction', async () => {
     const allCheckboxIndeterminateSelector = '#all-checkbox input[type=checkbox]+span[data-indeterminate]'
 
     const { container } = render(<TransactionForm />)
@@ -74,7 +80,7 @@ describe('Transaction amount adding/removing interactions test cases', () => {
     expect(container.querySelector(allCheckboxIndeterminateSelector)).toBeInTheDocument()
   })
 
-  test('Remove amount rows in case one row left, checkbox should hide for only one row.', async () => {
+  test('Remove amount rows in case one row left, checkbox should hide for only one row.Transaction', async () => {
     const { container } = render(<TransactionForm />)
 
     const addNewRowButton = screen.getByTestId('add-new-row-button')
