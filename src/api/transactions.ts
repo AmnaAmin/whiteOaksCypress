@@ -290,7 +290,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-const getFileContents = async (document: any, documentType: number) => {
+export const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
 
   if (document?.s3Url) return Promise.resolve()
@@ -737,4 +737,67 @@ export const useOverPaymentTransaction = (transactionType?: number) => {
     transactions,
     ...rest,
   }
+}
+
+export const useUploadMaterialAttachment = () => {
+  const client = useClient()
+  const toast = useToast()
+
+  return useMutation(
+    (payload: any) => {
+      return client('smart-material-scan', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while uploading attachment.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+const swoPrefix = '/smartwo/api'
+export const useFetchMaterialItems = (correlationId?: string | null | undefined) => {
+  const client = useClient(swoPrefix)
+  const [refetchInterval, setRefetchInterval] = useState(5000)
+
+  const { data, ...rest } = useQuery<any>(
+    ['fetchMaterialItems', correlationId],
+    async () => {
+      const response = await client(`smart-materials/correlation/` + correlationId, {})
+
+      if (response?.data && response?.data?.status === 'COMPLETED') {
+        setRefetchInterval(0)
+      }
+      return response?.data
+    },
+    {
+      enabled: !!correlationId,
+      refetchInterval: refetchInterval,
+    },
+  )
+
+  return {
+    materialItems: data || {},
+    ...rest,
+  }
+}
+
+export const mapMaterialItemstoTransactions = items => {
+  return items?.map(i => {
+    return {
+      id: Date.now(),
+      description: i.description,
+      amount: i.whiteoaksCost,
+      checked: false,
+    }
+  })
 }
