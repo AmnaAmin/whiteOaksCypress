@@ -248,8 +248,8 @@ export type ChangeOrderType = {
 }
 
 export type TransactionsWithRefundType = {
-  isVisible?: boolean,
-  id: 'refund-material' | 'refund-late-fee' | 'refund-factoring',
-  name: 'refundMaterial' | 'refundLateFee' | 'refundFactoring',
+  isVisible?: boolean
+  id: 'refund-material' | 'refund-late-fee' | 'refund-factoring'
+  name: 'refundMaterial' | 'refundLateFee' | 'refundFactoring'
   label: 'Refund material' | 'Refund late fee' | 'Refund factoring'
-};
+}
