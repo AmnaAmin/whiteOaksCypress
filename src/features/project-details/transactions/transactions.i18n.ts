@@ -56,6 +56,7 @@ export const transaction = {
         dateOfSignature: 'Date of signature',
         readMore: 'Read More',
         readLess: 'Read Less',
+        refund: 'Refund',
 
         // Project WO Overview Table
         vendor: 'Vendor',
@@ -73,6 +74,8 @@ export const transaction = {
         balance: 'Balance',
         profit: 'Profit',
         profitPercentage: 'Profit %',
+        factoring: 'Factoring',
+        lateFee: 'Late Fee',
 
         // Financial Overview Table
         client: 'Client',
@@ -157,6 +160,7 @@ export const transaction = {
         dateOfSignature: 'Fecha de la firma',
         readMore: 'Lee mas',
         readLess: 'Leer menos',
+        refund: 'Reembolso',
 
         // Project WO Overview Table
         vendor: 'Vendedor',
@@ -174,6 +178,8 @@ export const transaction = {
         balance: 'Balance',
         profit: 'Lucro',
         profitPercentage: 'Lucros %',
+        factoring: 'Factorización',
+        lateFee: 'Cargo por demora',
 
         // Financial Overview Table
         client: 'Cliente',
