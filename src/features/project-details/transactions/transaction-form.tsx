@@ -131,7 +131,7 @@ export type TransactionFormProps = {
 export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-
+  const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   // const [document, setDocument] = useState<File | null>(null)
@@ -190,6 +190,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
     control,
     transaction,
+    isMaterialsLoading,
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
@@ -250,8 +251,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   )
 
   // Disable selection of future payment received date for all users expect Admin
-  const futureDateDisable =  !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
- 
+  const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
@@ -292,7 +293,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
 
   return (
     <Flex direction="column">
-      {isFormLoading && <ViewLoader />}
+      {(isFormLoading || isMaterialsLoading) && (
+        <ViewLoader label={isMaterialsLoading ? t(`${TRANSACTION}.scanningMessage`) : null} />
+      )}
       {isLienWaiverRequired && <LienWaiverAlert />}
 
       {isFormSubmitLoading && (
@@ -721,7 +724,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 )}
               </Grid>
 
-              <TransactionAmountForm formReturn={formReturn} transaction={transaction} />
+              <TransactionAmountForm
+                formReturn={formReturn}
+                transaction={transaction}
+                isMaterialsLoading={isMaterialsLoading}
+                setMaterialsLoading={setMaterialsLoading}
+              />
             </Flex>
           ) : (
             <Box flex={1}>
