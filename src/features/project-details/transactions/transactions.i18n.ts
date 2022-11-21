@@ -26,6 +26,7 @@ export const transaction = {
         paidDate: 'Paid Date',
         payDateVariance: 'Pay Date Variance',
         invoicedDate: 'Invoiced Date',
+        scanningMessage: 'Scanning Attachment. This may take few seconds...',
 
         // Transaction Modal
         addNewRow: 'Add New Row',
@@ -123,6 +124,7 @@ export const transaction = {
         invoicedDate: 'Fecha Facturada',
         paidDate: 'Fecha de Pago',
         payDateVariance: 'Variación de La Fecha de Pago',
+        scanningMessage: 'Adjunto de escaneo. Esto puede tardar unos segundos...',
 
         // Transaction Modal
 

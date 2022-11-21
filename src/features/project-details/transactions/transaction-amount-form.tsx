@@ -13,8 +13,6 @@ import {
   Divider,
   GridItem,
   Grid,
-  Spinner,
-  Center,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlinePlus } from 'react-icons/ai'
@@ -40,11 +38,15 @@ import { useAccountDetails } from 'api/vendor-details'
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
   transaction?: ChangeOrderType
+  isMaterialsLoading?: boolean
+  setMaterialsLoading?: (value) => void
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   formReturn,
   transaction: changeOrder,
+  isMaterialsLoading,
+  setMaterialsLoading,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -69,7 +71,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
   const { data: account } = useAccountDetails()
   const [correlationId, setCorrelationId] = useState<null | string | undefined>(null)
-  const { materialItems, isLoading: isLoadingMaterialItems } = useFetchMaterialItems(correlationId)
+  const { materialItems } = useFetchMaterialItems(correlationId)
 
   const checkedItems = useMemo(() => {
     return transaction?.map(item => item.checked)
@@ -85,8 +87,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   })
 
   useEffect(() => {
-    if (materialItems?.length) {
-      setValue('transaction', mapMaterialItemstoTransactions(materialItems))
+    if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
+      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data))
+      setMaterialsLoading?.(false)
     }
   }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)
@@ -136,25 +139,28 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   }, [removeTransactionField, transactionFields, onDeleteConfirmationModalClose, setValue])
 
   const onFileChange = useCallback(
-    async e => {
+    e => {
       const files = e.target.files
       if (files[0]) {
         setValue('attachment', files[0])
         if ([TransactionTypeValues.material].includes(values?.transactionType?.value)) {
-          var currentTime = +new Date()
-          const correlationId = (account.id + '-' + currentTime) as string
-          let payload = (await getFileContents(files[0], values?.transactionType?.value)) as any
-          payload.correlationId = correlationId
-          uploadMaterialAttachment(payload, {
-            onSuccess: () => {
-              setCorrelationId(correlationId)
-            },
-          })
+          uploadMaterialDocument(files[0])
         }
       }
     },
-    [setValue, values],
+    [setValue, values, setCorrelationId],
   )
+
+  const uploadMaterialDocument = async document => {
+    setMaterialsLoading?.(true)
+    let payload = (await getFileContents(document, values?.transactionType?.value)) as any
+    payload.correlationId = (account.id + '-' + +new Date()) as string
+    uploadMaterialAttachment(payload, {
+      onSuccess: () => {
+        setCorrelationId(payload.correlationId)
+      },
+    })
+  }
 
   const onRefundMaterialCheckboxChange = isChecked => {
     const transaction = getValues('transaction')
@@ -310,7 +316,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 variant="outline"
                 size="sm"
                 colorScheme="brand"
-                isDisabled={isApproved}
+                isDisabled={isApproved || !values?.transactionType?.value}
               >
                 {t(`${TRANSACTION}.attachment`)}
               </Button>
@@ -327,39 +333,35 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         flexDirection="column"
         roundedTop={6}
       >
-        {isLoadingMaterialItems ? (
-          <Center h="400px">
-            <Spinner size="lg" />
-          </Center>
-        ) : (
-          <>
-            <Grid
-              gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-              px="4"
-              py="3"
-              fontSize="14px"
-              color="gray.600"
-              bg="gray.50"
-              gap="1rem 4rem"
-              borderWidth="0 0 1px 0"
-              borderStyle="solid"
-              borderColor="gray.200"
-              roundedTop={6}
-            >
-              {isShowCheckboxes && (
-                <GridItem id="all-checkbox">
-                  <Checkbox
-                    variant="normal"
-                    isChecked={allChecked}
-                    isDisabled={isApproved}
-                    isIndeterminate={isIndeterminate}
-                    onChange={toggleAllCheckboxes}
-                  />
-                </GridItem>
-              )}
-              <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
-              <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
-            </Grid>
+        <>
+          <Grid
+            gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+            px="4"
+            py="3"
+            fontSize="14px"
+            color="gray.600"
+            bg="gray.50"
+            gap="1rem 4rem"
+            borderWidth="0 0 1px 0"
+            borderStyle="solid"
+            borderColor="gray.200"
+            roundedTop={6}
+          >
+            {isShowCheckboxes && (
+              <GridItem id="all-checkbox">
+                <Checkbox
+                  variant="normal"
+                  isChecked={allChecked}
+                  isDisabled={isApproved}
+                  isIndeterminate={isIndeterminate}
+                  onChange={toggleAllCheckboxes}
+                />
+              </GridItem>
+            )}
+            <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
+            <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
+          </Grid>
+          {!isMaterialsLoading && (
             <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
               {transactionFields.map((transactionField, index) => {
                 return (
@@ -464,26 +466,26 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 )
               })}
             </Box>
-            <Box position="absolute" left="0" right="0" bottom="0" zIndex={1}>
-              <Grid
-                gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-                fontSize="14px"
-                color="gray.600"
-                columnGap="4rem"
-                borderWidth="1px 0 0 0"
-                borderStyle="solid"
-                borderColor="gray.200"
-                bg="white"
-              >
-                {isShowCheckboxes && <GridItem />}
-                <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
-                <GridItem py="4" fontWeight="bold" data-testid="total-amount">
-                  {t('total')}: {totalAmount}
-                </GridItem>
-              </Grid>
-            </Box>
-          </>
-        )}
+          )}
+          <Box position="absolute" left="0" right="0" bottom="0" zIndex={1}>
+            <Grid
+              gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+              fontSize="14px"
+              color="gray.600"
+              columnGap="4rem"
+              borderWidth="1px 0 0 0"
+              borderStyle="solid"
+              borderColor="gray.200"
+              bg="white"
+            >
+              {isShowCheckboxes && <GridItem />}
+              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
+              <GridItem py="4" fontWeight="bold" data-testid="total-amount">
+                {t('total')}: {totalAmount}
+              </GridItem>
+            </Grid>
+          </Box>
+        </>
       </Flex>
 
       <ConfirmationBox

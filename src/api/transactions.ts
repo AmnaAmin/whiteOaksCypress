@@ -741,18 +741,9 @@ export const useUploadMaterialAttachment = () => {
       })
     },
     {
-      onSuccess() {
-        toast({
-          title: 'Success Upload Attachment.',
-          description: 'Attachment has been uploaded successfully.',
-          status: 'success',
-          isClosable: true,
-          position: 'top-left',
-        })
-      },
       onError(error: ErrorType) {
         toast({
-          title: error?.title || 'Error while updating transaction.',
+          title: error?.title || 'Error while uploading attachment.',
           description: error?.message || 'Something went wrong.',
           status: 'error',
           isClosable: true,
@@ -766,17 +757,17 @@ export const useUploadMaterialAttachment = () => {
 const swoPrefix = '/smartwo/api'
 export const useFetchMaterialItems = (correlationId?: string | null | undefined) => {
   const client = useClient(swoPrefix)
-  const [refetchInterval, setRefetchInterval] = useState(15000)
+  const [refetchInterval, setRefetchInterval] = useState(5000)
 
   const { data, ...rest } = useQuery<any>(
     ['fetchMaterialItems', correlationId],
     async () => {
       const response = await client(`smart-materials/correlation/` + correlationId, {})
 
-      if (!response?.data || (response?.data && response?.data?.[0]?.status === 'COMPLETED')) {
+      if (response?.data && response?.data?.status === 'COMPLETED') {
         setRefetchInterval(0)
       }
-      return response?.data?.[0]
+      return response?.data
     },
     {
       enabled: !!correlationId,
@@ -785,17 +776,17 @@ export const useFetchMaterialItems = (correlationId?: string | null | undefined)
   )
 
   return {
-    materialItems: data?.data || [],
+    materialItems: data || {},
     ...rest,
   }
 }
 
 export const mapMaterialItemstoTransactions = items => {
-  return items.map(i => {
+  return items?.map(i => {
     return {
       id: Date.now(),
       description: i.description,
-      amount: i.vendorCost,
+      amount: i.whiteoaksCost,
       checked: false,
     }
   })
