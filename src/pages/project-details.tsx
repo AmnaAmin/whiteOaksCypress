@@ -121,7 +121,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Box h="40px" w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 &&
-                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
+                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid, STATUS.Punch].includes(
                     projectStatus as STATUS,
                   ) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
