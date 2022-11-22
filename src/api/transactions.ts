@@ -765,18 +765,13 @@ export const useUploadMaterialAttachment = () => {
 }
 
 const swoPrefix = '/smartwo/api'
-export const useFetchMaterialItems = (correlationId?: string | null | undefined) => {
+export const useFetchMaterialItems = (correlationId: string | null | undefined, refetchInterval: number) => {
   const client = useClient(swoPrefix)
-  const [refetchInterval, setRefetchInterval] = useState(5000)
-
   const { data, ...rest } = useQuery<any>(
     ['fetchMaterialItems', correlationId],
     async () => {
       const response = await client(`smart-materials/correlation/` + correlationId, {})
 
-      if (response?.data && response?.data?.status === 'COMPLETED') {
-        setRefetchInterval(0)
-      }
       return response?.data
     },
     {
