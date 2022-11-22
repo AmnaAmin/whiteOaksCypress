@@ -10,7 +10,7 @@ import {
   CHANGE_ORDER_AGAINST_VENDOR_TRANSACTION_ID,
   CHANGE_ORDER_AGAINST_PROJECT_SOW_TRANSACTION_ID,
   DRAW_TRANSACTION_AGAINST_VENDOR_ID,
-  DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
+  // DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
   MATERIAL_TRANSACTION_ID,
   PAYMENT_TRANSACTION_ID,
   APPROVED_TRANSACTION_ID,
@@ -94,57 +94,57 @@ describe('Given Project Coordinator create new transaction', () => {
     })
 
     // We should resume this test case After Draw flow Lien Waiver support added
-    // test('Then User should create Change Order transaction against Project SOW of Vendor WorkOrder successfully', async () => {
-    //   const onClose = jest.fn()
+    test('Then User should create Change Order transaction against Project SOW of Vendor WorkOrder successfully', async () => {
+      const onClose = jest.fn()
 
-    //   await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212' })
 
-    //   // User first select Payment type, one of ['Change Order', 'Draw']
-    //   await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
+      // User first select Payment type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
 
-    //   // User first select Against, one of ['Project SOW', 'Vendor']
-    //   await selectOption(screen.getByTestId('against-select-field'), 'Project SOW')
-    //   /**
-    //    * Check the following fields changed properly,
-    //    * 1- Transaction Type selected with 'Change Order'
-    //    * 2- Expected Completion Date field visible with already filled value of current Date but disabled
-    //    * 3- New Expected Completion Date field visible
-    //    */
-    //   expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
-    //   expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      // User first select Against, one of ['Project SOW', 'Vendor']
+      await selectOption(screen.getByTestId('against-select-field'), 'Project SOW')
+      /**
+       * Check the following fields changed properly,
+       * 1- Transaction Type selected with 'Change Order'
+       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+       * 3- New Expected Completion Date field visible
+       */
+      expect(getByText(screen.getByTestId('transaction-type'), 'Change Order')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
 
-    //   // User first select Work Order, one of ['SOW-1', 'SOW-2']
-    //   const workOrderOptionLabel = createWorkOrderLabel(workOrder.skillName, workOrder.companyName)
-    //   await selectOption(screen.getByTestId('work-order-select'), workOrderOptionLabel)
-    //   expect(getByText(screen.getByTestId('work-order-select'), workOrderOptionLabel)).toBeInTheDocument()
+      // User first select Work Order, one of ['SOW-1', 'SOW-2']
+      const workOrderOptionLabel = createWorkOrderLabel(workOrder.skillName, workOrder.companyName)
+      await selectOption(screen.getByTestId('work-order-select'), workOrderOptionLabel)
+      expect(getByText(screen.getByTestId('work-order-select'), workOrderOptionLabel)).toBeInTheDocument()
 
-    //   // User first select Change Order, one of ['Change Order-1', 'Change Order-2']
-    //   const changeOrderOptionLabel = createChangeOrderLabel(changeOrder.changeOrderAmount, changeOrder.name)
-    //   await selectOption(screen.getByTestId('change-order-select'), changeOrderOptionLabel)
-    //   expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
+      // User first select Change Order, one of ['Change Order-1', 'Change Order-2']
+      const changeOrderOptionLabel = createChangeOrderLabel(changeOrder.changeOrderAmount, changeOrder.name)
+      await selectOption(screen.getByTestId('change-order-select'), changeOrderOptionLabel)
+      expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
 
-    //   const totalAmount = screen.getByTestId('total-amount')
-    //   expect(totalAmount.textContent).toEqual('Total: $0.00')
+      const totalAmount = screen.getByTestId('total-amount')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
-    //   // Fill the description and amount fields
-    //   const descriptionField = screen.getByTestId('transaction-description-0')
-    //   const amountField = screen.getByTestId('transaction-amount-0')
+      // Fill the description and amount fields
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
 
-    //   await userEvent.type(descriptionField, 'Added painting')
-    //   await userEvent.type(amountField, '3000')
+      await userEvent.type(descriptionField, 'Added painting')
+      await userEvent.type(amountField, '3000')
 
-    //   // Check the total amount is correct
-    //   expect(totalAmount.textContent).toEqual('Total: $3,000.00')
+      // Check the total amount is correct
+      expect(totalAmount.textContent).toEqual('Total: $3,000.00')
 
-    //   // User submit the transaction
-    //   await act(async () => {
-    //     await userEvent.click(screen.getByTestId('save-transaction'))
-    //   })
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
 
-    //   await waitForLoadingToFinish()
+      await waitForLoadingToFinish()
 
-    //   expect(onClose).toHaveBeenCalled()
-    // })
+      expect(onClose).toHaveBeenCalled()
+    })
 
     test('Then user should create Change Order transaction against Project SOW of work order ignore (not applicable)', async () => {
       const onClose = jest.fn()
