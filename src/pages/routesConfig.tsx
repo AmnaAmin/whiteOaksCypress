@@ -15,6 +15,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Performance } from './fpm/performance'
 import { PerformanceTab } from 'features/performance/performance'
 import { UserManagement } from './admin/user-management'
+import Dashboard from './admin/dashboard'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -76,7 +77,11 @@ export default function useRoutesConfig() {
         { path: 'vendors', element: VendorProfilePage },
       ]
     case isAdmin:
-      return [{ path: 'userManager', element: UserManagement }]
+      return [
+        { path: 'adminDashboard', element: Dashboard },
+        { path: 'userManager', element: UserManagement },
+        { path: 'project-details/:projectId', element: ProjectDetails },
+      ]
 
     case isAccounting:
       return [
