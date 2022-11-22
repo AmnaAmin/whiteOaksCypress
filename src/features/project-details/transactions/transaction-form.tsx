@@ -171,6 +171,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     formState: { errors },
     setValue,
     getValues,
+    watch,
     control,
     reset, //  isTruncated title={label}
   } = formReturn
@@ -198,7 +199,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   const { amount } = useTotalAmount(control)
   const againstOptions = useAgainstOptions(againstSelectOptions, control)
   const payDateVariance = useCalculatePayDateVariance(control)
-
+  const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   const onAgainstOptionSelect = (option: SelectOption) => {
@@ -276,14 +277,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     function updateAgainstOption() {
       if (transaction) return
 
-      if (againstOptions.length === 1 && transactionType) {
+      if (againstOptions.length === 1 && watchTransactionType) {
         setValue('against', againstOptions?.[0])
         resetExpectedCompletionDateFields(againstOptions?.[0])
       } else if (againstOptions.length > 1) {
         setValue('against', null)
       }
     },
-    [againstOptions, transactionType, transaction],
+    [watchTransactionType, transaction],
   )
 
   const onModalClose = () => {
@@ -293,9 +294,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
 
   return (
     <Flex direction="column">
-      {(isFormLoading || isMaterialsLoading) && (
-        <ViewLoader label={isMaterialsLoading ? t(`${TRANSACTION}.scanningMessage`) : null} />
-      )}
+      {isFormLoading && <ViewLoader />}
       {isLienWaiverRequired && <LienWaiverAlert />}
 
       {isFormSubmitLoading && (
@@ -783,7 +782,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 data-testid="save-transaction"
                 colorScheme="brand"
                 variant="solid"
-                disabled={isFormSubmitLoading}
+                disabled={isFormSubmitLoading || isMaterialsLoading}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
