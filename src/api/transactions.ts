@@ -786,12 +786,12 @@ export const useFetchMaterialItems = (correlationId: string | null | undefined, 
   }
 }
 
-export const mapMaterialItemstoTransactions = items => {
+export const mapMaterialItemstoTransactions = (items, isRefund) => {
   return items?.map(i => {
     return {
       id: Date.now(),
       description: i.description,
-      amount: i.whiteoaksCost,
+      amount: isRefund ? Math.abs(i.whiteoaksCost) : i.whiteoaksCost,
       checked: false,
     }
   })

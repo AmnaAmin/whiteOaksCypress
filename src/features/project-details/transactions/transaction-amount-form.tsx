@@ -94,7 +94,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   useEffect(() => {
     if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
       setRefetchInterval(0)
-      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data))
+      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refundMaterial))
       setMaterialsLoading?.(false)
     }
   }, [materialItems])
