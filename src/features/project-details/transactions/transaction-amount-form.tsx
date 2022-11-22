@@ -13,6 +13,10 @@ import {
   Divider,
   GridItem,
   Grid,
+  Center,
+  VStack,
+  Spinner,
+  FormLabel,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlinePlus } from 'react-icons/ai'
@@ -71,7 +75,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
   const { data: account } = useAccountDetails()
   const [correlationId, setCorrelationId] = useState<null | string | undefined>(null)
-  const { materialItems } = useFetchMaterialItems(correlationId)
+  const [refetchInterval, setRefetchInterval] = useState<number>(5000)
+  const { materialItems } = useFetchMaterialItems(correlationId, refetchInterval)
 
   const checkedItems = useMemo(() => {
     return transaction?.map(item => item.checked)
@@ -88,6 +93,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   useEffect(() => {
     if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
+      setRefetchInterval(0)
       setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data))
       setMaterialsLoading?.(false)
     }
@@ -147,6 +153,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           uploadMaterialDocument(files[0])
         }
       }
+      e.target.value = null
     },
     [setValue, values, setCorrelationId],
   )
@@ -155,6 +162,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setMaterialsLoading?.(true)
     let payload = (await getFileContents(document, values?.transactionType?.value)) as any
     payload.correlationId = (account.id + '-' + +new Date()) as string
+    setRefetchInterval(5000)
     uploadMaterialAttachment(payload, {
       onSuccess: () => {
         setCorrelationId(payload.correlationId)
@@ -187,6 +195,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               size="sm"
               borderColor="#4E87F8"
               color="#4E87F8"
+              disabled={isMaterialsLoading}
               onClick={addRow}
               leftIcon={<AiOutlinePlus color="#4E87F8" />}
             >
@@ -234,7 +243,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     variant="link"
                     _focus={{ outline: 'none' }}
                     isChecked={!!value}
-                    isDisabled={isApproved}
+                    isDisabled={isApproved || isMaterialsLoading}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
                       onToggleRefundCheckbox(isChecked)
@@ -296,8 +305,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     {document?.name || document.fileType}
                   </Text>
                   <MdOutlineCancel
-                    cursor="pointer"
+                    cursor={isMaterialsLoading ? 'default' : 'pointer'}
                     onClick={() => {
+                      if (isMaterialsLoading) {
+                        return
+                      }
                       setValue('attachment', null)
                       setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
                       if (inputRef.current) inputRef.current.value = ''
@@ -360,7 +372,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
           <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
         </Grid>
-        {!isMaterialsLoading && (
+        {isMaterialsLoading ? (
+          <Center>
+            <VStack>
+              <Spinner size="lg" />
+              <FormLabel variant={'light-label'} color="brand.300">
+                {t(`${TRANSACTION}.scanningMessage`)}
+              </FormLabel>
+            </VStack>
+          </Center>
+        ) : (
           <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
             {transactionFields.map((transactionField, index) => {
               return (
