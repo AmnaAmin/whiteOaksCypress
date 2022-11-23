@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useGetAllProjects, useProjects, useWeekDayProjectsDue } from 'api/projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { ExportButton } from 'components/table-refactored/export-button'
 import {
   GotoFirstPage,
@@ -67,7 +67,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   return (
-    <Box overflow={'auto'} height="calc(100vh - 100px)">
+    <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
       <TableContextProvider
         data={projects}
         columns={tableColumns}
@@ -77,11 +77,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table
-          isLoading={isLoading}
-          onRowClick={onRowClick}
-          isEmpty={!isLoading && !projects?.length}
-        />
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
@@ -91,6 +87,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
               colorScheme="brand"
               fileName="projects.xlsx"
             />
+            <CustomDivider />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
