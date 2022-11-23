@@ -79,6 +79,7 @@ const PaymentInfoTab = props => {
     invoiceAmount: string | null
     clientOriginalApprovedAmount: string | null
     clientApprovedAmount: string | null
+    partialPayment: string | null
   }
 
   const {
@@ -331,6 +332,23 @@ const PaymentInfoTab = props => {
                   />
                 </FormControl>
               </Box>
+
+              <Box height="80px">
+                <FormControl>
+                  <FormLabel variant={'strong-label'} size={'md'}>
+                    {t('partialPayment')}
+                  </FormLabel>
+                  <Input
+                    id="partialPayment"
+                    type="text"
+                    size="md"
+                    {...register('partialPayment')}
+                    variant="outline"
+                   
+                  />
+                </FormControl>
+              </Box>
+
             </SimpleGrid>
           </Box>
         </ModalBody>

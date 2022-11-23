@@ -209,6 +209,7 @@ export const parsePaymentValuesToPayload = formValues => {
     expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
     datePaid: dateISOFormat(formValues?.datePaid),
+    partialPayment :  formValues?.partialPayment,
   }
 }
 
@@ -225,6 +226,7 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    partialPayment: currencyFormatter(0),
   }
   return defaultValues
 }
