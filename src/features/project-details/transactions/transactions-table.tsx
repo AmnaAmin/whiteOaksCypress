@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { useTransactionsV1} from 'api/transactions'
+import { useTransactionsV1 } from 'api/transactions'
 import { useParams } from 'react-router'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
@@ -13,7 +13,11 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
 
-export const TransactionsTable = React.forwardRef((props, ref) => {
+type TransactionProps = {
+  projectStatus: string
+}
+
+export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
@@ -33,7 +37,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     row => {
       setSelectedTransactionName(row.name)
       setSelectedTransactionId(row.id)
-
       onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
@@ -69,6 +72,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         heading={selectedTransactionName as string}
         selectedTransactionId={selectedTransactionId as number}
         projectId={projectId as string}
+        projectStatus={props?.projectStatus as string}
       />
       <TransactionDetailsModal
         isOpen={isOpenTransactionDetailsModal}
