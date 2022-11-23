@@ -90,6 +90,7 @@ const PaymentInfoTab = props => {
     handleSubmit,
     control,
     formState: { errors },
+    clearErrors,
     getValues,
     setValue,
     watch,
@@ -377,14 +378,13 @@ const PaymentInfoTab = props => {
                             prefix={'$'}
                             disabled={!partialPaymentEnabled}
                             onValueChange={e => {
+                              clearErrors('paymentDate')
                               field.onChange(e.floatValue ?? '')
                             }}
                             onBlur={e => {
                               if (!watchPaymentDate) {
                                 if (watchPartialPayment && watchPartialPayment > 0) {
                                   setValue('paymentDate', datePickerFormat(new Date()))
-                                } else {
-                                  setValue('paymentDate', null)
                                 }
                               }
                             }}
@@ -397,7 +397,7 @@ const PaymentInfoTab = props => {
                 </FormControl>
               </Box>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors?.paymentDate}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('paymentDate')}
                   </FormLabel>
@@ -408,8 +408,11 @@ const PaymentInfoTab = props => {
                     css={calendarIcon}
                     isDisabled={!paymentDateEnabled}
                     variant="outline"
-                    {...register('paymentDate')}
+                    {...register('paymentDate', {
+                      required: watchPartialPayment && watchPartialPayment > 0 ? 'This is required' : false,
+                    })}
                   />
+                  <FormErrorMessage>{errors?.paymentDate?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
             </SimpleGrid>
