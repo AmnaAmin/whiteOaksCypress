@@ -1,7 +1,7 @@
 // Export React Table to excel button component
 // Language: typescript
 
-import { Button, ButtonProps, Flex, Text } from '@chakra-ui/react'
+import { Button, ButtonProps, Center, Divider, Flex, HStack, Icon, Text } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
 import { reduceArrayToObject } from 'utils'
@@ -92,15 +92,17 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   }
 
   return (
-    <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading}>
-      {children ?? (
-        <Flex justifyContent="center">
-          <BiExport fontSize={'18px'} />
-
-          <Text ml="2.88">{t('projects.export')}</Text>
-        </Flex>
-      )}
-    </Button>
+    <Center>
+      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading}>
+        {children ?? (
+          <HStack spacing={1}>
+            <Icon as={BiExport} fontSize={'18px'} mb="3px" />
+            <Text>{t('projects.export')}</Text>
+          </HStack>
+        )}
+      </Button>
+      <Divider orientation="vertical" height={'15px'} border="1px solid" borderColor="gray.300" />
+    </Center>
   )
 }
 

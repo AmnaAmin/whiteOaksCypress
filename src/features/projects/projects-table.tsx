@@ -67,7 +67,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   return (
-    <Box overflow={'auto'} height="calc(100vh - 100px)">
+    <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
       <TableContextProvider
         data={projects}
         columns={tableColumns}
@@ -77,11 +77,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table
-          isLoading={isLoading}
-          onRowClick={onRowClick}
-          isEmpty={!isLoading && !projects?.length}
-        />
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
