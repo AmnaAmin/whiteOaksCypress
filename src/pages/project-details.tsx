@@ -175,7 +175,7 @@ export const ProjectDetails: React.FC = props => {
                   {isShowProjectFinancialOverview ? (
                     <TransactionDetails ref={tabsContainerRef} />
                   ) : (
-                    <TransactionsTable ref={tabsContainerRef} />
+                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                   )}
                 </Box>
               </TabPanel>
