@@ -165,7 +165,7 @@ export const useLienWaiverFormValues = (
   }, [totalAmount, selectedWorkOrder, setValue])
 }
 
-export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>) => {
+export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>, projectStatus) => {
   const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
@@ -177,7 +177,7 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
     }
 
     // If transaction type is draw, hide Project SOW againstOption
-    if (transactionType?.value === TransactionTypeValues.draw) {
+    if (transactionType?.value === TransactionTypeValues.draw && projectStatus === 'invoiced' ) {
       return againstOptions.slice(1)
     }
 

@@ -6,9 +6,10 @@ import { TRANSACTION } from './transactions.i18n'
 
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   projectId: string
+  projectStatus: string
 }
 
-const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId }) => {
+const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, projectStatus }) => {
   const { t } = useTranslation()
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
@@ -18,7 +19,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId })
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
         <ModalBody>
-          <TransactionForm onClose={onClose} projectId={projectId} />
+          <TransactionForm onClose={onClose} projectId={projectId} projectStatus={projectStatus} />
         </ModalBody>
       </ModalContent>
     </Modal>
