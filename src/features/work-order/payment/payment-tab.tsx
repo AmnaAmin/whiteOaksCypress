@@ -13,7 +13,7 @@ import {
   HStack,
   Icon,
 } from '@chakra-ui/react'
-import { BiCalendar, BiDollarCircle, BiSpreadsheet } from 'react-icons/bi'
+import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'api/vendor-projects'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -24,7 +24,8 @@ import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecisi
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
-import { currencyFormatter } from 'utils/string-formatters'
+import { CustomRequiredInput } from 'components/input/input'
+import NumberFormat from 'react-number-format'
 
 const CalenderCard = props => {
   return (
@@ -79,19 +80,25 @@ const PaymentInfoTab = props => {
     invoiceAmount: string | null
     clientOriginalApprovedAmount: string | null
     clientApprovedAmount: string | null
-    partialPayment: string | null
+    partialPayment: number | undefined | string
+    paymentDate: string | null
+    finalInvoiceAmount: string | number
   }
 
   const {
     register,
     handleSubmit,
     control,
+    formState: { errors },
     getValues,
     setValue,
+    watch,
     reset: resetPayments,
   } = useForm<FormValues>({
     defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
   })
+  const watchPartialPayment = watch('partialPayment')
+  const watchPaymentDate = watch('paymentDate')
 
   useEffect(() => {
     if ([STATUS.Declined]?.includes(workOrder?.statusLabel?.toLowerCase())) {
@@ -114,15 +121,22 @@ const PaymentInfoTab = props => {
     clientApprovedAmountEnabled,
     paymentTermDateEnabled,
     paymentTermEnabled,
+    finalInvoiceAmountEnabled,
+    paymentDateEnabled,
+    partialPaymentEnabled,
   } = useFieldEnableDecision(workOrder)
 
   const onSubmit = values => {
     onSave(parsePaymentValuesToPayload(values))
   }
 
+  const checkKeyDown = e => {
+    if (e.code === 'Enter') e.preventDefault()
+  }
+
   return (
     <Box>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
         <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
           <SimpleGrid
             columns={5}
@@ -132,11 +146,6 @@ const PaymentInfoTab = props => {
             minH="100px"
             alignItems={'center'}
           >
-            <InformationCard
-              title={t('finalInvoice')}
-              date={currencyFormatter(workOrder?.finalInvoiceAmount)}
-              icon={BiDollarCircle}
-            />
             <CalenderCard
               title={t('lwDate')}
               date={
@@ -250,7 +259,7 @@ const PaymentInfoTab = props => {
             </SimpleGrid>
           </Box>
 
-          <Box mt={10}>
+          <Box mt={10} mb={10}>
             <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
               <Box>
                 <FormControl>
@@ -332,23 +341,77 @@ const PaymentInfoTab = props => {
                   />
                 </FormControl>
               </Box>
-
               <Box height="80px">
                 <FormControl>
                   <FormLabel variant={'strong-label'} size={'md'}>
-                    {t('partialPayment')}
+                    {t('balanceDue')}
                   </FormLabel>
                   <Input
-                    id="partialPayment"
+                    id="finalInvoiceAmount"
                     type="text"
                     size="md"
-                    {...register('partialPayment')}
+                    isDisabled={!finalInvoiceAmountEnabled}
+                    {...register('finalInvoiceAmount')}
                     variant="outline"
-                   
                   />
                 </FormControl>
               </Box>
-
+              <Box height="80px">
+                <FormControl isInvalid={!!errors?.partialPayment}>
+                  <FormLabel variant={'strong-label'} size={'md'}>
+                    {t('payment')}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    rules={{
+                      max: { value: workOrder?.finalInvoiceAmount, message: 'Amount is greaten than Balance Due.' },
+                    }}
+                    name="partialPayment"
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            value={field.value}
+                            thousandSeparator
+                            customInput={CustomRequiredInput}
+                            prefix={'$'}
+                            disabled={!partialPaymentEnabled}
+                            onValueChange={e => {
+                              field.onChange(e.floatValue ?? '')
+                            }}
+                            onBlur={e => {
+                              if (!watchPaymentDate) {
+                                if (watchPartialPayment && watchPartialPayment > 0) {
+                                  setValue('paymentDate', datePickerFormat(new Date()))
+                                } else {
+                                  setValue('paymentDate', null)
+                                }
+                              }
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
+                  />
+                </FormControl>
+              </Box>
+              <Box>
+                <FormControl>
+                  <FormLabel variant={'strong-label'} size={'md'}>
+                    {t('paymentDate')}
+                  </FormLabel>
+                  <Input
+                    id="paymentDate"
+                    type="date"
+                    size="md"
+                    css={calendarIcon}
+                    isDisabled={!paymentDateEnabled}
+                    variant="outline"
+                    {...register('paymentDate')}
+                  />
+                </FormControl>
+              </Box>
             </SimpleGrid>
           </Box>
         </ModalBody>
