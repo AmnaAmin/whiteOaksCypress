@@ -6,9 +6,17 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedTransactionId: number
   projectId: string
   heading?: string
+  projectStatus: string
 }
 
-const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, heading, selectedTransactionId, projectId }) => {
+const UpdateTransactionModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  heading,
+  selectedTransactionId,
+  projectId,
+  projectStatus,
+}) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" variant="custom">
       <ModalOverlay />
@@ -16,7 +24,12 @@ const UpdateTransactionModal: React.FC<Props> = ({ isOpen, onClose, heading, sel
         <ModalHeader data-testid="update-transaction">{heading}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
         <ModalBody>
-          <TransactionForm onClose={onClose} selectedTransactionId={selectedTransactionId} projectId={projectId} />
+          <TransactionForm
+            onClose={onClose}
+            selectedTransactionId={selectedTransactionId}
+            projectId={projectId}
+            projectStatus={projectStatus}
+          />
         </ModalBody>
       </ModalContent>
     </Modal>

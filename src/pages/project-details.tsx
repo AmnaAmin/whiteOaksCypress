@@ -175,7 +175,7 @@ export const ProjectDetails: React.FC = props => {
                   {isShowProjectFinancialOverview ? (
                     <TransactionDetails ref={tabsContainerRef} />
                   ) : (
-                    <TransactionsTable ref={tabsContainerRef} />
+                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                   )}
                 </Box>
               </TabPanel>
@@ -214,6 +214,7 @@ export const ProjectDetails: React.FC = props => {
           isOpen={isOpenTransactionModal}
           onClose={onTransactionModalClose}
           projectId={projectId as string}
+          projectStatus={projectStatus}
         />
         {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
