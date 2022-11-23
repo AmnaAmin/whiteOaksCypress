@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, Spacer, VStack, Text } from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, FormLabel } from '@chakra-ui/react'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
@@ -13,6 +13,8 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
+import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
+import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -28,10 +30,13 @@ const Dashboard: React.FC = () => {
     navigate('/projects', { state: params })
   }
 
+  const [seeDetails, setSeeDetails] = useState(false)
+  const [hoverButton, setHoverButton] = useState(false)
+
   return (
     <VStack w="100%" zIndex={2} spacing="14px">
       <Box w={{ base: '100%' }}>
-        <VendorScore vendorId={vendorId} />
+        <VendorScore vendorId={vendorId} seeDetails={seeDetails} setSeeDetails={setSeeDetails} />
       </Box>
 
       <Box w="100%">
@@ -87,6 +92,23 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
+      {seeDetails ? (
+        <Box width="100%">
+          <FormLabel variant="strong-lable" size={'lg'}>
+            {t(`${DASHBOARD}.upcomingPayment`)}
+          </FormLabel>
+          <Box w="100%" onMouseEnter={() => setHoverButton(true)} onMouseLeave={() => setHoverButton(false)} pb={5}>
+            <UpcomingPaymentTable
+              setSeeDetails={setSeeDetails}
+              setHoverButton={setHoverButton}
+              seeDetails={seeDetails}
+              hoverButton={hoverButton}
+            />
+          </Box>
+        </Box>
+      ) : (
+        ''
+      )}
     </VStack>
   )
 }
