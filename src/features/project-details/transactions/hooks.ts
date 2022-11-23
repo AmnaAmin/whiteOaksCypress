@@ -176,7 +176,11 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
       return againstOptions.slice(1)
     }
 
-    
+    // If transaction type is draw, hide Project SOW againstOption
+    if (transactionType?.value === TransactionTypeValues.draw) {
+      return againstOptions.slice(1)
+    }
+
     if ([TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some((value) => transactionType?.value === value)) {
       return againstOptions.slice(1)
     }
