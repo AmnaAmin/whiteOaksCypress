@@ -584,6 +584,8 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['changeOrder', projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
 
         toast({
           title: 'New Transaction.',
