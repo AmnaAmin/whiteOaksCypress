@@ -7,7 +7,6 @@ import { useVendorCards, useVendorEntity } from 'api/vendor-dashboard'
 import { useTranslation } from 'react-i18next'
 
 import { LicenseDocument } from 'types/vendor.types'
-import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
@@ -128,7 +127,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
             data={vendorEntity?.licenseDocuments
               .map((licenseDocument: LicenseDocument) => ({
                 title: LicenseType[licenseDocument.licenseType],
-                date: dateFormat(licenseDocument.licenseExpirationDate),
+                date: licenseDocument.licenseExpirationDate,
                 testId: LicenseType[licenseDocument.licenseType],
               }))
               .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
