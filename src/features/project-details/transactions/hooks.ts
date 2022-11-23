@@ -14,18 +14,20 @@ import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-function getRefundTransactionType(type):TransactionsWithRefundType {
-  if(type === TransactionTypeValues.material) return {
-    id: 'refund-material',
-    name: 'refundMaterial',
-    label: 'Refund material',
-  };
+function getRefundTransactionType(type): TransactionsWithRefundType {
+  if (type === TransactionTypeValues.material)
+    return {
+      id: 'refund-material',
+      name: 'refundMaterial',
+      label: 'Refund material',
+    }
 
-  if(type === TransactionTypeValues.lateFee) return {
-    id: 'refund-late-fee',
-    name: 'refundLateFee',
-    label: 'Refund late fee',
-  }
+  if (type === TransactionTypeValues.lateFee)
+    return {
+      id: 'refund-late-fee',
+      name: 'refundLateFee',
+      label: 'Refund late fee',
+    }
   return {
     id: 'refund-factoring',
     name: 'refundFactoring',
@@ -51,7 +53,9 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isAgainstProjectSOWOptionSelected && selectedTransactionTypeId === TransactionTypeValues.draw
   const refundCheckbox: TransactionsWithRefundType = {
     ...getRefundTransactionType(selectedTransactionTypeId),
-    isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some((val) => val === selectedTransactionTypeId),
+    isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
+      val => val === selectedTransactionTypeId,
+    ),
   }
 
   // The status field should be hidden if user create new transaction or
@@ -177,11 +181,13 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
     }
 
     // If transaction type is draw, hide Project SOW againstOption
-    if (transactionType?.value === TransactionTypeValues.draw && projectStatus === 'invoiced' ) {
+    if (transactionType?.value === TransactionTypeValues.draw && (projectStatus === 'invoiced' || projectStatus === 'INVOICED' ) ) {
       return againstOptions.slice(1)
     }
 
-    if ([TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some((value) => transactionType?.value === value)) {
+    if (
+      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(value => transactionType?.value === value)
+    ) {
       return againstOptions.slice(1)
     }
 
