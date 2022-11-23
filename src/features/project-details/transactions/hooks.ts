@@ -180,7 +180,7 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
       return againstOptions.slice(1)
     }
 
-    // If transaction type is draw, hide Project SOW againstOption
+    // If transaction type is draw and project status is invoiced, hide Project SOW againstOption
     if (transactionType?.value === TransactionTypeValues.draw && (projectStatus === 'invoiced' || projectStatus === 'INVOICED' ) ) {
       return againstOptions.slice(1)
     }
