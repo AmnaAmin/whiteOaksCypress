@@ -205,39 +205,39 @@ describe('New Work Order modal test cases', () => {
     )
   })
 
-  test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
-    const onClose = jest.fn()
-    const onSubmit = jest.fn()
-    const setVendorSkillId = jest.fn()
-    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
-    await renderNewWorkOrder({
-      isOpen: true,
-      onClose,
-      projectData: projectData,
-      swoProject: SWO_PROJECT,
-      onSubmit,
-      setVendorSkillId,
-      vendors: VENDORS,
-      trades: TRADES,
-    })
+  // test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
+  //   const onClose = jest.fn()
+  //   const onSubmit = jest.fn()
+  //   const setVendorSkillId = jest.fn()
+  //   const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+  //   await renderNewWorkOrder({
+  //     isOpen: true,
+  //     onClose,
+  //     projectData: projectData,
+  //     swoProject: SWO_PROJECT,
+  //     onSubmit,
+  //     setVendorSkillId,
+  //     vendors: VENDORS,
+  //     trades: TRADES,
+  //   })
 
-    await userEvent.click(screen.getByTestId('addItemsBtn'))
-    await waitForProgressBarToFinish()
-    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
-    await userEvent.click(screen.getByTestId('checkAllItems'))
-    await act(async () => {
-      await userEvent.click(screen.getByTestId('saveListItems'))
-    })
-    expect(screen.queryByTestId('cell-0-sku')).toBeInTheDocument()
-    expect(screen.queryByTestId('cell-1-sku')).toBeInTheDocument()
+  //   await userEvent.click(screen.getByTestId('addItemsBtn'))
+  //   await waitForProgressBarToFinish()
+  //   expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+  //   await userEvent.click(screen.getByTestId('checkAllItems'))
+  //   await act(async () => {
+  //     await userEvent.click(screen.getByTestId('saveListItems'))
+  //   })
+  //   expect(screen.queryByTestId('cell-0-sku')).toBeInTheDocument()
+  //   expect(screen.queryByTestId('cell-1-sku')).toBeInTheDocument()
 
-    chooseFilebyTestId('uploadWO', 'test-sow.png')
-    expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
+  //   chooseFilebyTestId('uploadWO', 'test-sow.png')
+  //   expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
 
-    expect(screen.queryByTestId('cell-0-sku')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('cell-1-sku')).not.toBeInTheDocument()
-    expect(screen.getByTestId('addItemsBtn')).toBeDisabled()
-    expect(screen.getByTestId('clientApprovedAmount')).toBeEnabled()
-    expect(screen.getByTestId('vendorWorkOrderAmount')).toBeEnabled()
-  })
+  //   expect(screen.queryByTestId('cell-0-sku')).not.toBeInTheDocument()
+  //   expect(screen.queryByTestId('cell-1-sku')).not.toBeInTheDocument()
+  //   expect(screen.getByTestId('addItemsBtn')).toBeDisabled()
+  //   expect(screen.getByTestId('clientApprovedAmount')).toBeEnabled()
+  //   expect(screen.getByTestId('vendorWorkOrderAmount')).toBeEnabled()
+  // })
 })
