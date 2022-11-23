@@ -36,6 +36,7 @@ type TableWrapperProps = {
   setColumnFilters?: (updater: Updater<ColumnFiltersState>) => void
   totalPages?: number
   defaultFlexStyle?: boolean
+  manualPagination?: boolean
 }
 
 export const TableContextProvider: React.FC<TableWrapperProps> = ({
@@ -46,6 +47,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   setColumnFilters,
   totalPages = 0,
   children,
+  manualPagination = true,
 }) => {
   const emptyRowsLength = 3
   const emptyRows = Array(emptyRowsLength).fill({})
@@ -91,9 +93,9 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
-    manualPagination: true,
+    manualPagination: manualPagination,
     pageCount: totalPages ?? -1,
-    onPaginationChange: setPagination,
+    ...(setPagination && { onPaginationChange: setPagination }),
     onColumnFiltersChange: setColumnFilters ?? setColumnFiltersState,
   })
   return <TableContext.Provider value={{ tableInstance }}>{children}</TableContext.Provider>

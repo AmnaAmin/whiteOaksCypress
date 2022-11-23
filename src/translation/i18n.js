@@ -13,6 +13,7 @@ import { fpmCards } from 'features/fpm/fpmCards.i18n'
 import { clients } from 'features/clients/clients.i18n'
 import { accounts } from 'pages/accounts.i18n'
 import { sideNav } from '../components/layout/sideNav.i18n'
+import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -33,6 +34,7 @@ i18n.use(initReactI18next).init({
         ...clients.en.translation,
         ...accounts.en.translation,
         ...sideNav.en.translation,
+        ...adminDashboard.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -513,6 +515,7 @@ i18n.use(initReactI18next).init({
         ...clients.es.translation,
         ...accounts.es.translation,
         ...sideNav.es.translation,
+        ...adminDashboard.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

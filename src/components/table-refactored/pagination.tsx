@@ -148,12 +148,14 @@ export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
 
   return (
     <Flex gap="1" alignItems="center">
-      <>
-        <Text color="blackAlpha.800">
-          {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}
-        </Text>
-        {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
-      </>
+      {pageIndex !== -1 && (
+        <>
+          <Text color="blackAlpha.800">
+            {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}
+          </Text>
+          {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
+        </>
+      )}
     </Flex>
   )
 }
