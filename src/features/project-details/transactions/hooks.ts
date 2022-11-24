@@ -75,7 +75,9 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     refundCheckbox,
-    isShowPaymentRecievedDateField: selectedTransactionTypeId === TransactionTypeValues.payment,
+    isShowPaymentRecievedDateField: [TransactionTypeValues.payment, TransactionTypeValues.woPaid].includes(
+      selectedTransactionTypeId,
+    ),
     isShowPaidBackDateField: isTransactionTypeOverpaymentSelected && markAsPaid && isStatusNotCancelled,
     isShowMarkAsField: isTransactionTypeOverpaymentSelected && isStatusNotCancelled,
   }
