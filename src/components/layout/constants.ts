@@ -2,6 +2,7 @@ import {
   BiAlignMiddle,
   BiBarChartSquare,
   BiCreditCard,
+  BiDockTop,
   BiDollarCircle,
   BiGroup,
   BiLineChart,
@@ -175,6 +176,13 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.userMgmt`,
       Icon: BiUserPlus,
       color: '#ECC94B',
+    },
+
+    {
+      pathTo: '/projectType',
+      title: 'Project type',
+      Icon: BiDockTop,
+      color: '#9B2C2C',
     },
   ],
 

@@ -198,6 +198,9 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     invoiceAmountEnabled: defaultStatus,
     clientOriginalApprovedAmountEnabled: defaultStatus,
     clientApprovedAmountEnabled: defaultStatus,
+    finalInvoiceAmountEnabled: defaultStatus,
+    paymentDateEnabled: defaultStatus || invoicedState,
+    partialPaymentEnabled: defaultStatus || invoicedState,
   }
 }
 
@@ -209,6 +212,8 @@ export const parsePaymentValuesToPayload = formValues => {
     expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
     datePaid: dateISOFormat(formValues?.datePaid),
+    partialPayment: formValues?.partialPayment,
+    partialPaymentDate: dateISOFormat(formValues?.paymentDate),
   }
 }
 
@@ -225,6 +230,9 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    partialPayment: 0,
+    paymentDate: datePickerFormat(workOrder?.partialPaymentDate),
+    finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
   }
   return defaultValues
 }

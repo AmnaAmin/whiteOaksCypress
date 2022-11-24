@@ -69,6 +69,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
         heading={selectedTransactionName as string}
         selectedTransactionId={selectedTransactionId as number}
         projectId={projectId as string}
+        projectStatus = {''} //TODO need to send project status when overpayment card is visible
       />
       <TransactionDetailsModal
         isOpen={isOpenTransactionDetailsModal}
