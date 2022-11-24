@@ -200,6 +200,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       const isPendingDrawTransaction =
         transactions?.filter(t => t.transactionTypeLabel === 'Draw' && t.status === TransactionStatusValues.pending) ||
         []
+      const isPendingDraw = isPendingDrawTransaction?.length > 0 && project?.projectStatus === 'CLOSED'
 
       // if project in new status and there are zero work orders then
       // active status should be disabled
@@ -250,7 +251,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       ) {
         return {
           ...selectOption,
-          label: `${selectOption.label} (Remaining Payment must be $0`,
+          label: `${selectOption.label} (Remaining Payment must be $0)`,
           disabled: true,
         }
       }
@@ -265,6 +266,16 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         return {
           ...selectOption,
           label: `${selectOption.label} (You have pending transactions)`,
+          disabled: true,
+        }
+      }
+
+      // If project status is Closed and there are some pending draw transactions then
+      // project status Invoiced should be disabled
+      if (projectStatusId === ProjectStatus.Closed && optionValue === ProjectStatus.Invoiced && isPendingDraw) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (You have pending draw transactions)`,
           disabled: true,
         }
       }
