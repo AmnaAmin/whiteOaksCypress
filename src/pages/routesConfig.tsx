@@ -16,6 +16,7 @@ import { Performance } from './fpm/performance'
 import { PerformanceTab } from 'features/performance/performance'
 import { UserManagement } from './admin/user-management'
 import Dashboard from './admin/dashboard'
+import { ProjectType } from './admin/project-type'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -81,6 +82,7 @@ export default function useRoutesConfig() {
         { path: 'adminDashboard', element: Dashboard },
         { path: 'userManager', element: UserManagement },
         { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'projectType', element: ProjectType },
       ]
 
     case isAccounting:
