@@ -39,6 +39,8 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
+  const [selectedProjectStatus, setSelectedProjectStatus] = useState<string>()
+
   const {
     isOpen: isAccountReceivableModal,
     onOpen: onAccountReceivableModalOpen,
@@ -55,9 +57,11 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
       if (row.type === 'draw') {
         setSelectedTransactionId(row.changeOrderId)
         setSelectedProjectId(row.projectId)
+        setSelectedProjectStatus(row?.projectStatus || '')
         onEditModalOpen()
       } else {
         setSelectedProjectId(row.projectId)
+        setSelectedProjectStatus(row?.projectStatus || '')
         onAccountReceivableModalOpen()
       }
     },
@@ -127,6 +131,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         onClose={onTransactionModalClose}
         selectedTransactionId={selectedTransactionId as number}
         projectId={selectedProjectId as string}
+        projectStatus={selectedProjectStatus as string}
       />
     </Box>
   )

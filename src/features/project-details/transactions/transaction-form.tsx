@@ -126,9 +126,10 @@ export type TransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
   projectId: string
+  projectStatus: string
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId, projectStatus }) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
@@ -197,7 +198,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus)
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
