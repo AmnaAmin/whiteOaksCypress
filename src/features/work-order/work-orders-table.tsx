@@ -18,9 +18,6 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { data: workOrders, isFetching } = useProjectWorkOrders(projectId)
   const { refetch: refetchGantt } = useGanttChart(projectId)
 
-  // Do not show WO which have been cancelled
-  const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35)
-
   useEffect(() => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
       const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
@@ -50,10 +47,10 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
       )}
 
       <Box overflow={'auto'} w="100%" h="calc(100vh - 350px)" position="relative">
-        <TableContextProvider data={workOrdersNotCancelled} columns={WORK_ORDER_TABLE_COLUMNS}>
+        <TableContextProvider data={workOrders} columns={WORK_ORDER_TABLE_COLUMNS}>
           <Table
             isLoading={isFetching}
-            isEmpty={!isFetching && !workOrdersNotCancelled?.length}
+            isEmpty={!isFetching && !workOrders?.length}
             onRowClick={onRowClick}
           />
         </TableContextProvider>
