@@ -527,6 +527,12 @@ export const parseTransactionToFormValues = (
   const isMaterialRefunded =
     transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
 
+  const isLateFeeRefunded =
+    transaction.transactionType === TransactionTypeValues.lateFee && transaction.changeOrderAmount > 0
+
+  const isFactoringRefunded =
+    transaction.transactionType === TransactionTypeValues.factoring && transaction.changeOrderAmount > 0
+
   const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS.revenue : TRANSACTION_MARK_AS_OPTIONS.paid
   const paidBackDate = transaction.transactionType === TransactionTypeValues.overpayment ? transaction.paidDate : null
 
@@ -555,6 +561,8 @@ export const parseTransactionToFormValues = (
     payDateVariance,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refundMaterial: isMaterialRefunded,
+    refundLateFee: isLateFeeRefunded,
+    refundFactoring: isFactoringRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
