@@ -83,6 +83,15 @@ export default function useRoutesConfig() {
         { path: 'userManager', element: UserManagement },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'projectType', element: ProjectType },
+        { path: 'projects', element: Projects },
+        { path: 'payable', element: Payable },
+        { path: 'receivable', element: Receivable },
+        { path: 'vendors', element: Vendors },
+        { path: 'clients', element: Clients },
+        { path: 'reports', element: Reports },
+        { path: 'markets', element: Markets },
+        { path: 'performance', element: PerformanceTab },
+        { path: 'vendorSkills', element: VendorSkills },
       ]
 
     case isAccounting:

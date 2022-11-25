@@ -85,25 +85,3 @@ export const useRevenuePerClient = () => {
   }
 }
 
-export const mapRevenueClientToGraphData = revenuePerClient => {
-  const graphData = [] as any
-  /* group data by clients */
-  const groupByClient = revenuePerClient?.reduce((r, a) => {
-    r[a.clientName] = [...(r[a.clientName] || []), a]
-    return r
-  }, {})
-  for (const [key] of Object?.entries(groupByClient)) {
-    const graphValue = {}
-    /* Aggregate Amount */
-
-    graphValue['amount'] = [
-      ...groupByClient[key]?.map(function (o) {
-        return o.amount
-      }),
-    ].reduce((a, b) => a + b, 0)
-
-    graphValue['clientName'] = key
-    graphData?.push(graphValue)
-  }
-  return graphData
-}

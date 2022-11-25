@@ -4,8 +4,9 @@ import { Box, BoxProps, useColorModeValue as mode } from '@chakra-ui/react'
 export const Sidebar: React.FC<BoxProps> = props => {
   return (
     <Box
-      overflowY="auto"
-      maxH="full"
+      overflowY="scroll"
+      overflowX="hidden"
+      h="calc(100vh - 120px)"
       mt="12px"
       pb="2"
       lineHeight="taller"
