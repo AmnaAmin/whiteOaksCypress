@@ -12,7 +12,7 @@ import {
   ProjectStatus,
 } from 'types/project-details.types'
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
-import { SelectOption, TransactionStatusValues } from 'types/transaction.type'
+import { SelectOption } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
 import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
