@@ -4,7 +4,7 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 
 import { PROJECT_COLUMNS, PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { ExportButton } from 'components/table-refactored/export-button'
 import { SELECTED_CARD_MAP_URL } from './admin-dashboard.utils'
 import {
@@ -19,11 +19,14 @@ import { useNavigate } from 'react-router-dom'
 import { PaginationState } from '@tanstack/react-table'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useGetAllProjects, useProjects } from 'api/projects'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
 type ProjectProps = {
   selectedCard: string
 }
 
-export const FilteredProjectsData: React.FC<ProjectProps> = ({ selectedCard }) => {
+export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
   const navigate = useNavigate()
   useEffect(() => {
     if (selectedCard) {
@@ -47,6 +50,9 @@ export const FilteredProjectsData: React.FC<ProjectProps> = ({ selectedCard }) =
     pagination.pageSize,
   )
 
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.pcproject)
+  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.pcproject)
+
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(
     filteredUrl + '&' + queryStringWithoutPagination,
   )
@@ -54,11 +60,15 @@ export const FilteredProjectsData: React.FC<ProjectProps> = ({ selectedCard }) =
     navigate(`/project-details/${rowData.id}`)
   }
 
+  const onSave = (columns: any) => {
+    postGridColumn(columns)
+  }
+
   return (
     <Box h={'500px'} overflow="auto">
       <TableContextProvider
         data={projects}
-        columns={PROJECT_COLUMNS}
+        columns={tableColumns}
         pagination={pagination}
         setPagination={setPagination}
         columnFilters={columnFilters}
@@ -75,6 +85,8 @@ export const FilteredProjectsData: React.FC<ProjectProps> = ({ selectedCard }) =
               colorScheme="brand"
               fileName="projects.xlsx"
             />
+            <CustomDivider />
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
