@@ -33,10 +33,13 @@ export const RevenuePerClient = () => {
     let data = [] as any
 
     if (filter && filter !== 'All') {
+      // filter data by selected month
       const filteredRevenueClientData = filterDataByMonth(revenuePerClient, filter)
+      // group client and then pick the max value of each to show on graph
       data = _.values(_.groupBy(filteredRevenueClientData, 'clientName'))?.map(n => _.maxBy(n, 'amount')) || []
       setGraphData(data)
     } else {
+      // group all clients and then pick the max value of each to show on graph
       data = _.values(_.groupBy(revenuePerClient, 'clientName'))?.map(n => _.maxBy(n, 'amount')) || []
       setGraphData(data)
     }
@@ -57,22 +60,16 @@ export const RevenuePerClient = () => {
   const CustomTooltip = ({ payload }: any) => {
     if (payload && payload.length) {
       return (
-          <div>
-            {payload?.map(item => {
-              return (
-                <Box
-                  background="white"
-                  border='1px solid #CBD5E0'
-                  rounded={5}
-                  fontSize= '14px'
-                  p={2}
-                >
-                  <Box>{`Revenue in ${item?.payload?.clientName} :`} </Box>
-                  <Center fontWeight={600} color='#F6AD55'>{`$${item.value}`}</Center>
-                </Box>
-              )
-            })}
-          </div>
+        <div>
+          {payload?.map(item => {
+            return (
+              <Box background="white" border="1px solid #CBD5E0" rounded={5} fontSize="14px" p={2}>
+                <Box>{`Revenue in ${item?.payload?.clientName}:`} </Box>
+                <Center fontWeight={600} color="#F6AD55">{`$${item.value}`}</Center>
+              </Box>
+            )
+          })}
+        </div>
       )
     }
     return null
@@ -114,10 +111,7 @@ export const RevenuePerClient = () => {
                   fontStyle: 'normal',
                 }}
               />
-              <Tooltip
-                content={<CustomTooltip />}
-                cursor={{ fill: 'transparent' }}
-              />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
               <Legend iconSize={10} iconType="square" />
               <Bar dataKey="amount" name="Amount" fill="#F6AD55" radius={[5, 5, 0, 0]} />
             </BarChart>
