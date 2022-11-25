@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
-import { Box, FormLabel, HStack } from '@chakra-ui/react'
+import { Box, Center, FormLabel, HStack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { filterByMonthOptions } from './admin-dashboard.utils'
-import { mapRevenueClientToGraphData, useRevenuePerClient } from 'api/admin-dashboard'
+import { useRevenuePerClient } from 'api/admin-dashboard'
 import { Card } from 'components/card/card'
+import _ from 'lodash'
 
 const currentMonth = format(new Date(), 'LLL', { locale: enUS })
 const defaultFilterByMonth = filterByMonthOptions?.find(m => m.value === currentMonth) || []
@@ -17,27 +18,28 @@ const filterDataByMonth = (filteredRevenueClientData, monthName: any) => {
 
 export const RevenuePerClient = () => {
   const { revenuePerClient } = useRevenuePerClient()
-  const [graphData, setGraphData] = useState([])
+  const [graphData, setGraphData] = useState<any>([])
 
   useEffect(() => {
     if (revenuePerClient) {
       const filteredRevenueClientData = filterDataByMonth(revenuePerClient, currentMonth)
-      const data = mapRevenueClientToGraphData(filteredRevenueClientData)
+      const data = _.values(_.groupBy(filteredRevenueClientData, 'clientName'))?.map(n => _.maxBy(n, 'amount')) || []
       setGraphData(data)
     }
   }, [revenuePerClient])
 
   const handleFilter = e => {
     const filter = e.value
-    let data = []
+    let data = [] as any
 
     if (filter && filter !== 'All') {
       const filteredRevenueClientData = filterDataByMonth(revenuePerClient, filter)
-      data = mapRevenueClientToGraphData(filteredRevenueClientData)
+      data = _.values(_.groupBy(filteredRevenueClientData, 'clientName'))?.map(n => _.maxBy(n, 'amount')) || []
+      setGraphData(data)
     } else {
-      data = mapRevenueClientToGraphData(revenuePerClient)
+      data = _.values(_.groupBy(revenuePerClient, 'clientName'))?.map(n => _.maxBy(n, 'amount')) || []
+      setGraphData(data)
     }
-    setGraphData(data)
   }
 
   const CustomizedAxisTick = props => {
@@ -50,6 +52,30 @@ export const RevenuePerClient = () => {
         </text>
       </g>
     )
+  }
+
+  const CustomTooltip = ({ payload }: any) => {
+    if (payload && payload.length) {
+      return (
+          <div>
+            {payload?.map(item => {
+              return (
+                <Box
+                  background="white"
+                  border='1px solid #CBD5E0'
+                  rounded={5}
+                  fontSize= '14px'
+                  p={2}
+                >
+                  <Box>{`Revenue in ${item?.payload?.clientName} :`} </Box>
+                  <Center fontWeight={600} color='#F6AD55'>{`$${item.value}`}</Center>
+                </Box>
+              )
+            })}
+          </div>
+      )
+    }
+    return null
   }
 
   return (
@@ -89,14 +115,8 @@ export const RevenuePerClient = () => {
                 }}
               />
               <Tooltip
-                contentStyle={{
-                  borderRadius: '5px',
-                  backgroundColor: 'white',
-                  fontSize: '14px',
-                }}
-                itemStyle={{ fontSize: '14px' }}
+                content={<CustomTooltip />}
                 cursor={{ fill: 'transparent' }}
-                formatter={value => `$${value}`}
               />
               <Legend iconSize={10} iconType="square" />
               <Bar dataKey="amount" name="Amount" fill="#F6AD55" radius={[5, 5, 0, 0]} />
