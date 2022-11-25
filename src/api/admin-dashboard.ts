@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query'
 import { AdminCards } from 'types/admin-dashboard.types'
-import { Project } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
 
 export const useAdminCards = () => {
@@ -16,21 +15,6 @@ export const useAdminCards = () => {
     adminCards,
     ...rest,
   }
-}
-
-export const useFetchFilteredProjects = filteredUrl => {
-  const client = useClient()
-  return useQuery<Array<Project>>(
-    ['FilteredProjects', filteredUrl],
-    async () => {
-      const response = await client(`project/${filteredUrl}/?cacheBuster=${new Date().valueOf()}`, {})
-
-      return response?.data
-    },
-    {
-      enabled: !!filteredUrl && filteredUrl !== '',
-    },
-  )
 }
 
 export const useSalesPerMonth = () => {
