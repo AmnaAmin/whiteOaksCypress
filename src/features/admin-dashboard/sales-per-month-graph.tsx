@@ -67,7 +67,6 @@ export const SalesPerMonth = ({ data, bar, line }) => {
   const CustomTooltip = ({ payload }: any) => {
     if (payload && payload.length) {
       return (
-        <div>
           <div>
             {payload?.map(item => {
               return (
@@ -84,7 +83,6 @@ export const SalesPerMonth = ({ data, bar, line }) => {
                 </Box>
               )
             })}
-          </div>
         </div>
       )
     }
