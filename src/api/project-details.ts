@@ -12,12 +12,12 @@ import {
   ProjectStatus,
 } from 'types/project-details.types'
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
-import { SelectOption, TransactionStatusValues } from 'types/transaction.type'
+import { SelectOption } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
 import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
-import { GET_TRANSACTIONS_API_KEY, useTransactionsV1 } from './transactions'
+import { GET_TRANSACTIONS_API_KEY } from './transactions'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -178,7 +178,6 @@ export const getProjectStatusSelectOptions = () => {
 }
 
 export const useProjectStatusSelectOptions = (project: Project) => {
-  const { transactions } = useTransactionsV1(project?.id?.toString())
   return useMemo(() => {
     if (!project) return []
 
@@ -195,11 +194,6 @@ export const useProjectStatusSelectOptions = (project: Project) => {
 
     const selectOptionWithDisableEnabled = projectStatusSelectOptions.map((selectOption: SelectOption) => {
       const optionValue = selectOption?.value
-
-      // Shows pending draw transaction
-      const isPendingDrawTransaction =
-        transactions?.filter(t => t.transactionTypeLabel === 'Draw' && t.status === TransactionStatusValues.pending) ||
-        []
 
       // if project in new status and there are zero work orders then
       // active status should be disabled
@@ -245,12 +239,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       if (
         sowNewAmount - partialPayment > 0 &&
         projectStatusId === ProjectStatus.Invoiced &&
-        optionValue === ProjectStatus.ClientPaid &&
-        isPendingDrawTransaction?.length > 0
+        optionValue === ProjectStatus.ClientPaid
       ) {
         return {
           ...selectOption,
-          label: `${selectOption.label} (Remaining Payment must be $0`,
+          label: `${selectOption.label} (Remaining Payment must be $0)`,
           disabled: true,
         }
       }

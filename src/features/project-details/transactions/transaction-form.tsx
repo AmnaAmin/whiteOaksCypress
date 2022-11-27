@@ -609,7 +609,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
-                        {t(`${TRANSACTION}.paymentReceivedDate`)}
+                        {watchTransactionType?.value === TransactionTypeValues.woPaid
+                          ? t(`${TRANSACTION}.woPaymentDate`)
+                          : t(`${TRANSACTION}.paymentReceivedDate`)}
                       </FormLabel>
                       <Input
                         data-testid="payment-received-date"

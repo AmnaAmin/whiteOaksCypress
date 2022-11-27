@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query'
 import { AdminCards } from 'types/admin-dashboard.types'
-import { Project } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
 
 export const useAdminCards = () => {
@@ -16,21 +15,6 @@ export const useAdminCards = () => {
     adminCards,
     ...rest,
   }
-}
-
-export const useFetchFilteredProjects = filteredUrl => {
-  const client = useClient()
-  return useQuery<Array<Project>>(
-    ['FilteredProjects', filteredUrl],
-    async () => {
-      const response = await client(`project/${filteredUrl}/?cacheBuster=${new Date().valueOf()}`, {})
-
-      return response?.data
-    },
-    {
-      enabled: !!filteredUrl && filteredUrl !== '',
-    },
-  )
 }
 
 export const useSalesPerMonth = () => {
@@ -101,25 +85,3 @@ export const useRevenuePerClient = () => {
   }
 }
 
-export const mapRevenueClientToGraphData = revenuePerClient => {
-  const graphData = [] as any
-  /* group data by clients */
-  const groupByClient = revenuePerClient?.reduce((r, a) => {
-    r[a.clientName] = [...(r[a.clientName] || []), a]
-    return r
-  }, {})
-  for (const [key] of Object?.entries(groupByClient)) {
-    const graphValue = {}
-    /* Aggregate Amount */
-
-    graphValue['amount'] = [
-      ...groupByClient[key]?.map(function (o) {
-        return o.amount
-      }),
-    ].reduce((a, b) => a + b, 0)
-
-    graphValue['clientName'] = key
-    graphData?.push(graphValue)
-  }
-  return graphData
-}
