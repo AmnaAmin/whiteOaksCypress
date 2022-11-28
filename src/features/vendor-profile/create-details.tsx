@@ -48,6 +48,7 @@ const CreateVendorDetail: React.FC<{
     formState: { errors },
     control,
     register,
+    setError,
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
@@ -130,11 +131,15 @@ const CreateVendorDetail: React.FC<{
               type="email"
               {...register('businessEmailAddress', {
                 required: isActive && 'This is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email',
+                },
               })}
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.businessEmailAddress?.message}</FormErrorMessage>
+            <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -148,7 +153,18 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryEmail')}
             </FormLabel>
 
-            <Input {...register('secondEmailAddress')} variant="outline" size="md" />
+            <Input
+              type="email"
+              {...register('secondEmailAddress', {
+                required: isActive,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email',
+                },
+              })}
+              variant="outline"
+              size="md"
+            />
           </FormControl>
           <GridItem></GridItem>
         </HStack>
