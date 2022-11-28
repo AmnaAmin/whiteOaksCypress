@@ -46,11 +46,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     onOpen: onAccountReceivableModalOpen,
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
-  const {
-    isOpen: isOpenTransactionModal,
-    onOpen: onEditModalOpen,
-    onClose: onTransactionModalClose
-  } = useDisclosure()
+  const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
 
   const onRowClick = useCallback(
     row => {
@@ -72,11 +68,8 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     receivables,
     isLoading,
     totalPages,
-    dataCount
-  } = usePaginatedAccountReceivables(
-    queryStringWithPagination,
-    pagination.pageSize,
-  )
+    dataCount,
+  } = usePaginatedAccountReceivables(queryStringWithPagination, pagination.pageSize)
 
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
@@ -88,7 +81,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   }
 
   return (
-    <Box overflow="auto" width="100%" h="600px">
+    <Box overflow="auto" width="100%" h="600px" roundedTop={6}>
       <TableContextProvider
         data={receivables}
         columns={tableColumns}

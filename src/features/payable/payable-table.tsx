@@ -87,7 +87,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
           />
         )}
 
-        <Box overflow={'auto'} height="calc(100vh - 100px)">
+        <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
           <TableContextProvider
             data={workOrders}
             columns={tableColumns}
