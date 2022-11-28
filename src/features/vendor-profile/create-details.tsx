@@ -48,7 +48,6 @@ const CreateVendorDetail: React.FC<{
     formState: { errors },
     control,
     register,
-    setError,
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
