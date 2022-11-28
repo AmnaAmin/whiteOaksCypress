@@ -100,7 +100,7 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('LWDate')}
               InputElem={
-                invoiceAndPaymentData.dateLeanWaiverSubmitted ? (
+                invoiceAndPaymentData.dateLeanWaiverSubmitted && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
