@@ -1,4 +1,4 @@
-import { ColumnFiltersState, PaginationState } from '@tanstack/react-table'
+import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
 import { useState, useMemo, useEffect } from 'react'
 import { getAPIFilterQueryString } from 'utils/filters-query-utils'
 
@@ -11,9 +11,11 @@ type UseColumnFiltersQueryStringProps = {
   selectedFPM?: any
   userIds?: number[]
   days?: any
+  sorting?: SortingState
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
-  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days } = options
+  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting } =
+    options
   const { pageIndex, pageSize } = pagination || {}
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -53,18 +55,25 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds.join(',') }]
     }
 
-    const queryStringWithoutPagination = getAPIFilterQueryString(0, 10000000, finalFilters, queryStringAPIFilterKeys)
+    const queryStringWithoutPagination = getAPIFilterQueryString(
+      0,
+      10000000,
+      finalFilters,
+      queryStringAPIFilterKeys,
+      sorting,
+    )
     const queryStringWithPagination = getAPIFilterQueryString(
       pageIndex,
       pageSize,
       finalFilters,
       queryStringAPIFilterKeys,
+      sorting,
     )
     return {
       queryStringWithoutPagination,
       queryStringWithPagination,
     }
-  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days])
+  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days, sorting])
 
   useEffect(() => {
     if (!pagination) return
