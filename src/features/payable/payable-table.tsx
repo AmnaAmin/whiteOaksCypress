@@ -3,7 +3,7 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import { useGetAllWorkOrders, usePaginatedAccountPayable } from 'api/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from 'features/work-order/work-order-edit'
-import { ColumnDef, ColumnFiltersState, PaginationState, Updater } from '@tanstack/react-table'
+import { ColumnDef, ColumnFiltersState, PaginationState, SortingState, Updater } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
@@ -27,6 +27,8 @@ type PayablePropsTyep = {
   pagination: PaginationState
   queryStringWithPagination: string
   queryStringWithoutPagination: string
+  sorting: SortingState
+  setSorting: (updater: Updater<SortingState>) => void
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
@@ -34,13 +36,14 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     payableColumns,
     setColumnFilters,
     setPagination,
+    setSorting,
+    sorting,
     pagination,
     queryStringWithPagination,
     queryStringWithoutPagination,
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-
     const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
       queryStringWithPagination,
       pagination.pageSize,
@@ -94,6 +97,8 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             pagination={pagination}
             setPagination={setPagination}
             // columnFilters={columnFilters}
+            sorting={sorting}
+            setSorting={setSorting}
             setColumnFilters={setColumnFilters}
             totalPages={totalPages}
           >
