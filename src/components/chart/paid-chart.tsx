@@ -26,6 +26,9 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
     count: value?.count,
   }))
 
+  // If the graph has no data we are showing a message on the graph.
+  const placeholder = data?.length === 0 || data?.count?.length === 0
+
   return (
     <ResponsiveContainer width={width} height={height}>
       <BarChart
@@ -61,7 +64,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
           }}
           tickMargin={15}
         >
-          {data?.length === 0 && (
+          {placeholder && (
             <Label
               value="There is currently no data available for the month selected"
               offset={180}
@@ -88,7 +91,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             return ` ${'$' + round(tick / 1000, 2) + 'k'} `
           }}
         />
-        {data?.length && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
+        {!placeholder && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
 
         <Bar dataKey="count" fill="url(#colorUv)" radius={[5, 5, 0, 0]} />
       </BarChart>
