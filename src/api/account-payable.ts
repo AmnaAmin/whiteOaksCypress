@@ -20,7 +20,11 @@ export const useAccountPayableCard = () => {
 }
 
 const getPayableQueryString = (filterQueryString: string) => {
-  return filterQueryString ? filterQueryString + `&sort=expectedPaymentDate,asc` : 'sort=expectedPaymentDate,asc'
+  let queryString = filterQueryString
+  if (filterQueryString && filterQueryString.search('&sort=expectedPaymentDate') < 0) {
+    queryString = queryString + `&sort=expectedPaymentDate,asc`
+  }
+  return queryString
 }
 type PayableResponse = Array<any>
 export const usePaginatedAccountPayable = (queryString: string, pageSize: number) => {

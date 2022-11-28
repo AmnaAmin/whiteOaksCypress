@@ -1,4 +1,4 @@
-import { ColumnFiltersState } from '@tanstack/react-table'
+import { ColumnFiltersState, SortingState } from '@tanstack/react-table'
 import { dateISOFormatWithZeroTime } from './date-time-utils'
 
 const getQueryString = (obj: { [key: string]: string | number }) => {
@@ -27,6 +27,7 @@ export const getAPIFilterQueryString = (
   size?: number,
   columnFilters?: ColumnFiltersState,
   queryAndTableColumnMapKeys?: { [key: string]: string },
+  sorting?: SortingState,
 ) => {
   const dateToISOFormatFilters =
     columnFilters?.map(filter => {
@@ -53,6 +54,6 @@ export const getAPIFilterQueryString = (
     ...filterKeyValues,
     page: page || 0,
     size: size || 100000,
-    sort: 'id,desc',
+    sort: sorting && sorting?.length > 0 ? `${sorting?.[0]?.id},${sorting?.[0]?.desc ? 'desc' : 'asc'}` : 'id,desc', //{accessor},{direction}
   })
 }
