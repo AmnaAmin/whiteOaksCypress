@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Button, HStack, Icon, Text } from '@chakra-ui/react'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, ColumnFiltersState, PaginationState, Updater } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
 import { RiCloseFill } from 'react-icons/ri'
@@ -15,15 +15,24 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { settingColumns } from 'components/table-refactored/make-data'
 import { DASHBOARD } from './dashboard.i18n'
 import { useTranslation } from 'react-i18next'
+import { useGetAllUpcomingPaymentWorkOrders, usePaginatedUpcomingPayment } from 'api/vendor-dashboard'
+import { dateFormat } from 'utils/date-time-utils'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import Status from 'features/common/status'
 
 type workOrderType = {
   setSeeDetails: (boolean) => void
   setHoverButton: (boolean) => void
   seeDetails: boolean
   hoverButton: boolean
+  pagination: PaginationState
+  queryStringWithPagination: string
+  queryStringWithoutPagination: string
+  setPagination: (updater: Updater<PaginationState>) => void
+  setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 }
 
 export const UpcomingPaymentTable: React.FC<workOrderType> = ({
@@ -31,44 +40,54 @@ export const UpcomingPaymentTable: React.FC<workOrderType> = ({
   setHoverButton,
   seeDetails,
   hoverButton,
+  pagination,
+  queryStringWithPagination,
+  queryStringWithoutPagination,
+  setPagination,
+  setColumnFilters,
 }) => {
   const { t } = useTranslation()
 
-  const columns: ColumnDef<any>[] = [
+  const UPCOMING_PAYMENT_COLUMNS: ColumnDef<any>[] = [
     {
       header: t(`${DASHBOARD}.projectID`),
-      accessorKey: 'companyName',
+      accessorKey: 'projectId',
+      accessorFn: row => row.projectId,
     },
     {
       header: t(`${DASHBOARD}.woStatus`),
-      accessorKey: 'contacts[0].contact',
-      //   accessorFn: row => row.contacts?.[0]?.contact,
+      accessorKey: 'statusLabel',
+      accessorFn: row => row.statusLabel,
+      cell: (row: any) => {
+        const value = row.cell.getValue()
+        return <Status value={value} id={value} />
+      },
     },
     {
       header: t(`${DASHBOARD}.woID`),
-      accessorKey: 'streetAddress',
-      //   accessorFn: row => row.streetAddress,
+      accessorKey: 'id',
+      accessorFn: row => row.id,
     },
     {
       header: t(`${DASHBOARD}.address`),
-      accessorKey: 'contacts[0].phoneNumber',
-      //   accessorFn: row => row.contacts?.[0]?.phoneNumber,
+      accessorKey: 'vendorAddress',
+      accessorFn: row => row.vendorAddress,
     },
     {
       header: t(`${DASHBOARD}.trade`),
-      accessorKey: 'contacts[0].emailAddress',
-      //   accessorFn: row => row.contacts?.[0]?.emailAddress,
+      accessorKey: 'marketName',
+      accessorFn: row => row.marketName,
     },
     {
       header: t(`${DASHBOARD}.dueDateWO`),
-      accessorKey: 'accountPayableContactInfos[0].emailAddress',
-      //   accessorFn: row => row.accountPayableContactInfos?.[0]?.emailAddress,
+      accessorKey: 'workOrderExpectedCompletionDate',
+      accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
     },
     {
       header: () => {
         return (
           <HStack>
-            <Text isTruncated w={160}>
+            <Text isTruncated w={160} title={t(`${DASHBOARD}.expectedPayment`)}>
               {t(`${DASHBOARD}.expectedPayment`)}
             </Text>
             {hoverButton && (
@@ -92,34 +111,50 @@ export const UpcomingPaymentTable: React.FC<workOrderType> = ({
           </HStack>
         )
       },
-      accessorKey: 'accountPayableContactInfos[0].phoneNumber',
-      //   accessorFn: row => row.accountPayableContactInfos?.[0]?.phoneNumber,
+      accessorKey: 'expectedPaymentDate',
+      accessorFn: row => dateFormat(row.expectedPaymentDate),
     },
   ]
 
-  const onSave = () => {}
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.upcomingPayment)
+
+  const onSave = columns => {
+    postGridColumn(columns)
+  }
+
+  const { tableColumns, settingColumns } = useTableColumnSettings(UPCOMING_PAYMENT_COLUMNS, TableNames.upcomingPayment)
+
+  const { refetch, isLoading: isExportDataLoading } = useGetAllUpcomingPaymentWorkOrders(queryStringWithoutPagination)
+
+  const { workOrders, isLoading, totalPages, dataCount } = usePaginatedUpcomingPayment(
+    queryStringWithPagination,
+    pagination.pageSize,
+  )
 
   return (
     <Box overflow={'auto'} h="calc(100vh - 225px)">
-      <TableContextProvider data={[]} columns={columns}>
-        <Table
-          onRowClick={() => {}}
-          // isLoading={isLoading}
-          isEmpty={true}
-        />
+      <TableContextProvider
+        data={workOrders}
+        columns={tableColumns}
+        totalPages={totalPages}
+        pagination={pagination}
+        setPagination={setPagination}
+        setColumnFilters={setColumnFilters}
+      >
+        <Table onRowClick={() => {}} isLoading={isLoading} isEmpty={!isLoading && !workOrders?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
-              columns={[]}
-              //   refetch={refetch}
-              isLoading={true}
+              columns={tableColumns}
+              refetch={refetch}
+              isLoading={isExportDataLoading}
               colorScheme="brand"
               fileName="projects.xlsx"
             />
-            {settingColumns && <TableColumnSettings disabled={true} onSave={onSave} columns={[]} />}
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
-            <ShowCurrentRecordsWithTotalRecords dataCount={[]} />
+            <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
             <GotoFirstPage />
             <GotoPreviousPage />
             <GotoNextPage />
