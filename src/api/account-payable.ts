@@ -21,7 +21,7 @@ export const useAccountPayableCard = () => {
 
 const getPayableQueryString = (filterQueryString: string) => {
   let queryString = filterQueryString
-  if (filterQueryString && filterQueryString.search('&sort=expectedPaymentDate') < 0) {
+  if (filterQueryString?.search('&sort=expectedPaymentDate') < 0) {
     queryString = queryString + `&sort=expectedPaymentDate,asc`
   }
   return queryString
