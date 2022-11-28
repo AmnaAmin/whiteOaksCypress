@@ -4,6 +4,7 @@ import InputView from 'components/input-view/input-view'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
+import { STATUS } from 'features/common/status'
 
 type InvoiceAndPaymentData = {
   dateInvoiceSubmitted: string
@@ -18,6 +19,7 @@ type InvoiceAndPaymentData = {
   finalInvoiceAmount: number
   dateLeanWaiverSubmitted: string
   datePermitsPulled: string
+  status: string
 }
 
 const InvoicingAndPaymentTab = ({
@@ -38,7 +40,7 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('paymentTermDate')}
               InputElem={
-                invoiceAndPaymentData.paymentTermDate ? (
+                invoiceAndPaymentData.paymentTermDate && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -143,7 +145,7 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('invoiceSubmitted')}
               InputElem={
-                invoiceAndPaymentData.dateInvoiceSubmitted ? (
+                invoiceAndPaymentData.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -160,7 +162,7 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('expectedPay')}
               InputElem={
-                invoiceAndPaymentData.expectedPaymentDate ? (
+                invoiceAndPaymentData.expectedPaymentDate && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
