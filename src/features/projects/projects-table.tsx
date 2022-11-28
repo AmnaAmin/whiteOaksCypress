@@ -42,7 +42,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
       pagination,
       setPagination,
       sorting,
-      setSorting,
       selectedCard,
       selectedDay,
       selectedFPM,

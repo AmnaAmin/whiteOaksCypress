@@ -46,7 +46,6 @@ export const Payable = () => {
     setPagination,
     selectedCard,
     selectedDay,
-    setSorting,
     sorting,
   })
 

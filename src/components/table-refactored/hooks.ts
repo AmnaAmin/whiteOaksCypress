@@ -12,7 +12,6 @@ type UseColumnFiltersQueryStringProps = {
   userIds?: number[]
   days?: any
   sorting?: SortingState
-  setSorting?: (sorting: SortingState) => void
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
   const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting } =

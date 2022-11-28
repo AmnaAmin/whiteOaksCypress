@@ -38,7 +38,6 @@ export const Receivable = () => {
     selectedCard,
     selectedDay,
     sorting,
-    setSorting,
   })
 
   const { mutate: batchCall } = useBatchProcessingMutation()
