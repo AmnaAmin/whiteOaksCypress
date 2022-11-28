@@ -23,6 +23,7 @@ export const TransactionInfoCard: React.FC<{
 }> = ({ projectData, isLoading }) => {
   const { t } = useTranslation()
 
+  console.log('projectD', projectData)
   return (
     <Flex
       py={6}
@@ -46,7 +47,9 @@ export const TransactionInfoCard: React.FC<{
         </Box>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('WODueDate')}>
-        <Text>{dateFormat(projectData?.clientDueDate as string)}</Text>
+        <Text>
+          {projectData?.vendorWODateCompleted ? dateFormat(projectData?.vendorWODateCompleted as string) : 'mm/dd/yyyy'}
+        </Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('contactName')}>
         <Text>{projectData?.projectManager}</Text>
