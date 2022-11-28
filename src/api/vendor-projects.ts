@@ -149,7 +149,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
         return {
           item: ai.id,
           description: ai.name,
-          amount: `$${ai.transactionTotal}`,
+          amount: currencyFormatter(ai.transactionTotal),
         }
       }),
     ],
