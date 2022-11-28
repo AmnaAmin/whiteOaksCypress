@@ -23,7 +23,6 @@ export const TransactionInfoCard: React.FC<{
 }> = ({ projectData, isLoading }) => {
   const { t } = useTranslation()
 
-  console.log('projectD', projectData)
   return (
     <Flex
       py={6}
