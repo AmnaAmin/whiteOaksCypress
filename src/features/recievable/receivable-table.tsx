@@ -85,7 +85,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   }
 
   return (
-    <Box overflow="auto" width="100%" h="600px">
+    <Box overflow="auto" width="100%" h="600px" roundedTop={6}>
       <TableContextProvider
         data={receivables}
         columns={tableColumns}

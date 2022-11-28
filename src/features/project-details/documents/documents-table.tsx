@@ -30,24 +30,17 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const onRowClick = row => {}
 
   return (
-    <Box>
-      <Box h="calc(100vh - 300px)" overflow={'auto'}>
-        <TableContextProvider data={documents} columns={tableColumns}>
-          <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
-          <TableFooter position="sticky" bottom="0" left="0" right="0">
-            <ButtonsWrapper>
-              <ExportCustomButton
-                columns={tableColumns}
-                data={documents}
-                colorScheme="brand"
-                fileName="documents.csv"
-              />
+    <Box h="calc(100vh - 300px)" overflow={'auto'} roundedTop={6}>
+      <TableContextProvider data={documents} columns={tableColumns}>
+        <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
+        <TableFooter position="sticky" bottom="0" left="0" right="0">
+          <ButtonsWrapper>
+            <ExportCustomButton columns={tableColumns} data={documents} colorScheme="brand" fileName="documents.csv" />
 
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-            </ButtonsWrapper>
-          </TableFooter>
-        </TableContextProvider>
-      </Box>
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </ButtonsWrapper>
+        </TableFooter>
+      </TableContextProvider>
     </Box>
   )
 })
