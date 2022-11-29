@@ -743,10 +743,11 @@ const requiredStyle = {
   fontSize: '18px',
 }
 
-export const useFieldEnableDecision = ({ workOrder }) => {
+export const useFieldEnableDecision = ({ workOrder, lineItems }) => {
   const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
   const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
-  const verificationEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
+  const verificationEnabled =
+    [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS) && lineItems.some(l => l.isCompleted)
 
   return {
     statusEnabled: statusEnabled,
@@ -787,7 +788,7 @@ export const useGetLineItemsColumn = ({
   const values = getValues()
   const watchFieldArray = watch('assignedItems')
   const { isVendor } = useUserRolesSelector()
-  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems: watchFieldArray })
   const controlledAssignedItems = assignedItems.map((field, index) => {
     return {
       ...field,
