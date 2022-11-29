@@ -179,7 +179,7 @@ export const ProjectDetails: React.FC = props => {
                   )}
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" mt="7px">
+              <TabPanel p="0px" mt="6px">
                 <Card rounded="16px" padding="0">
                   <ProjectDetailsTab projectData={projectData as Project} />
                 </Card>
@@ -189,7 +189,7 @@ export const ProjectDetails: React.FC = props => {
                 <WorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
 
-              <TabPanel p="0px" mt="3">
+              <TabPanel p="0px" mt="7px">
                 <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
 
@@ -203,7 +203,7 @@ export const ProjectDetails: React.FC = props => {
                 />
               </TabPanel> */}
 
-              <TabPanel px="0">
+              <TabPanel p="0" mt="7px">
                 <ProjectNotes projectId={projectId} />
               </TabPanel>
             </TabPanels>
