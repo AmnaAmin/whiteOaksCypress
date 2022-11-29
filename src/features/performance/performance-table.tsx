@@ -80,8 +80,8 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
           isOpen={isOpen}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 320px)">
-        <TableContextProvider data={performance || []} columns={PERFORMANCE_COLUMNS}>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6}>
+        <TableContextProvider data={performance} columns={PERFORMANCE_COLUMNS}>
           <Table
             onRowClick={row => {
               setSelectedUser(row)
