@@ -130,7 +130,6 @@ const RemainingItemsModal: React.FC<{
 
   const assignAndReset = () => {
     setAssignedItems(selectedItems)
-    reset()
     setSelectedItems([])
     setUpdatedItems([])
     onClose()
@@ -166,6 +165,7 @@ const RemainingItemsModal: React.FC<{
                 {isAssignmentAllowed && (
                   <>
                     <Button
+                      data-testid="add-row-btn"
                       type="button"
                       variant="ghost"
                       colorScheme="brand"

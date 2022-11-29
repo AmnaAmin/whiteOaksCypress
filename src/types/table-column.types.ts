@@ -23,6 +23,7 @@ export type TableColumnSetting = {
 export enum TableNames {
   adminDashboard = 'adminDashboard',
   project = 'project',
+  new_project = 'new_project',
   transaction = 'transaction',
   workOrder = 'workOrder',
   alerts = 'alerts',

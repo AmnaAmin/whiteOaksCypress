@@ -512,6 +512,7 @@ export const InputField = (props: InputFieldType) => {
             <Input
               maxLength={maxLength}
               key={[fieldName] + '.' + [index]}
+              data-testid={`input-` + index + '-' + fieldName}
               size="sm"
               type={inputType}
               value={field.value}
@@ -537,9 +538,10 @@ export const InputField = (props: InputFieldType) => {
   )
 }
 
-export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
+export const SelectCheckBox = ({ selectedItems, setSelectedItems, row, index }) => {
   return (
     <Checkbox
+      data-testid={`check-` + index}
       isChecked={selectedItems?.map(s => s.id)?.includes(row?.id)}
       onChange={e => {
         if (e.currentTarget?.checked) {
@@ -554,7 +556,13 @@ export const SelectCheckBox = ({ selectedItems, setSelectedItems, row }) => {
   )
 }
 
-export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ label, onChange, onClear, value }) => {
+export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> = ({
+  label,
+  onChange,
+  onClear,
+  value,
+  testId,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const { t } = useTranslation()
 
@@ -576,6 +584,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value }> = ({ lab
         <Button
           minW={'auto'}
           size="sm"
+          data-testid={testId}
           onClick={() => inputRef?.current?.click()}
           colorScheme="brand"
           variant="outline"
@@ -849,12 +858,12 @@ export const useGetLineItemsColumn = ({
     return documentFile
   }
 
-  const downloadDocument = (link, text) => {
+  const downloadDocument = (link, text, testId) => {
     return (
       <a href={link} target="_blank" rel="noreferrer" download style={{ marginTop: '5px', color: '#4E87F8' }}>
         <HStack>
           <Icon as={BiDownload} size="sm" />
-          <Text fontSize="12px" fontStyle="normal" maxW="70px" isTruncated>
+          <Text data-testid={testId} fontSize="12px" fontStyle="normal" maxW="70px" isTruncated>
             {text}
           </Text>
         </HStack>
@@ -870,6 +879,7 @@ export const useGetLineItemsColumn = ({
             as={CgPlayListRemove}
             boxSize={7}
             color="brand.300"
+            data-testid={'unassign-all'}
             title="UnAssign All"
             onClick={() => {
               if (setUnAssignedItems && unassignedItems) {
@@ -896,6 +906,7 @@ export const useGetLineItemsColumn = ({
             <Icon
               as={BiXCircle}
               boxSize={5}
+              data-testid={'unassign-' + index}
               color="brand.300"
               onClick={() => {
                 if (setUnAssignedItems && unassignedItems) {
@@ -1174,6 +1185,7 @@ export const useGetLineItemsColumn = ({
               name={`assignedItems.${index}.isCompleted`}
               render={({ field, fieldState }) => (
                 <CustomCheckBox
+                  testid={`isCompleted-` + index}
                   text="Completed"
                   isChecked={field.value}
                   disabled={!statusEnabled}
@@ -1205,6 +1217,7 @@ export const useGetLineItemsColumn = ({
                 <VStack gap="1px">
                   <Box>
                     <UploadImage
+                      testId={'upload-' + index}
                       label={`upload`}
                       value={field?.value?.fileType}
                       onChange={async (file: any) => {
@@ -1220,6 +1233,7 @@ export const useGetLineItemsColumn = ({
                       {downloadDocument(
                         values.assignedItems[index]?.document?.s3Url,
                         values.assignedItems[index]?.document?.fileType,
+                        'uploaded-' + index,
                       )}
                     </Box>
                   )}
@@ -1246,6 +1260,7 @@ export const useGetLineItemsColumn = ({
                   text="Verified"
                   disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
                   isChecked={field.value}
+                  testid={`isVerified-` + index}
                   onChange={e => {
                     field.onChange(e.currentTarget.checked)
                   }}
