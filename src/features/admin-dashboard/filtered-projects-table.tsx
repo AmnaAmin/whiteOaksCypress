@@ -50,8 +50,8 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
     pagination.pageSize,
   )
 
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.pcproject)
-  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.pcproject)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.adminDashboard)
+  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.adminDashboard)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(
     filteredUrl + '&' + queryStringWithoutPagination,

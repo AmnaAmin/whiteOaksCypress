@@ -170,6 +170,7 @@ export const WorkOrderDetails = ({
                       finalInvoiceAmount: workOrder?.finalInvoiceAmount,
                       dateLeanWaiverSubmitted: workOrder?.dateLeanWaiverSubmitted ?? '',
                       datePermitsPulled: workOrder?.datePermitsPulled ?? '',
+                      status: workOrder?.statusLabel ?? '',
                     }}
                   />
                 </TabPanel>
