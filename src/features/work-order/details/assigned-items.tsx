@@ -96,8 +96,8 @@ const AssignedItems = (props: AssignedItemType) => {
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
 
   useEffect(() => {
-    const allVerified = lineItems?.length > 0 && lineItems.every(l => l.isCompleted && l.isVerified)
-    const isAnyItemComplete = lineItems?.length > 0 && lineItems.some(l => l.isCompleted)
+    const allVerified = lineItems?.length > 0 && lineItems?.every(l => l.isCompleted && l.isVerified)
+    const isAnyItemComplete = lineItems?.length > 0 && lineItems?.some(l => l.isCompleted)
     if (allVerified) {
       if (!workOrder?.workOrderDateCompleted) {
         setValue('workOrderDateCompleted', datePickerFormat(new Date()))

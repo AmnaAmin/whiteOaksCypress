@@ -747,7 +747,7 @@ export const useFieldEnableDecision = ({ workOrder, lineItems }) => {
   const formattedStatus = workOrder?.statusLabel?.toLocaleLowerCase()
   const statusEnabled = [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS)
   const verificationEnabled =
-    [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS) && lineItems.some(l => l.isCompleted)
+    [STATUS.Active, STATUS.PastDue].includes(formattedStatus as STATUS) && lineItems?.some(l => l.isCompleted)
 
   return {
     statusEnabled: statusEnabled,
