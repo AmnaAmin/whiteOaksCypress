@@ -37,6 +37,8 @@ type TableWrapperProps = {
   totalPages?: number
   defaultFlexStyle?: boolean
   manualPagination?: boolean
+  sorting?: SortingState
+  setSorting?: (updater: Updater<SortingState>) => void
 }
 
 export const TableContextProvider: React.FC<TableWrapperProps> = ({
@@ -48,11 +50,13 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   totalPages = 0,
   children,
   manualPagination = true,
+  sorting,
+  setSorting,
 }) => {
   const emptyRowsLength = 3
   const emptyRows = Array(emptyRowsLength).fill({})
-  const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
+  const [sortingState, setSortingState] = React.useState<SortingState>([])
 
   // Create pagination state in case pagination object enabled
   const paginationState: { pagination: PaginationState } | {} = React.useMemo(() => {
@@ -71,6 +75,12 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
       }
     : {}
 
+  const sortState = !setSorting
+    ? {
+        sorting: sortingState,
+      }
+    : { sorting }
+
   const filtersConfigurations: any = setColumnFilters
     ? {
         onColumnFiltersChange: setColumnFilters,
@@ -85,17 +95,17 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     state: {
       ...paginationState,
       ...columnFilterState,
-      sorting,
+      ...sortState,
     },
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
     manualPagination: manualPagination,
     pageCount: totalPages ?? -1,
     ...(setPagination && { onPaginationChange: setPagination }),
+    onSortingChange: setSorting ?? setSortingState,
     onColumnFiltersChange: setColumnFilters ?? setColumnFiltersState,
   })
   return <TableContext.Provider value={{ tableInstance }}>{children}</TableContext.Provider>
