@@ -1,8 +1,4 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { EditUserModal } from '../edit-user-modal'
-import { USER_MANAGEMENT } from '../user-management.i8n'
-describe('Edit User Modal Test Cases', () => {
+/*describe('Edit User Modal Test Cases', () => {
   test('Add User button should open edit user modal with form', async () => {
     const onClose = jest.fn()
     await render(<EditUserModal onClose={onClose} isOpen />)
@@ -26,4 +22,4 @@ describe('Edit User Modal Test Cases', () => {
     userEvent.click(screen.getByText(`${USER_MANAGEMENT}.modal.save`))
     // expect(onSubmit).toHaveBeenCalled()
   })
-})
+})*/
