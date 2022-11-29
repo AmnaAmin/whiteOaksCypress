@@ -35,7 +35,7 @@ export const CustomCheckBox = props => {
       cursor={!state.isDisabled ? 'pointer' : 'default'}
       {...htmlProps}
     >
-      <input {...getInputProps()} hidden id={props.id} />
+      <input data-testid={props?.testid} {...getInputProps()} hidden id={props.id} />
       <HStack
         ml="2"
         justifyContent="center"
