@@ -766,7 +766,12 @@ describe('Given update transaction', () => {
     test('Then open Material transaction in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: MATERIAL_TRANSACTION_ID, projectId: '1212', projectStatus: 'invoiced' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: MATERIAL_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Material' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -815,7 +820,12 @@ describe('Given update transaction', () => {
     test('Then open Payment transaction in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: PAYMENT_TRANSACTION_ID, projectId: '1212', projectStatus: 'invoiced' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: PAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Payment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -860,7 +870,12 @@ describe('Given update transaction', () => {
     test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction as paid successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212', projectStatus: 'invoiced' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: OVERPAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -907,7 +922,12 @@ describe('Given update transaction', () => {
     test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction as revenue successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212', projectStatus: 'invoiced' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: OVERPAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -939,7 +959,12 @@ describe('Given update transaction', () => {
     test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction with pending status should show form errors', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212', projectStatus: 'invoiced' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: OVERPAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -973,7 +998,12 @@ describe('Given update transaction', () => {
     test('Then user can see all transaction form fields as disabled', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: APPROVED_TRANSACTION_ID, projectId: '1212', projectStatus: 'invoiced' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: APPROVED_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()

@@ -203,6 +203,7 @@ const RemainingListTable = (props: RemainingListType) => {
           <Box paddingLeft={'6px'}>
             {!isNew ? (
               <SelectCheckBox
+                index={row.index}
                 selectedItems={selectedItems}
                 setSelectedItems={setSelectedItems}
                 row={values?.remainingItems?.[row?.index]}
@@ -210,6 +211,7 @@ const RemainingListTable = (props: RemainingListType) => {
             ) : (
               <Icon
                 as={BiXCircle}
+                data-testid={`remove-` + row?.index}
                 boxSize={5}
                 color="brand.300"
                 onClick={() => {
@@ -359,7 +361,7 @@ const RemainingListTable = (props: RemainingListType) => {
       Cell: ({ row }) => {
         return (
           <>
-            <Box pl={'7px'} minW={'100px'} minH={'20px'}>
+            <Box data-testid={'cell-' + row?.index + '-totalPrice'} pl={'7px'} minW={'100px'} minH={'20px'}>
               {currencyFormatter(values?.remainingItems[row?.index]?.totalPrice)}
             </Box>
           </>

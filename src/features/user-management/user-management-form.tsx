@@ -52,12 +52,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const { data: userInfo } = useUser(user?.email)
   const { mutate: updateUser } = useSaveUserDetails()
-  const { mutate: addUser } = useCreateUserMutation();
+  const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
 
   useUserDetails({ form, userInfo })
   const formValues = useWatch({ control })
-  const accountType:any = formValues?.accountType;
+  const accountType: any = formValues?.accountType
   const watchRequiredField =
     !formValues?.email ||
     !formValues?.firstName ||
@@ -66,22 +66,15 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
-    (
-      accountType?.label === 'Project Coordinator' &&
-      !validateMarket(formValues?.markets)
-    )
+    (accountType?.label === 'Project Coordinator' && !validateMarket(formValues?.markets))
 
-  const isProjectCoordinator = accountType?.label === 'Project Coordinator';
+  const isProjectCoordinator = accountType?.label === 'Project Coordinator'
 
   const onSubmit = useCallback(
     async formData => {
-      
-      const mutation = userInfo?.id ? updateUser : addUser;
+      const mutation = userInfo?.id ? updateUser : addUser
 
-      mutation(
-        parseMarketFormValuesToAPIPayload(
-          userMangtPayload(formData)
-        ), {
+      mutation(parseMarketFormValuesToAPIPayload(userMangtPayload(formData)), {
         onSuccess() {
           onClose()
         },
@@ -92,7 +85,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     },
     [userInfo, addUser, updateUser, userMangtPayload],
   )
-  
+
   const isEditUser = !!(user && user.id)
 
   return (
