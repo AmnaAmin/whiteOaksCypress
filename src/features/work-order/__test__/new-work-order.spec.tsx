@@ -205,39 +205,86 @@ describe('New Work Order modal test cases', () => {
     )
   })
 
-  // test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
-  //   const onClose = jest.fn()
-  //   const onSubmit = jest.fn()
-  //   const setVendorSkillId = jest.fn()
-  //   const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
-  //   await renderNewWorkOrder({
-  //     isOpen: true,
-  //     onClose,
-  //     projectData: projectData,
-  //     swoProject: SWO_PROJECT,
-  //     onSubmit,
-  //     setVendorSkillId,
-  //     vendors: VENDORS,
-  //     trades: TRADES,
-  //   })
+  test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
+    const onClose = jest.fn()
+    const onSubmit = jest.fn()
+    const setVendorSkillId = jest.fn()
+    const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+    await renderNewWorkOrder({
+      isOpen: true,
+      onClose,
+      projectData: projectData,
+      swoProject: SWO_PROJECT,
+      onSubmit,
+      setVendorSkillId,
+      vendors: VENDORS,
+      trades: TRADES,
+    })
 
-  //   await userEvent.click(screen.getByTestId('addItemsBtn'))
-  //   await waitForProgressBarToFinish()
-  //   expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
-  //   await userEvent.click(screen.getByTestId('checkAllItems'))
-  //   await act(async () => {
-  //     await userEvent.click(screen.getByTestId('saveListItems'))
-  //   })
-  //   expect(screen.queryByTestId('cell-0-sku')).toBeInTheDocument()
-  //   expect(screen.queryByTestId('cell-1-sku')).toBeInTheDocument()
+    await userEvent.click(screen.getByTestId('addItemsBtn'))
+    await waitForProgressBarToFinish()
+    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+    await userEvent.click(screen.getByTestId('checkAllItems'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('saveListItems'))
+    })
+    expect(screen.queryByTestId('cell-0-sku')).toBeInTheDocument()
+    expect(screen.queryByTestId('cell-1-sku')).toBeInTheDocument()
 
-  //   chooseFilebyTestId('uploadWO', 'test-sow.png')
-  //   expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
+    chooseFilebyTestId('uploadWO', 'test-sow.png')
+    expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
 
-  //   expect(screen.queryByTestId('cell-0-sku')).not.toBeInTheDocument()
-  //   expect(screen.queryByTestId('cell-1-sku')).not.toBeInTheDocument()
-  //   expect(screen.getByTestId('addItemsBtn')).toBeDisabled()
-  //   expect(screen.getByTestId('clientApprovedAmount')).toBeEnabled()
-  //   expect(screen.getByTestId('vendorWorkOrderAmount')).toBeEnabled()
-  // })
+    expect(screen.queryByTestId('cell-0-sku')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('cell-1-sku')).not.toBeInTheDocument()
+    expect(screen.getByTestId('addItemsBtn')).toBeDisabled()
+    expect(screen.getByTestId('clientApprovedAmount')).toBeEnabled()
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toBeEnabled()
+  })
+})
+
+test('Assign and Unassign Line Items from Remaining Items Modal. Assigned items from Remaining items modal shows in the Line Items Grid. If any item is unassigned from line items grid, it will be shown back in remaining list.', async () => {
+  const onClose = jest.fn()
+  const onSubmit = jest.fn()
+  const setVendorSkillId = jest.fn()
+  const projectData = PROJECTS?.find(p => p.id === SWO_PROJECT.projectId)
+  await renderNewWorkOrder({
+    isOpen: true,
+    onClose,
+    projectData: projectData,
+    swoProject: SWO_PROJECT,
+    onSubmit,
+    setVendorSkillId,
+    vendors: VENDORS,
+    trades: TRADES,
+  })
+  // Open Remaining Items Modal. Assign (check all items). And Save
+  await userEvent.click(screen.getByTestId('addItemsBtn'))
+
+  await waitForProgressBarToFinish()
+  expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+  await userEvent.click(screen.getByTestId('checkAllItems'))
+  await act(async () => {
+    await userEvent.click(screen.getByTestId('saveListItems'))
+  })
+
+  //Assigned Items will be shows in Line Items
+  expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
+  expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
+
+  // Line Item can be removed/unassigned individually or be unassign all icon in header.
+  await userEvent.click(screen.getByTestId('unassign-0'))
+  expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku2')
+  act(() => {
+    fireEvent.click(screen.getByTestId('unassign-all'))
+  })
+
+  expect(screen.queryByTestId('cell-0-sku')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('cell-1-sku')).not.toBeInTheDocument()
+  expect(screen.getByText('There is no data to display.')).toBeInTheDocument()
+
+  //unassign items should show in remaining items modal
+  //The last assign items will be at the top
+  await userEvent.click(screen.getByTestId('addItemsBtn'))
+  expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku2')
+  expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku1')
 })
