@@ -121,7 +121,7 @@ export const ProjectDetails: React.FC = props => {
 
               <Box h="40px" w="100%" display="flex" justifyContent="end" position="relative">
                 {tabIndex === 2 &&
-                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid].includes(
+                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid, STATUS.Punch].includes(
                     projectStatus as STATUS,
                   ) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
@@ -175,7 +175,7 @@ export const ProjectDetails: React.FC = props => {
                   {isShowProjectFinancialOverview ? (
                     <TransactionDetails ref={tabsContainerRef} />
                   ) : (
-                    <TransactionsTable ref={tabsContainerRef} />
+                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                   )}
                 </Box>
               </TabPanel>
@@ -214,6 +214,7 @@ export const ProjectDetails: React.FC = props => {
           isOpen={isOpenTransactionModal}
           onClose={onTransactionModalClose}
           projectId={projectId as string}
+          projectStatus={projectStatus}
         />
         {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}

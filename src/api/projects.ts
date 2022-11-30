@@ -149,11 +149,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (final, curr) => {
       return {
         vendorAccountPayable: final.vendorAccountPayable + (curr.accountPayable || 0),
-        projectTotalCost:
-          final.projectTotalCost +
-          (curr.workOrderOriginalAmount || 0) +
-          (curr.changeOrder || 0) +
-          (curr.adjustment || 0),
+        projectTotalCost: final.projectTotalCost + (curr.workOrderNewAmount || 0),
         materialCost: final.materialCost + curr.material,
         vendorPayment: final.vendorPayment + curr.vendorPayment,
       }
@@ -183,6 +179,21 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,
+    ...rest,
+  }
+}
+
+export const useWorkOrders = () => {
+  const client = useClient()
+
+  const { data: workOrderData, ...rest } = useQuery(['workorder_projects'], async () => {
+    const response = await client(`vendor/workorders`, {})
+
+    return response?.data
+  })
+
+  return {
+    workOrderData,
     ...rest,
   }
 }

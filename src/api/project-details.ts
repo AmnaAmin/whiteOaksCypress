@@ -234,6 +234,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       }
 
       // if project status is Invoiced and remaining payment is not zero then
+      // also if there is pending draw transaction, then client paid will be disabled
       // project status Paid should be disabled
       if (
         sowNewAmount - partialPayment > 0 &&
@@ -242,7 +243,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       ) {
         return {
           ...selectOption,
-          label: `${selectOption.label} (Remaining Payment must be $0`,
+          label: `${selectOption.label} (Remaining Payment must be $0)`,
           disabled: true,
         }
       }

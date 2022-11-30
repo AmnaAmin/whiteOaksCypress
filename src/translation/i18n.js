@@ -12,6 +12,9 @@ import { project } from 'features/update-project-details/project-details.i18n'
 import { fpmCards } from 'features/fpm/fpmCards.i18n'
 import { clients } from 'features/clients/clients.i18n'
 import { accounts } from 'pages/accounts.i18n'
+import { sideNav } from '../components/layout/sideNav.i18n'
+import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
+import { projectType } from '../features/project-type/project-type.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -31,6 +34,9 @@ i18n.use(initReactI18next).init({
         ...fpmCards.en.translation,
         ...clients.en.translation,
         ...accounts.en.translation,
+        ...sideNav.en.translation,
+        ...adminDashboard.en.translation,
+        ...projectType.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -139,9 +145,10 @@ i18n.use(initReactI18next).init({
         uploadDocument: 'Upload Document',
         contactName: 'Contact Name:',
         projectID: 'Project ID',
+        WoID: 'WO ID',
         contactNo: 'Contact No',
         WODueDate: 'WO Due Date',
-        DueDateWO: 'Due Date WO',
+        dueDateWO: 'Due Date WO',
         trade: 'Trade',
         auditLogs: 'Audit Logs',
         totalAmount: 'Total Amount',
@@ -243,6 +250,7 @@ i18n.use(initReactI18next).init({
         generateLW: 'Generate LW',
         dateInvoiceSubmitted: 'Date Invoice Submitted',
         paymentTermDate: 'Payment Term Date',
+        paymentDate: 'Payment Date',
         datePaymentProcessed: 'Date Payment Processed',
         expectedPayDate: 'Expected Pay Date',
         paymentTerms: 'Payment Terms',
@@ -509,6 +517,9 @@ i18n.use(initReactI18next).init({
         ...fpmCards.es.translation,
         ...clients.es.translation,
         ...accounts.es.translation,
+        ...sideNav.es.translation,
+        ...adminDashboard.es.translation,
+        ...projectType.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -682,9 +693,10 @@ i18n.use(initReactI18next).init({
         uploadDocument: 'Subir documento',
         contactName: 'Nombre de Contacto',
         projectID: 'Projecto ID',
+        WoID: 'WO ID',
         contactNo: 'Número de Contacto',
         WODueDate: 'Fecha de vencimiento de OT',
-        DueDateWO: 'Fecha de vencimiento OT',
+        dueDateWO: 'Fecha de vencimiento OT',
         trade: 'Comercio',
         auditLogs: 'Registros de auditoría',
         totalAmount: 'Cantidad Total',
@@ -781,6 +793,7 @@ i18n.use(initReactI18next).init({
         generateLW: 'Generar LW',
         dateInvoiceSubmitted: 'Fecha de Envío de la Factura',
         paymentTermDate: 'Plazo de Pago Fecha',
+        paymentDate: 'Fecha de pago',
         datePaymentProcessed: 'Fecha de Procesamiento del Pago',
         expectedPayDate: 'Fecha de Pago Esperada',
         check: 'Controlar',

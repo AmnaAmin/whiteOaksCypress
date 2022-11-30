@@ -10,7 +10,7 @@ import {
   CHANGE_ORDER_AGAINST_VENDOR_TRANSACTION_ID,
   CHANGE_ORDER_AGAINST_PROJECT_SOW_TRANSACTION_ID,
   DRAW_TRANSACTION_AGAINST_VENDOR_ID,
-  DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
+  // DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
   MATERIAL_TRANSACTION_ID,
   PAYMENT_TRANSACTION_ID,
   APPROVED_TRANSACTION_ID,
@@ -44,7 +44,7 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Change Order', () => {
     test('Then User should create Change Order transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('Against', { selector: 'label' })).toBeInTheDocument()
@@ -97,7 +97,7 @@ describe('Given Project Coordinator create new transaction', () => {
     test('Then User should create Change Order transaction against Project SOW of Vendor WorkOrder successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
@@ -149,7 +149,7 @@ describe('Given Project Coordinator create new transaction', () => {
     test('Then user should create Change Order transaction against Project SOW of work order ignore (not applicable)', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
@@ -202,7 +202,7 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Draw', () => {
     test('Then User should create Draw transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
@@ -210,10 +210,18 @@ describe('Given Project Coordinator create new transaction', () => {
       await selectOption(screen.getByTestId('transaction-type'), 'Draw')
 
       // User first select Against, one of ['SOW', 'Vendor']
-      await selectOption(
-        screen.getByTestId('against-select-field'),
-        createAgainstLabel(workOrder.companyName, workOrder.skillName),
-      )
+      expect(
+        getByText(
+          screen.getByTestId('against-select-field'),
+          createAgainstLabel(workOrder.companyName, workOrder.skillName),
+        ),
+      ).toBeInTheDocument()
+
+      // --- Change of Requirement --- Removing this as there is no Project SOW against Draw Transaction
+      // await selectOption(
+      //   screen.getByTestId('against-select-field'),
+      //   createAgainstLabel(workOrder.companyName, workOrder.skillName),
+      // )
 
       /**
        * Check the following fields changed properly,
@@ -277,60 +285,62 @@ describe('Given Project Coordinator create new transaction', () => {
       // expect(onClose).toHaveBeenCalled()
     })
 
-    test('Then User should create Draw transaction against Project SOW successfully', async () => {
-      const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212' })
+    // --- Change of Requirement --- Removing this as there is no Project SOW against Draw Transaction
 
-      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+    // test('Then User should create Draw transaction against Project SOW successfully', async () => {
+    //   const onClose = jest.fn()
+    //   await renderTransactionForm({ onClose, projectId: '1212' })
 
-      // User first select Transaction type, one of ['Change Order', 'Draw']
-      await selectOption(screen.getByTestId('transaction-type'), 'Draw')
+    //   expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
-      // User first select Against, one of ['SOW', 'Vendor']
-      await selectOption(screen.getByTestId('against-select-field'), 'Project SOW')
+    //   // User first select Transaction type, one of ['Change Order', 'Draw']
+    //   await selectOption(screen.getByTestId('transaction-type'), 'Draw')
 
-      // user select payment term select option
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+    //   // User first select Against, one of ['SOW', 'Vendor']
+    //   await selectOption(screen.getByTestId('against-select-field'), 'Project SOW')
 
-      await fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2022-10-01' } })
+    //   // user select payment term select option
+    //   await selectOption(screen.getByTestId('payment-term-select'), '20')
 
-      /**
-       * Check the following fields changed properly,
-       * 1- Transaction Type selected with 'Draw'
-       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
-       * 3- New Expected Completion Date field visible
-       */
-      expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
-      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      expect(getByText(screen.getByTestId('payment-term-select'), '20')).toBeInTheDocument()
-      expect((screen.getByTestId('invoice-date') as HTMLInputElement).value).toEqual('2022-10-01')
+    //   await fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2022-10-01' } })
 
-      const totalAmount = screen.getByTestId('total-amount')
+    //   /**
+    //    * Check the following fields changed properly,
+    //    * 1- Transaction Type selected with 'Draw'
+    //    * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+    //    * 3- New Expected Completion Date field visible
+    //    */
+    //   expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
+    //   expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+    //   expect(getByText(screen.getByTestId('payment-term-select'), '20')).toBeInTheDocument()
+    //   expect((screen.getByTestId('invoice-date') as HTMLInputElement).value).toEqual('2022-10-01')
 
-      expect(totalAmount.textContent).toEqual('Total: $0.00')
+    //   const totalAmount = screen.getByTestId('total-amount')
 
-      const descriptionField = screen.getByTestId('transaction-description-0')
-      const amountField = screen.getByTestId('transaction-amount-0')
+    //   expect(totalAmount.textContent).toEqual('Total: $0.00')
 
-      await userEvent.type(descriptionField, 'Added')
-      await userEvent.type(amountField, '400')
+    //   const descriptionField = screen.getByTestId('transaction-description-0')
+    //   const amountField = screen.getByTestId('transaction-amount-0')
 
-      // User submit the transaction
-      await act(async () => {
-        await userEvent.click(screen.getByTestId('save-transaction'))
-      })
+    //   await userEvent.type(descriptionField, 'Added')
+    //   await userEvent.type(amountField, '400')
 
-      await waitForLoadingToFinish()
+    //   // User submit the transaction
+    //   await act(async () => {
+    //     await userEvent.click(screen.getByTestId('save-transaction'))
+    //   })
 
-      expect(onClose).toHaveBeenCalled()
-    })
+    //   await waitForLoadingToFinish()
+
+    //   expect(onClose).toHaveBeenCalled()
+    // })
   })
 
   // Write test suite for when the user create transaction of payment type Material
   describe('When the user create transaction of payment type Material', () => {
     test('Then User should create Material transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
@@ -374,7 +384,7 @@ describe('Given Project Coordinator create new transaction', () => {
 
     test('Then User should create Material transaction against Vendor with refund material checkbox checked successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
@@ -422,7 +432,7 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Payment', () => {
     test('Then User should create Payment transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
@@ -472,6 +482,7 @@ describe('Given update transaction', () => {
         onClose,
         selectedTransactionId: CHANGE_ORDER_AGAINST_VENDOR_TRANSACTION_ID,
         projectId: '1212',
+        projectStatus: 'invoiced',
       })
 
       // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
@@ -520,6 +531,7 @@ describe('Given update transaction', () => {
         onClose,
         selectedTransactionId: CHANGE_ORDER_AGAINST_PROJECT_SOW_TRANSACTION_ID,
         projectId: '1212',
+        projectStatus: 'invoiced',
       })
 
       // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
@@ -568,6 +580,7 @@ describe('Given update transaction', () => {
         onClose,
         selectedTransactionId: TRANSACTION_OF_CHANGE_ORDER_AGAINST_PROJECT_SOW_NOT_APPLICABLE_WORK_ORDER_ID,
         projectId: '1212',
+        projectStatus: 'invoiced',
       })
 
       // Check Transaction Type select field is prepopulated with 'Change Order' and disabled
@@ -622,6 +635,7 @@ describe('Given update transaction', () => {
         onClose,
         selectedTransactionId: DRAW_TRANSACTION_AGAINST_VENDOR_ID,
         projectId: '1212',
+        projectStatus: 'invoiced',
       })
 
       // Check Transaction Type select field is prepopulated with 'Draw' and disabled
@@ -684,73 +698,80 @@ describe('Given update transaction', () => {
       expect((screen.getByTestId('signature-date') as HTMLInputElement).value).toEqual(dateFormat(new Date()))
     })
 
-    test('Then open transaction against Project SOW in update transaction form with prepopulated fields and update the form successfully', async () => {
-      const onClose = jest.fn()
+    // --- Change of Requirement --- Removing this as there is no Project SOW against Draw Transaction
 
-      await renderTransactionForm({
-        onClose,
-        selectedTransactionId: DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
-        projectId: '1212',
-      })
+    // test('Then open transaction against Project SOW in update transaction form with prepopulated fields and update the form successfully', async () => {
+    //   const onClose = jest.fn()
 
-      // Check Transaction Type select field is prepopulated with 'Draw' and disabled
-      expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
-      expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
+    //   await renderTransactionForm({
+    //     onClose,
+    //     selectedTransactionId: DRAW_TRANSACTION_AGAINST_PROJECT_SOW_ID,
+    //     projectId: '1212',
+    //   })
 
-      // Check Against select field is prepopulated with Vendor and disabled
-      expect(getByRole(screen.getByTestId('against-select-field'), 'combobox')).toBeDisabled()
-      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+    //   // Check Transaction Type select field is prepopulated with 'Draw' and disabled
+    //   expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
+    //   expect(getByText(screen.getByTestId('transaction-type'), 'Draw')).toBeInTheDocument()
 
-      // Check Invoice date field is prepopulated with Invoice date
-      expect((screen.getByTestId('invoice-date') as HTMLInputElement).value).toEqual('2022-07-08')
+    //   // Check Against select field is prepopulated with Vendor and disabled
+    //   expect(getByRole(screen.getByTestId('against-select-field'), 'combobox')).toBeDisabled()
+    //   expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
 
-      const descriptionField = screen.getByTestId('transaction-description-0') as HTMLInputElement
-      const amountField = screen.getByTestId('transaction-amount-0') as HTMLInputElement
+    //   // Check Invoice date field is prepopulated with Invoice date
+    //   expect((screen.getByTestId('invoice-date') as HTMLInputElement).value).toEqual('2022-07-08')
 
-      // Check the description and amount field are prepopulated with the values of the transaction
-      expect(descriptionField.value).toEqual('Test')
-      expect(amountField.value).toEqual('-300')
+    //   const descriptionField = screen.getByTestId('transaction-description-0') as HTMLInputElement
+    //   const amountField = screen.getByTestId('transaction-amount-0') as HTMLInputElement
 
-      // Check total amount is rendered properly
-      const totalAmount = screen.getByTestId('total-amount')
-      expect(totalAmount.textContent).toEqual('Total: -$300.00')
+    //   // Check the description and amount field are prepopulated with the values of the transaction
+    //   expect(descriptionField.value).toEqual('Test')
+    //   expect(amountField.value).toEqual('-300')
 
-      // Add paid date
-      await fireEvent.change(screen.getByTestId('paid-date'), { target: { value: '2022-07-20' } })
-      expect((screen.getByTestId('paid-date') as HTMLInputElement).value).toEqual('2022-07-20')
+    //   // Check total amount is rendered properly
+    //   const totalAmount = screen.getByTestId('total-amount')
+    //   expect(totalAmount.textContent).toEqual('Total: -$300.00')
 
-      // Check pay date variance is calculated like (invoiced date) - paid date = variance
-      // (07/08/2022) - (07/20/2022) = -12
-      const payDateVariance = screen.getByTestId('pay-date-variance') as HTMLInputElement
-      expect(payDateVariance.value).toEqual('-12')
+    //   // Add paid date
+    //   await fireEvent.change(screen.getByTestId('paid-date'), { target: { value: '2022-07-20' } })
+    //   expect((screen.getByTestId('paid-date') as HTMLInputElement).value).toEqual('2022-07-20')
 
-      // Clear the description and amount field
-      await userEvent.clear(descriptionField)
-      await userEvent.clear(amountField)
+    //   // Check pay date variance is calculated like (invoiced date) - paid date = variance
+    //   // (07/08/2022) - (07/20/2022) = -12
+    //   const payDateVariance = screen.getByTestId('pay-date-variance') as HTMLInputElement
+    //   expect(payDateVariance.value).toEqual('-12')
 
-      // update the description and amount field
-      await userEvent.type(descriptionField, 'Updated')
-      await userEvent.type(amountField, '4000')
+    //   // Clear the description and amount field
+    //   await userEvent.clear(descriptionField)
+    //   await userEvent.clear(amountField)
 
-      // Check the total amount is updated
-      expect(totalAmount.textContent).toEqual('Total: -$4,000.00')
+    //   // update the description and amount field
+    //   await userEvent.type(descriptionField, 'Updated')
+    //   await userEvent.type(amountField, '4000')
 
-      // User submit the transaction
-      await act(async () => {
-        await userEvent.click(screen.getByTestId('save-transaction'))
-      })
+    //   // Check the total amount is updated
+    //   expect(totalAmount.textContent).toEqual('Total: -$4,000.00')
 
-      await waitForLoadingToFinish()
+    //   // User submit the transaction
+    //   await act(async () => {
+    //     await userEvent.click(screen.getByTestId('save-transaction'))
+    //   })
 
-      expect(onClose).toHaveBeenCalled()
-    })
+    //   await waitForLoadingToFinish()
+
+    //   expect(onClose).toHaveBeenCalled()
+    // })
   })
 
   describe('When user update Material transaction of status pending', () => {
     test('Then open Material transaction in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: MATERIAL_TRANSACTION_ID, projectId: '1212' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: MATERIAL_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Material' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -799,7 +820,12 @@ describe('Given update transaction', () => {
     test('Then open Payment transaction in update transaction form with prepopulated fields and update the form successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: PAYMENT_TRANSACTION_ID, projectId: '1212' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: PAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Payment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -844,7 +870,12 @@ describe('Given update transaction', () => {
     test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction as paid successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: OVERPAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -891,7 +922,12 @@ describe('Given update transaction', () => {
     test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction as revenue successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: OVERPAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -923,7 +959,12 @@ describe('Given update transaction', () => {
     test('Then open Overpayment transaction in update transaction form with prepopulated fields and update the transaction with pending status should show form errors', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: OVERPAYMENT_TRANSACTION_ID, projectId: '1212' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: OVERPAYMENT_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is prepopulated with 'Overpayment' and disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()
@@ -957,7 +998,12 @@ describe('Given update transaction', () => {
     test('Then user can see all transaction form fields as disabled', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, selectedTransactionId: APPROVED_TRANSACTION_ID, projectId: '1212' })
+      await renderTransactionForm({
+        onClose,
+        selectedTransactionId: APPROVED_TRANSACTION_ID,
+        projectId: '1212',
+        projectStatus: 'invoiced',
+      })
 
       // Check Transaction Type select field is disabled
       expect(getByRole(screen.getByTestId('transaction-type'), 'combobox')).toBeDisabled()

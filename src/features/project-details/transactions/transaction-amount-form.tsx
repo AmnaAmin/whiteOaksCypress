@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useMemo, useRef } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -13,6 +13,10 @@ import {
   Divider,
   GridItem,
   Grid,
+  Center,
+  VStack,
+  Spinner,
+  FormLabel,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlinePlus } from 'react-icons/ai'
@@ -27,15 +31,26 @@ import { useTranslation } from 'react-i18next'
 import { BiDownload, BiFile } from 'react-icons/bi'
 import numeral from 'numeral'
 import { TRANSACTION } from './transactions.i18n'
+import {
+  getFileContents,
+  mapMaterialItemstoTransactions,
+  useFetchMaterialItems,
+  useUploadMaterialAttachment,
+} from 'api/transactions'
+import { useAccountDetails } from 'api/vendor-details'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
   transaction?: ChangeOrderType
+  isMaterialsLoading?: boolean
+  setMaterialsLoading?: (value) => void
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   formReturn,
   transaction: changeOrder,
+  isMaterialsLoading,
+  setMaterialsLoading,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -48,6 +63,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setValue,
   } = formReturn
   const values = getValues()
+
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -56,9 +72,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   const transaction = useWatch({ name: 'transaction', control })
   const document = useWatch({ name: 'attachment', control })
+  const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
+  const { data: account } = useAccountDetails()
+  const [correlationId, setCorrelationId] = useState<null | string | undefined>(null)
+  const [refetchInterval, setRefetchInterval] = useState<number>(5000)
+  const { materialItems } = useFetchMaterialItems(correlationId, refetchInterval)
 
   const checkedItems = useMemo(() => {
-    return transaction.map(item => item.checked)
+    return transaction?.map(item => item.checked)
   }, [transaction])
 
   const {
@@ -70,9 +91,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     name: 'transaction',
   })
 
+  useEffect(() => {
+    if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
+      setRefetchInterval(0)
+      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refundMaterial))
+      setMaterialsLoading?.(false)
+    }
+  }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)
 
-  const { isShowRefundMaterialCheckbox } = useFieldShowHideDecision(control)
+  const { refundCheckbox } = useFieldShowHideDecision(control)
   const { isApproved } = useFieldDisabledEnabledDecision(control, changeOrder)
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
@@ -121,12 +149,28 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       const files = e.target.files
       if (files[0]) {
         setValue('attachment', files[0])
+        if ([TransactionTypeValues.material].includes(values?.transactionType?.value)) {
+          uploadMaterialDocument(files[0])
+        }
       }
+      e.target.value = null
     },
-    [setValue],
+    [setValue, values, setCorrelationId],
   )
 
-  const onRefundMaterialCheckboxChange = isChecked => {
+  const uploadMaterialDocument = async document => {
+    setMaterialsLoading?.(true)
+    let payload = (await getFileContents(document, values?.transactionType?.value)) as any
+    payload.correlationId = (account.id + '-' + +new Date()) as string
+    setRefetchInterval(5000)
+    uploadMaterialAttachment(payload, {
+      onSuccess: () => {
+        setCorrelationId(payload.correlationId)
+      },
+    })
+  }
+
+  const onToggleRefundCheckbox = isChecked => {
     const transaction = getValues('transaction')
 
     transaction?.forEach((transactionField, index) => {
@@ -151,6 +195,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               size="sm"
               borderColor="#4E87F8"
               color="#4E87F8"
+              disabled={isMaterialsLoading}
               onClick={addRow}
               leftIcon={<AiOutlinePlus color="#4E87F8" />}
             >
@@ -186,26 +231,26 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
         <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
         <HStack w={!isApproved ? 'auto' : '100%'} justifyContent="end">
-          {isShowRefundMaterialCheckbox && (
+          {refundCheckbox.isVisible && (
             <Controller
               control={control}
-              name="refundMaterial"
+              name={refundCheckbox.name}
               render={({ field: { name, value, onChange } }) => {
                 return (
                   <Checkbox
-                    data-testid="refund-material"
+                    data-testid={refundCheckbox.id}
                     name={name}
                     variant="link"
                     _focus={{ outline: 'none' }}
                     isChecked={!!value}
-                    isDisabled={isApproved}
+                    isDisabled={isApproved || isMaterialsLoading}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
-                      onRefundMaterialCheckboxChange(isChecked)
+                      onToggleRefundCheckbox(isChecked)
                       onChange(isChecked)
                     }}
                   >
-                    Refund material
+                    {t(`${TRANSACTION}.refund`)}
                   </Checkbox>
                 )
               }}
@@ -260,9 +305,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     {document?.name || document.fileType}
                   </Text>
                   <MdOutlineCancel
-                    cursor="pointer"
+                    cursor={isMaterialsLoading ? 'default' : 'pointer'}
                     onClick={() => {
+                      if (isMaterialsLoading) {
+                        return
+                      }
                       setValue('attachment', null)
+                      setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
                       if (inputRef.current) inputRef.current.value = ''
                     }}
                   />
@@ -279,7 +328,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 variant="outline"
                 size="sm"
                 colorScheme="brand"
-                isDisabled={isApproved}
+                isDisabled={isApproved || !values?.transactionType?.value}
               >
                 {t(`${TRANSACTION}.attachment`)}
               </Button>
@@ -323,110 +372,128 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
           <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
         </Grid>
-        <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
-          {transactionFields.map((transactionField, index) => {
-            return (
-              <Grid
-                className="amount-input-row"
-                key={transactionField.id}
-                gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-                p="4"
-                fontSize="14px"
-                color="gray.600"
-                gap="2rem 4rem"
-                borderWidth={'0 0 1px 0'}
-                borderStyle="solid"
-                borderColor="gray.200"
-              >
-                {isShowCheckboxes && (
-                  <GridItem>
-                    <Controller
-                      control={control}
-                      name={`transaction.${index}.checked` as const}
-                      render={({ field: { name, value, onChange } }) => {
-                        return (
-                          <Checkbox
-                            variant="normal"
-                            py="2"
-                            data-testid={`checkbox-${index}`}
-                            key={name}
-                            name={name}
-                            isDisabled={isApproved}
-                            isChecked={transactionField.checked}
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                              transactionField.checked = event.currentTarget.checked
-                              onChange(event.currentTarget.checked)
-                            }}
-                          />
-                        )
-                      }}
-                    />
-                  </GridItem>
-                )}
-                <GridItem pr="7">
-                  <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
-                    <Input
-                      data-testid={`transaction-description-${index}`}
-                      type="text"
-                      size="sm"
-                      autoComplete="off"
-                      placeholder="Add Description here"
-                      readOnly={isApproved}
-                      variant={isApproved ? 'unstyled' : 'required-field'}
-                      {...register(`transaction.${index}.description` as const, {
-                        required: 'This is required field',
-                      })}
-                    />
-
-                    <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
-                  </FormControl>
-                </GridItem>
-                <GridItem pr="7">
-                  <FormControl isInvalid={!!errors.transaction?.[index]?.amount}>
-                    <Controller
-                      name={`transaction.${index}.amount` as const}
-                      control={control}
-                      rules={{
-                        required: 'This is required field',
-                      }}
-                      render={({ field, fieldState }) => {
-                        return (
-                          <>
-                            <Input
-                              {...field}
-                              data-testid={`transaction-amount-${index}`}
-                              type={isApproved ? 'text' : 'number'}
-                              size="sm"
-                              placeholder="Add Amount"
-                              readOnly={isApproved}
-                              variant={isApproved ? 'unstyled' : 'required-field'}
-                              autoComplete="off"
-                              value={isApproved ? numeral(Number(field.value)).format('$0,0[.]00') : field.value}
-                              onChange={event => {
-                                const inputValue = Number(event.currentTarget.value)
-                                const transactionTypeId = getValues('transactionType')?.value
-                                const isRefundMaterialCheckboxChecked = getValues('refundMaterial')
-
-                                field.onChange(
-                                  TransactionTypeValues.draw === transactionTypeId ||
-                                    (TransactionTypeValues.material === transactionTypeId &&
-                                      !isRefundMaterialCheckboxChecked)
-                                    ? -1 * Math.abs(inputValue)
-                                    : inputValue,
-                                )
+        {isMaterialsLoading ? (
+          <Center>
+            <VStack>
+              <Spinner size="lg" />
+              <FormLabel variant={'light-label'} color="brand.300">
+                {t(`${TRANSACTION}.scanningMessage`)}
+              </FormLabel>
+            </VStack>
+          </Center>
+        ) : (
+          <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
+            {transactionFields.map((transactionField, index) => {
+              return (
+                <Grid
+                  className="amount-input-row"
+                  key={transactionField.id}
+                  gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+                  p="4"
+                  fontSize="14px"
+                  color="gray.600"
+                  gap="2rem 4rem"
+                  borderWidth={'0 0 1px 0'}
+                  borderStyle="solid"
+                  borderColor="gray.200"
+                >
+                  {isShowCheckboxes && (
+                    <GridItem>
+                      <Controller
+                        control={control}
+                        name={`transaction.${index}.checked` as const}
+                        render={({ field: { name, value, onChange } }) => {
+                          return (
+                            <Checkbox
+                              variant="normal"
+                              py="2"
+                              data-testid={`checkbox-${index}`}
+                              key={name}
+                              name={name}
+                              isDisabled={isApproved}
+                              isChecked={transactionField.checked}
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                                transactionField.checked = event.currentTarget.checked
+                                onChange(event.currentTarget.checked)
                               }}
                             />
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                          </>
-                        )
-                      }}
-                    />
-                  </FormControl>
-                </GridItem>
-              </Grid>
-            )
-          })}
-        </Box>
+                          )
+                        }}
+                      />
+                    </GridItem>
+                  )}
+                  <GridItem pr="7">
+                    <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
+                      <Input
+                        data-testid={`transaction-description-${index}`}
+                        type="text"
+                        size="sm"
+                        autoComplete="off"
+                        placeholder="Add Description here"
+                        readOnly={isApproved}
+                        variant={isApproved ? 'unstyled' : 'required-field'}
+                        {...register(`transaction.${index}.description` as const, {
+                          required: 'This is required field',
+                        })}
+                      />
+
+                      <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem pr="7">
+                    <FormControl isInvalid={!!errors.transaction?.[index]?.amount}>
+                      <Controller
+                        name={`transaction.${index}.amount` as const}
+                        control={control}
+                        rules={{
+                          required: 'This is required field',
+                        }}
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Input
+                                {...field}
+                                data-testid={`transaction-amount-${index}`}
+                                type={isApproved ? 'text' : 'number'}
+                                size="sm"
+                                placeholder="Add Amount"
+                                readOnly={isApproved}
+                                variant={isApproved ? 'unstyled' : 'required-field'}
+                                autoComplete="off"
+                                value={isApproved ? numeral(Number(field.value)).format('$0,0[.]00') : field.value}
+                                onChange={event => {
+                                  const inputValue = Number(event.currentTarget.value)
+                                  const transactionTypeId = getValues('transactionType')?.value
+                                  const isRefundMaterial = getValues('refundMaterial')
+                                  const isRefundLateFee = getValues('refundLateFee')
+                                  const isRefundFactoring = getValues('refundFactoring')
+                                  const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring
+
+                                  field.onChange(
+                                    TransactionTypeValues.draw === transactionTypeId ||
+                                      ([
+                                        TransactionTypeValues.material,
+                                        TransactionTypeValues.lateFee,
+                                        TransactionTypeValues.factoring,
+                                      ].some(id => id === transactionTypeId) &&
+                                        !isRefund)
+                                      ? -1 * Math.abs(inputValue)
+                                      : inputValue,
+                                  )
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                </Grid>
+              )
+            })}
+          </Box>
+        )}
         <Box position="absolute" left="0" right="0" bottom="0" zIndex={1}>
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}

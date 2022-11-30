@@ -53,7 +53,7 @@ import {
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
@@ -68,6 +68,7 @@ import {
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
+import { format } from 'date-fns'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -125,11 +126,13 @@ export type TransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
   projectId: string
+  projectStatus: string
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId, projectStatus }) => {
   const { t } = useTranslation()
-
+  const { isAdmin } = useUserRolesSelector()
+  const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   // const [document, setDocument] = useState<File | null>(null)
@@ -169,6 +172,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     formState: { errors },
     setValue,
     getValues,
+    watch,
     control,
     reset, //  isTruncated title={label}
   } = formReturn
@@ -188,14 +192,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
     control,
     transaction,
+    isMaterialsLoading,
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus)
   const payDateVariance = useCalculatePayDateVariance(control)
-
+  const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   const onAgainstOptionSelect = (option: SelectOption) => {
@@ -247,6 +252,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     [workOrdersKeyValues, setValue],
   )
 
+  // Disable selection of future payment received date for all users expect Admin
+  const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
@@ -270,14 +278,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     function updateAgainstOption() {
       if (transaction) return
 
-      if (againstOptions.length === 1 && transactionType) {
+      if (againstOptions.length === 1 && watchTransactionType) {
         setValue('against', againstOptions?.[0])
         resetExpectedCompletionDateFields(againstOptions?.[0])
       } else if (againstOptions.length > 1) {
         setValue('against', null)
       }
     },
-    [againstOptions, transactionType, transaction],
+    [watchTransactionType, transaction],
   )
 
   const onModalClose = () => {
@@ -601,7 +609,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
-                        {t(`${TRANSACTION}.paymentReceivedDate`)}
+                        {watchTransactionType?.value === TransactionTypeValues.woPaid
+                          ? t(`${TRANSACTION}.woPaymentDate`)
+                          : t(`${TRANSACTION}.paymentReceivedDate`)}
                       </FormLabel>
                       <Input
                         data-testid="payment-received-date"
@@ -610,6 +620,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         type="date"
                         variant="required-field"
                         isDisabled={isApproved}
+                        max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
                       <FormErrorMessage>{errors?.paymentRecievedDate?.message}</FormErrorMessage>
@@ -715,7 +726,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 )}
               </Grid>
 
-              <TransactionAmountForm formReturn={formReturn} transaction={transaction} />
+              <TransactionAmountForm
+                formReturn={formReturn}
+                transaction={transaction}
+                isMaterialsLoading={isMaterialsLoading}
+                setMaterialsLoading={setMaterialsLoading}
+              />
             </Flex>
           ) : (
             <Box flex={1}>
@@ -769,7 +785,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 data-testid="save-transaction"
                 colorScheme="brand"
                 variant="solid"
-                disabled={isFormSubmitLoading}
+                disabled={isFormSubmitLoading || isMaterialsLoading}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

@@ -7,7 +7,6 @@ import { useVendorCards, useVendorEntity } from 'api/vendor-dashboard'
 import { useTranslation } from 'react-i18next'
 
 import { LicenseDocument } from 'types/vendor.types'
-import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
@@ -116,18 +115,22 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
           gridGap="15px"
         >
-          <SimpleSlider heading={t('insuranceExpiration')} data={defaultData} isLoading={isLoading} />
+          <SimpleSlider
+            heading={t('insuranceExpiration')}
+            data={defaultData.sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
+            isLoading={isLoading}
+          />
 
           <SimpleSlider
             isLoading={isLoading}
             heading={t('licenseExpiration')}
             data={vendorEntity?.licenseDocuments
-              ?.sort((curr: any, pre: any) => pre.id - curr.id)
               .map((licenseDocument: LicenseDocument) => ({
                 title: LicenseType[licenseDocument.licenseType],
-                date: dateFormat(licenseDocument.licenseExpirationDate),
+                date: licenseDocument.licenseExpirationDate,
                 testId: LicenseType[licenseDocument.licenseType],
-              }))}
+              }))
+              .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
           />
         </Flex>
       </Box>
