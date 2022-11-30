@@ -84,7 +84,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
       await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
     })
 
-    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
     expect(screen.getByTestId('isVerified-0')).not.toHaveAttribute('checked')
     expect(screen.getByTestId('isVerified-1')).not.toHaveAttribute('checked')
 
