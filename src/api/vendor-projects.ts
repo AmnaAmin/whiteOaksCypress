@@ -107,6 +107,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
 
   // Vendor
   const rightMarginX = 15 
+  // Might be needed
   //doc.internal.pageSize.getWidth() - 80 /* starting point of right margin text */
 
   // Heading
