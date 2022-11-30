@@ -31,6 +31,8 @@ import {
   useSaveVendorDetails,
   useVendorProfile,
 } from 'api/vendor-details'
+import { VendorProjects } from 'features/vendor-profile/vendor-projects'
+import { useProjectTypeSelectOptions } from 'api/pc-projects'
 
 type Props = {
   vendorProfileData?: VendorProfile
@@ -201,6 +203,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {t('market')}
             </Tab>
             {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+            <Tab>{t('Projects')}</Tab>
           </TabList>
 
           <TabPanels mt="31px">
@@ -257,6 +260,15 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {tabIndex === 4 && (
                 <MarketList
                   isActive={tabIndex === 4}
+                  vendorProfileData={vendorProfileData as VendorProfile}
+                  onClose={props.onClose}
+                />
+              )}
+            </TabPanel>
+            <TabPanel p="0px">
+              {tabIndex === 5 && (
+                <VendorProjects
+                  isActive={tabIndex === 5}
                   vendorProfileData={vendorProfileData as VendorProfile}
                   onClose={props.onClose}
                 />
