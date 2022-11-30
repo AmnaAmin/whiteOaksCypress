@@ -27,7 +27,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
   }))
 
   // If the graph has no data we are showing a message on the graph.
-  const emptyGraphData = data?.length === 0 || data?.count?.length === 0
+  const emptyGraphData = data?.filter(value => value?.count)?.length === 0
 
   return (
     <ResponsiveContainer width={width} height={height}>
