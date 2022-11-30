@@ -99,51 +99,60 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   const baseFont = 'times'
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
-    streetAddress: '4 14th Street #601',
+    streetAddress: 'Four 14th Street #601',
     city: 'Hoboken',
     state: 'NJ',
     zipCode: '07030',
   }
 
   // Vendor
-  const rightMarginX = doc.internal.pageSize.getWidth() - 80 /* starting point of right margin text */
+  const rightMarginX = 15 
+  //doc.internal.pageSize.getWidth() - 80 /* starting point of right margin text */
 
   // Heading
-  doc.setFontSize(22).setFont(baseFont, 'bold')
-  doc.text('INVOICE', rightMarginX, 20, { charSpace: 3 })
+  doc.setFontSize(22).setFont(baseFont, 'normal')
+  doc.text('INVOICE #', rightMarginX, 20, { charSpace: 0 })
+  doc.text(workOrder?.invoiceNumber.slice(2,8), rightMarginX + 40, 20)
 
-  //Address
+  // PO Number
+  doc.setFontSize(12).setFont(baseFont, 'bold')
+  doc.text('PO Number:', rightMarginX, 35)
   doc.setFontSize(12).setFont(baseFont, 'normal')
-  doc.text(woAddress?.companyName, 15, 45)
-  doc.text(woAddress?.streetAddress, 15, 50)
-  doc.text(woAddress?.city + ', ' + woAddress?.state + ' ' + woAddress?.zipCode, 15, 55)
+  doc.text(truncateWithEllipsis(workOrder?.propertyAddress, 15), rightMarginX + 25, 35)
 
-  doc.text('Vendor', 15, 65)
-  doc.text(workOrder?.companyName, 15, 70)
+  // From Vendor
+  doc.text('From:', rightMarginX, 60) 
+  doc.setFontSize(12).setFont(baseFont, 'bold')
+  doc.text(workOrder?.companyName, rightMarginX, 65) 
 
-  // Specifications
+  // Address
+  doc.setFontSize(12).setFont(baseFont, 'normal')
+  doc.text('Bill To:', rightMarginX + 65, 60)
+  doc.setFontSize(12).setFont(baseFont, 'bold')
+  doc.text(woAddress?.companyName, rightMarginX + 65, 65)
+  doc.setFontSize(12).setFont(baseFont, 'normal')
+  doc.text(woAddress?.streetAddress, rightMarginX + 65, 70)
+  doc.text(woAddress?.city + ', ' + woAddress?.state + ' ' + woAddress?.zipCode, rightMarginX + 65, 75)
+
+  // Dates
   doc.setFont(baseFont, 'bold')
-  doc.text('Invoice #', rightMarginX, 45)
-  doc.text('P.O. #', rightMarginX, 55)
-  doc.text('Invoice Date', rightMarginX, 65)
-  doc.text('Due Date', rightMarginX, 75)
-
+  doc.text('Invoice Date', rightMarginX + 135, 60)
+  doc.text('Due Date', rightMarginX + 135, 65)
   doc.setFont(baseFont, 'normal')
-  doc.text(workOrder?.invoiceNumber, rightMarginX + 35, 45)
-  doc.text(truncateWithEllipsis(workOrder?.propertyAddress, 15), rightMarginX + 35, 55)
   doc.text(
     workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy',
-    rightMarginX + 35,
-    65,
+    rightMarginX + 160,
+    60,
   )
-  doc.text(workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 35, 75)
+  doc.text(workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 160, 65)
 
   // Table
   autoTable(doc, {
-    startY: 85,
+    startY: 80,
     headStyles: { fillColor: '#D3D3D3', textColor: '#000000' },
     tableLineColor: [0, 0, 0],
     tableLineWidth: 0.1,
+    
     body: [
       ...items.map(ai => {
         return {
@@ -158,13 +167,13 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
       { header: 'Description', dataKey: 'description' },
       { header: 'Total', dataKey: 'amount' },
     ],
-    theme: 'plain',
-    bodyStyles: { minCellHeight: 15 },
+    theme: 'grid',
+    bodyStyles: { minCellHeight: 10 }
   })
 
   // Summary
   const tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
-  const summaryX = doc.internal.pageSize.getWidth() - 90 /* Starting x point of invoice summary  */
+  const summaryX = doc.internal.pageSize.getWidth() - 70 /* Starting x point of invoice summary  */
   doc.internal.pageSize.getHeight()
   doc.setDrawColor(0)
   let rectX = summaryX - 10
@@ -173,14 +182,15 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     doc.addPage()
     rectY = 20
   }
-  const rectL = 86
+  const rectL = 86 - 20
   const rectW = 10
   const summaryInfo = [
     { title: 'Subtotal', value: currencyFormatter(summary.subTotal) },
     { title: 'Amount Paid', value: currencyFormatter(Math.abs(summary.amountPaid)) },
     { title: 'Balance Due', value: currencyFormatter(summary.subTotal - Math.abs(summary.amountPaid)) },
   ]
-  doc.rect(14, rectY, 96, 30, 'D')
+  // hide first rect as per new format
+  // doc.rect(14, rectY, 96, 30, 'D') 
   summaryInfo.forEach(sum => {
     let rectD = 'D'
     if (sum.title === 'Balance Due') {
@@ -189,7 +199,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     }
     doc.rect(rectX, rectY, rectL, rectW, rectD)
     doc.setFont(baseFont, 'bold')
-    doc.text(sum.title, summaryX, rectY + 6)
+    doc.text(sum.title, summaryX - 5, rectY + 6)
     doc.setFont(baseFont, 'normal')
     doc.text(sum.value, summaryX + 40, rectY + 6)
     rectY = rectY + 10
