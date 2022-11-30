@@ -59,8 +59,8 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   }
 
   return (
-    <Flex flexDir="column" minH="420px">
-      <Box flex="1">
+    <Flex flexDir="column">
+      <Box px="6" minH="300px">
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl isInvalid={!!errors?.name}>
@@ -152,7 +152,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
             </FormControl>
           </GridItem>
         </Grid>
-        <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3" mt={3}>
+        <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
             <FormControl isInvalid={!!errors?.sowOriginalContractAmount}>
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.originalSOWAmount`)} size="md">
@@ -182,7 +182,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               />
             </FormControl>
           </GridItem>
-          <GridItem mb={10}>
+          <GridItem>
             <FormControl isInvalid={!!errors?.documents}>
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.uploadProjectSOW`)} size="md">
                 {t(`${NEW_PROJECT}.uploadProjectSOW`)}
@@ -227,7 +227,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </Grid>
       </Box>
 
-      <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
+      <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5" px="6">
         <Button variant="outline" size="md" colorScheme="brand" onClick={props.onClose}>
           {t(`${NEW_PROJECT}.cancel`)}
         </Button>
