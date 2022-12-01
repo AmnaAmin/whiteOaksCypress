@@ -1,6 +1,6 @@
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import { Box, Button, chakra, Checkbox, Divider, HStack, Icon, Stack, Text, useCheckbox } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
@@ -35,7 +35,7 @@ export const CustomCheckBox = props => {
       cursor={!state.isDisabled ? 'pointer' : 'default'}
       {...htmlProps}
     >
-      <input {...getInputProps()} hidden id={props.id} />
+      <input data-testid={props?.testid} {...getInputProps()} hidden id={props.id} />
       <HStack
         ml="2"
         justifyContent="center"
@@ -96,15 +96,23 @@ const AssignedItems = (props: AssignedItemType) => {
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
 
   useEffect(() => {
-    const allVerified = lineItems?.length > 0 && lineItems.every(l => l.isCompleted && l.isVerified)
-    if (allVerified && !workOrder?.workOrderDateCompleted) {
-      setValue('workOrderDateCompleted', datePickerFormat(new Date()))
+    const allVerified = lineItems?.length > 0 && lineItems?.every(l => l.isCompleted && l.isVerified)
+    const isAnyItemComplete = lineItems?.length > 0 && lineItems?.some(l => l.isCompleted)
+    if (allVerified) {
+      if (!workOrder?.workOrderDateCompleted) {
+        setValue('workOrderDateCompleted', datePickerFormat(new Date()))
+      }
+      setMarkAllVerified(true)
+    }
+    if (!isAnyItemComplete) {
+      setMarkAllVerified(false)
     }
   }, [lineItems])
 
   const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsComplete } = useActionsShowDecision({ workOrder })
-  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems })
   const { isVendor } = useUserRolesSelector()
+  const [markAllVerified, setMarkAllVerified] = useState<boolean>()
   const allowEdit = !isVendor && !workOrder
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
@@ -170,12 +178,14 @@ const AssignedItems = (props: AssignedItemType) => {
                   data-testid="showMarkAllIsVerified"
                   size="md"
                   disabled={!verificationEnabled}
+                  isChecked={markAllVerified}
                   onChange={e => {
                     assignedItems.forEach((item, index) => {
                       if (values?.assignedItems?.[index]?.isCompleted) {
                         setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
                       }
                     })
+                    setMarkAllVerified(e.target.checked)
                   }}
                 >
                   {t(`${WORK_ORDER}.markAllVerified`)}

@@ -111,8 +111,8 @@ export const AddPropertyInfo: React.FC<{
 
   return (
     <>
-      <Flex flexDir="column" minH="420px">
-        <Box flex="1">
+      <Flex flexDir="column">
+        <Box px="6" minH="300px">
           {isDuplicateAddress && (
             <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
               <AlertIcon />
@@ -324,7 +324,7 @@ export const AddPropertyInfo: React.FC<{
           </Grid>
         </Box>
 
-        <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
+        <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5" px="6">
           <Button onClick={props.onClose} variant="outline" size="md" colorScheme="brand">
             {t('cancel')}
           </Button>

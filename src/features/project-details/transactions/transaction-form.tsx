@@ -80,7 +80,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
       // templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
       templateColumns="repeat(4, 1fr)"
       gap={'1rem 20px'}
-      borderBottom="2px solid"
+      borderBottom="1px solid #E2E8F0"
       borderColor="gray.200"
       py="5"
     >
@@ -129,7 +129,12 @@ export type TransactionFormProps = {
   projectStatus: string
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId, projectStatus }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({
+  onClose,
+  selectedTransactionId,
+  projectId,
+  projectStatus,
+}) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)

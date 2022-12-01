@@ -138,7 +138,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const { data: userInfo } = useUser(user?.email)
   const { mutate: updateUser } = useSaveUserDetails()
-  const { mutate: addUser } = useCreateUserMutation();
+  const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes } = useViewVendor()
   useUserDetails({ form, userInfo })
@@ -155,10 +155,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
-    (
-      accountType?.label === 'Project Coordinator' &&
-      !validateMarket(formValues?.markets)
-    )
+    (accountType?.label === 'Project Coordinator' && !validateMarket(formValues?.markets))
 
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator';
