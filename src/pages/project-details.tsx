@@ -190,7 +190,9 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               <TabPanel p="0px" mt="7px">
                 {formattedGanttData?.length > 0 ? (
-                  <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
+                  <Flex minH="270px" bg="#fff">
+                    <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
+                  </Flex>
                 ) : (
                   <Flex h="calc(100vh - 450px)" bg="#fff" justifyContent={'center'}>
                     <FormLabel display={'flex'} alignItems="center" variant="light-label">
