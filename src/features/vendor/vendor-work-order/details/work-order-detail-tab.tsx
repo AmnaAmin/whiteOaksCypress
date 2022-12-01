@@ -87,7 +87,7 @@ const WorkOrderDetailTab = ({
     if (workOrder?.id && workOrderAssignedItems) {
       reset(getDefaultValues())
     }
-  }, [workOrder, reset, workOrderAssignedItems])
+  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const downloadPdf = () => {
     let doc = new jsPDF()
