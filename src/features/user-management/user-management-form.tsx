@@ -141,6 +141,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes } = useViewVendor()
   useUserDetails({ form, userInfo })
+
+  /**
+   * When we are calling reset() on form, we are not getting
+   * latest formValues from useWatch hook
+   */
   const formValues = useWatch({ control })
   const accountType: any = formValues?.accountType;
   const fpmRole: any = formValues?.fieldProjectManagerRoleId;
@@ -158,7 +163,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       !validateMarket(formValues?.markets)
     )
 
-  console.log('form - ', formValues);
+  console.log('formValues - ', formValues);
 
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator';
@@ -191,6 +196,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue('states', formValues.states?.map((state) => ({ ...state, checked: false })))
   }
 
+  console.log('userInfo - ', userInfo);
+  console.log('isVendor - ', isVendor);
   const onSubmit = useCallback(
     async formData => {
 
@@ -199,7 +206,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         formattedPayload={...formattedPayload,vendorId:formattedPayload?.vendorId?.value}
       }
       const mutation = userInfo?.id ? updateUser : addUser;
-
+      console.log('formattedPayload ', formattedPayload);
       mutation(
         parseMarketFormValuesToAPIPayload(formattedPayload
         ), {
@@ -211,7 +218,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         },
       })
     },
-    [userInfo, addUser, updateUser, userMangtPayload],
+    [userInfo, isVendor, addUser, updateUser, userMangtPayload],
   )
 
   const isEditUser = !!(user && user.id)

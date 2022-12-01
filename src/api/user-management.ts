@@ -265,6 +265,7 @@ const parseUserFormData = ({
     markets: markets || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
+    vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
   }
 }
