@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
+import { parseStatesAPIDataToFormValues } from 'utils/states'
 import { useMarkets, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
 
@@ -147,6 +148,7 @@ export const userMangtPayload = (user: any) => {
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId || '',
     parentFieldProjectManagerId: user.parentFieldProjectManagerId || '',
     markets: user.markets.filter(m => m.checked),
+    states: user.states.filter(m => m.checked),
     stateId: user.state?.id,
     userType: user.accountType?.value,
   }
@@ -208,6 +210,26 @@ export const useAccountTypes = () => {
     ...rest,
   }
 }
+
+export const useFPMManagerRoles = () => {
+  const client = useClient();
+  const { data, ...rest } = useQuery('fpm-manager-roles', async () => {
+    const response = await client(`lk_value/lookupType/9`, {})
+    return response?.data
+  })
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: res?.value,
+    })) || []
+
+  return {
+    data,
+    options,
+    ...rest,
+  }
+}
+
 export const useAllManagers = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('users-allAvailableManagers', async () => {
@@ -258,7 +280,9 @@ export const useUserDetails = ({ form, userInfo }) => {
   useEffect(() => {
     if(!userInfo) {
       const formattedMarkets = parseMarketAPIDataToFormValues(markets, [])
+      const formattedStates = parseStatesAPIDataToFormValues(stateOptions)
         setValue('markets', formattedMarkets)
+        setValue('states', formattedStates)
     } else {
       reset(
         parseUserFormData({
