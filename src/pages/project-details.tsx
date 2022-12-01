@@ -95,7 +95,6 @@ export const ProjectDetails: React.FC = props => {
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
-        {formattedGanttData?.length > 0 ? <ProjectSchedule isLoading={isLoading} data={formattedGanttData} /> : null}
         <AmountDetailsCard projectId={projectId} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
@@ -105,6 +104,7 @@ export const ProjectDetails: React.FC = props => {
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
                 <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
                 <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
+                <Tab>{t('projects.projectDetails.schedule')}</Tab>
                 <Tab>{t('projects.projectDetails.documents')}</Tab>
                 {/* <Tab>{t('alerts')}</Tab> */}
                 <Tab>
@@ -128,7 +128,7 @@ export const ProjectDetails: React.FC = props => {
                       {t('newWorkOrder')}
                     </Button>
                   )}
-                {tabIndex === 3 && (
+                {tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
                     {t('projects.projectDetails.upload')}
                   </Button>
@@ -188,7 +188,17 @@ export const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="100%" mt="7px">
                 <WorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
-
+              <TabPanel p="0px" mt="7px">
+                {formattedGanttData?.length > 0 ? (
+                  <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
+                ) : (
+                  <Flex h="calc(100vh - 430px)" bg="#fff" justifyContent={'center'}>
+                    <FormLabel display={'flex'} alignItems="center" variant="light-label">
+                      {'No data returned for this view.'}
+                    </FormLabel>
+                  </Flex>
+                )}
+              </TabPanel>
               <TabPanel p="0px" mt="7px">
                 <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
