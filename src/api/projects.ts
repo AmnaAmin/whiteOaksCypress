@@ -183,17 +183,30 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   }
 }
 
-export const useWorkOrders = () => {
-  const client = useClient()
+export const VENDOR_WORK_ORDER_QUERY_KEY = 'workorder_projects'
+type VendorWorkOrder = Array<any>
 
-  const { data: workOrderData, ...rest } = useQuery(['workorder_projects'], async () => {
-    const response = await client(`vendor/workorders`, {})
+const getVendorWorkOrderQueryString = (filterQueryString: string) => {
+  let queryString = filterQueryString
+  if (filterQueryString?.search('&sort=workOrderExpectedCompletionDate') < 0) {
+    queryString = queryString + `&sort=expectedPaymentDate,asc`
+  }
+  return queryString
+}
 
-    return response?.data
-  })
+export const useWorkOrders = (queryString: string, pageSize: number) => {
+  const apiQueryString = getVendorWorkOrderQueryString(queryString)
+
+  const { data, ...rest } = usePaginationQuery<VendorWorkOrder>(
+    [VENDOR_WORK_ORDER_QUERY_KEY, apiQueryString],
+    `vendor/workorders?${apiQueryString}`,
+    pageSize,
+  )
 
   return {
-    workOrderData,
+    workOrderData: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
     ...rest,
   }
 }
