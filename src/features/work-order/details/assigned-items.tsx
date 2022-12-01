@@ -264,11 +264,11 @@ const AssignedItems = (props: AssignedItemType) => {
         </Stack>
 
         <Box width="100%" height={'100%'} overflowX={overflowXVal} overflowY={'hidden'}>
-          <TableContextProvider data={values.assignedItems ?? []} columns={ASSIGNED_ITEMS_COLUMNS}>
+          <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS}>
             <Table
               handleOnDrag={handleOnDragEnd}
               handleOnDragStart={handleOnDragStart}
-              isLoading={isLoadingLineItems}
+              isLoading={true}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
             />
           </TableContextProvider>

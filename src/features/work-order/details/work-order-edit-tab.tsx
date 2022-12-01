@@ -373,7 +373,7 @@ const WorkOrderDetailTab = props => {
                 </Center>
               ) : (
                 <AssignedItems
-                  isLoadingLineItems={isFetchingLineItems}
+                  isLoadingLineItems={isFetchingLineItems || isWorkOrderUpdating}
                   onOpenRemainingItemsModal={onOpenRemainingItemsModal}
                   unassignedItems={unassignedItems}
                   setUnAssignedItems={setUnAssignedItems}
