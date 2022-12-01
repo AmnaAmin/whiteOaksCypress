@@ -1,21 +1,24 @@
-import { Button, Checkbox, Flex, FormControl, FormLabel, HStack, Input, Spacer } from '@chakra-ui/react'
+import { Button, Checkbox, Flex, FormControl, FormLabel, HStack, Input, Spacer, VStack } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
   useAccountTypes,
+  useAllManagers,
   useCreateUserMutation,
   useDeleteUserDetails,
+  useFPMManagerRoles,
   userMangtPayload,
   useSaveUserDetails,
   useUser,
   useUserDetails,
+  useViewVendor,
 } from 'api/user-management'
 import { languageOptions } from 'api/vendor-details'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import ReactSelect from 'components/form/react-select'
-import { useCallback, useState } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { useCallback, useMemo, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { UserForm } from 'types/user.types'
@@ -35,6 +38,84 @@ const validateMarket = markets => {
   }
   return true
 }
+export const BONUS = [
+  {
+    value: 0,
+    label: '0%',
+  },
+  {
+    value: 1,
+    label: '1%',
+  },
+  {
+    value: 2,
+    label: '2%',
+  },
+  {
+    value: 3,
+    label: '3%',
+  },
+  {
+    value: 4,
+    label: '4%',
+  },
+  {
+    value: 5,
+    label: '5%',
+  },
+  {
+    value: 6,
+    label: '6%',
+  },
+  {
+    value: 7,
+    label: '7%',
+  },
+  {
+    value: 8,
+    label: '8%',
+  },
+  {
+    value: 9,
+    label: '9%',
+  },
+  {
+    value: 10,
+    label: '10%',
+  }
+];
+
+export const DURATION = [
+  {
+    value: 0,
+    label: 'No',
+  },
+  {
+    value: 10,
+    label: '10',
+  },
+  {
+    value: 20,
+    label: '20',
+  },
+  {
+    value: 30,
+    label: '30',
+  },
+  {
+    value: 60,
+    label: '60',
+  },
+  {
+    value: 90,
+    label: '90',
+  },
+  {
+    value: -1,
+    label: 'Indefinitely',
+  },
+];
+
 
 export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) => {
   const { t } = useTranslation()
@@ -42,22 +123,29 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: accountTypeOptions } = useAccountTypes()
+  const { options: availableManagers } = useAllManagers()
+  const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    setValue,
     reset,
+    watch
   } = form
 
   const { data: userInfo } = useUser(user?.email)
   const { mutate: updateUser } = useSaveUserDetails()
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
-
+  const { options: vendorTypes } = useViewVendor()
   useUserDetails({ form, userInfo })
-  const formValues = useWatch({ control })
-  const accountType: any = formValues?.accountType
+
+  const formValues = watch()
+  const accountType: any = formValues?.accountType;
+  const fpmRole: any = formValues?.fieldProjectManagerRoleId;
+
   const watchRequiredField =
     !formValues?.email ||
     !formValues?.firstName ||
@@ -68,13 +156,48 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.langKey ||
     (accountType?.label === 'Project Coordinator' && !validateMarket(formValues?.markets))
 
-  const isProjectCoordinator = accountType?.label === 'Project Coordinator'
+  const isVendor = accountType?.label === 'Vendor'
+  const isProjectCoordinator = accountType?.label === 'Project Coordinator';
+  const isFPM = accountType?.label === 'Field Project Manager';
+
+  const showMarkets = useMemo(() => {
+    if ([61, 221].includes(fpmRole?.value)) {
+      return true;
+    }
+    return isProjectCoordinator;
+  }, [isProjectCoordinator, fpmRole]);
+
+  const showStates = fpmRole?.value === 59;
+  // const showRegions = fpmRole?.value === 60;
+
+  const handleChangeAccountType = () => {
+    setValue('parentFieldProjectManagerId', null)
+    // setValue('managerRoleId', undefined)
+    setValue('fieldProjectManagerRoleId', undefined)
+    setValue('newTarget', undefined)
+    setValue('newBonus', undefined)
+    setValue('ignoreQuota', undefined)
+    setValue('markets', formValues.markets?.map((market) => ({ ...market, checked: false })))
+    setValue('states', formValues.states?.map((state) => ({ ...state, checked: false })))
+    setValue('vendorId', undefined)
+  }
+
+  const handleChangeFpmRole = () => {
+    setValue('markets', formValues.markets?.map((market) => ({ ...market, checked: false })))
+    setValue('states', formValues.states?.map((state) => ({ ...state, checked: false })))
+  }
 
   const onSubmit = useCallback(
     async formData => {
-      const mutation = userInfo?.id ? updateUser : addUser
 
-      mutation(parseMarketFormValuesToAPIPayload(userMangtPayload(formData)), {
+      let formattedPayload = userMangtPayload(formData)
+      if(isVendor){
+        formattedPayload={...formattedPayload,vendorId:formattedPayload?.vendorId?.value}
+      }
+      const mutation = userInfo?.id ? updateUser : addUser;
+      mutation(
+        parseMarketFormValuesToAPIPayload(formattedPayload
+        ), {
         onSuccess() {
           onClose()
         },
@@ -83,7 +206,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         },
       })
     },
-    [userInfo, addUser, updateUser, userMangtPayload],
+    [userInfo, isVendor, addUser, updateUser, userMangtPayload],
   )
 
   const isEditUser = !!(user && user.id)
@@ -158,8 +281,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <Controller
             control={control}
             name="accountType"
-            render={({ field }) => (
-              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={accountTypeOptions} />
+            render={({ field: { onChange, ...rest } }) => (
+              <ReactSelect
+                {...rest}
+                selectProps={{ isBorderLeft: true }}
+                options={accountTypeOptions}
+                onChange={(target) => {
+                  onChange(target)
+                  handleChangeAccountType()
+                }}
+              />
             )}
           />
         </FormControl>
@@ -191,7 +322,33 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </FormControl>
       </HStack>
 
-      {isProjectCoordinator ? (
+      {isFPM ? (
+        <HStack mt="30px" spacing={15}>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.fieldProjectManagerRole`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="fieldProjectManagerRoleId"
+              render={({ field: { onChange, ...rest } }) => (
+                <ReactSelect
+                  {...rest}
+                  selectProps={{ isBorderLeft: true }}
+                  options={fpmManagerRoleOptions}
+                  onChange={(target) => {
+                    onChange(target)
+                    handleChangeFpmRole()
+                  }}
+                />
+              )}
+            />
+          </FormControl>
+        </HStack>
+      ) : null
+      }
+
+      {showMarkets ? (
         <HStack mt="30px" spacing={15}>
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.markets?.map((market, index) => {
@@ -222,6 +379,126 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </HStack>
       ) : null}
 
+      {/* TODO - check from product and backend, whether states and regions are the same thing */}
+      {showStates ? (
+        <VStack mt="30px">
+          <FormLabel variant="strong-label" size="md" alignSelf="start">
+            {t(`${USER_MANAGEMENT}.modal.state`)}
+          </FormLabel>
+          <Flex wrap="wrap" gridGap={3}>
+            {formValues?.states?.map((state, index) => {
+              return (
+                <Controller
+                  name={`states.${index}`}
+                  control={control}
+                  key={state.state.id}
+                  render={({ field: { name, onChange, value } }) => {
+                    return (
+                      <CheckboxButton
+                        name={name}
+                        key={value.state.id}
+                        isChecked={state?.checked}
+                        onChange={event => {
+                          const checked = event.target.checked
+                          onChange({ ...state, checked })
+                        }}
+                      >
+                        {value.state?.label}
+                      </CheckboxButton>
+                    )
+                  }}
+                />
+              )
+            })}
+          </Flex>
+        </VStack>
+      ) : null}
+
+      {isFPM ? (
+        <>
+          <HStack mt="30px" spacing={15}>
+            {/* <FormControl w="215px">
+              <FormLabel variant="strong-label" size="md">
+                Manager Role
+              </FormLabel>
+              <Controller
+                control={control}
+                name="managerRoleId"
+                render={({ field }) => (
+                  <ReactSelect {...field} options={[]} />
+                )}
+              />
+            </FormControl> */}
+            <FormControl w="215px">
+              <FormLabel variant="strong-label" size="md">
+                {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="parentFieldProjectManagerId"
+                render={({ field }) => (
+                  <ReactSelect {...field} options={availableManagers} />
+                )}
+              />
+            </FormControl>
+
+            <FormControl w={215}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${USER_MANAGEMENT}.modal.newTarget`)}
+              </FormLabel>
+              <Input borderLeft="2.5px solid #4E87F8" type="number" {...register('newTarget')} />
+            </FormControl>
+
+            <FormControl w="215px">
+              <FormLabel variant="strong-label" size="md">
+                {t(`${USER_MANAGEMENT}.modal.newBonus`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="newBonus"
+                render={({ field }) => (
+                  <ReactSelect {...field} options={BONUS} />
+                )}
+              />
+            </FormControl>
+          </HStack>
+          <HStack mt="30px" spacing={15}>
+            <FormControl w={215}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${USER_MANAGEMENT}.modal.ignoreQuota`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="ignoreQuota"
+                render={({ field }) => (
+                  <ReactSelect {...field} options={DURATION} />
+                )}
+              />
+            </FormControl>
+          </HStack>
+        </>
+      ) : null}
+
+      {isVendor ?
+        <>
+          <HStack mt="30px" spacing={15}>
+            <FormControl w="215px">
+              <FormLabel variant="strong-label" size="md">
+                Vendor
+              </FormLabel>
+              <Controller
+                control={control}
+                name="vendorId"
+                render={({ field }) => (
+                  <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={vendorTypes} />
+                )}
+              />
+            </FormControl>
+
+          </HStack>
+
+        </>
+        : null}
       <HStack mt="30px" spacing={15}>
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
