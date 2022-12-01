@@ -21,12 +21,12 @@ import { UploadDocumentModal } from 'features/project-details/documents/upload-d
 import { Card } from 'components/card/card'
 // import { AlertsTable } from 'features/projects/alerts/alerts-table'
 // import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import ProjectSchedule from 'features/project-details/project-schedule/project-schedule'
 import { useGanttChart } from 'api/pc-projects'
 // import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
+import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -35,7 +35,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const { ganttChartData } = useGanttChart(projectId)
+  const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
   // const [alertRow, selectedAlertRow] = useState(true)
   // const [firstDate, setFirstDate] = useState(undefined);
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
@@ -189,15 +189,7 @@ export const ProjectDetails: React.FC = props => {
                 <WorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
               <TabPanel p="0px" mt="7px">
-                {formattedGanttData?.length > 0 ? (
-                  <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
-                ) : (
-                  <Flex h="calc(100vh - 450px)" bg="#fff" justifyContent={'center'}>
-                    <FormLabel display={'flex'} alignItems="center" variant="light-label">
-                      {'No data returned for this view.'}
-                    </FormLabel>
-                  </Flex>
-                )}
+                <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
               </TabPanel>
               <TabPanel p="0px" mt="7px">
                 <VendorDocumentsTable ref={tabsContainerRef} />
