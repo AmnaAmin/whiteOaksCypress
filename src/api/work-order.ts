@@ -131,7 +131,7 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
 
   return {
     workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
-      return e.order
+      return e.orderNo
     }),
     ...rest,
   }
@@ -268,7 +268,7 @@ export const parseWODetailValuesToPayload = formValues => {
         document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
-        order: index,
+        orderNo: index,
       }
       delete assignedItem.uploadedDoc
       return assignedItem
@@ -343,7 +343,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
         document: a.uploadedDoc ? a.uploadedDoc : a.document,
         id: '',
         smartLineItemId: a.id,
-        order: index,
+        orderNo: index,
       }
       delete assignedItem.uploadedDoc
       return assignedItem
