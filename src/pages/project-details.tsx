@@ -192,7 +192,7 @@ export const ProjectDetails: React.FC = props => {
                 {formattedGanttData?.length > 0 ? (
                   <ProjectSchedule isLoading={isLoading} data={formattedGanttData} />
                 ) : (
-                  <Flex h="calc(100vh - 430px)" bg="#fff" justifyContent={'center'}>
+                  <Flex h="calc(100vh - 450px)" bg="#fff" justifyContent={'center'}>
                     <FormLabel display={'flex'} alignItems="center" variant="light-label">
                       {'No data returned for this view.'}
                     </FormLabel>
