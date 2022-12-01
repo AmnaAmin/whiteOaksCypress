@@ -102,12 +102,13 @@ const WorkOrderDetailTab = ({
 
   const parseAssignedItems = values => {
     const assignedItems = [
-      ...values?.assignedItems?.map(a => {
+      ...values?.assignedItems?.map((a, index) => {
         if (a.document) {
           delete a?.document?.fileObject
         }
         const assignedItem = {
           ...a,
+          order: index,
           document: a.uploadedDoc ? a.uploadedDoc : a.document,
         }
         delete assignedItem.uploadedDoc

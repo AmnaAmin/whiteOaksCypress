@@ -97,6 +97,7 @@ type TableProps = {
   isHideFilters?: boolean
   isShowFooter?: boolean
   handleOnDrag?: (result) => void
+  handleOnDragStart?: (result) => void
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -107,6 +108,7 @@ export const Table: React.FC<TableProps> = ({
   isHideFilters,
   isShowFooter,
   handleOnDrag,
+  handleOnDragStart,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -269,6 +271,7 @@ export const Table: React.FC<TableProps> = ({
               </Tbody>
             ) : (
               <DragDropEnabledRows
+                handleOnDragStart={handleOnDragStart}
                 handleOnDrag={handleOnDrag}
                 getRowModel={getRowModel}
                 onRowClick={onRowClick}
@@ -303,11 +306,21 @@ export const Table: React.FC<TableProps> = ({
 
 export default Table
 
-const DragDropEnabledRows = ({ handleOnDrag, getRowModel, onRowClick, onRightClick, getColumnMaxMinWidths }) => {
+const DragDropEnabledRows = ({
+  handleOnDrag,
+  getRowModel,
+  onRowClick,
+  onRightClick,
+  getColumnMaxMinWidths,
+  handleOnDragStart,
+}) => {
   return (
     <DragDropContext
       onDragEnd={result => {
         handleOnDrag?.(result)
+      }}
+      onBeforeCapture={result => {
+        handleOnDragStart?.(result)
       }}
     >
       <Droppable droppableId="droppable">
