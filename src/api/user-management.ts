@@ -1,4 +1,5 @@
 import { useToast } from '@chakra-ui/react'
+import { BONUS, DURATION } from 'features/user-management/user-management-form'
 import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -144,13 +145,15 @@ export const userMangtPayload = (user: any) => {
     ...user,
     newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
-    vendorId: user.vendorId || '',
-    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId || '',
-    parentFieldProjectManagerId: user.parentFieldProjectManagerId || '',
-    markets: user.markets.filter(m => m.checked),
-    states: user.states.filter(m => m.checked),
-    stateId: user.state?.id,
+    vendorId: user.vendorId?.value || '',
+    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
+    parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
+    markets: user.markets?.filter(market => market.checked) || [],
+    states: user.states?.filter(state => state.checked)|| [],
+    stateId: user.state?.id || '',
     userType: user.accountType?.value,
+    ignoreQuota: user.ignoreQuota?.value || '',
+    newBonus: user.newBonus?.value || '',
   }
   delete userObj.state
   delete userObj.accountType
@@ -258,6 +261,8 @@ const parseUserFormData = ({
   accountTypeOptions,
   viewVendorsOptions,
   languageOptions,
+  fpmManagerRoleOptions,
+  availableManagers
 }) => {
 
   return {
@@ -267,6 +272,11 @@ const parseUserFormData = ({
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
+    newBonus: BONUS.find(bonus => bonus.value === userInfo?.newBonus),
+    ignoreQuota: DURATION.find(quotaDuration => quotaDuration.value === userInfo?.ignoreQuota),
+    fieldProjectManagerRoleId : fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId),
+    parentFieldProjectManagerId: availableManagers?.find(manager => manager.value === userInfo?.parentFieldProjectManagerId)
+
   }
 }
 
@@ -277,6 +287,8 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { options: allManagersOptions } = useAllManagers()
   const { options: accountTypeOptions } = useAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
+  const {options: fpmManagerRoleOptions} = useFPMManagerRoles()
+  const {options: availableManagers} = useAllManagers()
 
   useEffect(() => {
     if(!userInfo) {
@@ -294,6 +306,8 @@ export const useUserDetails = ({ form, userInfo }) => {
           accountTypeOptions,
           viewVendorsOptions,
           languageOptions,
+          fpmManagerRoleOptions,
+          availableManagers
         }),
       )
     }

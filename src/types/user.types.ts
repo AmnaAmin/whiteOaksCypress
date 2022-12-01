@@ -33,7 +33,7 @@ export type UserForm = {
   markets?: any[],//TODO - fix type def
   states?: any[],
   regions?: any[],
-  managerRoleId?: string
+  // managerRoleId?: string
   newBonus?: number | null
   newTarget?: number | null
   parentFieldProjectManagerId?: number | null

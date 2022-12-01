@@ -19,7 +19,7 @@ import { CheckboxButton } from 'components/form/checkbox-button'
 import ReactSelect from 'components/form/react-select'
 import { setValues } from 'framer-motion/types/render/utils/setters'
 import { useCallback, useMemo, useState } from 'react'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { UserForm } from 'types/user.types'
@@ -133,6 +133,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     control,
     setValue,
     reset,
+    watch
   } = form
 
   const { data: userInfo } = useUser(user?.email)
@@ -142,11 +143,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { options: vendorTypes } = useViewVendor()
   useUserDetails({ form, userInfo })
 
-  /**
-   * When we are calling reset() on form, we are not getting
-   * latest formValues from useWatch hook
-   */
-  const formValues = useWatch({ control })
+  const formValues = watch()
   const accountType: any = formValues?.accountType;
   const fpmRole: any = formValues?.fieldProjectManagerRoleId;
 
@@ -163,8 +160,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       !validateMarket(formValues?.markets)
     )
 
-  console.log('formValues - ', formValues);
-
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator';
   const isFPM = accountType?.label === 'Field Project Manager';
@@ -177,11 +172,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [isProjectCoordinator, fpmRole]);
 
   const showStates = fpmRole?.value === 59;
-  const showRegions = fpmRole?.value === 60;
+  // const showRegions = fpmRole?.value === 60;
 
   const handleChangeAccountType = () => {
     setValue('parentFieldProjectManagerId', null)
-    setValue('managerRoleId', undefined)
+    // setValue('managerRoleId', undefined)
     setValue('fieldProjectManagerRoleId', undefined)
     setValue('newTarget', undefined)
     setValue('newBonus', undefined)
@@ -196,8 +191,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue('states', formValues.states?.map((state) => ({ ...state, checked: false })))
   }
 
-  console.log('userInfo - ', userInfo);
-  console.log('isVendor - ', isVendor);
   const onSubmit = useCallback(
     async formData => {
 
@@ -206,7 +199,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         formattedPayload={...formattedPayload,vendorId:formattedPayload?.vendorId?.value}
       }
       const mutation = userInfo?.id ? updateUser : addUser;
-      console.log('formattedPayload ', formattedPayload);
       mutation(
         parseMarketFormValuesToAPIPayload(formattedPayload
         ), {
@@ -429,7 +421,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       {isFPM ? (
         <>
           <HStack mt="30px" spacing={15}>
-            <FormControl w="215px">
+            {/* <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
                 Manager Role
               </FormLabel>
@@ -440,7 +432,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   <ReactSelect {...field} options={[]} />
                 )}
               />
-            </FormControl>
+            </FormControl> */}
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
@@ -458,7 +450,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-              <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('newTarget')} />
+              <Input borderLeft="2.5px solid #4E87F8" type="number" {...register('newTarget')} />
             </FormControl>
 
             <FormControl w="215px">
