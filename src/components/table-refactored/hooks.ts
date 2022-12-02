@@ -17,7 +17,6 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
   const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting } =
     options
   const { pageIndex, pageSize } = pagination || {}
-  console.log(selectedCard)
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 

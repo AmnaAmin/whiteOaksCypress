@@ -111,8 +111,6 @@ export const GotoNextPage: React.FC<ButtonProps> = () => {
   const tableInstance = useTableInstance()
   const { pageIndex } = tableInstance.getState().pagination
 
-  console.log(pageIndex)
-
   // handle page next
   const handlePageNext = () => {
     if (pageIndex < tableInstance.getTotalSize() - 1) {

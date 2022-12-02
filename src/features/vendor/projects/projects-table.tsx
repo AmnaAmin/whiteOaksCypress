@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Link } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { useGetAllWorkOrders, useWorkOrders } from 'api/projects'
+import { SELECTED_CARD_MAP_URL, useGetAllWorkOrders, useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
 import { dateFormat } from 'utils/date-time-utils'
 
@@ -13,7 +13,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
-import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
+import { ColumnDef, PaginationState } from '@tanstack/react-table'
 import {
   GotoFirstPage,
   GotoLastPage,
@@ -22,13 +22,12 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { SELECTED_CARD_MAP_URL } from 'features/admin-dashboard/admin-dashboard.utils'
 
 const PROJECT_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
   statusLabel: 'statusLabel.contains',
   id: 'id.equals',
-  propertyAddress: 'propertyAddress.equals',
+  propertyAddress: 'propertyAddress.contains',
   skillName: 'skillName.contains',
   workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
   expectedPaymentDate: 'expectedPaymentDate.equals',
@@ -96,36 +95,35 @@ type ProjectProps = {
 
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (selectedCard) {
-      setFilteredUrl(SELECTED_CARD_MAP_URL[selectedCard])
-      setPagination({ pageIndex: 0, pageSize: 20 })
-    }
-  }, [selectedCard])
-
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const navigate = useNavigate()
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
       queryStringAPIFilterKeys: PROJECT_TABLE_QUERY_KEYS,
       pagination,
       setPagination,
-      selectedCard,
-      sorting,
     })
+
+  useEffect(() => {
+    if (selectedCard) {
+      setFilteredUrl(SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+    } else {
+      setFilteredUrl(null)
+    }
+  }, [selectedCard])
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
     filteredUrl + '&' + queryStringWithoutPagination,
   )
+
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
     filteredUrl + '&' + queryStringWithPagination,
     pagination.pageSize,
   )
-  // const [filterProjects, setFilterProjects] = useState(workOrderData)
 
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.projectId}`)
@@ -135,20 +133,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     postGridColumn(columns)
   }
 
-  // useEffect(() => {
-  //   if (!selectedCard) setFilterProjects(workOrderData)
-
-  //   setFilterProjects(
-  //     workOrderData?.filter(
-  //       wo =>
-  //         !selectedCard ||
-  //         wo.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
-  //     ),
-  //   )
-  // }, [selectedCard, workOrderData])
-
-  // console.log('dataCount', dataCount)
-
   return (
     <Box overflow={'auto'} h="calc(100vh - 270px)" roundedTop={6}>
       <TableContextProvider
@@ -156,8 +140,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         columns={tableColumns}
         totalPages={totalPages}
         pagination={pagination}
-        sorting={sorting}
-        setSorting={setSorting}
         setPagination={setPagination}
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
