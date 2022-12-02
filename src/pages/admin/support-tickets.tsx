@@ -1,9 +1,9 @@
 import { Box, Button, HStack, Text, useDisclosure } from '@chakra-ui/react'
+import { SupportModal } from 'features/support/support-modal'
 import { SupportTable } from 'features/support/support-table'
 import { SUPPORT } from 'features/support/support.i18n'
 import { useTranslation } from 'react-i18next'
 import { BiAddToQueue } from 'react-icons/bi'
-import { ProjectTypeModal } from './project-type-modal'
 
 export const SupportTickets = () => {
   const { t } = useTranslation()
@@ -21,7 +21,7 @@ export const SupportTickets = () => {
       </HStack>
 
       <SupportTable />
-      <ProjectTypeModal onClose={onClose} isOpen={isOpen} />
+      <SupportModal onClose={onClose} isOpen={isOpen} />
     </Box>
   )
 }
