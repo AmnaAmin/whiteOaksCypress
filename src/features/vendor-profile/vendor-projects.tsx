@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Flex, Button, RadioGroup, Stack, Radio, VStack } from '@chakra-ui/react'
 import { VendorProfile } from 'types/vendor.types'
 import { useFetchVendorWorkOrders } from 'api/vendor-details'
@@ -25,27 +25,27 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
   const VENDOR_PROJECTS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
       {
-        header: 'Project ID',
+        header: 'projectId',
         accessorKey: 'projectId',
       },
       {
-        header: 'Type',
+        header: 'type',
         accessorKey: 'projectTypeValue',
       },
       {
-        header: 'Status',
+        header: 'status',
         accessorKey: 'statusLabel',
       },
       {
-        header: 'Street Address',
+        header: 'streetAddress',
         accessorKey: 'streetAddress',
       },
       {
-        header: 'Pending Transactions',
+        header: 'pendingTransactions',
         accessorKey: 'pendingCount',
       },
       {
-        header: 'PastDue',
+        header: 'pastDue',
         accessorKey: 'isPastDue',
       },
     ]
@@ -61,16 +61,13 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
   const [projectStatus, setProjectStatus] = useState('active')
   const [tableData, setTableData] = useState([])
 
-  const filterProjects = projects => {
-    const data = projects?.filter(project => {
-      if (projectStatus === 'paid' && project.status === WORK_ORDER_STATUS.Paid) return project
-      else if (
-        projectStatus === 'active' &&
-        [WORK_ORDER_STATUS.Active, WORK_ORDER_STATUS.Completed].includes(project.status)
-      )
-        return project
-    })
-    return data
+  const filterProject = project => {
+    if (projectStatus === 'paid' && project.status === WORK_ORDER_STATUS.Paid) return project
+    else if (
+      projectStatus === 'active' &&
+      [WORK_ORDER_STATUS.Active, WORK_ORDER_STATUS.Completed].includes(project.status)
+    )
+      return project
   }
 
   const mapToProjectsTable = data => {
@@ -87,7 +84,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
   }
 
   useEffect(() => {
-    const data = filterProjects(vendorProjects)
+    const data = vendorProjects?.filter(filterProject)
     const mappedData = mapToProjectsTable(data)
     setTableData(mappedData)
   }, [vendorProjects?.length, projectStatus])

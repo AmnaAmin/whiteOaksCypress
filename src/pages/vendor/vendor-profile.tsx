@@ -32,7 +32,6 @@ import {
   useVendorProfile,
 } from 'api/vendor-details'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
-import { useProjectTypeSelectOptions } from 'api/pc-projects'
 
 type Props = {
   vendorProfileData?: VendorProfile
