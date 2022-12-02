@@ -527,6 +527,12 @@ export const parseTransactionToFormValues = (
   const isMaterialRefunded =
     transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
 
+  const isLateFeeRefunded =
+    transaction.transactionType === TransactionTypeValues.lateFee && transaction.changeOrderAmount > 0
+
+  const isFactoringRefunded =
+    transaction.transactionType === TransactionTypeValues.factoring && transaction.changeOrderAmount > 0
+
   const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS.revenue : TRANSACTION_MARK_AS_OPTIONS.paid
   const paidBackDate = transaction.transactionType === TransactionTypeValues.overpayment ? transaction.paidDate : null
 
@@ -555,6 +561,8 @@ export const parseTransactionToFormValues = (
     payDateVariance,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refundMaterial: isMaterialRefunded,
+    refundLateFee: isLateFeeRefunded,
+    refundFactoring: isFactoringRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
@@ -584,6 +592,8 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['changeOrder', projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
 
         toast({
           title: 'New Transaction.',
@@ -765,18 +775,13 @@ export const useUploadMaterialAttachment = () => {
 }
 
 const swoPrefix = '/smartwo/api'
-export const useFetchMaterialItems = (correlationId?: string | null | undefined) => {
+export const useFetchMaterialItems = (correlationId: string | null | undefined, refetchInterval: number) => {
   const client = useClient(swoPrefix)
-  const [refetchInterval, setRefetchInterval] = useState(5000)
-
   const { data, ...rest } = useQuery<any>(
     ['fetchMaterialItems', correlationId],
     async () => {
       const response = await client(`smart-materials/correlation/` + correlationId, {})
 
-      if (response?.data && response?.data?.status === 'COMPLETED') {
-        setRefetchInterval(0)
-      }
       return response?.data
     },
     {
@@ -791,12 +796,12 @@ export const useFetchMaterialItems = (correlationId?: string | null | undefined)
   }
 }
 
-export const mapMaterialItemstoTransactions = items => {
+export const mapMaterialItemstoTransactions = (items, isRefund) => {
   return items?.map(i => {
     return {
       id: Date.now(),
       description: i.description,
-      amount: i.whiteoaksCost,
+      amount: isRefund ? Math.abs(i.whiteoaksCost) : i.whiteoaksCost,
       checked: false,
     }
   })

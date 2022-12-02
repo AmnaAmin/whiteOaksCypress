@@ -21,12 +21,12 @@ import { UploadDocumentModal } from 'features/project-details/documents/upload-d
 import { Card } from 'components/card/card'
 // import { AlertsTable } from 'features/projects/alerts/alerts-table'
 // import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import ProjectSchedule from 'features/project-details/project-schedule/project-schedule'
 import { useGanttChart } from 'api/pc-projects'
 // import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
+import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -35,7 +35,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const { ganttChartData } = useGanttChart(projectId)
+  const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
   // const [alertRow, selectedAlertRow] = useState(true)
   // const [firstDate, setFirstDate] = useState(undefined);
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
@@ -95,7 +95,6 @@ export const ProjectDetails: React.FC = props => {
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
-        {formattedGanttData?.length > 0 ? <ProjectSchedule isLoading={isLoading} data={formattedGanttData} /> : null}
         <AmountDetailsCard projectId={projectId} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
@@ -105,6 +104,7 @@ export const ProjectDetails: React.FC = props => {
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
                 <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
                 <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
+                <Tab>{t('projects.projectDetails.schedule')}</Tab>
                 <Tab>{t('projects.projectDetails.documents')}</Tab>
                 {/* <Tab>{t('alerts')}</Tab> */}
                 <Tab>
@@ -119,7 +119,7 @@ export const ProjectDetails: React.FC = props => {
                 </Tab>
               </Flex>
 
-              <Box h="40px" w="100%" display="flex" justifyContent="end" position="relative">
+              <HStack h="50px" w="100%" justifyContent="end">
                 {tabIndex === 2 &&
                   ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid, STATUS.Punch].includes(
                     projectStatus as STATUS,
@@ -128,7 +128,7 @@ export const ProjectDetails: React.FC = props => {
                       {t('newWorkOrder')}
                     </Button>
                   )}
-                {tabIndex === 3 && (
+                {tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
                     {t('projects.projectDetails.upload')}
                   </Button>
@@ -166,7 +166,7 @@ export const ProjectDetails: React.FC = props => {
                     </Button>
                   </HStack>
                 )}
-              </Box>
+              </HStack>
             </TabList>
 
             <TabPanels h="100%">
@@ -175,11 +175,11 @@ export const ProjectDetails: React.FC = props => {
                   {isShowProjectFinancialOverview ? (
                     <TransactionDetails ref={tabsContainerRef} />
                   ) : (
-                    <TransactionsTable ref={tabsContainerRef} />
+                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                   )}
                 </Box>
               </TabPanel>
-              <TabPanel p="0px" mt="7px">
+              <TabPanel p="0px" mt="6px">
                 <Card rounded="16px" padding="0">
                   <ProjectDetailsTab projectData={projectData as Project} />
                 </Card>
@@ -188,8 +188,10 @@ export const ProjectDetails: React.FC = props => {
               <TabPanel p="0px" h="100%" mt="7px">
                 <WorkOrdersTable ref={tabsContainerRef} />
               </TabPanel>
-
-              <TabPanel p="0px" mt="3">
+              <TabPanel p="0px" mt="7px">
+                <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
+              </TabPanel>
+              <TabPanel p="0px" mt="7px">
                 <VendorDocumentsTable ref={tabsContainerRef} />
               </TabPanel>
 
@@ -203,7 +205,7 @@ export const ProjectDetails: React.FC = props => {
                 />
               </TabPanel> */}
 
-              <TabPanel px="0">
+              <TabPanel p="0" mt="7px">
                 <ProjectNotes projectId={projectId} />
               </TabPanel>
             </TabPanels>
@@ -214,6 +216,7 @@ export const ProjectDetails: React.FC = props => {
           isOpen={isOpenTransactionModal}
           onClose={onTransactionModalClose}
           projectId={projectId as string}
+          projectStatus={projectStatus}
         />
         {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}

@@ -54,7 +54,7 @@ const CalenderCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text data-testid={props.testId} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date || 'mm/dd/yyyy'}
         </Text>
       </Box>
@@ -70,6 +70,7 @@ const InformationCard = props => {
           {props.title}
         </Text>
         <Text
+          data-testid={props.testId}
           color="gray.500"
           fontSize="14px"
           fontStyle="normal"
@@ -250,7 +251,7 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems))
     }
-  }, [workOrder, reset, workOrderAssignedItems])
+  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -271,18 +272,23 @@ const WorkOrderDetailTab = props => {
               )}
             </Box>
             <SimpleGrid columns={5}>
-              <InformationCard title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
-              <InformationCard title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
-              <InformationCard title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
-              <InformationCard title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
+              <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+              <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+              <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+              <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
 
             <SimpleGrid columns={5}>
-              <CalenderCard title={t(`${WORK_ORDER}.woIssued`)} date={dateFormat(workOrderIssueDate)} />
               <CalenderCard
+                testId={'woIssued'}
+                title={t(`${WORK_ORDER}.woIssued`)}
+                date={dateFormat(workOrderIssueDate)}
+              />
+              <CalenderCard
+                testId={'lwSubmitted'}
                 title={t(`${WORK_ORDER}.lwSubmitted`)}
                 date={
                   dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
@@ -290,6 +296,7 @@ const WorkOrderDetailTab = props => {
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard
+                testId={'completionVariance'}
                 title={t(`${WORK_ORDER}.completionVariance`)}
                 date={workOrderCompletionDateVariance ?? '0'}
               />
@@ -306,6 +313,7 @@ const WorkOrderDetailTab = props => {
                     {t('expectedStart')}
                   </FormLabel>
                   <Input
+                    data-testid="workOrderStartDate"
                     id="workOrderStartDate"
                     type="date"
                     size="md"
@@ -324,6 +332,7 @@ const WorkOrderDetailTab = props => {
                     {t('expectedCompletion')}
                   </FormLabel>
                   <Input
+                    data-testid="workOrderExpectedCompletionDate"
                     id="workOrderExpectedCompletionDate"
                     type="date"
                     size="md"
@@ -343,6 +352,7 @@ const WorkOrderDetailTab = props => {
                     {t('completedByVendor')}
                   </FormLabel>
                   <Input
+                    data-testid="workOrderDateCompleted"
                     id="workOrderDateCompleted"
                     type="date"
                     size="md"
@@ -407,7 +417,7 @@ const WorkOrderDetailTab = props => {
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button colorScheme="brand" type="submit" disabled={disabledSave}>
+            <Button data-testId="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
               {t('save')}
             </Button>
           </HStack>

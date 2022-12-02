@@ -20,7 +20,7 @@ import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
   const { projectId } = useParams<'projectId'>()
-  const { projectData, isLoading } = useProject(projectId)
+  const { projectData, isLoading } = useProject(`${projectId}`)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState<number>(1)
   const [alertRow, selectedAlertRow] = useState(true)
@@ -85,7 +85,7 @@ const ProjectDetails: React.FC = props => {
             <TabPanels mt="10px" h="100%">
               <TabPanel p="0px" h="0px">
                 <Box h="100%">
-                  <TransactionsTable ref={tabsContainerRef} />
+                  <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                 </Box>
               </TabPanel>
               <TabPanel p="0px" h="0px">
@@ -127,6 +127,7 @@ const ProjectDetails: React.FC = props => {
         isOpen={isOpenTransactionModal}
         onClose={onTransactionModalClose}
         projectId={projectId as string}
+        projectStatus={projectData?.vendorWOStatusValue as string}
       />
     </>
   )
