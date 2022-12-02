@@ -1,5 +1,15 @@
 import React from 'react'
-import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack, Center, Spinner } from '@chakra-ui/react'
+import {
+  Text,
+  Flex,
+  Box,
+  CircularProgress,
+  CircularProgressLabel,
+  HStack,
+  Center,
+  Spinner,
+  VStack,
+} from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -82,27 +92,29 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                     </Text>
                   </CircularProgress>
                 </Flex>
-                <Box h="100%" w="100%">
-                  <HStack justifyContent="end">
+                <HStack h="100%" w="100%" justifyContent="space-between">
+                  <HStack>
+                    <Box mt="18px" ml="30px ">
+                      {isLoading ? (
+                        <BlankSlate width="200px" h="20px" />
+                      ) : (
+                        <Text fontSize="18px" color="gray.600" fontWeight={700}>
+                          {ammount}
+                        </Text>
+                      )}
+                      <Text fontSize="18px" color="gray.600" fontWeight={500}>
+                        {t('upcomingPayment')}
+                      </Text>
+                    </Box>
+                  </HStack>
+                  <VStack justifyContent="space-between" h="100%" alignItems="end">
                     {isLoading ? (
                       <BlankSlate width="60px" h="15px" />
                     ) : (
                       <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
                     )}
-                  </HStack>
-                  <Box mt="18px" ml="30px ">
-                    {isLoading ? (
-                      <BlankSlate width="200px" h="20px" />
-                    ) : (
-                      <Text fontSize="18px" color="gray.600" fontWeight={700}>
-                        {ammount}
-                      </Text>
-                    )}
-                    <Text fontSize="18px" color="gray.600" fontWeight={500}>
-                      {t('upcomingPayment')}
-                    </Text>
-                  </Box>
-                </Box>
+                  </VStack>
+                </HStack>
               </HStack>
             </>
           </Flex>

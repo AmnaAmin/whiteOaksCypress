@@ -34,20 +34,20 @@ export const useUser = (email?: string) => {
 }
 
 export const useCreateUserMutation = () => {
-  const client = useClient();
-  const toast = useToast();
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
+  const client = useClient()
+  const toast = useToast()
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
 
   return useMutation(
     (payload: any) => {
       return client('users', {
         data: {
-          login: payload.email,//TODO - Check why need login and email with backend
-          ...payload
+          login: payload.email, //TODO - Check why need login and email with backend
+          ...payload,
         },
         method: 'POST',
-      });
+      })
     },
     {
       onSuccess() {
@@ -67,7 +67,7 @@ export const useCreateUserMutation = () => {
           isClosable: true,
         })
       },
-    }
+    },
   )
 }
 
@@ -149,7 +149,7 @@ export const userMangtPayload = (user: any) => {
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
     parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
     markets: user.markets?.filter(market => market.checked) || [],
-    states: user.states?.filter(state => state.checked)|| [],
+    states: user.states?.filter(state => state.checked) || [],
     stateId: user.state?.id || '',
     userType: user.accountType?.value,
     ignoreQuota: user.ignoreQuota?.value || '',
@@ -215,7 +215,7 @@ export const useAccountTypes = () => {
 }
 
 export const useFPMManagerRoles = () => {
-  const client = useClient();
+  const client = useClient()
   const { data, ...rest } = useQuery('fpm-manager-roles', async () => {
     const response = await client(`lk_value/lookupType/9`, {})
     return response?.data
@@ -262,9 +262,8 @@ const parseUserFormData = ({
   viewVendorsOptions,
   languageOptions,
   fpmManagerRoleOptions,
-  availableManagers
+  availableManagers,
 }) => {
-
   return {
     ...userInfo,
     markets: markets || [],
@@ -274,9 +273,12 @@ const parseUserFormData = ({
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
     newBonus: BONUS.find(bonus => bonus.value === userInfo?.newBonus),
     ignoreQuota: DURATION.find(quotaDuration => quotaDuration.value === userInfo?.ignoreQuota),
-    fieldProjectManagerRoleId : fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId),
-    parentFieldProjectManagerId: availableManagers?.find(manager => manager.value === userInfo?.parentFieldProjectManagerId)
-
+    fieldProjectManagerRoleId: fpmManagerRoleOptions?.find(
+      fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId,
+    ),
+    parentFieldProjectManagerId: availableManagers?.find(
+      manager => manager.value === userInfo?.parentFieldProjectManagerId,
+    ),
   }
 }
 
@@ -287,15 +289,15 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { options: allManagersOptions } = useAllManagers()
   const { options: accountTypeOptions } = useAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
-  const {options: fpmManagerRoleOptions} = useFPMManagerRoles()
-  const {options: availableManagers} = useAllManagers()
+  const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
+  const { options: availableManagers } = useAllManagers()
 
   useEffect(() => {
-    if(!userInfo) {
+    if (!userInfo) {
       const formattedMarkets = parseMarketAPIDataToFormValues(markets, [])
       const formattedStates = parseStatesAPIDataToFormValues(stateOptions)
-        setValue('markets', formattedMarkets)
-        setValue('states', formattedStates)
+      setValue('markets', formattedMarkets)
+      setValue('states', formattedStates)
     } else {
       reset(
         parseUserFormData({
@@ -307,7 +309,7 @@ export const useUserDetails = ({ form, userInfo }) => {
           viewVendorsOptions,
           languageOptions,
           fpmManagerRoleOptions,
-          availableManagers
+          availableManagers,
         }),
       )
     }

@@ -1,4 +1,16 @@
-import { Button, Checkbox, Flex, FormControl, FormLabel, HStack, Icon, Input, Spacer, Text, VStack } from '@chakra-ui/react'
+import {
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormLabel,
+  HStack,
+  Icon,
+  Input,
+  Spacer,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
@@ -90,8 +102,8 @@ export const BONUS = [
   {
     value: 10,
     label: '10%',
-  }
-];
+  },
+]
 
 export const DURATION = [
   {
@@ -122,8 +134,7 @@ export const DURATION = [
     value: -1,
     label: 'Indefinitely',
   },
-];
-
+]
 
 export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) => {
   const { t } = useTranslation()
@@ -140,7 +151,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     control,
     setValue,
     reset,
-    watch
+    watch,
   } = form
 
   const { data: userInfo } = useUser(user?.email)
@@ -151,22 +162,23 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   useUserDetails({ form, userInfo })
 
   const formValues = watch()
-  const accountType: any = formValues?.accountType;
-  const fpmRole: any = formValues?.fieldProjectManagerRoleId;
+  const accountType: any = formValues?.accountType
+  const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
   const isVendor = accountType?.label === 'Vendor'
-  const isProjectCoordinator = accountType?.label === 'Project Coordinator';
-  const isFPM = accountType?.label === 'Field Project Manager';
+  const isProjectCoordinator = accountType?.label === 'Project Coordinator'
+  const isFPM = accountType?.label === 'Field Project Manager'
 
   const showMarkets = useMemo(() => {
     if ([61, 221].includes(fpmRole?.value)) {
-      return true;
+      return true
     }
-    return isProjectCoordinator;
-  }, [isProjectCoordinator, fpmRole]);
-  const showStates = fpmRole?.value === 59;
+    return isProjectCoordinator
+  }, [isProjectCoordinator, fpmRole])
+
+  const showStates = fpmRole?.value === 59
   // const showRegions = fpmRole?.value === 60;
-  const noMarketsSelected = !validateMarket(formValues?.markets);
+  const noMarketsSelected = !validateMarket(formValues?.markets)
 
   const watchRequiredField =
     !formValues?.email ||
@@ -178,7 +190,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.langKey ||
     (showMarkets && noMarketsSelected) ||
     (isVendor && !formValues.vendorId) ||
-    (isFPM  && (!fpmRole || !formValues?.newTarget)) ||
+    (isFPM && (!fpmRole || !formValues?.newTarget)) ||
     (showStates && !validateState(formValues?.states))
 
   const handleChangeAccountType = () => {
@@ -188,27 +200,36 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue('newTarget', undefined)
     setValue('newBonus', undefined)
     setValue('ignoreQuota', undefined)
-    setValue('markets', formValues.markets?.map((market) => ({ ...market, checked: false })))
-    setValue('states', formValues.states?.map((state) => ({ ...state, checked: false })))
+    setValue(
+      'markets',
+      formValues.markets?.map(market => ({ ...market, checked: false })),
+    )
+    setValue(
+      'states',
+      formValues.states?.map(state => ({ ...state, checked: false })),
+    )
     setValue('vendorId', undefined)
   }
 
   const handleChangeFpmRole = () => {
-    setValue('markets', formValues.markets?.map((market) => ({ ...market, checked: false })))
-    setValue('states', formValues.states?.map((state) => ({ ...state, checked: false })))
+    setValue(
+      'markets',
+      formValues.markets?.map(market => ({ ...market, checked: false })),
+    )
+    setValue(
+      'states',
+      formValues.states?.map(state => ({ ...state, checked: false })),
+    )
   }
 
   const onSubmit = useCallback(
     async formData => {
-
       let formattedPayload = userMangtPayload(formData)
-      if(isVendor){
-        formattedPayload={...formattedPayload,vendorId:formattedPayload?.vendorId?.value}
+      if (isVendor) {
+        formattedPayload = { ...formattedPayload, vendorId: formattedPayload?.vendorId?.value }
       }
-      const mutation = userInfo?.id ? updateUser : addUser;
-      mutation(
-        parseMarketFormValuesToAPIPayload(formattedPayload
-        ), {
+      const mutation = userInfo?.id ? updateUser : addUser
+      mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
           onClose()
         },
@@ -297,7 +318,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 {...rest}
                 selectProps={{ isBorderLeft: true }}
                 options={accountTypeOptions}
-                onChange={(target) => {
+                onChange={target => {
                   onChange(target)
                   handleChangeAccountType()
                 }}
@@ -347,7 +368,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   {...rest}
                   selectProps={{ isBorderLeft: true }}
                   options={fpmManagerRoleOptions}
-                  onChange={(target) => {
+                  onChange={target => {
                     onChange(target)
                     handleChangeFpmRole()
                   }}
@@ -356,8 +377,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             />
           </FormControl>
         </HStack>
-      ) : null
-      }
+      ) : null}
 
       {showMarkets ? (
         <VStack mt="30px" spacing={15} alignItems="start">
@@ -460,9 +480,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <Controller
                 control={control}
                 name="parentFieldProjectManagerId"
-                render={({ field }) => (
-                  <ReactSelect {...field} options={availableManagers} />
-                )}
+                render={({ field }) => <ReactSelect {...field} options={availableManagers} />}
               />
             </FormControl>
 
@@ -480,9 +498,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <Controller
                 control={control}
                 name="newBonus"
-                render={({ field }) => (
-                  <ReactSelect {...field} options={BONUS} />
-                )}
+                render={({ field }) => <ReactSelect {...field} options={BONUS} />}
               />
             </FormControl>
           </HStack>
@@ -494,16 +510,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <Controller
                 control={control}
                 name="ignoreQuota"
-                render={({ field }) => (
-                  <ReactSelect {...field} options={DURATION} />
-                )}
+                render={({ field }) => <ReactSelect {...field} options={DURATION} />}
               />
             </FormControl>
           </HStack>
         </>
       ) : null}
 
-      {isVendor ?
+      {isVendor ? (
         <>
           <HStack mt="30px" spacing={15}>
             <FormControl w="215px">
@@ -518,11 +532,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 )}
               />
             </FormControl>
-
           </HStack>
-
         </>
-        : null}
+      ) : null}
       <HStack mt="30px" spacing={15}>
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">

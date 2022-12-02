@@ -67,22 +67,22 @@ export const SalesPerMonth = ({ data, bar, line }) => {
   const CustomTooltip = ({ payload }: any) => {
     if (payload && payload.length) {
       return (
-          <div>
-            {payload?.map(item => {
-              return (
-                <Box
-                  className={item.className}
-                  key={item.id}
-                  background={item.fill}
-                  color="white"
-                  rounded={5}
-                  mb={1}
-                  p={1}
-                >
-                  {`${item.name} : $${item.value}`}
-                </Box>
-              )
-            })}
+        <div>
+          {payload?.map(item => {
+            return (
+              <Box
+                className={item.className}
+                key={item.id}
+                background={item.fill}
+                color="white"
+                rounded={5}
+                mb={1}
+                p={1}
+              >
+                {`${item.name} : $${item.value}`}
+              </Box>
+            )
+          })}
         </div>
       )
     }

@@ -30,9 +30,9 @@ export type UserForm = {
   lastModifiedBy?: string
   lastModifiedDate?: string
   login?: string
-  markets?: any[],//TODO - fix type def
-  states?: any[],
-  regions?: any[],
+  markets?: any[] //TODO - fix type def
+  states?: any[]
+  regions?: any[]
   // managerRoleId?: string
   newBonus?: number | null
   newTarget?: number | null
