@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
         </Card>
       </Flex>
 
-      <Box width="100%">
+      <Box width="100%" pb="5">
         <FormLabel variant="strong-lable" size={'lg'}>
           {t(`${DASHBOARD}.upcomingPayment`)}
         </FormLabel>
