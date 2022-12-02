@@ -33,7 +33,7 @@ export const ProjectNotes: React.FC<any> = props => {
       saveNote={saveNote}
       notes={notes}
       contentStyle={{ padding: '25px', maxHeight: '400px' }}
-      pageLayoutStyle={{ bg: 'white', rounded: 16, pb: 2 }}
+      pageLayoutStyle={{ bg: 'white', rounded: 6, pb: 2 }}
     />
   )
 }

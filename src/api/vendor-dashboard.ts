@@ -1,6 +1,7 @@
 import { useClient } from 'utils/auth-context'
 import { useQuery } from 'react-query'
 import { VendorEntity } from 'types/vendor.types'
+import { usePaginationQuery } from 'api'
 
 export const useVendorCards = () => {
   const client = useClient()
@@ -65,4 +66,55 @@ export const useVendorSettings = () => {
 
     return response?.data
   })
+}
+
+export const UPCOMING_PAYMENT_TABLE_QUERY_KEYS = {
+  projectId: 'projectId.equals',
+  statusLabel: 'statusLabel.contains',
+  id: 'id.equals',
+  marketName: 'marketName.contains',
+  vendorAddress: 'vendorAddress.contains',
+  workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
+  expectedPaymentDate: 'expectedPaymentDate.equals',
+}
+
+export const UPCOMING_PAYMENT_API_KEY = 'upcoming-payment'
+
+const getUpcomingPaymentQueryString = (filterQueryString: string) => {
+  return filterQueryString ? filterQueryString + `&sort=expectedPaymentDate,asc` : 'sort=expectedPaymentDate,asc'
+}
+type UpcomingPaymentResponse = Array<any>
+export const usePaginatedUpcomingPayment = (queryString: string, pageSize: number) => {
+  const apiQueryString = getUpcomingPaymentQueryString(queryString)
+
+  const { data, ...rest } = usePaginationQuery<UpcomingPaymentResponse>(
+    [UPCOMING_PAYMENT_API_KEY, apiQueryString],
+    `all-payables?${apiQueryString}`,
+    pageSize,
+  )
+
+  return {
+    workOrders: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+const GET_ALL_WORKORDERS_QUERY_KEY = 'all_payable_api_key'
+// This hook of getting workorders from backend is only for export button of payable table
+export const useGetAllUpcomingPaymentWorkOrders = (queryString: string) => {
+  const client = useClient()
+  const apiQueryString = getUpcomingPaymentQueryString(queryString)
+
+  return useQuery(
+    [GET_ALL_WORKORDERS_QUERY_KEY, apiQueryString],
+    async () => {
+      const response = await client(`all-payables?${apiQueryString}`, {})
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
 }

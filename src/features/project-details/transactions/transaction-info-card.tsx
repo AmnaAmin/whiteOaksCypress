@@ -46,9 +46,7 @@ export const TransactionInfoCard: React.FC<{
         </Box>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('WODueDate')}>
-        <Text>
-          {projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate as string) : 'mm/dd/yyyy'}
-        </Text>
+        <Text>{projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate as string) : 'mm/dd/yyyy'}</Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('contactName')}>
         <Text>{projectData?.projectManager}</Text>

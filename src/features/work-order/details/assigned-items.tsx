@@ -1,6 +1,18 @@
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
-import { Box, Button, chakra, Checkbox, Divider, HStack, Icon, Stack, Text, useCheckbox } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import {
+  Box,
+  Button,
+  chakra,
+  Checkbox,
+  Divider,
+  HStack,
+  Icon,
+  ResponsiveValue,
+  Stack,
+  Text,
+  useCheckbox,
+} from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
 import { FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
@@ -89,6 +101,7 @@ const AssignedItems = (props: AssignedItemType) => {
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const { fields: assignedItems } = assignedItemsArray
+  const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
 
   const values = getValues()
   const lineItems = useWatch({ name: 'assignedItems', control })
@@ -96,15 +109,23 @@ const AssignedItems = (props: AssignedItemType) => {
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
 
   useEffect(() => {
-    const allVerified = lineItems?.length > 0 && lineItems.every(l => l.isCompleted && l.isVerified)
-    if (allVerified && !workOrder?.workOrderDateCompleted) {
-      setValue('workOrderDateCompleted', datePickerFormat(new Date()))
+    const allVerified = lineItems?.length > 0 && lineItems?.every(l => l.isCompleted && l.isVerified)
+    const isAnyItemComplete = lineItems?.length > 0 && lineItems?.some(l => l.isCompleted)
+    if (allVerified) {
+      if (!workOrder?.workOrderDateCompleted) {
+        setValue('workOrderDateCompleted', datePickerFormat(new Date()))
+      }
+      setMarkAllVerified(true)
+    }
+    if (!isAnyItemComplete) {
+      setMarkAllVerified(false)
     }
   }, [lineItems])
 
   const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsComplete } = useActionsShowDecision({ workOrder })
-  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder })
+  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems })
   const { isVendor } = useUserRolesSelector()
+  const [markAllVerified, setMarkAllVerified] = useState<boolean>()
   const allowEdit = !isVendor && !workOrder
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
@@ -115,6 +136,29 @@ const AssignedItems = (props: AssignedItemType) => {
     assignedItemsArray,
     workOrder,
   })
+
+  const handleOnDragEnd = useCallback(
+    result => {
+      if (!result.destination) return
+
+      const items = Array.from(values.assignedItems)
+      const {
+        source: { index: sourceIndex },
+        destination: { index: destinationIndex },
+      } = result
+
+      const [reorderedItem] = items.splice(sourceIndex, 1)
+      items.splice(destinationIndex, 0, reorderedItem)
+
+      setValue('assignedItems', items)
+      setOverflowXVal('auto')
+    },
+    [values?.assignedItems],
+  )
+
+  const handleOnDragStart = useCallback(result => {
+    setOverflowXVal('hidden')
+  }, [])
 
   return (
     <Box>
@@ -170,12 +214,14 @@ const AssignedItems = (props: AssignedItemType) => {
                   data-testid="showMarkAllIsVerified"
                   size="md"
                   disabled={!verificationEnabled}
+                  isChecked={markAllVerified}
                   onChange={e => {
                     assignedItems.forEach((item, index) => {
                       if (values?.assignedItems?.[index]?.isCompleted) {
                         setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
                       }
                     })
+                    setMarkAllVerified(e.target.checked)
                   }}
                 >
                   {t(`${WORK_ORDER}.markAllVerified`)}
@@ -217,9 +263,14 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
         </Stack>
 
-        <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
-          <TableContextProvider data={values.assignedItems ?? []} columns={ASSIGNED_ITEMS_COLUMNS}>
-            <Table isLoading={isLoadingLineItems} isEmpty={!isLoadingLineItems && !values.assignedItems?.length} />
+        <Box width="100%" height={'100%'} overflowX={overflowXVal} overflowY={'hidden'}>
+          <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS}>
+            <Table
+              handleOnDrag={handleOnDragEnd}
+              handleOnDragStart={handleOnDragStart}
+              isLoading={true}
+              isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
+            />
           </TableContextProvider>
         </Box>
       </>

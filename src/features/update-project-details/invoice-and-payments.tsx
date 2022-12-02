@@ -238,7 +238,7 @@ const InvoiceAndPayments: React.FC = () => {
               size="md"
               type="date"
               id="invoiceBackDate"
-              {...register('invoiceBackDate', {
+              {...register('woaExpectedPayDate', {
                 onChange: onInvoiceBackDateChange,
               })}
             />

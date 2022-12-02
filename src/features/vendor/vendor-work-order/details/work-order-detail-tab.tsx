@@ -11,8 +11,9 @@ import {
   AlertIcon,
   Center,
   Spinner,
+  Icon,
 } from '@chakra-ui/react'
-import { BiCalendar } from 'react-icons/bi'
+import { BiCalendar, BiFile } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { dateFormat } from 'utils/date-time-utils'
@@ -24,19 +25,20 @@ import { createInvoicePdf, LineItems } from 'features/work-order/details/assigne
 import { useEffect } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 
-const CalenderCard = props => {
+const SummaryCard = props => {
   return (
     <Flex justifyContent={'left'} pb={'20px'}>
       <Box pr={4}>
-        <BiCalendar size={23} color="#718096" />
+        <Icon as={props.icon} fontSize="23px" color="#718096" />
       </Box>
       <Box lineHeight="20px">
         <FormLabel variant="strong-label" size="md">
           {props.title}
         </FormLabel>
         <FormLabel data-testid={props.title} variant="light-label" size="md">
-          {props.value ? props.value : 'mm/dd/yy'}
+          {props.value}
         </FormLabel>
       </Box>
     </Flex>
@@ -87,7 +89,7 @@ const WorkOrderDetailTab = ({
     if (workOrder?.id && workOrderAssignedItems) {
       reset(getDefaultValues())
     }
-  }, [workOrder, reset, workOrderAssignedItems])
+  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const downloadPdf = () => {
     let doc = new jsPDF()
@@ -102,12 +104,13 @@ const WorkOrderDetailTab = ({
 
   const parseAssignedItems = values => {
     const assignedItems = [
-      ...values?.assignedItems?.map(a => {
+      ...values?.assignedItems?.map((a, index) => {
         if (a.document) {
           delete a?.document?.fileObject
         }
         const assignedItem = {
           ...a,
+          orderNo: index,
           document: a.uploadedDoc ? a.uploadedDoc : a.document,
         }
         delete assignedItem.uploadedDoc
@@ -149,7 +152,7 @@ const WorkOrderDetailTab = ({
             </Alert>
           )}
           <SimpleGrid
-            columns={4}
+            columns={5}
             spacing={8}
             borderBottom="1px solid  #E2E8F0"
             minH="60px"
@@ -157,13 +160,35 @@ const WorkOrderDetailTab = ({
             mb="20px"
             alignItems={'left'}
           >
-            <CalenderCard title={t('WOIssued')} value={dateFormat(workOrder.workOrderIssueDate)} />
-            <CalenderCard title={t('expectedStart')} value={dateFormat(workOrder.workOrderStartDate)} />
-            <CalenderCard
-              title={t('expectedCompletion')}
-              value={dateFormat(workOrder.workOrderExpectedCompletionDate)}
+            <SummaryCard
+              title={t('WOIssued')}
+              icon={BiCalendar}
+              value={workOrder.workOrderIssueDate ? dateFormat(workOrder.workOrderIssueDate) : 'mm/dd/yy'}
             />
-            <CalenderCard title={t('completedByVendor')} value={dateFormat(workOrder.workOrderDateCompleted)} />
+            <SummaryCard
+              title={t('expectedStart')}
+              icon={BiCalendar}
+              value={workOrder.workOrderStartDate ? dateFormat(workOrder.workOrderStartDate) : 'mm/dd/yy'}
+            />
+            <SummaryCard
+              icon={BiCalendar}
+              title={t('expectedCompletion')}
+              value={
+                workOrder.workOrderExpectedCompletionDate
+                  ? dateFormat(workOrder.workOrderExpectedCompletionDate)
+                  : 'mm/dd/yy'
+              }
+            />
+            <SummaryCard
+              icon={BiCalendar}
+              title={t('completedByVendor')}
+              value={workOrder.workOrderDateCompleted ? dateFormat(workOrder.workOrderDateCompleted) : 'mm/dd/yy'}
+            />
+            <SummaryCard
+              title={t(`${NEW_PROJECT}.lockBoxCode`)}
+              icon={BiFile}
+              value={!!projectData?.lockBoxCode ? projectData?.lockBoxCode : '--'}
+            />
           </SimpleGrid>
           <Box mx="32px" mt={8}>
             {isLoadingLineItems ? (
