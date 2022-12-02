@@ -71,7 +71,7 @@ export const useVendorSettings = () => {
 export const UPCOMING_PAYMENT_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
   statusLabel: 'statusLabel.contains',
-  propertyAddress: 'id.equals',
+  id: 'id.equals',
   marketName: 'marketName.contains',
   vendorAddress: 'vendorAddress.contains',
   workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',

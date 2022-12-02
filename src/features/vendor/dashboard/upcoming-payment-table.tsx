@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { ColumnDef, ColumnFiltersState, PaginationState, Updater } from '@tanstack/react-table'
+import { ColumnDef, PaginationState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
@@ -16,28 +16,20 @@ import {
 import TableColumnSettings from 'components/table/table-column-settings'
 import { DASHBOARD } from './dashboard.i18n'
 import { useTranslation } from 'react-i18next'
-import { useGetAllUpcomingPaymentWorkOrders, usePaginatedUpcomingPayment } from 'api/vendor-dashboard'
+import {
+  UPCOMING_PAYMENT_TABLE_QUERY_KEYS,
+  useGetAllUpcomingPaymentWorkOrders,
+  usePaginatedUpcomingPayment,
+} from 'api/vendor-dashboard'
 import { dateFormat } from 'utils/date-time-utils'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import Status from 'features/common/status'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 
-type workOrderType = {
-  pagination: PaginationState
-  queryStringWithPagination: string
-  queryStringWithoutPagination: string
-  setPagination: (updater: Updater<PaginationState>) => void
-  setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
-}
-
-export const UpcomingPaymentTable: React.FC<workOrderType> = ({
-  pagination,
-  queryStringWithPagination,
-  queryStringWithoutPagination,
-  setPagination,
-  setColumnFilters,
-}) => {
+export const UpcomingPaymentTable = () => {
   const { t } = useTranslation()
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
 
   const UPCOMING_PAYMENT_COLUMNS: ColumnDef<any>[] = [
     {
@@ -81,6 +73,12 @@ export const UpcomingPaymentTable: React.FC<workOrderType> = ({
     },
   ]
 
+  const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: UPCOMING_PAYMENT_TABLE_QUERY_KEYS,
+    pagination,
+    setPagination,
+  })
+
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.upcomingPayment)
 
   const onSave = columns => {
@@ -114,7 +112,7 @@ export const UpcomingPaymentTable: React.FC<workOrderType> = ({
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="projects.xlsx"
+              fileName="upcoming-payment.xlsx"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>

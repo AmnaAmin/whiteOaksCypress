@@ -15,9 +15,6 @@ import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
 import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
-import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
-import { UPCOMING_PAYMENT_TABLE_QUERY_KEYS } from 'api/vendor-dashboard'
-import { PaginationState } from '@tanstack/react-table'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -32,14 +29,6 @@ const Dashboard: React.FC = () => {
   const onCardClick = params => {
     navigate('/projects', { state: params })
   }
-
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-
-  const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: UPCOMING_PAYMENT_TABLE_QUERY_KEYS,
-    pagination,
-    setPagination,
-  })
 
   return (
     <VStack w="100%" zIndex={2} spacing="14px">
@@ -106,13 +95,7 @@ const Dashboard: React.FC = () => {
           {t(`${DASHBOARD}.upcomingPayment`)}
         </FormLabel>
 
-        <UpcomingPaymentTable
-          pagination={pagination}
-          queryStringWithPagination={queryStringWithPagination}
-          queryStringWithoutPagination={queryStringWithoutPagination}
-          setPagination={setPagination}
-          setColumnFilters={setColumnFilters}
-        />
+        <UpcomingPaymentTable />
       </Box>
     </VStack>
   )
