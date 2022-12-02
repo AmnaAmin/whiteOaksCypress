@@ -12,7 +12,7 @@ import {
   BiUserPlus,
 } from 'react-icons/bi'
 
-import { FaAlignCenter, FaHome } from 'react-icons/fa'
+import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -236,6 +236,12 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
       color: '#68D391',
+    },
+    {
+      pathTo: '/support-tickets',
+      title: 'Support',
+      Icon: FaReact,
+      color: '#3182CE',
     },
   ],
 

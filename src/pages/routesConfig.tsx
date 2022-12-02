@@ -17,6 +17,7 @@ import { PerformanceTab } from 'features/performance/performance'
 import { UserManagement } from './admin/user-management'
 import Dashboard from './admin/dashboard'
 import { ProjectType } from './admin/project-type'
+import { SupportTickets } from './admin/support-tickets'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -85,6 +86,7 @@ export default function useRoutesConfig() {
         { path: 'projectType', element: ProjectType },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },
+	{ path: 'support-tickets', element: SupportTickets },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },

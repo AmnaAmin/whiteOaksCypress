@@ -15,6 +15,7 @@ import { accounts } from 'pages/accounts.i18n'
 import { sideNav } from '../components/layout/sideNav.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
+import { support } from 'features/support/support.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -37,6 +38,7 @@ i18n.use(initReactI18next).init({
         ...sideNav.en.translation,
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
+        ...support.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -520,6 +522,7 @@ i18n.use(initReactI18next).init({
         ...sideNav.es.translation,
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
+        ...support.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

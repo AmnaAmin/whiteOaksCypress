@@ -1,5 +1,5 @@
 import { useClient } from 'utils/auth-context'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { FileAttachment, SupportFormValues, SupportsPayload } from 'types/support.types'
 import { dateISOFormat, getFormattedDate } from 'utils/date-time-utils'
 import { useToast } from '@chakra-ui/react'
@@ -47,6 +47,14 @@ export const STATUS_OPTIONS = [
     label: 'Rejected',
   },
 ]
+export const SUPPORT_LIST = 'SUPPORT_LIST'
+export const useSupport = () => {
+  const client = useClient()
+  return useQuery(SUPPORT_LIST, async () => {
+    const response = await client(`project_type`, {})
+    return response?.data
+  })
+}
 
 export const getSupportFormDefaultValues = (email: string): SupportFormValues => {
   return {
