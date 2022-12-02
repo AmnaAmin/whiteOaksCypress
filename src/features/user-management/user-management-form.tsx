@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, FormControl, FormLabel, HStack, Input, Spacer, VStack } from '@chakra-ui/react'
+import { Button, Checkbox, Flex, FormControl, FormLabel, HStack, Icon, Input, Spacer, Text, VStack } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
@@ -20,6 +20,7 @@ import ReactSelect from 'components/form/react-select'
 import { useCallback, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { BiErrorCircle } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { UserForm } from 'types/user.types'
 import { parseMarketFormValuesToAPIPayload } from 'utils/markets'
@@ -34,6 +35,13 @@ type UserManagement = {
 const validateMarket = markets => {
   const checkedMarkets = markets?.filter(t => t.checked)
   if (!(checkedMarkets && checkedMarkets.length > 0)) {
+    return false
+  }
+  return true
+}
+const validateState = states => {
+  const checkedStates = states?.filter(state => state.checked)
+  if (!(checkedStates && checkedStates.length > 0)) {
     return false
   }
   return true
@@ -146,16 +154,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const accountType: any = formValues?.accountType;
   const fpmRole: any = formValues?.fieldProjectManagerRoleId;
 
-  const watchRequiredField =
-    !formValues?.email ||
-    !formValues?.firstName ||
-    !formValues?.lastName ||
-    !formValues?.accountType ||
-    !formValues?.streetAddress ||
-    !formValues?.telephoneNumber ||
-    !formValues?.langKey ||
-    (accountType?.label === 'Project Coordinator' && !validateMarket(formValues?.markets))
-
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator';
   const isFPM = accountType?.label === 'Field Project Manager';
@@ -166,9 +164,22 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     }
     return isProjectCoordinator;
   }, [isProjectCoordinator, fpmRole]);
-
   const showStates = fpmRole?.value === 59;
   // const showRegions = fpmRole?.value === 60;
+  const noMarketsSelected = !validateMarket(formValues?.markets);
+
+  const watchRequiredField =
+    !formValues?.email ||
+    !formValues?.firstName ||
+    !formValues?.lastName ||
+    !formValues?.accountType ||
+    !formValues?.streetAddress ||
+    !formValues?.telephoneNumber ||
+    !formValues?.langKey ||
+    (showMarkets && noMarketsSelected) ||
+    (isVendor && !formValues.vendorId) ||
+    (isFPM  && (!fpmRole || !formValues?.newTarget)) ||
+    (showStates && !validateState(formValues?.states))
 
   const handleChangeAccountType = () => {
     setValue('parentFieldProjectManagerId', null)
@@ -349,7 +360,20 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       }
 
       {showMarkets ? (
-        <HStack mt="30px" spacing={15}>
+        <VStack mt="30px" spacing={15} alignItems="start">
+          <Flex alignItems="center">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.markets`)}
+            </FormLabel>
+            {noMarketsSelected && (
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="8px" height="8px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="8px">
+                  Select one market atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.markets?.map((market, index) => {
               return (
@@ -376,7 +400,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               )
             })}
           </Flex>
-        </HStack>
+        </VStack>
       ) : null}
 
       {/* TODO - check from product and backend, whether states and regions are the same thing */}
