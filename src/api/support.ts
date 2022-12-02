@@ -51,8 +51,8 @@ export const SUPPORT_LIST = 'SUPPORT_LIST'
 export const useSupport = () => {
   const client = useClient()
   return useQuery(SUPPORT_LIST, async () => {
-    const response = await client(`project_type`, {})
-    return response?.data
+    const response = await client(`support-ticket`, {})
+    return response?.data || []
   })
 }
 
