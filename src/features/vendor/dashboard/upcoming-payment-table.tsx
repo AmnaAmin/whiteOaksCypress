@@ -1,9 +1,8 @@
 import React from 'react'
-import { Box, Button, HStack, Icon, Text } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { ColumnDef, ColumnFiltersState, PaginationState, Updater } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
-import { RiCloseFill } from 'react-icons/ri'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import { ExportButton } from 'components/table-refactored/export-button'
 import {
@@ -24,10 +23,6 @@ import { TableNames } from 'types/table-column.types'
 import Status from 'features/common/status'
 
 type workOrderType = {
-  setSeeDetails: (boolean) => void
-  setHoverButton: (boolean) => void
-  seeDetails: boolean
-  hoverButton: boolean
   pagination: PaginationState
   queryStringWithPagination: string
   queryStringWithoutPagination: string
@@ -36,10 +31,6 @@ type workOrderType = {
 }
 
 export const UpcomingPaymentTable: React.FC<workOrderType> = ({
-  setSeeDetails,
-  setHoverButton,
-  seeDetails,
-  hoverButton,
   pagination,
   queryStringWithPagination,
   queryStringWithoutPagination,
@@ -84,33 +75,7 @@ export const UpcomingPaymentTable: React.FC<workOrderType> = ({
       accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
     },
     {
-      header: () => {
-        return (
-          <HStack>
-            <Text isTruncated w={160} title={t(`${DASHBOARD}.expectedPayment`)}>
-              {t(`${DASHBOARD}.expectedPayment`)}
-            </Text>
-            {hoverButton && (
-              <Button
-                variant="ghost"
-                colorScheme="gray"
-                minW={'10px'}
-                h={4}
-                p={1}
-                rounded={2}
-                onClick={() => {
-                  setSeeDetails(!seeDetails)
-                  setHoverButton(false)
-                }}
-                transition={{ width: '10s', height: '4s' }}
-                onMouseEnter={() => setHoverButton(true)}
-              >
-                <Icon as={RiCloseFill} fontSize={20} />
-              </Button>
-            )}
-          </HStack>
-        )
-      },
+      header: t(`${DASHBOARD}.expectedPayment`),
       accessorKey: 'expectedPaymentDate',
       accessorFn: row => dateFormat(row.expectedPaymentDate),
     },

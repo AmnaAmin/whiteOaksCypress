@@ -33,10 +33,7 @@ const Dashboard: React.FC = () => {
     navigate('/projects', { state: params })
   }
 
-  const [seeDetails, setSeeDetails] = useState(false)
-  const [hoverButton, setHoverButton] = useState(false)
-
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 15 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
 
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: UPCOMING_PAYMENT_TABLE_QUERY_KEYS,
@@ -47,7 +44,7 @@ const Dashboard: React.FC = () => {
   return (
     <VStack w="100%" zIndex={2} spacing="14px">
       <Box w={{ base: '100%' }}>
-        <VendorScore vendorId={vendorId} seeDetails={seeDetails} setSeeDetails={setSeeDetails} />
+        <VendorScore vendorId={vendorId} />
       </Box>
 
       <Box w="100%">
@@ -103,28 +100,20 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
-      {seeDetails ? (
-        <Box width="100%">
-          <FormLabel variant="strong-lable" size={'lg'}>
-            {t(`${DASHBOARD}.upcomingPayment`)}
-          </FormLabel>
-          <Box w="100%" onMouseEnter={() => setHoverButton(true)} onMouseLeave={() => setHoverButton(false)} pb={5}>
-            <UpcomingPaymentTable
-              setSeeDetails={setSeeDetails}
-              setHoverButton={setHoverButton}
-              seeDetails={seeDetails}
-              hoverButton={hoverButton}
-              pagination={pagination}
-              queryStringWithPagination={queryStringWithPagination}
-              queryStringWithoutPagination={queryStringWithoutPagination}
-              setPagination={setPagination}
-              setColumnFilters={setColumnFilters}
-            />
-          </Box>
-        </Box>
-      ) : (
-        ''
-      )}
+
+      <Box width="100%">
+        <FormLabel variant="strong-lable" size={'lg'}>
+          {t(`${DASHBOARD}.upcomingPayment`)}
+        </FormLabel>
+
+        <UpcomingPaymentTable
+          pagination={pagination}
+          queryStringWithPagination={queryStringWithPagination}
+          queryStringWithoutPagination={queryStringWithoutPagination}
+          setPagination={setPagination}
+          setColumnFilters={setColumnFilters}
+        />
+      </Box>
     </VStack>
   )
 }

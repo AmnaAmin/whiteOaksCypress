@@ -9,7 +9,6 @@ import {
   Center,
   Spinner,
   VStack,
-  Button,
 } from '@chakra-ui/react'
 
 import { Card } from '../card/card'
@@ -22,7 +21,6 @@ import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
-import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -33,11 +31,7 @@ const LicenseType: { [key: number]: string } = {
   6: 'Mechanical',
 }
 
-export const VendorScore: React.FC<{ vendorId: number; setSeeDetails: (any) => void; seeDetails: boolean }> = ({
-  vendorId,
-  setSeeDetails,
-  seeDetails,
-}) => {
+export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const { data: vendorEntity, isLoading } = useVendorEntity(vendorId)
   const scoreProgress = ((vendorEntity?.score ?? 0) / 5) * 100
   const { t } = useTranslation()
@@ -120,10 +114,6 @@ export const VendorScore: React.FC<{ vendorId: number; setSeeDetails: (any) => v
                     ) : (
                       <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
                     )}
-
-                    <Button variant="link" colorScheme="brand" onClick={() => setSeeDetails(!seeDetails)}>
-                      {t(`${DASHBOARD}.seeDetails`)}
-                    </Button>
                   </VStack>
                 </HStack>
               </HStack>
