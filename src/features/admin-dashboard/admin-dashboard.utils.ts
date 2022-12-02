@@ -4,6 +4,11 @@ export const SELECTED_CARD_MAP_URL = {
   payable: 'numberOfInvoicedWorkorders.greaterThan=0',
   material: 'projectStatusId.notIn=33,41&materialCost.notEquals=0',
   draw: 'projectStatusId.notIn=33,41&drawAmountWo.notEquals=0',
+  active: 34,
+  completed: 36,
+  pastDue: 114,
+  invoiced: 110,
+  declined: 111,
 }
 
 export const filterByMonthOptions = [

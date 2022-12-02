@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Link } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { useGetAllProjects, useWorkOrders } from 'api/projects'
+import { useGetAllWorkOrders, useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
 import { dateFormat } from 'utils/date-time-utils'
 
@@ -13,7 +13,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
-import { ColumnDef, PaginationState } from '@tanstack/react-table'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import {
   GotoFirstPage,
   GotoLastPage,
@@ -22,6 +22,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { SELECTED_CARD_MAP_URL } from 'features/admin-dashboard/admin-dashboard.utils'
 
 const PROJECT_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
@@ -90,28 +91,41 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
 ]
 
 type ProjectProps = {
-  selectedCard: string
+  selectedCard?: string
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const navigate = useNavigate()
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 6 })
+  useEffect(() => {
+    if (selectedCard) {
+      setFilteredUrl(SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+    }
+  }, [selectedCard])
+
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
       queryStringAPIFilterKeys: PROJECT_TABLE_QUERY_KEYS,
       pagination,
       setPagination,
+      selectedCard,
+      sorting,
     })
 
-  const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
+  const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
+    filteredUrl + '&' + queryStringWithoutPagination,
+  )
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
-    queryStringWithPagination,
-    pagination.pageIndex,
+    filteredUrl + '&' + queryStringWithPagination,
+    pagination.pageSize,
   )
-  const [filterProjects, setFilterProjects] = useState(workOrderData)
+  // const [filterProjects, setFilterProjects] = useState(workOrderData)
 
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.projectId}`)
@@ -121,29 +135,34 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     postGridColumn(columns)
   }
 
-  useEffect(() => {
-    if (!selectedCard) setFilterProjects(workOrderData)
+  // useEffect(() => {
+  //   if (!selectedCard) setFilterProjects(workOrderData)
 
-    setFilterProjects(
-      workOrderData?.filter(
-        wo =>
-          !selectedCard ||
-          wo.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
-      ),
-    )
-  }, [selectedCard, workOrderData])
+  //   setFilterProjects(
+  //     workOrderData?.filter(
+  //       wo =>
+  //         !selectedCard ||
+  //         wo.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
+  //     ),
+  //   )
+  // }, [selectedCard, workOrderData])
+
+  // console.log('dataCount', dataCount)
+
   return (
     <Box overflow={'auto'} h="calc(100vh - 270px)" roundedTop={6}>
       <TableContextProvider
-        data={filterProjects}
+        data={workOrderData}
         columns={tableColumns}
         totalPages={totalPages}
         pagination={pagination}
+        sorting={sorting}
+        setSorting={setSorting}
         setPagination={setPagination}
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
       >
-        <Table isLoading={isLoading} onRowClick={onRowClick} />
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !workOrderData?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
@@ -151,7 +170,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="projects.xlsx"
+              fileName="workOrders.xlsx"
             />
             <CustomDivider />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}

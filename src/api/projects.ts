@@ -199,7 +199,7 @@ export const useWorkOrders = (queryString: string, pageSize: number) => {
 
   const { data, ...rest } = usePaginationQuery<VendorWorkOrder>(
     [VENDOR_WORK_ORDER_QUERY_KEY, apiQueryString],
-    `vendor/workorders?${apiQueryString}`,
+    `vendor/workorders?${apiQueryString}&status.notEquals=35`,
     pageSize,
   )
 
@@ -207,6 +207,28 @@ export const useWorkOrders = (queryString: string, pageSize: number) => {
     workOrderData: data?.data,
     totalPages: data?.totalCount,
     dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+export const ALL_WORK_ORDER_QUERY_KEY = 'all_workOrders'
+export const useGetAllWorkOrders = (filterQueryString: string) => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ALL_PROJECTS_QUERY_KEY,
+    async () => {
+      const response = await client(`vendor/workorders?${filterQueryString}&status.notEquals=35`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    allProjects: data,
     ...rest,
   }
 }
