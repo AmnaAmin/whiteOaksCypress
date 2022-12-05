@@ -27,6 +27,7 @@ import {
   parseVendorFormDataToAPIData,
   prepareVendorDocumentObject,
   useCreateVendorMutation,
+  useFetchVendorWorkOrders,
   usePaymentMethods,
   useSaveVendorDetails,
   useVendorProfile,
@@ -34,6 +35,7 @@ import {
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 
 type Props = {
+  vendorId?: number | string | undefined
   vendorProfileData?: VendorProfile
   onClose?: () => void
   refetch?: () => void
@@ -68,6 +70,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
   const { mutate: createVendor } = useCreateVendorMutation()
+  const {
+    vendorProjects,
+    isFetching: isProjectsFetching,
+    isLoading: isProjectsLoading,
+  } = useFetchVendorWorkOrders(props.vendorId)
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState(0)
@@ -85,6 +92,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   useEffect(() => {
     setReachTabIndex(index => (tabIndex > index ? tabIndex : index))
   }, [tabIndex])
+
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
       if (vendorProfileData?.id) {
@@ -267,8 +275,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             <TabPanel p="0px">
               {tabIndex === 5 && (
                 <VendorProjects
-                  isActive={tabIndex === 5}
-                  vendorProfileData={vendorProfileData as VendorProfile}
+                  isFetching={isProjectsFetching}
+                  isLoading={isProjectsLoading}
+                  vendorProjects={vendorProjects}
                   onClose={props.onClose}
                 />
               )}

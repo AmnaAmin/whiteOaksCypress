@@ -617,14 +617,20 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
 
 //vendor projects
 
-export const useFetchVendorWorkOrders = (vendorId: string) => {
+export const useFetchVendorWorkOrders = (vendorId: string | number | undefined) => {
   const client = useClient()
 
-  const { data: vendorProjects, ...rest } = useQuery(['VendorProjects'], async () => {
-    const response = await client(`vendor/${vendorId}/workorders`, {})
+  const { data: vendorProjects, ...rest } = useQuery(
+    ['VendorProjects'],
+    async () => {
+      const response = await client(`vendor/${vendorId}/workorders`, {})
 
-    return response?.data
-  })
+      return response?.data
+    },
+    {
+      enabled: !!vendorId,
+    },
+  )
 
   return {
     vendorProjects,

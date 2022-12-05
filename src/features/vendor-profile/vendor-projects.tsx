@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Flex, Button, RadioGroup, Stack, Radio, VStack } from '@chakra-ui/react'
-import { VendorProfile } from 'types/vendor.types'
-import { useFetchVendorWorkOrders } from 'api/vendor-details'
+import { VendorProjectType } from 'types/vendor.types'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { t } from 'i18next'
@@ -17,10 +16,11 @@ import { TableNames } from 'types/table-column.types'
 
 type ProjectProps = {
   onClose?: () => void
-  vendorProfileData: VendorProfile
-  isActive: boolean
+  vendorProjects: Array<VendorProjectType>
+  isFetching: boolean
+  isLoading: boolean
 }
-export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onClose, isActive }) => {
+export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose, isFetching, isLoading }) => {
   const { projectTypes } = useProjectTypeSelectOptions()
   const VENDOR_PROJECTS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
@@ -57,7 +57,6 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
     TableNames.vendorProjects,
   )
 
-  const { vendorProjects, isFetching } = useFetchVendorWorkOrders(`${vendorProfileData?.id}`)
   const [projectStatus, setProjectStatus] = useState('active')
   const [tableData, setTableData] = useState([])
 
@@ -87,7 +86,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
     const data = vendorProjects?.filter(filterProject)
     const mappedData = mapToProjectsTable(data)
     setTableData(mappedData)
-  }, [vendorProjects?.length, projectStatus])
+  }, [vendorProjects, projectStatus])
 
   const onSave = (columns: any) => {
     postGridColumn(columns)
@@ -103,7 +102,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
       </RadioGroup>
       <Box overflow={'auto'} w="100%" h="430px" position="relative" roundedTop={6}>
         <TableContextProvider data={tableData} columns={tableColumns}>
-          <Table isLoading={isFetching} isEmpty={!isFetching && !vendorProjects?.length} />
+          <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
               <ExportButton
@@ -113,7 +112,9 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProfileData, onCl
                 fileName="projects.xlsx"
               />
               <CustomDivider />
-              {settingColumns && <TableColumnSettings disabled={isFetching} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings disabled={isFetching || isLoading} onSave={onSave} columns={settingColumns} />
+              )}
             </ButtonsWrapper>
           </TableFooter>
         </TableContextProvider>
