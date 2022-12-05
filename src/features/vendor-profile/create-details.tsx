@@ -155,7 +155,6 @@ const CreateVendorDetail: React.FC<{
             <Input
               type="email"
               {...register('secondEmailAddress', {
-                required: isActive,
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: 'Invalid email',
