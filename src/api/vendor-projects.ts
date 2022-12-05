@@ -107,14 +107,14 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   }
 
   // Vendor
-  const rightMarginX = 15 
+  const rightMarginX = 15
   // Might be needed
   //doc.internal.pageSize.getWidth() - 80 /* starting point of right margin text */
 
   // Heading
   doc.setFontSize(22).setFont(baseFont, 'normal')
   doc.text('INVOICE #', rightMarginX, 20, { charSpace: 0 })
-  doc.text(workOrder?.invoiceNumber.slice(2,8), rightMarginX + 40, 20)
+  doc.text(workOrder?.invoiceNumber.slice(2, 8), rightMarginX + 40, 20)
 
   // PO Number
   doc.setFontSize(12).setFont(baseFont, 'bold')
@@ -123,7 +123,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   doc.text(truncateWithEllipsis(workOrder?.propertyAddress, 15), rightMarginX + 25, 35)
 
   // From Vendor
-  doc.text('From:', rightMarginX, 60) 
+  doc.text('From:', rightMarginX, 60)
   doc.setFontSize(12).setFont(baseFont, 'bold')
   doc.text(workOrder?.companyName, rightMarginX, 65) 
   doc.setFontSize(12).setFont(baseFont, 'normal')
@@ -156,7 +156,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     headStyles: { fillColor: '#D3D3D3', textColor: '#000000', font: baseFont },
     tableLineColor: [0, 0, 0],
     tableLineWidth: 0.1,
-    
+
     body: [
       ...items.map(ai => {
         return {
@@ -196,7 +196,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     { title: 'Balance Due', value: currencyFormatter(summary.subTotal - Math.abs(summary.amountPaid)) },
   ]
   // hide first rect as per new format
-  // doc.rect(14, rectY, 96, 30, 'D') 
+  // doc.rect(14, rectY, 96, 30, 'D')
   summaryInfo.forEach(sum => {
     let rectD = 'D'
     if (sum.title === 'Balance Due') {

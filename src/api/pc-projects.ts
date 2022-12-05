@@ -243,6 +243,7 @@ export const useProperties = () => {
   }
 }
 
+//TODO - move to common apis folder
 export const useStates = () => {
   const client = useClient()
 

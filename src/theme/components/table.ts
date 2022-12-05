@@ -24,7 +24,6 @@ const TableVariants = {
           tbody: {
             tr: {
               h: '45px',
-              bg: 'white',
               fontWeight: 400,
             },
           },
