@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { useVendor } from 'api/pc-projects'
 import Status from 'features/common/status'
-import Vendor from 'features/vendors/selected-vendor-modal'
-import { ProjectWorkOrderType } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -13,6 +11,8 @@ import { ExportCustomButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
+import { Vendor as VendorType } from 'types/vendor.types'
+import Vendor from './selected-vendor-modal'
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
@@ -99,7 +99,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       ),
     )
   }, [selectedCard, vendors])
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+  const [selectedVendor, setSelectedVendor] = useState<VendorType>()
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
   const { tableColumns, settingColumns } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
@@ -110,11 +110,11 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
 
   return (
     <Box overflow="auto">
-      {selectedWorkOrder && (
+      {selectedVendor && (
         <Vendor
-          vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
+          vendorDetails={selectedVendor as VendorType}
           onClose={() => {
-            setSelectedWorkOrder(undefined)
+            setSelectedVendor(undefined)
           }}
         />
       )}
@@ -122,7 +122,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6}>
         <TableContextProvider data={filterVendors} columns={tableColumns}>
           <Table
-            onRowClick={row => setSelectedWorkOrder(row)}
+            onRowClick={row => setSelectedVendor(row)}
             isLoading={isLoading}
             isEmpty={!isLoading && !filterVendors?.length}
           />

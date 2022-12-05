@@ -14,11 +14,11 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { t } from 'i18next'
 
 import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
-import React, { useCallback, useEffect } from 'react'
-import { ProjectWorkOrderType } from 'types/project.type'
 import { useVendorProfile } from 'api/vendor-details'
+import { Vendor as VendorType } from 'types/vendor.types'
+import { useCallback, useEffect } from 'react'
 
-const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkOrderType; onClose: () => void }) => {
+const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; onClose: () => void }) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorDetails.id)
 
@@ -58,6 +58,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: ProjectWorkO
                 <BlankSlate width="60px" />
               ) : (
                 <VendorProfileTabs
+                  vendorId={vendorDetails.id}
                   vendorProfileData={vendorProfileData}
                   refetch={refetch}
                   vendorModalType="editVendor"

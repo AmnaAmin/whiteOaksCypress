@@ -206,6 +206,7 @@ export const useProjectTypeSelectOptions = () => {
     })) || []
 
   return {
+    projectTypes,
     projectTypeSelectOptions,
     ...rest,
   }
