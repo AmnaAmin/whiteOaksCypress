@@ -97,6 +97,7 @@ export const documentTerm = [
 
 export const createInvoice = (doc, workOrder, projectData: Project, items, summary) => {
   const baseFont = 'times'
+
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
     streetAddress: 'Four 14th Street #601',
@@ -124,7 +125,9 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   // From Vendor
   doc.text('From:', rightMarginX, 60)
   doc.setFontSize(12).setFont(baseFont, 'bold')
-  doc.text(workOrder?.companyName, rightMarginX, 65)
+  doc.text(workOrder?.companyName, rightMarginX, 65) 
+  doc.setFontSize(12).setFont(baseFont, 'normal')
+  doc.text(workOrder?.vendorAddress, rightMarginX, 70) 
 
   // Address
   doc.setFontSize(12).setFont(baseFont, 'normal')
@@ -150,7 +153,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   // Table
   autoTable(doc, {
     startY: 80,
-    headStyles: { fillColor: '#D3D3D3', textColor: '#000000' },
+    headStyles: { fillColor: '#D3D3D3', textColor: '#000000', font: baseFont },
     tableLineColor: [0, 0, 0],
     tableLineWidth: 0.1,
 
@@ -169,12 +172,13 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
       { header: 'Total', dataKey: 'amount' },
     ],
     theme: 'grid',
-    bodyStyles: { minCellHeight: 10 },
+    bodyStyles: { minCellHeight: 10, font: baseFont, lineColor: 'black', textColor: 'black' }
   })
 
   // Summary
   const tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
   const summaryX = doc.internal.pageSize.getWidth() - 70 /* Starting x point of invoice summary  */
+  doc.setFontSize(12).setFont(baseFont, 'normal')
   doc.internal.pageSize.getHeight()
   doc.setDrawColor(0)
   let rectX = summaryX - 10
