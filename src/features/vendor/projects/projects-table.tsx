@@ -1,144 +1,171 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
-import { TableWrapper } from 'components/table/table'
-import { RowProps } from 'components/table/react-table'
-import { Link } from 'react-router-dom'
-import { useWorkOrders } from 'api/projects'
+import { Box, Link } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
+import { SELECTED_CARD_MAP_URL, useGetAllWorkOrders, useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
 import { dateFormat } from 'utils/date-time-utils'
-import { Column } from 'react-table'
 
-export const PROJECT_COLUMNS = [
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { Table } from 'components/table-refactored/table'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
+import { ExportButton } from 'components/table-refactored/export-button'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { ColumnDef, PaginationState } from '@tanstack/react-table'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+
+const PROJECT_TABLE_QUERY_KEYS = {
+  projectId: 'projectId.equals',
+  statusLabel: 'statusLabel.contains',
+  id: 'id.equals',
+  propertyAddress: 'propertyAddress.contains',
+  skillName: 'skillName.contains',
+  workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
+  expectedPaymentDate: 'expectedPaymentDate.equals',
+}
+
+export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
-    Header: 'projectID',
-    accessor: 'projectId',
-  },
-  {
-    Header: 'WOstatus',
-    accessor: 'statusLabel',
-    Cell: ({ value, row }) => <Status value={value} id={row.original.statusLabel} />,
-  },
-  {
-    Header: 'WoID',
-    accessor: 'id',
-  },
-  {
-    Header: 'address',
-    accessor: 'propertyAddress',
-  },
-  {
-    Header: 'trade',
-    accessor: 'skillName',
-  },
-  {
-    Header: 'dueDateWO',
-    accessor: 'workOrderExpectedCompletionDate',
-    Cell({ value }) {
-      return dateFormat(value)
+    header: 'projectID',
+    accessorKey: 'projectId',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return (
+        <Link
+          href={`${process.env.PUBLIC_URL}/project-details/${value}`}
+          color="#533f03"
+          fontWeight="bold"
+          _hover={{
+            color: '#8d2638',
+          }}
+        >
+          {value}
+        </Link>
+      )
     },
-    getCellExportValue(row) {
-      return dateFormat(row.values.workOrderExpectedCompletionDate)
+  },
+  {
+    header: 'WOstatus',
+    accessorKey: 'statusLabel',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <Status value={value} id={value} />
     },
   },
   {
-    Header: 'expectedPaymentDate',
-    accessor: 'expectedPaymentDate',
-    Cell({ value }) {
-      return dateFormat(value)
+    header: 'WoID',
+    accessorKey: 'id',
+  },
+  {
+    header: 'address',
+    accessorKey: 'propertyAddress',
+  },
+  {
+    header: 'trade',
+    accessorKey: 'skillName',
+  },
+  {
+    header: 'dueDateWO',
+    accessorKey: 'workOrderExpectedCompletionDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.workOrderExpectedCompletionDate)
     },
-    getCellExportValue(row) {
-      return dateFormat(row.values.expectedPaymentDate)
+  },
+  {
+    header: 'expectedPaymentDate',
+    accessorKey: 'expectedPaymentDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.expectedPaymentDate)
     },
   },
 ]
 
-const ProjectRow: React.FC<RowProps> = ({ row, style }) => {
-  const idCell = row.cells.find(cell => cell.column.id === 'projectId')
-  const projectId = idCell?.value
-
-  return (
-    <Link
-      to={`/project-details/${projectId}`}
-      data-testid="project-table-row"
-      onContextMenu={() => window.open(`${process.env.PUBLIC_URL}/project-details/${projectId}`)}
-    >
-      <Tr
-        bg="white"
-        _hover={{
-          background: 'gray.50',
-          '& > td > a': {
-            color: '#333',
-          },
-        }}
-        {...row.getRowProps({
-          style,
-        })}
-      >
-        {row.cells.map((cell, index) => {
-          return (
-            <Td {...cell.getCellProps()} key={`row_${index}`} p="0" bg="transparent">
-              <Flex alignItems="center" h="72px" pl="10px">
-                <Text
-                  noOfLines={2}
-                  title={cell.value}
-                  padding="0 15px"
-                  color="gray.600"
-                  mb="20px"
-                  mt="10px"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  fontWeight="400"
-                >
-                  {cell.render('Cell')}
-                </Text>
-              </Flex>
-            </Td>
-          )
-        })}
-      </Tr>
-    </Link>
-  )
-}
-
 type ProjectProps = {
-  selectedCard: string
-  projectColumns: Column[]
-  resizeElementRef: any
-  setTableInstance: (tableInstance: any) => void
+  selectedCard?: string
 }
-export const ProjectsTable: React.FC<ProjectProps> = ({
-  setTableInstance,
-  projectColumns,
-  resizeElementRef,
-  selectedCard,
-}) => {
-  const { workOrderData, isLoading } = useWorkOrders()
-  const [filterProjects, setFilterProjects] = useState(workOrderData)
+
+export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const navigate = useNavigate()
+
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: PROJECT_TABLE_QUERY_KEYS,
+      pagination,
+      setPagination,
+    })
 
   useEffect(() => {
-    if (!selectedCard) setFilterProjects(workOrderData)
+    if (selectedCard) {
+      setFilteredUrl(SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+    } else {
+      setFilteredUrl(null)
+    }
+  }, [selectedCard])
 
-    setFilterProjects(
-      workOrderData?.filter(
-        wo =>
-          !selectedCard ||
-          wo.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.replace(/\s/g, '').toLowerCase(),
-      ),
-    )
-  }, [selectedCard, workOrderData])
+  const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
+    filteredUrl + '&' + queryStringWithoutPagination,
+  )
+
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+  const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
+    filteredUrl + '&' + queryStringWithPagination,
+    pagination.pageSize,
+  )
+
+  const onRowClick = rowData => {
+    navigate(`/project-details/${rowData.projectId}`)
+  }
+
+  const onSave = (columns: any) => {
+    postGridColumn(columns)
+  }
 
   return (
-    <Box w="100%" ref={resizeElementRef}>
-      <TableWrapper
-        isLoading={isLoading}
-        columns={projectColumns}
-        data={filterProjects || []}
-        TableRow={ProjectRow}
-        name="my-table"
-        setTableInstance={setTableInstance}
-        tableHeight="calc(100vh - 270px)"
-        sortBy={{ id: 'id', desc: true }}
-      />
+    <Box overflow={'auto'} h="calc(100vh - 270px)" roundedTop={6}>
+      <TableContextProvider
+        data={workOrderData}
+        columns={tableColumns}
+        totalPages={totalPages}
+        pagination={pagination}
+        setPagination={setPagination}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+      >
+        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !workOrderData?.length} />
+        <TableFooter position="sticky" bottom="0" left="0" right="0">
+          <ButtonsWrapper>
+            <ExportButton
+              columns={tableColumns}
+              refetch={refetch}
+              isLoading={isExportDataLoading}
+              colorScheme="brand"
+              fileName="workOrders.xlsx"
+            />
+            <CustomDivider />
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </ButtonsWrapper>
+          <TablePagination>
+            <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
+            <GotoFirstPage />
+            <GotoPreviousPage />
+            <GotoNextPage />
+            <GotoLastPage />
+          </TablePagination>
+        </TableFooter>
+      </TableContextProvider>
     </Box>
   )
 }
