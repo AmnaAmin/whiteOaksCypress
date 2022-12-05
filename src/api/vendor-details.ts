@@ -614,3 +614,26 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
   }
 }
+
+//vendor projects
+
+export const useFetchVendorWorkOrders = (vendorId: string | number | undefined) => {
+  const client = useClient()
+
+  const { data: vendorProjects, ...rest } = useQuery(
+    ['VendorProjects'],
+    async () => {
+      const response = await client(`vendor/${vendorId}/workorders`, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!vendorId,
+    },
+  )
+
+  return {
+    vendorProjects,
+    ...rest,
+  }
+}
