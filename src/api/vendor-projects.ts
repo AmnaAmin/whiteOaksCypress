@@ -179,7 +179,6 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   const tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
   const summaryX = doc.internal.pageSize.getWidth() - 70 /* Starting x point of invoice summary  */
   doc.setFontSize(12).setFont(baseFont, 'normal')
-  doc.tableLineColor([0, 0, 0,])
   doc.internal.pageSize.getHeight()
   doc.setDrawColor(0)
   let rectX = summaryX - 10
