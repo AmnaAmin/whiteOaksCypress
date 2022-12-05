@@ -336,7 +336,7 @@ export const parseChangeOrderAPIPayload = async (
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
-  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate as string)
+  const newExpectedCompletionDate = formValues.newExpectedCompletionDate as string
 
   const documents: any = []
 
