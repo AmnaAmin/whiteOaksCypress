@@ -9,6 +9,10 @@ import {
   Center,
   Spinner,
   VStack,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  Button,
 } from '@chakra-ui/react'
 
 import { Card } from '../card/card'
@@ -20,6 +24,33 @@ import { LicenseDocument } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
+import { useNavigate } from 'react-router-dom'
+
+const ExpirationAlertMessage = () => {
+  const navigate = useNavigate()
+  return (
+    <Box w="70%" mb="16px">
+      <Alert status="error" rounded={6} h="47px">
+        <AlertIcon />
+        {/* <AlertTitle>Your browser is outdated!</AlertTitle> */}
+        <AlertDescription>
+          Your license & insurance has expired, to reactivate please renew your license.
+          <Button
+            variant="outline"
+            colorScheme="red"
+            ml={3}
+            h="28px"
+            onClick={() => {
+              navigate(`/datailsTab`)
+            }}
+          >
+            Renew Now!
+          </Button>
+        </AlertDescription>
+      </Alert>
+    </Box>
+  )
+}
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -58,7 +89,8 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   ].filter(item => item.date)
 
   return (
-    <>
+    <Box>
+      <ExpirationAlertMessage />
       <Box
         justifyContent="space-evenly"
         display="grid"
@@ -146,6 +178,6 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           />
         </Flex>
       </Box>
-    </>
+    </Box>
   )
 }
