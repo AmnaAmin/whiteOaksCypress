@@ -1,10 +1,12 @@
 import { useToast } from '@chakra-ui/react'
+import { BONUS, DURATION } from 'features/user-management/user-management-form'
 import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
+import { parseStatesAPIDataToFormValues } from 'utils/states'
 import { useMarkets, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
 
@@ -32,20 +34,20 @@ export const useUser = (email?: string) => {
 }
 
 export const useCreateUserMutation = () => {
-  const client = useClient();
-  const toast = useToast();
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
+  const client = useClient()
+  const toast = useToast()
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
 
   return useMutation(
     (payload: any) => {
       return client('users', {
         data: {
-          login: payload.email,//TODO - Check why need login and email with backend
-          ...payload
+          login: payload.email, //TODO - Check why need login and email with backend
+          ...payload,
         },
         method: 'POST',
-      });
+      })
     },
     {
       onSuccess() {
@@ -65,7 +67,7 @@ export const useCreateUserMutation = () => {
           isClosable: true,
         })
       },
-    }
+    },
   )
 }
 
@@ -143,12 +145,15 @@ export const userMangtPayload = (user: any) => {
     ...user,
     newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
-    vendorId: user.vendorId || '',
-    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId || '',
-    parentFieldProjectManagerId: user.parentFieldProjectManagerId || '',
-    markets: user.markets.filter(m => m.checked),
-    stateId: user.state?.id,
+    vendorId: user.vendorId?.value || '',
+    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
+    parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
+    markets: user.markets?.filter(market => market.checked) || [],
+    states: user.states?.filter(state => state.checked) || [],
+    stateId: user.state?.id || '',
     userType: user.accountType?.value,
+    ignoreQuota: user.ignoreQuota?.value || '',
+    newBonus: user.newBonus?.value || '',
   }
   delete userObj.state
   delete userObj.accountType
@@ -208,6 +213,26 @@ export const useAccountTypes = () => {
     ...rest,
   }
 }
+
+export const useFPMManagerRoles = () => {
+  const client = useClient()
+  const { data, ...rest } = useQuery('fpm-manager-roles', async () => {
+    const response = await client(`lk_value/lookupType/9`, {})
+    return response?.data
+  })
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: res?.value,
+    })) || []
+
+  return {
+    data,
+    options,
+    ...rest,
+  }
+}
+
 export const useAllManagers = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('users-allAvailableManagers', async () => {
@@ -236,14 +261,24 @@ const parseUserFormData = ({
   accountTypeOptions,
   viewVendorsOptions,
   languageOptions,
+  fpmManagerRoleOptions,
+  availableManagers,
 }) => {
-
   return {
     ...userInfo,
     markets: markets || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
+    vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
+    newBonus: BONUS.find(bonus => bonus.value === userInfo?.newBonus),
+    ignoreQuota: DURATION.find(quotaDuration => quotaDuration.value === userInfo?.ignoreQuota),
+    fieldProjectManagerRoleId: fpmManagerRoleOptions?.find(
+      fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId,
+    ),
+    parentFieldProjectManagerId: availableManagers?.find(
+      manager => manager.value === userInfo?.parentFieldProjectManagerId,
+    ),
   }
 }
 
@@ -254,11 +289,15 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { options: allManagersOptions } = useAllManagers()
   const { options: accountTypeOptions } = useAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
+  const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
+  const { options: availableManagers } = useAllManagers()
 
   useEffect(() => {
-    if(!userInfo) {
+    if (!userInfo) {
       const formattedMarkets = parseMarketAPIDataToFormValues(markets, [])
-        setValue('markets', formattedMarkets)
+      const formattedStates = parseStatesAPIDataToFormValues(stateOptions)
+      setValue('markets', formattedMarkets)
+      setValue('states', formattedStates)
     } else {
       reset(
         parseUserFormData({
@@ -269,6 +308,8 @@ export const useUserDetails = ({ form, userInfo }) => {
           accountTypeOptions,
           viewVendorsOptions,
           languageOptions,
+          fpmManagerRoleOptions,
+          availableManagers,
         }),
       )
     }

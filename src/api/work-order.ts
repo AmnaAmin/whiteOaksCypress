@@ -10,6 +10,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 import { readFileContent } from './vendor-details'
+import { sortBy } from 'lodash'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -129,7 +130,9 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
   )
 
   return {
-    workOrderAssignedItems: workOrder?.assignedItems,
+    workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
+      return e.orderNo
+    }),
     ...rest,
   }
 }
@@ -254,7 +257,7 @@ export const parseWODetailValuesToPayload = formValues => {
     - smartLineItem id is id of line item in swo */
 
   const assignedItems = [
-    ...formValues?.assignedItems?.map(a => {
+    ...formValues?.assignedItems?.map((a, index) => {
       const isNewSmartLineItem = !a.smartLineItemId
       if (a.document) {
         delete a?.document?.fileObject
@@ -265,6 +268,7 @@ export const parseWODetailValuesToPayload = formValues => {
         document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
+        orderNo: index,
       }
       delete assignedItem.uploadedDoc
       return assignedItem
@@ -330,7 +334,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
   const selectedCapacity = 1
   var documents = [] as any
   const assignedItems = [
-    ...formValues?.assignedItems?.map(a => {
+    ...formValues?.assignedItems?.map((a, index) => {
       if (a.document) {
         delete a?.document?.fileObject
       }
@@ -339,6 +343,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
         document: a.uploadedDoc ? a.uploadedDoc : a.document,
         id: '',
         smartLineItemId: a.id,
+        orderNo: index,
       }
       delete assignedItem.uploadedDoc
       return assignedItem

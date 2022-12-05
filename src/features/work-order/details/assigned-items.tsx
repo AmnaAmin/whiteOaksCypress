@@ -1,6 +1,18 @@
 import { AddIcon, CheckIcon } from '@chakra-ui/icons'
-import { Box, Button, chakra, Checkbox, Divider, HStack, Icon, Stack, Text, useCheckbox } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import {
+  Box,
+  Button,
+  chakra,
+  Checkbox,
+  Divider,
+  HStack,
+  Icon,
+  ResponsiveValue,
+  Stack,
+  Text,
+  useCheckbox,
+} from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
 import { FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
@@ -89,6 +101,7 @@ const AssignedItems = (props: AssignedItemType) => {
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const { fields: assignedItems } = assignedItemsArray
+  const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
 
   const values = getValues()
   const lineItems = useWatch({ name: 'assignedItems', control })
@@ -123,6 +136,29 @@ const AssignedItems = (props: AssignedItemType) => {
     assignedItemsArray,
     workOrder,
   })
+
+  const handleOnDragEnd = useCallback(
+    result => {
+      if (!result.destination) return
+
+      const items = Array.from(values.assignedItems)
+      const {
+        source: { index: sourceIndex },
+        destination: { index: destinationIndex },
+      } = result
+
+      const [reorderedItem] = items.splice(sourceIndex, 1)
+      items.splice(destinationIndex, 0, reorderedItem)
+
+      setValue('assignedItems', items)
+      setOverflowXVal('auto')
+    },
+    [values?.assignedItems],
+  )
+
+  const handleOnDragStart = useCallback(result => {
+    setOverflowXVal('hidden')
+  }, [])
 
   return (
     <Box>
@@ -227,9 +263,14 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
         </Stack>
 
-        <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
-          <TableContextProvider data={values.assignedItems ?? []} columns={ASSIGNED_ITEMS_COLUMNS}>
-            <Table isLoading={isLoadingLineItems} isEmpty={!isLoadingLineItems && !values.assignedItems?.length} />
+        <Box width="100%" height={'100%'} overflowX={overflowXVal} overflowY={'hidden'}>
+          <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS}>
+            <Table
+              handleOnDrag={handleOnDragEnd}
+              handleOnDragStart={handleOnDragStart}
+              isLoading={true}
+              isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
+            />
           </TableContextProvider>
         </Box>
       </>

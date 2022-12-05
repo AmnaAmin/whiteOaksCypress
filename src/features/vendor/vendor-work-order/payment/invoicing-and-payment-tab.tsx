@@ -40,7 +40,8 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('paymentTermDate')}
               InputElem={
-                invoiceAndPaymentData.paymentTermDate && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.paymentTermDate &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -100,7 +101,8 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('LWDate')}
               InputElem={
-                invoiceAndPaymentData.dateLeanWaiverSubmitted && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.dateLeanWaiverSubmitted &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -145,7 +147,8 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('invoiceSubmitted')}
               InputElem={
-                invoiceAndPaymentData.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.dateInvoiceSubmitted &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -162,7 +165,8 @@ const InvoicingAndPaymentTab = ({
               Icon={<BiCalendar />}
               label={t('expectedPay')}
               InputElem={
-                invoiceAndPaymentData.expectedPaymentDate && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.expectedPaymentDate &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>

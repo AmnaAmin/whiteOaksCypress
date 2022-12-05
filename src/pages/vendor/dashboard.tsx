@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, Spacer, VStack, Text } from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, FormLabel } from '@chakra-ui/react'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
@@ -13,6 +13,8 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
+import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
+import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -87,6 +89,14 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
+
+      <Box width="100%" pb="5">
+        <FormLabel variant="strong-lable" size={'lg'}>
+          {t(`${DASHBOARD}.upcomingPayment`)}
+        </FormLabel>
+
+        <UpcomingPaymentTable />
+      </Box>
     </VStack>
   )
 }

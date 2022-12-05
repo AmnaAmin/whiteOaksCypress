@@ -327,6 +327,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                           _active: { bg: 'gray.100' },
                         }}
                         disabled={isFieldsDisabled}
+                        onClick={() => setOpenSignature(true)}
                       >
                         <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                         <Image
@@ -349,7 +350,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                             _hover={{ bg: 'inherit' }}
                             disabled={isFieldsDisabled}
                             data-testid="openSignature"
-                            onClick={() => setOpenSignature(true)}
                           >
                             <BiEditAlt color="#A0AEC0" />
                           </IconButton>
@@ -362,7 +362,10 @@ export const LienWaiverTab: React.FC<any> = props => {
                               _hover={{ bg: 'inherit' }}
                               disabled={isFieldsDisabled}
                               data-testid="removeSignature"
-                              onClick={onRemoveSignature}
+                              onClick={e => {
+                                onRemoveSignature()
+                                e.stopPropagation()
+                              }}
                             >
                               <BiTrash className="mr-1" color="#A0AEC0" />
                             </IconButton>
