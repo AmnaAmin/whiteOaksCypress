@@ -332,7 +332,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             ) : (
               <Button
                 onClick={e => {
-                  if (document && document.s3Url) {
+                  if ([TransactionTypeValues.material].includes(values?.transactionType?.value) && document?.s3Url) {
                     onReplaceMaterialUploadOpen()
                   } else {
                     if (inputRef.current) {
