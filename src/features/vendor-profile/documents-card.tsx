@@ -13,12 +13,13 @@ import {
 } from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useVendorNext } from 'api/vendor-details'
+import { dateFormat } from 'utils/date-time-utils'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -46,6 +47,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     control,
     setValue,
     getValues,
+    reset,
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
   const { disableDocumentsNext } = useVendorNext({ control, documents })
@@ -77,6 +79,38 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
       </a>
     )
   }
+
+  const watchW9DocumentDate = useWatch({ control, name: 'w9DocumentDate' })
+  const watchW9DocumentFile = useWatch({ control, name: 'w9Document' })
+  const watchAgreementSignedDate = useWatch({ control, name: 'agreementSignedDate' })
+  const watchAgreementFile = useWatch({ control, name: 'agreement' })
+  const watchAutoInsuranceExpDate = useWatch({ control, name: 'autoInsuranceExpDate' })
+  const watchInsuranceFile = useWatch({ control, name: 'insurance' })
+  const watchCoiGlExpDate = useWatch({ control, name: 'coiGlExpDate' })
+  const watchCoiGlExpFile = useWatch({ control, name: 'coiGlExpFile' })
+  const watchCoiWcExpDate = useWatch({ control, name: 'coiWcExpDate' })
+  const watchCoiWcExpFile = useWatch({ control, name: 'coiWcExpFile' })
+
+  //If the field value Changes value compared to the API value shows the message
+
+  const compireW9DocumentDate = watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string)
+  const compireAgreementSignedDate = watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string)
+  const compireAutoInsuranceExpDate =
+    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string)
+  const compireCoiGlExpDate = watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string)
+  const compireCoiWcExpDate = watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string)
+
+  const UnSaveMessage = () => {
+    return (
+      <HStack>
+        <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />
+        <Text fontStyle="italic" color="#F56565" fontSize="12px">
+          your input has been changed,please save.
+        </Text>
+      </HStack>
+    )
+  }
+
   return (
     <>
       <Box h="502px" overflow="auto">
@@ -96,15 +130,15 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
                 testId="w9DocumentDate"
                 onChange={e => {
-                  if (!changedDateFields.includes('w9DocumentDate')) {
+                  if (changedDateFields.includes('w9DocumentDate')) {
                     setChangeDateFields([...changedDateFields, 'w9DocumentDate'])
                   }
                 }}
               />
             </Box>
           </Flex>
-          <Flex>
-            <FormControl w="290px" isInvalid={!!errors.w9Document?.message}>
+          <HStack>
+            <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
               <FormLabel variant="strong-label" size="md">
                 {t('fileUpload')}
               </FormLabel>
@@ -138,7 +172,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-          </Flex>
+            {(!compireW9DocumentDate || watchW9DocumentFile) && <UnSaveMessage />}
+          </HStack>
         </HStack>
         <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
@@ -161,8 +196,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex>
-              <FormControl w="290px" isInvalid={!!errors.agreement?.message}>
+            <HStack>
+              <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -200,7 +235,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!compireAgreementSignedDate || watchAgreementFile) && <UnSaveMessage />}
+            </HStack>
           </HStack>
         </Box>
 
@@ -232,8 +268,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex>
-              <FormControl w="290px" isInvalid={!!errors.insurance?.message}>
+            <HStack>
+              <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -271,7 +307,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!compireAutoInsuranceExpDate || watchInsuranceFile) && <UnSaveMessage />}
+            </HStack>
           </HStack>
         </Box>
         <Box mt="30px">
@@ -295,8 +332,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex w="100%" pr="20px">
-              <FormControl w="290px" isInvalid={!!errors.coiGlExpFile?.message}>
+            <HStack w="100%" pr="20px">
+              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -332,7 +369,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!compireCoiGlExpDate || watchCoiGlExpFile) && <UnSaveMessage />}
+            </HStack>
           </HStack>
         </Box>
         <Box mt="30px">
@@ -356,8 +394,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex w="100%" pr="20px">
-              <FormControl w="290px" isInvalid={!!errors.coiWcExpFile?.message}>
+            <HStack w="100%" pr="20px">
+              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -393,7 +431,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!compireCoiWcExpDate || watchCoiWcExpFile) && <UnSaveMessage />}
+            </HStack>
           </HStack>
         </Box>
       </Box>
@@ -408,6 +447,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         alignItems="center"
         justifyContent="end"
       >
+        <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
+          Discard Cahnges
+        </Button>
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
