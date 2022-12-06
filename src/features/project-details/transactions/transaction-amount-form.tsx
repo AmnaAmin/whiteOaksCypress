@@ -538,8 +538,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         onConfirm={deleteRows}
       />
       <ConfirmationBox
-        title="Are You Sure?"
-        content="Do you really want to upload a new attachment? Current line items will be replaced with the scanned items from the new receipt, as you Save the transaction."
+        title={t(`${TRANSACTION}.confirmationTitle`)}
+        content={t(`${TRANSACTION}.confirmationMessageMaterialAttachment`)}
         isOpen={isReplaceMaterialUploadOpen}
         onClose={onReplaceMaterialUploadClose}
         onConfirm={openFileDialog}
