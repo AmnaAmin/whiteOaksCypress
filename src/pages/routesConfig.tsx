@@ -31,7 +31,6 @@ export default function useRoutesConfig() {
     isVendorManager,
     isDoc,
     isAccounting,
-    isAdmin,
     isOperations,
     isClientManager,
     isConstructionOperations,
