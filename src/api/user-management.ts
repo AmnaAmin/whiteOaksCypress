@@ -151,6 +151,7 @@ export const userMangtPayload = (user: any) => {
     markets: user.markets?.filter(market => market.checked) || [],
     states: user.states?.filter(state => state.checked) || [],
     stateId: user.state?.id || '',
+    fpmStateId: user.state?.id || '',
     userType: user.accountType?.value,
     ignoreQuota: user.ignoreQuota?.value || '',
     newBonus: user.newBonus?.value || '',
