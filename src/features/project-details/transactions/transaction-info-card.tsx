@@ -55,7 +55,7 @@ export const TransactionInfoCard: React.FC<{
         <Text>{projectData?.projectManagerPhoneNumber}</Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('address')} flex={2} border="none">
-        {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
+        {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
       </InfoStructureCard>
     </Flex>
   )

@@ -386,8 +386,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </FormLabel>
             {noMarketsSelected && (
               <Flex alignItems="center">
-                <Icon as={BiErrorCircle} width="8px" height="8px" color="red.400" ml="10px" mr="2px" />
-                <Text as="span" color="red.400" fontSize="8px">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
                   Select one market atleast
                 </Text>
               </Flex>
