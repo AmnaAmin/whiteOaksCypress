@@ -141,6 +141,7 @@ export const useDeleteUserDetails = () => {
 }
 
 export const userMangtPayload = (user: any) => {
+  console.log('user', user)
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -151,7 +152,7 @@ export const userMangtPayload = (user: any) => {
     markets: user.markets?.filter(market => market.checked) || [],
     states: user.states?.filter(state => state.checked) || [],
     stateId: user.state?.id || '',
-    fpmStateId: user.state?.id || '',
+    fpmStateId: user.accountType?.label === 'Field Project Manager' ? user.state?.id : '',
     userType: user.accountType?.value,
     ignoreQuota: user.ignoreQuota?.value || '',
     newBonus: user.newBonus?.value || '',
