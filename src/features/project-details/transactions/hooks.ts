@@ -184,7 +184,7 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
 
     // If transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
     if (
-      transactionType?.value === TransactionTypeValues.draw &&
+      transactionType?.value === TransactionTypeValues.draw && !isVendor &&
       !['new', 'active', 'punch', 'closed'].includes(projectStatus.toLowerCase())
     ) {
       return againstOptions.slice(1)
