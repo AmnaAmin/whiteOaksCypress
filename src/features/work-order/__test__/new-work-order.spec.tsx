@@ -56,8 +56,7 @@ beforeAll(() => {
 
 jest.setTimeout(150000)
 describe('New Work Order modal test cases', () => {
-  test('Sample Test', async () => {})
-  /*test('Verify new work order showing project specific details and rendering form correctly', async () => {
+  test('Verify new work order showing project specific details and rendering form correctly', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
     const setVendorSkillId = jest.fn()
@@ -100,7 +99,7 @@ describe('New Work Order modal test cases', () => {
     expect(screen.queryByTestId('showMarkAllIsComplete')).not.toBeInTheDocument()
     expect(screen.queryByTestId('downloadPdf')).not.toBeInTheDocument()
   })
-
+  /* Commented out. Needs to be reviewed and fixed.
   test('Assigning Line Items to work Order and saving work order. The profit entered on the form will apply to all line items. The sum of Client Amount for Line Items is equal to client amount field in form. The sum of Vendor Amounts for Line Items is equal to vendor amount of the work order', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
@@ -163,7 +162,7 @@ describe('New Work Order modal test cases', () => {
         }),
       ),
     )
-  })
+  })*/
 
   test('Upload SOW in new work order modal and save new work order. By uploading sow, assigned items will be null and CAA and VAA will be enabled fields.', async () => {
     const onClose = jest.fn()
@@ -213,7 +212,7 @@ describe('New Work Order modal test cases', () => {
       ),
     )
   })
-
+  /* Commented out. Needs to be reviewed and fixed.
   test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
