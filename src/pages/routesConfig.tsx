@@ -11,7 +11,7 @@ import { Markets } from 'pages/vendor-manager/markets'
 // import Alerts from './alerts'
 // import { ProjectCoordinatorDashboard } from 'pages/dashboard'
 
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useAdminAccessController, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Performance } from './fpm/performance'
 import { PerformanceTab } from 'features/performance/performance'
 import { UserManagement } from './admin/user-management'
@@ -31,11 +31,11 @@ export default function useRoutesConfig() {
     isVendorManager,
     isDoc,
     isAccounting,
-    isAdmin,
     isOperations,
     isClientManager,
     isConstructionOperations,
   } = useUserRolesSelector()
+  const { isInternalAdminUser, isPublicAdminUser } = useAdminAccessController()
   switch (true) {
     case isFPM:
       return [
@@ -77,7 +77,22 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: VendorProjectDetails },
         { path: 'vendors', element: VendorProfilePage },
       ]
-    case isAdmin:
+    case isPublicAdminUser:
+      return [
+        { path: 'adminDashboard', element: Dashboard },
+        { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'projects', element: Projects },
+        { path: 'projectType', element: ProjectType },
+        { path: 'payable', element: Payable },
+        { path: 'receivable', element: Receivable },
+        { path: 'vendors', element: Vendors },
+        { path: 'clients', element: Clients },
+        { path: 'reports', element: Reports },
+        { path: 'markets', element: Markets },
+        { path: 'performance', element: PerformanceTab },
+        { path: 'vendorSkills', element: VendorSkills },
+      ]
+    case isInternalAdminUser:
       return [
         { path: 'adminDashboard', element: Dashboard },
         { path: 'userManager', element: UserManagement },
