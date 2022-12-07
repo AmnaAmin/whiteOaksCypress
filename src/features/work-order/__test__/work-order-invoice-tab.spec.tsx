@@ -8,7 +8,7 @@ import { Modal } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
 import { TransactionStatusValues as TSV } from 'types/transaction.type'
 
-export const renderInvoice = async ({ onClose, workOrder, documentsData, transactions }: any) => {
+export const renderInvoice = async ({ onClose, workOrder, documentsData, transactions, vendorAddress }: any) => {
   const setTabIndex = jest.fn()
   const component = await render(
     <Modal isOpen={true} onClose={onClose} size="none">
@@ -23,7 +23,7 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
         onSave={null}
         navigateToProjectDetails={null}
         isWorkOrderUpdating={false} 
-        vendorAddress={null}      />
+        vendorAddress={vendorAddress}      />
     </Modal>,
     {
       wrapper: Providers,
