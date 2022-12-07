@@ -234,7 +234,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           onClose()
         },
         onError() {
-          onClose()
+          // onClose()
         },
       })
     },
