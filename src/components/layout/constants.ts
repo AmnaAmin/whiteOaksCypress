@@ -15,6 +15,7 @@ import {
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
+import { useAdminAccessController } from 'utils/redux-common-selectors'
 import { SIDE_NAV } from './sideNav.i18n'
 
 type Menu = {
@@ -164,6 +165,56 @@ export const MENU_ROLE_BASED: Menus = {
     },
   ],
 
+  [UserTypes.publicAdmin]: [
+    {
+      pathTo: '/adminDashboard',
+      title: `${SIDE_NAV}.dashboard`,
+      Icon: FaHome,
+      color: '#ED8936',
+    },
+    {
+      pathTo: '/projects',
+      title: `${SIDE_NAV}.projects`,
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+    {
+      pathTo: '/payable',
+      title: `${SIDE_NAV}.payable`,
+      Icon: BiCreditCard,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/receivable',
+      title: `${SIDE_NAV}.receivable`,
+      Icon: BiDollarCircle,
+      color: '#4299E1',
+    },
+    {
+      pathTo: '/vendors',
+      title: `${SIDE_NAV}.vendors`,
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+    {
+      pathTo: '/clients',
+      title: `${SIDE_NAV}.clients`,
+      Icon: BiGroup,
+      color: '#0BC5EA',
+    },
+    {
+      pathTo: '/reports',
+      title: `${SIDE_NAV}.reports`,
+      Icon: BiBarChartSquare,
+      color: '#FC8181',
+    },
+    {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+  ],
   [UserTypes.admin]: [
     {
       pathTo: '/adminDashboard',
@@ -360,6 +411,10 @@ export const MENU_ROLE_BASED: Menus = {
 export const useRoleBasedMenu = (): Array<Menu> => {
   const { data } = useAuth()
   const { userTypeLabel } = data?.user as Account
+  const { isPublicAdminUser } = useAdminAccessController()
+  if(isPublicAdminUser) {
+    return MENU_ROLE_BASED['publicAdmin']
+  }
   return MENU_ROLE_BASED[userTypeLabel] || []
 }
 
