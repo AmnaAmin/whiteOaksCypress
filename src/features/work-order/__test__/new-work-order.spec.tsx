@@ -56,7 +56,7 @@ beforeAll(() => {
 
 jest.setTimeout(150000)
 describe('New Work Order modal test cases', () => {
-  test('Verify new work order showing project specific details and rendering form correctly', async () => {
+  test('test-workorder Verify new work order showing project specific details and rendering form correctly', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
     const setVendorSkillId = jest.fn()
@@ -100,7 +100,7 @@ describe('New Work Order modal test cases', () => {
     expect(screen.queryByTestId('downloadPdf')).not.toBeInTheDocument()
   })
 
-  test('Assigning Line Items to work Order and saving work order. The profit entered on the form will apply to all line items. The sum of Client Amount for Line Items is equal to client amount field in form. The sum of Vendor Amounts for Line Items is equal to vendor amount of the work order', async () => {
+  test('test-workorder Assigning Line Items to work Order and saving work order. The profit entered on the form will apply to all line items. The sum of Client Amount for Line Items is equal to client amount field in form. The sum of Vendor Amounts for Line Items is equal to vendor amount of the work order', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
     const setVendorSkillId = jest.fn()
@@ -132,7 +132,7 @@ describe('New Work Order modal test cases', () => {
         expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
       },
       {
-        timeout: 10000,
+        timeout: 30000,
       },
     )
 
@@ -164,7 +164,7 @@ describe('New Work Order modal test cases', () => {
     )
   })
 
-  test('Upload SOW in new work order modal and save new work order. By uploading sow, assigned items will be null and CAA and VAA will be enabled fields.', async () => {
+  test('test-workorder Upload SOW in new work order modal and save new work order. By uploading sow, assigned items will be null and CAA and VAA will be enabled fields.', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
     const setVendorSkillId = jest.fn()
@@ -213,7 +213,7 @@ describe('New Work Order modal test cases', () => {
     )
   })
 
-  test('When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
+  test('test-workorder When SOW is uploaded, Add new items is disabled. When SOW is removed, Add New Items is enabled.', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
     const setVendorSkillId = jest.fn()
@@ -237,7 +237,7 @@ describe('New Work Order modal test cases', () => {
         expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
       },
       {
-        timeout: 10000,
+        timeout: 30000,
       },
     )
     userEvent.click(screen.getByTestId('checkAllItems'))
@@ -257,7 +257,7 @@ describe('New Work Order modal test cases', () => {
     expect(screen.getByTestId('vendorWorkOrderAmount')).toBeEnabled()
   })
 
-  test('Assign and Unassign Line Items from Remaining Items Modal. Assigned items from Remaining items modal shows in the Line Items Grid. If any item is unassigned from line items grid, it will be shown back in remaining list.', async () => {
+  test('test-workorder Assign and Unassign Line Items from Remaining Items Modal. Assigned items from Remaining items modal shows in the Line Items Grid. If any item is unassigned from line items grid, it will be shown back in remaining list.', async () => {
     const onClose = jest.fn()
     const onSubmit = jest.fn()
     const setVendorSkillId = jest.fn()
@@ -281,7 +281,7 @@ describe('New Work Order modal test cases', () => {
         expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
       },
       {
-        timeout: 10000,
+        timeout: 30000,
       },
     )
     userEvent.click(screen.getByTestId('checkAllItems'))
