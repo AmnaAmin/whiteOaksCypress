@@ -1,8 +1,18 @@
 import { Box, Checkbox, Flex, Icon, Td, Tr } from '@chakra-ui/react'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import Table from 'components/table-refactored/table'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { TableFooter } from 'components/table-refactored/table-footer'
 import { RowProps } from 'components/table/react-table'
-import { TableWrapper } from 'components/table/table'
 import { difference } from 'lodash'
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
@@ -33,8 +43,6 @@ type CellInputType = {
   valueFormatter?: (value) => void
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
-  autoFocus?: boolean
-  setIsFocus?: (val) => void
   rules?: any
   maxLength?: number
 }
@@ -51,13 +59,11 @@ const renderInput = (props: CellInputType) => {
     valueFormatter,
     selectedCell,
     setSelectedCell,
-    autoFocus,
-    setIsFocus,
     rules,
     maxLength,
   } = props
 
-  const isNew = values?.remainingItems[row?.index]?.action === 'new'
+  const isNew = values?.remainingItems?.[row?.index]?.action === 'new'
   return (
     <Box pl={'5px'}>
       {isNew ? (
@@ -69,8 +75,6 @@ const renderInput = (props: CellInputType) => {
           inputType={type}
           fieldArray="remainingItems"
           onChange={handleChange}
-          autoFocus={autoFocus}
-          setIsFocus={setIsFocus}
           rules={rules}
         ></InputField>
       ) : (
@@ -88,8 +92,6 @@ const renderInput = (props: CellInputType) => {
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
           allowEdit={true}
-          autoFocus={autoFocus}
-          setIsFocus={setIsFocus}
         />
       )}
     </Box>
@@ -152,7 +154,7 @@ const RemainingListTable = (props: RemainingListType) => {
     updatedItems,
     setUpdatedItems,
   } = props
-  const { fields: remainingItems, remove } = remainingFieldArray
+  const { remove } = remainingFieldArray
   const { getValues, setValue, control } = formControl
   const values = getValues()
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
@@ -171,220 +173,206 @@ const RemainingListTable = (props: RemainingListType) => {
     setTotal({ index, value: Number(e?.target?.value) * Number(remainingItemsWatch[index]?.quantity) })
   }
 
-  const REMAINING_ITEMS_COLUMNS = [
-    {
-      Header: () => {
-        return (
-          <Checkbox
-            data-testid="checkAllItems"
-            isChecked={
-              values?.remainingItems?.length > 0 &&
-              difference(
-                values?.remainingItems.map(r => r.id),
-                selectedItems.map(s => s.id),
-              )?.length < 1
-            }
-            onChange={e => {
-              if (e.currentTarget?.checked) {
-                setSelectedItems([...values?.remainingItems])
-              } else {
-                setSelectedItems([])
+  const REMAINING_ITEMS_COLUMNS = useMemo(() => {
+    return [
+      {
+        header: () => {
+          return (
+            <Checkbox
+              data-testid="checkAllItems"
+              isChecked={
+                values?.remainingItems?.length > 0 &&
+                difference(
+                  values?.remainingItems.map(r => r.id),
+                  selectedItems.map(s => s.id),
+                )?.length < 1
               }
-            }}
-          />
-        )
-      },
-      disableSortBy: true,
-      accessor: 'assigned',
-      filterable: false,
-      Cell: ({ row }) => {
-        const isNew = values?.remainingItems[row?.index]?.action === 'new'
-        return (
-          <Box paddingLeft={'6px'}>
-            {!isNew ? (
-              <SelectCheckBox
-                index={row.index}
-                selectedItems={selectedItems}
-                setSelectedItems={setSelectedItems}
-                row={values?.remainingItems?.[row?.index]}
-              />
-            ) : (
-              <Icon
-                as={BiXCircle}
-                data-testid={`remove-` + row?.index}
-                boxSize={5}
-                color="brand.300"
-                onClick={() => {
-                  remove(row?.index)
-                }}
-                cursor="pointer"
-              ></Icon>
-            )}
-          </Box>
-        )
-      },
-      disableExport: true,
-      width: 100,
-      sortable: false,
-    },
-    {
-      Header: `${WORK_ORDER}.location`,
-      accessor: 'location',
-      Cell: ({ row, setIsFocus, isFocus }) =>
-        renderInput({
-          row: row,
-          values,
-          formControl,
-          updatedItems,
-          setUpdatedItems,
-          fieldName: 'location',
-          selectedCell,
-          setSelectedCell,
-          autoFocus: isFocus,
-          setIsFocus,
-        }),
-      minWidth: 200,
-      filterable: true,
-    },
-    {
-      Header: `${WORK_ORDER}.sku`,
-      accessor: 'sku',
-      Cell: ({ row, setIsFocus, isFocus }) =>
-        renderInput({
-          row: row,
-          values,
-          formControl,
-          updatedItems,
-          setUpdatedItems,
-          fieldName: 'sku',
-          selectedCell,
-          setSelectedCell,
-          autoFocus: isFocus,
-          setIsFocus,
-        }),
-      width: 100,
-      filterable: true,
-    },
-    {
-      Header: `${WORK_ORDER}.productName`,
-      accessor: 'productName',
-      Cell: ({ row, setIsFocus, isFocus }) =>
-        renderInput({
-          row,
-          values,
-          formControl,
-          updatedItems,
-          setUpdatedItems,
-          fieldName: 'productName',
-          selectedCell,
-          setSelectedCell,
-          autoFocus: isFocus,
-          setIsFocus,
-          rules: { required: '*Required' },
-        }),
-      minWidth: 200,
-      filterable: true,
-    },
-    {
-      Header: `${WORK_ORDER}.details`,
-      accessor: 'description',
-      Cell: ({ row, setIsFocus, isFocus }) =>
-        renderInput({
-          maxLength: 2000,
-          row,
-          values,
-          formControl,
-          updatedItems,
-          setUpdatedItems,
-          fieldName: 'description',
-          selectedCell,
-          setSelectedCell,
-          autoFocus: isFocus,
-          setIsFocus,
-          rules: { required: '*Required' },
-        }),
-      minWidth: 300,
-      filterable: true,
-    },
-    {
-      Header: `${WORK_ORDER}.quantity`,
-      accessor: 'quantity',
-      Cell: ({ row, setIsFocus, isFocus }) =>
-        renderInput({
-          row,
-          values,
-          formControl,
-          updatedItems,
-          setUpdatedItems,
-          fieldName: 'quantity',
-          type: 'number',
-          selectedCell,
-          setSelectedCell,
-          handleChange: (e, index) => {
-            handleQuantityChange(e, index)
-          },
-          autoFocus: isFocus,
-          setIsFocus,
-          rules: { required: '*Required' },
-        }),
-      width: 120,
-      filterable: true,
-    },
-    {
-      Header: `${WORK_ORDER}.unitPrice`,
-      accessor: 'unitPrice',
-      Cell: ({ row, setIsFocus, isFocus }) =>
-        renderInput({
-          row,
-          values,
-          formControl,
-          updatedItems,
-          setUpdatedItems,
-          fieldName: 'unitPrice',
-          valueFormatter: currencyFormatter,
-          type: 'number',
-          selectedCell,
-          setSelectedCell,
-          handleChange: (e, index) => {
-            handleUnitPriceChange(e, index)
-          },
-          autoFocus: isFocus,
-          setIsFocus,
-          rules: { required: '*Required' },
-        }),
-      width: 120,
-      filterable: true,
-    },
-    {
-      Header: `${WORK_ORDER}.total`,
-      accessor: 'totalPrice',
-      Cell: ({ row }) => {
-        return (
-          <>
-            <Box data-testid={'cell-' + row?.index + '-totalPrice'} pl={'7px'} minW={'100px'} minH={'20px'}>
-              {currencyFormatter(values?.remainingItems[row?.index]?.totalPrice)}
+              onChange={e => {
+                if (e.currentTarget?.checked) {
+                  setSelectedItems([...values?.remainingItems])
+                } else {
+                  setSelectedItems([])
+                }
+              }}
+            />
+          )
+        },
+        accessorKey: 'assigned',
+        size: 80,
+        cell: ({ row }) => {
+          const isNew = values?.remainingItems?.[row?.index]?.action === 'new'
+          return (
+            <Box paddingLeft={'6px'}>
+              {!isNew ? (
+                <SelectCheckBox
+                  index={row.index}
+                  selectedItems={selectedItems}
+                  setSelectedItems={setSelectedItems}
+                  row={values?.remainingItems?.[row?.index]}
+                />
+              ) : (
+                <Icon
+                  as={BiXCircle}
+                  data-testid={`remove-` + row?.index}
+                  boxSize={5}
+                  color="brand.300"
+                  onClick={() => {
+                    remove(row?.index)
+                  }}
+                  cursor="pointer"
+                ></Icon>
+              )}
             </Box>
-          </>
-        )
+          )
+        },
       },
-      width: 150,
-      filterable: true,
-    },
-  ]
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) =>
+          renderInput({
+            row: row,
+            values,
+            formControl,
+            updatedItems,
+            setUpdatedItems,
+            fieldName: 'location',
+            selectedCell,
+            setSelectedCell,
+          }),
+        size: 200,
+      },
+      {
+        header: `${WORK_ORDER}.sku`,
+        accessorKey: 'sku',
+        cell: ({ row }) =>
+          renderInput({
+            row: row,
+            values,
+            formControl,
+            updatedItems,
+            setUpdatedItems,
+            fieldName: 'sku',
+            selectedCell,
+            setSelectedCell,
+          }),
+        size: 100,
+      },
+      {
+        header: `${WORK_ORDER}.productName`,
+        accessorKey: 'productName',
+        cell: ({ row }) =>
+          renderInput({
+            row,
+            values,
+            formControl,
+            updatedItems,
+            setUpdatedItems,
+            fieldName: 'productName',
+            selectedCell,
+            setSelectedCell,
+            rules: { required: '*Required' },
+          }),
+        size: 200,
+      },
+      {
+        header: `${WORK_ORDER}.details`,
+        accessorKey: 'description',
+        cell: ({ row }) =>
+          renderInput({
+            maxLength: 2000,
+            row,
+            values,
+            formControl,
+            updatedItems,
+            setUpdatedItems,
+            fieldName: 'description',
+            selectedCell,
+            setSelectedCell,
+            rules: { required: '*Required' },
+          }),
+        size: 300,
+      },
+      {
+        header: `${WORK_ORDER}.quantity`,
+        accessorKey: 'quantity',
+        cell: ({ row }) =>
+          renderInput({
+            row,
+            values,
+            formControl,
+            updatedItems,
+            setUpdatedItems,
+            fieldName: 'quantity',
+            type: 'number',
+            selectedCell,
+            setSelectedCell,
+            handleChange: (e, index) => {
+              handleQuantityChange(e, index)
+            },
+            rules: { required: '*Required' },
+          }),
+        size: 120,
+      },
+      {
+        header: `${WORK_ORDER}.unitPrice`,
+        accessorKey: 'unitPrice',
+        cell: ({ row }) =>
+          renderInput({
+            row,
+            values,
+            formControl,
+            updatedItems,
+            setUpdatedItems,
+            fieldName: 'unitPrice',
+            valueFormatter: currencyFormatter,
+            type: 'number',
+            selectedCell,
+            setSelectedCell,
+            handleChange: (e, index) => {
+              handleUnitPriceChange(e, index)
+            },
+            rules: { required: '*Required' },
+          }),
+        size: 120,
+      },
+      {
+        header: `${WORK_ORDER}.total`,
+        accessorKey: 'totalPrice',
+        cell: ({ row }) => {
+          return (
+            <>
+              <Box data-testid={'cell-' + row?.index + '-totalPrice'} pl={'7px'} minW={'100px'} minH={'20px'}>
+                {currencyFormatter(values?.remainingItems?.[row?.index]?.totalPrice)}
+              </Box>
+            </>
+          )
+        },
+        size: 150,
+      },
+    ]
+  }, [selectedCell, setSelectedCell, selectedItems, setSelectedItems, values.remainingItems])
 
   return (
-    <Box width="100%" height={'100%'} overflowX="auto" overflowY={'hidden'}>
-      <TableWrapper
+    <Box height="calc(100vh - 300px)" overflow="auto">
+      <TableContextProvider
+        totalPages={values?.remainingItems?.length ? Math.ceil(values?.remainingItems?.length / 10) : -1}
+        data={values.remainingItems}
         columns={REMAINING_ITEMS_COLUMNS}
-        data={remainingItems ?? []}
-        isLoading={isLoading}
-        TableRow={LineItemsRow}
-        tableHeight="calc(100vh - 325px)"
-        name="remaining-items-table"
-        defaultFlexStyle={false}
-        disableFilter={false}
-        rowHeight={80}
-      />
+        manualPagination={false}
+      >
+        <Table isLoading={isLoading} isEmpty={!isLoading && !values.remainingItems?.length} />
+        <TableFooter position="sticky" bottom="0" left="0" right="0">
+          <Box></Box>
+          <TablePagination>
+            <ShowCurrentRecordsWithTotalRecords dataCount={values?.remainingItems?.length} />
+            <GotoFirstPage />
+            <GotoPreviousPage />
+            <GotoNextPage />
+            <GotoLastPage />
+          </TablePagination>
+        </TableFooter>
+      </TableContextProvider>
     </Box>
   )
 }
