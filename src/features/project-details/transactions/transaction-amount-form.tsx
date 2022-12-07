@@ -70,6 +70,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onOpen: onDeleteConfirmationModalOpen,
   } = useDisclosure()
 
+  const {
+    isOpen: isReplaceMaterialUploadOpen,
+    onClose: onReplaceMaterialUploadClose,
+    onOpen: onReplaceMaterialUploadOpen,
+  } = useDisclosure()
+
   const transaction = useWatch({ name: 'transaction', control })
   const document = useWatch({ name: 'attachment', control })
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
@@ -182,6 +188,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     })
   }
 
+  const openFileDialog = () => {
+    if (inputRef.current) {
+      inputRef.current.click()
+    }
+    onReplaceMaterialUploadClose()
+  }
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1
 
   return (
@@ -298,7 +310,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           )}
 
           {!isApproved &&
-            (document ? (
+            (document && !document.s3Url ? (
               <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
                 <HStack spacing="5px" h="31px" padding="10px" align="center">
                   <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
@@ -320,8 +332,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             ) : (
               <Button
                 onClick={e => {
-                  if (inputRef.current) {
-                    inputRef.current.click()
+                  if ([TransactionTypeValues.material].includes(values?.transactionType?.value) && document?.s3Url) {
+                    onReplaceMaterialUploadOpen()
+                  } else {
+                    if (inputRef.current) {
+                      inputRef.current.click()
+                    }
                   }
                 }}
                 leftIcon={<BiFile />}
@@ -520,6 +536,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         isOpen={isDeleteConfirmationModalOpen}
         onClose={onDeleteConfirmationModalClose}
         onConfirm={deleteRows}
+      />
+      <ConfirmationBox
+        title={t(`${TRANSACTION}.confirmationTitle`)}
+        content={t(`${TRANSACTION}.confirmationMessageMaterialAttachment`)}
+        isOpen={isReplaceMaterialUploadOpen}
+        onClose={onReplaceMaterialUploadClose}
+        onConfirm={openFileDialog}
       />
     </>
   )
