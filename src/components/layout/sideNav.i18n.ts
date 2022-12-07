@@ -15,7 +15,7 @@ export const sideNav = {
         markets: 'Markets',
         reports: 'Reports',
         performance: 'Performance',
-        userMgmt: 'User Mgmt',
+        userMgmt: 'User Management',
       },
     },
   },

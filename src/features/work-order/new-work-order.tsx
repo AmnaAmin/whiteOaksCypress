@@ -215,7 +215,7 @@ export const NewWorkOrderForm: React.FC<{
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
 
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
+  const { remainingItems, isLoading, isFetching } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
   const defaultFormValues = () => {
@@ -748,7 +748,7 @@ export const NewWorkOrderForm: React.FC<{
           onClose={onCloseRemainingItemsModal}
           setAssignedItems={setAssignedItems}
           remainingItems={unassignedItems}
-          isLoading={isLoading}
+          isLoading={isLoading || isFetching}
           swoProject={swoProject}
         />
       )}
