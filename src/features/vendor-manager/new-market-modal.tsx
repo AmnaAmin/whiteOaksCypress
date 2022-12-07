@@ -105,7 +105,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
 
   useEffect(() => {
     if (selectedMarket) {
-      setValue('state', { label: selectedMarket?.stateName, id: selectedMarket?.id })
+      setValue('state', { label: selectedMarket?.stateName, id: selectedMarket?.stateId })
       setValue('metroServiceArea', selectedMarket?.metropolitanServiceArea)
     }
   }, [selectedMarket])
@@ -172,54 +172,28 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" />
                 </Box>
 
-                {selectedMarket && (
-                  <FormControl w="215px">
-                    <FormLabel variant="strong-label" size="md">
-                      {t(`${VENDOR_MANAGER}.state`)}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      name="state"
-                      render={({ field }) => (
-                        <>
-                          <Select
-                            {...field}
-                            options={stateSelectOptions}
-                            // size="md"
-                            selectProps={{ isBorderLeft: true }}
-                            onChange={option => {
-                              field.onChange(option)
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                  </FormControl>
-                )}
-                {!selectedMarket && (
-                  <FormControl w="215px">
-                    <FormLabel variant="strong-label" size="md">
-                      {t(`${VENDOR_MANAGER}.state`)}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      name="state"
-                      render={({ field }) => (
-                        <>
-                          <Select
-                            {...field}
-                            options={stateSelectOptions}
-                            // size="md"
-                            selectProps={{ isBorderLeft: true }}
-                            onChange={option => {
-                              field.onChange(option)
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                  </FormControl>
-                )}
+                <FormControl w="215px">
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${VENDOR_MANAGER}.state`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="state"
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          {...field}
+                          options={stateSelectOptions}
+                          // size="md"
+                          selectProps={{ isBorderLeft: true }}
+                          onChange={option => {
+                            field.onChange(option)
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </FormControl>
               </HStack>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
