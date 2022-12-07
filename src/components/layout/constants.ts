@@ -209,6 +209,24 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#FC8181',
     },
     {
+      pathTo: '/markets',
+      title: `${SIDE_NAV}.markets`,
+      Icon: BiStats,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/projectType',
+      title: 'Project type',
+      Icon: BiDockTop,
+      color: '#9B2C2C',
+    },
+    {
+      pathTo: '/vendorSkills',
+      title: `${SIDE_NAV}.vendorsSkills`,
+      Icon: BiAlignMiddle,
+      color: '#4E87F8',
+    },
+    {
       pathTo: '/performance',
       title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
