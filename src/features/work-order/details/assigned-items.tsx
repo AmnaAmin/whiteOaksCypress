@@ -268,7 +268,7 @@ const AssignedItems = (props: AssignedItemType) => {
             <Table
               handleOnDrag={handleOnDragEnd}
               handleOnDragStart={handleOnDragStart}
-              isLoading={true}
+              isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
             />
           </TableContextProvider>

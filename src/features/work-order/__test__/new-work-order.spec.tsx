@@ -118,19 +118,27 @@ describe('New Work Order modal test cases', () => {
 
     await selectOption(screen.getByTestId('vendorSkillId'), 'Appliances')
     await selectOption(screen.getByTestId('vendorId'), 'Sibi')
-    await userEvent.type(screen.getByTestId('percentage'), '10')
+    userEvent.type(screen.getByTestId('percentage'), '10')
 
-    await fireEvent.change(screen.getByTestId('workOrderStartDate'), { target: { value: '2022-10-01' } })
+    fireEvent.change(screen.getByTestId('workOrderStartDate'), { target: { value: '2022-10-01' } })
     expect((screen.getByTestId('workOrderStartDate') as HTMLInputElement).value).toEqual('2022-10-01')
-    await fireEvent.change(screen.getByTestId('workOrderExpectedCompletionDate'), { target: { value: '2022-10-05' } })
+    fireEvent.change(screen.getByTestId('workOrderExpectedCompletionDate'), { target: { value: '2022-10-05' } })
     expect((screen.getByTestId('workOrderExpectedCompletionDate') as HTMLInputElement).value).toEqual('2022-10-05')
-    await userEvent.click(screen.getByTestId('addItemsBtn'))
-
-    await waitForProgressBarToFinish()
-    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
-    await userEvent.click(screen.getByTestId('checkAllItems'))
     await act(async () => {
-      await userEvent.click(screen.getByTestId('saveListItems'))
+      userEvent.click(screen.getByTestId('addItemsBtn'))
+    })
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+      },
+      {
+        timeout: 10000,
+      },
+    )
+
+    userEvent.click(screen.getByTestId('checkAllItems'))
+    await act(async () => {
+      userEvent.click(screen.getByTestId('saveListItems'))
     })
     expect(screen.getByTestId('cell-0-profit').textContent).toEqual('10%')
     expect(screen.getByTestId('cell-1-profit').textContent).toEqual('10%')
@@ -175,16 +183,16 @@ describe('New Work Order modal test cases', () => {
     await selectOption(screen.getByTestId('vendorSkillId'), 'Appliances')
     await selectOption(screen.getByTestId('vendorId'), 'Sibi')
 
-    await fireEvent.change(screen.getByTestId('workOrderStartDate'), { target: { value: '2022-10-01' } })
+    fireEvent.change(screen.getByTestId('workOrderStartDate'), { target: { value: '2022-10-01' } })
     expect((screen.getByTestId('workOrderStartDate') as HTMLInputElement).value).toEqual('2022-10-01')
-    await fireEvent.change(screen.getByTestId('workOrderExpectedCompletionDate'), { target: { value: '2022-10-05' } })
+    fireEvent.change(screen.getByTestId('workOrderExpectedCompletionDate'), { target: { value: '2022-10-05' } })
     expect((screen.getByTestId('workOrderExpectedCompletionDate') as HTMLInputElement).value).toEqual('2022-10-05')
 
     chooseFilebyTestId('uploadWO', 'test-sow.png')
 
     expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
-    await userEvent.type(screen.getByTestId('clientApprovedAmount'), '100')
-    await userEvent.type(screen.getByTestId('percentage'), '10')
+    userEvent.type(screen.getByTestId('clientApprovedAmount'), '100')
+    userEvent.type(screen.getByTestId('percentage'), '10')
     expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('value', '$90')
 
     act(() => {
@@ -221,12 +229,20 @@ describe('New Work Order modal test cases', () => {
       trades: TRADES,
     })
 
-    await userEvent.click(screen.getByTestId('addItemsBtn'))
-    await waitForProgressBarToFinish()
-    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
-    await userEvent.click(screen.getByTestId('checkAllItems'))
     await act(async () => {
-      await userEvent.click(screen.getByTestId('saveListItems'))
+      userEvent.click(screen.getByTestId('addItemsBtn'))
+    })
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+      },
+      {
+        timeout: 10000,
+      },
+    )
+    userEvent.click(screen.getByTestId('checkAllItems'))
+    await act(async () => {
+      userEvent.click(screen.getByTestId('saveListItems'))
     })
     expect(screen.queryByTestId('cell-0-sku')).toBeInTheDocument()
     expect(screen.queryByTestId('cell-1-sku')).toBeInTheDocument()
@@ -257,13 +273,20 @@ describe('New Work Order modal test cases', () => {
       trades: TRADES,
     })
     // Open Remaining Items Modal. Assign (check all items). And Save
-    await userEvent.click(screen.getByTestId('addItemsBtn'))
-
-    await waitForProgressBarToFinish()
-    expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
-    await userEvent.click(screen.getByTestId('checkAllItems'))
     await act(async () => {
-      await userEvent.click(screen.getByTestId('saveListItems'))
+      userEvent.click(screen.getByTestId('addItemsBtn'))
+    })
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('checkAllItems')).toBeInTheDocument()
+      },
+      {
+        timeout: 10000,
+      },
+    )
+    userEvent.click(screen.getByTestId('checkAllItems'))
+    await act(async () => {
+      userEvent.click(screen.getByTestId('saveListItems'))
     })
 
     //Assigned Items will be shows in Line Items
@@ -271,7 +294,7 @@ describe('New Work Order modal test cases', () => {
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
 
     // Line Item can be removed/unassigned individually or be unassign all icon in header.
-    await userEvent.click(screen.getByTestId('unassign-0'))
+    userEvent.click(screen.getByTestId('unassign-0'))
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku2')
     act(() => {
       fireEvent.click(screen.getByTestId('unassign-all'))
@@ -283,7 +306,7 @@ describe('New Work Order modal test cases', () => {
 
     //unassign items should show in remaining items modal
     //The last assign items will be at the top
-    await userEvent.click(screen.getByTestId('addItemsBtn'))
+    userEvent.click(screen.getByTestId('addItemsBtn'))
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku2')
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku1')
   })
