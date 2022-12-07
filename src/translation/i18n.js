@@ -420,7 +420,7 @@ i18n.use(initReactI18next).init({
         invoiceBackDate: 'Invoice Back Date',
 
         // work order details
-        cancelWorkOrder: 'cancel Work Order',
+        cancelWorkOrder: 'Cancel Work Order',
         vendorName: 'Vendor Name',
         vendorType: 'Vendor Type',
         phoneNo: 'Phone No',
