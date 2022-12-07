@@ -198,7 +198,11 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     ],
     theme: 'grid',
     bodyStyles: { minCellHeight: 10, font: baseFont, lineColor: 'black', textColor: 'black' },
-    columnStyles: { 0: { cellWidth: 35 }, 2: { cellWidth: 35 } }
+    columnStyles: {
+      0: { cellWidth: 35, lineColor: 'black' },
+      1: { lineColor: 'black' },
+      2: { cellWidth: 35, lineColor: 'black' },
+    },
   })
 
   // Summary
@@ -206,7 +210,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   const summaryX = doc.internal.pageSize.getWidth() - 70 /* Starting x point of invoice summary  */
   doc.setFontSize(12).setFont(baseFont, 'normal')
   doc.internal.pageSize.getHeight()
-  doc.setDrawColor(0)
+  doc.setDrawColor(0, 0, 0)
   let rectX = summaryX - 10
   let rectY = tableEndsY
   if (doc.internal.pageSize.getHeight() - tableEndsY < 30) {

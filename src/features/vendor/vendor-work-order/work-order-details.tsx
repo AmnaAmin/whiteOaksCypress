@@ -58,7 +58,7 @@ export const WorkOrderDetails = ({
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
   const [isUpdating, setIsUpdating] = useState()
-  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId)
+  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()

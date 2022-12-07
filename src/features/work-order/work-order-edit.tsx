@@ -71,7 +71,7 @@ const WorkOrderDetails = ({
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
 
   const navigate = useNavigate()
-  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId)
+  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
 
   useEffect(() => {
     if (workOrder) {
