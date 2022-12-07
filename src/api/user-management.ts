@@ -258,6 +258,7 @@ const parseUserFormData = ({
   userInfo,
   stateOptions,
   markets,
+  states,
   allManagersOptions,
   accountTypeOptions,
   viewVendorsOptions,
@@ -268,6 +269,7 @@ const parseUserFormData = ({
   return {
     ...userInfo,
     markets: markets || [],
+    states: states || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
@@ -305,6 +307,7 @@ export const useUserDetails = ({ form, userInfo }) => {
           userInfo,
           stateOptions,
           markets: parseMarketAPIDataToFormValues(markets, userInfo.markets),
+          states: parseStatesAPIDataToFormValues(stateOptions, userInfo.states),
           allManagersOptions,
           accountTypeOptions,
           viewVendorsOptions,
