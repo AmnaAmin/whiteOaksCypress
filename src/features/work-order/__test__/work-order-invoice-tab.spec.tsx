@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
-import { WORK_ORDERS, DOCUMENTS, TRANSACTIONS } from 'mocks/api/workorder/data'
+import { WORK_ORDERS, DOCUMENTS, TRANSACTIONS, VENDOR_ADDRESS } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen, act } from 'utils/test-utils'
 import { InvoiceTab } from '../invoice/invoice-tab'
 import { Modal } from '@chakra-ui/react'
@@ -41,7 +41,8 @@ describe('Work Order Invoice Test Cases', () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel === 'PAST DUE')
     const documentsData = []
-    await renderInvoice({ onClose, workOrder, documentsData })
+    const vendorAddress = VENDOR_ADDRESS
+    await renderInvoice({ onClose, workOrder, documentsData, vendorAddress })
     expect(screen.getByTestId('Invoice No.').textContent).toEqual(workOrder?.invoiceNumber)
     expect(screen.getByTestId('Final Invoice').textContent).toEqual(
       workOrder?.finalInvoiceAmount ? currencyFormatter(workOrder?.finalInvoiceAmount) : '',
@@ -59,8 +60,9 @@ describe('Work Order Invoice Test Cases', () => {
     const documentsData = []
 
     const transactionItems = TRANSACTIONS.filter(co => co.status === TSV.approved && co.parentWorkOrderId === 8984)
+    const vendorAddress = VENDOR_ADDRESS
 
-    await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS })
+    await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS, vendorAddress })
     expect(screen.queryByTestId('generateInvoice')).not.toHaveAttribute('disabled')
     expect(screen.queryAllByTestId('invoice-items')).toHaveLength(transactionItems.length)
     expect(screen.queryByTestId('balanceDue')?.textContent).toEqual(
@@ -79,7 +81,9 @@ describe('Work Order Invoice Test Cases', () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'invoiced')
     const documentsData = DOCUMENTS
-    await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS })
+    const vendorAddress = VENDOR_ADDRESS
+
+    await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS, vendorAddress })
     expect(screen.queryByTestId('generateInvoice')).not.toBeInTheDocument()
     expect(screen.queryByTestId('seeInvoice')).toBeInTheDocument()
   })
@@ -88,7 +92,9 @@ describe('Work Order Invoice Test Cases', () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'declined')
     const documentsData = []
-    await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS })
+    const vendorAddress = VENDOR_ADDRESS
+
+    await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS, vendorAddress })
     expect(screen.queryByTestId('generateInvoice')).toBeInTheDocument()
     expect(screen.queryByTestId('seeInvoice')).not.toBeInTheDocument()
     await act(async () => await userEvent.click(screen.getByTestId('generateInvoice')))
