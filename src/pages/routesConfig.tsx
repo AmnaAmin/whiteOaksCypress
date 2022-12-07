@@ -82,12 +82,15 @@ export default function useRoutesConfig() {
         { path: 'adminDashboard', element: Dashboard },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'projects', element: Projects },
+        { path: 'projectType', element: ProjectType },
         { path: 'payable', element: Payable },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },
         { path: 'reports', element: Reports },
+        { path: 'markets', element: Markets },
         { path: 'performance', element: PerformanceTab },
+        { path: 'vendorSkills', element: VendorSkills },
       ]
     case isInternalAdminUser:
       return [
