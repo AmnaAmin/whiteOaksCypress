@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useCallback, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { MdOutlineCancel } from 'react-icons/md'
@@ -368,8 +368,6 @@ type EditableCellType = {
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (e) => void
   allowEdit?: boolean
-  autoFocus?: boolean
-  setIsFocus?: (val) => void
   maxLength?: number
 }
 
@@ -387,20 +385,10 @@ export const EditableField = (props: EditableCellType) => {
     selectedCell,
     setSelectedCell,
     allowEdit,
-    autoFocus,
-    setIsFocus,
     maxLength,
   } = props
   const { getValues, setValue, control } = formControl
   const values = getValues()
-  const inputRef = useRef<any>(null)
-
-  useEffect(() => {
-    if (selectedCell?.id === index + '-' + fieldName) {
-      inputRef?.current?.focus()
-    }
-  }, [selectedCell])
-
   const remainingItemsWatch = useWatch({ name: fieldArray, control })
 
   return (
@@ -419,7 +407,6 @@ export const EditableField = (props: EditableCellType) => {
               onClick={() => {
                 if (allowEdit) {
                   setSelectedCell({ id: index + '-' + fieldName, value: remainingItemsWatch[index]?.[fieldName] })
-                  setIsFocus?.(true)
                 }
               }}
             >
@@ -440,9 +427,7 @@ export const EditableField = (props: EditableCellType) => {
                     key={[fieldName] + '.' + [index]}
                     size="sm"
                     type={inputType}
-                    ref={inputRef}
                     value={field.value}
-                    autoFocus={autoFocus}
                     onChange={e => {
                       field.onChange(e.target.value)
                       if (setUpdatedItems && updatedItems && !updatedItems?.includes(values?.[fieldArray][index]?.id)) {
@@ -451,15 +436,11 @@ export const EditableField = (props: EditableCellType) => {
                       onChange?.(e, index)
                     }}
                     onBlur={e => {
-                      setIsFocus?.(false)
                       setSelectedCell(null)
                       if (e.target.value === '') {
                         setValue(`${fieldArray}.${index}.${fieldName}`, selectedCell?.value)
                         onChange?.({ target: { value: selectedCell?.value } }, index)
                       }
-                    }}
-                    onFocus={() => {
-                      setIsFocus?.(true)
                     }}
                   ></Input>
                 )}
@@ -479,8 +460,6 @@ type InputFieldType = {
   fieldArray: string
   inputType?: string
   onChange?: (e, index) => void
-  autoFocus?: boolean
-  setIsFocus?: (val) => void
   rules?: any
   maxLength?: number
 }
@@ -492,8 +471,6 @@ export const InputField = (props: InputFieldType) => {
     fieldArray,
     onChange: handleChange,
     inputType = 'text',
-    autoFocus,
-    setIsFocus,
     rules,
     maxLength,
   } = props
@@ -508,7 +485,7 @@ export const InputField = (props: InputFieldType) => {
           control={control}
           name={`${fieldArray}.${index}.${fieldName}`}
           rules={rules}
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <Input
               maxLength={maxLength}
               key={[fieldName] + '.' + [index]}
@@ -516,16 +493,9 @@ export const InputField = (props: InputFieldType) => {
               size="sm"
               type={inputType}
               value={field.value}
-              autoFocus={autoFocus}
               onChange={e => {
                 field.onChange(e.target.value)
                 handleChange?.(e, index)
-              }}
-              onBlur={e => {
-                setIsFocus?.(false)
-              }}
-              onFocus={() => {
-                setIsFocus?.(true)
               }}
             ></Input>
           )}
@@ -872,407 +842,409 @@ export const useGetLineItemsColumn = ({
     )
   }
 
-  let columns = [
-    {
-      header: () => {
-        return (
-          <Icon
-            as={CgPlayListRemove}
-            boxSize={7}
-            color="brand.300"
-            data-testid={'unassign-all'}
-            title="UnAssign All"
-            onClick={() => {
-              if (setUnAssignedItems && unassignedItems) {
-                setUnAssignedItems([
-                  ...values.assignedItems?.map(i => {
-                    return mapToRemainingItems(i)
-                  }),
-                  ...unassignedItems,
-                ])
-                removeAssigned()
-              }
-            }}
-            cursor="pointer"
-          ></Icon>
-        )
-      },
-      size: 80,
-      enableSorting: false,
-      accessorKey: 'assigned',
-      cell: ({ row }) => {
-        const index = row?.index
-        return (
-          <Box paddingLeft={'6px'}>
+  let columns = useMemo(() => {
+    return [
+      {
+        header: () => {
+          return (
             <Icon
-              as={BiXCircle}
-              boxSize={5}
-              data-testid={'unassign-' + index}
+              as={CgPlayListRemove}
+              boxSize={7}
               color="brand.300"
+              data-testid={'unassign-all'}
+              title="UnAssign All"
               onClick={() => {
                 if (setUnAssignedItems && unassignedItems) {
-                  setUnAssignedItems([{ ...mapToRemainingItems(values?.assignedItems[index]) }, ...unassignedItems])
-                  removeAssigned(index)
+                  setUnAssignedItems([
+                    ...values.assignedItems?.map(i => {
+                      return mapToRemainingItems(i)
+                    }),
+                    ...unassignedItems,
+                  ])
+                  removeAssigned()
                 }
               }}
               cursor="pointer"
             ></Icon>
-          </Box>
-        )
+          )
+        },
+        size: 80,
+        enableSorting: false,
+        accessorKey: 'assigned',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box paddingLeft={'6px'}>
+              <Icon
+                as={BiXCircle}
+                boxSize={5}
+                data-testid={'unassign-' + index}
+                color="brand.300"
+                onClick={() => {
+                  if (setUnAssignedItems && unassignedItems) {
+                    setUnAssignedItems([{ ...mapToRemainingItems(values?.assignedItems[index]) }, ...unassignedItems])
+                    removeAssigned(index)
+                  }
+                }}
+                cursor="pointer"
+              ></Icon>
+            </Box>
+          )
+        },
       },
-    },
-    {
-      header: `${WORK_ORDER}.location`,
-      accessorKey: 'location',
-      cell: ({ row }) => {
-        const index = row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              fieldName="location"
-              fieldArray="assignedItems"
-              formControl={formControl}
-              inputType="text"
-              allowEdit={allowEdit}
-            />
-          </Box>
-        )
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
       },
-    },
-    {
-      header: `${WORK_ORDER}.sku`,
-      accessorKey: 'sku',
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              fieldName="sku"
-              fieldArray="assignedItems"
-              formControl={formControl}
-              inputType="text"
-              allowEdit={allowEdit}
-            />
-          </Box>
-        )
+      {
+        header: `${WORK_ORDER}.sku`,
+        accessorKey: 'sku',
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="sku"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
       },
-    },
-    {
-      header: `${WORK_ORDER}.productName`,
-      accessorKey: 'productName',
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              fieldName="productName"
-              fieldArray="assignedItems"
-              formControl={formControl}
-              inputType="text"
-              allowEdit={allowEdit}
-            />
-          </Box>
-        )
+      {
+        header: `${WORK_ORDER}.productName`,
+        accessorKey: 'productName',
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="productName"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+        size: 200,
       },
-      size: 200,
-    },
-    {
-      header: () => {
-        return (
-          <>
-            {!isVendor && !workOrder && (
-              <Box as="span" sx={requiredStyle}>
-                *
-              </Box>
-            )}
-            {t(`${WORK_ORDER}.details`)}
-          </>
-        )
-      },
-      accessorKey: 'description',
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              fieldName="description"
-              fieldArray="assignedItems"
-              formControl={formControl}
-              inputType="text"
-              allowEdit={allowEdit}
-            />
-          </Box>
-        )
-      },
-      size: 250,
-    },
-    {
-      header: () => {
-        return (
-          <>
-            {!isVendor && !workOrder && (
-              <Box as="span" sx={requiredStyle}>
-                *
-              </Box>
-            )}
-            {t(`${WORK_ORDER}.quantity`)}
-          </>
-        )
-      },
-      size: 100,
-      accessorKey: 'quantity',
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              fieldName="quantity"
-              fieldArray="assignedItems"
-              formControl={formControl}
-              inputType="text"
-              allowEdit={allowEdit}
-              onChange={e => {
-                handleItemQtyChange(e, index)
-              }}
-            />
-          </Box>
-        )
-      },
-    },
-    {
-      header: () => {
-        return (
-          <>
-            {!isVendor && !workOrder && (
-              <Box as="span" sx={requiredStyle}>
-                *
-              </Box>
-            )}
-            {t(`${WORK_ORDER}.price`)}
-          </>
-        )
-      },
-      size: 100,
-      accessorKey: 'price',
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              fieldName="price"
-              formControl={formControl}
-              inputType="number"
-              fieldArray="assignedItems"
-              valueFormatter={currencyFormatter}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              allowEdit={allowEdit}
-              onChange={e => {
-                handleItemPriceChange(e, index)
-              }}
-            />
-          </Box>
-        )
-      },
-    },
-    {
-      header: `${WORK_ORDER}.clientAmount`,
-      accessorKey: 'clientAmount',
-      size: 150,
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <EditableField
-            index={index}
-            fieldName="clientAmount"
-            formControl={formControl}
-            inputType="number"
-            fieldArray="assignedItems"
-            valueFormatter={currencyFormatter}
-            selectedCell={selectedCell}
-            setSelectedCell={setSelectedCell}
-            allowEdit={false}
-          ></EditableField>
-        )
-      },
-    },
-    {
-      header: `${WORK_ORDER}.profit`,
-      accessorKey: 'profit',
-      size: 100,
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              fieldName="profit"
-              formControl={formControl}
-              inputType="number"
-              fieldArray="assignedItems"
-              valueFormatter={val => {
-                if (val !== null && val !== '') return val + '%'
-                else return val
-              }}
-              onChange={e => {
-                handleItemProfitChange(e, index)
-              }}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              allowEdit={allowEdit}
-            />
-          </Box>
-        )
-      },
-    },
-    {
-      header: () => {
-        if (!isVendor) {
-          return <>{t(`${WORK_ORDER}.vendorAmount`)}</>
-        } else {
-          return <>{t(`${WORK_ORDER}.amount`)}</>
-        }
-      },
-      accessorKey: 'vendorAmount',
-      size: 160,
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Box>
-            <EditableField
-              index={index}
-              fieldName="vendorAmount"
-              formControl={formControl}
-              inputType="number"
-              fieldArray="assignedItems"
-              valueFormatter={currencyFormatter}
-              onChange={e => {
-                handleItemVendorAmountChange(e, index)
-              }}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              allowEdit={allowEdit}
-            />
-          </Box>
-        )
-      },
-    },
-    {
-      header: `${WORK_ORDER}.status`,
-      accessorKey: 'isCompleted',
-      enableSorting: false,
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <HStack justifyContent={'center'} h="50px">
-            <Controller
-              control={control}
-              name={`assignedItems.${index}.isCompleted`}
-              render={({ field, fieldState }) => (
-                <CustomCheckBox
-                  testid={`isCompleted-` + index}
-                  text="Completed"
-                  isChecked={field.value}
-                  disabled={!statusEnabled}
-                  onChange={e => {
-                    if (!e.target.checked) {
-                      setValue(`assignedItems.${index}.isVerified`, false)
-                    }
-                    field.onChange(e.currentTarget.checked)
-                  }}
-                ></CustomCheckBox>
+      {
+        header: () => {
+          return (
+            <>
+              {!isVendor && !workOrder && (
+                <Box as="span" sx={requiredStyle}>
+                  *
+                </Box>
               )}
-            ></Controller>
-          </HStack>
-        )
+              {t(`${WORK_ORDER}.details`)}
+            </>
+          )
+        },
+        accessorKey: 'description',
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="description"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+        size: 250,
       },
-    },
-    {
-      header: `${WORK_ORDER}.images`,
-      accessorKey: 'images',
-      enableSorting: false,
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <Controller
-            name={`assignedItems.${index}.uploadedDoc`}
-            control={control}
-            render={({ field, fieldState }) => {
-              return (
-                <VStack gap="1px">
-                  <Box>
-                    <UploadImage
-                      testId={'upload-' + index}
-                      label={`upload`}
-                      value={field?.value?.fileType}
-                      onChange={async (file: any) => {
-                        const document = await onFileChange(file)
-                        field.onChange(document)
-                      }}
-                      onClear={() => setValue(field.name, null)}
-                    ></UploadImage>
-                  </Box>
-
-                  {assignedItems[index]?.document?.s3Url && (
+      {
+        header: () => {
+          return (
+            <>
+              {!isVendor && !workOrder && (
+                <Box as="span" sx={requiredStyle}>
+                  *
+                </Box>
+              )}
+              {t(`${WORK_ORDER}.quantity`)}
+            </>
+          )
+        },
+        size: 100,
+        accessorKey: 'quantity',
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="quantity"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+                onChange={e => {
+                  handleItemQtyChange(e, index)
+                }}
+              />
+            </Box>
+          )
+        },
+      },
+      {
+        header: () => {
+          return (
+            <>
+              {!isVendor && !workOrder && (
+                <Box as="span" sx={requiredStyle}>
+                  *
+                </Box>
+              )}
+              {t(`${WORK_ORDER}.price`)}
+            </>
+          )
+        },
+        size: 100,
+        accessorKey: 'price',
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                fieldName="price"
+                formControl={formControl}
+                inputType="number"
+                fieldArray="assignedItems"
+                valueFormatter={currencyFormatter}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                allowEdit={allowEdit}
+                onChange={e => {
+                  handleItemPriceChange(e, index)
+                }}
+              />
+            </Box>
+          )
+        },
+      },
+      {
+        header: `${WORK_ORDER}.clientAmount`,
+        accessorKey: 'clientAmount',
+        size: 150,
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <EditableField
+              index={index}
+              fieldName="clientAmount"
+              formControl={formControl}
+              inputType="number"
+              fieldArray="assignedItems"
+              valueFormatter={currencyFormatter}
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              allowEdit={false}
+            ></EditableField>
+          )
+        },
+      },
+      {
+        header: `${WORK_ORDER}.profit`,
+        accessorKey: 'profit',
+        size: 100,
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                fieldName="profit"
+                formControl={formControl}
+                inputType="number"
+                fieldArray="assignedItems"
+                valueFormatter={val => {
+                  if (val !== null && val !== '') return val + '%'
+                  else return val
+                }}
+                onChange={e => {
+                  handleItemProfitChange(e, index)
+                }}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+      },
+      {
+        header: () => {
+          if (!isVendor) {
+            return <>{t(`${WORK_ORDER}.vendorAmount`)}</>
+          } else {
+            return <>{t(`${WORK_ORDER}.amount`)}</>
+          }
+        },
+        accessorKey: 'vendorAmount',
+        size: 160,
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                fieldName="vendorAmount"
+                formControl={formControl}
+                inputType="number"
+                fieldArray="assignedItems"
+                valueFormatter={currencyFormatter}
+                onChange={e => {
+                  handleItemVendorAmountChange(e, index)
+                }}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+      },
+      {
+        header: `${WORK_ORDER}.status`,
+        accessorKey: 'isCompleted',
+        enableSorting: false,
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <HStack justifyContent={'center'} h="50px">
+              <Controller
+                control={control}
+                name={`assignedItems.${index}.isCompleted`}
+                render={({ field, fieldState }) => (
+                  <CustomCheckBox
+                    testid={`isCompleted-` + index}
+                    text="Completed"
+                    isChecked={field.value}
+                    disabled={!statusEnabled}
+                    onChange={e => {
+                      if (!e.target.checked) {
+                        setValue(`assignedItems.${index}.isVerified`, false)
+                      }
+                      field.onChange(e.currentTarget.checked)
+                    }}
+                  ></CustomCheckBox>
+                )}
+              ></Controller>
+            </HStack>
+          )
+        },
+      },
+      {
+        header: `${WORK_ORDER}.images`,
+        accessorKey: 'images',
+        enableSorting: false,
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <Controller
+              name={`assignedItems.${index}.uploadedDoc`}
+              control={control}
+              render={({ field, fieldState }) => {
+                return (
+                  <VStack gap="1px">
                     <Box>
-                      {downloadDocument(
-                        values.assignedItems[index]?.document?.s3Url,
-                        values.assignedItems[index]?.document?.fileType,
-                        'uploaded-' + index,
-                      )}
+                      <UploadImage
+                        testId={'upload-' + index}
+                        label={`upload`}
+                        value={field?.value?.fileType}
+                        onChange={async (file: any) => {
+                          const document = await onFileChange(file)
+                          field.onChange(document)
+                        }}
+                        onClear={() => setValue(field.name, null)}
+                      ></UploadImage>
                     </Box>
-                  )}
-                </VStack>
-              )
-            }}
-          />
-        )
+
+                    {assignedItems[index]?.document?.s3Url && (
+                      <Box>
+                        {downloadDocument(
+                          values.assignedItems[index]?.document?.s3Url,
+                          values.assignedItems[index]?.document?.fileType,
+                          'uploaded-' + index,
+                        )}
+                      </Box>
+                    )}
+                  </VStack>
+                )
+              }}
+            />
+          )
+        },
       },
-    },
-    {
-      header: `${WORK_ORDER}.verification`,
-      accessorKey: 'isVerified',
-      enableSorting: false,
-      cell: cellInfo => {
-        const index = cellInfo?.row?.index
-        return (
-          <HStack justifyContent={'center'} h="50px">
-            <Controller
-              control={control}
-              name={`assignedItems.${index}.isVerified`}
-              render={({ field, fieldState }) => (
-                <CustomCheckBox
-                  text="Verified"
-                  disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
-                  isChecked={field.value}
-                  testid={`isVerified-` + index}
-                  onChange={e => {
-                    field.onChange(e.currentTarget.checked)
-                  }}
-                ></CustomCheckBox>
-              )}
-            ></Controller>
-          </HStack>
-        )
+      {
+        header: `${WORK_ORDER}.verification`,
+        accessorKey: 'isVerified',
+        enableSorting: false,
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <HStack justifyContent={'center'} h="50px">
+              <Controller
+                control={control}
+                name={`assignedItems.${index}.isVerified`}
+                render={({ field, fieldState }) => (
+                  <CustomCheckBox
+                    text="Verified"
+                    disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
+                    isChecked={field.value}
+                    testid={`isVerified-` + index}
+                    onChange={e => {
+                      field.onChange(e.currentTarget.checked)
+                    }}
+                  ></CustomCheckBox>
+                )}
+              ></Controller>
+            </HStack>
+          )
+        },
       },
-    },
-  ]
+    ]
+  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }

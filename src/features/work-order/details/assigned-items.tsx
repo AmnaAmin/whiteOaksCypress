@@ -47,7 +47,7 @@ export const CustomCheckBox = props => {
       cursor={!state.isDisabled ? 'pointer' : 'default'}
       {...htmlProps}
     >
-      <input data-testid={props?.testid} {...getInputProps()} hidden id={props.id} />
+      <input {...getInputProps()} hidden id={props.id} />
       <HStack
         ml="2"
         justifyContent="center"
@@ -56,6 +56,7 @@ export const CustomCheckBox = props => {
         w={4}
         id={props.id}
         h={4}
+        data-testid={props?.testid}
         {...getCheckboxProps()}
         onChange={e => {
           if (!state.isDisabled) {
@@ -268,7 +269,7 @@ const AssignedItems = (props: AssignedItemType) => {
             <Table
               handleOnDrag={handleOnDragEnd}
               handleOnDragStart={handleOnDragStart}
-              isLoading={true}
+              isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
             />
           </TableContextProvider>
