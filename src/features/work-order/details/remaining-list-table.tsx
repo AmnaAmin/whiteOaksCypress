@@ -12,7 +12,7 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { TableFooter } from 'components/table-refactored/table-footer'
 import { RowProps } from 'components/table/react-table'
 import { difference } from 'lodash'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
@@ -353,24 +353,6 @@ const RemainingListTable = (props: RemainingListType) => {
     ]
   }, [selectedCell, setSelectedCell, selectedItems, setSelectedItems, values.remainingItems])
 
-  const handleOnDragEnd = useCallback(
-    result => {
-      if (!result.destination) return
-
-      const items = Array.from(values.remainingItems)
-      const {
-        source: { index: sourceIndex },
-        destination: { index: destinationIndex },
-      } = result
-
-      const [reorderedItem] = items.splice(sourceIndex, 1)
-      items.splice(destinationIndex, 0, reorderedItem)
-
-      setValue('remainingItems', items)
-    },
-    [values?.remainingItems],
-  )
-
   return (
     <Box height="calc(100vh - 300px)" overflow="auto">
       <TableContextProvider
@@ -379,11 +361,7 @@ const RemainingListTable = (props: RemainingListType) => {
         columns={REMAINING_ITEMS_COLUMNS}
         manualPagination={false}
       >
-        <Table
-          handleOnDrag={handleOnDragEnd}
-          isLoading={isLoading}
-          isEmpty={!isLoading && !values.remainingItems?.length}
-        />
+        <Table isLoading={isLoading} isEmpty={!isLoading && !values.remainingItems?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <Box></Box>
           <TablePagination>
