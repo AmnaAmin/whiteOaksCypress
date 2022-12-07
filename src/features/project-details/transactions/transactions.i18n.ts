@@ -28,6 +28,9 @@ export const transaction = {
         invoicedDate: 'Invoiced Date',
         scanningMessage: 'Scanning Attachment. This may take few seconds...',
         woPaymentDate: 'Payment Date',
+        confirmationTitle: 'Are you Sure?',
+        confirmationMessageMaterialAttachment:
+          'Do you really want to upload a new attachment? Current line items will be replaced with the scanned items from the new receipt, as you Save the transaction.',
 
         // Transaction Modal
         addNewRow: 'Add New Row',
@@ -130,6 +133,9 @@ export const transaction = {
         payDateVariance: 'Variación de La Fecha de Pago',
         scanningMessage: 'Adjunto de escaneo. Esto puede tardar unos segundos...',
         woPaymentDate: 'Fecha de pago',
+        confirmationTitle: 'Estas segura?',
+        confirmationMessageMaterialAttachment:
+          'Realmente desea cargar un nuevo archivo adjunto? Los elementos de línea actuales se reemplazarán con los elementos escaneados del nuevo recibo, a medida que guarde la transacción.',
 
         // Transaction Modal
 
