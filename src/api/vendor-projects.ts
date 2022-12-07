@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import autoTable from 'jspdf-autotable'
 import { dateFormat } from 'utils/date-time-utils'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, truncateWithEllipsisInCenter } from 'utils/string-formatters'
 import { Project } from 'types/project.type'
 
 export const useUploadDocument = () => {
@@ -117,7 +117,6 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
 
   // Split company name in two lines
   const vendorCompanyName = workOrder?.companyName?.split(0, 20)
-
   // Vendor
   const rightMarginX = 15
   // Might be needed
@@ -137,22 +136,18 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   // From Vendor Address
   doc.text('From:', rightMarginX, 60)
   doc.setFontSize(12).setFont(baseFont, 'bold')
-  if (workOrder?.companyName?.length > 20) {
-    doc.text(vendorCompanyName[0], rightMarginX, 65)
-    doc.text(vendorCompanyName[1], rightMarginX, 70)
-    doc.setFontSize(12).setFont(baseFont, 'normal')
-    doc.text(vendorAddress[0]?.streetAddress, rightMarginX, 75)
-    doc.text(vendorAddress[0]?.city + ', ' + vendorAddress[0]?.state + ' ' + vendorAddress[0]?.zipCode, 65, 80)
-  } else {
-    doc.text(workOrder?.companyName, rightMarginX, 65)
-    doc.setFontSize(12).setFont(baseFont, 'normal')
-    doc.text(vendorAddress[0]?.streetAddress, rightMarginX, 70)
-    doc.text(
-      vendorAddress[0]?.city + ', ' + vendorAddress[0]?.state + ' ' + vendorAddress[0]?.zipCode,
-      rightMarginX,
-      75,
-    )
-  }
+  // if (workOrder?.companyName?.length > 20) {
+  //   doc.text(vendorCompanyName[0], rightMarginX, 65)
+  //   doc.text(vendorCompanyName[1], rightMarginX, 70)
+  //   doc.setFontSize(12).setFont(baseFont, 'normal')
+  //   doc.text(vendorAddress[0]?.streetAddress, rightMarginX, 75)
+  //   doc.text(vendorAddress[0]?.city + ', ' + vendorAddress[0]?.state + ' ' + vendorAddress[0]?.zipCode, 65, 80)
+  // } else {
+  doc.text(truncateWithEllipsisInCenter(workOrder?.companyName), rightMarginX, 65) //workOrder?.companyName
+  doc.setFontSize(12).setFont(baseFont, 'normal')
+  doc.text(vendorAddress[0]?.streetAddress, rightMarginX, 70)
+  doc.text(vendorAddress[0]?.city + ', ' + vendorAddress[0]?.state + ' ' + vendorAddress[0]?.zipCode, rightMarginX, 75)
+  //}
 
   // To Address
   doc.setFontSize(12).setFont(baseFont, 'normal')
