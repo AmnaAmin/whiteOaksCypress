@@ -16,7 +16,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
   parseCreateVendorFormToAPIData,
@@ -62,6 +62,7 @@ export const validateMarket = markets => {
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
+  const { isVendor } = useUserRolesSelector()
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -210,7 +211,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {t('market')}
             </Tab>
             {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-            <Tab>{t('Projects')}</Tab>
+            {!isVendor && <Tab>{t('Projects')}</Tab>}
           </TabList>
 
           <TabPanels mt="31px">
@@ -272,16 +273,18 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 />
               )}
             </TabPanel>
-            <TabPanel p="0px">
-              {tabIndex === 5 && (
-                <VendorProjects
-                  isFetching={isProjectsFetching}
-                  isLoading={isProjectsLoading}
-                  vendorProjects={vendorProjects}
-                  onClose={props.onClose}
-                />
-              )}
-            </TabPanel>
+            {!isVendor && (
+              <TabPanel p="0px">
+                {tabIndex === 5 && (
+                  <VendorProjects
+                    isFetching={isProjectsFetching}
+                    isLoading={isProjectsLoading}
+                    vendorProjects={vendorProjects}
+                    onClose={props.onClose}
+                  />
+                )}
+              </TabPanel>
+            )}
             {/* <TabPanel p="0px">
               <Box overflow="auto">
                 <AuditLogs
