@@ -1,7 +1,7 @@
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Providers } from 'providers'
 import { PROJECTS, SWO_PROJECT, TRADES, VENDORS } from 'mocks/api/workorder/data'
-import { waitForLoadingToFinish, screen, selectOption, waitForProgressBarToFinish } from 'utils/test-utils'
+import { waitForLoadingToFinish, screen, selectOption } from 'utils/test-utils'
 import { NewWorkOrderForm } from '../new-work-order'
 import { dateFormat } from 'utils/date-time-utils'
 import userEvent from '@testing-library/user-event'
