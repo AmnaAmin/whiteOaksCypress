@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
-import { useDocuments } from 'api/vendor-projects'
+import { useDocuments, useVendorAddress } from 'api/vendor-projects'
 import { InvoiceTab } from '../../work-order/invoice/invoice-tab'
 import InvoicingAndPaymentTab from './payment/invoicing-and-payment-tab'
 import { LienWaiverTab } from '../../work-order/lien-waiver/lien-waiver'
@@ -58,6 +58,7 @@ export const WorkOrderDetails = ({
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
   const [isUpdating, setIsUpdating] = useState()
+  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId)
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -144,6 +145,7 @@ export const WorkOrderDetails = ({
                       documentsData={documentsData}
                       projectData={projectData}
                       workOrder={workOrder}
+                      vendorAddress = {vendorAddress}
                       transactions={transactions}
                       onClose={onClose}
                       setTabIndex={setTabIndex}
