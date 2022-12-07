@@ -24,7 +24,6 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useToast } from '@chakra-ui/react'
 import { useCreateProjectMutation } from 'api/pc-projects'
-import { dateISOFormat } from 'utils/date-time-utils'
 import { useNavigate } from 'react-router-dom'
 import { DevTool } from '@hookform/devtools'
 import { useTranslation } from 'react-i18next'
@@ -129,9 +128,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         projectType: `${values.projectType?.value}`,
         woNumber: values.woNumber,
         poNumber: values.poNumber,
-        clientStartDate: dateISOFormat(values.clientStartDate),
-        clientDueDate: dateISOFormat(values.clientDueDate),
-        woaStartDate: dateISOFormat(values.woaStartDate),
+        clientStartDate: values.clientStartDate,
+        clientDueDate: values.clientDueDate,
+        woaStartDate: values.woaStartDate,
         sowOriginalContractAmount: values.sowOriginalContractAmount,
         documents: fileContents ? [fileContents] : [],
         newProperty: property,

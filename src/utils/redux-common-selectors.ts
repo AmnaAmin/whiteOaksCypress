@@ -45,6 +45,19 @@ export const useUserRolesSelector = (): UserRoles => {
   }
 }
 
+// This is temporary work until we ship out complete admin portal
+export const useAdminAccessController = (): any => {
+  const { data } = useAuth()
+  const { login } = data?.user as Account
+  const {
+    isAdmin,
+  } = useUserRolesSelector()
+  return {
+    isInternalAdminUser: isAdmin && login === "admin@test1.com",
+    isPublicAdminUser: isAdmin && login !== "admin@test1.com",
+  }
+}
+
 export const useUserProfile = (): Account | undefined => {
   const { data } = useAuth()
   return data?.user

@@ -87,9 +87,9 @@ export const ProjectSummaryCard: React.FC<{
             variant="light-label"
             size="md"
             noOfLines={1}
-            title={`${projectData?.streetAddress}, ${projectData?.city}`}
+            title={`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
           >
-            {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
+            {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
           </FormLabel>
         </InfoStructureCard>
         <InfoStructureCard isLoading={isLoading} title="" border="none">

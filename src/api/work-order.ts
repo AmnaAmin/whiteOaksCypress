@@ -212,7 +212,7 @@ export const parsePaymentValuesToPayload = formValues => {
     dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
     paymentTerm: formValues?.paymentTerm?.value,
     paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
-    expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
+    expectedPaymentDate: formValues?.expectedPaymentDate,
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
     datePaid: dateISOFormat(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
@@ -275,9 +275,9 @@ export const parseWODetailValuesToPayload = formValues => {
     }),
   ]
   return {
-    workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
-    workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
-    workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
+    workOrderStartDate: formValues?.workOrderStartDate,
+    workOrderDateCompleted: formValues?.workOrderDateCompleted,
+    workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
   }
@@ -360,8 +360,8 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     })
   }
   return {
-    workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
-    workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
+    workOrderStartDate: formValues.workOrderStartDate,
+    workOrderExpectedCompletionDate: formValues.workOrderExpectedCompletionDate,
     invoiceAmount: formValues.invoiceAmount,
     clientApprovedAmount: formValues.clientApprovedAmount,
     percentage: formValues.percentage,

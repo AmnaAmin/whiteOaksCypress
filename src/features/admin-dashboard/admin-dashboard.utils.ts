@@ -5,7 +5,6 @@ export const SELECTED_CARD_MAP_URL = {
   material: 'projectStatusId.notIn=33,41&materialCost.notEquals=0',
   draw: 'projectStatusId.notIn=33,41&drawAmountWo.notEquals=0',
 }
-
 export const filterByMonthOptions = [
   { value: 'All', label: 'All' },
   { value: 'Jan', label: 'January' },
