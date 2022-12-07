@@ -1,6 +1,4 @@
 import { Box, Checkbox, Flex, Icon, Td, Tr } from '@chakra-ui/react'
-import { ExportButton } from 'components/table-refactored/export-button'
-import { settingColumns } from 'components/table-refactored/make-data'
 import {
   GotoFirstPage,
   GotoLastPage,
@@ -45,8 +43,6 @@ type CellInputType = {
   valueFormatter?: (value) => void
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (val) => void
-  autoFocus?: boolean
-  setIsFocus?: (val) => void
   rules?: any
   maxLength?: number
 }
@@ -63,8 +59,6 @@ const renderInput = (props: CellInputType) => {
     valueFormatter,
     selectedCell,
     setSelectedCell,
-    autoFocus,
-    setIsFocus,
     rules,
     maxLength,
   } = props
@@ -81,8 +75,6 @@ const renderInput = (props: CellInputType) => {
           inputType={type}
           fieldArray="remainingItems"
           onChange={handleChange}
-          autoFocus={autoFocus}
-          setIsFocus={setIsFocus}
           rules={rules}
         ></InputField>
       ) : (
@@ -100,8 +92,6 @@ const renderInput = (props: CellInputType) => {
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
           allowEdit={true}
-          autoFocus={autoFocus}
-          setIsFocus={setIsFocus}
         />
       )}
     </Box>
@@ -164,7 +154,7 @@ const RemainingListTable = (props: RemainingListType) => {
     updatedItems,
     setUpdatedItems,
   } = props
-  const { fields: remainingItems, remove } = remainingFieldArray
+  const { remove } = remainingFieldArray
   const { getValues, setValue, control } = formControl
   const values = getValues()
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
