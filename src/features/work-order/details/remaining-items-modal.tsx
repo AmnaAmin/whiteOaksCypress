@@ -42,7 +42,6 @@ const RemainingItemsModal: React.FC<{
 }> = props => {
   const { remainingItems, isLoading, setAssignedItems, onClose, swoProject, isAssignmentAllowed } = props
   const [selectedItems, setSelectedItems] = useState<LineItems[]>([])
-  const [updatedItems, setUpdatedItems] = useState<number[]>([])
   const { mutateAsync: updateLineItemsAsync } = useAssignLineItems({ swoProjectId: swoProject?.id })
   const { mutateAsync: createLineItemsAsync } = useCreateLineItem({ swoProject })
   const { mutate: updateLineItems } = useAssignLineItems({
@@ -82,8 +81,11 @@ const RemainingItemsModal: React.FC<{
   }, [swoProject])
 
   const onSubmit = async values => {
-    const newLineItems = values.remainingItems.filter(r => r?.action === 'new')
-    const updatedLineItems = [...values.remainingItems.filter(r => !!r.id && updatedItems.includes(r?.id))]
+    const allItems = values.remainingItems?.map((item, index) => {
+      return { ...item, sortOrder: index }
+    })
+    const newLineItems = allItems.filter(r => r?.action === 'new')
+    const updatedLineItems = allItems.filter(r => !!r.id)
 
     if (updatedLineItems?.length > 0 && newLineItems?.length > 0) {
       const update = updateLineItemsAsync(updatedLineItems)
@@ -131,7 +133,6 @@ const RemainingItemsModal: React.FC<{
   const assignAndReset = () => {
     setAssignedItems(selectedItems)
     setSelectedItems([])
-    setUpdatedItems([])
     onClose()
   }
   const checkKeyDown = e => {
@@ -212,8 +213,6 @@ const RemainingItemsModal: React.FC<{
                 isLoading={isLoading}
                 selectedItems={selectedItems}
                 setSelectedItems={setSelectedItems}
-                updatedItems={updatedItems}
-                setUpdatedItems={setUpdatedItems}
                 swoProject={swoProject}
               />
             </ModalBody>
