@@ -91,7 +91,7 @@ const InformationCard = props => {
 }
 
 interface FormValues {
-  cancel: string | null
+  cancel: any
   workOrderStartDate: string | null
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
@@ -195,22 +195,6 @@ const WorkOrderDetailTab = props => {
     setUploadedWO(uploadedWO)
   }, [documentsData])
 
-  useEffect(() => {
-    if (transactions && transactions.length > 0) {
-      // only show approved or paid transactions.
-      const transactionItems = transactions.filter(
-        t => t.status === TSV.approved && t.parentWorkOrderId === workOrder.id,
-      )
-      console.log('transactionItems', transactionItems)
-
-      // Draw Transaction Type = 30
-      const materialTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.material)
-      const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
-      console.log('materialTransactions', materialTransactions)
-      console.log('drawTransactions', drawTransactions)
-    }
-  }, [transactions])
-
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
       deleteLineItems(
@@ -259,22 +243,12 @@ const WorkOrderDetailTab = props => {
     }
   }
 
-  const onSubmit = values => {
+  const onSubmit = values => {    
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
     const removedItems = getRemovedItems(formValues, workOrderAssignedItems)
-
-    if (values?.cancel?.value === 35) {
-      alert()
-      /**
-       * Business Logic - If WO is set to cancelled from the dropdown, the status of the WO is set to CANCELLED - which is value.status 35
-       */
-      // values.status = 35
-      // values.statusLabel = 'CANCELLED'
-    }
-
     const payload = parseWODetailValuesToPayload(values)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
@@ -350,12 +324,10 @@ const WorkOrderDetailTab = props => {
                     <Controller
                       control={control}
                       name="cancel"
-                      rules={{ required: 'This is required' }}
                       render={({ field }) => (
                         <>
                           <ReactSelect
                             options={CANCEL_WO_OPTIONS}
-                            defaultValue={CANCEL_WO_OPTIONS[0]}
                             onChange={option => field.onChange(option)}
                             isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
                           />

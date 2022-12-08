@@ -274,10 +274,9 @@ export const parseWODetailValuesToPayload = formValues => {
     }),
   ]
 
-   return {
+  return {
     cancel: formValues?.cancel?.value,
-    // status: formValues?.cancel?.value === 35 ? 35 : formValues?.status,
-    // statusLabel: formValues?.cancel?.value === 35 ? 'CANCELLED' : formValues?.statusLabel,
+    ...(formValues?.cancel.value === 35 && { status: 35 }),
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
@@ -288,7 +287,10 @@ export const parseWODetailValuesToPayload = formValues => {
 
 export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
   const defaultValues = {
-    cancel: workOrder?.cancel,
+    cancel: {
+      value: '',
+      label: 'Select',
+    },
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
@@ -364,7 +366,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     })
   }
   return {
-    cancel : formValues.cancel?.value,
+    cancel: formValues.cancel?.value,
     workOrderStartDate: formValues.workOrderStartDate,
     workOrderExpectedCompletionDate: formValues.workOrderExpectedCompletionDate,
     invoiceAmount: formValues.invoiceAmount,
