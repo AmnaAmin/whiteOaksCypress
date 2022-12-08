@@ -39,6 +39,13 @@ export const truncateWithEllipsis = (s: string, maxLength: number) => {
   return s
 }
 
+export const truncateWithEllipsisInCenter = (str: string) => {
+  if (str.length > 30) {
+    return str.substr(0, 10) + '.....' + str.substr(str.length - 10, str.length)
+  }
+  return str
+}
+
 /**
  * Divides given value by 100
  * @param percentage (number) The percentage input

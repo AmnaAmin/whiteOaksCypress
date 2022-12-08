@@ -56,6 +56,7 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
           id="password"
           {...register('password')}
           rounded="6px"
+          autoComplete="new-password"
           onInput={event => {
             const value = event.currentTarget.value
             let score = zxcvbn(value).score
