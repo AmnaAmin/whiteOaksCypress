@@ -17,7 +17,6 @@ import {
   Spinner,
   Stack,
   Text,
-  toast,
   useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
@@ -46,7 +45,6 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
-import { TransactionStatusValues as TSV, TransactionType, TransactionTypeValues } from 'types/transaction.type'
 
 const CalenderCard = props => {
   return (
@@ -111,7 +109,6 @@ const WorkOrderDetailTab = props => {
     workOrderAssignedItems,
     isFetchingLineItems,
     isLoadingLineItems,
-    transactions,
   } = props
 
   const formReturn = useForm<FormValues>()

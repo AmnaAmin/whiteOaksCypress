@@ -34,7 +34,6 @@ import { useDocuments } from 'api/vendor-projects'
 import { useTransactionsV1 } from 'api/transactions'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
 import { useFetchProjectId } from './details/assignedItems.utils'
-import { transaction } from 'features/project-details/transactions/transactions.i18n'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -208,7 +207,6 @@ const WorkOrderDetails = ({
                       workOrderAssignedItems={workOrderAssignedItems}
                       isFetchingLineItems={isFetchingLineItems}
                       isLoadingLineItems={isLoadingLineItems}
-                      transactions={transactions}
                     />
                   </TabPanel>
                   <TabPanel p={0}>
