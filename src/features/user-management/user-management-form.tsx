@@ -242,7 +242,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   )
 
   const isEditUser = !!(user && user.id)
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -557,7 +556,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <Controller
             control={control}
             name="state"
-            render={({ field }) => <ReactSelect id="state" {...field} options={stateOptions} />}
+            render={({ field }) => (
+              <ReactSelect id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: showStates ? true : false }} />
+            )}
           />
         </FormControl>
 
