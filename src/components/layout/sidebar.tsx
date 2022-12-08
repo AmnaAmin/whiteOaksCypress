@@ -9,6 +9,7 @@ export const Sidebar: React.FC<BoxProps> = props => {
       h="calc(100vh - 120px)"
       mt="12px"
       pb="2"
+      isTruncated
       lineHeight="taller"
       {...props}
       sx={{

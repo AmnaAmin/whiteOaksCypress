@@ -85,8 +85,8 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     })
 
     expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
-    expect(screen.getByTestId('isVerified-0')).not.toHaveAttribute('checked')
-    expect(screen.getByTestId('isVerified-1')).not.toHaveAttribute('checked')
+    expect(screen.getByTestId('isVerified-0')).not.toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-1')).not.toHaveAttribute('data-checked')
 
     /* Action to complete items */
     await act(async () => {
@@ -101,8 +101,8 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     })
 
     expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
-    expect(screen.getByTestId('isVerified-0')).toHaveAttribute('checked')
-    expect(screen.getByTestId('isVerified-1')).toHaveAttribute('checked')
+    expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
     expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual(
       datePickerFormat(new Date()),
     )
@@ -160,9 +160,9 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.getByTestId('workOrderExpectedCompletionDate') as HTMLInputElement).toBeDisabled()
     expect(screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).toBeDisabled()
     expect(screen.getByTestId('workOrderStartDate') as HTMLInputElement).toBeDisabled()
-    expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('checked')
-    expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('checked')
-    expect(screen.getByTestId('isVerified-0')).toHaveAttribute('checked')
-    expect(screen.getByTestId('isVerified-1')).toHaveAttribute('checked')
+    expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
   })
 })

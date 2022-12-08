@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import autoTable from 'jspdf-autotable'
 import { dateFormat } from 'utils/date-time-utils'
-import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
+import { currencyFormatter, truncateWithEllipsisInCenter } from 'utils/string-formatters'
 import { Project } from 'types/project.type'
 
 export const useUploadDocument = () => {
@@ -95,7 +95,16 @@ export const documentTerm = [
   { value: 39, label: '30' },
 ]
 
-export const createInvoice = (doc, workOrder, projectData: Project, items, summary) => {
+export const useVendorAddress = projectId => {
+  const client = useClient()
+
+  return useQuery(['vendorAddress', projectId], async () => {
+    const response = await client(`view-vendors/v1?id.equals=${projectId}`, {})
+    return response?.data
+  })
+}
+
+export const createInvoice = (doc, workOrder, projectData: Project, items, summary, vendorAddress) => {
   const baseFont = 'times'
 
   const woAddress = {
@@ -120,16 +129,17 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   doc.setFontSize(12).setFont(baseFont, 'bold')
   doc.text('PO Number:', rightMarginX, 35)
   doc.setFontSize(12).setFont(baseFont, 'normal')
-  doc.text(truncateWithEllipsis(workOrder?.propertyAddress, 15), rightMarginX + 25, 35)
+  doc.text(workOrder?.propertyAddress, rightMarginX + 25, 35)
 
-  // From Vendor
+  // From Vendor Address
   doc.text('From:', rightMarginX, 60)
   doc.setFontSize(12).setFont(baseFont, 'bold')
-  doc.text(workOrder?.companyName, rightMarginX, 65) 
+  doc.text(truncateWithEllipsisInCenter(workOrder?.companyName), rightMarginX, 65) 
   doc.setFontSize(12).setFont(baseFont, 'normal')
-  doc.text(workOrder?.vendorAddress, rightMarginX, 70) 
+  doc.text(vendorAddress[0]?.streetAddress, rightMarginX, 70)
+  doc.text(vendorAddress[0]?.city + ', ' + vendorAddress[0]?.state + ' ' + vendorAddress[0]?.zipCode, rightMarginX, 75)
 
-  // Address
+  // To Address
   doc.setFontSize(12).setFont(baseFont, 'normal')
   doc.text('Bill To:', rightMarginX + 65, 60)
   doc.setFontSize(12).setFont(baseFont, 'bold')
@@ -172,7 +182,12 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
       { header: 'Total', dataKey: 'amount' },
     ],
     theme: 'grid',
-    bodyStyles: { minCellHeight: 10, font: baseFont, lineColor: 'black', textColor: 'black' }
+    bodyStyles: { minCellHeight: 10, font: baseFont, lineColor: 'black', textColor: 'black' },
+    columnStyles: {
+      0: { cellWidth: 35, lineColor: 'black' },
+      1: { lineColor: 'black' },
+      2: { cellWidth: 35, lineColor: 'black' },
+    },
   })
 
   // Summary
@@ -180,7 +195,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   const summaryX = doc.internal.pageSize.getWidth() - 70 /* Starting x point of invoice summary  */
   doc.setFontSize(12).setFont(baseFont, 'normal')
   doc.internal.pageSize.getHeight()
-  doc.setDrawColor(0)
+  doc.setDrawColor(0, 0, 0)
   let rectX = summaryX - 10
   let rectY = tableEndsY
   if (doc.internal.pageSize.getHeight() - tableEndsY < 30) {
@@ -206,7 +221,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     doc.setFont(baseFont, 'bold')
     doc.text(sum.title, summaryX - 5, rectY + 6)
     doc.setFont(baseFont, 'normal')
-    doc.text(sum.value, summaryX + 40, rectY + 6)
+    doc.text(sum.value, summaryX + 35, rectY + 6)
     rectY = rectY + 10
   })
   return doc
