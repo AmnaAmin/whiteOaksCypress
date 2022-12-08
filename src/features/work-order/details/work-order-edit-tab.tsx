@@ -45,6 +45,7 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
@@ -128,6 +129,7 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const { isAdmin } = useUserRolesSelector()
 
   const {
     skillName,
@@ -312,7 +314,7 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
-              {!isCancelled && (
+              {isAdmin && !isCancelled && (
                 <Box w="215px">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
