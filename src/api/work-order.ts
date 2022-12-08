@@ -255,7 +255,6 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
-
   const assignedItems = [
     ...formValues?.assignedItems?.map((a, index) => {
       const isNewSmartLineItem = !a.smartLineItemId
@@ -274,10 +273,11 @@ export const parseWODetailValuesToPayload = formValues => {
       return assignedItem
     }),
   ]
-  return {
+
+   return {
     cancel: formValues?.cancel?.value,
     // status: formValues?.cancel?.value === 35 ? 35 : formValues?.status,
-    // statusLabel: formValues?.cancel?.value === 35 ? 'Canceled' : formValues?.statusLabel,
+    // statusLabel: formValues?.cancel?.value === 35 ? 'CANCELLED' : formValues?.statusLabel,
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,

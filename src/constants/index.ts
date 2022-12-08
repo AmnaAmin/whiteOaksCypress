@@ -25,11 +25,11 @@ export const FILTERED_PAYMENT_TERMS_OPTIONS = PAYMENT_TERMS_OPTIONS.filter(payme
 
 export const CANCEL_WO_OPTIONS = [
   {
-    value: 35,
-    label: 'Yes',
+    value: "",
+    label: 'Select',
   },
   {
-    value: '',
-    label: 'No',
+    value: 35,
+    label: 'Yes',
   }
 ]

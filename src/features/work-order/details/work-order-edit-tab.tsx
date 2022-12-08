@@ -17,6 +17,7 @@ import {
   Spinner,
   Stack,
   Text,
+  toast,
   useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
@@ -45,6 +46,7 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
+import { TransactionStatusValues as TSV, TransactionType, TransactionTypeValues } from 'types/transaction.type'
 
 const CalenderCard = props => {
   return (
@@ -109,6 +111,7 @@ const WorkOrderDetailTab = props => {
     workOrderAssignedItems,
     isFetchingLineItems,
     isLoadingLineItems,
+    transactions,
   } = props
 
   const formReturn = useForm<FormValues>()
@@ -128,7 +131,6 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
-  const [cancelVendorWO, setCancelVendorWO] = useState<any>()
 
   const {
     skillName,
@@ -193,6 +195,22 @@ const WorkOrderDetailTab = props => {
     setUploadedWO(uploadedWO)
   }, [documentsData])
 
+  useEffect(() => {
+    if (transactions && transactions.length > 0) {
+      // only show approved or paid transactions.
+      const transactionItems = transactions.filter(
+        t => t.status === TSV.approved && t.parentWorkOrderId === workOrder.id,
+      )
+      console.log('transactionItems', transactionItems)
+
+      // Draw Transaction Type = 30
+      const materialTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.material)
+      const drawTransactions = transactionItems.filter(it => it.transactionType === TransactionTypeValues.draw)
+      console.log('materialTransactions', materialTransactions)
+      console.log('drawTransactions', drawTransactions)
+    }
+  }, [transactions])
+
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
       deleteLineItems(
@@ -247,13 +265,16 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
     const removedItems = getRemovedItems(formValues, workOrderAssignedItems)
+
     if (values?.cancel?.value === 35) {
       alert()
       /**
        * Business Logic - If WO is set to cancelled from the dropdown, the status of the WO is set to CANCELLED - which is value.status 35
        */
-      values.status = 35
+      // values.status = 35
+      // values.statusLabel = 'CANCELLED'
     }
+
     const payload = parseWODetailValuesToPayload(values)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
@@ -267,6 +288,7 @@ const WorkOrderDetailTab = props => {
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
   return (
@@ -333,13 +355,9 @@ const WorkOrderDetailTab = props => {
                         <>
                           <ReactSelect
                             options={CANCEL_WO_OPTIONS}
-                            // value={cancelVendorWO}
-                            onChange={event => {
-                              const selectedVal = event.target.checked
-                              field.onChange(selectedVal)
-                              // setCancelVendorWO(selectedVal)
-                            }}
-                            isDisabled={[STATUS.Completed].includes(workOrder.statusLabel?.toLowerCase())}
+                            defaultValue={CANCEL_WO_OPTIONS[0]}
+                            onChange={option => field.onChange(option)}
+                            isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
                           />
                         </>
                       )}
