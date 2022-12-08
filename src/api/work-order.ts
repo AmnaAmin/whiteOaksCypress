@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 import { readFileContent } from './vendor-details'
 import { sortBy } from 'lodash'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -188,19 +189,20 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
 
 /* WorkOrder Payments */
 export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
+  const { isAdmin } = useUserRolesSelector()
   const defaultStatus = false
   // not used for now -  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
-    dateInvoiceSubmittedEnabled: defaultStatus,
-    paymentTermEnabled: defaultStatus || invoicedState,
-    paymentTermDateEnabled: defaultStatus,
-    expectedPaymentDateEnabled: defaultStatus,
-    datePaymentProcessedEnabled: defaultStatus || invoicedState,
-    datePaidEnabled: defaultStatus || invoicedState,
-    invoiceAmountEnabled: defaultStatus,
-    clientOriginalApprovedAmountEnabled: defaultStatus,
-    clientApprovedAmountEnabled: defaultStatus,
+    dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
+    paymentTermEnabled: defaultStatus || invoicedState || isAdmin,
+    paymentTermDateEnabled: defaultStatus || isAdmin,
+    expectedPaymentDateEnabled: defaultStatus || isAdmin,
+    datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
+    datePaidEnabled: defaultStatus || invoicedState || isAdmin,
+    invoiceAmountEnabled: defaultStatus || isAdmin,
+    clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
+    clientApprovedAmountEnabled: defaultStatus || isAdmin,
     finalInvoiceAmountEnabled: defaultStatus,
     paymentDateEnabled: defaultStatus || invoicedState,
     partialPaymentEnabled: defaultStatus || invoicedState,
@@ -243,12 +245,15 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 /* WorkOrder Details */
 
 export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
-  const defaultStatus = false
+  const { isAdmin } = useUserRolesSelector()
   const completedByVendor =
     [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
     formValues?.assignedItems?.length < 1
   return {
-    completedByVendor: defaultStatus || completedByVendor,
+    completedByVendor: completedByVendor,
+    workOrderStartDateEnable: [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
+    workOrderExpectedCompletionDateEnable:
+      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
   }
 }
 
