@@ -4,6 +4,7 @@ import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { isDefined } from 'utils'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
 import { parseStatesAPIDataToFormValues } from 'utils/states'
@@ -152,7 +153,7 @@ export const userMangtPayload = (user: any) => {
     states: user.states?.filter(state => state.checked) || [],
     stateId: user.state?.id || '',
     userType: user.accountType?.value,
-    ignoreQuota: user.ignoreQuota?.value || '',
+    ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.value || '',
   }
   delete userObj.state
@@ -257,6 +258,7 @@ const parseUserFormData = ({
   userInfo,
   stateOptions,
   markets,
+  states,
   allManagersOptions,
   accountTypeOptions,
   viewVendorsOptions,
@@ -267,6 +269,7 @@ const parseUserFormData = ({
   return {
     ...userInfo,
     markets: markets || [],
+    states: states || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
@@ -304,6 +307,7 @@ export const useUserDetails = ({ form, userInfo }) => {
           userInfo,
           stateOptions,
           markets: parseMarketAPIDataToFormValues(markets, userInfo.markets),
+          states: parseStatesAPIDataToFormValues(stateOptions, userInfo.states),
           allManagersOptions,
           accountTypeOptions,
           viewVendorsOptions,

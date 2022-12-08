@@ -28,9 +28,9 @@ export const transaction = {
         invoicedDate: 'Invoiced Date',
         scanningMessage: 'Scanning Attachment. This may take few seconds...',
         woPaymentDate: 'Payment Date',
-        confirmationTitle: 'Are you Sure?',
+        confirmationTitle: 'Are you sure?',
         confirmationMessageMaterialAttachment:
-          'Do you really want to upload a new attachment? Current line items will be replaced with the scanned items from the new receipt, as you Save the transaction.',
+          'Do you really want to upload a new attachment? Current line item(s) will be replaced with the scanned items from the new receipt, as you Save the transaction.',
 
         // Transaction Modal
         addNewRow: 'Add New Row',
