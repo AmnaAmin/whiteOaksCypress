@@ -75,6 +75,7 @@ export const InvoiceTab = ({
   setTabIndex,
   projectData,
   isWorkOrderUpdating,
+  vendorAddress,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
@@ -183,7 +184,7 @@ export const InvoiceTab = ({
   const generateInvoice = async () => {
     let form = new jsPDF()
     const updatedWorkOrder = prepareInvoicePayload()
-    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
+    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid }, vendorAddress)
     const pdfUri = form.output('datauristring')
     updateWorkOrder(
       {
@@ -247,7 +248,7 @@ export const InvoiceTab = ({
     } else {
       generateInvoice()
     }
-  }, [items, workOrder, projectData])
+  }, [items, workOrder, projectData, vendorAddress])
 
   return (
     <Box>
