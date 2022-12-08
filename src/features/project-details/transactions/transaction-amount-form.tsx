@@ -44,6 +44,7 @@ type TransactionAmountFormProps = {
   transaction?: ChangeOrderType
   isMaterialsLoading?: boolean
   setMaterialsLoading?: (value) => void
+  selectedTransactionId?: string | number | undefined
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
@@ -51,6 +52,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   transaction: changeOrder,
   isMaterialsLoading,
   setMaterialsLoading,
+  selectedTransactionId,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -112,7 +114,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
-
+  const isEditMaterialTransaction =
+    [TransactionTypeValues.material].includes(values?.transactionType?.value) &&
+    !!selectedTransactionId &&
+    transaction?.length > 0
   const { formattedAmount: totalAmount } = useTotalAmount(control)
 
   const toggleAllCheckboxes = useCallback(
@@ -332,7 +337,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             ) : (
               <Button
                 onClick={e => {
-                  if ([TransactionTypeValues.material].includes(values?.transactionType?.value) && document?.s3Url) {
+                  if (isEditMaterialTransaction) {
                     onReplaceMaterialUploadOpen()
                   } else {
                     if (inputRef.current) {
