@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
@@ -224,19 +224,19 @@ export const parsePaymentValuesToPayload = formValues => {
 
 export const defaultValuesPayment = (workOrder, paymentsTerms) => {
   const defaultValues = {
-    dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
+    dateInvoiceSubmitted: getLocalTimeZoneDate(workOrder?.dateInvoiceSubmitted),
     paymentTerm: workOrder?.paymentTerm
       ? paymentsTerms.find(p => p.value === workOrder?.paymentTerm)
       : paymentsTerms.find(p => p.value === '20'),
-    paymentTermDate: datePickerFormat(workOrder?.paymentTermDate),
-    expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
+    paymentTermDate: getLocalTimeZoneDate(workOrder?.paymentTermDate),
+    expectedPaymentDate: getLocalTimeZoneDate(workOrder?.expectedPaymentDate),
     datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
-    datePaid: datePickerFormat(workOrder?.datePaid),
+    datePaid: getLocalTimeZoneDate(workOrder?.datePaid),
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
     partialPayment: 0,
-    paymentDate: datePickerFormat(workOrder?.partialPaymentDate),
+    paymentDate: getLocalTimeZoneDate(workOrder?.partialPaymentDate),
     finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
   }
   return defaultValues
@@ -260,7 +260,6 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
-
   const assignedItems = [
     ...formValues?.assignedItems?.map((a, index) => {
       const isNewSmartLineItem = !a.smartLineItemId
@@ -279,7 +278,10 @@ export const parseWODetailValuesToPayload = formValues => {
       return assignedItem
     }),
   ]
+
   return {
+    cancel: formValues?.cancel?.value,
+    ...(formValues?.cancel.value === 35 && { status: 35 }),
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
@@ -290,6 +292,10 @@ export const parseWODetailValuesToPayload = formValues => {
 
 export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
   const defaultValues = {
+    cancel: {
+      value: '',
+      label: 'Select',
+    },
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
@@ -365,6 +371,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     })
   }
   return {
+    cancel: formValues.cancel?.value,
     workOrderStartDate: formValues.workOrderStartDate,
     workOrderExpectedCompletionDate: formValues.workOrderExpectedCompletionDate,
     invoiceAmount: formValues.invoiceAmount,

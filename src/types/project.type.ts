@@ -184,6 +184,7 @@ export type ProjectWorkOrderType = {
   vendorAddress: string
   durationCategory: string
   invoiceNumber: string
+  cancel: string
 }
 
 export type ProjectAlertType = {
