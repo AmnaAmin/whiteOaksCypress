@@ -255,7 +255,6 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
-
   const assignedItems = [
     ...formValues?.assignedItems?.map((a, index) => {
       const isNewSmartLineItem = !a.smartLineItemId
@@ -274,7 +273,10 @@ export const parseWODetailValuesToPayload = formValues => {
       return assignedItem
     }),
   ]
+
   return {
+    cancel: formValues?.cancel?.value,
+    ...(formValues?.cancel.value === 35 && { status: 35 }),
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
@@ -285,6 +287,10 @@ export const parseWODetailValuesToPayload = formValues => {
 
 export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
   const defaultValues = {
+    cancel: {
+      value: '',
+      label: 'Select',
+    },
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
@@ -360,6 +366,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     })
   }
   return {
+    cancel: formValues.cancel?.value,
     workOrderStartDate: formValues.workOrderStartDate,
     workOrderExpectedCompletionDate: formValues.workOrderExpectedCompletionDate,
     invoiceAmount: formValues.invoiceAmount,
