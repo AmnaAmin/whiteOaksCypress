@@ -241,9 +241,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const onSubmit = useCallback(
     async formData => {
       let formattedPayload = userMangtPayload(formData)
-      if (isVendor) {
-        formattedPayload = { ...formattedPayload, vendorId: formattedPayload?.vendorId?.value }
-      }
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
