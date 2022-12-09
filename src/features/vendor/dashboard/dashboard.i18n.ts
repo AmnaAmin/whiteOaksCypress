@@ -14,6 +14,13 @@ export const dashboard = {
         trade: 'Trade',
         dueDateWO: 'Due Date WO',
         expectedPayment: 'Expected Payment',
+
+        // Expiration Message
+        licenseInsuranceExpirationMessage:
+          'Your license & insurance has expired, to reactivate please renew your license.',
+        licenseExpirationMessage: 'Your license has expired, to reactivate please renew your license.',
+        insuranceExpirationMessage: 'Your Insurance has expired, to reactivate please renew your Insurance.',
+        renewNow: 'Renew Now!',
       },
     },
   },
@@ -30,6 +37,12 @@ export const dashboard = {
         trade: 'Comercio',
         dueDateWO: 'Fecha de vencimiento OT',
         expectedPayment: 'Pago esperado',
+
+        // Expiration Message
+        licenseInsuranceExpirationMessage: 'Su licencia y seguro han caducado, para reactivar, renueve su licencia.',
+        licenseExpirationMessage: 'Su licencia ha caducado, para reactivarla renueve su licencia.',
+        insuranceExpirationMessage: 'Su seguro ha vencido, para reactivarlo renueve su seguro.',
+        renewNow: '¡Renovar ahora!',
       },
     },
   },

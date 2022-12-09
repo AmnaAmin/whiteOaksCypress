@@ -13,13 +13,15 @@ import {
 } from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useVendorNext } from 'api/vendor-details'
-import { dateFormat } from 'utils/date-time-utils'
+import { useWatchDocumentFeild } from './hook'
+import { UnSaveFieldMessage } from './change-field-message'
+import { VENDORPROFILE } from './vendor-profile.i18n'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -57,6 +59,19 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     }
   }, [vendor])
 
+  const {
+    isW9DocumentDateChanged,
+    watchW9DocumentFile,
+    isAgreementSignedDateChanged,
+    watchAgreementFile,
+    isAutoInsuranceExpDateChanged,
+    watchInsuranceFile,
+    isCoiGlExpDateChanged,
+    watchCoiGlExpFile,
+    isCoiWcExpDateChanged,
+    watchCoiWcExpFile,
+  } = useWatchDocumentFeild(control, vendor)
+
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
@@ -77,37 +92,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </Text>
         </Flex>
       </a>
-    )
-  }
-
-  const watchW9DocumentDate = useWatch({ control, name: 'w9DocumentDate' })
-  const watchW9DocumentFile = useWatch({ control, name: 'w9Document' })
-  const watchAgreementSignedDate = useWatch({ control, name: 'agreementSignedDate' })
-  const watchAgreementFile = useWatch({ control, name: 'agreement' })
-  const watchAutoInsuranceExpDate = useWatch({ control, name: 'autoInsuranceExpDate' })
-  const watchInsuranceFile = useWatch({ control, name: 'insurance' })
-  const watchCoiGlExpDate = useWatch({ control, name: 'coiGlExpDate' })
-  const watchCoiGlExpFile = useWatch({ control, name: 'coiGlExpFile' })
-  const watchCoiWcExpDate = useWatch({ control, name: 'coiWcExpDate' })
-  const watchCoiWcExpFile = useWatch({ control, name: 'coiWcExpFile' })
-
-  //If the field value Changes value compared to the API value shows the message
-
-  const compireW9DocumentDate = watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string)
-  const compireAgreementSignedDate = watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string)
-  const compireAutoInsuranceExpDate =
-    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string)
-  const compireCoiGlExpDate = watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string)
-  const compireCoiWcExpDate = watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string)
-
-  const UnSaveMessage = () => {
-    return (
-      <HStack>
-        <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />
-        <Text fontStyle="italic" color="#F56565" fontSize="12px">
-          your input has been changed,please save.
-        </Text>
-      </HStack>
     )
   }
 
@@ -172,7 +156,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-            {(!compireW9DocumentDate || watchW9DocumentFile) && <UnSaveMessage />}
+            {(!isW9DocumentDateChanged || watchW9DocumentFile) && <UnSaveFieldMessage />}
           </HStack>
         </HStack>
         <Box mt="30px">
@@ -235,7 +219,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!compireAgreementSignedDate || watchAgreementFile) && <UnSaveMessage />}
+              {(!isAgreementSignedDateChanged || watchAgreementFile) && <UnSaveFieldMessage />}
             </HStack>
           </HStack>
         </Box>
@@ -307,7 +291,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!compireAutoInsuranceExpDate || watchInsuranceFile) && <UnSaveMessage />}
+              {(!isAutoInsuranceExpDateChanged || watchInsuranceFile) && <UnSaveFieldMessage />}
             </HStack>
           </HStack>
         </Box>
@@ -369,7 +353,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!compireCoiGlExpDate || watchCoiGlExpFile) && <UnSaveMessage />}
+              {(!isCoiGlExpDateChanged || watchCoiGlExpFile) && <UnSaveFieldMessage />}
             </HStack>
           </HStack>
         </Box>
@@ -431,7 +415,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!compireCoiWcExpDate || watchCoiWcExpFile) && <UnSaveMessage />}
+              {(!isCoiWcExpDateChanged || watchCoiWcExpFile) && <UnSaveFieldMessage />}
             </HStack>
           </HStack>
         </Box>
@@ -448,7 +432,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         justifyContent="end"
       >
         <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
-          Discard Cahnges
+          {t(`${VENDORPROFILE}.discardChanges`)}
         </Button>
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
