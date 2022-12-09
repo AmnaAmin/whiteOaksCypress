@@ -209,6 +209,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#FC8181',
     },
     {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+    {
       pathTo: '/markets',
       title: `${SIDE_NAV}.markets`,
       Icon: BiStats,
@@ -225,13 +231,7 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
-    },
-    {
-      pathTo: '/performance',
-      title: `${SIDE_NAV}.performance`,
-      Icon: BiLineChart,
-      color: '#68D391',
-    },
+    }
   ],
   [UserTypes.admin]: [
     {
@@ -277,6 +277,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#FC8181',
     },
     {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+    {
       pathTo: '/userManager',
       title: `${SIDE_NAV}.userMgmt`,
       Icon: BiUserPlus,
@@ -299,12 +305,6 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
-    },
-    {
-      pathTo: '/performance',
-      title: `${SIDE_NAV}.performance`,
-      Icon: BiLineChart,
-      color: '#68D391',
     },
   ],
 
