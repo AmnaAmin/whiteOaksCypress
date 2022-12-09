@@ -26,7 +26,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     register,
     clearErrors,
     setValue,
-    getValues,
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
