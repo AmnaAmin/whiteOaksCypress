@@ -53,8 +53,8 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
       <InputGroup size="md">
         <Input
           type={password ? 'text' : 'password'}
-          id="password"
-          {...register('password')}
+          id="newPassword"
+          {...register('newPassword')}
           rounded="6px"
           autoComplete="new-password"
           onInput={event => {
@@ -64,6 +64,9 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
               score = 1
             }
             setStrength(score)
+          }}
+          style={{
+            borderLeft: "2.5px solid #4E87F8"
           }}
         />
         <InputRightElement h="40px">

@@ -145,7 +145,7 @@ export const useDeleteUserDetails = () => {
 export const userMangtPayload = (user: any) => {
   const userObj = {
     ...user,
-    newPassword: user.password || '',
+    newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
     vendorId: user.vendorId?.value || '',
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
