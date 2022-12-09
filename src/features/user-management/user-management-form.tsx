@@ -3,6 +3,7 @@ import {
   Checkbox,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -295,6 +296,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               }
             })}
           />
+          <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
         <FormControl w={215}>
