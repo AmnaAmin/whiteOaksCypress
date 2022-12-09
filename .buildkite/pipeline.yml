@@ -29,7 +29,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'dev-IntegrationTests'
-      REACT_APP_SUPERSET_URL: 'https://bi-dev.woaharvest.com'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
   - command:
       - chmod 755 auto/build.sh
@@ -47,7 +47,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'dev'
-      REACT_APP_SUPERSET_URL: 'https://bi-dev.woaharvest.com'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
   - command:
       - chmod 755 auto/build.sh
@@ -65,7 +65,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'qa'
-      REACT_APP_SUPERSET_URL: 'https://bi-dev.woaharvest.com'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
   - command:
       - echo "Bypass master Github Commit Status from QA..."
@@ -87,7 +87,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'qa-IntegrationTests'
-      REACT_APP_SUPERSET_URL: 'https://bi-dev.woaharvest.com'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
   - command:
       - chmod 755 auto/run_tests.sh
@@ -113,7 +113,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'preprod-IntegrationTests'
-      REACT_APP_SUPERSET_URL: 'https://bi-dev.woaharvest.com'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
   - wait
 
@@ -137,7 +137,7 @@ steps:
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'preprod'
-      REACT_APP_SUPERSET_URL: 'https://bi-dev.woaharvest.com'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
   - wait
 
