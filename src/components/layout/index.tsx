@@ -49,8 +49,10 @@ export const Layout: React.FC = props => {
                   {menu?.map(item => (
                     <>
                       {
-                        (isInternalAdminUser && item.title === `${SIDE_NAV}.userMgmt`) ||
-                        (isPublicAdminUser && item.title === `${SIDE_NAV}.markets`) && (
+                        (
+                          (isInternalAdminUser && item.title === `${SIDE_NAV}.userMgmt`) ||
+                          (isPublicAdminUser && item.title === `${SIDE_NAV}.markets`)
+                        ) && (
                         <Flex
                           alignItems='center'
                           h="43px"
