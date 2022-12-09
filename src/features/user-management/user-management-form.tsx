@@ -196,6 +196,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.email ||
     !formValues?.firstName ||
     !formValues?.lastName ||
+    !formValues?.newPassword ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
