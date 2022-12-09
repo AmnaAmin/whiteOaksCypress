@@ -24,7 +24,7 @@ import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecisi
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 
 const CalenderCard = props => {
@@ -374,7 +374,7 @@ const PaymentInfoTab = props => {
                           <NumberFormat
                             value={field.value}
                             thousandSeparator
-                            customInput={CustomRequiredInput}
+                            customInput={CustomInput}
                             prefix={'$'}
                             disabled={!partialPaymentEnabled}
                             onValueChange={e => {

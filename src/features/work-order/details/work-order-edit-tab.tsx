@@ -143,7 +143,8 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
-  const { completedByVendor } = useFieldEnableDecisionDetailsTab({ workOrder, formValues })
+  const { completedByVendor, workOrderStartDateEnable, workOrderExpectedCompletionDateEnable } =
+    useFieldEnableDecisionDetailsTab({ workOrder, formValues })
 
   // Remaining Items handles
   const {
@@ -347,7 +348,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!workOrderStartDateEnable}
                     variant="required-field"
                     {...register('workOrderStartDate', {
                       required: 'This is required field.',
@@ -367,7 +368,7 @@ const WorkOrderDetailTab = props => {
                     size="md"
                     css={calendarIcon}
                     min={woStartDate as string}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!workOrderExpectedCompletionDateEnable}
                     variant="required-field"
                     {...register('workOrderExpectedCompletionDate', {
                       required: 'This is required field.',
