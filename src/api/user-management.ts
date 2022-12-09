@@ -310,6 +310,7 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('markets', formattedMarkets)
       setValue('states', formattedStates)
       setValue('regions', formattedRegions)
+      setValue('activated', true)
     } else {
       reset(
         parseUserFormData({
