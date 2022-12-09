@@ -145,7 +145,7 @@ export const useDeleteUserDetails = () => {
 export const userMangtPayload = (user: any) => {
   const userObj = {
     ...user,
-    newPassword: user.newPassword || '',
+    newPassword: user.password || '',
     langKey: user.langKey?.value || '',
     vendorId: user.vendorId?.value || '',
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
@@ -311,6 +311,7 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('states', formattedStates)
       setValue('regions', formattedRegions)
       setValue('activated', true)
+      setValue('langKey', languageOptions[0])
     } else {
       reset(
         parseUserFormData({
