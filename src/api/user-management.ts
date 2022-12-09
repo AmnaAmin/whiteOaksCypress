@@ -202,7 +202,7 @@ export const useUsersAuthorities = () => {
 export const useAccountTypes = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('account-types', async () => {
-    const response = await client(`lk_value/lookupType/1`, {})
+    const response = await client(`lk_value/lookupType/accountType/active`, {})
     return response?.data
   })
   const options =
