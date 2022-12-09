@@ -76,3 +76,15 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
 }
 
 export default Status
+
+export const PROJECT_STATUS = {
+  new: { value: '7', label: 'NEW' },
+  active: { value: '8', label: 'ACTIVE' },
+  punch: { value: '9', label: 'PUNCH' },
+  invoiced: { value: '11', label: 'INVOICED' },
+  paid: { value: '41', label: 'PAID' },
+  closed: { value: '10', label: 'CLOSED' },
+  cancelled: { value: '33', label: 'CANCELLED' },
+  clientPaid: { value: '72', label: 'CLIENT PAID' },
+  overpayment: { value: '109', label: 'Overpayment' },
+};
