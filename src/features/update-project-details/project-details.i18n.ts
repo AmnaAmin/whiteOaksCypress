@@ -18,6 +18,7 @@ export const project = {
           woaCompletion: 'WOA Completion',
           clientWalkthrough: 'Client Walkthrough',
           clientSignOff: 'Client Sign Off',
+          overrideStatus: 'Override Status',
 
           // Invoicing & Payment
 
@@ -98,6 +99,7 @@ export const project = {
           woaCompletion: 'WOA Fecha de finalización',
           clientWalkthrough: 'Fecha de recorrido del cliente',
           clientSignOff: 'Fecha de cierre del cliente',
+          overrideStatus: 'Anular estado',
 
           // Invoicing & Payment
           invoicingPayment: 'Facturación y pago',
