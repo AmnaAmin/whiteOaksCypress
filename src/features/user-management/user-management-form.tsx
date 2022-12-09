@@ -14,7 +14,7 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
-  useAccountTypes,
+  useActiveAccountTypes,
   useAllManagers,
   useCreateUserMutation,
   useDeleteUserDetails,
@@ -148,7 +148,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
-  const { options: accountTypeOptions } = useAccountTypes()
+  const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: availableManagers } = useAllManagers()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const {

@@ -199,7 +199,7 @@ export const useUsersAuthorities = () => {
   }
 }
 
-export const useAccountTypes = () => {
+export const useActiveAccountTypes = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('account-types', async () => {
     const response = await client(`lk_value/lookupType/accountType/active`, {})
@@ -296,7 +296,7 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { markets } = useMarkets()
   const { regionSelectOptions } = useRegions()
   const { options: allManagersOptions } = useAllManagers()
-  const { options: accountTypeOptions } = useAccountTypes()
+  const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const { options: availableManagers } = useAllManagers()
