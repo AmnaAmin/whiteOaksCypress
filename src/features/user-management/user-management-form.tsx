@@ -58,6 +58,13 @@ const validateState = states => {
   }
   return true
 }
+const validateRegions = regions => {
+  const checkedRegions = regions?.filter(region => region.checked)
+  if (!(checkedRegions && checkedRegions.length > 0)) {
+    return false
+  }
+  return true
+}
 export const BONUS = [
   {
     value: 0,
@@ -177,7 +184,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [isProjectCoordinator, fpmRole])
 
   const showStates = fpmRole?.value === 59
-  // const showRegions = fpmRole?.value === 60;
+  const showRegions = fpmRole?.value === 60;
+
   const noMarketsSelected = !validateMarket(formValues?.markets)
 
   const watchRequiredField =
@@ -188,10 +196,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
-    (showMarkets && noMarketsSelected) ||
     (isVendor && !formValues.vendorId) ||
     (isFPM && (!fpmRole || !formValues?.newTarget)) ||
-    (showStates && !validateState(formValues?.states))
+    (showMarkets && noMarketsSelected) ||
+    (showStates && !validateState(formValues?.states)) ||
+    (showRegions && !validateRegions(formValues?.regions));
 
   const handleChangeAccountType = () => {
     setValue('parentFieldProjectManagerId', null)
@@ -219,6 +228,10 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue(
       'states',
       formValues.states?.map(state => ({ ...state, checked: false })),
+    )
+    setValue(
+      'regions',
+      formValues.regions?.map(region => ({ ...region, checked: false })),
     )
   }
 
@@ -422,7 +435,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </VStack>
       ) : null}
 
-      {/* TODO - check from product and backend, whether states and regions are the same thing */}
       {showStates ? (
         <VStack mt="30px">
           <FormLabel variant="strong-label" size="md" alignSelf="start">
@@ -447,6 +459,40 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         }}
                       >
                         {value.state?.label}
+                      </CheckboxButton>
+                    )
+                  }}
+                />
+              )
+            })}
+          </Flex>
+        </VStack>
+      ) : null}
+
+      {showRegions ? (
+        <VStack mt="30px" alignItems="start">
+          <FormLabel variant="strong-label" size="md" alignSelf="start">
+            {t(`${USER_MANAGEMENT}.modal.regions`)}
+          </FormLabel>
+          <Flex wrap="wrap" gridGap={3}>
+            {formValues?.regions?.map((region, index) => {
+              return (
+                <Controller
+                  name={`regions.${index}`}
+                  control={control}
+                  key={region.value}
+                  render={({ field: { name, onChange, value } }) => {
+                    return (
+                      <CheckboxButton
+                        name={name}
+                        key={region.region.value}
+                        isChecked={region?.checked}
+                        onChange={event => {
+                          const checked = event.target.checked
+                          onChange({ ...region, checked })
+                        }}
+                      >
+                        {value.region?.value}
                       </CheckboxButton>
                     )
                   }}
