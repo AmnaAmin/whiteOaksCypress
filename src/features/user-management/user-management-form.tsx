@@ -190,7 +190,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const showRegions = fpmRole?.value === 60;
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
-
+  const noStatesSelected = !validateState(formValues?.states)
+  const noRegionSelected = !validateRegions(formValues?.regions)
   const watchRequiredField =
     !formValues?.email ||
     !formValues?.firstName ||
@@ -439,10 +440,20 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       ) : null}
 
       {showStates ? (
-        <VStack mt="30px">
-          <FormLabel variant="strong-label" size="md" alignSelf="start">
-            {t(`${USER_MANAGEMENT}.modal.state`)}
-          </FormLabel>
+        <VStack mt="30px" spacing={15} alignItems="start">
+          <Flex alignItems="center">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.state`)}
+            </FormLabel>
+            {noStatesSelected && (
+                <Flex alignItems="center">
+                  <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                  <Text as="span" color="red.400" fontSize="12px">
+                    Select one state atleast
+                  </Text>
+                </Flex>
+              )}
+          </Flex>
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.states?.map((state, index) => {
               return (
@@ -473,10 +484,20 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       ) : null}
 
       {showRegions ? (
-        <VStack mt="30px" alignItems="start">
-          <FormLabel variant="strong-label" size="md" alignSelf="start">
-            {t(`${USER_MANAGEMENT}.modal.regions`)}
-          </FormLabel>
+        <VStack mt="30px" spacing={15} alignItems="start">
+          <Flex alignItems="center">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.regions`)}
+            </FormLabel>
+            {noRegionSelected && (
+                  <Flex alignItems="center">
+                    <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                    <Text as="span" color="red.400" fontSize="12px">
+                      Select one region atleast
+                    </Text>
+                  </Flex>
+              )}
+          </Flex>  
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.regions?.map((region, index) => {
               return (
