@@ -350,7 +350,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="langKey"
             render={({ field }) => (
-              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
+              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions}/>
             )}
           />
         </FormControl>

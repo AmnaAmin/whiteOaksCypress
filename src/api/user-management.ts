@@ -311,6 +311,7 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('states', formattedStates)
       setValue('regions', formattedRegions)
       setValue('activated', true)
+      setValue('langKey', languageOptions[0])
     } else {
       reset(
         parseUserFormData({
