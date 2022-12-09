@@ -24,7 +24,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const isStatusCancelled = projectStatus === STATUS.Cancelled
 
   // Enabled field status on location tab
-  const newActivePunchEnabledFieldStatus = isStatusNew || isStatusActive || isStatusPunch
+  const newActivePunchEnabledFieldStatus =
+    isStatusNew || isStatusActive || isStatusPunch || isStatusClientPaid || isStatusPaid
 
   return {
     isStatusNew,
@@ -45,37 +46,45 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
       isFPM ||
       isStatusClosed ||
       isStatusInvoiced ||
-      isStatusClientPaid ||
+      (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
-      isStatusOverPayment ||
-      isAdmin,
+      isStatusOverPayment,
     isWOACompletionDisabled:
       isStatusClosed ||
       isStatusNew ||
       isStatusActive ||
       isStatusInvoiced ||
-      isStatusClientPaid ||
+      (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientStartDateDisabled:
       isFPM ||
       isStatusClosed ||
       isStatusInvoiced ||
-      isStatusClientPaid ||
+      (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
-      isStatusOverPayment ||
-      !isAdmin,
+      isStatusOverPayment,
     isClientDueDateDisabled:
       isFPM ||
       isStatusClosed ||
       isStatusInvoiced ||
-      isStatusClientPaid ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment,
+    isClientWalkthroughDisabled:
+      isStatusNew ||
+      isStatusActive ||
+      isStatusInvoiced ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment,
+    isClientSignOffDisabled:
+      isStatusNew ||
+      isStatusActive ||
+      (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
       isStatusOverPayment ||
-      !isAdmin,
-    isClientWalkthroughDisabled:
-      isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment || !isAdmin,
-    isClientSignOffDisabled: isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isStatusInvoiced,
 
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
