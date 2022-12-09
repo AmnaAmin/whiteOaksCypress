@@ -3,6 +3,7 @@ import {
   Checkbox,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -14,7 +15,7 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
-  useAccountTypes,
+  useActiveAccountTypes,
   useAllManagers,
   useCreateUserMutation,
   useDeleteUserDetails,
@@ -148,7 +149,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
-  const { options: accountTypeOptions } = useAccountTypes()
+  const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: availableManagers } = useAllManagers()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const {
@@ -166,12 +167,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes } = useViewVendor()
+
   useUserDetails({ form, userInfo })
 
   const formValues = watch()
   const accountType: any = formValues?.accountType
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
+  const isEditUser = !!(user && user.id)
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator'
   const isFPM = accountType?.label === 'Field Project Manager'
@@ -254,7 +257,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     [userInfo, isVendor, addUser, updateUser, userMangtPayload],
   )
 
-  const isEditUser = !!(user && user.id)
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -274,7 +276,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               isDisabled={isEditUser}
               borderLeft="2.5px solid #4E87F8"
               type="id"
-              placeholder="id"
               {...register('id')}
             />
           </FormControl>
@@ -287,16 +288,22 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             isDisabled={isEditUser}
             borderLeft="2.5px solid #4E87F8"
             type="email"
-            placeholder="Email"
-            {...register('email')}
+            {...register('email', {
+              required: 'This is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email',
+              }
+            })}
           />
+          <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.firstName`)}
           </FormLabel>
-          <Input borderLeft="2.5px solid #4E87F8" type="text" placeholder="First Name" {...register('firstName')} />
+          <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('firstName')} />
         </FormControl>
 
         <FormControl w={215}>
@@ -307,7 +314,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             autoComplete="off"
             borderLeft="2.5px solid #4E87F8"
             type="text"
-            placeholder="Last Name"
             {...register('lastName')}
           />
         </FormControl>
@@ -585,14 +591,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.address`)}
           </FormLabel>
-          <Input borderLeft="2.5px solid #4E87F8" type="text" placeholder="Address" {...register('streetAddress')} />
+          <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('streetAddress')} />
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.city`)}
           </FormLabel>
-          <Input type="text" placeholder="City" {...register('city')} />
+          <Input type="text" {...register('city')} />
         </FormControl>
 
         <FormControl w={215}>
