@@ -180,7 +180,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <Controller
                 control={control}
                 name="overrideProjectStatus"
-                rules={{ required: 'This is required' }}
+              
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
