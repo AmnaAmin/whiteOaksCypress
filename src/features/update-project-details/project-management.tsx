@@ -173,14 +173,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.status}>
+            <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.overrideStatus`)}
               </FormLabel>
               <Controller
                 control={control}
                 name="overrideProjectStatus"
-              
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
@@ -193,7 +192,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                         field.onChange(option)
                       }}
                     />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
               />
