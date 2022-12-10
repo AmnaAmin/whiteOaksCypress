@@ -15,7 +15,6 @@ import {
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
-import { useAdminAccessController } from 'utils/redux-common-selectors'
 import { SIDE_NAV } from './sideNav.i18n'
 
 type Menu = {
@@ -429,10 +428,6 @@ export const MENU_ROLE_BASED: Menus = {
 export const useRoleBasedMenu = (): Array<Menu> => {
   const { data } = useAuth()
   const { userTypeLabel } = data?.user as Account
-  const { isPublicAdminUser } = useAdminAccessController()
-  if(isPublicAdminUser) {
-    return MENU_ROLE_BASED['publicAdmin']
-  }
   return MENU_ROLE_BASED[userTypeLabel] || []
 }
 
