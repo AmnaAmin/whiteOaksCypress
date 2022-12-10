@@ -196,7 +196,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.email ||
     !formValues?.firstName ||
     !formValues?.lastName ||
-    !formValues?.newPassword ||
+    (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
@@ -319,7 +319,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       </HStack>
 
       <HStack mt="30px">
-        <PasswordField errors={errors} register={register} />
+        <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
       </HStack>
 
       <HStack mt="30px" spacing={15}>
