@@ -10,12 +10,10 @@ import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
 import { BiChevronDown } from 'react-icons/bi'
-import { useAdminAccessController } from 'utils/redux-common-selectors'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const menu = useRoleBasedMenu()
-  const { isPublicAdminUser, isInternalAdminUser } = useAdminAccessController()
   const { t } = useTranslation()
 
   return (
@@ -48,11 +46,7 @@ export const Layout: React.FC = props => {
                 <Stack align="start" spacing={3}>
                   {menu?.map(item => (
                     <>
-                      {
-                        (
-                          (isInternalAdminUser && item.title === `${SIDE_NAV}.userMgmt`) ||
-                          (isPublicAdminUser && item.title === `${SIDE_NAV}.markets`)
-                        ) && (
+                      {item.title === `${SIDE_NAV}.userMgmt` && (
                         <Flex
                           alignItems='center'
                           h="43px"
