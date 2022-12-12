@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   HStack,
@@ -47,13 +47,6 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
-  const [watchChanges, setWatchChanges] = useState(false)
-
-  const WatchChangeFields = isLicenseChanged => {
-    useEffect(() => {
-      setWatchChanges(isLicenseChanged)
-    }, [isLicenseChanged])
-  }
 
   const {
     formState: { errors },
@@ -120,7 +113,6 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
       <VStack align="start" h="470px" spacing="15px" overflow="auto">
         {licenseFields.map((license, index) => {
           const isLicenseChanged = checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index])
-          WatchChangeFields(isLicenseChanged)
 
           return (
             <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
@@ -241,11 +233,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         justifyContent="end"
         borderTop="2px solid #E2E8F0"
       >
-        {!!watchChanges && (
-          <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
-            {t(`${VENDORPROFILE}.discardChanges`)}
-          </Button>
-        )}
+        <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
+          {t(`${VENDORPROFILE}.discardChanges`)}
+        </Button>
+
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
