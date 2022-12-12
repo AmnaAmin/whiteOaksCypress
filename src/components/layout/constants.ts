@@ -15,7 +15,6 @@ import {
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
-import { useAdminAccessController } from 'utils/redux-common-selectors'
 import { SIDE_NAV } from './sideNav.i18n'
 
 type Menu = {
@@ -209,6 +208,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#FC8181',
     },
     {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+    {
       pathTo: '/markets',
       title: `${SIDE_NAV}.markets`,
       Icon: BiStats,
@@ -225,13 +230,7 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
-    },
-    {
-      pathTo: '/performance',
-      title: `${SIDE_NAV}.performance`,
-      Icon: BiLineChart,
-      color: '#68D391',
-    },
+    }
   ],
   [UserTypes.admin]: [
     {
@@ -277,6 +276,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#FC8181',
     },
     {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+    {
       pathTo: '/userManager',
       title: `${SIDE_NAV}.userMgmt`,
       Icon: BiUserPlus,
@@ -299,12 +304,6 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
-    },
-    {
-      pathTo: '/performance',
-      title: `${SIDE_NAV}.performance`,
-      Icon: BiLineChart,
-      color: '#68D391',
     },
   ],
 
@@ -429,10 +428,6 @@ export const MENU_ROLE_BASED: Menus = {
 export const useRoleBasedMenu = (): Array<Menu> => {
   const { data } = useAuth()
   const { userTypeLabel } = data?.user as Account
-  const { isPublicAdminUser } = useAdminAccessController()
-  if(isPublicAdminUser) {
-    return MENU_ROLE_BASED['publicAdmin']
-  }
   return MENU_ROLE_BASED[userTypeLabel] || []
 }
 

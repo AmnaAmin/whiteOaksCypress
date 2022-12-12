@@ -21,6 +21,10 @@ export type State = {
   modifiedBy: string
   modifiedDate: string
 }
+export type Region = {
+  value: string
+  label: string
+}
 
 export type User = {
   id: number

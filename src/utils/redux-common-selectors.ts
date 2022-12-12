@@ -12,6 +12,7 @@ type UserRoles = {
   isOperations: boolean
   isClientManager: boolean
   isConstructionOperations: boolean
+  isOpsOrAdmin: boolean
 }
 
 enum UserTypes {
@@ -42,19 +43,7 @@ export const useUserRolesSelector = (): UserRoles => {
     isOperations: userType === UserTypes.operations,
     isClientManager: userType === UserTypes.clientManager,
     isConstructionOperations: userType === UserTypes.constructionOperations,
-  }
-}
-
-// This is temporary work until we ship out complete admin portal
-export const useAdminAccessController = (): any => {
-  const { data } = useAuth()
-  const { login } = data?.user as Account
-  const {
-    isAdmin,
-  } = useUserRolesSelector()
-  return {
-    isInternalAdminUser: isAdmin && login === "admin@test1.com",
-    isPublicAdminUser: isAdmin && login !== "admin@test1.com",
+    isOpsOrAdmin: userType === UserTypes.admin || userType === UserTypes.operations,
   }
 }
 

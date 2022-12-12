@@ -326,6 +326,7 @@ export const parseFormValuesFromAPIData = ({
     clientDueDate: project.clientDueDate as string,
     clientWalkthroughDate: project.clientWalkthroughDate as string,
     clientSignOffDate: project.clientSignoffDate as string,
+    overrideProjectStatus: '',
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -413,6 +414,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
+    overrideProjectStatus: formValues.overrideProjectStatus?.value,
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
