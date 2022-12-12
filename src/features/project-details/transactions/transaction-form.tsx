@@ -736,6 +736,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 transaction={transaction}
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
+                selectedTransactionId={selectedTransactionId}
               />
             </Flex>
           ) : (

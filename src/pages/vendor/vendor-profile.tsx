@@ -16,7 +16,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
   parseCreateVendorFormToAPIData,
@@ -27,14 +27,17 @@ import {
   parseVendorFormDataToAPIData,
   prepareVendorDocumentObject,
   useCreateVendorMutation,
+  useFetchVendorWorkOrders,
   usePaymentMethods,
   useSaveVendorDetails,
   useVendorProfile,
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { ExpirationAlertMessage } from 'features/vendor-profile/expiration-alert-message'
+import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 
 type Props = {
+  vendorId?: number | string | undefined
   vendorProfileData?: VendorProfile
   onClose?: () => void
   refetch?: () => void
@@ -61,6 +64,7 @@ export const validateMarket = markets => {
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
+  const { isVendor } = useUserRolesSelector()
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -69,6 +73,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
   const { mutate: createVendor } = useCreateVendorMutation()
+  const {
+    vendorProjects,
+    isFetching: isProjectsFetching,
+    isLoading: isProjectsLoading,
+  } = useFetchVendorWorkOrders(props.vendorId)
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
@@ -86,6 +95,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   useEffect(() => {
     setReachTabIndex(index => (tabIndex > index ? tabIndex : index))
   }, [tabIndex])
+
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
       if (vendorProfileData?.id) {
@@ -219,6 +229,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {t('market')}
               </Tab>
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+              {!isVendor && <Tab>{t('Projects')}</Tab>}
             </TabList>
 
             <TabPanels mt="31px">
@@ -280,6 +291,36 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   />
                 )}
               </TabPanel>
+              <TabPanel p="0px">
+                {tabIndex === 3 && (
+                  <TradeList
+                    isActive={tabIndex === 3}
+                    vendorProfileData={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                )}
+              </TabPanel>
+              <TabPanel p="0px">
+                {tabIndex === 4 && (
+                  <MarketList
+                    isActive={tabIndex === 4}
+                    vendorProfileData={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                )}
+              </TabPanel>
+              {!isVendor && (
+                <TabPanel p="0px">
+                  {tabIndex === 5 && (
+                    <VendorProjects
+                      isFetching={isProjectsFetching}
+                      isLoading={isProjectsLoading}
+                      vendorProjects={vendorProjects}
+                      onClose={props.onClose}
+                    />
+                  )}
+                </TabPanel>
+              )}
               {/* <TabPanel p="0px">
               <Box overflow="auto">
               <AuditLogs

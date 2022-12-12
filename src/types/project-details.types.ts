@@ -24,6 +24,7 @@ type ProjectManagementValues = {
   clientDueDate: string | null
   clientWalkthroughDate: string | null
   clientSignOffDate: string | null
+  overrideProjectStatus: SelectOption | null
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -110,6 +111,7 @@ export type ProjectDetailsAPIPayload = {
   clientStartDate: string | null
   clientDueDate: string | null
   clientWalkthroughDate: string | null
+  overrideProjectStatus: SelectOption | null
 
   // invoicing and payment payload
   sowOriginalContractAmount: number | null
@@ -199,7 +201,6 @@ export type ProjectDetailsAPIPayload = {
   profitPercentage: number | null
   revenue: number | null
   newPartialPayment: number | null
-  overrideProjectStatus: string | null
   property: {
     streetAddress: string | null
     city: string | null

@@ -7,7 +7,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const { isFPM, isProjectCoordinator, isDoc, isAccounting } = useUserRolesSelector()
+  const { isFPM, isProjectCoordinator, isDoc, isAccounting, isAdmin } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -24,7 +24,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const isStatusCancelled = projectStatus === STATUS.Cancelled
 
   // Enabled field status on location tab
-  const newActivePunchEnabledFieldStatus = isStatusNew || isStatusActive || isStatusPunch
+  const newActivePunchEnabledFieldStatus =
+    isStatusNew || isStatusActive || isStatusPunch || isStatusClientPaid || isStatusPaid
 
   return {
     isStatusNew,
@@ -42,22 +43,48 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isClientSignOffDateRequired: isStatusClosed,
 
     isWOAStartDisabled:
-      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM ||
+      isStatusClosed ||
+      isStatusInvoiced ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment,
     isWOACompletionDisabled:
       isStatusClosed ||
       isStatusNew ||
       isStatusActive ||
       isStatusInvoiced ||
-      isStatusClientPaid ||
+      (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientStartDateDisabled:
-      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM ||
+      isStatusClosed ||
+      isStatusInvoiced ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment,
     isClientDueDateDisabled:
-      isFPM || isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isFPM ||
+      isStatusClosed ||
+      isStatusInvoiced ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment,
     isClientWalkthroughDisabled:
-      isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
-    isClientSignOffDisabled: isStatusNew || isStatusActive || isStatusClientPaid || isStatusPaid || isStatusOverPayment,
+      isStatusNew ||
+      isStatusActive ||
+      isStatusInvoiced ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment,
+    isClientSignOffDisabled:
+      isStatusNew ||
+      isStatusActive ||
+      (isStatusClientPaid && !isAdmin) ||
+      isStatusPaid ||
+      isStatusOverPayment ||
+      isStatusInvoiced,
 
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
@@ -79,18 +106,22 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed || isFPM,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
-    isClientDisabled: isAllTimeDisabled,
+    isClientDisabled: !isAdmin,
 
     // Location Form fields states
-    isAddressDisabled: isAllTimeDisabled,
-    isCityDisabled: isAllTimeDisabled,
-    isStateDisabled: isAllTimeDisabled,
-    isZipDisabled: isAllTimeDisabled,
-    isMarketDisabled: isAllTimeDisabled,
+    isAddressDisabled: !isAdmin,
+    isCityDisabled: !isAdmin,
+    isStateDisabled: !isAdmin,
+    isZipDisabled: !isAdmin,
+    isMarketDisabled: !isAdmin,
     isGateCodeDisabled:
-      isFPM || isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+      isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
+        ? !newActivePunchEnabledFieldStatus
+        : isAllTimeDisabled,
     isLockBoxCodeDisabled:
-      isFPM || isDoc || isProjectCoordinator || isAccounting ? !newActivePunchEnabledFieldStatus : isAllTimeDisabled,
+      isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
+        ? !newActivePunchEnabledFieldStatus
+        : isAllTimeDisabled,
   }
 }
 

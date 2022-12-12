@@ -12,6 +12,7 @@ type UserRoles = {
   isOperations: boolean
   isClientManager: boolean
   isConstructionOperations: boolean
+  isOpsOrAdmin: boolean
 }
 
 enum UserTypes {
@@ -42,6 +43,7 @@ export const useUserRolesSelector = (): UserRoles => {
     isOperations: userType === UserTypes.operations,
     isClientManager: userType === UserTypes.clientManager,
     isConstructionOperations: userType === UserTypes.constructionOperations,
+    isOpsOrAdmin: userType === UserTypes.admin || userType === UserTypes.operations,
   }
 }
 

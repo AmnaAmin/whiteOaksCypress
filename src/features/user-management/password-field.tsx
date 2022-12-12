@@ -14,7 +14,11 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import zxcvbn from 'zxcvbn'
 import { USER_MANAGEMENT } from './user-management.i8n'
 
-export const PasswordField: React.FC<{ errors: any; register: any }> = ({ register, errors }) => {
+export const PasswordField: React.FC<{ errors: any; register: any; isRequired: boolean }> = ({
+  register,
+  errors,
+  isRequired,
+}) => {
   const [password, setPassword] = useState(false)
   const { t } = useTranslation()
 
@@ -53,9 +57,10 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
       <InputGroup size="md">
         <Input
           type={password ? 'text' : 'password'}
-          id="password"
-          {...register('password')}
+          id="newPassword"
+          {...register('newPassword')}
           rounded="6px"
+          autoComplete="new-password"
           onInput={event => {
             const value = event.currentTarget.value
             let score = zxcvbn(value).score
@@ -63,6 +68,9 @@ export const PasswordField: React.FC<{ errors: any; register: any }> = ({ regist
               score = 1
             }
             setStrength(score)
+          }}
+          style={{
+            borderLeft: isRequired ? '2.5px solid #4E87F8' : '',
           }}
         />
         <InputRightElement h="40px">

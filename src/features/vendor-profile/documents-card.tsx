@@ -18,7 +18,6 @@ import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
-import { useVendorNext } from 'api/vendor-details'
 import { useWatchDocumentFeild } from './hook'
 import { UnSaveFieldMessage } from './change-field-message'
 import { VENDORPROFILE } from './vendor-profile.i18n'
@@ -52,7 +51,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     reset,
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
-  const { disableDocumentsNext } = useVendorNext({ control, documents })
+
   useEffect(() => {
     if (!vendor) {
       setChangeDateFields([])
@@ -129,7 +128,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               <Controller
                 name="w9Document"
                 control={control}
-                rules={{ required: documents.w9DocumentUrl ? '' : isActive && 'This is required field' }}
                 render={({ field, fieldState }) => {
                   return (
                     <VStack alignItems="baseline">
@@ -439,13 +437,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             Cancel
           </Button>
         )}
-        <Button
-          disabled={disableDocumentsNext}
-          type="submit"
-          data-testid="saveDocumentCards"
-          variant="solid"
-          colorScheme="brand"
-        >
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
           {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>

@@ -44,6 +44,7 @@ type TransactionAmountFormProps = {
   transaction?: ChangeOrderType
   isMaterialsLoading?: boolean
   setMaterialsLoading?: (value) => void
+  selectedTransactionId?: string | number | undefined
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
@@ -51,6 +52,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   transaction: changeOrder,
   isMaterialsLoading,
   setMaterialsLoading,
+  selectedTransactionId,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -68,6 +70,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
     onOpen: onDeleteConfirmationModalOpen,
+  } = useDisclosure()
+
+  const {
+    isOpen: isReplaceMaterialUploadOpen,
+    onClose: onReplaceMaterialUploadClose,
+    onOpen: onReplaceMaterialUploadOpen,
   } = useDisclosure()
 
   const transaction = useWatch({ name: 'transaction', control })
@@ -106,7 +114,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
-
+  const isEditMaterialTransaction =
+    [TransactionTypeValues.material].includes(values?.transactionType?.value) &&
+    !!selectedTransactionId &&
+    transaction?.length > 0
   const { formattedAmount: totalAmount } = useTotalAmount(control)
 
   const toggleAllCheckboxes = useCallback(
@@ -182,6 +193,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     })
   }
 
+  const openFileDialog = () => {
+    if (inputRef.current) {
+      inputRef.current.click()
+    }
+    onReplaceMaterialUploadClose()
+  }
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1
 
   return (
@@ -298,7 +315,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           )}
 
           {!isApproved &&
-            (document ? (
+            (document && !document.s3Url ? (
               <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
                 <HStack spacing="5px" h="31px" padding="10px" align="center">
                   <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
@@ -320,8 +337,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             ) : (
               <Button
                 onClick={e => {
-                  if (inputRef.current) {
-                    inputRef.current.click()
+                  if (isEditMaterialTransaction) {
+                    onReplaceMaterialUploadOpen()
+                  } else {
+                    if (inputRef.current) {
+                      inputRef.current.click()
+                    }
                   }
                 }}
                 leftIcon={<BiFile />}
@@ -520,6 +541,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         isOpen={isDeleteConfirmationModalOpen}
         onClose={onDeleteConfirmationModalClose}
         onConfirm={deleteRows}
+      />
+      <ConfirmationBox
+        title={t(`${TRANSACTION}.confirmationTitle`)}
+        content={t(`${TRANSACTION}.confirmationMessageMaterialAttachment`)}
+        isOpen={isReplaceMaterialUploadOpen}
+        onClose={onReplaceMaterialUploadClose}
+        onConfirm={openFileDialog}
       />
     </>
   )

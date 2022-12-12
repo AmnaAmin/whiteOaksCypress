@@ -11,6 +11,7 @@ export enum UserTypes {
   operations = 'Operational',
   clientManager = 'Client Manager',
   constructionOperations = 'Construction Operations',
+  publicAdmin = 'publicAdmin',
 }
 
 export type Account = {

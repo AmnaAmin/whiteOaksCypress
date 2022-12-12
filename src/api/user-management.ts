@@ -4,10 +4,12 @@ import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { isDefined } from 'utils'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
+import { parseRegionsAPIDataToFormValues } from 'utils/regions'
 import { parseStatesAPIDataToFormValues } from 'utils/states'
-import { useMarkets, useStates } from './pc-projects'
+import { useMarkets, useRegions, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
 
 export const useUserManagement = () => {
@@ -150,9 +152,11 @@ export const userMangtPayload = (user: any) => {
     parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
     markets: user.markets?.filter(market => market.checked) || [],
     states: user.states?.filter(state => state.checked) || [],
+    regions: user.regions?.filter(region => region.checked).map(region => region.region.label) || [],
     stateId: user.state?.id || '',
+    fpmStateId: user.accountType?.label === 'Field Project Manager' ? user.state?.id : '',
     userType: user.accountType?.value,
-    ignoreQuota: user.ignoreQuota?.value || '',
+    ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.value || '',
   }
   delete userObj.state
@@ -195,10 +199,10 @@ export const useUsersAuthorities = () => {
   }
 }
 
-export const useAccountTypes = () => {
+export const useActiveAccountTypes = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('account-types', async () => {
-    const response = await client(`lk_value/lookupType/1`, {})
+    const response = await client(`lk_value/lookupType/accountType/active`, {})
     return response?.data
   })
   const options =
@@ -257,6 +261,8 @@ const parseUserFormData = ({
   userInfo,
   stateOptions,
   markets,
+  states,
+  regions,
   allManagersOptions,
   accountTypeOptions,
   viewVendorsOptions,
@@ -267,6 +273,8 @@ const parseUserFormData = ({
   return {
     ...userInfo,
     markets: markets || [],
+    states: states || [],
+    regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
@@ -286,24 +294,32 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { setValue, reset } = form
   const { stateSelectOptions: stateOptions } = useStates()
   const { markets } = useMarkets()
+  const { regionSelectOptions } = useRegions()
   const { options: allManagersOptions } = useAllManagers()
-  const { options: accountTypeOptions } = useAccountTypes()
+  const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const { options: availableManagers } = useAllManagers()
 
+  const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
+  const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
+  const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.states || [])
+
   useEffect(() => {
     if (!userInfo) {
-      const formattedMarkets = parseMarketAPIDataToFormValues(markets, [])
-      const formattedStates = parseStatesAPIDataToFormValues(stateOptions)
       setValue('markets', formattedMarkets)
       setValue('states', formattedStates)
+      setValue('regions', formattedRegions)
+      setValue('activated', true)
+      setValue('langKey', languageOptions[0])
     } else {
       reset(
         parseUserFormData({
           userInfo,
           stateOptions,
-          markets: parseMarketAPIDataToFormValues(markets, userInfo.markets),
+          markets: formattedMarkets,
+          states: formattedStates,
+          regions: formattedRegions,
           allManagersOptions,
           accountTypeOptions,
           viewVendorsOptions,
@@ -318,6 +334,7 @@ export const useUserDetails = ({ form, userInfo }) => {
     userInfo,
     stateOptions?.length,
     markets?.length,
+    regionSelectOptions?.length,
     allManagersOptions?.length,
     accountTypeOptions?.length,
     viewVendorsOptions?.length,

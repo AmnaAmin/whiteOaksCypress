@@ -67,6 +67,7 @@ i18n.use(initReactI18next).init({
         overview: 'Overview',
         WOpaid: 'WO Paid',
         paid: 'Paid',
+        active: 'Active',
         paidSmall: 'Paid',
         January: 'January',
         Februray: 'Februray',
@@ -421,7 +422,7 @@ i18n.use(initReactI18next).init({
         invoiceBackDate: 'Invoice Back Date',
 
         // work order details
-        cancelWorkOrder: 'cancel Work Order',
+        cancelWorkOrder: 'Cancel Work Order',
         vendorName: 'Vendor Name',
         vendorType: 'Vendor Type',
         phoneNo: 'Phone No',
@@ -610,6 +611,7 @@ i18n.use(initReactI18next).init({
         overview: 'INFORMACIÓN GENERAL',
         WOpaid: 'WO Pagado',
         paid: 'Pagado',
+        active: 'Activa',
         paidSmall: 'Pagado',
         January: 'Enero',
         Februray: 'Febrero',

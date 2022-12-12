@@ -86,8 +86,8 @@ describe('Work Order modal showing work order specific details', () => {
     })
 
     expect(screen.getByTestId('showMarkAllIsComplete')).toHaveAttribute('data-checked')
-    expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('checked')
-    expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('checked')
+    expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
   })
 
   test('Verify work order details in completed state', async () => {

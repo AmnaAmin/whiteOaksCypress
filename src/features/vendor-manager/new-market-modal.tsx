@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,9 +14,10 @@ import {
   Input,
   Divider,
   useToast,
+  FormControl,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
-import { useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
@@ -66,11 +67,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
   const toast = useToast()
   const queryClient = useQueryClient()
   const { stateSelectOptions } = useStates()
-  const [selectValue, setSelectValue] = useState({ label: selectedMarket?.stateName, id: selectedMarket?.id })
 
-  const setAddressInfo = option => {
-    setValue('state', option)
-  }
   const onSubmit = data => {
     const arg = {
       createdBy: data?.createdBy,
@@ -106,9 +103,24 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     name: 'state',
   })
 
+  useEffect(() => {
+    if (selectedMarket) {
+      setValue('state', { label: selectedMarket?.stateName, id: selectedMarket?.stateId })
+      setValue('metroServiceArea', selectedMarket?.metropolitanServiceArea)
+    }
+  }, [selectedMarket])
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          reset()
+        }}
+        size="3xl"
+        isCentered
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalOverlay />
           <ModalContent>
@@ -117,7 +129,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 {selectedMarket ? `ID-${selectedMarket?.id}` : t(`${VENDOR_MANAGER}.newMarket`)}
               </FormLabel>
             </ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton onClick={() => reset()} />
             <ModalBody>
               <HStack spacing="25px" mt="30px">
                 <InformationCard
@@ -157,51 +169,46 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.metroServiceArea`)}
                   </FormLabel>
-                  <Input
-                    {...register('metroServiceArea')}
-                    type="text"
-                    variant="required-field"
-                    w="215px"
-                    defaultValue={selectedMarket?.metropolitanServiceArea}
-                  />
+                  <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" />
                 </Box>
-                <Box w="215px">
+
+                <FormControl w="215px">
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.state`)}
                   </FormLabel>
-                  {selectedMarket && (
-                    <Select
-                      {...register('state')}
-                      options={stateSelectOptions}
-                      // size="md"
-                      value={selectValue}
-                      selectProps={{ isBorderLeft: true }}
-                      onChange={option => {
-                        setAddressInfo(option)
-                        setSelectValue({ label: option.label, id: option.id })
-                      }}
-                    />
-                  )}
-                  {!selectedMarket && (
-                    <Select
-                      {...register('state')}
-                      options={stateSelectOptions}
-                      // size="md"
-                      selectProps={{ isBorderLeft: true }}
-                      onChange={option => {
-                        setAddressInfo(option)
-                      }}
-                    />
-                  )}
-                </Box>
+                  <Controller
+                    control={control}
+                    name="state"
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          {...field}
+                          options={stateSelectOptions}
+                          // size="md"
+                          selectProps={{ isBorderLeft: true }}
+                          onChange={option => {
+                            field.onChange(option)
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </FormControl>
               </HStack>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
               <HStack spacing="16px">
-                <Button variant="outline" colorScheme="brand" onClick={onClose}>
+                <Button
+                  variant="outline"
+                  colorScheme="brand"
+                  onClick={() => {
+                    onClose()
+                    reset()
+                  }}
+                >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button disabled={!metroValue || !stateValue} type="submit" colorScheme="brand">
+                <Button isDisabled={!metroValue || !stateValue} type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>

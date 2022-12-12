@@ -3,6 +3,7 @@ import {
   Checkbox,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -14,7 +15,7 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
-  useAccountTypes,
+  useActiveAccountTypes,
   useAllManagers,
   useCreateUserMutation,
   useDeleteUserDetails,
@@ -54,6 +55,13 @@ const validateMarket = markets => {
 const validateState = states => {
   const checkedStates = states?.filter(state => state.checked)
   if (!(checkedStates && checkedStates.length > 0)) {
+    return false
+  }
+  return true
+}
+const validateRegions = regions => {
+  const checkedRegions = regions?.filter(region => region.checked)
+  if (!(checkedRegions && checkedRegions.length > 0)) {
     return false
   }
   return true
@@ -141,7 +149,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
-  const { options: accountTypeOptions } = useAccountTypes()
+  const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: availableManagers } = useAllManagers()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const {
@@ -159,12 +167,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes } = useViewVendor()
+
   useUserDetails({ form, userInfo })
 
   const formValues = watch()
   const accountType: any = formValues?.accountType
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
+  const isEditUser = !!(user && user.id)
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator'
   const isFPM = accountType?.label === 'Field Project Manager'
@@ -177,21 +187,25 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [isProjectCoordinator, fpmRole])
 
   const showStates = fpmRole?.value === 59
-  // const showRegions = fpmRole?.value === 60;
-  const noMarketsSelected = !validateMarket(formValues?.markets)
+  const showRegions = fpmRole?.value === 60
 
+  const noMarketsSelected = !validateMarket(formValues?.markets)
+  const noStatesSelected = !validateState(formValues?.states)
+  const noRegionSelected = !validateRegions(formValues?.regions)
   const watchRequiredField =
     !formValues?.email ||
     !formValues?.firstName ||
     !formValues?.lastName ||
+    (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
-    (showMarkets && noMarketsSelected) ||
     (isVendor && !formValues.vendorId) ||
     (isFPM && (!fpmRole || !formValues?.newTarget)) ||
-    (showStates && !validateState(formValues?.states))
+    (showMarkets && noMarketsSelected) ||
+    (showStates && !validateState(formValues?.states)) ||
+    (showRegions && !validateRegions(formValues?.regions))
 
   const handleChangeAccountType = () => {
     setValue('parentFieldProjectManagerId', null)
@@ -220,28 +234,27 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       'states',
       formValues.states?.map(state => ({ ...state, checked: false })),
     )
+    setValue(
+      'regions',
+      formValues.regions?.map(region => ({ ...region, checked: false })),
+    )
   }
 
   const onSubmit = useCallback(
     async formData => {
       let formattedPayload = userMangtPayload(formData)
-      if (isVendor) {
-        formattedPayload = { ...formattedPayload, vendorId: formattedPayload?.vendorId?.value }
-      }
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
           onClose()
         },
         onError() {
-          onClose()
+          // onClose()
         },
       })
     },
     [userInfo, isVendor, addUser, updateUser, userMangtPayload],
   )
-
-  const isEditUser = !!(user && user.id)
 
   return (
     <form
@@ -258,13 +271,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             <FormLabel variant="strong-label" size="md">
               {t(`${USER_MANAGEMENT}.modal.id`)}
             </FormLabel>
-            <Input
-              isDisabled={isEditUser}
-              borderLeft="2.5px solid #4E87F8"
-              type="id"
-              placeholder="id"
-              {...register('id')}
-            />
+            <Input isDisabled={isEditUser} borderLeft="2.5px solid #4E87F8" type="id" {...register('id')} />
           </FormControl>
         )}
         <FormControl w={215}>
@@ -275,34 +282,34 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             isDisabled={isEditUser}
             borderLeft="2.5px solid #4E87F8"
             type="email"
-            placeholder="Email"
-            {...register('email')}
+            {...register('email', {
+              required: 'This is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email',
+              },
+            })}
           />
+          <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.firstName`)}
           </FormLabel>
-          <Input borderLeft="2.5px solid #4E87F8" type="text" placeholder="First Name" {...register('firstName')} />
+          <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('firstName')} />
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.lastName`)}
           </FormLabel>
-          <Input
-            autoComplete="off"
-            borderLeft="2.5px solid #4E87F8"
-            type="text"
-            placeholder="Last Name"
-            {...register('lastName')}
-          />
+          <Input autoComplete="off" borderLeft="2.5px solid #4E87F8" type="text" {...register('lastName')} />
         </FormControl>
       </HStack>
 
       <HStack mt="30px">
-        <PasswordField errors={errors} register={register} />
+        <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
       </HStack>
 
       <HStack mt="30px" spacing={15}>
@@ -387,8 +394,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </FormLabel>
             {noMarketsSelected && (
               <Flex alignItems="center">
-                <Icon as={BiErrorCircle} width="8px" height="8px" color="red.400" ml="10px" mr="2px" />
-                <Text as="span" color="red.400" fontSize="8px">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
                   Select one market atleast
                 </Text>
               </Flex>
@@ -423,12 +430,21 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </VStack>
       ) : null}
 
-      {/* TODO - check from product and backend, whether states and regions are the same thing */}
       {showStates ? (
-        <VStack mt="30px">
-          <FormLabel variant="strong-label" size="md" alignSelf="start">
-            {t(`${USER_MANAGEMENT}.modal.state`)}
-          </FormLabel>
+        <VStack mt="30px" spacing={15} alignItems="start">
+          <Flex alignItems="center">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.state`)}
+            </FormLabel>
+            {noStatesSelected && (
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one state atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.states?.map((state, index) => {
               return (
@@ -448,6 +464,50 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         }}
                       >
                         {value.state?.label}
+                      </CheckboxButton>
+                    )
+                  }}
+                />
+              )
+            })}
+          </Flex>
+        </VStack>
+      ) : null}
+
+      {showRegions ? (
+        <VStack mt="30px" spacing={15} alignItems="start">
+          <Flex alignItems="center">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.regions`)}
+            </FormLabel>
+            {noRegionSelected && (
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one region atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
+          <Flex wrap="wrap" gridGap={3}>
+            {formValues?.regions?.map((region, index) => {
+              return (
+                <Controller
+                  name={`regions.${index}`}
+                  control={control}
+                  key={region.value}
+                  render={({ field: { name, onChange, value } }) => {
+                    return (
+                      <CheckboxButton
+                        name={name}
+                        key={region.region.value}
+                        isChecked={region?.checked}
+                        onChange={event => {
+                          const checked = event.target.checked
+                          onChange({ ...region, checked })
+                        }}
+                      >
+                        {value.region?.value}
                       </CheckboxButton>
                     )
                   }}
@@ -540,14 +600,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.address`)}
           </FormLabel>
-          <Input borderLeft="2.5px solid #4E87F8" type="text" placeholder="Address" {...register('streetAddress')} />
+          <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('streetAddress')} />
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.city`)}
           </FormLabel>
-          <Input type="text" placeholder="City" {...register('city')} />
+          <Input type="text" {...register('city')} />
         </FormControl>
 
         <FormControl w={215}>
@@ -557,7 +617,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <Controller
             control={control}
             name="state"
-            render={({ field }) => <ReactSelect id="state" {...field} options={stateOptions} />}
+            render={({ field }) => (
+              <ReactSelect
+                id="state"
+                {...field}
+                options={stateOptions}
+                selectProps={{ isBorderLeft: showStates ? true : false }}
+              />
+            )}
           />
         </FormControl>
 
