@@ -42,6 +42,19 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
     watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string)
   const isCoiGlExpDateChanged = watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string)
   const isCoiWcExpDateChanged = watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string)
+
+  const isAllFiledWatch =
+    !isW9DocumentDateChanged ||
+    watchW9DocumentFile ||
+    !isAgreementSignedDateChanged ||
+    watchAgreementFile ||
+    !isAutoInsuranceExpDateChanged ||
+    watchInsuranceFile ||
+    !isCoiGlExpDateChanged ||
+    watchCoiGlExpFile ||
+    !isCoiWcExpDateChanged ||
+    watchCoiWcExpFile
+
   return {
     isW9DocumentDateChanged,
     watchW9DocumentFile,
@@ -53,6 +66,7 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
     watchCoiGlExpFile,
     isCoiWcExpDateChanged,
     watchCoiWcExpFile,
+    isAllFiledWatch,
   }
 }
 

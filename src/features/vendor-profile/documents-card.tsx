@@ -69,6 +69,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     watchCoiGlExpFile,
     isCoiWcExpDateChanged,
     watchCoiWcExpFile,
+    isAllFiledWatch,
   } = useWatchDocumentFeild(control, vendor)
 
   const [, setFileBlob] = React.useState<Blob>()
@@ -429,9 +430,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         alignItems="center"
         justifyContent="end"
       >
-        <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
-          {t(`${VENDORPROFILE}.discardChanges`)}
-        </Button>
+        {isAllFiledWatch && (
+          <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
+            {t(`${VENDORPROFILE}.discardChanges`)}
+          </Button>
+        )}
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
