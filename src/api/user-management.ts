@@ -143,6 +143,14 @@ export const useDeleteUserDetails = () => {
 }
 
 export const userMangtPayload = (user: any) => {
+  const getFpmStateId = () => {
+    return (
+      user.accountType?.label === 'Field Project Manager' &&
+      user.fieldProjectManagerRoleId.value === 59 //Area Manager
+    )
+    ? user.states?.find(state => state.checked === true)?.state?.id
+    : ''
+  }
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -151,14 +159,14 @@ export const userMangtPayload = (user: any) => {
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
     parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
     markets: user.markets?.filter(market => market.checked) || [],
-    states: user.states?.filter(state => state.checked) || [],
     regions: user.regions?.filter(region => region.checked).map(region => region.region.label) || [],
     stateId: user.state?.id || '',
-    fpmStateId: user.accountType?.label === 'Field Project Manager' ? user.state?.id : '',
+    fpmStateId: getFpmStateId(),
     userType: user.accountType?.value,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.value || '',
   }
+  delete userObj.states
   delete userObj.state
   delete userObj.accountType
 
@@ -303,7 +311,7 @@ export const useUserDetails = ({ form, userInfo }) => {
 
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
-  const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.states || [])
+  const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.fpmStateId || [])
 
   useEffect(() => {
     if (!userInfo) {

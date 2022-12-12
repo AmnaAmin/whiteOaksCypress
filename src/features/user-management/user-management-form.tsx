@@ -452,15 +452,20 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   name={`states.${index}`}
                   control={control}
                   key={state.state.id}
-                  render={({ field: { name, onChange, value } }) => {
+                  render={({ field: { name, value } }) => {
                     return (
                       <CheckboxButton
                         name={name}
                         key={value.state.id}
                         isChecked={state?.checked}
                         onChange={event => {
-                          const checked = event.target.checked
-                          onChange({ ...state, checked })
+                          setValue('states', formValues?.states?.map((s) => {
+                            if(s.state.id === value.state.id) {
+                              return { ...s, checked: event.target.checked }
+                            }
+                            return { ...s, checked: false }
+                          }))
+
                         }}
                       >
                         {value.state?.label}
