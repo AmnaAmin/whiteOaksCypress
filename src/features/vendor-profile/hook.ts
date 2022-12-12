@@ -1,36 +1,26 @@
 import { Control, useWatch } from 'react-hook-form'
 import { DocumentsCardFormValues } from 'types/vendor.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { isBefore } from 'date-fns'
 
 export const useDocumentLicenseMessage = ({ data }) => {
-  const currentDate = new Date()
-
-  const Document = [
-    {
-      date: data?.w9DocumentDate,
-    },
-    {
-      date: data?.agreementSignedDate,
-    },
-    {
-      date: data?.autoInsuranceExpirationDate,
-    },
-    {
-      date: data?.coiWcExpirationDate,
-    },
-    {
-      date: data?.coiglExpirationDate,
-    },
+  const DocumentDates = [
+    data?.w9DocumentDate,
+    data?.agreementSignedDate,
+    data?.autoInsuranceExpirationDate,
+    data?.coiWcExpirationDate,
+    data?.coiglExpirationDate,
   ]
 
-  const DocumentDates = Document?.map(value => value.date)
-  const licenseDate = data?.licenseDocuments?.map(value => value.licenseExpirationDate)
+  const expiredLicenseDateProfile = data?.licenseDocuments?.map(value =>
+    isBefore(new Date(value?.licenseExpirationDate), new Date()),
+  )
 
-  const expiredLicenseDate = licenseDate?.filter(value => dateFormat(value) < dateFormat(currentDate)).length
-  const expiredInsuranceDate = DocumentDates?.filter(value => dateFormat(value) < dateFormat(currentDate)).length
+  const expiredInsuranceDateProfile = DocumentDates.map(value => isBefore(new Date(value), new Date()))
+
   return {
-    expiredLicenseDate,
-    expiredInsuranceDate,
+    expiredLicenseDateProfile,
+    expiredInsuranceDateProfile,
   }
 }
 

@@ -9,13 +9,20 @@ import {
   useDisclosure,
   CloseButton,
 } from '@chakra-ui/react'
+import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
+import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { LicenseDocument } from 'types/vendor.types'
-import { useInsuranceLicenseErrorMessage } from './hook'
+import { useInsuranceLicenseErrorMessage } from '../../components/VendorScore/hook'
 
-const CustomAlert: React.FC<{ title: string; tabs: number; onClose: () => void }> = ({ title, tabs, onClose }) => {
+const CustomAlert: React.FC<{ title: string; tabs?: number; onClose?: () => void; data?: any }> = ({
+  title,
+  tabs,
+  onClose,
+  data,
+}) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -28,26 +35,30 @@ const CustomAlert: React.FC<{ title: string; tabs: number; onClose: () => void }
       <AlertDescription display="flex" justifyContent="space-between" w="100%">
         <HStack>
           <FormLabel m={0} color="#E53E3E">
-            {t(`${DASHBOARD}.${title}`)}
+            {t(`${DASHBOARD ? DASHBOARD : VENDORPROFILE}.${title}`)}
           </FormLabel>
-
-          <Button variant="outline" colorScheme="red" ml={3} h="28px" onClick={() => selectTabs(tabs)}>
-            {t(`${DASHBOARD}.renewNow`)}
-          </Button>
+          {!data && (
+            <Button variant="outline" colorScheme="red" ml={3} h="28px" onClick={() => selectTabs(tabs)}>
+              {t(`${DASHBOARD}.renewNow`)}
+            </Button>
+          )}
         </HStack>
-        <CloseButton alignSelf="flex-start" position="relative" onClick={onClose} />
+        {!data && <CloseButton alignSelf="flex-start" position="relative" onClick={onClose} />}
       </AlertDescription>
     </Alert>
   )
 }
 
-export const ExpirationAlertMessage: React.FC<{ insurance: any; license: LicenseDocument[] | undefined }> = ({
-  insurance,
-  license,
-}) => {
+export const ExpirationAlertMessage: React.FC<{
+  insurance?: any
+  license?: LicenseDocument[] | undefined
+  data?: any
+  tabIndex?: number
+}> = ({ insurance, license, data, tabIndex }) => {
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true })
 
   const { expiredInsuranceDate, expiredLicenseDate } = useInsuranceLicenseErrorMessage({ license, insurance })
+  const { expiredInsuranceDateProfile, expiredLicenseDateProfile } = useDocumentLicenseMessage({ data })
 
   return isVisible ? (
     <Box width="70%" mb="16px">
@@ -61,6 +72,14 @@ export const ExpirationAlertMessage: React.FC<{ insurance: any; license: License
 
       {!expiredInsuranceDate && expiredLicenseDate ? (
         <CustomAlert title={'licenseExpirationMessage'} tabs={2} onClose={onClose} />
+      ) : null}
+
+      {expiredInsuranceDateProfile && tabIndex === 1 ? (
+        <CustomAlert title={'insuranceExpirationMessage'} tabs={2} onClose={onClose} data={data} />
+      ) : null}
+
+      {expiredLicenseDateProfile && tabIndex === 2 ? (
+        <CustomAlert title={'licenseExpirationMessage'} data={data} />
       ) : null}
     </Box>
   ) : null

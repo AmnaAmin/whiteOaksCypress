@@ -33,8 +33,8 @@ import {
   useVendorProfile,
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
-import { ExpirationAlertMessage } from 'features/vendor-profile/expiration-alert-message'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
+import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
 
 type Props = {
   vendorId?: number | string | undefined

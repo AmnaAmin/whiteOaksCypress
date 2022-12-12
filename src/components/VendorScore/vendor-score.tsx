@@ -20,7 +20,7 @@ import { LicenseDocument } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
-import { ExpirationAlertMessage } from './expiration-alert-message'
+import { ExpirationAlertMessage } from '../../features/common/expiration-alert-message'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
