@@ -5,6 +5,7 @@ import { vendorProfileHandlers } from './api/vendor-profile/vendor-profile-handl
 import { projectDetailHandlers } from './api/projects/project-details-handlers'
 import { workOrderHandlers } from './api/workorder/work-order-handlers'
 import { projectTypeHandlers } from './api/project-type/project-type-handlers'
+import { creatATicketHandlers } from './api/creat-a-ticket/creat-a-ticket-handlers'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -14,4 +15,5 @@ export const handlers = [
   ...projectDetailHandlers,
   ...workOrderHandlers,
   ...projectTypeHandlers,
+  ...creatATicketHandlers,
 ]

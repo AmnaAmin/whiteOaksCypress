@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   Box,
-  Flex,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -19,6 +18,7 @@ import {
   ISSUE_TYPE_OPTIONS,
   parseSupportFormValuesToAPIPayload,
   SEVERITY_OPTIONS,
+  STATUS_OPTIONS,
   useCreateTicketMutation,
 } from 'api/support'
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -29,31 +29,11 @@ import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import ReactSelect from 'components/form/react-select'
 
-export const CreateATicket = () => {
-  const [fileBlob, setFileBlob] = React.useState<Blob>()
-  const { mutate: createTicket } = useCreateTicketMutation()
-
-  const readFile = (event: any) => {
-    setFileBlob(event.target?.result?.split(',')?.[1])
-  }
-
-  const onSubmit = (formValues: SupportFormValues) => {
-    const attachment: FileAttachment = {
-      newFileName: formValues.attachment?.name ?? '',
-      newFileObject: fileBlob as Blob,
-    }
-
-    const payload = parseSupportFormValuesToAPIPayload(formValues, attachment)
-    createTicket(payload)
-  }
-  return (
-    <Box>
-      <CreateATicketForm onSubmit={onSubmit} readFile={readFile} />
-    </Box>
-  )
+type CreateATicketTypes = {
+  onClose?: () => void
 }
 
-const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }> = ({ onSubmit, readFile }) => {
+export const CreateATicketForm: React.FC<CreateATicketTypes> = ({ onClose }) => {
   const { t } = useTranslation()
   const { email } = useUserProfile() as Account
   const defaultValues = React.useMemo(() => {
@@ -77,6 +57,23 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
   } = useForm<SupportFormValues>({
     defaultValues,
   })
+
+  const [fileBlob, setFileBlob] = React.useState<Blob>()
+  const { mutate: createTicket } = useCreateTicketMutation()
+
+  const readFile = (event: any) => {
+    setFileBlob(event.target?.result?.split(',')?.[1])
+  }
+
+  const onSubmit = (formValues: SupportFormValues) => {
+    const attachment: FileAttachment = {
+      newFileName: formValues.attachment?.name ?? '',
+      newFileObject: fileBlob as Blob,
+    }
+
+    const payload = parseSupportFormValuesToAPIPayload(formValues, attachment)
+    createTicket(payload)
+  }
 
   return (
     <Card py="0">
@@ -128,6 +125,28 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
                         <ReactSelect
                           id="severity"
                           options={SEVERITY_OPTIONS}
+                          {...field}
+                          selectProps={{ isBorderLeft: true }}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )}
+                  />
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.status} w="215px" data-testid="status">
+                  <FormLabel htmlFor="status" variant="strong-label" color="gray.600">
+                    {t('Status')}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="status"
+                    rules={{ required: 'This is required field' }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <ReactSelect
+                          id="status"
+                          options={STATUS_OPTIONS}
                           {...field}
                           selectProps={{ isBorderLeft: true }}
                         />
@@ -207,19 +226,14 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
               }}
             />
           </FormControl>
-          <Flex
-            flexDirection="row-reverse"
-            w="100%"
-            h="100px"
-            mt="100px"
-            alignItems="center"
-            justifyContent="end"
-            borderTop="2px solid #E2E8F0"
-          >
-            <Button type="submit" colorScheme="brand">
+          <HStack w="100%" h="100px" mt="100px" justifyContent="end" borderTop="2px solid #E2E8F0">
+            <Button variant="outline" onClick={onClose} colorScheme="brand">
+              Cancel
+            </Button>
+            <Button type="submit" colorScheme="brand" data-testid="save">
               {t('save')}
             </Button>
-          </Flex>
+          </HStack>
         </form>
       </Box>
     </Card>
