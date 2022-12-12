@@ -19,7 +19,7 @@ import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useWatchDocumentFeild } from './hook'
-import { UnSaveFieldMessage } from './change-field-message'
+import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 
 type DocumentsProps = {
@@ -113,7 +113,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
                 testId="w9DocumentDate"
                 onChange={e => {
-                  if (changedDateFields.includes('w9DocumentDate')) {
+                  if (!changedDateFields.includes('w9DocumentDate')) {
                     setChangeDateFields([...changedDateFields, 'w9DocumentDate'])
                   }
                 }}
@@ -154,7 +154,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-            {(!isW9DocumentDateChanged || watchW9DocumentFile) && <UnSaveFieldMessage />}
+            {(!isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
           </HStack>
         </HStack>
         <Box mt="30px">
@@ -217,7 +217,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isAgreementSignedDateChanged || watchAgreementFile) && <UnSaveFieldMessage />}
+              {(!isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
@@ -289,7 +289,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isAutoInsuranceExpDateChanged || watchInsuranceFile) && <UnSaveFieldMessage />}
+              {(!isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
@@ -351,7 +351,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isCoiGlExpDateChanged || watchCoiGlExpFile) && <UnSaveFieldMessage />}
+              {(!isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
@@ -413,7 +413,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isCoiWcExpDateChanged || watchCoiWcExpFile) && <UnSaveFieldMessage />}
+              {(!isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>

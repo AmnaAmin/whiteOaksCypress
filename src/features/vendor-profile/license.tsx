@@ -25,7 +25,7 @@ import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
-import { UnSaveFieldMessage } from './change-field-message'
+import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 type LicenseProps = {
   vendor: VendorProfile
@@ -215,7 +215,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               </VStack>
               {isLicenseChanged ? (
                 <>
-                  <UnSaveFieldMessage />
+                  <SaveChangedFieldAlert />
                 </>
               ) : null}
             </HStack>

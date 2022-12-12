@@ -60,7 +60,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
 
   return (
     <Box>
-      <ExpirationAlertMessage insurance={defaultData} lecense={vendorEntity} />
+      <ExpirationAlertMessage insurance={defaultData} license={vendorEntity?.licenseDocuments} />
       <Box
         justifyContent="space-evenly"
         display="grid"

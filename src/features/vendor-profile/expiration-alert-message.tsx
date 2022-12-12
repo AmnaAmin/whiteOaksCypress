@@ -1,10 +1,10 @@
 import { Box, Alert, AlertIcon, AlertDescription, FormLabel } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { useDocumentLecenseMessage } from './hook'
+import { useDocumentLicenseMessage } from './hook'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 
 export const ExpirationAlertMessage: React.FC<{ data: any; tabIndex: number }> = ({ data, tabIndex }) => {
-  const { expiredInsuranceDate, expiredLecenseDate } = useDocumentLecenseMessage({ data })
+  const { expiredInsuranceDate, expiredLicenseDate } = useDocumentLicenseMessage({ data })
   const { t } = useTranslation()
 
   return (
@@ -20,7 +20,7 @@ export const ExpirationAlertMessage: React.FC<{ data: any; tabIndex: number }> =
         </Alert>
       ) : null}
 
-      {expiredLecenseDate && tabIndex === 2 ? (
+      {expiredLicenseDate && tabIndex === 2 ? (
         <Alert status="error" rounded={6} h="47px" bg="#FFE4E4">
           <AlertIcon />
           <AlertDescription>

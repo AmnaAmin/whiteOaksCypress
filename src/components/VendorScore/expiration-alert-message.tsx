@@ -12,7 +12,8 @@ import {
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { useInsuranceLecenseErrorMessage } from './hook'
+import { LicenseDocument } from 'types/vendor.types'
+import { useInsuranceLicenseErrorMessage } from './hook'
 
 const CustomAlert: React.FC<{ title: string; tabs: number; onClose: () => void }> = ({ title, tabs, onClose }) => {
   const navigate = useNavigate()
@@ -40,22 +41,25 @@ const CustomAlert: React.FC<{ title: string; tabs: number; onClose: () => void }
   )
 }
 
-export const ExpirationAlertMessage: React.FC<{ insurance: any; lecense: any }> = ({ insurance, lecense }) => {
+export const ExpirationAlertMessage: React.FC<{ insurance: any; license: LicenseDocument[] | undefined }> = ({
+  insurance,
+  license,
+}) => {
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true })
 
-  const { expiredInsuranceDate, expiredLecenseDate } = useInsuranceLecenseErrorMessage({ lecense, insurance })
+  const { expiredInsuranceDate, expiredLicenseDate } = useInsuranceLicenseErrorMessage({ license, insurance })
 
   return isVisible ? (
     <Box width="70%" mb="16px">
-      {expiredInsuranceDate && expiredLecenseDate ? (
+      {expiredInsuranceDate && expiredLicenseDate ? (
         <CustomAlert title={'licenseInsuranceExpirationMessage'} tabs={1} onClose={onClose} />
       ) : null}
 
-      {expiredInsuranceDate && !expiredLecenseDate ? (
+      {expiredInsuranceDate && !expiredLicenseDate ? (
         <CustomAlert title={'insuranceExpirationMessage'} tabs={1} onClose={onClose} />
       ) : null}
 
-      {!expiredInsuranceDate && expiredLecenseDate ? (
+      {!expiredInsuranceDate && expiredLicenseDate ? (
         <CustomAlert title={'licenseExpirationMessage'} tabs={2} onClose={onClose} />
       ) : null}
     </Box>

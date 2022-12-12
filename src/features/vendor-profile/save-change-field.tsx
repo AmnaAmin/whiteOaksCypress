@@ -2,7 +2,7 @@ import { Divider, HStack, Text } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 
-export const UnSaveFieldMessage = () => {
+export const SaveChangedFieldAlert = () => {
   return (
     <HStack>
       <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />

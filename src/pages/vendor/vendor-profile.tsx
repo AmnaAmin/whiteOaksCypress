@@ -291,24 +291,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   />
                 )}
               </TabPanel>
-              <TabPanel p="0px">
-                {tabIndex === 3 && (
-                  <TradeList
-                    isActive={tabIndex === 3}
-                    vendorProfileData={vendorProfileData as VendorProfile}
-                    onClose={props.onClose}
-                  />
-                )}
-              </TabPanel>
-              <TabPanel p="0px">
-                {tabIndex === 4 && (
-                  <MarketList
-                    isActive={tabIndex === 4}
-                    vendorProfileData={vendorProfileData as VendorProfile}
-                    onClose={props.onClose}
-                  />
-                )}
-              </TabPanel>
+
               {!isVendor && (
                 <TabPanel p="0px">
                   {tabIndex === 5 && (

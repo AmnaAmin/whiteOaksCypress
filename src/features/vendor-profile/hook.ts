@@ -2,7 +2,7 @@ import { Control, useWatch } from 'react-hook-form'
 import { DocumentsCardFormValues } from 'types/vendor.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 
-export const useDocumentLecenseMessage = ({ data }) => {
+export const useDocumentLicenseMessage = ({ data }) => {
   const currentDate = new Date()
 
   const Document = [
@@ -24,12 +24,12 @@ export const useDocumentLecenseMessage = ({ data }) => {
   ]
 
   const DocumentDates = Document?.map(value => value.date)
-  const lecenseDate = data?.licenseDocuments?.map(value => value.licenseExpirationDate)
+  const licenseDate = data?.licenseDocuments?.map(value => value.licenseExpirationDate)
 
-  const expiredLecenseDate = lecenseDate?.filter(value => dateFormat(value) < dateFormat(currentDate)).length
+  const expiredLicenseDate = licenseDate?.filter(value => dateFormat(value) < dateFormat(currentDate)).length
   const expiredInsuranceDate = DocumentDates?.filter(value => dateFormat(value) < dateFormat(currentDate)).length
   return {
-    expiredLecenseDate,
+    expiredLicenseDate,
     expiredInsuranceDate,
   }
 }

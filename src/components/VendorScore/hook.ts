@@ -1,13 +1,13 @@
-export const useInsuranceLecenseErrorMessage = ({ insurance, lecense }) => {
+export const useInsuranceLicenseErrorMessage = ({ insurance, license }) => {
   const currentDate = new Date().toISOString()
 
   const insuranceDate = insurance?.map(value => value.date)
-  const lecenseDate = lecense?.licenseDocuments?.map(value => value.licenseExpirationDate)
+  const licenseDate = license?.map(value => value.licenseExpirationDate)
 
   const expiredInsuranceDate = insuranceDate?.filter(value => value < currentDate).length
-  const expiredLecenseDate = lecenseDate?.filter(value => value < currentDate).length
+  const expiredLicenseDate = licenseDate?.filter(value => value < currentDate).length
   return {
     expiredInsuranceDate,
-    expiredLecenseDate,
+    expiredLicenseDate,
   }
 }
