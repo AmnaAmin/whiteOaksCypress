@@ -38,6 +38,7 @@ import {
   useUploadMaterialAttachment,
 } from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
+import NumberFormat from 'react-number-format'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -468,47 +469,59 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         control={control}
                         rules={{
                           required: 'This is required field',
-                          pattern: /^[0-9]+$/,
                         }}
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <Input
-                                {...field}
-                                data-testid={`transaction-amount-${index}`}
-                                size="sm"
-                                placeholder="Add Amount"
-                                readOnly={isApproved}
-                                variant={isApproved ? 'unstyled' : 'required-field'}
-                                autoComplete="off"
-                                value={isApproved ? numeral(Number(field.value)).format('$0,0[.]00') : field.value}
-                                onChange={event => {
-                                  const inputValue = !isNaN(Number(event.currentTarget.value))
-                                    ? Number(event.currentTarget.value)
-                                    : ''
-                                  if (inputValue === '') {
-                                    field.onChange('')
-                                    return
-                                  }
-                                  const transactionTypeId = getValues('transactionType')?.value
-                                  const isRefundMaterial = getValues('refundMaterial')
-                                  const isRefundLateFee = getValues('refundLateFee')
-                                  const isRefundFactoring = getValues('refundFactoring')
-                                  const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring
+                              {!isApproved ? (
+                                <NumberFormat
+                                  data-testid={`transaction-amount-${index}`}
+                                  customInput={Input}
+                                  value={field.value}
+                                  placeholder="Add Amount"
+                                  onChange={e => {
+                                    if (e.currentTarget.value !== '') {
+                                      const transactionTypeId = getValues('transactionType')?.value
+                                      const isRefundMaterial = getValues('refundMaterial')
+                                      const isRefundLateFee = getValues('refundLateFee')
+                                      const isRefundFactoring = getValues('refundFactoring')
+                                      const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring
 
-                                  field.onChange(
-                                    TransactionTypeValues.draw === transactionTypeId ||
-                                      ([
+                                      const defaultNegative = [
+                                        TransactionTypeValues.draw,
                                         TransactionTypeValues.material,
                                         TransactionTypeValues.lateFee,
                                         TransactionTypeValues.factoring,
-                                      ].some(id => id === transactionTypeId) &&
-                                        !isRefund)
-                                      ? -1 * Math.abs(inputValue)
-                                      : inputValue,
-                                  )
-                                }}
-                              />
+                                      ].some(id => id === transactionTypeId)
+
+                                      // if by default its a negative transaction, we arent allowing - by user input.
+                                      const inputValue =
+                                        defaultNegative || isRefund
+                                          ? e.currentTarget.value.replace('-', '')
+                                          : e.currentTarget.value
+
+                                      field.onChange(
+                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
+                                      )
+                                    } else {
+                                      field.onChange('')
+                                    }
+                                  }}
+                                  variant={'required-field'}
+                                  size="sm"
+                                />
+                              ) : (
+                                <Input
+                                  {...field}
+                                  data-testid={`transaction-amount-${index}`}
+                                  size="sm"
+                                  placeholder="Add Amount"
+                                  readOnly={isApproved}
+                                  variant={'unstyles'}
+                                  autoComplete="off"
+                                  value={numeral(Number(field.value)).format('$0,0[.]00')}
+                                />
+                              )}
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
                           )
