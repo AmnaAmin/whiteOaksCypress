@@ -4,9 +4,8 @@ import { NewMarketModal } from 'features/vendor-manager/new-market-modal'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BsPlus } from 'react-icons/bs'
 import { useMarkets } from 'api/vendor-details'
-import { BiExport } from 'react-icons/bi'
+import { BiBookAdd, BiExport } from 'react-icons/bi'
 
 export const Markets = () => {
   const { markets, isLoading } = useMarkets()
@@ -24,7 +23,7 @@ export const Markets = () => {
           <Text fontWeight={600} color="gray.600" fontSize="18px">
             {t(`${VENDOR_MANAGER}.markets`)}
           </Text>
-          <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BsPlus} />} onClick={onDocumentModalOpen}>
+          <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onDocumentModalOpen}>
             {t(`${VENDOR_MANAGER}.newMarket`)}
           </Button>
         </HStack>

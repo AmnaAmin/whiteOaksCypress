@@ -126,7 +126,16 @@ export const Table: React.FC<TableProps> = ({
   }
 
   return (
-    <Stack display="table" minH="100%" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative" zIndex={0}>
+    <Stack
+      display="table"
+      minH="calc(100% - 41px)"
+      w="100%"
+      bg="white"
+      boxShadow="sm"
+      rounded="md"
+      position="relative"
+      zIndex={0}
+    >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
           {getHeaderGroups().map(headerGroup => (
