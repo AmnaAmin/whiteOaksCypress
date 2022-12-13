@@ -27,6 +27,7 @@ import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
+import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -117,6 +118,7 @@ export const ProjectDetails: React.FC = props => {
 
                   {/* Figma update */}
                 </Tab>
+                <Tab>{t('projects.projectDetails.auditLogs')}</Tab>
               </Flex>
 
               <HStack h="50px" w="100%" justifyContent="end">
@@ -207,6 +209,9 @@ export const ProjectDetails: React.FC = props => {
 
               <TabPanel p="0" mt="7px">
                 <ProjectNotes projectId={projectId} />
+              </TabPanel>
+              <TabPanel p="0px" mt="7px">
+                <AuditLogsTable />
               </TabPanel>
             </TabPanels>
           </Tabs>
