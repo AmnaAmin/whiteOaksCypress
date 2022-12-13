@@ -367,7 +367,6 @@ i18n.use(initReactI18next).init({
         insurance: 'Insurance',
         W9Document: 'W9 Document',
         agreementSign: 'Agreement Sign',
-        autoInsurance: 'Auto Insurance',
         generalLiability: 'General Liability',
         workerComp: 'Worker Comp',
 
@@ -925,7 +924,6 @@ i18n.use(initReactI18next).init({
         insurance: 'Seguro',
         W9Document: 'Documento W9',
         agreementSign: 'Signo de acuerdo',
-        autoInsurance: 'Seguro de auto',
         generalLiability: 'Responsabilidad general',
         workerComp: 'Compensación al trabajador',
 
