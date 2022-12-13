@@ -13,9 +13,9 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { AddressInfo, ProjectFormValues } from 'types/project.type'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import { useProjects } from 'api/projects'
@@ -73,6 +73,21 @@ export const AddPropertyInfo: React.FC<{
     setValue('acknowledgeCheck', true)
   }
 
+  // Get all values of Address Info
+  const watchAddress = useWatch({ name: 'streetAddress', control })
+  const watchCity = useWatch({ name: 'city', control })
+  const watchState = useWatch({ name: 'state', control }) 
+  const watchZipCode = useWatch({ name: 'zipCode', control })
+
+  useEffect(() => {
+    setAddressInfo({
+      address: watchAddress || '',
+      city: watchCity || '',
+      state: watchState?.label || '',
+      zipCode: watchZipCode || '',
+    })
+  }, [watchAddress, watchCity, watchState, watchZipCode])
+
   // On Street Address change, set values of City, State and Zip
   const setAddressValues = option => {
     const property = option?.property
@@ -85,13 +100,6 @@ export const AddPropertyInfo: React.FC<{
     setValue('property', property)
     setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
     setValue('state', { label: market?.stateName, value: market?.stateId })
-
-    setAddressInfo({
-      address: property?.streetAddress,
-      city: property?.city,
-      state: market?.state,
-      zipCode: property?.zipCode,
-    })
 
     // Check for duplicate address
     const duplicatedInProjects =
@@ -147,12 +155,12 @@ export const AddPropertyInfo: React.FC<{
                   control={control}
                   name={`streetAddress`}
                   rules={{ required: 'This is required field' }}
-                  render={({ field: { value }, fieldState }) => (
+                  render={({ field, fieldState }) => (
                     <>
                       <CreatableSelect
                         id="streetAddress"
                         options={propertySelectOptions}
-                        selected={value}
+                        selected={field.value}
                         placeholder="Type address here.."
                         onChange={setAddressValues}
                         selectProps={{ isBorderLeft: true }}
@@ -174,7 +182,12 @@ export const AddPropertyInfo: React.FC<{
                 <Input
                   id="city"
                   variant="required-field"
-                  {...register('city', { required: 'This is required field.' })}
+                  {...register('city', {
+                    required: true,
+                    onChange: e => {
+                      setAddressInfo({ ...addressInfo, city: e.target.value })
+                    },
+                  })}
                 />
                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
               </FormControl>
