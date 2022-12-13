@@ -954,12 +954,14 @@ i18n.use(initReactI18next).init({
         language: 'Idioma',
         profilePicture: 'Foto de perfil',
         changePicture: 'Cambia tu foto de perfil',
+
         // Password Page
         password: 'Clave',
         currentPassword: 'Contraseña actual',
         newPassword: 'Nueva contraseña',
         newPasswordConfirmation: 'Nueva confirmación de contraseña',
         passwordStrength: 'Seguridad de la contraseña',
+        
         // Support Page
         createTicket: 'Crear un boleto',
         issueType: 'Tipo de problema',
