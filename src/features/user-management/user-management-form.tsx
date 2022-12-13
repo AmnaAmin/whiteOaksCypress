@@ -187,7 +187,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [isProjectCoordinator, fpmRole])
 
   const showStates = fpmRole?.value === 59
-  const showRegions = fpmRole?.value === 60;
+  const showRegions = fpmRole?.value === 60
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
@@ -205,7 +205,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (isFPM && (!fpmRole || !formValues?.newTarget)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
-    (showRegions && !validateRegions(formValues?.regions));
+    (showRegions && !validateRegions(formValues?.regions))
 
   const handleChangeAccountType = () => {
     setValue('parentFieldProjectManagerId', null)
@@ -271,12 +271,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             <FormLabel variant="strong-label" size="md">
               {t(`${USER_MANAGEMENT}.modal.id`)}
             </FormLabel>
-            <Input
-              isDisabled={isEditUser}
-              borderLeft="2.5px solid #4E87F8"
-              type="id"
-              {...register('id')}
-            />
+            <Input isDisabled={isEditUser} borderLeft="2.5px solid #4E87F8" type="id" {...register('id')} />
           </FormControl>
         )}
         <FormControl w={215}>
@@ -292,7 +287,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Invalid email',
-              }
+              },
             })}
           />
           <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
@@ -309,12 +304,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.lastName`)}
           </FormLabel>
-          <Input
-            autoComplete="off"
-            borderLeft="2.5px solid #4E87F8"
-            type="text"
-            {...register('lastName')}
-          />
+          <Input autoComplete="off" borderLeft="2.5px solid #4E87F8" type="text" {...register('lastName')} />
         </FormControl>
       </HStack>
 
@@ -352,7 +342,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="langKey"
             render={({ field }) => (
-              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions}/>
+              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
             )}
           />
         </FormControl>
@@ -447,13 +437,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               {t(`${USER_MANAGEMENT}.modal.state`)}
             </FormLabel>
             {noStatesSelected && (
-                <Flex alignItems="center">
-                  <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
-                  <Text as="span" color="red.400" fontSize="12px">
-                    Select one state atleast
-                  </Text>
-                </Flex>
-              )}
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one state atleast
+                </Text>
+              </Flex>
+            )}
           </Flex>
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.states?.map((state, index) => {
@@ -496,14 +486,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               {t(`${USER_MANAGEMENT}.modal.regions`)}
             </FormLabel>
             {noRegionSelected && (
-                  <Flex alignItems="center">
-                    <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
-                    <Text as="span" color="red.400" fontSize="12px">
-                      Select one region atleast
-                    </Text>
-                  </Flex>
-              )}
-          </Flex>  
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one region atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
           <Flex wrap="wrap" gridGap={3}>
             {formValues?.regions?.map((region, index) => {
               return (
@@ -633,7 +623,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="state"
             render={({ field }) => (
-              <ReactSelect id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: showStates ? true : false }} />
+              <ReactSelect
+                id="state"
+                {...field}
+                options={stateOptions}
+                selectProps={{ isBorderLeft: showStates ? true : false }}
+              />
             )}
           />
         </FormControl>

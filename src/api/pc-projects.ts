@@ -301,7 +301,7 @@ export const useRegions = () => {
   const regionSelectOptions =
     regions?.map(region => ({
       value: region,
-      label: region
+      label: region,
     })) || []
 
   return {

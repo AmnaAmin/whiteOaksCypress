@@ -48,7 +48,7 @@ export const Layout: React.FC = props => {
                     <>
                       {item.title === `${SIDE_NAV}.userMgmt` && (
                         <Flex
-                          alignItems='center'
+                          alignItems="center"
                           h="43px"
                           w="201px"
                           style={{
@@ -56,17 +56,25 @@ export const Layout: React.FC = props => {
                             borderBottom: '1px solid #EDF2F7',
                             paddingLeft: '8px',
                             marginBottom: '21px',
-                            marginTop: '28px'
+                            marginTop: '28px',
                           }}
                         >
-                          <BiChevronDown color='#718096' style={{ width: '24px', height: '24px' }} />
-                          <Text color='gray.500' as="span" style={{fontWeight: 600, fontSize: '14px', lineHeight: '28px'}}>
+                          <BiChevronDown color="#718096" style={{ width: '24px', height: '24px' }} />
+                          <Text
+                            color="gray.500"
+                            as="span"
+                            style={{ fontWeight: 600, fontSize: '14px', lineHeight: '28px' }}
+                          >
                             {t(`${SIDE_NAV}.administration`)}
                           </Text>
                         </Flex>
                       )}
                       <Box w="201px" key={item.pathTo}>
-                        <SidebarLink pathTo={item.pathTo} title={t(item.title)} icon={<item.Icon color={item.color} />} />
+                        <SidebarLink
+                          pathTo={item.pathTo}
+                          title={t(item.title)}
+                          icon={<item.Icon color={item.color} />}
+                        />
                       </Box>
                     </>
                   ))}

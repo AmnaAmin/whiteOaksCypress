@@ -129,18 +129,17 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 <MenuItem sx={hoverEffect}>
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
-                  <Link
-                    color="gray.600"
-                    fontWeight={400}
-                    fontSize="14px"
-                    target="_blank"
-                    href="https://docs.woaharvest.com/"
-                    title="help"
-                    _hover={{ textDecorationLine: 'none' }}
-                  >
-                    {t('help')}
-                  </Link>
+                <MenuItem
+                  sx={hoverEffect}
+                  as={Link}
+                  color="gray.600"
+                  fontWeight={400}
+                  fontSize="14px"
+                  target="_blank"
+                  href="https://docs.woaharvest.com/"
+                  _hover={{ textDecorationLine: 'none' }}
+                >
+                  {t('help')}
                 </MenuItem>
                 <MenuItem sx={hoverEffect}>
                   <RouterLink to="/support">{t('support')}</RouterLink>

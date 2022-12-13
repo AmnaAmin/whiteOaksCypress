@@ -34,21 +34,23 @@ export const getAPIFilterQueryString = (
       // change to iso format if we have date and value is not specified 0 or 1.
       // Dates will have value 0 or 1 if we have to null check the field
       if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
-        if([
-          'clientStartDate',
-          'clientDueDate',
-          'clientWalkThroughDate',
-          'clientSignoffDate',
-          'expectedPayDate',
-          'workOrderStartDate',
-          'workOrderExpectedCompletionDate',
-          'workOrderDateCompleted',
-          'expectedPaymentDate',
-          'newExpectedCompletionDate'
-        ].includes(filter.id)) {
+        if (
+          [
+            'clientStartDate',
+            'clientDueDate',
+            'clientWalkThroughDate',
+            'clientSignoffDate',
+            'expectedPayDate',
+            'workOrderStartDate',
+            'workOrderExpectedCompletionDate',
+            'workOrderDateCompleted',
+            'expectedPaymentDate',
+            'newExpectedCompletionDate',
+          ].includes(filter.id)
+        ) {
           return {
             ...filter,
-            value: filter.value ? datePickerFormat(filter.value as string) : null,            
+            value: filter.value ? datePickerFormat(filter.value as string) : null,
           }
         }
         return {
