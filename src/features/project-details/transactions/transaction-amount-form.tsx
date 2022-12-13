@@ -468,6 +468,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         control={control}
                         rules={{
                           required: 'This is required field',
+                          pattern: /^[0-9]+$/,
                         }}
                         render={({ field, fieldState }) => {
                           return (
@@ -475,7 +476,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                               <Input
                                 {...field}
                                 data-testid={`transaction-amount-${index}`}
-                                type={isApproved ? 'text' : 'number'}
                                 size="sm"
                                 placeholder="Add Amount"
                                 readOnly={isApproved}
@@ -483,7 +483,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                 autoComplete="off"
                                 value={isApproved ? numeral(Number(field.value)).format('$0,0[.]00') : field.value}
                                 onChange={event => {
-                                  const inputValue = Number(event.currentTarget.value)
+                                  const inputValue = !isNaN(Number(event.currentTarget.value))
+                                    ? Number(event.currentTarget.value)
+                                    : ''
+                                  if (inputValue === '') {
+                                    field.onChange('')
+                                    return
+                                  }
                                   const transactionTypeId = getValues('transactionType')?.value
                                   const isRefundMaterial = getValues('refundMaterial')
                                   const isRefundLateFee = getValues('refundLateFee')
