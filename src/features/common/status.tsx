@@ -87,4 +87,4 @@ export const PROJECT_STATUS = {
   cancelled: { value: '33', label: 'CANCELLED' },
   clientPaid: { value: '72', label: 'CLIENT PAID' },
   overpayment: { value: '109', label: 'Overpayment' },
-};
+}

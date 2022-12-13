@@ -22,8 +22,9 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
         rejectInvoiceCheck={null}
         onSave={null}
         navigateToProjectDetails={null}
-        isWorkOrderUpdating={false} 
-        vendorAddress={vendorAddress}      />
+        isWorkOrderUpdating={false}
+        vendorAddress={vendorAddress}
+      />
     </Modal>,
     {
       wrapper: Providers,

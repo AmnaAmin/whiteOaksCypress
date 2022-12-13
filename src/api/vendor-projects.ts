@@ -134,7 +134,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   // From Vendor Address
   doc.text('From:', rightMarginX, 60)
   doc.setFontSize(12).setFont(baseFont, 'bold')
-  doc.text(truncateWithEllipsisInCenter(workOrder?.companyName), rightMarginX, 65) 
+  doc.text(truncateWithEllipsisInCenter(workOrder?.companyName), rightMarginX, 65)
   doc.setFontSize(12).setFont(baseFont, 'normal')
   doc.text(vendorAddress[0]?.streetAddress, rightMarginX, 70)
   doc.text(vendorAddress[0]?.city + ', ' + vendorAddress[0]?.state + ' ' + vendorAddress[0]?.zipCode, rightMarginX, 75)
