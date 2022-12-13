@@ -73,12 +73,13 @@ export const AddPropertyInfo: React.FC<{
     setValue('acknowledgeCheck', true)
   }
 
-  // Get all values of Address Info
+  // Get all values of Address Info 
   const watchAddress = useWatch({ name: 'streetAddress', control })
   const watchCity = useWatch({ name: 'city', control })
   const watchState = useWatch({ name: 'state', control }) 
   const watchZipCode = useWatch({ name: 'zipCode', control })
 
+  // Set all values of Address Info
   useEffect(() => {
     setAddressInfo({
       address: watchAddress || '',
