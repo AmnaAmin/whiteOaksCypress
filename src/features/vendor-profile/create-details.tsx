@@ -413,7 +413,6 @@ const CreateVendorDetail: React.FC<{
                       <ReactSelect
                         options={PAYMENT_TERMS_OPTIONS}
                         menuPosition="fixed"
-                        maxMenuHeight={80}
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                       />

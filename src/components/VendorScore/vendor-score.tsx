@@ -20,6 +20,7 @@ import { LicenseDocument } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
+import { ExpirationAlertMessage } from '../../features/common/expiration-alert-message'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -58,7 +59,8 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   ].filter(item => item.date)
 
   return (
-    <>
+    <Box>
+      <ExpirationAlertMessage insurance={defaultData} license={vendorEntity?.licenseDocuments} />
       <Box
         justifyContent="space-evenly"
         display="grid"
@@ -146,6 +148,6 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           />
         </Flex>
       </Box>
-    </>
+    </Box>
   )
 }

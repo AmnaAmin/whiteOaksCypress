@@ -230,7 +230,7 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
-    }
+    },
   ],
   [UserTypes.admin]: [
     {
