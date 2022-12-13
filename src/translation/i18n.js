@@ -972,6 +972,7 @@ i18n.use(initReactI18next).init({
         createTicketTitle: 'Crear Ticket',
         createTicketSuccessMessage: 'Ticket creado con éxito.',
         createTicketErrorMessage: 'Crear ticket api causa algún error.',
+        
         // Header
         help: 'Ayudar',
         support: 'Apoyo',
