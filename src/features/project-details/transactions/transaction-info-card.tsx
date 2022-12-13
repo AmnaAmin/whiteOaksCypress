@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, Text } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, Text, Tooltip } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +10,11 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" fontWeight={500} color="gray.500">
-        <Text color="gray.600">{title}</Text>
+        <Tooltip label={title} color="black" placement="top">
+          <Text color="gray.600" noOfLines={1}>
+            {title}
+          </Text>
+        </Tooltip>
         {isLoading ? <BlankSlate size="sm" /> : children}
       </Box>
     </Center>
