@@ -16,11 +16,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFormContext } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
-import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useWatchDocumentFeild } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
+import { useTranslation } from 'react-i18next'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -40,8 +40,10 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
     </Box>
   )
 })
+
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
+  const { t } = useTranslation()
 
   const {
     formState: { errors },
@@ -135,7 +137,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                       <Box>
                         <ChooseFileField
                           name={field.name}
-                          value={field.value?.name ? field.value?.name : 'Choose File'}
+                          value={field.value?.name ? field.value?.name : t('chooseFile')}
                           isError={!!fieldState.error?.message}
                           onChange={(file: any) => {
                             onFileChange(file)
@@ -147,7 +149,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                       </Box>
                       {documents.w9DocumentUrl && (
                         <Box overflow="hidden" top={16}>
-                          {downloadDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
+                          {downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
                         </Box>
                       )}
                     </VStack>
@@ -198,7 +200,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -210,7 +212,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.agreementUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.agreementUrl, 'Agreement Sign', 'agreementLink')}
+                            {downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
                           </Box>
                         )}
                       </VStack>
@@ -270,7 +272,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -282,7 +284,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.insuranceUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
+                            {downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
                           </Box>
                         )}
                       </VStack>
@@ -332,7 +334,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -344,7 +346,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.coiGLExpUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiGLExpUrl, 'General Liability', 'coiGlExpLink')}
+                            {downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
                           </Box>
                         )}
                       </VStack>
@@ -394,7 +396,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -406,7 +408,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.coiWcExpUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
+                            {downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
                           </Box>
                         )}
                       </VStack>
