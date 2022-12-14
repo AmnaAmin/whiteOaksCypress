@@ -11,13 +11,15 @@ export const useDocumentLicenseMessage = ({ data }) => {
     data?.coiglExpirationDate,
   ]
 
-  const currentDate = dateFormat(new Date().toISOString())
+  const currentDate = datePickerFormat(new Date())
 
   const expiredLicenseDateProfile = data?.licenseDocuments
-    ?.map(value => dateFormat(value?.licenseExpirationDate) < currentDate)
+    ?.map(value => (datePickerFormat(value?.licenseExpirationDate) as string) < currentDate!)
     .includes(true)
 
-  const expiredInsuranceDateProfile = DocumentDates.map(value => dateFormat(value) < currentDate).includes(true)
+  const expiredInsuranceDateProfile = DocumentDates.map(
+    value => (datePickerFormat(value) as string) < currentDate!,
+  ).includes(true)
 
   return {
     expiredLicenseDateProfile,
@@ -37,12 +39,21 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
   const watchCoiWcExpDate = useWatch({ control, name: 'coiWcExpDate' })
   const watchCoiWcExpFile = useWatch({ control, name: 'coiWcExpFile' })
 
-  const isW9DocumentDateChanged = watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string)
-  const isAgreementSignedDateChanged = watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string)
+  const isW9DocumentDateChanged =
+    watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string) || watchW9DocumentDate === null
+
+  const isAgreementSignedDateChanged =
+    watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string) || watchAgreementSignedDate === null
+
   const isAutoInsuranceExpDateChanged =
-    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string)
-  const isCoiGlExpDateChanged = watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string)
-  const isCoiWcExpDateChanged = watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string)
+    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string) ||
+    watchAutoInsuranceExpDate === null
+
+  const isCoiGlExpDateChanged =
+    watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string) || watchCoiGlExpDate === null
+
+  const isCoiWcExpDateChanged =
+    watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string) || watchCoiWcExpDate === null
 
   const isAllFiledWatch =
     !isW9DocumentDateChanged ||
@@ -77,9 +88,13 @@ export const checkIsLicenseChanged = (values: any, licenseDocument) => {
   const watchExpiryDate = licenseDocument?.licenseExpirationDate
   const watchExpirationFile = values?.expirationFile
 
-  const isLicenseTypeChanged = watchLicenseType !== values.licenseType
-  const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber
-  const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate)
+  const watchLicenseTypeNot = watchLicenseType !== undefined
+  const watchLicenseNumberNot = watchLicenseNumber !== undefined
+  const watchExpiryDateNot = watchExpiryDate !== undefined
+
+  const isLicenseTypeChanged = watchLicenseType !== values.licenseType && watchLicenseTypeNot
+  const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber && watchLicenseNumberNot
+  const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate) && watchExpiryDateNot
 
   return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || !!watchExpirationFile
 }
