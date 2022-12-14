@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { enUS } from 'date-fns/locale'
 import sub from 'date-fns/sub'
 import { range } from 'lodash'
 import { GenericObjectType } from 'types/common.types'
@@ -79,8 +80,13 @@ monthOptions.unshift({
   year: '-1',
   month: '-1',
 })
+
 export const convertDateTimeFromServer = (date: string) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : null
+}
+
+export const convertDateWithTimeStamp = (date: string) => {
+  return date ? format(new Date(date),  'Pp', { locale: enUS }) : null
 }
 
 export const convertDateTimeToServer = (date: Date) => {
