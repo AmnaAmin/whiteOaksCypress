@@ -228,7 +228,7 @@ export const Table: React.FC<TableProps> = ({
             <Tr>
               <Td colSpan={100} border="0">
                 <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
-                  There is no data to display.
+                  {t('noDataDisplayed')}
                 </Box>
               </Td>
             </Tr>
