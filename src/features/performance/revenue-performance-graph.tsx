@@ -118,7 +118,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             <XAxis
               dataKey={['This Month', 'Last Month'].includes(monthCheck?.label) ? 'centerMonth' : 'month'}
               axisLine={false}
-              interval={['This Month', 'Last Month'].includes(monthCheck?.label) ? 70 : 5}
+              interval={['This Month', 'Last Month'].includes(monthCheck?.label) ? 0 : 5}
               tickLine={false}
               tick={{
                 fill: '#4A5568',
