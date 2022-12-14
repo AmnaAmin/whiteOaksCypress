@@ -26,21 +26,8 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
           </Flex>
         </Flex>
       ) : (
-        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
-          <WrapItem justifyContent="center" mb={1}>
-            <Avatar size="sm" bg="blackAlpha.200" />
-          </WrapItem>
-          <Flex justifyContent="center" color="gray.600">
-            <Box maxW="150px" whiteSpace={'nowrap'} overflow="hidden" textOverflow={'ellipsis'}>
-              {userNote.createdBy}
-            </Box>
-          </Flex>
-          <Flex justifyContent="center" color="gray.500">
-            <span>{convertDateWithTimeStamp(userNote.createdDate)}</span>
-          </Flex>
-        </Flex>
+        <Box w="150px" mr={5} />
       )}
-
       <Text
         whiteSpace="pre-wrap"
         w="100%"
