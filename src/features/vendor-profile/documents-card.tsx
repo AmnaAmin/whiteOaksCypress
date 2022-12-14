@@ -20,6 +20,7 @@ import ChooseFileField from 'components/choose-file/choose-file'
 import { useWatchDocumentFeild } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
+import { dateFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 
 type DocumentsProps = {
@@ -50,7 +51,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     control,
     setValue,
     getValues,
-    reset,
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
 
@@ -95,6 +95,19 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         </Flex>
       </a>
     )
+  }
+
+  const resetFields = () => {
+    setValue('w9DocumentDate', dateFormat(vendor?.w9DocumentDate!))
+    setValue('w9Document', null)
+    setValue('agreementSignedDate', dateFormat(vendor?.agreementSignedDate!))
+    setValue('agreement', null)
+    setValue('autoInsuranceExpDate', dateFormat(vendor?.autoInsuranceExpirationDate!))
+    setValue('insurance', null)
+    setValue('coiGlExpDate', dateFormat(vendor?.coiglExpirationDate!))
+    setValue('coiGlExpFile', null)
+    setValue('coiWcExpDate', dateFormat(vendor?.coiWcExpirationDate!))
+    setValue('coiWcExpFile', null)
   }
 
   return (
@@ -433,7 +446,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         justifyContent="end"
       >
         {isAllFiledWatch && (
-          <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
+          <Button variant="outline" colorScheme="brand" onClick={() => resetFields()} mr="3">
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
