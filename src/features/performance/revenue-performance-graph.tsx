@@ -7,7 +7,7 @@ import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label, Legend } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
