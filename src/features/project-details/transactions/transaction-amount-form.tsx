@@ -384,6 +384,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             <GridItem id="all-checkbox">
               <Checkbox
                 variant="normal"
+                colorScheme="CustomPrimaryColor"
                 isChecked={allChecked}
                 isDisabled={isApproved}
                 isIndeterminate={isIndeterminate}
