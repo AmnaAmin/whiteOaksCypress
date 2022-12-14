@@ -86,7 +86,7 @@ export const convertDateTimeFromServer = (date: string) => {
 }
 
 export const convertDateWithTimeStamp = (date: string) => {
-  return date ? format(new Date(date),  'Pp', { locale: enUS }) : null
+  return date ? format(new Date(date), 'Pp', { locale: enUS }) : null
 }
 
 export const convertDateTimeToServer = (date: Date) => {

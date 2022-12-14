@@ -53,7 +53,6 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     control,
     register,
     setValue,
-    reset,
     watch,
   } = useFormContext<LicenseFormValues>()
 
@@ -90,6 +89,21 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         </Flex>
       </a>
     )
+  }
+
+  const watchChangeFields = licenseFields
+    ?.map((e, index) => checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index]))
+    .includes(true)
+
+  const resetFields = () => {
+    licenseFields?.map((value, index) => {
+      return [
+        setValue(`licenses.${index}.licenseType`, value?.licenseType),
+        setValue(`licenses.${index}.licenseNumber`, value?.licenseNumber),
+        setValue(`licenses.${index}.expiryDate`, value?.expiryDate),
+        setValue(`licenses.${index}.expirationFile`, null),
+      ]
+    })
   }
 
   return (
@@ -233,9 +247,11 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         justifyContent="end"
         borderTop="2px solid #E2E8F0"
       >
-        <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
-          {t(`${VENDORPROFILE}.discardChanges`)}
-        </Button>
+        {watchChangeFields && (
+          <Button variant="outline" colorScheme="brand" onClick={() => resetFields()} mr="3">
+            {t(`${VENDORPROFILE}.discardChanges`)}
+          </Button>
+        )}
 
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">

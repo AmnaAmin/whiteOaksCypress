@@ -1,7 +1,6 @@
 import { Control, useWatch } from 'react-hook-form'
 import { DocumentsCardFormValues } from 'types/vendor.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-import { isBefore } from 'date-fns'
 
 export const useDocumentLicenseMessage = ({ data }) => {
   const DocumentDates = [
@@ -12,11 +11,13 @@ export const useDocumentLicenseMessage = ({ data }) => {
     data?.coiglExpirationDate,
   ]
 
-  const expiredLicenseDateProfile = data?.licenseDocuments?.map(value =>
-    isBefore(new Date(value?.licenseExpirationDate), new Date()),
-  )
+  const currentDate = dateFormat(new Date().toISOString())
 
-  const expiredInsuranceDateProfile = DocumentDates.map(value => isBefore(new Date(value), new Date()))
+  const expiredLicenseDateProfile = data?.licenseDocuments
+    ?.map(value => dateFormat(value?.licenseExpirationDate) < currentDate)
+    .includes(true)
+
+  const expiredInsuranceDateProfile = DocumentDates.map(value => dateFormat(value) < currentDate).includes(true)
 
   return {
     expiredLicenseDateProfile,
@@ -80,5 +81,5 @@ export const checkIsLicenseChanged = (values: any, licenseDocument) => {
   const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber
   const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate)
 
-  return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || watchExpirationFile
+  return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || !!watchExpirationFile
 }
