@@ -83,6 +83,13 @@ i18n.use(initReactI18next).init({
         December: 'December',
         export: 'Export',
         setting: 'Setting',
+        electrical: 'Electrical',
+        plumbing: 'Plumbing',
+        generalContractor: 'General Contractor',
+        roofing: 'Roofing',
+        architecture: 'Architecture',
+        mechanical: 'Mechanical',
+        noDataDisplayed: 'No data returned for this view.',
 
         // PROJECTS
         projectsHeading: 'Projects',
@@ -358,6 +365,11 @@ i18n.use(initReactI18next).init({
         cancel: 'Cancel',
         insurances: 'Insurances',
         insurance: 'Insurance',
+        W9Document: 'W9 Document',
+        agreementSign: 'Agreement Sign',
+        generalLiability: 'General Liability',
+        workerComp: 'Worker Comp',
+
         // Vendor-profile-license
         license: 'License',
         addLicense: 'Add License',
@@ -627,6 +639,13 @@ i18n.use(initReactI18next).init({
         December: 'Diciembre',
         export: 'Exportar',
         setting: 'Ajuste',
+        electrical: 'Eléctrico',
+        plumbing: 'Plomería',
+        generalContractor: 'Contratista general',
+        roofing: 'Techumbre',
+        architecture: 'Arquitectura',
+        mechanical: 'Mecánico',
+        noDataDisplayed: 'No se han devuelto datos para esta vista.',
 
         // PROJECTS
         projectsHeading: 'Proyectos',
@@ -902,7 +921,11 @@ i18n.use(initReactI18next).init({
         back: 'Espalda',
         cancel: 'Cancelar',
         insurances: 'Seguros',
-        insurance: 'seguro',
+        insurance: 'Seguro',
+        W9Document: 'Documento W9',
+        agreementSign: 'Signo de acuerdo',
+        generalLiability: 'Responsabilidad general',
+        workerComp: 'Compensación al trabajador',
 
         // Vendor-profile-license
         license: 'Licencia',
@@ -931,12 +954,14 @@ i18n.use(initReactI18next).init({
         language: 'Idioma',
         profilePicture: 'Foto de perfil',
         changePicture: 'Cambia tu foto de perfil',
+
         // Password Page
         password: 'Clave',
         currentPassword: 'Contraseña actual',
         newPassword: 'Nueva contraseña',
         newPasswordConfirmation: 'Nueva confirmación de contraseña',
         passwordStrength: 'Seguridad de la contraseña',
+
         // Support Page
         createTicket: 'Crear un boleto',
         issueType: 'Tipo de problema',
@@ -947,6 +972,7 @@ i18n.use(initReactI18next).init({
         createTicketTitle: 'Crear Ticket',
         createTicketSuccessMessage: 'Ticket creado con éxito.',
         createTicketErrorMessage: 'Crear ticket api causa algún error.',
+
         // Header
         help: 'Ayudar',
         support: 'Apoyo',

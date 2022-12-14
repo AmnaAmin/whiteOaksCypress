@@ -203,7 +203,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                             <ChooseFileField
                               testId={`expirationFile-` + index}
                               name={field.name}
-                              value={field.value?.name ? field.value?.name : 'Choose File'}
+                              value={field.value?.name ? field.value?.name : t('chooseFile')}
                               isError={!!fieldState.error?.message}
                               onChange={(file: any) => {
                                 onFileChange(file)

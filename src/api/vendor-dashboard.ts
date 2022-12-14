@@ -48,6 +48,7 @@ export const useVendorEntity = (vendorId: number, tabIndex?: number) => {
     return response?.data
   })
 }
+
 export const useVendorsPerMonth = (vendorId: number) => {
   const client = useClient()
 
