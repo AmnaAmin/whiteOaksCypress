@@ -961,7 +961,7 @@ i18n.use(initReactI18next).init({
         newPassword: 'Nueva contraseña',
         newPasswordConfirmation: 'Nueva confirmación de contraseña',
         passwordStrength: 'Seguridad de la contraseña',
-        
+
         // Support Page
         createTicket: 'Crear un boleto',
         issueType: 'Tipo de problema',
@@ -972,7 +972,7 @@ i18n.use(initReactI18next).init({
         createTicketTitle: 'Crear Ticket',
         createTicketSuccessMessage: 'Ticket creado con éxito.',
         createTicketErrorMessage: 'Crear ticket api causa algún error.',
-        
+
         // Header
         help: 'Ayudar',
         support: 'Apoyo',
