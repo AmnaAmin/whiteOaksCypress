@@ -1,12 +1,14 @@
-import { dateFormat } from 'utils/date-time-utils'
+import { datePickerFormat } from 'utils/date-time-utils'
 
 export const useInsuranceLicenseErrorMessage = ({ insurance, license }) => {
-  const currentDate = dateFormat(new Date().toISOString())
+  const currentDate = datePickerFormat(new Date())
 
-  const expiredInsuranceDate = insurance?.map(value => dateFormat(value?.date) < currentDate).includes(true)
+  const expiredInsuranceDate = insurance
+    ?.map(value => (datePickerFormat(value?.date) as string) < currentDate!)
+    .includes(true)
 
   const expiredLicenseDate = license
-    ?.map(value => dateFormat(value?.licenseExpirationDate) < currentDate)
+    ?.map(value => (datePickerFormat(value?.licenseExpirationDate) as string) < currentDate!)
     .includes(true)
 
   return {

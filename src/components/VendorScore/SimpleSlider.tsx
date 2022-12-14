@@ -5,16 +5,17 @@ import Slider from 'react-slick'
 import { Card } from '../card/card'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { chunk } from 'lodash'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 
 const isDateExpired = (date: string) => {
-  const currentDate = new Date()
-  const givenDate = new Date(date)
-  if (givenDate > currentDate) return ''
+  const currentDate = datePickerFormat(new Date())
+  const givenDate = datePickerFormat(new Date(date))
+
+  if (givenDate! >= currentDate!) return ''
   return '#F56565'
 }
 
