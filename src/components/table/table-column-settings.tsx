@@ -16,13 +16,13 @@ import {
   Text,
   Icon,
 } from '@chakra-ui/react'
-import { FaAtom } from 'react-icons/fa'
 import { BiGridVertical } from 'react-icons/bi'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from 'components/button/button'
+import { MdOutlineSettings } from 'react-icons/md'
 
 type ColumnType = {
   id?: number
@@ -95,8 +95,10 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         data-testid="column-settings-button"
         disabled={disabled}
       >
-        <Icon as={FaAtom} fontSize="18px" mr={1} />
-        {t('settings')}
+        <HStack spacing={1}>
+          <Icon as={MdOutlineSettings} fontSize="18px" />
+          <Text> {t('settings')}</Text>
+        </HStack>
       </Button>
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">

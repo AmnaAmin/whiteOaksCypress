@@ -3,7 +3,7 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import AccountReceivableModal from 'features/recievable/account-receivable-modal'
 import { usePaginatedAccountReceivables, useGetAllAccountReceivables } from 'api/account-receivable'
 import UpdateTransactionModal from 'features/project-details/transactions/update-transaction-modal'
-import { ColumnDef, ColumnFiltersState, PaginationState, Updater } from '@tanstack/react-table'
+import { ColumnDef, ColumnFiltersState, PaginationState, SortingState, Updater } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import Table from 'components/table-refactored/table'
@@ -27,6 +27,8 @@ type ReceivableProps = {
   pagination: PaginationState
   queryStringWithPagination: string
   queryStringWithoutPagination: string
+  sorting: SortingState
+  setSorting: (updater: Updater<SortingState>) => void
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
@@ -34,30 +36,32 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   setColumnFilters,
   setPagination,
   pagination,
+  sorting,
+  setSorting,
   queryStringWithPagination,
   queryStringWithoutPagination,
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
+  const [selectedProjectStatus, setSelectedProjectStatus] = useState<string>()
+
   const {
     isOpen: isAccountReceivableModal,
     onOpen: onAccountReceivableModalOpen,
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
-  const {
-    isOpen: isOpenTransactionModal,
-    onOpen: onEditModalOpen,
-    onClose: onTransactionModalClose
-  } = useDisclosure()
+  const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
 
   const onRowClick = useCallback(
     row => {
       if (row.type === 'draw') {
         setSelectedTransactionId(row.changeOrderId)
         setSelectedProjectId(row.projectId)
+        setSelectedProjectStatus(row?.projectStatus || '')
         onEditModalOpen()
       } else {
         setSelectedProjectId(row.projectId)
+        setSelectedProjectStatus(row?.projectStatus || '')
         onAccountReceivableModalOpen()
       }
     },
@@ -68,11 +72,8 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     receivables,
     isLoading,
     totalPages,
-    dataCount
-  } = usePaginatedAccountReceivables(
-    queryStringWithPagination,
-    pagination.pageSize,
-  )
+    dataCount,
+  } = usePaginatedAccountReceivables(queryStringWithPagination, pagination.pageSize)
 
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
@@ -84,12 +85,14 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   }
 
   return (
-    <Box overflow="auto" width="100%" h="600px">
+    <Box overflow="auto" width="100%" h="600px" roundedTop={6}>
       <TableContextProvider
         data={receivables}
         columns={tableColumns}
         pagination={pagination}
         setPagination={setPagination}
+        sorting={sorting}
+        setSorting={setSorting}
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
@@ -127,6 +130,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         onClose={onTransactionModalClose}
         selectedTransactionId={selectedTransactionId as number}
         projectId={selectedProjectId as string}
+        projectStatus={selectedProjectStatus as string}
       />
     </Box>
   )

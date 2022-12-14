@@ -1,7 +1,7 @@
 // Export React Table to excel button component
 // Language: typescript
 
-import { Button, ButtonProps, Flex, Text } from '@chakra-ui/react'
+import { Button, ButtonProps, Flex, HStack, Icon, Text } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
 import { reduceArrayToObject } from 'utils'
@@ -14,6 +14,7 @@ import { useCallback } from 'react'
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
   isLoading?: boolean
+  fetchedData?: Array<any> | undefined | null
   refetch?: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
   ) => Promise<QueryObserverResult<any[], unknown>>
@@ -65,28 +66,38 @@ const useExportToExcel = () => {
 /*
    This is used when exporting full CSV data from the server side pagination table        
 */
-export const ExportButton: React.FC<ExportButtonProps> = ({ children, fileName, refetch, isLoading, ...rest }) => {
+export const ExportButton: React.FC<ExportButtonProps> = ({
+  children,
+  fileName,
+  refetch,
+  fetchedData,
+  isLoading,
+  ...rest
+}) => {
   const { t } = useTranslation()
   const exportToExcel = useExportToExcel()
 
   const handleExport = () => {
-    refetch?.()?.then(({ data }) => {
-      if (data) {
-        exportToExcel(data, fileName)
-      } else if (data) {
-        console.error('Export button should be inside tableContext.provider tree')
-      }
-    })
+    if (fetchedData) {
+      exportToExcel(fetchedData, fileName)
+    } else {
+      refetch?.()?.then(({ data }) => {
+        if (data) {
+          exportToExcel(data, fileName)
+        } else if (data) {
+          console.error('Export button should be inside tableContext.provider tree')
+        }
+      })
+    }
   }
 
   return (
     <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading}>
       {children ?? (
-        <Flex justifyContent="center">
-          <BiExport fontSize={'18px'} />
-
-          <Text ml="2.88">{t('projects.export')}</Text>
-        </Flex>
+        <HStack spacing={1}>
+          <Icon as={BiExport} fontSize={'18px'} mb="1px" />
+          <Text>{t('projects.export')}</Text>
+        </HStack>
       )}
     </Button>
   )

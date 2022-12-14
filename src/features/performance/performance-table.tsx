@@ -34,6 +34,13 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       },
     },
     {
+      header: 'Margin %',
+      accessorKey: 'marginPercentage',
+      accessorFn(row) {
+        return numeral(row.marginPercentage / 100).format('0.00%')
+      },
+    },
+    {
       header: 'Target',
       accessorKey: 'target',
       accessorFn(row) {
@@ -73,8 +80,8 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
           isOpen={isOpen}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 320px)">
-        <TableContextProvider data={performance || []} columns={PERFORMANCE_COLUMNS}>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6}>
+        <TableContextProvider data={performance} columns={PERFORMANCE_COLUMNS}>
           <Table
             onRowClick={row => {
               setSelectedUser(row)

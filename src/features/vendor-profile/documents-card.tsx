@@ -16,9 +16,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFormContext } from 'react-hook-form'
 import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
-import { t } from 'i18next'
 import ChooseFileField from 'components/choose-file/choose-file'
-import { useVendorNext } from 'api/vendor-details'
+import { useWatchDocumentFeild } from './hook'
+import { SaveChangedFieldAlert } from './save-change-field'
+import { VENDORPROFILE } from './vendor-profile.i18n'
+import { useTranslation } from 'react-i18next'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -38,22 +40,39 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
     </Box>
   )
 })
+
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
+  const { t } = useTranslation()
 
   const {
     formState: { errors },
     control,
     setValue,
     getValues,
+    reset,
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
-  const { disableDocumentsNext } = useVendorNext({ control, documents })
+
   useEffect(() => {
     if (!vendor) {
       setChangeDateFields([])
     }
   }, [vendor])
+
+  const {
+    isW9DocumentDateChanged,
+    watchW9DocumentFile,
+    isAgreementSignedDateChanged,
+    watchAgreementFile,
+    isAutoInsuranceExpDateChanged,
+    watchInsuranceFile,
+    isCoiGlExpDateChanged,
+    watchCoiGlExpFile,
+    isCoiWcExpDateChanged,
+    watchCoiWcExpFile,
+    isAllFiledWatch,
+  } = useWatchDocumentFeild(control, vendor)
 
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -77,6 +96,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
       </a>
     )
   }
+
   return (
     <>
       <Box h="502px" overflow="auto">
@@ -103,22 +123,21 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               />
             </Box>
           </Flex>
-          <Flex>
-            <FormControl w="290px" isInvalid={!!errors.w9Document?.message}>
+          <HStack>
+            <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
               <FormLabel variant="strong-label" size="md">
                 {t('fileUpload')}
               </FormLabel>
               <Controller
                 name="w9Document"
                 control={control}
-                rules={{ required: documents.w9DocumentUrl ? '' : isActive && 'This is required field' }}
                 render={({ field, fieldState }) => {
                   return (
                     <VStack alignItems="baseline">
                       <Box>
                         <ChooseFileField
                           name={field.name}
-                          value={field.value?.name ? field.value?.name : 'Choose File'}
+                          value={field.value?.name ? field.value?.name : t('chooseFile')}
                           isError={!!fieldState.error?.message}
                           onChange={(file: any) => {
                             onFileChange(file)
@@ -130,7 +149,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                       </Box>
                       {documents.w9DocumentUrl && (
                         <Box overflow="hidden" top={16}>
-                          {downloadDocument(documents.w9DocumentUrl, 'W9 Document', 'w9DocumentLink')}
+                          {downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
                         </Box>
                       )}
                     </VStack>
@@ -138,7 +157,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-          </Flex>
+            {(!isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
+          </HStack>
         </HStack>
         <Box mt="30px">
           <HStack alignItems="flex-start" spacing="16px">
@@ -161,8 +181,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex>
-              <FormControl w="290px" isInvalid={!!errors.agreement?.message}>
+            <HStack>
+              <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -180,7 +200,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -192,7 +212,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.agreementUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.agreementUrl, 'Agreement Sign', 'agreementLink')}
+                            {downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
                           </Box>
                         )}
                       </VStack>
@@ -200,7 +220,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
+            </HStack>
           </HStack>
         </Box>
 
@@ -232,8 +253,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex>
-              <FormControl w="290px" isInvalid={!!errors.insurance?.message}>
+            <HStack>
+              <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -251,7 +272,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -263,7 +284,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.insuranceUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.insuranceUrl, 'Auto Insurance', 'autoInsuranceLink')}
+                            {downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
                           </Box>
                         )}
                       </VStack>
@@ -271,7 +292,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
+            </HStack>
           </HStack>
         </Box>
         <Box mt="30px">
@@ -295,8 +317,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex w="100%" pr="20px">
-              <FormControl w="290px" isInvalid={!!errors.coiGlExpFile?.message}>
+            <HStack w="100%" pr="20px">
+              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -312,7 +334,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -324,7 +346,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.coiGLExpUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiGLExpUrl, 'General Liability', 'coiGlExpLink')}
+                            {downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
                           </Box>
                         )}
                       </VStack>
@@ -332,7 +354,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
+            </HStack>
           </HStack>
         </Box>
         <Box mt="30px">
@@ -356,8 +379,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <Flex w="100%" pr="20px">
-              <FormControl w="290px" isInvalid={!!errors.coiWcExpFile?.message}>
+            <HStack w="100%" pr="20px">
+              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -373,7 +396,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         <Box>
                           <ChooseFileField
                             name={field.name}
-                            value={field.value?.name ? field.value?.name : 'Choose File'}
+                            value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
@@ -385,7 +408,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         </Box>
                         {documents.coiWcExpUrl && (
                           <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiWcExpUrl, 'Worker Comp', 'coiWcExpLink')}
+                            {downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
                           </Box>
                         )}
                       </VStack>
@@ -393,7 +416,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-            </Flex>
+              {(!isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
+            </HStack>
           </HStack>
         </Box>
       </Box>
@@ -408,18 +432,17 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         alignItems="center"
         justifyContent="end"
       >
+        {isAllFiledWatch && (
+          <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
+            {t(`${VENDORPROFILE}.discardChanges`)}
+          </Button>
+        )}
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button
-          disabled={disableDocumentsNext}
-          type="submit"
-          data-testid="saveDocumentCards"
-          variant="solid"
-          colorScheme="brand"
-        >
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
           {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>

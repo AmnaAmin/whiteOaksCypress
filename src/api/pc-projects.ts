@@ -206,6 +206,7 @@ export const useProjectTypeSelectOptions = () => {
     })) || []
 
   return {
+    projectTypes,
     projectTypeSelectOptions,
     ...rest,
   }
@@ -243,6 +244,7 @@ export const useProperties = () => {
   }
 }
 
+//TODO - move to common apis folder
 export const useStates = () => {
   const client = useClient()
 
@@ -284,6 +286,27 @@ export const useMarkets = () => {
   return {
     marketSelectOptions,
     markets,
+    ...rest,
+  }
+}
+
+export const useRegions = () => {
+  const client = useClient()
+
+  const { data: regions, ...rest } = useQuery('regions', async () => {
+    const response = await client(`regions`, {})
+
+    return response?.data
+  })
+  const regionSelectOptions =
+    regions?.map(region => ({
+      value: region,
+      label: region,
+    })) || []
+
+  return {
+    regionSelectOptions,
+    regions,
     ...rest,
   }
 }

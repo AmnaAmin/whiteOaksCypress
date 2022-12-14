@@ -4,12 +4,14 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 import { readFileContent } from './vendor-details'
+import { sortBy } from 'lodash'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type UpdateWorkOrderProps = {
   hideToast?: boolean
@@ -129,7 +131,9 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
   )
 
   return {
-    workOrderAssignedItems: workOrder?.assignedItems,
+    workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
+      return e.orderNo
+    }),
     ...rest,
   }
 }
@@ -185,19 +189,23 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
 
 /* WorkOrder Payments */
 export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
+  const { isAdmin } = useUserRolesSelector()
   const defaultStatus = false
   // not used for now -  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
-    dateInvoiceSubmittedEnabled: defaultStatus,
-    paymentTermEnabled: defaultStatus || invoicedState,
-    paymentTermDateEnabled: defaultStatus,
-    expectedPaymentDateEnabled: defaultStatus,
-    datePaymentProcessedEnabled: defaultStatus || invoicedState,
-    datePaidEnabled: defaultStatus || invoicedState,
-    invoiceAmountEnabled: defaultStatus,
-    clientOriginalApprovedAmountEnabled: defaultStatus,
-    clientApprovedAmountEnabled: defaultStatus,
+    dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
+    paymentTermEnabled: defaultStatus || invoicedState || isAdmin,
+    paymentTermDateEnabled: defaultStatus || isAdmin,
+    expectedPaymentDateEnabled: defaultStatus || isAdmin,
+    datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
+    datePaidEnabled: defaultStatus || invoicedState || isAdmin,
+    invoiceAmountEnabled: defaultStatus || isAdmin,
+    clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
+    clientApprovedAmountEnabled: defaultStatus || isAdmin,
+    finalInvoiceAmountEnabled: defaultStatus,
+    paymentDateEnabled: defaultStatus || invoicedState,
+    partialPaymentEnabled: defaultStatus || invoicedState,
   }
 }
 
@@ -206,25 +214,30 @@ export const parsePaymentValuesToPayload = formValues => {
     dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
     paymentTerm: formValues?.paymentTerm?.value,
     paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
-    expectedPaymentDate: dateISOFormat(formValues?.expectedPaymentDate),
+    expectedPaymentDate: formValues?.expectedPaymentDate,
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
     datePaid: dateISOFormat(formValues?.datePaid),
+    partialPayment: formValues?.partialPayment,
+    partialPaymentDate: dateISOFormat(formValues?.paymentDate),
   }
 }
 
 export const defaultValuesPayment = (workOrder, paymentsTerms) => {
   const defaultValues = {
-    dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
+    dateInvoiceSubmitted: getLocalTimeZoneDate(workOrder?.dateInvoiceSubmitted),
     paymentTerm: workOrder?.paymentTerm
       ? paymentsTerms.find(p => p.value === workOrder?.paymentTerm)
       : paymentsTerms.find(p => p.value === '20'),
-    paymentTermDate: datePickerFormat(workOrder?.paymentTermDate),
-    expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
+    paymentTermDate: getLocalTimeZoneDate(workOrder?.paymentTermDate),
+    expectedPaymentDate: getLocalTimeZoneDate(workOrder?.expectedPaymentDate),
     datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
-    datePaid: datePickerFormat(workOrder?.datePaid),
+    datePaid: getLocalTimeZoneDate(workOrder?.datePaid),
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    partialPayment: 0,
+    paymentDate: getLocalTimeZoneDate(workOrder?.partialPaymentDate),
+    finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
   }
   return defaultValues
 }
@@ -232,21 +245,23 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
 /* WorkOrder Details */
 
 export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
-  const defaultStatus = false
+  const { isAdmin } = useUserRolesSelector()
   const completedByVendor =
     [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLowerCase() as STATUS) &&
     formValues?.assignedItems?.length < 1
   return {
-    completedByVendor: defaultStatus || completedByVendor,
+    completedByVendor: completedByVendor,
+    workOrderStartDateEnable: [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
+    workOrderExpectedCompletionDateEnable:
+      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
   }
 }
 
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
-
   const assignedItems = [
-    ...formValues?.assignedItems?.map(a => {
+    ...formValues?.assignedItems?.map((a, index) => {
       const isNewSmartLineItem = !a.smartLineItemId
       if (a.document) {
         delete a?.document?.fileObject
@@ -257,15 +272,19 @@ export const parseWODetailValuesToPayload = formValues => {
         document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
         id: isNewSmartLineItem ? '' : a.id,
         smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
+        orderNo: index,
       }
       delete assignedItem.uploadedDoc
       return assignedItem
     }),
   ]
+
   return {
-    workOrderStartDate: dateISOFormat(formValues?.workOrderStartDate),
-    workOrderDateCompleted: dateISOFormat(formValues?.workOrderDateCompleted),
-    workOrderExpectedCompletionDate: dateISOFormat(formValues?.workOrderExpectedCompletionDate),
+    cancel: formValues?.cancel?.value,
+    ...(formValues?.cancel.value === 35 && { status: 35 }),
+    workOrderStartDate: formValues?.workOrderStartDate,
+    workOrderDateCompleted: formValues?.workOrderDateCompleted,
+    workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
   }
@@ -273,6 +292,10 @@ export const parseWODetailValuesToPayload = formValues => {
 
 export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
   const defaultValues = {
+    cancel: {
+      value: '',
+      label: 'Select',
+    },
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
@@ -322,7 +345,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
   const selectedCapacity = 1
   var documents = [] as any
   const assignedItems = [
-    ...formValues?.assignedItems?.map(a => {
+    ...formValues?.assignedItems?.map((a, index) => {
       if (a.document) {
         delete a?.document?.fileObject
       }
@@ -331,6 +354,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
         document: a.uploadedDoc ? a.uploadedDoc : a.document,
         id: '',
         smartLineItemId: a.id,
+        orderNo: index,
       }
       delete assignedItem.uploadedDoc
       return assignedItem
@@ -347,8 +371,9 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     })
   }
   return {
-    workOrderStartDate: dateISOFormat(formValues.workOrderStartDate),
-    workOrderExpectedCompletionDate: dateISOFormat(formValues.workOrderExpectedCompletionDate),
+    cancel: formValues.cancel?.value,
+    workOrderStartDate: formValues.workOrderStartDate,
+    workOrderExpectedCompletionDate: formValues.workOrderExpectedCompletionDate,
     invoiceAmount: formValues.invoiceAmount,
     clientApprovedAmount: formValues.clientApprovedAmount,
     percentage: formValues.percentage,

@@ -24,6 +24,9 @@ import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiAddToQueue, BiDownload } from 'react-icons/bi'
+import { checkIsLicenseChanged } from './hook'
+import { SaveChangedFieldAlert } from './save-change-field'
+import { VENDORPROFILE } from './vendor-profile.i18n'
 type LicenseProps = {
   vendor: VendorProfile
   onClose?: () => void
@@ -50,6 +53,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     control,
     register,
     setValue,
+    reset,
+    watch,
   } = useFormContext<LicenseFormValues>()
 
   const {
@@ -60,6 +65,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     control,
     name: 'licenses',
   })
+
+  const formValues = watch()
 
   const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
@@ -84,6 +91,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
       </a>
     )
   }
+
   return (
     <Box>
       <Button
@@ -104,6 +112,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
       </Button>
       <VStack align="start" h="470px" spacing="15px" overflow="auto">
         {licenseFields.map((license, index) => {
+          const isLicenseChanged = checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index])
+
           return (
             <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
               <Box w="2em" color="barColor.100" fontSize="15px">
@@ -162,7 +172,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 testId={`expiryDate-` + index}
               />
               <VStack>
-                <FormControl w="290px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
+                <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
                   <FormLabel variant="strong-label" size="md">
                     File Upload
                   </FormLabel>
@@ -179,7 +189,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                             <ChooseFileField
                               testId={`expirationFile-` + index}
                               name={field.name}
-                              value={field.value?.name ? field.value?.name : 'Choose File'}
+                              value={field.value?.name ? field.value?.name : t('chooseFile')}
                               isError={!!fieldState.error?.message}
                               onChange={(file: any) => {
                                 onFileChange(file)
@@ -205,6 +215,11 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   />
                 </FormControl>
               </VStack>
+              {isLicenseChanged ? (
+                <>
+                  <SaveChangedFieldAlert />
+                </>
+              ) : null}
             </HStack>
           )
         })}
@@ -218,6 +233,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         justifyContent="end"
         borderTop="2px solid #E2E8F0"
       >
+        <Button variant="outline" colorScheme="brand" onClick={() => reset()} mr="3">
+          {t(`${VENDORPROFILE}.discardChanges`)}
+        </Button>
+
         {onClose && (
           <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
             Cancel

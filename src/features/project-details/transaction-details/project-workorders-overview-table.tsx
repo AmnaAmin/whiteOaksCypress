@@ -107,6 +107,32 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
       //     return numeral(total).format('$0,0.00')
       //   },
       // },
+
+      {
+        header: `${TRANSACTION}.lateFee`,
+        accessorKey: 'lateFee',
+        accessorFn(row) {
+          return numeral(row.lateFee).format('$0,0.00')
+        },
+        footer: props => {
+          const total = getTotalOfKey('lateFee', financialOveriewTableData)
+
+          return numeral(total).format('$0,0.00')
+        },
+      },
+
+      {
+        header: `${TRANSACTION}.factoring`,
+        accessorKey: 'factoring',
+        accessorFn(row) {
+          return numeral(row.factoring).format('$0,0.00')
+        },
+        footer: props => {
+          const total = getTotalOfKey('factoring', financialOveriewTableData)
+
+          return numeral(total).format('$0,0.00')
+        },
+      },
       {
         header: `${TRANSACTION}.finalVendorWOs`,
         accessorKey: 'workOrderNewAmount',
@@ -184,6 +210,22 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
           const total = getTotalOfKey('profit', financialOveriewTableData)
 
           return numeral(total).format('$0,0.00')
+        },
+      },
+      {
+        header: `${TRANSACTION}.profitPercentage`,
+        accessorKey: 'vendorProfitPercentage',
+        accessorFn(row) {
+          return isDefined(row.vendorProfitPercentage)
+            ? numeral(percentageFormatter(row.vendorProfitPercentage)).format('0.00%')
+            : ''
+        },
+        footer: props => {
+          const total =
+            (getTotalOfKey('profit', financialOveriewTableData) /
+              getTotalOfKey('newAmount', financialOveriewTableData)) *
+            100
+          return isDefined(total) ? numeral(percentageFormatter(total)).format('0.00%') : ''
         },
       },
     ],

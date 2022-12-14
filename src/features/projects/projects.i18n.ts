@@ -7,6 +7,7 @@ export const projects = {
         projectTable: {
           generalLabour: 'General Labor',
           projectManager: 'FPM',
+          woDraw: 'WO Draw',
           status: 'Status',
           address: 'Address',
           city: 'City',
@@ -96,6 +97,7 @@ export const projects = {
           documents: 'Documents',
           notes: 'Notes',
           upload: 'Upload',
+          schedule: 'Schedule',
         },
         dueProjects: 'Due Projects',
         export: 'Export',
@@ -108,6 +110,7 @@ export const projects = {
         projectTable: {
           generalLabour: 'Travail Général',
           projectManager: 'FPM',
+          woDraw: 'Sorteo WO',
           status: 'Estado',
           address: 'Dirección',
           city: 'Ciudad',
@@ -193,6 +196,7 @@ export const projects = {
           viewDetails: 'Ver detalles',
           newTransaction: 'Nueva Transacción',
           projectDetails: 'Detalles de ganancias',
+          schedule: 'Calendario',
           vendorWorkOrders: 'Órdenes de Trabajo del Proveedor',
           documents: 'Documentos',
           notes: 'Notas',

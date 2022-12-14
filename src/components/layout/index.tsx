@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Container, Flex, Stack, useColorModeValue as mode } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
@@ -7,10 +7,14 @@ import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
 import { useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
+import { useTranslation } from 'react-i18next'
+import { SIDE_NAV } from './sideNav.i18n'
+import { BiChevronDown } from 'react-icons/bi'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const menu = useRoleBasedMenu()
+  const { t } = useTranslation()
 
   return (
     <Box width="100%">
@@ -41,9 +45,38 @@ export const Layout: React.FC = props => {
               <Sidebar>
                 <Stack align="start" spacing={3}>
                   {menu?.map(item => (
-                    <Box w="201px" key={item.pathTo}>
-                      <SidebarLink pathTo={item.pathTo} title={item.title} icon={<item.Icon color={item.color} />} />
-                    </Box>
+                    <>
+                      {item.title === `${SIDE_NAV}.userMgmt` && (
+                        <Flex
+                          alignItems="center"
+                          h="43px"
+                          w="201px"
+                          style={{
+                            borderTop: '1px solid #EDF2F7',
+                            borderBottom: '1px solid #EDF2F7',
+                            paddingLeft: '8px',
+                            marginBottom: '21px',
+                            marginTop: '28px',
+                          }}
+                        >
+                          <BiChevronDown color="#718096" style={{ width: '24px', height: '24px' }} />
+                          <Text
+                            color="gray.500"
+                            as="span"
+                            style={{ fontWeight: 600, fontSize: '14px', lineHeight: '28px' }}
+                          >
+                            {t(`${SIDE_NAV}.administration`)}
+                          </Text>
+                        </Flex>
+                      )}
+                      <Box w="201px" key={item.pathTo}>
+                        <SidebarLink
+                          pathTo={item.pathTo}
+                          title={t(item.title)}
+                          icon={<item.Icon color={item.color} />}
+                        />
+                      </Box>
+                    </>
                   ))}
                 </Stack>
               </Sidebar>

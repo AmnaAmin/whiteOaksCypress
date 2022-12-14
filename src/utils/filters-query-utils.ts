@@ -1,5 +1,5 @@
-import { ColumnFiltersState } from '@tanstack/react-table'
-import { dateISOFormatWithZeroTime } from './date-time-utils'
+import { ColumnFiltersState, SortingState } from '@tanstack/react-table'
+import { dateISOFormatWithZeroTime, datePickerFormat } from './date-time-utils'
 
 const getQueryString = (obj: { [key: string]: string | number }) => {
   return Object.keys(obj).reduce((str, key, i) => {
@@ -27,12 +27,32 @@ export const getAPIFilterQueryString = (
   size?: number,
   columnFilters?: ColumnFiltersState,
   queryAndTableColumnMapKeys?: { [key: string]: string },
+  sorting?: SortingState,
 ) => {
   const dateToISOFormatFilters =
     columnFilters?.map(filter => {
       // change to iso format if we have date and value is not specified 0 or 1.
       // Dates will have value 0 or 1 if we have to null check the field
       if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
+        if (
+          [
+            'clientStartDate',
+            'clientDueDate',
+            'clientWalkThroughDate',
+            'clientSignoffDate',
+            'expectedPayDate',
+            'workOrderStartDate',
+            'workOrderExpectedCompletionDate',
+            'workOrderDateCompleted',
+            'expectedPaymentDate',
+            'newExpectedCompletionDate',
+          ].includes(filter.id)
+        ) {
+          return {
+            ...filter,
+            value: filter.value ? datePickerFormat(filter.value as string) : null,
+          }
+        }
         return {
           ...filter,
           value: filter.value ? dateISOFormatWithZeroTime(filter.value as string) : null,
@@ -53,6 +73,6 @@ export const getAPIFilterQueryString = (
     ...filterKeyValues,
     page: page || 0,
     size: size || 100000,
-    sort: 'id,desc',
+    sort: sorting && sorting?.length > 0 ? `${sorting?.[0]?.id},${sorting?.[0]?.desc ? 'desc' : 'asc'}` : 'id,desc', //{accessor},{direction}
   })
 }

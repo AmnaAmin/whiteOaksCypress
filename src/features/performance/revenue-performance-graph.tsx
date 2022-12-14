@@ -41,8 +41,19 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
     '#949AC2',
   ]
 
-  let { Revenue, Profit, Bonus } = vendorData[0]
-  const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === 0)
+  let {
+    Revenue = undefined,
+    Profit = undefined,
+    Bonus = undefined,
+  } = vendorData?.length > 0
+    ? vendorData[0]
+    : {
+        Revenue: undefined,
+        Profit: undefined,
+        Bonus: undefined,
+      }
+
+  const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
   const currAndLast = ['This Month', 'Last Month'].includes(monthCheck?.label)
 
   return (
@@ -64,7 +75,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             axisLine={false}
             tickMargin={30}
             angle={-45}
-            interval={Math.floor(vendorData.length / 60)}
+            interval={Math.floor(vendorData?.length / 60)}
             tick={
               ['This Month', 'Last Month'].includes(monthCheck?.label)
                 ? {
@@ -171,13 +182,13 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   const data = useMemo(
     () =>
       flatten(
-        months.map((month, monthIndex) => {
-          const monthExistsInChart = chartData !== undefined && Object.keys(chartData)?.find(months => months === month)
+        months?.map((month, monthIndex) => {
+          const monthExistsInChart = Object?.keys(chartData)?.find(months => months === month)
           let nameMonthData
 
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
-            const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
+            const graphs = Object?.keys(nameMonthData)?.map((nameKey, index) => {
               const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
               return {
                 username: `${firstName} ${lastName}`,
@@ -187,9 +198,9 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 Revenue: nameMonthData[nameKey]?.revenue,
               }
             })
-            let newgraphs = graphs.map((n, i) => ({
+            let newgraphs = graphs?.map((n, i) => ({
               ...n,
-              centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
+              centerMonth: Math.floor(graphs?.length / 2) === i ? n?.month : undefined,
             }))
             return newgraphs
           }
@@ -210,7 +221,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   )
 
   useEffect(() => {
-    const finalGraphData = data?.filter(a => a.month === currentMonth)
+    const finalGraphData = data?.filter(a => a?.month === currentMonth)
     setGraphData(finalGraphData)
   }, [data])
 
@@ -260,16 +271,16 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
       selectedQuater = getLastQuarterByDate()
     }
 
-    selectedFpm = selectedFpm.map(n => n.value)
+    selectedFpm = selectedFpm?.map(n => n?.value)
     const finalGraphData = data?.filter(
       a =>
-        (!selectedMonth || a.month === selectedMonth) &&
-        (!selectedQuater || a.quarter === selectedQuater) &&
-        (!selectedFpm.length || selectedFpm.includes(a.userId)),
+        (!selectedMonth || a?.month === selectedMonth) &&
+        (!selectedQuater || a?.quarter === selectedQuater) &&
+        (!selectedFpm?.length || selectedFpm?.includes(a?.userId)),
     )
     setGraphData(finalGraphData)
   }
-
+    
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
@@ -297,7 +308,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
               <FormLabel width={'10%'} variant="strong-label" size="md">
                 Filter By:
               </FormLabel>
-              <Box width={'90%'} pr={8} maxHeight={'40px'}>
+              <Box width={'90%'} pr={8} minHeight={'40px'}>
                 <ReactSelect
                   name={`fpmDropdown`}
                   value={fpmOption}

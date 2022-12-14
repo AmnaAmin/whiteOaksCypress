@@ -109,6 +109,14 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.payment,
     label: 'Payment',
   },
+  {
+    value: TransactionTypeValues.lateFee,
+    label: 'Late Fee',
+  },
+  {
+    value: TransactionTypeValues.factoring,
+    label: 'Factoring',
+  },
 ]
 
 export const useTransactionTypes = () => {
@@ -204,7 +212,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled') || isUpdating
+          return !(status === 'paid' || status === 'cancelled' || status === 'invoiced') || isUpdating
         })
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
@@ -282,7 +290,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-const getFileContents = async (document: any, documentType: number) => {
+export const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
 
   if (document?.s3Url) return Promise.resolve()
@@ -328,7 +336,7 @@ export const parseChangeOrderAPIPayload = async (
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
-  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate as string)
+  const newExpectedCompletionDate = formValues.newExpectedCompletionDate as string
 
   const documents: any = []
 
@@ -438,6 +446,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refundMaterial: false,
+    refundLateFee: false,
+    refundFactoring: false,
   }
 }
 
@@ -517,6 +527,12 @@ export const parseTransactionToFormValues = (
   const isMaterialRefunded =
     transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
 
+  const isLateFeeRefunded =
+    transaction.transactionType === TransactionTypeValues.lateFee && transaction.changeOrderAmount > 0
+
+  const isFactoringRefunded =
+    transaction.transactionType === TransactionTypeValues.factoring && transaction.changeOrderAmount > 0
+
   const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS.revenue : TRANSACTION_MARK_AS_OPTIONS.paid
   const paidBackDate = transaction.transactionType === TransactionTypeValues.overpayment ? transaction.paidDate : null
 
@@ -545,6 +561,8 @@ export const parseTransactionToFormValues = (
     payDateVariance,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refundMaterial: isMaterialRefunded,
+    refundLateFee: isLateFeeRefunded,
+    refundFactoring: isFactoringRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,
@@ -574,6 +592,8 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries(['changeOrder', projectId])
+        queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
 
         toast({
           title: 'New Transaction.',
@@ -617,6 +637,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(['changeOrder', projectId])
+        queryClient.invalidateQueries(['overpayment', Number(projectId)])
 
         toast({
           title: 'Update Transaction.',
@@ -726,4 +747,62 @@ export const useOverPaymentTransaction = (transactionType?: number) => {
     transactions,
     ...rest,
   }
+}
+
+export const useUploadMaterialAttachment = () => {
+  const client = useClient()
+  const toast = useToast()
+
+  return useMutation(
+    (payload: any) => {
+      return client('smart-material-scan', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onError(error: ErrorType) {
+        toast({
+          title: error?.title || 'Error while uploading attachment.',
+          description: error?.message || 'Something went wrong.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+const swoPrefix = '/smartwo/api'
+export const useFetchMaterialItems = (correlationId: string | null | undefined, refetchInterval: number) => {
+  const client = useClient(swoPrefix)
+  const { data, ...rest } = useQuery<any>(
+    ['fetchMaterialItems', correlationId],
+    async () => {
+      const response = await client(`smart-materials/correlation/` + correlationId, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!correlationId,
+      refetchInterval: refetchInterval,
+    },
+  )
+
+  return {
+    materialItems: data || {},
+    ...rest,
+  }
+}
+
+export const mapMaterialItemstoTransactions = (items, isRefund) => {
+  return items?.map(i => {
+    return {
+      id: Date.now(),
+      description: i.description,
+      amount: isRefund ? Math.abs(i.whiteoaksCost) : i.whiteoaksCost,
+      checked: false,
+    }
+  })
 }

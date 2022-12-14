@@ -21,7 +21,10 @@ export type TableColumnSetting = {
 }
 
 export enum TableNames {
+  adminDashboard = 'adminDashboard',
+  vendorProjects = 'vendorProjects',
   project = 'project',
+  new_project = 'new_project',
   transaction = 'transaction',
   workOrder = 'workOrder',
   alerts = 'alerts',
@@ -31,4 +34,5 @@ export enum TableNames {
   payable = 'payable',
   receivable = 'receivable',
   document = 'document',
+  upcomingPayment = 'upcomingPayment',
 }

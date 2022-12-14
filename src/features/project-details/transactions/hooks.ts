@@ -5,6 +5,7 @@ import {
   SelectOption,
   TransactionMarkAsValues,
   TransactionStatusValues,
+  TransactionsWithRefundType,
   TransactionTypeValues,
 } from 'types/transaction.type'
 import { AGAINST_DEFAULT_VALUE, calculatePayDateVariance, parseLienWaiverFormValues } from 'api/transactions'
@@ -12,6 +13,27 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+
+function getRefundTransactionType(type): TransactionsWithRefundType {
+  if (type === TransactionTypeValues.material)
+    return {
+      id: 'refund-material',
+      name: 'refundMaterial',
+      label: 'Refund material',
+    }
+
+  if (type === TransactionTypeValues.lateFee)
+    return {
+      id: 'refund-late-fee',
+      name: 'refundLateFee',
+      label: 'Refund late fee',
+    }
+  return {
+    id: 'refund-factoring',
+    name: 'refundFactoring',
+    label: 'Refund factoring',
+  }
+}
 
 export const useFieldShowHideDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
@@ -29,7 +51,12 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
   const isTransactionTypeDrawAgainstProjectSOWSelected =
     isAgainstProjectSOWOptionSelected && selectedTransactionTypeId === TransactionTypeValues.draw
-  const isShowRefundMaterialCheckbox = selectedTransactionTypeId === TransactionTypeValues.material
+  const refundCheckbox: TransactionsWithRefundType = {
+    ...getRefundTransactionType(selectedTransactionTypeId),
+    isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
+      val => val === selectedTransactionTypeId,
+    ),
+  }
 
   // The status field should be hidden if user create new transaction or
   // if the transaction of type overpayment with markAs = revenue
@@ -47,8 +74,10 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowNewExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
-    isShowRefundMaterialCheckbox,
-    isShowPaymentRecievedDateField: selectedTransactionTypeId === TransactionTypeValues.payment,
+    refundCheckbox,
+    isShowPaymentRecievedDateField: [TransactionTypeValues.payment, TransactionTypeValues.woPaid].includes(
+      selectedTransactionTypeId,
+    ),
     isShowPaidBackDateField: isTransactionTypeOverpaymentSelected && markAsPaid && isStatusNotCancelled,
     isShowMarkAsField: isTransactionTypeOverpaymentSelected && isStatusNotCancelled,
   }
@@ -64,9 +93,13 @@ export const useFieldRequiredDecision = (control: Control<FormValues, any>, tran
   }
 }
 
-export const useFieldDisabledEnabledDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
+export const useFieldDisabledEnabledDecision = (
+  control: Control<FormValues, any>,
+  transaction?: ChangeOrderType,
+  isMaterialsLoading?: boolean,
+) => {
   // const { isAdmin } = useUserRolesSelector()
-  const isUpdateForm = !!transaction
+  const isUpdateForm = !!transaction || isMaterialsLoading
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
@@ -75,7 +108,7 @@ export const useFieldDisabledEnabledDecision = (control: Control<FormValues, any
     isUpdateForm,
     isApproved: isStatusApproved,
     isPaidDateDisabled: !transaction || isStatusApproved,
-    isStatusDisabled: isStatusApproved,
+    isStatusDisabled: isStatusApproved || isMaterialsLoading,
   }
 }
 
@@ -138,7 +171,7 @@ export const useLienWaiverFormValues = (
   }, [totalAmount, selectedWorkOrder, setValue])
 }
 
-export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>) => {
+export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>, projectStatus) => {
   const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
@@ -146,6 +179,21 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
     // In case of other users than vendors the first option of againstOptions is the
     // Project SOW which should be hide in case transactionType is material
     if (transactionType?.value === TransactionTypeValues.material && !isVendor) {
+      return againstOptions.slice(1)
+    }
+
+    // If transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
+    if (
+      transactionType?.value === TransactionTypeValues.draw &&
+      !isVendor &&
+      !['new', 'active', 'punch', 'closed'].includes(projectStatus.toLowerCase())
+    ) {
+      return againstOptions.slice(1)
+    }
+
+    if (
+      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(value => transactionType?.value === value)
+    ) {
       return againstOptions.slice(1)
     }
 

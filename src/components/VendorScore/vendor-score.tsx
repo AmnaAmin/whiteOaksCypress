@@ -1,5 +1,15 @@
 import React from 'react'
-import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack, Center, Spinner } from '@chakra-ui/react'
+import {
+  Text,
+  Flex,
+  Box,
+  CircularProgress,
+  CircularProgressLabel,
+  HStack,
+  Center,
+  Spinner,
+  VStack,
+} from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -7,10 +17,10 @@ import { useVendorCards, useVendorEntity } from 'api/vendor-dashboard'
 import { useTranslation } from 'react-i18next'
 
 import { LicenseDocument } from 'types/vendor.types'
-import { dateFormat } from 'utils/date-time-utils'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
+import { ExpirationAlertMessage } from '../../features/common/expiration-alert-message'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -49,7 +59,8 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   ].filter(item => item.date)
 
   return (
-    <>
+    <Box>
+      <ExpirationAlertMessage insurance={defaultData} license={vendorEntity?.licenseDocuments} />
       <Box
         justifyContent="space-evenly"
         display="grid"
@@ -83,27 +94,29 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                     </Text>
                   </CircularProgress>
                 </Flex>
-                <Box h="100%" w="100%">
-                  <HStack justifyContent="end">
+                <HStack h="100%" w="100%" justifyContent="space-between">
+                  <HStack>
+                    <Box mt="18px" ml="30px ">
+                      {isLoading ? (
+                        <BlankSlate width="200px" h="20px" />
+                      ) : (
+                        <Text fontSize="18px" color="gray.600" fontWeight={700}>
+                          {ammount}
+                        </Text>
+                      )}
+                      <Text fontSize="18px" color="gray.600" fontWeight={500}>
+                        {t('upcomingPayment')}
+                      </Text>
+                    </Box>
+                  </HStack>
+                  <VStack justifyContent="space-between" h="100%" alignItems="end">
                     {isLoading ? (
                       <BlankSlate width="60px" h="15px" />
                     ) : (
                       <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
                     )}
-                  </HStack>
-                  <Box mt="18px" ml="30px ">
-                    {isLoading ? (
-                      <BlankSlate width="200px" h="20px" />
-                    ) : (
-                      <Text fontSize="18px" color="gray.600" fontWeight={700}>
-                        {ammount}
-                      </Text>
-                    )}
-                    <Text fontSize="18px" color="gray.600" fontWeight={500}>
-                      {t('upcomingPayment')}
-                    </Text>
-                  </Box>
-                </Box>
+                  </VStack>
+                </HStack>
               </HStack>
             </>
           </Flex>
@@ -116,21 +129,25 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
           gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
           gridGap="15px"
         >
-          <SimpleSlider heading={t('insuranceExpiration')} data={defaultData} isLoading={isLoading} />
+          <SimpleSlider
+            heading={t('insuranceExpiration')}
+            data={defaultData.sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
+            isLoading={isLoading}
+          />
 
           <SimpleSlider
             isLoading={isLoading}
             heading={t('licenseExpiration')}
             data={vendorEntity?.licenseDocuments
-              ?.sort((curr: any, pre: any) => pre.id - curr.id)
               .map((licenseDocument: LicenseDocument) => ({
                 title: LicenseType[licenseDocument.licenseType],
-                date: dateFormat(licenseDocument.licenseExpirationDate),
+                date: licenseDocument.licenseExpirationDate,
                 testId: LicenseType[licenseDocument.licenseType],
-              }))}
+              }))
+              .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
           />
         </Flex>
       </Box>
-    </>
+    </Box>
   )
 }

@@ -7,17 +7,15 @@ import {
   ModalHeader,
   ModalBody,
   Button,
-  Grid,
   ModalProps,
   ModalCloseButton,
-  Stack,
   Tabs,
   TabList,
   Tab,
   TabPanel,
   TabPanels,
-  Flex,
   Progress,
+  Box,
 } from '@chakra-ui/react'
 import { AddProjectInfo } from './add-project-info'
 import { AddPropertyInfo } from './add-property-info'
@@ -26,7 +24,6 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useToast } from '@chakra-ui/react'
 import { useCreateProjectMutation } from 'api/pc-projects'
-import { dateISOFormat } from 'utils/date-time-utils'
 import { useNavigate } from 'react-router-dom'
 import { DevTool } from '@hookform/devtools'
 import { useTranslation } from 'react-i18next'
@@ -131,9 +128,9 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         projectType: `${values.projectType?.value}`,
         woNumber: values.woNumber,
         poNumber: values.poNumber,
-        clientStartDate: dateISOFormat(values.clientStartDate),
-        clientDueDate: dateISOFormat(values.clientDueDate),
-        woaStartDate: dateISOFormat(values.woaStartDate),
+        clientStartDate: values.clientStartDate,
+        clientDueDate: values.clientDueDate,
+        woaStartDate: values.woaStartDate,
         sowOriginalContractAmount: values.sowOriginalContractAmount,
         documents: fileContents ? [fileContents] : [],
         newProperty: property,
@@ -198,63 +195,41 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
   )
 
   return (
-    <>
-      <Flex>
-        <Grid templateColumns="repeat(4, 1fr)" gap={'1rem 0.5rem'}>
-          <Stack w={{ base: '971px', xl: '100%' }} spacing={3}>
-            {isLoading && (
-              <Progress
-                size="xs"
-                isIndeterminate
-                position="absolute"
-                top="60px"
-                left="0"
-                width="100%"
-                aria-label="loading"
-              />
-            )}
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
-                <Tabs
-                  colorScheme="brand"
-                  variant="enclosed"
-                  index={tabIndex}
-                  onChange={index => setTabIndex(index)}
-                  mt="7"
-                >
-                  <TabList color="#4A5568">
-                    <Tab>{t(`${NEW_PROJECT}.projectInformation`)}</Tab>
-                    <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_PROJECT}.propertyInformation`)}</Tab>
-                    <Tab isDisabled={isPropertyInformationNextButtonDisabled}>
-                      {t(`${NEW_PROJECT}.projectManagement`)}
-                    </Tab>
-                  </TabList>
-                  <TabPanels mt="31px" h="100%">
-                    <TabPanel p="0px" h="100%">
-                      <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
-                    </TabPanel>
-                    <TabPanel p="0px" h="100%">
-                      <AddPropertyInfo
-                        isLoading={false}
-                        setNextTab={setNextTab}
-                        onClose={onClose}
-                        isDuplicateAddress={isDuplicateAddress}
-                        setIsDuplicateAddress={setIsDuplicateAddress}
-                      />
-                    </TabPanel>
-                    <TabPanel p="0px" h="100%">
-                      <ManageProject isLoading={isLoading} onClose={onClose} />
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </form>
+    <Box>
+      {isLoading && (
+        <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
+      )}
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
+          <Tabs colorScheme="brand" variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="3">
+            <TabList color="#4A5568" mx="6">
+              <Tab>{t(`${NEW_PROJECT}.projectInformation`)}</Tab>
+              <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_PROJECT}.propertyInformation`)}</Tab>
+              <Tab isDisabled={isPropertyInformationNextButtonDisabled}>{t(`${NEW_PROJECT}.projectManagement`)}</Tab>
+            </TabList>
+            <TabPanels mt="31px" h="100%">
+              <TabPanel p="0px" h="100%">
+                <AddProjectInfo setNextTab={setNextTab} onClose={onClose} />
+              </TabPanel>
+              <TabPanel p="0px" h="100%">
+                <AddPropertyInfo
+                  isLoading={false}
+                  setNextTab={setNextTab}
+                  onClose={onClose}
+                  isDuplicateAddress={isDuplicateAddress}
+                  setIsDuplicateAddress={setIsDuplicateAddress}
+                />
+              </TabPanel>
+              <TabPanel p="0px" h="100%">
+                <ManageProject isLoading={isLoading} onClose={onClose} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </form>
 
-              <DevTool control={methods.control} />
-            </FormProvider>
-          </Stack>
-        </Grid>
-      </Flex>
-    </>
+        <DevTool control={methods.control} />
+      </FormProvider>
+    </Box>
   )
 }
 
@@ -267,12 +242,20 @@ type UpdateProjectProps = CustomModalProps & {
 export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation()
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="5xl" closeOnEsc={true} closeOnOverlayClick={true} variant="custom">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="5xl"
+      closeOnEsc={true}
+      closeOnOverlayClick={true}
+      variant="custom"
+      isCentered
+    >
       <ModalOverlay>
-        <ModalContent minH="600px">
+        <ModalContent>
           <ModalHeader>{t(`${NEW_PROJECT}.title`)}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
-          <ModalBody px="6">
+          <ModalBody px="0">
             <AddProjectForm onClose={onClose} />
           </ModalBody>
         </ModalContent>

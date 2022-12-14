@@ -1,4 +1,4 @@
-import { HStack, StackProps } from '@chakra-ui/react'
+import { Center, Divider, HStack, StackProps } from '@chakra-ui/react'
 
 export const TableFooter: React.FC<StackProps> = ({ children, ...rest }) => {
   return (
@@ -21,5 +21,13 @@ export const ButtonsWrapper: React.FC<StackProps> = ({ children, ...rest }) => {
     >
       {children}
     </HStack>
+  )
+}
+
+export const CustomDivider = () => {
+  return (
+    <Center>
+      <Divider orientation="vertical" height={'15px'} border="1px solid" borderColor="gray.300" />
+    </Center>
   )
 }

@@ -7,6 +7,8 @@ import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -32,8 +34,10 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       </datalist>
       <DebouncedInput
         type={dateFilter ? 'date' : 'text'}
-        value={(columnFilterValue ?? '') as string}
-        onChange={value => column.setFilterValue(value)}
+        value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
+        onChange={value =>
+          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(value)
+        }
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
         // @ts-ignore
@@ -92,6 +96,8 @@ type TableProps = {
   isEmpty?: boolean
   isHideFilters?: boolean
   isShowFooter?: boolean
+  handleOnDrag?: (result) => void
+  handleOnDragStart?: (result) => void
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -101,6 +107,8 @@ export const Table: React.FC<TableProps> = ({
   isEmpty,
   isHideFilters,
   isShowFooter,
+  handleOnDrag,
+  handleOnDragStart,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -118,7 +126,16 @@ export const Table: React.FC<TableProps> = ({
   }
 
   return (
-    <Stack display="table" minH="100%" w="100%" bg="white" boxShadow="sm" rounded="md" position="relative" zIndex={0}>
+    <Stack
+      display="table"
+      minH="calc(100% - 41px)"
+      w="100%"
+      bg="white"
+      boxShadow="sm"
+      rounded="md"
+      position="relative"
+      zIndex={0}
+    >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
           {getHeaderGroups().map(headerGroup => (
@@ -211,56 +228,66 @@ export const Table: React.FC<TableProps> = ({
             <Tr>
               <Td colSpan={100} border="0">
                 <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
-                  There is no data to display.
+                  {t('noDataDisplayed')}
                 </Box>
               </Td>
             </Tr>
           </Tbody>
         ) : (
           <>
-            <Tbody>
-              {isLoading
-                ? getRowModel().rows.map(row => {
-                    return (
-                      <Tr key={row.id}>
+            {!handleOnDrag ? (
+              <Tbody>
+                {isLoading
+                  ? getRowModel().rows.map(row => {
+                      return (
+                        <Tr key={row.id}>
+                          {row.getVisibleCells().map(cell => {
+                            return (
+                              <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
+                                <BlankSlate size="sm" width="100%" />
+                              </Td>
+                            )
+                          })}
+                        </Tr>
+                      )
+                    })
+                  : getRowModel().rows.map(row => (
+                      <Tr
+                        key={row.id}
+                        onClick={() => onRowClick?.(row.original)}
+                        cursor={onRowClick ? 'pointer' : 'default'}
+                        onContextMenu={() => onRightClick?.(row.original)}
+                        _hover={{
+                          bg: 'gray.50',
+                        }}
+                      >
                         {row.getVisibleCells().map(cell => {
+                          const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+
                           return (
-                            <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
-                              <BlankSlate size="sm" width="100%" />
+                            <Td
+                              key={cell.id}
+                              isTruncated
+                              title={cell.getContext()?.getValue() as string}
+                              {...getColumnMaxMinWidths(cell.column)}
+                            >
+                              {value}
                             </Td>
                           )
                         })}
                       </Tr>
-                    )
-                  })
-                : getRowModel().rows.map(row => (
-                    <Tr
-                      key={row.id}
-                      onClick={() => onRowClick?.(row.original)}
-                      cursor={onRowClick ? 'pointer' : 'default'}
-                      onContextMenu={() => onRightClick?.(row.original)}
-                      _hover={{
-                        bg: 'gray.50',
-                      }}
-                    >
-                      {row.getVisibleCells().map(cell => {
-                        const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-
-                        return (
-                          <Td
-                            key={cell.id}
-                            isTruncated
-                            title={cell.getContext()?.getValue() as string}
-                            {...getColumnMaxMinWidths(cell.column)}
-                          >
-                            {value}
-                          </Td>
-                        )
-                      })}
-                    </Tr>
-                  ))}
-            </Tbody>
-
+                    ))}
+              </Tbody>
+            ) : (
+              <DragDropEnabledRows
+                handleOnDragStart={handleOnDragStart}
+                handleOnDrag={handleOnDrag}
+                getRowModel={getRowModel}
+                onRowClick={onRowClick}
+                onRightClick={onRightClick}
+                getColumnMaxMinWidths={getColumnMaxMinWidths}
+              />
+            )}
             {isShowFooter && (
               <Tfoot>
                 {getFooterGroups().map(footerGroup => {
@@ -287,3 +314,68 @@ export const Table: React.FC<TableProps> = ({
 }
 
 export default Table
+
+const DragDropEnabledRows = ({
+  handleOnDrag,
+  getRowModel,
+  onRowClick,
+  onRightClick,
+  getColumnMaxMinWidths,
+  handleOnDragStart,
+}) => {
+  return (
+    <DragDropContext
+      onDragEnd={result => {
+        handleOnDrag?.(result)
+      }}
+      onBeforeCapture={result => {
+        handleOnDragStart?.(result)
+      }}
+    >
+      <Droppable droppableId="droppable">
+        {provided => (
+          <Tbody {...provided.droppableProps} ref={provided.innerRef}>
+            {getRowModel().rows.map?.(row => (
+              <Draggable key={`${row.id}`} draggableId={row.id} index={row.index}>
+                {(provided, snapshot) => (
+                  <>
+                    <Tr
+                      key={row.id}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      onClick={() => onRowClick?.(row.original)}
+                      cursor={onRowClick ? 'pointer' : 'default'}
+                      onContextMenu={() => onRightClick?.(row.original)}
+                      backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                      boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
+                      _hover={{
+                        bg: 'gray.50',
+                      }}
+                    >
+                      {row.getVisibleCells().map(cell => {
+                        const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+
+                        return (
+                          <Td
+                            key={cell.id}
+                            isTruncated
+                            title={cell.getContext()?.getValue() as string}
+                            {...getColumnMaxMinWidths(cell.column)}
+                          >
+                            {value}
+                          </Td>
+                        )
+                      })}
+                    </Tr>
+                  </>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </Tbody>
+        )}
+      </Droppable>
+    </DragDropContext>
+  )
+}

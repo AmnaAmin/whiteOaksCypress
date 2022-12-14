@@ -215,7 +215,7 @@ export const NewWorkOrderForm: React.FC<{
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
 
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
+  const { remainingItems, isLoading, isFetching } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
   const defaultFormValues = () => {
@@ -257,8 +257,19 @@ export const NewWorkOrderForm: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const [woStartDate, watchPercentage, watchUploadWO] = watch(['workOrderStartDate', 'percentage', 'uploadWO'])
+  const [woStartDate, watchPercentage, watchUploadWO, woExpectedCompletionDate] = watch([
+    'workOrderStartDate',
+    'percentage',
+    'uploadWO',
+    'workOrderExpectedCompletionDate',
+  ])
   const watchLineItems = useWatch({ name: 'assignedItems', control })
+
+  useEffect(() => {
+    if (woStartDate! > woExpectedCompletionDate!) {
+      setValue('workOrderExpectedCompletionDate', null)
+    }
+  })
 
   useEffect(() => {
     if (watchPercentage === 0) {
@@ -613,6 +624,7 @@ export const NewWorkOrderForm: React.FC<{
                           required: 'This field is required.',
                         })}
                       />
+
                       <FormErrorMessage>
                         {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
                       </FormErrorMessage>
@@ -736,7 +748,7 @@ export const NewWorkOrderForm: React.FC<{
           onClose={onCloseRemainingItemsModal}
           setAssignedItems={setAssignedItems}
           remainingItems={unassignedItems}
-          isLoading={isLoading}
+          isLoading={isLoading || isFetching}
           swoProject={swoProject}
         />
       )}

@@ -2,6 +2,7 @@ import {
   BiAlignMiddle,
   BiBarChartSquare,
   BiCreditCard,
+  BiDockTop,
   BiDollarCircle,
   BiGroup,
   BiLineChart,
@@ -14,6 +15,7 @@ import {
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
+import { SIDE_NAV } from './sideNav.i18n'
 
 type Menu = {
   pathTo: string
@@ -30,19 +32,19 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.vendor]: [
     {
       pathTo: '/vendorDashboard',
-      title: 'Dashboard',
+      title: `${SIDE_NAV}.dashboard`,
       Icon: FaHome,
       color: '#ED8936',
     },
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/vendors',
-      title: 'Profile',
+      title: `${SIDE_NAV}.profile`,
       Icon: BiUser,
       color: '#68D391',
     },
@@ -57,25 +59,25 @@ export const MENU_ROLE_BASED: Menus = {
     // },
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/payable',
-      title: 'Payable',
+      title: `${SIDE_NAV}.payable`,
       Icon: BiCreditCard,
       color: '#68D391',
     },
     {
       pathTo: '/receivable',
-      title: 'Receivable',
+      title: `${SIDE_NAV}.receivable`,
       Icon: BiDollarCircle,
       color: '#4299E1',
     },
     {
       pathTo: '/vendors',
-      title: 'Vendors',
+      title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
@@ -87,7 +89,7 @@ export const MENU_ROLE_BASED: Menus = {
     // },
     {
       pathTo: '/clients',
-      title: 'Clients',
+      title: `${SIDE_NAV}.clients`,
       Icon: BiGroup,
       color: '#0BC5EA',
     },
@@ -96,19 +98,19 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.vendorManager]: [
     {
       pathTo: '/vendors',
-      title: 'Vendors',
+      title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
     {
       pathTo: '/vendorSkills',
-      title: 'Vendors Skills',
+      title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
     },
     {
       pathTo: '/markets',
-      title: 'Markets',
+      title: `${SIDE_NAV}.markets`,
       Icon: BiStats,
       color: '#68D391',
     },
@@ -117,31 +119,31 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.doc]: [
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/vendors',
-      title: 'Vendors',
+      title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
     {
       pathTo: '/clients',
-      title: 'Clients',
+      title: `${SIDE_NAV}.clients`,
       Icon: BiGroup,
       color: '#0BC5EA',
     },
     {
       pathTo: '/reports',
-      title: 'Reports',
+      title: `${SIDE_NAV}.reports`,
       Icon: BiBarChartSquare,
       color: '#FC8181',
     },
     {
       pathTo: '/performance',
-      title: 'Performance',
+      title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
       color: '#68D391',
     },
@@ -150,66 +152,201 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.fpm]: [
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/performance',
-      title: 'Performance',
+      title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
       color: '#68D391',
     },
   ],
 
-  [UserTypes.admin]: [
+  [UserTypes.publicAdmin]: [
     {
-      pathTo: '/userManager',
-      title: 'User Mgmt',
-      Icon: BiUserPlus,
-      color: '#ECC94B',
+      pathTo: '/adminDashboard',
+      title: `${SIDE_NAV}.dashboard`,
+      Icon: FaHome,
+      color: '#ED8936',
     },
-  ],
-  [UserTypes.accounting]: [
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/payable',
-      title: 'Payable',
+      title: `${SIDE_NAV}.payable`,
       Icon: BiCreditCard,
       color: '#68D391',
     },
     {
       pathTo: '/receivable',
-      title: 'Receivable',
+      title: `${SIDE_NAV}.receivable`,
       Icon: BiDollarCircle,
       color: '#4299E1',
     },
     {
       pathTo: '/vendors',
-      title: 'Vendors',
+      title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
     {
       pathTo: '/clients',
-      title: 'Clients',
+      title: `${SIDE_NAV}.clients`,
       Icon: BiGroup,
       color: '#0BC5EA',
     },
     {
       pathTo: '/reports',
-      title: 'Reports',
+      title: `${SIDE_NAV}.reports`,
       Icon: BiBarChartSquare,
       color: '#FC8181',
     },
     {
       pathTo: '/performance',
-      title: 'Performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/markets',
+      title: `${SIDE_NAV}.markets`,
+      Icon: BiStats,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/projectType',
+      title: 'Project type',
+      Icon: BiDockTop,
+      color: '#9B2C2C',
+    },
+    {
+      pathTo: '/vendorSkills',
+      title: `${SIDE_NAV}.vendorsSkills`,
+      Icon: BiAlignMiddle,
+      color: '#4E87F8',
+    },
+  ],
+  [UserTypes.admin]: [
+    {
+      pathTo: '/adminDashboard',
+      title: `${SIDE_NAV}.dashboard`,
+      Icon: FaHome,
+      color: '#ED8936',
+    },
+    {
+      pathTo: '/projects',
+      title: `${SIDE_NAV}.projects`,
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+    {
+      pathTo: '/payable',
+      title: `${SIDE_NAV}.payable`,
+      Icon: BiCreditCard,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/receivable',
+      title: `${SIDE_NAV}.receivable`,
+      Icon: BiDollarCircle,
+      color: '#4299E1',
+    },
+    {
+      pathTo: '/vendors',
+      title: `${SIDE_NAV}.vendors`,
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+    {
+      pathTo: '/clients',
+      title: `${SIDE_NAV}.clients`,
+      Icon: BiGroup,
+      color: '#0BC5EA',
+    },
+    {
+      pathTo: '/reports',
+      title: `${SIDE_NAV}.reports`,
+      Icon: BiBarChartSquare,
+      color: '#FC8181',
+    },
+    {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
+      Icon: BiLineChart,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/userManager',
+      title: `${SIDE_NAV}.userMgmt`,
+      Icon: BiUserPlus,
+      color: '#ECC94B',
+    },
+    {
+      pathTo: '/markets',
+      title: `${SIDE_NAV}.markets`,
+      Icon: BiStats,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/projectType',
+      title: 'Project type',
+      Icon: BiDockTop,
+      color: '#9B2C2C',
+    },
+    {
+      pathTo: '/vendorSkills',
+      title: `${SIDE_NAV}.vendorsSkills`,
+      Icon: BiAlignMiddle,
+      color: '#4E87F8',
+    },
+  ],
+
+  [UserTypes.accounting]: [
+    {
+      pathTo: '/projects',
+      title: `${SIDE_NAV}.projects`,
+      Icon: FaAlignCenter,
+      color: '#4E87F8',
+    },
+    {
+      pathTo: '/payable',
+      title: `${SIDE_NAV}.payable`,
+      Icon: BiCreditCard,
+      color: '#68D391',
+    },
+    {
+      pathTo: '/receivable',
+      title: `${SIDE_NAV}.receivable`,
+      Icon: BiDollarCircle,
+      color: '#4299E1',
+    },
+    {
+      pathTo: '/vendors',
+      title: `${SIDE_NAV}.vendors`,
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+    {
+      pathTo: '/clients',
+      title: `${SIDE_NAV}.clients`,
+      Icon: BiGroup,
+      color: '#0BC5EA',
+    },
+    {
+      pathTo: '/reports',
+      title: `${SIDE_NAV}.reports`,
+      Icon: BiBarChartSquare,
+      color: '#FC8181',
+    },
+    {
+      pathTo: '/performance',
+      title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
       color: '#68D391',
     },
@@ -217,43 +354,43 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.operations]: [
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/payable',
-      title: 'Payable',
+      title: `${SIDE_NAV}.payable`,
       Icon: BiCreditCard,
       color: '#68D391',
     },
     {
       pathTo: '/receivable',
-      title: 'Receivable',
+      title: `${SIDE_NAV}.receivable`,
       Icon: BiDollarCircle,
       color: '#4299E1',
     },
     {
       pathTo: '/vendors',
-      title: 'Vendors',
+      title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
     },
     {
       pathTo: '/clients',
-      title: 'Clients',
+      title: `${SIDE_NAV}.clients`,
       Icon: BiGroup,
       color: '#0BC5EA',
     },
     {
       pathTo: '/reports',
-      title: 'Reports',
+      title: `${SIDE_NAV}.reports`,
       Icon: BiBarChartSquare,
       color: '#FC8181',
     },
     {
       pathTo: '/performance',
-      title: 'Performance',
+      title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
       color: '#68D391',
     },
@@ -267,7 +404,7 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.clientManager]: [
     {
       pathTo: '/clients',
-      title: 'Clients',
+      title: `${SIDE_NAV}.clients`,
       Icon: BiGroup,
       color: '#0BC5EA',
     },
@@ -275,13 +412,13 @@ export const MENU_ROLE_BASED: Menus = {
   [UserTypes.constructionOperations]: [
     {
       pathTo: '/projects',
-      title: 'Projects',
+      title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
       color: '#4E87F8',
     },
     {
       pathTo: '/vendors',
-      title: 'Vendors',
+      title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
     },

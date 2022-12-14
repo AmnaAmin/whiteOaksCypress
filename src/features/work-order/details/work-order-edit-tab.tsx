@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useCallback, useEffect, useState } from 'react'
-import { useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
+import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
@@ -43,6 +43,9 @@ import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
+import ReactSelect from 'components/form/react-select'
+import { CANCEL_WO_OPTIONS } from 'constants/index'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
@@ -54,7 +57,7 @@ const CalenderCard = props => {
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text data-testid={props.testId} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date || 'mm/dd/yyyy'}
         </Text>
       </Box>
@@ -70,6 +73,7 @@ const InformationCard = props => {
           {props.title}
         </Text>
         <Text
+          data-testid={props.testId}
           color="gray.500"
           fontSize="14px"
           fontStyle="normal"
@@ -86,6 +90,7 @@ const InformationCard = props => {
 }
 
 interface FormValues {
+  cancel: any
   workOrderStartDate: string | null
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
@@ -124,6 +129,7 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const { isAdmin } = useUserRolesSelector()
 
   const {
     skillName,
@@ -137,7 +143,8 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
-  const { completedByVendor } = useFieldEnableDecisionDetailsTab({ workOrder, formValues })
+  const { completedByVendor, workOrderStartDateEnable, workOrderExpectedCompletionDateEnable } =
+    useFieldEnableDecisionDetailsTab({ workOrder, formValues })
 
   // Remaining Items handles
   const {
@@ -250,11 +257,13 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems))
     }
-  }, [workOrder, reset, workOrderAssignedItems])
+  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
+  const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
   return (
     <Box>
@@ -271,18 +280,23 @@ const WorkOrderDetailTab = props => {
               )}
             </Box>
             <SimpleGrid columns={5}>
-              <InformationCard title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
-              <InformationCard title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
-              <InformationCard title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
-              <InformationCard title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
+              <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+              <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+              <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+              <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
             </SimpleGrid>
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
 
             <SimpleGrid columns={5}>
-              <CalenderCard title={t(`${WORK_ORDER}.woIssued`)} date={dateFormat(workOrderIssueDate)} />
               <CalenderCard
+                testId={'woIssued'}
+                title={t(`${WORK_ORDER}.woIssued`)}
+                date={dateFormat(workOrderIssueDate)}
+              />
+              <CalenderCard
+                testId={'lwSubmitted'}
                 title={t(`${WORK_ORDER}.lwSubmitted`)}
                 date={
                   dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
@@ -290,6 +304,7 @@ const WorkOrderDetailTab = props => {
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard
+                testId={'completionVariance'}
                 title={t(`${WORK_ORDER}.completionVariance`)}
                 date={workOrderCompletionDateVariance ?? '0'}
               />
@@ -300,17 +315,40 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
+              {isAdmin && !isCancelled && (
+                <Box w="215px">
+                  <FormControl zIndex="2">
+                    <FormLabel variant="strong-label" size="md">
+                      {t('cancelWorkOrder')}
+                    </FormLabel>
+                    <Controller
+                      control={control}
+                      name="cancel"
+                      render={({ field }) => (
+                        <>
+                          <ReactSelect
+                            options={CANCEL_WO_OPTIONS}
+                            onChange={option => field.onChange(option)}
+                            isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                          />
+                        </>
+                      )}
+                    />
+                  </FormControl>
+                </Box>
+              )}
               <Box w="215px">
                 <FormControl zIndex="2">
                   <FormLabel variant="strong-label" size="md">
                     {t('expectedStart')}
                   </FormLabel>
                   <Input
+                    data-testid="workOrderStartDate"
                     id="workOrderStartDate"
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!workOrderStartDateEnable}
                     variant="required-field"
                     {...register('workOrderStartDate', {
                       required: 'This is required field.',
@@ -324,12 +362,13 @@ const WorkOrderDetailTab = props => {
                     {t('expectedCompletion')}
                   </FormLabel>
                   <Input
+                    data-testid="workOrderExpectedCompletionDate"
                     id="workOrderExpectedCompletionDate"
                     type="date"
                     size="md"
                     css={calendarIcon}
                     min={woStartDate as string}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!workOrderExpectedCompletionDateEnable}
                     variant="required-field"
                     {...register('workOrderExpectedCompletionDate', {
                       required: 'This is required field.',
@@ -343,6 +382,7 @@ const WorkOrderDetailTab = props => {
                     {t('completedByVendor')}
                   </FormLabel>
                   <Input
+                    data-testid="workOrderDateCompleted"
                     id="workOrderDateCompleted"
                     type="date"
                     size="md"
@@ -407,7 +447,7 @@ const WorkOrderDetailTab = props => {
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button colorScheme="brand" type="submit" disabled={disabledSave}>
+            <Button data-testId="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
               {t('save')}
             </Button>
           </HStack>

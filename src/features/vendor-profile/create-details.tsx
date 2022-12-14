@@ -21,7 +21,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useStates } from 'api/pc-projects'
-import { FILTERED_PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   parseMarketAPIDataToFormValues,
   parseTradeAPIDataToFormValues,
@@ -130,11 +130,15 @@ const CreateVendorDetail: React.FC<{
               type="email"
               {...register('businessEmailAddress', {
                 required: isActive && 'This is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email',
+                },
               })}
               variant="required-field"
               size="md"
             />
-            <FormErrorMessage pos="absolute">{errors.businessEmailAddress?.message}</FormErrorMessage>
+            <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -148,7 +152,17 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryEmail')}
             </FormLabel>
 
-            <Input {...register('secondEmailAddress')} variant="outline" size="md" />
+            <Input
+              type="email"
+              {...register('secondEmailAddress', {
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email',
+                },
+              })}
+              variant="outline"
+              size="md"
+            />
           </FormControl>
           <GridItem></GridItem>
         </HStack>
@@ -397,9 +411,9 @@ const CreateVendorDetail: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
-                        options={FILTERED_PAYMENT_TERMS_OPTIONS}
+                        options={PAYMENT_TERMS_OPTIONS}
                         menuPosition="fixed"
-                        maxMenuHeight={80}
+                        maxMenuHeight="100%"
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                       />
@@ -496,7 +510,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
     setValue('state', { label: state?.name, value: state?.code })
     setValue(
       'paymentTerm',
-      FILTERED_PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),
+      PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),
     )
     if (markets?.length && vendorProfileData) {
       const tradeFormValues = parseMarketAPIDataToFormValues(markets, vendorProfileData as VendorProfile)
@@ -507,7 +521,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
       const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
       setValue('trades', tradeFormValues.trades)
     }
-  }, [reset, vendorProfileData, documentScore, documentStatus, states, FILTERED_PAYMENT_TERMS_OPTIONS, markets, trades])
+  }, [reset, vendorProfileData, documentScore, documentStatus, states, PAYMENT_TERMS_OPTIONS, markets, trades])
 }
 
 export default CreateVendorDetail
