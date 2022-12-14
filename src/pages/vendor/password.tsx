@@ -124,8 +124,7 @@ const VendorProfilePassword = () => {
                   sx={inputFieldStyle}
                   id="currentPassword"
                   {...register('currentPassword')}
-                  rounded="6px"
-                  borderLeft="2px solid #4E87F8"
+                  variant="required-field"
                 />
                 <InputRightElement h="40px">
                   <Icon
@@ -186,8 +185,7 @@ const VendorProfilePassword = () => {
                     sx={inputFieldStyle}
                     id="confirmPassword"
                     {...register('confirmPassword')}
-                    rounded="6px"
-                    borderLeft="2px solid #4E87F8"
+                    variant="required-field"
                   />
                   <InputRightElement h="40px">
                     <Icon
