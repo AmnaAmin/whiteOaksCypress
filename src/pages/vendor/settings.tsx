@@ -173,10 +173,7 @@ const Settings = React.forwardRef(() => {
               placeholder={t('firstName')}
               register={register}
               controlStyle={{ w: '215px' }}
-              elementStyle={{
-                bg: 'white',
-                borderLeft: '2px solid #4E87F8',
-              }}
+              variant="required-field"
               rules={{ required: 'This is required field' }}
               name={`firstName`}
             />
