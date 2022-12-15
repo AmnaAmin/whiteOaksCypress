@@ -27,7 +27,7 @@ const useVendorCardJson = cards => {
       {
         id: 'pastDue',
         title: t('pastDue'),
-        value: 'past due',
+        value: 'pastDue',
         number: cards?.find(c => c.label === 'pastDue')?.count,
         IconElement: <IconElement Icon={BiCalendar} bg="#E8F0FF" />,
       },
