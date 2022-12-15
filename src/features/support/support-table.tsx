@@ -1,5 +1,4 @@
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
@@ -8,48 +7,86 @@ import { useState } from 'react'
 import { useSupport } from 'api/support'
 import { SupportModal } from './support-modal'
 
+export enum SUPPORT_FIELDS_TYPES {
+  bug = 4,
+  FeatureRequest = 5,
+  Major = 1,
+  Medium = 3,
+  Low = 2,
+  New = 66,
+  WorkInProgress = 67,
+  Resolved = 69,
+  Rejected = 70,
+}
+
+const SupportTypes: React.FC<{ Id: number }> = ({ Id }) => {
+  return (
+    <>
+      {Id === 4
+        ? 'bug'
+        : null || Id === SUPPORT_FIELDS_TYPES.bug
+        ? 'Feature Request'
+        : null || Id === SUPPORT_FIELDS_TYPES.FeatureRequest
+        ? 'Feature Request'
+        : null || Id === SUPPORT_FIELDS_TYPES.Major
+        ? 'Major'
+        : null || Id === SUPPORT_FIELDS_TYPES.Medium
+        ? 'Medium'
+        : null || Id === SUPPORT_FIELDS_TYPES.Low
+        ? 'Low'
+        : null || Id === SUPPORT_FIELDS_TYPES.New
+        ? 'New'
+        : null || Id === SUPPORT_FIELDS_TYPES.WorkInProgress
+        ? 'WorkIn Progress'
+        : null || Id === SUPPORT_FIELDS_TYPES.Resolved
+        ? 'Resolved'
+        : null || Id === SUPPORT_FIELDS_TYPES.Rejected
+        ? 'Rejected'
+        : null}
+    </>
+  )
+}
+
 export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${SUPPORT}.id`,
-    accessorKey: 'value',
+    accessorKey: 'id',
   },
   {
     header: `${SUPPORT}.title`,
-    accessorKey: 'value',
+    accessorKey: 'title',
   },
   {
     header: `${SUPPORT}.description`,
-    accessorKey: 'value',
+    accessorKey: 'description',
   },
   {
     header: `${SUPPORT}.issueType`,
-    accessorKey: 'value',
+    accessorKey: 'lkpSupportTypeId',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <SupportTypes Id={value} />
+    },
   },
   {
     header: `${SUPPORT}.severity`,
-    accessorKey: 'value',
+    accessorKey: 'lkpSeverityId',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <SupportTypes Id={value} />
+    },
   },
   {
     header: `${SUPPORT}.status`,
-    accessorKey: 'value',
+    accessorKey: 'lkpStatusId',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <SupportTypes Id={value} />
+    },
   },
   {
     header: `${SUPPORT}.createdBy`,
-    accessorKey: 'value',
-  },
-  {
-    header: `${SUPPORT}.createdDate`,
-    accessorKey: 'value',
-    accessorFn(cellInfo) {
-      return dateFormat(cellInfo.createdDate)
-    },
-  },
-  {
-    header: `${SUPPORT}.modifiedDate`,
-    accessorKey: 'value',
-    accessorFn(cellInfo) {
-      return dateFormat(cellInfo.modifiedDate)
-    },
+    accessorKey: 'createdBy',
   },
 ]
 

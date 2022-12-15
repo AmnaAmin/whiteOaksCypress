@@ -54,6 +54,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({ onClose }) => 
     setValue,
     register,
     handleSubmit,
+    reset,
   } = useForm<SupportFormValues>({
     defaultValues,
   })
@@ -72,7 +73,12 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({ onClose }) => 
     }
 
     const payload = parseSupportFormValuesToAPIPayload(formValues, attachment)
-    createTicket(payload)
+    createTicket(payload, {
+      onSuccess: () => {
+        onClose?.()
+        reset()
+      },
+    })
   }
 
   return (
