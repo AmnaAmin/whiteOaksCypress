@@ -407,6 +407,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         ) : (
           <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
             {transactionFields.map((transactionField, index) => {
+              const values = getValues()
+              const defaultNegative = [
+                TransactionTypeValues.draw,
+                TransactionTypeValues.material,
+                TransactionTypeValues.lateFee,
+                TransactionTypeValues.factoring,
+              ].some(id => id === values?.transactionType?.value)
+              const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
+
               return (
                 <Grid
                   className="amount-input-row"
@@ -480,33 +489,18 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                   customInput={Input}
                                   value={field.value}
                                   placeholder="Add Amount"
-                                  onChange={e => {
-                                    if (e.currentTarget.value !== '') {
-                                      const transactionTypeId = getValues('transactionType')?.value
-                                      const isRefundMaterial = getValues('refundMaterial')
-                                      const isRefundLateFee = getValues('refundLateFee')
-                                      const isRefundFactoring = getValues('refundFactoring')
-                                      const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring
-
-                                      const defaultNegative = [
-                                        TransactionTypeValues.draw,
-                                        TransactionTypeValues.material,
-                                        TransactionTypeValues.lateFee,
-                                        TransactionTypeValues.factoring,
-                                      ].some(id => id === transactionTypeId)
-
-                                      // if by default its a negative transaction, we arent allowing - by user input.
-                                      const inputValue =
-                                        defaultNegative || isRefund
-                                          ? e.currentTarget.value.replace('-', '')
-                                          : e.currentTarget.value
-
-                                      field.onChange(
-                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
-                                      )
-                                    } else {
-                                      field.onChange('')
+                                  onKeyDown={e => {
+                                    if (defaultNegative && e?.code === 'Minus') {
+                                      e.preventDefault()
                                     }
+                                  }}
+                                  onChange={e => {
+                                    const inputValue = e.currentTarget.value
+                                    inputValue !== ''
+                                      ? field.onChange(
+                                          defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
+                                        )
+                                      : field.onChange('')
                                   }}
                                   variant={'required-field'}
                                   size="sm"
