@@ -129,7 +129,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
           const isLicenseChanged = checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index])
 
           return (
-            <HStack key={index} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
+            <HStack key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
               <Box w="2em" color="barColor.100" fontSize="15px">
                 <Center>
                   <Icon
