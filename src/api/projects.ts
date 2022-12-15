@@ -186,7 +186,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 export const SELECTED_CARD_MAP_URL = {
   active: 'status.equals=34',
   completed: 'status.equals=36',
-  pastdue: 'status.equals=114',
+  pastDue: 'status.equals=114',
   invoiced: 'status.equals=110',
   declined: 'status.equals=111',
 }

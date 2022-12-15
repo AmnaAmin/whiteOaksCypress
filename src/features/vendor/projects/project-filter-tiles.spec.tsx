@@ -59,7 +59,7 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       expect(onSelectCard).toHaveBeenCalled()
       expect(onSelectCard).toBeCalledWith('active')
       expect(onSelectCard).toHaveBeenCalled()
-      expect(onSelectCard).toBeCalledWith('pastdue')
+      expect(onSelectCard).toBeCalledWith('pastDue')
       expect(onSelectCard).toHaveBeenCalled()
       expect(onSelectCard).toBeCalledWith('completed')
       expect(onSelectCard).toHaveBeenCalled()
