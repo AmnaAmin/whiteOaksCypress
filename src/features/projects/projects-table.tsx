@@ -61,7 +61,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     PROJECT_COLUMNS,
     TableNames.project,
     {
-      'projectStatus': selectedCard,
+      'projectStatus': selectedCard !== 'past due' ? selectedCard : '',
       'clientDueDate': days?.find(c => c.dayName === selectedDay)?.dueDate
     }
   ) 
