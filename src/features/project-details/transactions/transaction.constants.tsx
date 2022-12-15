@@ -90,6 +90,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn: cellInfo => {
       return numeral(cellInfo.transactionTotal).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: `${TRANSACTION}.transactionStatus`,
@@ -105,6 +106,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn: cellInfo => {
       return dateFormat(cellInfo.modifiedDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: `${TRANSACTION}.approvedBy`,

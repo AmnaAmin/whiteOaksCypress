@@ -5,11 +5,12 @@ import { Button, ButtonProps, Flex, HStack, Icon, Text } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
 import { reduceArrayToObject } from 'utils'
-import XLSX from 'xlsx'
 import { useTableContext } from './table-context'
 import { useTranslation } from 'react-i18next'
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-query'
 import { useCallback } from 'react'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
@@ -24,39 +25,56 @@ type ExportButtonProps = ButtonProps & {
 const useExportToExcel = () => {
   const { t } = useTranslation()
   const { tableInstance } = useTableContext()
+  const workbook = new Excel.Workbook()
 
   const exportToExcel = useCallback(
-    (data: any[], fileName?: string) => {
-      const columns = tableInstance?.options?.columns || []
-      const columnsNames = columns.map(column => t(column.header as string))
-
-      // Make dictionary object of columns key with accessorKey and value the object of column because
-      // we want access the accessorKey value through accessorFn for customize value
-      const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
-
-      // Here we map all the key values with accessorFn
-      const dataMapped = data.map((row: any) => {
-        return Object.keys(row).reduce((acc, key) => {
-          const columnDef = columnDefWithAccessorKeyAsKey[key]
-          const header = columnDef?.header
-
-          const value = columnDef?.accessorFn?.(row) || row[key]
-
-          // If the header is not defined we don't want to export it
-          if (!header) return acc
-
-          return {
-            ...acc,
-            [t(header)]: value,
+    async (data: any[], fileName?: string) => {
+      try {
+        const worksheet = workbook.addWorksheet('Sheet 1')
+        // each columns contains header and its mapping key from data
+        const columns = tableInstance?.options?.columns || []
+        const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
+        const columnsNames = columns.map((column, index) => {
+          const style = {}
+          // @ts-ignore
+          if (column?.meta?.format === 'currency') {
+            style['numFmt'] = '$#,##0.00;[Red]$#,##0.00'
           }
-        }, {})
-      })
+          return { header: t(column.header as string), key: t(column.header as string), style }
+        })
+        worksheet.columns = columnsNames
+        const dataMapped = data.map((row: any) => {
+          return Object.keys(row).reduce((acc, key) => {
+            const columnDef = columnDefWithAccessorKeyAsKey[key]
+            const header = columnDef?.header
+            const value = columnDef?.meta?.format === 'date' ? new Date(row[key]) : row[key]
 
-      const wb = XLSX.utils.book_new()
-      const ws = XLSX.utils.json_to_sheet(dataMapped, { header: columnsNames })
+            // If the header is not defined we don't want to export it
+            if (!header) return acc
 
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1')
-      XLSX.writeFile(wb, fileName ?? 'export.csv')
+            return {
+              ...acc,
+              [t(header)]: value,
+            }
+          }, {})
+        })
+
+        // loop through data and add each one to worksheet
+        dataMapped.forEach(singleData => {
+          worksheet.addRow(singleData)
+        })
+
+        // write the content using writeBuffer
+        const buf = await workbook.xlsx.writeBuffer()
+
+        // download the processed file
+        saveAs(new Blob([buf]), `${fileName ?? 'export'}.xlsx`)
+      } catch (error) {
+        console.error('<<<ERRROR>>>', error)
+      } finally {
+        // removing worksheet's instance to create new one
+        workbook.removeWorksheet('Sheet 1')
+      }
     },
     [tableInstance],
   )
@@ -115,7 +133,6 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
   ...rest
 }) => {
   const exportToExcel = useExportToExcel()
-
   const handleExport = () => {
     exportToExcel(data, fileName)
   }
