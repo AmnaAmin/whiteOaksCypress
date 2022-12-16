@@ -33,7 +33,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
         // bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 87.64%, rgba(230, 241, 255, 0) 98.4%)',
         bg: '#22375B',
         boxShadow: '0px 2px 4px -3px gray !important',
-        fontWeight: 600,
+        // fontWeight: 500,
       }
     : {}
 
@@ -59,11 +59,11 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       {...rest}
       rounded={6}
     >
-      <HStack>
+      <HStack spacing="16px">
         <Box _groupHover={{ opacity: 1 }} fontSize="20px">
           {icon}
         </Box>
-        <Text fontSize="18px" lineHeight="28px" fontStyle="normal">
+        <Text fontSize="16px" lineHeight="28px" fontStyle="normal">
           {title}
         </Text>
       </HStack>
