@@ -65,11 +65,13 @@ export const UpcomingPaymentTable = () => {
       header: t(`${DASHBOARD}.dueDateWO`),
       accessorKey: 'workOrderExpectedCompletionDate',
       accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
+      meta: { format: 'date' },
     },
     {
       header: t(`${DASHBOARD}.expectedPayment`),
       accessorKey: 'expectedPaymentDate',
       accessorFn: row => dateFormat(row.expectedPaymentDate),
+      meta: { format: 'date' },
     },
   ]
 
@@ -111,8 +113,8 @@ export const UpcomingPaymentTable = () => {
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="brand"
-              fileName="upcoming-payment.xlsx"
+              colorScheme="darkBlue"
+              fileName="upcoming-payment"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>

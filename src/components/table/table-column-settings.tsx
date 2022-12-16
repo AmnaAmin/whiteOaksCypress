@@ -88,7 +88,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        colorScheme="brand"
+        colorScheme="darkBlue"
         variant="ghost"
         m={0}
         onClick={onOpen}
