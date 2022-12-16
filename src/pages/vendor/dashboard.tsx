@@ -81,7 +81,7 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px">
+            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'} rounded={6}>
               <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
