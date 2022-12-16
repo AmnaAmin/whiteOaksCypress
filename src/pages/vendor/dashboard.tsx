@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
       >
         <Card p={0} rounded="13px" flex={1} bg="#FDFDFF">
           <Flex mb="5px" mt="25px">
-            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
+            <Text color="gray.700" fontStyle="Poppins" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
             </Text>
           </Flex>
