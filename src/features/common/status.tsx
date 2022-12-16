@@ -67,6 +67,7 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
       variant="solid"
       backgroundColor={style?.backgroundColor}
       color={style?.color}
+      border='1px solid'
     >
       <TagLabel fontSize="14px" fontStyle="normal" fontWeight={400} p="2px 10px 2px 10px" textTransform="capitalize">
         {value?.toLocaleLowerCase()}
