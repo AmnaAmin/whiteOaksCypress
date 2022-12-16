@@ -36,7 +36,7 @@ type ProjectProps = {
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
@@ -87,16 +87,28 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   }
 
   const onPageSizeChange = pageSize => {
-    const paginationSettings = generateSettingColumn({
-      field: pageSize,
-      contentKey: 'pagination' as string,
-      order: columns.length,
-      userId: email,
-      type: TableNames.project,
-      hide: true,
-    })
-    settingColumns.push(paginationSettings)
-    postGridColumn(settingColumns as any)
+    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
+    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
+    console.log('columnsWithoutPaginationRecords - ', columnsWithoutPaginationRecords);    
+    if(paginationCol) {
+      console.log('grid api with existing record')
+      // postGridColumn([
+      //   ...columnsWithoutPaginationRecords,
+      //   {...paginationCol, field: pageSize}
+      // ] as any)
+    } else {
+      console.log('grid api with new record')
+      // const paginationSettings = generateSettingColumn({
+      //   field: pageSize,
+      //   contentKey: 'pagination' as string,
+      //   order: columns.length,
+      //   userId: email,
+      //   type: TableNames.project,
+      //   hide: true,
+      // })
+      // settingColumns.push(paginationSettings)
+      // postGridColumn(settingColumns as any)
+    }
   }
 
   return (
