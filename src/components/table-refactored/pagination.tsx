@@ -64,7 +64,11 @@ export const SelectPageSize = ({ onPageSizeChange }) => {
 
   return (
     <Flex gap="1" alignItems="center">
-      <Select value={pageSize} onChange={handlePageSizeChange}>
+      <Select
+        style={{ color: '#4A5568', border: '1px solid #CBD5E0' }}
+        value={pageSize}
+        onChange={handlePageSizeChange}
+      >
         {[25, 50, 100].map(pageSize => (
           <option key={pageSize} value={pageSize}>
             Show {pageSize}
