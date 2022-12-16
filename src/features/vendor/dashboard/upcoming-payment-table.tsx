@@ -114,7 +114,7 @@ export const UpcomingPaymentTable = () => {
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="upcoming-payment.xlsx"
+              fileName="upcoming-payment"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>

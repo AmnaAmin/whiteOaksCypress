@@ -123,20 +123,20 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const filtersInitialValues = {
-    'statusLabel': selectedCard !== 'pastDue' ? selectedCard : '',
-  };
-  
+    statusLabel: selectedCard !== 'pastDue' ? selectedCard : '',
+  }
+
   const tableColumnsWithFilters = useMemo(() => {
-    return tableColumns.map((col:any) => {
-      if(Object.keys(filtersInitialValues).includes(col.accessorKey)) {
+    return tableColumns.map((col: any) => {
+      if (Object.keys(filtersInitialValues).includes(col.accessorKey)) {
         return {
           ...col,
-          meta: {filterInitialState: filtersInitialValues[col.accessorKey]}
+          meta: { filterInitialState: filtersInitialValues[col.accessorKey] },
         }
       }
-      return col;
+      return col
     })
-  }, [tableColumns]);
+  }, [tableColumns])
 
   const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
     filteredUrl + '&' + queryStringWithPagination,
@@ -170,7 +170,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="workOrders.xlsx"
+              fileName="workOrders"
             />
             <CustomDivider />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
