@@ -123,6 +123,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const filtersInitialValues = {
     'statusLabel': selectedCard !== 'pastDue' ? selectedCard : '',
   };
+  
   const tableColumnsWithFilters = useMemo(() => {
     return tableColumns.map((col:any) => {
       if(Object.keys(filtersInitialValues).includes(col.accessorKey)) {
