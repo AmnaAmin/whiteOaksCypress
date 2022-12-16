@@ -105,12 +105,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
           <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportButton
-                columns={tableColumns}
-                fetchedData={tableData}
-                colorScheme="brand"
-                fileName="projects.xlsx"
-              />
+              <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
               <CustomDivider />
               {settingColumns && (
                 <TableColumnSettings disabled={isFetching || isLoading} onSave={onSave} columns={settingColumns} />

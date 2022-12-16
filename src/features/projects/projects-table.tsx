@@ -30,7 +30,13 @@ type ProjectProps = {
   resetFilters: boolean
 }
 
-export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM, resetFilters }) => {
+export const ProjectsTable: React.FC<ProjectProps> = ({
+  selectedCard,
+  selectedDay,
+  userIds,
+  selectedFPM,
+  resetFilters,
+}) => {
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
@@ -62,11 +68,11 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     PROJECT_COLUMNS,
     TableNames.project,
     {
-      'projectStatus': selectedCard !== 'past due' ? selectedCard : '',
-      'clientDueDate': days?.find(c => c.dayName === selectedDay)?.dueDate
+      projectStatus: selectedCard !== 'past due' ? selectedCard : '',
+      clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
     },
-    resetFilters
-  ) 
+    resetFilters,
+  )
 
   const onSave = (columns: any) => {
     postGridColumn(columns)
@@ -97,7 +103,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="projects.xlsx"
+              fileName="projects"
             />
             <CustomDivider />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}

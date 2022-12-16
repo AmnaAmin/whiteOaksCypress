@@ -53,7 +53,7 @@ const Dashboard: React.FC = () => {
       >
         <Card p={0} rounded="13px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
-            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
+            <Text color="gray.700" fontStyle="Poppins" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
             </Text>
           </Flex>
@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
             <Text
               mt="25px"
               ml="25px"
-              color="gray.600"
+              color="gray.700"
               fontStyle="normal"
               fontWeight={500}
               fontSize="18px"
@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px">
+            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'} rounded={6}>
               <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
