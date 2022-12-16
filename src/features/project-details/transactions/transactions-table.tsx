@@ -57,7 +57,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 refetch={refetch}
                 isLoading={isLoading}
                 colorScheme="brand"
-                fileName="transactions.csv"
+                fileName="transactions"
               />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}

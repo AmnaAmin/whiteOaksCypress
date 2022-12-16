@@ -25,6 +25,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(row) {
         return numeral(row.revenue).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Profit',
@@ -32,6 +33,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(row) {
         return numeral(row.profit).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Margin %',
@@ -46,6 +48,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(row) {
         return numeral(row.target).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Badge',
@@ -61,6 +64,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(cellInfo) {
         return numeral(cellInfo.disqualifiedRevenue).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Email',

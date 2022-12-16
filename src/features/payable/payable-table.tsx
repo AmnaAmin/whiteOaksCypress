@@ -110,7 +110,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                   refetch={refetch}
                   isLoading={isExportDataLoading}
                   colorScheme="brand"
-                  fileName="payable.xlsx"
+                  fileName="payable"
                 />
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />

@@ -65,11 +65,13 @@ export const UpcomingPaymentTable = () => {
       header: t(`${DASHBOARD}.dueDateWO`),
       accessorKey: 'workOrderExpectedCompletionDate',
       accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
+      meta: { format: 'date' },
     },
     {
       header: t(`${DASHBOARD}.expectedPayment`),
       accessorKey: 'expectedPaymentDate',
       accessorFn: row => dateFormat(row.expectedPaymentDate),
+      meta: { format: 'date' },
     },
   ]
 
