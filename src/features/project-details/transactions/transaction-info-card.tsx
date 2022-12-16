@@ -5,7 +5,6 @@ import Status from 'features/common/status'
 import { useTranslation } from 'react-i18next'
 import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import "@fontsource/poppins"
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
@@ -52,9 +51,7 @@ export const TransactionInfoCard: React.FC<{
         </Box>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('WODueDate')}>
-        <Text color="gray.500">
-          {projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate as string) : 'mm/dd/yyyy'}
-        </Text>
+        <Text color="gray.500">{projectData?.vendorWODueDate ? dateFormat(projectData?.vendorWODueDate as string) : 'mm/dd/yyyy'}</Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('contactName')}>
         <Text color="gray.500">{projectData?.projectManager}</Text>

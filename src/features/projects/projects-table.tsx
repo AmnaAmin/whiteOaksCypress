@@ -27,9 +27,10 @@ type ProjectProps = {
   selectedDay: string
   userIds?: number[]
   selectedFPM?: any
+  resetFilters: boolean
 }
 
-export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
+export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM, resetFilters }) => {
   const navigate = useNavigate()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
@@ -63,7 +64,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     {
       'projectStatus': selectedCard !== 'past due' ? selectedCard : '',
       'clientDueDate': days?.find(c => c.dayName === selectedDay)?.dueDate
-    }
+    },
+    resetFilters
   ) 
 
   const onSave = (columns: any) => {

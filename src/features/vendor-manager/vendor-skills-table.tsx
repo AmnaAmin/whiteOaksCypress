@@ -55,6 +55,7 @@ export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
         Header: `${VENDOR_MANAGER}.createdDate`,
         accessor: 'createdDate',
         Cell: ({ value }) => dateFormat(value),
+        meta: { format: 'date' },
       },
       {
         Header: `${VENDOR_MANAGER}.modifiedBy`,
@@ -64,6 +65,7 @@ export const VendorSkillsTable = React.forwardRef((props: any, ref) => {
         Header: `${VENDOR_MANAGER}.modifiedDate`,
         accessor: 'modifiedDate',
         Cell: ({ value }) => dateFormat(value),
+        meta: { format: 'date' },
       },
     ],
     ref,

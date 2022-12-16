@@ -47,6 +47,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.createdDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'COI-GL Expiration Date',
@@ -54,6 +55,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.coiglExpirationDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'COI-WC Expiration Date',
@@ -61,6 +63,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.coiWcExpirationDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'EIN/SSN',
@@ -128,12 +131,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportCustomButton
-                columns={tableColumns}
-                data={filterVendors}
-                colorScheme="brand"
-                fileName="vendors.csv"
-              />
+              <ExportCustomButton columns={tableColumns} data={filterVendors} colorScheme="brand" fileName="vendors" />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
