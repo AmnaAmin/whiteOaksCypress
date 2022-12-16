@@ -52,7 +52,12 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
   })
 }
 
-export const useTableColumnSettings = (columns: TableColumns, tableName: TableNames, filtersInitialValues={}, resetFilters:boolean=false) => {
+export const useTableColumnSettings = (
+  columns: TableColumns,
+  tableName: TableNames,
+  filtersInitialValues = {},
+  resetFilters: boolean = false,
+) => {
   const client = useClient()
   const { email } = useUserProfile() as Account
   const { t } = useTranslation()
@@ -94,22 +99,24 @@ export const useTableColumnSettings = (columns: TableColumns, tableName: TableNa
   })
 
   const tableColumns = sortTableColumnsBasedOnSettingColumnsOrder(settingColumns, filteredColumns)
-  const tableColumnsWithFilters = tableColumns.map((col:any) => {
-    if(filtersInitialValues && Object.keys(filtersInitialValues).includes(col.accessorKey)) {
+  const tableColumnsWithFilters = tableColumns.map((col: any) => {
+    if (filtersInitialValues && Object.keys(filtersInitialValues).includes(col.accessorKey)) {
       return {
         ...col,
         meta: {
+          ...col?.meta,
           filterInitialState: filtersInitialValues[col.accessorKey],
-          resetFilters
-        }
+          resetFilters,
+        },
       }
     }
     return {
       ...col,
       meta: {
-        resetFilters
-      }
-    };
+        ...col?.meta,
+        resetFilters,
+      },
+    }
   })
   return {
     tableColumns: tableColumnsWithFilters,
