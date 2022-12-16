@@ -13,6 +13,7 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(row) {
       return numeral(row.originalAmount).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   // {
   //   header: `${TRANSACTION}.revisedSOWAmount`,
@@ -27,6 +28,7 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(row) {
       return numeral(row.changeOrder).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   // {
   //   header: `${TRANSACTION}.revisedCOs`,
@@ -41,6 +43,7 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(row) {
       return numeral(row.draw).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   // {
   //   header: `${TRANSACTION}.adjustment`,
@@ -55,6 +58,7 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(row) {
       return numeral(row.finalSOWAmount).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: `${TRANSACTION}.partialPayments`,
@@ -62,6 +66,7 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(row) {
       return numeral(row.partialPayment).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: `${TRANSACTION}.AR`,
@@ -69,5 +74,6 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(row) {
       return numeral(row.accountReceivable).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
 ]
