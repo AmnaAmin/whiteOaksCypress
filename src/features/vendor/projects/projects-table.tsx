@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Link } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { SELECTED_CARD_MAP_URL, useGetAllWorkOrders, useWorkOrders } from 'api/projects'
@@ -122,6 +122,22 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+  const filtersInitialValues = {
+    'statusLabel': selectedCard !== 'pastDue' ? selectedCard : '',
+  };
+  
+  const tableColumnsWithFilters = useMemo(() => {
+    return tableColumns.map((col:any) => {
+      if(Object.keys(filtersInitialValues).includes(col.accessorKey)) {
+        return {
+          ...col,
+          meta: {filterInitialState: filtersInitialValues[col.accessorKey]}
+        }
+      }
+      return col;
+    })
+  }, [tableColumns]);
+
   const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
     filteredUrl + '&' + queryStringWithPagination,
     pagination.pageSize,
@@ -139,7 +155,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     <Box overflow={'auto'} h="calc(100vh - 270px)" roundedTop={6}>
       <TableContextProvider
         data={workOrderData}
-        columns={tableColumns}
+        columns={tableColumnsWithFilters}
         totalPages={totalPages}
         pagination={pagination}
         setPagination={setPagination}
@@ -150,7 +166,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
-              columns={tableColumns}
+              columns={tableColumnsWithFilters}
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
