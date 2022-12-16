@@ -36,7 +36,7 @@ type ProjectProps = {
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
@@ -70,9 +70,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     if (settingColumns) {
       const paginationColIndex = settingColumns?.length - 1
       const paginationRecord = settingColumns[paginationColIndex];
-      const newPageSize = paginationRecord?.field || 25;
+      const newPageSize = paginationRecord?.field || 0;
 
-      if(paginationRecord?.field) {
+      if(paginationRecord.contentKey === 'pagination' && paginationRecord?.field) {
         setPagination({ pageIndex: pagination.pageIndex, pageSize: Number(newPageSize) })
       }
     }
@@ -89,25 +89,23 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const onPageSizeChange = pageSize => {
     const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
     const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
-    console.log('columnsWithoutPaginationRecords - ', columnsWithoutPaginationRecords);    
+
     if(paginationCol) {
-      console.log('grid api with existing record')
-      // postGridColumn([
-      //   ...columnsWithoutPaginationRecords,
-      //   {...paginationCol, field: pageSize}
-      // ] as any)
+      postGridColumn([
+        ...columnsWithoutPaginationRecords,
+        {...paginationCol, field: pageSize}
+      ] as any)
     } else {
-      console.log('grid api with new record')
-      // const paginationSettings = generateSettingColumn({
-      //   field: pageSize,
-      //   contentKey: 'pagination' as string,
-      //   order: columns.length,
-      //   userId: email,
-      //   type: TableNames.project,
-      //   hide: true,
-      // })
-      // settingColumns.push(paginationSettings)
-      // postGridColumn(settingColumns as any)
+      const paginationSettings = generateSettingColumn({
+        field: pageSize,
+        contentKey: 'pagination' as string,
+        order: columns.length,
+        userId: email,
+        type: TableNames.project,
+        hide: true,
+      })
+      settingColumns.push(paginationSettings)
+      postGridColumn(settingColumns as any)
     }
   }
 
@@ -135,7 +133,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
               fileName="projects.xlsx"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns?.filter(col => col.contentKey !== 'pagination')} />}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
