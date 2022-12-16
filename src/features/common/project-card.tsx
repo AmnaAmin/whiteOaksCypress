@@ -42,10 +42,10 @@ export const ProjectCard = ({
         borderColor={selectedCard === value ? '#4E87F8' : ''}
         _hover={{ bg: 'blue.50' }}
       >
-        <Flex height="100%" w="100%">
-          <Text marginLeft={'20px'}>{IconElement}</Text>
-          <HStack w="65%" justifyContent="space-between">
-            <Text fontSize="14px" fontWeight="400" marginTop="4px" paddingLeft={'20px'} color="gray.700">
+        <Flex w="100%" mb="5px">
+          <Text marginLeft={'7.87px'}>{IconElement}</Text>
+          <HStack w="100%" justifyContent="space-between">
+            <Text fontSize="14px" fontWeight="400" marginTop="4px" paddingLeft={'9.89px'} color="gray.700">
               {title}
             </Text>
             <Text
@@ -53,7 +53,7 @@ export const ProjectCard = ({
               fontSize="20px"
               fontStyle="normal"
               color="gray.700"
-              paddingLeft={'20px'}
+              pr="19.27px"
               data-testid={`value-of-${title.toLocaleLowerCase()}`}
             >
               {isLoading ? <BlankSlate /> : number}
