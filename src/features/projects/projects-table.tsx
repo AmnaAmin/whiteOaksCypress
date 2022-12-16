@@ -36,7 +36,7 @@ type ProjectProps = {
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
@@ -66,6 +66,18 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
   })
 
+  useEffect(() => {
+    if (settingColumns) {
+      const paginationColIndex = settingColumns?.length - 1
+      const paginationRecord = settingColumns[paginationColIndex];
+      const newPageSize = paginationRecord?.field || 25;
+
+      if(paginationRecord?.field) {
+        setPagination({ pageIndex: pagination.pageIndex, pageSize: Number(newPageSize) })
+      }
+    }
+  }, [settingColumns?.length])
+
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
@@ -76,7 +88,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
 
   const onPageSizeChange = pageSize => {
     const paginationSettings = generateSettingColumn({
-      field: `${pagination.pageSize}`,
+      field: pageSize,
       contentKey: 'pagination' as string,
       order: columns.length,
       userId: email,
@@ -86,13 +98,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
     settingColumns.push(paginationSettings)
     postGridColumn(settingColumns as any)
   }
-
-  useEffect(() => {
-    if (settingColumns) {
-      const paginationSettings = settingColumns.find(s => s.colId === 'pagination')
-      setPagination({ pageIndex: pagination.pageIndex, pageSize: Number(paginationSettings?.field) })
-    }
-  }, [settingColumns?.length])
 
   return (
     <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
