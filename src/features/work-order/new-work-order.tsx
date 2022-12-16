@@ -486,7 +486,7 @@ export const NewWorkOrderForm: React.FC<{
                         control={control}
                         rules={{
                           required: 'This is required',
-                          min: { value: 1, message: 'Enter a valid amount' },
+                          min: { value: 0, message: 'Enter a valid amount' },
                         }}
                         name="clientApprovedAmount"
                         render={({ field, fieldState }) => {
