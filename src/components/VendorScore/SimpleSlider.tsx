@@ -44,7 +44,7 @@ export const SimpleSlider: React.FC<{
   }, [props.data])
   return (
     <Card
-      rounded="2xl"
+      rounded="6px"
       minH="156px"
       padding={{
         base: '30px 30px 10px',
@@ -63,7 +63,7 @@ export const SimpleSlider: React.FC<{
             fontStyle="normal"
             fontWeight={500}
             fontSize="18px"
-            color="gray.600"
+            color="gray.700"
             pb={3}
             mx={{ base: 'unset', lg: 'unset', '2xl': '5' }}
           >
@@ -106,7 +106,7 @@ const SliderItem: React.FC<{ title: string; date: string; testId?: string }> = (
       color={isDateExpired(date)}
       alignItems="center"
       fontWeight={400}
-      fontSize="16px"
+      fontSize="14px"
     >
       <Text>{title}</Text>
       <Text data-testId={testId}>{dateFormat(date)}</Text>
