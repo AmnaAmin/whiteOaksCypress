@@ -3,7 +3,7 @@
 
 import React, { ChangeEvent } from 'react'
 
-import { Button, ButtonProps, Flex, HStack, Input, StackProps, Text } from '@chakra-ui/react'
+import { Button, ButtonProps, Flex, HStack, Input, Select, StackProps, Text } from '@chakra-ui/react'
 import { useTableInstance } from './table-context'
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from 'react-icons/md'
 import { HiOutlineChevronDoubleLeft, HiOutlineChevronDoubleRight } from 'react-icons/hi'
@@ -52,24 +52,25 @@ export const GotoPage: React.FC = () => {
   )
 }
 
-export const SelectPageSize: React.FC = () => {
+export const SelectPageSize = ({ onPageSizeChange }) => {
   const tableInstance = useTableInstance()
   const { pageSize } = tableInstance.getState().pagination
 
   // handle page index change
   const handlePageSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     tableInstance.setPageSize(parseInt(event.target.value, 10))
+    onPageSizeChange(event.target.value)
   }
 
   return (
     <Flex gap="1" alignItems="center">
-      <select value={pageSize} onChange={handlePageSizeChange}>
-        {[5, 10, 20, 30, 40, 50].map(pageSize => (
+      <Select value={pageSize} onChange={handlePageSizeChange}>
+        {[25, 50, 100].map(pageSize => (
           <option key={pageSize} value={pageSize}>
             Show {pageSize}
           </option>
         ))}
-      </select>
+      </Select>
     </Flex>
   )
 }

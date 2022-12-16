@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useGetAllProjects, useProjects, useWeekDayProjectsDue } from 'api/projects'
@@ -11,6 +11,7 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
+  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
@@ -21,6 +22,9 @@ import { PaginationState, SortingState } from '@tanstack/react-table'
 import { PROJECT_COLUMNS } from 'constants/projects.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
+import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
+import { Account } from 'types/account.types'
+import { useUserProfile } from 'utils/redux-common-selectors'
 
 type ProjectProps = {
   selectedCard: string
@@ -31,8 +35,8 @@ type ProjectProps = {
 
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDay, userIds, selectedFPM }) => {
   const navigate = useNavigate()
-
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { email } = useUserProfile() as Account
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
@@ -57,14 +61,10 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { tableColumns, settingColumns } = useTableColumnSettings(
-    PROJECT_COLUMNS,
-    TableNames.project,
-    {
-      'projectStatus': selectedCard !== 'past due' ? selectedCard : '',
-      'clientDueDate': days?.find(c => c.dayName === selectedDay)?.dueDate
-    }
-  ) 
+  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project, {
+    projectStatus: selectedCard !== 'past due' ? selectedCard : '',
+    clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
+  })
 
   const onSave = (columns: any) => {
     postGridColumn(columns)
@@ -73,6 +73,26 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.id}`)
   }
+
+  const onPageSizeChange = pageSize => {
+    const paginationSettings = generateSettingColumn({
+      field: `${pagination.pageSize}`,
+      contentKey: 'pagination' as string,
+      order: columns.length,
+      userId: email,
+      type: TableNames.project,
+      hide: true,
+    })
+    settingColumns.push(paginationSettings)
+    postGridColumn(settingColumns as any)
+  }
+
+  useEffect(() => {
+    if (settingColumns) {
+      const paginationSettings = settingColumns.find(s => s.colId === 'pagination')
+      setPagination({ pageIndex: pagination.pageIndex, pageSize: Number(paginationSettings?.field) })
+    }
+  }, [settingColumns?.length])
 
   return (
     <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
@@ -106,6 +126,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
             <GotoPreviousPage />
             <GotoNextPage />
             <GotoLastPage />
+            <SelectPageSize onPageSizeChange={onPageSizeChange} />
           </TablePagination>
         </TableFooter>
       </TableContextProvider>
