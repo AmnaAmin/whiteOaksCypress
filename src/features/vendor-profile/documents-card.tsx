@@ -170,7 +170,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-            {(!isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
+            {(isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
           </HStack>
         </HStack>
         <Box mt="30px">
@@ -233,7 +233,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
+              {(isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
@@ -305,7 +305,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
+              {(isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
@@ -367,7 +367,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
+              {(isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
@@ -429,7 +429,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(!isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
+              {(isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>

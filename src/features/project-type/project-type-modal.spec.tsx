@@ -5,7 +5,7 @@ import { Providers } from 'providers'
 import { fireEvent, render, screen, waitFor } from 'utils/test-utils'
 import { ProjectTypeModal } from './project-type-modal'
 
-jest.setTimeout(150000)
+jest.setTimeout(250000)
 
 const renderNewProjectTypeModal = async ({ onClose, isOpen, projectTypetDetails }) => {
   await render(<ProjectTypeModal projectTypetDetails={projectTypetDetails} onClose={onClose} isOpen={isOpen} />, {
