@@ -79,6 +79,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.workOrderExpectedCompletionDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'expectedPaymentDate',
@@ -86,6 +87,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.expectedPaymentDate)
     },
+    meta: { format: 'date' },
   },
 ]
 
