@@ -9,7 +9,7 @@ import "@fontsource/poppins"
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
-    <Center flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
+    <Center flexDir="column" borderRight="1px solid #CBD5E0" px={5} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" fontWeight={400} fontFamily="poppins">
         <Tooltip label={title} color="gray.700" placement="top">
           <Text color="gray.700" noOfLines={1}>
