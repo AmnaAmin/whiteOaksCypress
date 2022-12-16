@@ -15,6 +15,7 @@ import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
 import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
+import { boxShadow } from 'theme/common-style'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -50,7 +51,7 @@ const Dashboard: React.FC = () => {
         w="100%"
         pb="10px"
       >
-        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF">
+        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
             <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
@@ -67,6 +68,7 @@ const Dashboard: React.FC = () => {
           ml={{ base: 0, xl: '15px' }}
           mt={{ base: '30px', xl: 0 }}
           bg="#FDFDFF"
+          style={boxShadow}
         >
           <Flex mb="20px">
             <Text
@@ -89,14 +91,14 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
-
-      <Box width="100%" pb="5">
-        <FormLabel variant="strong-lable" size={'lg'}>
-          {t(`${DASHBOARD}.upcomingPayment`)}
-        </FormLabel>
-
-        <UpcomingPaymentTable />
-      </Box>
+      <Card w="100%" style={boxShadow}>
+        <Box mt={3} ml={1}>
+          <FormLabel variant="strong-lable" fontSize={'18px'} lineHeight={'28px'}>
+            {t(`${DASHBOARD}.upcomingPayment`)}
+          </FormLabel>
+          <UpcomingPaymentTable />
+        </Box>
+      </Card>
     </VStack>
   )
 }
