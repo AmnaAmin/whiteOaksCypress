@@ -4,12 +4,9 @@
 import { Button, ButtonProps, Flex, HStack, Icon, Text } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
-import { reduceArrayToObject } from 'utils'
-import XLSX from 'xlsx'
-import { useTableContext } from './table-context'
 import { useTranslation } from 'react-i18next'
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-query'
-import { useCallback } from 'react'
+import { useSaveToExcel } from './util'
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
@@ -21,48 +18,6 @@ type ExportButtonProps = ButtonProps & {
   fileName?: string
 }
 
-const useExportToExcel = () => {
-  const { t } = useTranslation()
-  const { tableInstance } = useTableContext()
-
-  const exportToExcel = useCallback(
-    (data: any[], fileName?: string) => {
-      const columns = tableInstance?.options?.columns || []
-      const columnsNames = columns.map(column => t(column.header as string))
-
-      // Make dictionary object of columns key with accessorKey and value the object of column because
-      // we want access the accessorKey value through accessorFn for customize value
-      const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
-
-      // Here we map all the key values with accessorFn
-      const dataMapped = data.map((row: any) => {
-        return Object.keys(row).reduce((acc, key) => {
-          const columnDef = columnDefWithAccessorKeyAsKey[key]
-          const header = columnDef?.header
-
-          const value = columnDef?.accessorFn?.(row) || row[key]
-
-          // If the header is not defined we don't want to export it
-          if (!header) return acc
-
-          return {
-            ...acc,
-            [t(header)]: value,
-          }
-        }, {})
-      })
-
-      const wb = XLSX.utils.book_new()
-      const ws = XLSX.utils.json_to_sheet(dataMapped, { header: columnsNames })
-
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1')
-      XLSX.writeFile(wb, fileName ?? 'export.csv')
-    },
-    [tableInstance],
-  )
-
-  return exportToExcel
-}
 /*
    This is used when exporting full CSV data from the server side pagination table        
 */
@@ -75,7 +30,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   ...rest
 }) => {
   const { t } = useTranslation()
-  const exportToExcel = useExportToExcel()
+  const exportToExcel = useSaveToExcel()
 
   const handleExport = () => {
     if (fetchedData) {
@@ -114,8 +69,7 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
   columns,
   ...rest
 }) => {
-  const exportToExcel = useExportToExcel()
-
+  const exportToExcel = useSaveToExcel()
   const handleExport = () => {
     exportToExcel(data, fileName)
   }
