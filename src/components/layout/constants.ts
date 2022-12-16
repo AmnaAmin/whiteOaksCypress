@@ -34,7 +34,7 @@ export const MENU_ROLE_BASED: Menus = {
       pathTo: '/vendorDashboard',
       title: `${SIDE_NAV}.dashboard`,
       Icon: FaHome,
-      color: '#ED8936',
+      color: '#F6AD55',
     },
     {
       pathTo: '/projects',

@@ -33,7 +33,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
         // bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 87.64%, rgba(230, 241, 255, 0) 98.4%)',
         bg: '#22375B',
         boxShadow: '0px 2px 4px -3px gray !important',
-        // fontWeight: 500,
+        fontWeight: 500,
       }
     : {}
 
@@ -42,10 +42,11 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       as={Link}
       to={pathTo}
       color="gray.400"
-      fontSize="sm"
+      fontSize="12px"
       display="block"
       pl="5"
       py="2"
+      mx="5px"
       borderRight="6px solid transparent"
       cursor="pointer"
       _hover={{
@@ -54,7 +55,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
         borderColor: '#68D391',
       }}
       className="group"
-      fontWeight={500}
+      fontWeight={400}
       {...linkState}
       {...rest}
       rounded={6}
@@ -63,7 +64,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
         <Box _groupHover={{ opacity: 1 }} fontSize="20px">
           {icon}
         </Box>
-        <Text fontSize="16px" lineHeight="28px" fontStyle="normal">
+        <Text fontSize="14px" lineHeight="28px" fontStyle="normal">
           {title}
         </Text>
       </HStack>
