@@ -19,7 +19,8 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
   
   // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
   // In react table, meta key can be added to any column and meta can hold any arbitrary value
-  const filterInitialState = (column.columnDef?.meta as any)?.filterInitialState || null;
+  const metaData:any = column.columnDef?.meta as any;
+  const filterInitialState = metaData?.filterInitialState || null;
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
 
@@ -45,6 +46,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
         list={column.id + 'list'}
         // @ts-ignore
         minW={dateFilter && '127px'}
+        resetValue={!!metaData?.resetFilters}
       />
       <div className="h-1" />
     </>
@@ -54,6 +56,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
 // A debounced input react component
 function DebouncedInput({
   value: initialValue,
+  resetValue,
   onChange,
   debounce = 500,
   ...props
@@ -61,12 +64,13 @@ function DebouncedInput({
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
+  resetValue?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = React.useState(initialValue)
 
   React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
+    setValue(resetValue ? '' : initialValue)
+  }, [initialValue, resetValue])
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {

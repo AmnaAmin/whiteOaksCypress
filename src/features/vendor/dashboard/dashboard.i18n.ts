@@ -21,6 +21,9 @@ export const dashboard = {
         licenseExpirationMessage: 'Your license has expired, to reactivate please renew your license.',
         insuranceExpirationMessage: 'Your Insurance has expired, to reactivate please renew your Insurance.',
         renewNow: 'Renew Now!',
+
+        // Vendor Score
+        vendorscore: 'Vendor Score',
       },
     },
   },
@@ -43,6 +46,9 @@ export const dashboard = {
         licenseExpirationMessage: 'Su licencia ha caducado, para reactivarla renueve su licencia.',
         insuranceExpirationMessage: 'Su seguro ha vencido, para reactivarlo renueve su seguro.',
         renewNow: '¡Renovar ahora!',
+
+        // Vendor Score
+        vendorscore: 'Puntuación del proveedor',
       },
     },
   },

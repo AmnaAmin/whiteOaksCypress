@@ -33,7 +33,7 @@ export enum STATUS {
 
 const STATUS_COLOR = {
   [STATUS.Paid]: { color: '#C05621', backgroundColor: '#FEEBCB ' },
-  [STATUS.Active]: { color: '#63B3ED', backgroundColor: '#EBF8FF' },
+  [STATUS.Active]: { color: '#4299E1', backgroundColor: '#EBF8FF', borderColor: '#90CDF4' },
   [STATUS.Approved]: { color: '#4E87F8', backgroundColor: '#EBF8FF' },
   [STATUS.Completed]: { color: '#ED8936 ', backgroundColor: '#FEEBCB' },
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
@@ -63,10 +63,13 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
     <Tag
       data-testid="status"
       size="md"
-      rounded="6px"
+      rounded="4px"
       variant="solid"
       backgroundColor={style?.backgroundColor}
       color={style?.color}
+      borderWidth="0.5px"
+      borderColor={style?.borderColor}
+      borderStyle="solid"
     >
       <TagLabel fontSize="14px" fontStyle="normal" fontWeight={400} p="2px 10px 2px 10px" textTransform="capitalize">
         {value?.toLocaleLowerCase()}
