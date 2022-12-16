@@ -16,8 +16,11 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 
 function Filter({ column, table }: { column: Column<any, unknown>; table: TableType<any> }) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
+  
+  // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
+  // In react table, meta key can be added to any column and meta can hold any arbitrary value
+  const filterInitialState = (column.columnDef?.meta as any)?.filterInitialState || null;
+  const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
 
   const sortedUniqueValues = React.useMemo(
@@ -228,7 +231,7 @@ export const Table: React.FC<TableProps> = ({
             <Tr>
               <Td colSpan={100} border="0">
                 <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
-                  There is no data to display.
+                  {t('noDataDisplayed')}
                 </Box>
               </Td>
             </Tr>

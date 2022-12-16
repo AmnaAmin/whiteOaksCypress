@@ -56,9 +56,15 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard, selectedDa
   )
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
-
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+  const { tableColumns, settingColumns } = useTableColumnSettings(
+    PROJECT_COLUMNS,
+    TableNames.project,
+    {
+      'projectStatus': selectedCard !== 'past due' ? selectedCard : '',
+      'clientDueDate': days?.find(c => c.dayName === selectedDay)?.dueDate
+    }
+  ) 
 
   const onSave = (columns: any) => {
     postGridColumn(columns)

@@ -38,6 +38,7 @@ import {
   useUploadMaterialAttachment,
 } from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
+import NumberFormat from 'react-number-format'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -383,6 +384,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             <GridItem id="all-checkbox">
               <Checkbox
                 variant="normal"
+                colorScheme="CustomPrimaryColor"
                 isChecked={allChecked}
                 isDisabled={isApproved}
                 isIndeterminate={isIndeterminate}
@@ -405,6 +407,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         ) : (
           <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
             {transactionFields.map((transactionField, index) => {
+              const values = getValues()
+              const defaultNegative = [
+                TransactionTypeValues.draw,
+                TransactionTypeValues.material,
+                TransactionTypeValues.lateFee,
+                TransactionTypeValues.factoring,
+              ].some(id => id === values?.transactionType?.value)
+              const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
+
               return (
                 <Grid
                   className="amount-input-row"
@@ -468,47 +479,44 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         control={control}
                         rules={{
                           required: 'This is required field',
-                          pattern: /^[0-9]+$/,
                         }}
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              <Input
-                                {...field}
-                                data-testid={`transaction-amount-${index}`}
-                                size="sm"
-                                placeholder="Add Amount"
-                                readOnly={isApproved}
-                                variant={isApproved ? 'unstyled' : 'required-field'}
-                                autoComplete="off"
-                                value={isApproved ? numeral(Number(field.value)).format('$0,0[.]00') : field.value}
-                                onChange={event => {
-                                  const inputValue = !isNaN(Number(event.currentTarget.value))
-                                    ? Number(event.currentTarget.value)
-                                    : ''
-                                  if (inputValue === '') {
-                                    field.onChange('')
-                                    return
-                                  }
-                                  const transactionTypeId = getValues('transactionType')?.value
-                                  const isRefundMaterial = getValues('refundMaterial')
-                                  const isRefundLateFee = getValues('refundLateFee')
-                                  const isRefundFactoring = getValues('refundFactoring')
-                                  const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring
-
-                                  field.onChange(
-                                    TransactionTypeValues.draw === transactionTypeId ||
-                                      ([
-                                        TransactionTypeValues.material,
-                                        TransactionTypeValues.lateFee,
-                                        TransactionTypeValues.factoring,
-                                      ].some(id => id === transactionTypeId) &&
-                                        !isRefund)
-                                      ? -1 * Math.abs(inputValue)
-                                      : inputValue,
-                                  )
-                                }}
-                              />
+                              {!isApproved ? (
+                                <NumberFormat
+                                  data-testid={`transaction-amount-${index}`}
+                                  customInput={Input}
+                                  value={field.value}
+                                  placeholder="Add Amount"
+                                  onKeyDown={e => {
+                                    if (defaultNegative && e?.code === 'Minus') {
+                                      e.preventDefault()
+                                    }
+                                  }}
+                                  onChange={e => {
+                                    const inputValue = e.currentTarget.value
+                                    inputValue !== ''
+                                      ? field.onChange(
+                                          defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
+                                        )
+                                      : field.onChange('')
+                                  }}
+                                  variant={'required-field'}
+                                  size="sm"
+                                />
+                              ) : (
+                                <Input
+                                  {...field}
+                                  data-testid={`transaction-amount-${index}`}
+                                  size="sm"
+                                  placeholder="Add Amount"
+                                  readOnly={isApproved}
+                                  variant={'unstyles'}
+                                  autoComplete="off"
+                                  value={numeral(Number(field.value)).format('$0,0[.]00')}
+                                />
+                              )}
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </>
                           )

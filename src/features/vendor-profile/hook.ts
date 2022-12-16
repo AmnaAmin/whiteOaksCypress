@@ -1,22 +1,25 @@
 import { Control, useWatch } from 'react-hook-form'
 import { DocumentsCardFormValues } from 'types/vendor.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-import { isBefore } from 'date-fns'
 
 export const useDocumentLicenseMessage = ({ data }) => {
   const DocumentDates = [
-    data?.w9DocumentDate,
+    // data?.w9DocumentDate,
     data?.agreementSignedDate,
     data?.autoInsuranceExpirationDate,
     data?.coiWcExpirationDate,
     data?.coiglExpirationDate,
   ]
 
-  const expiredLicenseDateProfile = data?.licenseDocuments?.map(value =>
-    isBefore(new Date(value?.licenseExpirationDate), new Date()),
-  )
+  const currentDate = datePickerFormat(new Date())
 
-  const expiredInsuranceDateProfile = DocumentDates.map(value => isBefore(new Date(value), new Date()))
+  const expiredLicenseDateProfile = data?.licenseDocuments
+    ?.map(value => (datePickerFormat(value?.licenseExpirationDate) as string) < currentDate!)
+    .includes(true)
+
+  const expiredInsuranceDateProfile = DocumentDates.map(
+    value => (datePickerFormat(value) as string) < currentDate!,
+  ).includes(true)
 
   return {
     expiredLicenseDateProfile,
@@ -36,12 +39,21 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
   const watchCoiWcExpDate = useWatch({ control, name: 'coiWcExpDate' })
   const watchCoiWcExpFile = useWatch({ control, name: 'coiWcExpFile' })
 
-  const isW9DocumentDateChanged = watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string)
-  const isAgreementSignedDateChanged = watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string)
+  const isW9DocumentDateChanged =
+    watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string) || watchW9DocumentDate === null
+
+  const isAgreementSignedDateChanged =
+    watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string) || watchAgreementSignedDate === null
+
   const isAutoInsuranceExpDateChanged =
-    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string)
-  const isCoiGlExpDateChanged = watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string)
-  const isCoiWcExpDateChanged = watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string)
+    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string) ||
+    watchAutoInsuranceExpDate === null
+
+  const isCoiGlExpDateChanged =
+    watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string) || watchCoiGlExpDate === null
+
+  const isCoiWcExpDateChanged =
+    watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string) || watchCoiWcExpDate === null
 
   const isAllFiledWatch =
     !isW9DocumentDateChanged ||
@@ -76,9 +88,13 @@ export const checkIsLicenseChanged = (values: any, licenseDocument) => {
   const watchExpiryDate = licenseDocument?.licenseExpirationDate
   const watchExpirationFile = values?.expirationFile
 
-  const isLicenseTypeChanged = watchLicenseType !== values.licenseType
-  const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber
-  const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate)
+  const watchLicenseTypeNot = watchLicenseType !== undefined
+  const watchLicenseNumberNot = watchLicenseNumber !== undefined
+  const watchExpiryDateNot = watchExpiryDate !== undefined
 
-  return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || watchExpirationFile
+  const isLicenseTypeChanged = watchLicenseType !== values.licenseType && watchLicenseTypeNot
+  const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber && watchLicenseNumberNot
+  const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate) && watchExpiryDateNot
+
+  return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || !!watchExpirationFile
 }

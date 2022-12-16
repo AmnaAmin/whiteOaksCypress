@@ -3,7 +3,7 @@ import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'api/vendor-details'
-import { convertDateTimeFromServer } from 'utils/date-time-utils'
+import { convertDateWithTimeStamp } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
 
@@ -21,11 +21,23 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
             </Box>
           </Flex>
           <Flex justifyContent="center" color="gray.500">
-            <span>{convertDateTimeFromServer(otherNote.createdDate)}</span>
+            <span>{convertDateWithTimeStamp(otherNote.createdDate)}</span>
           </Flex>
         </Flex>
       ) : (
-        <Box w="150px" mr={5} />
+        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
+          <WrapItem justifyContent="center" mb={1}>
+            <Avatar size="sm" bg="blackAlpha.200" />
+          </WrapItem>
+          <Flex justifyContent="center" color="gray.600">
+            <Box maxW="150px" whiteSpace={'nowrap'} overflow="hidden" textOverflow={'ellipsis'}>
+              {userNote.createdBy}
+            </Box>
+          </Flex>
+          <Flex justifyContent="center" color="gray.500">
+            <span>{convertDateWithTimeStamp(userNote.createdDate)}</span>
+          </Flex>
+        </Flex>
       )}
       <Text
         whiteSpace="pre-wrap"
