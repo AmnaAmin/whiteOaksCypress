@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
             <Text
               mt="25px"
               ml="25px"
-              color="gray.600"
+              color="gray.700"
               fontStyle="normal"
               fontWeight={500}
               fontSize="18px"
