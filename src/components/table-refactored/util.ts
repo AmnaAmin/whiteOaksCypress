@@ -197,7 +197,7 @@ export const useSaveToExcel = () => {
           var style = {}
           // @ts-ignore
           if (column?.meta?.format === 'currency') {
-            style = { numFmt: '"$"#,##0.00;-"$"#,##0.00' }
+            style = { numFmt: '"$"#,##0.00;[Red]-"$"#,##0.00' }
           }
           return { header: t(column.header as string), key: t(column.header as string), style }
         })
@@ -208,7 +208,10 @@ export const useSaveToExcel = () => {
           return Object.keys(row).reduce((acc, key) => {
             const columnDef = columnDefWithAccessorKeyAsKey[key]
             const header = columnDef?.header
-            const value = columnDef?.meta?.format === 'date' ? new Date(row[key]) : row[key]
+            var value = row[key]
+            if (!!row[key] && columnDef?.meta?.format === 'date') {
+              value = new Date(row[key])
+            }
 
             // If the header is not defined we don't want to export it
             if (!header) return acc
