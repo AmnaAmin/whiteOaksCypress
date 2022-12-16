@@ -195,7 +195,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             index={tabIndex}
             size="md"
             variant="enclosed"
-            colorScheme="brand"
+            colorScheme="darkBlue"
             onChange={index => setTabIndex(index)}
           >
             <TabList>
