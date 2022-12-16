@@ -113,7 +113,7 @@ export const UpcomingPaymentTable = () => {
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="brand"
+              colorScheme="darkBlue"
               fileName="upcoming-payment"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
