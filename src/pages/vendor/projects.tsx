@@ -1,11 +1,12 @@
 import { Box, VStack } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { ProjectsTable } from 'features/vendor/projects/projects-table'
 import { useLocation } from 'react-router-dom'
+import { useStickyState } from 'utils/hooks'
 
 const Projects = () => {
-  const [selectedCard, setSelectedCard] = useState<string>('')
+  const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard');
 
   const { state } = useLocation()
   useEffect(() => {
