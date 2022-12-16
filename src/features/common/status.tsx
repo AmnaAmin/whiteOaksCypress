@@ -69,6 +69,7 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
       color={style?.color}
       borderWidth="0.5px"
       borderStyle="solid"
+      borderColor={style?.color}
     >
       <TagLabel fontSize="14px" fontStyle="normal" fontWeight={400} p="2px 10px 2px 10px" textTransform="capitalize">
         {value?.toLocaleLowerCase()}
