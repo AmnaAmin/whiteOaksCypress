@@ -38,12 +38,12 @@ export const Layout: React.FC = props => {
             flex="1"
             width="var(--sidebar-width)"
             py="5"
-            bg={mode('white', 'black')}
+            bg={mode('#14213D', '#14213D')}
             boxShadow={isOpen ? 'xl' : '0'}
           >
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
-                <Stack align="start" spacing={3}>
+                <Stack align="start" spacing={'2px'}>
                   {menu?.map(item => (
                     <>
                       {item.title === `${SIDE_NAV}.userMgmt` && (
