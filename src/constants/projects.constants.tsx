@@ -96,11 +96,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.clientStart',
     accessorKey: 'clientStartDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientStartDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.clientDue',
     accessorKey: 'clientDueDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientDueDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.type',
@@ -116,6 +118,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.accountPayable).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.woDraw',
@@ -123,6 +126,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.drawAmountWo).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.zip',
@@ -138,6 +142,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.sowNewAmount).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.projectCost',
@@ -145,11 +150,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.projectRelatedCost).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.paid',
     accessorKey: 'woaPaidDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaPaidDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.invoiceNumber',
@@ -159,6 +166,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.invoiceDate',
     accessorKey: 'woaInvoiceDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaInvoiceDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.accountRecievable',
@@ -166,6 +174,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.accountRecievable).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.market',
@@ -179,6 +188,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.woaFinish',
     accessorKey: 'woaCompletionDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaCompletionDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.region',
@@ -190,11 +200,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.partialPayment).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.expectedPayment',
     accessorKey: 'expectedPaymentDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.profitPercentage',
@@ -209,6 +221,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.profitTotal).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.materialCost',
@@ -216,6 +229,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.materialCost).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.percentagePaid', // Not getting this from backend at the moment
@@ -232,6 +246,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.drawAmountSow).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'projects.projectTable.woNo',

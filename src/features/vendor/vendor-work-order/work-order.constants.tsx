@@ -43,10 +43,12 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     header: 'issue',
     accessorKey: 'workOrderIssueDate',
     accessorFn: row => dateFormat(row.workOrderIssueDate),
+    meta: { format: 'date' },
   },
   {
     header: 'expectedCompletion',
     accessorKey: 'workOrderExpectedCompletionDate',
     accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
+    meta: { format: 'date' },
   },
 ]

@@ -4,7 +4,7 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 
 export const useDocumentLicenseMessage = ({ data }) => {
   const DocumentDates = [
-    data?.w9DocumentDate,
+    // data?.w9DocumentDate,
     data?.agreementSignedDate,
     data?.autoInsuranceExpirationDate,
     data?.coiWcExpirationDate,
@@ -40,31 +40,32 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
   const watchCoiWcExpFile = useWatch({ control, name: 'coiWcExpFile' })
 
   const isW9DocumentDateChanged =
-    watchW9DocumentDate === dateFormat(vendor?.w9DocumentDate as string) || watchW9DocumentDate === null
+    watchW9DocumentDate !== dateFormat(vendor?.w9DocumentDate as string) && (watchW9DocumentDate ?? false)
 
   const isAgreementSignedDateChanged =
-    watchAgreementSignedDate === dateFormat(vendor?.agreementSignedDate as string) || watchAgreementSignedDate === null
+    watchAgreementSignedDate !== dateFormat(vendor?.agreementSignedDate as string) &&
+    (watchAgreementSignedDate ?? false)
 
   const isAutoInsuranceExpDateChanged =
-    watchAutoInsuranceExpDate === dateFormat(vendor?.autoInsuranceExpirationDate as string) ||
-    watchAutoInsuranceExpDate === null
+    watchAutoInsuranceExpDate !== dateFormat(vendor?.autoInsuranceExpirationDate as string) &&
+    (watchAutoInsuranceExpDate ?? false)
 
   const isCoiGlExpDateChanged =
-    watchCoiGlExpDate === dateFormat(vendor?.coiglExpirationDate as string) || watchCoiGlExpDate === null
+    watchCoiGlExpDate !== dateFormat(vendor?.coiglExpirationDate as string) && (watchCoiGlExpDate ?? false)
 
   const isCoiWcExpDateChanged =
-    watchCoiWcExpDate === dateFormat(vendor?.coiWcExpirationDate as string) || watchCoiWcExpDate === null
+    watchCoiWcExpDate !== dateFormat(vendor?.coiWcExpirationDate as string) && (watchCoiWcExpDate ?? false)
 
   const isAllFiledWatch =
-    !isW9DocumentDateChanged ||
+    isW9DocumentDateChanged ||
     watchW9DocumentFile ||
-    !isAgreementSignedDateChanged ||
+    isAgreementSignedDateChanged ||
     watchAgreementFile ||
-    !isAutoInsuranceExpDateChanged ||
+    isAutoInsuranceExpDateChanged ||
     watchInsuranceFile ||
-    !isCoiGlExpDateChanged ||
+    isCoiGlExpDateChanged ||
     watchCoiGlExpFile ||
-    !isCoiWcExpDateChanged ||
+    isCoiWcExpDateChanged ||
     watchCoiWcExpFile
 
   return {
