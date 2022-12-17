@@ -15,13 +15,14 @@ import {
 } from '@chakra-ui/react'
 import DropdownLanguage from 'translation/DropdownLanguage'
 import React, { useState } from 'react'
-import { FaAngleDown, FaAngleUp, FaBell } from 'react-icons/fa'
+import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
 import { useTranslation } from 'react-i18next'
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -32,19 +33,14 @@ const UserInfo: React.FC = () => {
 
   return (
     <HStack>
-      <Avatar
-        name={userName}
-        src={account?.imageUrl ?? ''}
-        w={{ base: '30px', md: '42px' }}
-        h={{ base: '30px', md: '42px' }}
-      />
-      <VStack alignItems="start" spacing="0.3" visibility={{ base: 'hidden', md: 'visible' }}>
+      <Avatar name={userName} src={account?.imageUrl ?? ''} w="32px" h="32px" />
+      <VStack alignItems="start" spacing="0px" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="16px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
+          <Text fontSize="14px" pr="1" fontWeight={500} fontStyle="normal" color="white">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.600">
+        <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="white">
           {account?.userTypeLabel}
         </Text>
       </VStack>
@@ -66,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { t } = useTranslation()
 
   return (
-    <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
+    <Box py="3px" px={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
@@ -98,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 color="#A0AEC0"
                 _hover={{ color: 'gray.500' }}
               >
-                <FaBell fontSize="1.7rem" />
+                <FaBell fontSize="20px" />
               </MenuButton>
               <Notification />
 
@@ -111,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-          <HStack spacing={4} _hover={{ bg: 'blue.50', rounded: '6px' }} pl="1">
+          <HStack spacing={4} _hover={{ bg: '#14213D', rounded: '6px' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
@@ -158,8 +154,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   </Box>
                 </MenuItem>
               </MenuList>
-              <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
-                {show ? <FaAngleDown color="#4A5568" /> : <FaAngleUp color="#4A5568" />}
+              <Box position="relative" bottom=" 8.5px" px="4px" color="white" fontSize="20px">
+                {show ? <HiChevronDown /> : <HiChevronUp />}
               </Box>
             </Menu>
           </HStack>

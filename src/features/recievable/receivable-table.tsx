@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import AccountReceivableModal from 'features/recievable/account-receivable-modal'
 import { usePaginatedAccountReceivables, useGetAllAccountReceivables } from 'api/account-receivable'
@@ -86,16 +86,29 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
   const { tableColumns, settingColumns } = useTableColumnSettings(receivableColumns, TableNames.receivable)
 
+  const {
+    paginationRecord,
+    columnsWithoutPaginationRecords,
+  } = useMemo(() => {
+    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
+    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
+    
+    return {
+      paginationRecord: paginationCol ? {...paginationCol, field: paginationCol?.field || 0} : null,
+      columnsWithoutPaginationRecords,
+    }
+  }, [settingColumns])
+
   const onSave = columns => {
     postGridColumn(columns)
   }
 
   const onPageSizeChange = pageSize => {
-    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
-    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
-
-    if (paginationCol) {
-      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationCol, field: pageSize }] as any)
+    if(paginationRecord) {
+      postGridColumn([
+        ...columnsWithoutPaginationRecords,
+        {...paginationRecord, field: pageSize}
+      ] as any)
     } else {
       const paginationSettings = generateSettingColumn({
         field: pageSize,

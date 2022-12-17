@@ -43,7 +43,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [paginationInitialized, setPaginationInitialized] = useState(false);
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
@@ -157,7 +157,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               fileName="projects"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns?.filter(col => col.contentKey !== 'pagination')} />}
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

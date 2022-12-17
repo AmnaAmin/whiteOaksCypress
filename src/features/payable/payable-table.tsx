@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { useGetAllWorkOrders, usePaginatedAccountPayable } from 'api/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -59,6 +59,19 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.payable)
     const { tableColumns, settingColumns } = useTableColumnSettings(payableColumns, TableNames.payable)
 
+    const {
+      paginationRecord,
+      columnsWithoutPaginationRecords,
+    } = useMemo(() => {
+      const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
+      const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
+      
+      return {
+        paginationRecord: paginationCol ? {...paginationCol, field: paginationCol?.field || 0} : null,
+        columnsWithoutPaginationRecords,
+      }
+    }, [settingColumns])
+
     useEffect(() => {
       if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
         const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
@@ -80,12 +93,13 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const onSave = columns => {
       postGridColumn(columns)
     }
-    const onPageSizeChange = pageSize => {
-      const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
-      const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
 
-      if (paginationCol) {
-        postGridColumn([...columnsWithoutPaginationRecords, { ...paginationCol, field: pageSize }] as any)
+    const onPageSizeChange = pageSize => {
+      if(paginationRecord) {
+        postGridColumn([
+          ...columnsWithoutPaginationRecords,
+          {...paginationRecord, field: pageSize}
+        ] as any)
       } else {
         const paginationSettings = generateSettingColumn({
           field: pageSize,

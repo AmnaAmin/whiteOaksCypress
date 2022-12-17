@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Container, Flex, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, FormLabel, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
@@ -26,7 +26,7 @@ export const Layout: React.FC = props => {
         <IdleTimeOutModal />
         <Flex
           position="fixed"
-          top="66px"
+          top="48px"
           bottom="0"
           left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
           transition="left 0.5s ease-in-out"
@@ -38,12 +38,15 @@ export const Layout: React.FC = props => {
             flex="1"
             width="var(--sidebar-width)"
             py="5"
-            bg={mode('white', 'black')}
+            bg={mode('#14213D', '#14213D')}
             boxShadow={isOpen ? 'xl' : '0'}
           >
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
-                <Stack align="start" spacing={3}>
+                <Stack align="start" spacing={'2px'}>
+                  <FormLabel ml={6} color="#A1A6B1" size="sm">
+                    {t(`${SIDE_NAV}.menu`)}
+                  </FormLabel>
                   {menu?.map(item => (
                     <>
                       {item.title === `${SIDE_NAV}.userMgmt` && (
@@ -91,11 +94,11 @@ export const Layout: React.FC = props => {
             size="xs"
             onClick={toggle}
             fontSize="16px"
-            bg="gray.50"
+            bg="#14213D"
             color="gray.400"
             _hover={{
-              bg: 'gray.200',
-              color: 'gray.600',
+              bg: '#22375B',
+              color: 'white',
             }}
             maxW="0"
             minW="20px"
