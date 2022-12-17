@@ -101,22 +101,33 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         </HStack>
       </Button>
 
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
-        <ModalContent h="737px">
+        <ModalContent h="737px" bg="#F2F3F4" rounded="none">
           <ModalHeader
-            bg="#F7FAFC"
+            bg="#FFFFFF"
             borderBottom="1px solid #E2E8F0"
             fontSize="16px"
             fontStyle="normal"
-            fontWeight={500}
+            fontWeight={400}
             color="gray.600"
             mb="6"
+            borderTop="2px solid #345EA6"
           >
-            {t('columnSettings')}
+            {t('settings')}{' '}
           </ModalHeader>
-          <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
-          <ModalBody h="50vh" overflowY="scroll">
+          <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
+          <ModalBody
+            h="50vh"
+            overflowY="auto"
+            bg="#FFFFFF"
+            mx="5px"
+            borderTopLeftRadius="6px"
+            borderTopRightRadius="6px"
+            boxShadow="1px 0px 2px 0px lightgrey"
+            borderBottom="1px solid #CBD5E0"
+            pt="30px"
+          >
             <DragDropContext onDragEnd={handleOnDragEnd}>
               <Droppable droppableId="items">
                 {provided => (
@@ -139,15 +150,15 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                 borderRadius="8"
                                 w="485px"
                                 m="1.5"
-                                p="4"
+                                py="8px"
                                 fontSize="1em"
                                 fontWeight={600}
                                 backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                                 _hover={{ bg: 'blue.50' }}
                               >
-                                <HStack spacing="24px">
+                                <HStack spacing="21.83px" ml="21.83px">
                                   <BiGridVertical
-                                    fontSize="1.6rem"
+                                    fontSize="1.4rem"
                                     color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
                                   />
                                   <Checkbox
@@ -155,13 +166,13 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                                     marginStart="0.625rem"
                                     onChange={() => onCheck(index)}
                                     isChecked={!hide}
-                                    colorScheme="CustomPrimaryColor"
+                                    colorScheme="PrimaryCheckBox"
                                   >
                                     <Text
                                       ml="12px"
                                       color="gray.600"
                                       fontStyle="normal"
-                                      fontWeight={500}
+                                      fontWeight={400}
                                       fontSize="14px"
                                     >
                                       {t(field)}
@@ -181,10 +192,18 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             </DragDropContext>
           </ModalBody>
 
-          <ModalFooter>
-            <HStack spacing="16px">
+          <ModalFooter
+            bg="#FFFFFF"
+            roundedBottomLeft="6px"
+            roundedBottomRight="6px"
+            mx="5px"
+            mb="5px"
+            boxShadow="0px 1px 2px 0px lightgrey"
+            p="0px"
+          >
+            <HStack spacing="16px" mr="13px" my="16px">
               <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
-                {t('close')}
+                {t('cancel')}
               </Button>
               <Button colorScheme="brand" onClick={saveModal}>
                 {t('save')}
