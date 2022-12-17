@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <VStack w="100%" zIndex={2} spacing="14px">
+    <VStack w="100%" zIndex={2} spacing="11px">
       <Box w={{ base: '100%' }}>
         <VendorScore vendorId={vendorId} />
       </Box>
