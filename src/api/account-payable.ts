@@ -34,6 +34,7 @@ export const usePaginatedAccountPayable = (queryString: string, pageSize: number
     [ACCONT_PAYABLE_API_KEY, apiQueryString],
     `all-payables?${apiQueryString}`,
     pageSize,
+    { enabled: pageSize > 0}
   )
 
   return {
