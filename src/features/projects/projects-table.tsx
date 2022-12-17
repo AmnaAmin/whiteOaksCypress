@@ -153,7 +153,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
             <GotoPreviousPage />
             <GotoNextPage />
             <GotoLastPage />
-            <SelectPageSize onPageSizeChange={onPageSizeChange} />
+            <SelectPageSize dataCount={dataCount} onPageSizeChange={onPageSizeChange} />
           </TablePagination>
         </TableFooter>
       </TableContextProvider>

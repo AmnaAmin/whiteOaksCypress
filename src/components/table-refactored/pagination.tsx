@@ -52,7 +52,7 @@ export const GotoPage: React.FC = () => {
   )
 }
 
-export const SelectPageSize = ({ onPageSizeChange }) => {
+export const SelectPageSize = ({ onPageSizeChange, dataCount }) => {
   const tableInstance = useTableInstance()
   const { pageSize } = tableInstance.getState().pagination
 
@@ -65,6 +65,7 @@ export const SelectPageSize = ({ onPageSizeChange }) => {
   return (
     <Flex gap="1" alignItems="center">
       <Select
+        disabled={dataCount <= 25 ? true : false}
         style={{ color: '#4A5568', border: '1px solid #CBD5E0' }}
         value={pageSize}
         onChange={handlePageSizeChange}
