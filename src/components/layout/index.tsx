@@ -44,7 +44,7 @@ export const Layout: React.FC = props => {
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
                 <Stack align="start" spacing={'2px'}>
-                  <FormLabel ml={6} color="#A1A6B1" fontSize="12px">
+                  <FormLabel ml={6} color="#A1A6B1" size="sm">
                     {t(`${SIDE_NAV}.menu`)}
                   </FormLabel>
                   {menu?.map(item => (
