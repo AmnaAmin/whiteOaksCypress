@@ -107,6 +107,7 @@ const SliderItem: React.FC<{ title: string; date: string; testId?: string }> = (
       alignItems="center"
       fontWeight={400}
       fontSize="14px"
+      mb="2"
     >
       <Text>{title}</Text>
       <Text data-testId={testId}>{dateFormat(date)}</Text>
