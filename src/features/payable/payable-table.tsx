@@ -74,8 +74,8 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     }, [settingColumns])
 
     useEffect(() => {
-      const paginationsMismatchFound = pagination && paginationRecord && (paginationRecord.field as Number !== pagination.pageSize) 
       const paginationToBeDefaulted = !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord;
+      const paginationsMismatchFound = !paginationInitialized && pagination && paginationRecord && (paginationRecord.field as Number !== pagination.pageSize) 
 
       if(paginationToBeDefaulted || paginationsMismatchFound) {
         setPaginationInitialized(true);
