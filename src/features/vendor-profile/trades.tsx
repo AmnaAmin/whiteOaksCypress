@@ -39,7 +39,7 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
   return (
     <>
-      <Box h="510px" overflow="auto">
+      <Box h="584px" overflow="auto">
         <Flex maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (
@@ -68,9 +68,17 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
           })}
         </Flex>
       </Box>
-      <Flex alignItems="center" w="100%" height="72px" pt="8px" justifyContent="end" borderTop="2px solid #E2E8F0">
+      <Flex
+        alignItems="center"
+        w="100%"
+        height="72px"
+        pt="10px"
+        justifyContent="end"
+        borderTop="2px solid #CBD5E0"
+        mt={2}
+      >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
@@ -78,7 +86,7 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
           disabled={!validateTrade(tradeCheckboxes)}
           type="submit"
           variant="solid"
-          colorScheme="brand"
+          colorScheme="darkPrimary"
           data-testid="saveVendorSkills"
         >
           {vendorProfileData?.id ? t('save') : t('next')}

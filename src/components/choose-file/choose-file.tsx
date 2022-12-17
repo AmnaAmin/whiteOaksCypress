@@ -32,7 +32,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
     onClear?.()
   }
 
-  let leftBorder = '1px solid #E2E8F0'
+  let leftBorder = '2px solid #345EA6'
 
   if (isRequired) {
     leftBorder = '2px solid #4e87f8'
@@ -85,7 +85,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
             <Text
               whiteSpace="nowrap"
               title={value as string}
-              color={isError ? 'red' : '#4E87F8'}
+              color={isError ? 'red' : '#345EA6'}
               fontSize="14px"
               fontWeight={400}
               fontStyle={'normal'}
@@ -96,7 +96,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
             >
               {value}
             </Text>
-            <Button type="button" variant="link" size="xl" colorScheme={isError ? 'red' : 'brand'} bg="white">
+            <Button type="button" variant="link" size="xl" colorScheme={isError ? 'red' : 'darkPrimary'} bg="white">
               <BiUpload />
             </Button>
           </Flex>

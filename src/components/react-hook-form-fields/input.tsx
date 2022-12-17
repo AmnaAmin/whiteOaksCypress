@@ -30,7 +30,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
   <FormControl {...props.controlStyle} size={props.size} isInvalid={!!props.errorMessage}>
     <FormLabel
       display="flex"
-      color="gray.600"
+      color="gray.700"
       fontWeight={props.weight || 500}
       fontSize={props.size || '14px'}
       {...props.labelStyle}

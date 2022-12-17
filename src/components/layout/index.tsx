@@ -17,7 +17,7 @@ export const Layout: React.FC = props => {
 
   return (
     <Box width="100%">
-      <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{color:"#A1A6B1"}}>
+      <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{ color: '#A1A6B1' }}>
         <Header toggleMenu={toggle} />
       </Box>
 
@@ -25,7 +25,7 @@ export const Layout: React.FC = props => {
         <IdleTimeOutModal />
         <Flex
           position="fixed"
-          top="48px"
+          top="51px"
           bottom="0"
           left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
           transition="left 0.5s ease-in-out"
@@ -67,8 +67,8 @@ export const Layout: React.FC = props => {
                               fontWeight: 6500,
                               fontSize: '13px',
                               lineHeight: '28px',
-                              color: "#A1A6B1",
-                              letterSpacing: '1px'
+                              color: '#A1A6B1',
+                              letterSpacing: '1px',
                             }}
                           >
                             {t(`${SIDE_NAV}.administration`)}
