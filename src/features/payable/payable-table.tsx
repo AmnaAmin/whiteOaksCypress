@@ -20,7 +20,7 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { ExportButton } from 'components/table-refactored/export-button'
-import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
+import { generateSettingColumn } from 'components/table-refactored/make-data'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 
@@ -48,6 +48,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+    const [paginationInitialized, setPaginationInitialized] = useState(false);
     const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
       queryStringWithPagination,
       pagination.pageSize,
@@ -57,7 +58,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
 
     const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.payable)
-    const { tableColumns, settingColumns } = useTableColumnSettings(payableColumns, TableNames.payable)
+    const { tableColumns, settingColumns, isFetched: tablePreferenceFetched } = useTableColumnSettings(payableColumns, TableNames.payable)
 
     const {
       paginationRecord,
@@ -71,6 +72,19 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
         columnsWithoutPaginationRecords,
       }
     }, [settingColumns])
+
+    useEffect(() => {
+      const paginationsMismatchFound = pagination && paginationRecord && (paginationRecord.field as Number !== pagination.pageSize) 
+      const paginationToBeDefaulted = !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord;
+
+      if(paginationToBeDefaulted || paginationsMismatchFound) {
+        setPaginationInitialized(true);
+        setPagination((prevState) => ({
+          ...prevState,
+          pageSize: paginationToBeDefaulted ? 25 : (paginationRecord?.field as number || 25)
+        }))
+      }
+    }, [pagination, settingColumns, tablePreferenceFetched])
 
     useEffect(() => {
       if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -104,9 +118,9 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
         const paginationSettings = generateSettingColumn({
           field: pageSize,
           contentKey: 'pagination' as string,
-          order: columns.length,
+          order: columnsWithoutPaginationRecords.length,
           userId: email,
-          type: TableNames.project,
+          type: TableNames.payable,
           hide: true,
         })
         settingColumns.push(paginationSettings)
