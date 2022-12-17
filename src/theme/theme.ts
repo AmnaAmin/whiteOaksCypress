@@ -124,6 +124,9 @@ export const theme = extendTheme({
       800: '#4E87F8',
       900: '#4E87F8',
     },
+    darkBlue: {
+      800: '#22375B',
+    },
   },
   components: {
     ...tabs,

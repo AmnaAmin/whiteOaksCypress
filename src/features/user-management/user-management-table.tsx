@@ -47,6 +47,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
       header: `${USER_MANAGEMENT}.table.createdDate`,
       accessorKey: 'createdDate',
       accessorFn: value => dateFormat(value.createdDate),
+      meta: { format: 'date' },
     },
 
     {
@@ -57,6 +58,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
       header: `${USER_MANAGEMENT}.table.modifiedDate`,
       accessorKey: 'lastModifiedDate',
       accessorFn: value => dateFormat(value.lastModifiedDate),
+      meta: { format: 'date' },
     },
   ]
 
