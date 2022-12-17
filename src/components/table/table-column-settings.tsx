@@ -111,7 +111,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             fontStyle="normal"
             fontWeight={400}
             color="gray.600"
-            mb="6"
+            mb="11px"
             borderTop="2px solid #345EA6"
           >
             {t('Settings')}
@@ -121,7 +121,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             h="50vh"
             overflowY="auto"
             bg="#FFFFFF"
-            mx="5px"
+            mx="11px"
             borderTopLeftRadius="6px"
             borderTopRightRadius="6px"
             boxShadow="1px 0px 2px 0px lightgrey"
@@ -145,7 +145,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                             <Center>
                               <ListItem
                                 data-testid={`draggable-item-${index}`}
-                                border="2px"
+                                borderWidth="1.5px"
                                 borderColor="gray.300"
                                 borderRadius="8"
                                 w="485px"
@@ -196,8 +196,8 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             bg="#FFFFFF"
             roundedBottomLeft="6px"
             roundedBottomRight="6px"
-            mx="5px"
-            mb="5px"
+            mx="11px"
+            mb="11px"
             boxShadow="0px 1px 2px 0px lightgrey"
             p="0px"
           >
