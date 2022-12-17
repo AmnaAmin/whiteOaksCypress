@@ -114,7 +114,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             mb="6"
             borderTop="2px solid #345EA6"
           >
-            {t('settings')}{' '}
+            {t('Settings')}
           </ModalHeader>
           <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
           <ModalBody

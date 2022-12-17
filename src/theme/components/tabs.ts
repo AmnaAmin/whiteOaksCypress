@@ -13,6 +13,7 @@ const tabsVariants = {
             bg: '#EBF8FF',
             borderColor: '#CBD5E0',
             fontWeight: 500,
+            fontSize: '14px',
             color: '#4A5568',
             _selected: {
               borderTopColor: `${props.colorScheme}.300`,
@@ -21,6 +22,7 @@ const tabsVariants = {
               borderBottom: '1px solid #CBD5E0',
               color: '#4A5568',
               fontWeight: 500,
+              fontSize: '14px',
             },
             _disabled: {
               cursor: 'not-allowed',

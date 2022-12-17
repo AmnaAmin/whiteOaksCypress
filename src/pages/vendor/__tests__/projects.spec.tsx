@@ -14,7 +14,7 @@ describe('Vendor Projects Test Cases', () => {
 
     userEvent.click(screen.getByTestId('column-settings-button'))
 
-    expect(screen.getByText('Column Settings')).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument()
 
     const list = screen.getByTestId('column-settings-list')
     const allItems = document.querySelectorAll('#column-settings-list > div')
