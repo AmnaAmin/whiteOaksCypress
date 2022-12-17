@@ -38,7 +38,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resetFilters,
 }) => {
   const navigate = useNavigate()
-
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)

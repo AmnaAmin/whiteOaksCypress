@@ -8,6 +8,7 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import Table from 'components/table-refactored/table'
 import { ExportButton } from 'components/table-refactored/export-button'
+
 import TableColumnSettings from 'components/table/table-column-settings'
 import {
   GotoFirstPage,

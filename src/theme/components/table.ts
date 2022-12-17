@@ -26,6 +26,9 @@ const TableVariants = {
               h: '45px',
               fontWeight: 400,
             },
+            td: {
+              borderColor: 'gray.300',
+            },
           },
         }
       },

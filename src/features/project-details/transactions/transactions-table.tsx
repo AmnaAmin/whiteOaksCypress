@@ -56,7 +56,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 columns={tableColumns}
                 refetch={refetch}
                 isLoading={isLoading}
-                colorScheme="brand"
+                colorScheme="darkBlue"
                 fileName="transactions"
               />
 

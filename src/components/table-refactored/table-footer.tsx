@@ -15,7 +15,7 @@ export const ButtonsWrapper: React.FC<StackProps> = ({ children, ...rest }) => {
       bg="#F7FAFC"
       borderWidth="0 1px 1px 1px"
       borderStyle="solid"
-      borderColor="gray.200"
+      borderColor="gray.300"
       borderBottomRadius={'4px'}
       {...rest}
     >

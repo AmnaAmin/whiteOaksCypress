@@ -16,11 +16,11 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 
 function Filter({ column, table }: { column: Column<any, unknown>; table: TableType<any> }) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
-  
+
   // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
   // In react table, meta key can be added to any column and meta can hold any arbitrary value
-  const metaData:any = column.columnDef?.meta as any;
-  const filterInitialState = metaData?.filterInitialState || null;
+  const metaData: any = column.columnDef?.meta as any
+  const filterInitialState = metaData?.filterInitialState || null
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
 
@@ -92,6 +92,7 @@ function DebouncedInput({
       {...props}
       value={value}
       onChange={e => setValue(e.target.value)}
+      borderColor="gray.300"
     />
   )
 }
@@ -137,11 +138,12 @@ export const Table: React.FC<TableProps> = ({
       display="table"
       minH="calc(100% - 41px)"
       w="100%"
-      bg="white"
       boxShadow="sm"
       rounded="md"
       position="relative"
       zIndex={0}
+      border="1px solid #CBD5E0"
+      bg='white'
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -162,8 +164,9 @@ export const Table: React.FC<TableProps> = ({
                     position="sticky"
                     top="0"
                     py="3"
-                    bg="#F7FAFC"
+                    bg="#ECEDEE"
                     zIndex={1}
+                    borderBottomColor="gray.300"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
@@ -175,7 +178,6 @@ export const Table: React.FC<TableProps> = ({
                         fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
-                        // lineHeight="20px"
                         isTruncated
                         display="inline-block"
                         title={typeof title === 'string' ? t(title as string) : ''}
@@ -213,8 +215,8 @@ export const Table: React.FC<TableProps> = ({
                         position="sticky"
                         zIndex={1}
                         top="38px"
-                        borderTop="1px solid #ddd"
-                        bg="#F7FAFC"
+                        borderBottomColor="gray.300"
+                        bg="#ECEDEE"
                         {...getColumnMaxMinWidths(header.column)}
                       >
                         {header.column.getCanFilter() ? (
@@ -270,7 +272,6 @@ export const Table: React.FC<TableProps> = ({
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-
                           return (
                             <Td
                               key={cell.id}
