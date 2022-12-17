@@ -61,7 +61,7 @@ export const ExpirationAlertMessage: React.FC<{
   const { expiredInsuranceDateProfile, expiredLicenseDateProfile } = useDocumentLicenseMessage({ data })
 
   return isVisible ? (
-    <Box width="70%" mb={data ? '0' : '16px'}>
+    <Box width="70%" mb={data ? '0' : ''}>
       {expiredInsuranceDate && expiredLicenseDate ? (
         <CustomAlert title={'licenseInsuranceExpirationMessage'} tabs={1} onClose={onClose} />
       ) : null}

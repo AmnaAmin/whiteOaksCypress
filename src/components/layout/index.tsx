@@ -17,11 +17,11 @@ export const Layout: React.FC = props => {
 
   return (
     <Box width="100%">
-      <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{color:"#A1A6B1"}}>
+      <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{ color: '#A1A6B1' }}>
         <Header toggleMenu={toggle} />
       </Box>
 
-      <Container maxW="full" pt="27px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
+      <Container maxW="full" pt="50px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
         <IdleTimeOutModal />
         <Flex
           position="fixed"
@@ -67,8 +67,8 @@ export const Layout: React.FC = props => {
                               fontWeight: 6500,
                               fontSize: '13px',
                               lineHeight: '28px',
-                              color: "#A1A6B1",
-                              letterSpacing: '1px'
+                              color: '#A1A6B1',
+                              letterSpacing: '1px',
                             }}
                           >
                             {t(`${SIDE_NAV}.administration`)}
@@ -121,6 +121,7 @@ export const Layout: React.FC = props => {
           transition={isOpen ? '0.5s' : '1s'}
           height="calc(100vh - 65px)"
           py="1rem"
+          pl="8px"
           w="(calc(100% - var(--sidebar-width)"
         >
           {props.children}
