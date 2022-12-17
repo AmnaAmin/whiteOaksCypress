@@ -13,11 +13,10 @@ const tabsVariants = {
             bg: '#EBF8FF',
             borderColor: '#CBD5E0',
             fontWeight: 500,
-
             color: '#4A5568',
             _selected: {
-              borderTop: `2px solid ${props.colorScheme}`,
-
+              borderTopColor: `${props.colorScheme}.300`,
+              borderTopWidth: '3px',
               bg: 'white',
               borderBottom: '1px solid #CBD5E0',
               color: '#4A5568',
