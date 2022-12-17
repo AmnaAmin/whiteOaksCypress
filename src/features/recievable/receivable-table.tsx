@@ -49,7 +49,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const [selectedProjectStatus, setSelectedProjectStatus] = useState<string>()
-  const [paginationInitialized, setPaginationInitialized] = useState(false);
+  const [paginationInitialized, setPaginationInitialized] = useState(false)
   const { email } = useUserProfile() as Account
 
   const {
@@ -85,30 +85,36 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
-  const { tableColumns, settingColumns, isFetched: tablePreferenceFetched } = useTableColumnSettings(receivableColumns, TableNames.receivable)
-
   const {
-    paginationRecord,
-    columnsWithoutPaginationRecords,
-  } = useMemo(() => {
-    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
-    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
-    
+    tableColumns,
+    settingColumns,
+    isFetched: tablePreferenceFetched,
+  } = useTableColumnSettings(receivableColumns, TableNames.receivable)
+
+  const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
+    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
     return {
-      paginationRecord: paginationCol ? {...paginationCol, field: paginationCol?.field || 0} : null,
+      paginationRecord: paginationCol ? { ...paginationCol, field: paginationCol?.field || 0 } : null,
       columnsWithoutPaginationRecords,
     }
   }, [settingColumns])
 
   useEffect(() => {
-    const paginationToBeDefaulted = !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord;
-    const paginationsMismatchFound = !paginationInitialized && pagination && paginationRecord && (paginationRecord.field as Number !== pagination.pageSize) 
+    const paginationToBeDefaulted =
+      !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord
+    const paginationsMismatchFound =
+      !paginationInitialized &&
+      pagination &&
+      paginationRecord &&
+      (paginationRecord.field as Number) !== pagination.pageSize
 
-    if(paginationToBeDefaulted || paginationsMismatchFound) {
-      setPaginationInitialized(true);
-      setPagination((prevState) => ({
+    if (paginationToBeDefaulted || paginationsMismatchFound) {
+      setPaginationInitialized(true)
+      setPagination(prevState => ({
         ...prevState,
-        pageSize: paginationToBeDefaulted ? 25 : (Number(paginationRecord?.field) || 25)
+        pageSize: paginationToBeDefaulted ? 25 : Number(paginationRecord?.field) || 25,
       }))
     }
   }, [pagination, settingColumns, tablePreferenceFetched])
@@ -118,11 +124,8 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   }
 
   const onPageSizeChange = pageSize => {
-    if(paginationRecord) {
-      postGridColumn([
-        ...columnsWithoutPaginationRecords,
-        {...paginationRecord, field: pageSize}
-      ] as any)
+    if (paginationRecord) {
+      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationRecord, field: pageSize }] as any)
     } else {
       const paginationSettings = generateSettingColumn({
         field: pageSize,

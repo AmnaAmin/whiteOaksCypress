@@ -33,7 +33,7 @@ export const usePaginatedAccountReceivables = (queryString: string, pageSize: nu
     [GET_PAGINATED_RECEIVABLE_QUERY_KEY, queryString],
     `account-receivables?${queryString}`,
     pageSize,
-    { enabled: pageSize > 0}
+    { enabled: pageSize > 0 },
   )
 
   return {

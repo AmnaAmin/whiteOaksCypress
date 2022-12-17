@@ -48,7 +48,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-    const [paginationInitialized, setPaginationInitialized] = useState(false);
+    const [paginationInitialized, setPaginationInitialized] = useState(false)
     const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
       queryStringWithPagination,
       pagination.pageSize,
@@ -58,30 +58,36 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
 
     const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.payable)
-    const { tableColumns, settingColumns, isFetched: tablePreferenceFetched } = useTableColumnSettings(payableColumns, TableNames.payable)
-
     const {
-      paginationRecord,
-      columnsWithoutPaginationRecords,
-    } = useMemo(() => {
-      const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
-      const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
-      
+      tableColumns,
+      settingColumns,
+      isFetched: tablePreferenceFetched,
+    } = useTableColumnSettings(payableColumns, TableNames.payable)
+
+    const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
+      const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+      const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
       return {
-        paginationRecord: paginationCol ? {...paginationCol, field: paginationCol?.field || 0} : null,
+        paginationRecord: paginationCol ? { ...paginationCol, field: paginationCol?.field || 0 } : null,
         columnsWithoutPaginationRecords,
       }
     }, [settingColumns])
 
     useEffect(() => {
-      const paginationToBeDefaulted = !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord;
-      const paginationsMismatchFound = !paginationInitialized && pagination && paginationRecord && (paginationRecord.field as Number !== pagination.pageSize) 
+      const paginationToBeDefaulted =
+        !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord
+      const paginationsMismatchFound =
+        !paginationInitialized &&
+        pagination &&
+        paginationRecord &&
+        (paginationRecord.field as Number) !== pagination.pageSize
 
-      if(paginationToBeDefaulted || paginationsMismatchFound) {
-        setPaginationInitialized(true);
-        setPagination((prevState) => ({
+      if (paginationToBeDefaulted || paginationsMismatchFound) {
+        setPaginationInitialized(true)
+        setPagination(prevState => ({
           ...prevState,
-          pageSize: paginationToBeDefaulted ? 25 : (Number(paginationRecord?.field) || 25)
+          pageSize: paginationToBeDefaulted ? 25 : Number(paginationRecord?.field) || 25,
         }))
       }
     }, [pagination, settingColumns, tablePreferenceFetched])
@@ -109,11 +115,8 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     }
 
     const onPageSizeChange = pageSize => {
-      if(paginationRecord) {
-        postGridColumn([
-          ...columnsWithoutPaginationRecords,
-          {...paginationRecord, field: pageSize}
-        ] as any)
+      if (paginationRecord) {
+        postGridColumn([...columnsWithoutPaginationRecords, { ...paginationRecord, field: pageSize }] as any)
       } else {
         const paginationSettings = generateSettingColumn({
           field: pageSize,

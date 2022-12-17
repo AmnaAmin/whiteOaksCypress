@@ -25,7 +25,7 @@ export const Layout: React.FC = props => {
         <IdleTimeOutModal />
         <Flex
           position="fixed"
-          top="48px"
+          top="51px"
           bottom="0"
           left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
           transition="left 0.5s ease-in-out"

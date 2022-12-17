@@ -10,7 +10,7 @@ export const useProjects = (filterQueryString?: string, page?: number, size: num
   const queryKey = [PROJECTS_QUERY_KEY, filterQueryString]
   const endpoint = `v1/projects?${filterQueryString || ''}`
 
-  const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10, { enabled: size > 0})
+  const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10, { enabled: size > 0 })
 
   return {
     projects: data?.data,

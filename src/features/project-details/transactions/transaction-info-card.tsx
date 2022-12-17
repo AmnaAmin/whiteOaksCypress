@@ -29,15 +29,7 @@ export const TransactionInfoCard: React.FC<{
   const { t } = useTranslation()
 
   return (
-    <Flex
-      py={6}
-      h="74px" 
-      w="100%"
-      bg="white"
-      borderRadius="4px"
-      rounded={6}
-      style={boxShadow}
-    >
+    <Flex py={6} h="74px" w="100%" bg="white" borderRadius="4px" rounded={6} style={boxShadow}>
       <InfoStructureCard title={t('projectID')} isLoading={isLoading}>
         <Text color="gray.500">{projectData?.id}</Text>
       </InfoStructureCard>
@@ -52,7 +44,9 @@ export const TransactionInfoCard: React.FC<{
         </Box>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('WODueDate')}>
-        <Text color="gray.500">{projectData?.vendorWODueDate ? dateFormat(projectData?.vendorWODueDate as string) : 'mm/dd/yyyy'}</Text>
+        <Text color="gray.500">
+          {projectData?.vendorWODueDate ? dateFormat(projectData?.vendorWODueDate as string) : 'mm/dd/yyyy'}
+        </Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('contactName')}>
         <Text color="gray.500">{projectData?.projectManager}</Text>
@@ -61,7 +55,10 @@ export const TransactionInfoCard: React.FC<{
         <Text color="gray.500">{projectData?.projectManagerPhoneNumber}</Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('address')} flex={2} border="none">
-        <Text color="gray.500" noOfLines={1}>{`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}</Text>
+        <Text
+          color="gray.500"
+          noOfLines={1}
+        >{`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}</Text>
       </InfoStructureCard>
     </Flex>
   )
