@@ -72,6 +72,10 @@ export const theme = extendTheme({
       800: '#001b4d',
       900: '#00091f',
     },
+    darkPrimary: {
+      300: '#345EA6',
+      400: '#22375B',
+    },
     barColor: {
       50: '#4E87F8',
       100: '#4E87F8',
