@@ -21,7 +21,7 @@ type SelectProps = {
 
 export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
   <FormControl size={props.size || 'lg'} {...props.controlStyle} isInvalid={!!props.errorMessage} w="215px">
-    <FormLabel fontSize={props.size || 'sm'} htmlFor={props.name} color="#4A5568">
+    <FormLabel fontSize={props.size || 'sm'} htmlFor={props.name} color="gray.700">
       {props.label}
     </FormLabel>
     <Controller

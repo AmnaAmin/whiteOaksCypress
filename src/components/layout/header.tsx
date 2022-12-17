@@ -36,11 +36,11 @@ const UserInfo: React.FC = () => {
       <Avatar name={userName} src={account?.imageUrl ?? ''} w="32px" h="32px" />
       <VStack alignItems="start" spacing="0px" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="14px" pr="1" fontWeight={500} fontStyle="normal" color="white">
+          <Text fontSize="12px" pr="1" fontWeight={400} fontStyle="normal" color="white">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="white">
+        <Text fontSize="12px" fontStyle="normal" fontWeight={400} color="white">
           {account?.userTypeLabel}
         </Text>
       </VStack>
@@ -62,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { t } = useTranslation()
 
   return (
-    <Box py="3px" px={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
+    <Box py="8px" px={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 color="#A0AEC0"
                 _hover={{ color: 'gray.500' }}
               >
-                <FaBell fontSize="20px" />
+                <FaBell fontSize="16px" />
               </MenuButton>
               <Notification />
 

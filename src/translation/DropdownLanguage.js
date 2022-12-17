@@ -7,8 +7,8 @@ import { HiChevronDown } from 'react-icons/hi'
 
 const languageStyle = {
   paddingRight: '5px',
-  fontWeight: 500,
-  fontSize: '16px',
+  fontWeight: 400,
+  fontSize: '12px',
   color: '#4A5568',
   _focus: { background: 'blue.50' },
 }
@@ -16,7 +16,7 @@ const languageStyle = {
 const selectedLanguageStyle = {
   paddingRight: '5px',
   fontWeight: 400,
-  fontSize: '14px',
+  fontSize: '12px',
   color: 'white',
   _focus: { background: 'blue.50' },
 }
