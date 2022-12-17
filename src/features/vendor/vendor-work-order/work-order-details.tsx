@@ -98,7 +98,7 @@ export const WorkOrderDetails = ({
           <Stack spacing={5}>
             <Tabs
               variant="enclosed"
-              colorScheme="darkBlue"
+              colorScheme="darkPrimary"
               size="md"
               index={tabIndex}
               onChange={index => setTabIndex(index)}

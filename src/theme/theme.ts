@@ -72,7 +72,7 @@ export const theme = extendTheme({
       800: '#001b4d',
       900: '#00091f',
     },
-    darkBlue: {
+    darkPrimary: {
       300: '#345EA6',
       400: '#22375B',
     },
