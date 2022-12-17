@@ -108,7 +108,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
       setPaginationInitialized(true);
       setPagination((prevState) => ({
         ...prevState,
-        pageSize: paginationToBeDefaulted ? 25 : (paginationRecord?.field as number || 25)
+        pageSize: paginationToBeDefaulted ? 25 : (Number(paginationRecord?.field) || 25)
       }))
     }
   }, [pagination, settingColumns, tablePreferenceFetched])
