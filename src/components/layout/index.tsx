@@ -9,7 +9,6 @@ import { useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
-import { BiChevronDown } from 'react-icons/bi'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
