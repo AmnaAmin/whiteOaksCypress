@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -36,12 +37,17 @@ export const Projects = () => {
   const { isFPM } = useUserRolesSelector()
   const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
 
+  const [resetAllFilters, setResetAllFilters] = useState(false)
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard');
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay');
 
   const { t } = useTranslation()
 
   const clearAll = () => {
+    setResetAllFilters(true);
+    setTimeout(() => {
+      setResetAllFilters(false)
+    }, 700)
     setSelectedCard('')
     setSelectedDay('')
   }
@@ -103,6 +109,7 @@ export const Projects = () => {
             selectedDay={selectedDay as string}
             userIds={userIds}
             selectedFPM={selectedFPM}
+            resetFilters={resetAllFilters}
           />
         </Box>
       </VStack>

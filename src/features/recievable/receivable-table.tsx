@@ -8,17 +8,22 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import Table from 'components/table-refactored/table'
 import { ExportButton } from 'components/table-refactored/export-button'
+import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
+
 import TableColumnSettings from 'components/table/table-column-settings'
 import {
   GotoFirstPage,
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
+  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
 
 type ReceivableProps = {
   receivableColumns: ColumnDef<any>[]
@@ -44,6 +49,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const [selectedProjectStatus, setSelectedProjectStatus] = useState<string>()
+  const { email } = useUserProfile() as Account
 
   const {
     isOpen: isAccountReceivableModal,
@@ -84,6 +90,26 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     postGridColumn(columns)
   }
 
+  const onPageSizeChange = pageSize => {
+    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
+    if (paginationCol) {
+      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationCol, field: pageSize }] as any)
+    } else {
+      const paginationSettings = generateSettingColumn({
+        field: pageSize,
+        contentKey: 'pagination' as string,
+        order: columns.length,
+        userId: email,
+        type: TableNames.project,
+        hide: true,
+      })
+      settingColumns.push(paginationSettings)
+      postGridColumn(settingColumns as any)
+    }
+  }
+
   return (
     <Box overflow="auto" width="100%" h="600px" roundedTop={6}>
       <TableContextProvider
@@ -104,7 +130,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="receivable.xlsx"
+              fileName="receivable"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
@@ -114,6 +140,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
             <GotoPreviousPage />
             <GotoNextPage />
             <GotoLastPage />
+            <SelectPageSize dataCount={dataCount} onPageSizeChange={onPageSizeChange} />
           </TablePagination>
         </TableFooter>
       </TableContextProvider>

@@ -1,6 +1,12 @@
 import * as XLSX from 'xlsx'
 import { APP_LOCAL_DATE_FORMAT_Z } from 'components/layout/constants'
 import { format } from 'date-fns'
+import { saveAs } from 'file-saver'
+import { useCallback } from 'react'
+import { reduceArrayToObject } from 'utils'
+import { useTableContext } from './table-context'
+import { useTranslation } from 'react-i18next'
+import Excel from 'exceljs'
 
 export const getFileBlob = ({ columns, data, fileType, fileName }) => {
   const header = columns.map(c => c.exportValue)
@@ -131,3 +137,111 @@ export const convertImageUrltoDataURL = url =>
           reader.readAsDataURL(blob)
         }),
     )
+
+/*old export functionality*/
+export const useExportToExcel = () => {
+  const { t } = useTranslation()
+  const { tableInstance } = useTableContext()
+
+  const exportToExcel = useCallback(
+    (data: any[], fileName?: string) => {
+      const columns = tableInstance?.options?.columns || []
+      const columnsNames = columns.map(column => t(column.header as string))
+
+      // Make dictionary object of columns key with accessorKey and value the object of column because
+      // we want access the accessorKey value through accessorFn for customize value
+      const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
+
+      // Here we map all the key values with accessorFn
+      const dataMapped = data.map((row: any) => {
+        return Object.keys(row).reduce((acc, key) => {
+          const columnDef = columnDefWithAccessorKeyAsKey[key]
+          const header = columnDef?.header
+
+          const value = columnDef?.accessorFn?.(row) || row[key]
+
+          // If the header is not defined we don't want to export it
+          if (!header) return acc
+
+          return {
+            ...acc,
+            [t(header)]: value,
+          }
+        }, {})
+      })
+
+      const wb = XLSX.utils.book_new()
+      const ws = XLSX.utils.json_to_sheet(dataMapped, { header: columnsNames })
+
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1')
+      XLSX.writeFile(wb, fileName ?? 'export.csv')
+    },
+    [tableInstance],
+  )
+
+  return exportToExcel
+}
+
+export const useSaveToExcel = () => {
+  const { t } = useTranslation()
+  const { tableInstance } = useTableContext()
+  const workbook = new Excel.Workbook()
+
+  const exportToExcel = useCallback(
+    async (data: any[], fileName?: string) => {
+      try {
+        const worksheet = workbook.addWorksheet('Sheet 1')
+        // each columns contains header and its mapping key from data
+        const columns = tableInstance?.options?.columns || []
+        const columnsNames = columns.map((column, index) => {
+          var style = {}
+          // @ts-ignore
+          if (column?.meta?.format === 'currency') {
+            style = { numFmt: '"$"#,##0.00;[Red]-"$"#,##0.00' }
+          }
+          return { header: t(column.header as string), key: t(column.header as string), style }
+        })
+        worksheet.columns = columnsNames
+
+        const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
+        const dataMapped = data.map((row: any) => {
+          return Object.keys(row).reduce((acc, key) => {
+            const columnDef = columnDefWithAccessorKeyAsKey[key]
+            const header = columnDef?.header
+            var value = row[key]
+            if (!!row[key] && columnDef?.meta?.format === 'date') {
+              value = new Date(row[key])
+            }
+
+            // If the header is not defined we don't want to export it
+            if (!header) return acc
+
+            return {
+              ...acc,
+              [t(header)]: value,
+            }
+          }, {})
+        })
+
+        // loop through data and add each one to worksheet
+        dataMapped.forEach(singleData => {
+          worksheet.addRow(singleData)
+        })
+
+        // write the content using writeBuffer
+        const buf = await workbook.xlsx.writeBuffer()
+
+        // download the processed file
+        saveAs(new Blob([buf]), `${fileName ?? 'export'}.xlsx`)
+      } catch (error) {
+        console.error('Error...', error)
+      } finally {
+        // removing worksheet's instance to create new one
+        workbook.removeWorksheet('Sheet 1')
+      }
+    },
+    [tableInstance],
+  )
+
+  return exportToExcel
+}

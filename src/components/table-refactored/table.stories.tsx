@@ -52,7 +52,7 @@ export const WithAllComponents = () => {
       <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
-          <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
+          <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos" />
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </ButtonsWrapper>
 
@@ -124,7 +124,7 @@ export const WithExportAndColumnSettings = () => {
       <Table isLoading={isLoading} />
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
-          <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
+          <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos" />
           {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
         </ButtonsWrapper>
       </TableFooter>
@@ -162,7 +162,7 @@ export const TableInsideScrollableElement = () => {
         <Table isLoading={isLoading} onRowClick={onRowClick} />
         <TableFooter position="sticky" bottom="0">
           <ButtonsWrapper>
-            <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos.xlsx" />
+            <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos" />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>

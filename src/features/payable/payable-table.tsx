@@ -15,10 +15,14 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
+  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { ExportButton } from 'components/table-refactored/export-button'
+import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
 
 type PayablePropsTyep = {
   payableColumns: ColumnDef<any>[]
@@ -48,6 +52,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       queryStringWithPagination,
       pagination.pageSize,
     )
+    const { email } = useUserProfile() as Account
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
 
@@ -74,6 +79,25 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
 
     const onSave = columns => {
       postGridColumn(columns)
+    }
+    const onPageSizeChange = pageSize => {
+      const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+      const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
+      if (paginationCol) {
+        postGridColumn([...columnsWithoutPaginationRecords, { ...paginationCol, field: pageSize }] as any)
+      } else {
+        const paginationSettings = generateSettingColumn({
+          field: pageSize,
+          contentKey: 'pagination' as string,
+          order: columns.length,
+          userId: email,
+          type: TableNames.project,
+          hide: true,
+        })
+        settingColumns.push(paginationSettings)
+        postGridColumn(settingColumns as any)
+      }
     }
 
     return (
@@ -110,7 +134,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                   refetch={refetch}
                   isLoading={isExportDataLoading}
                   colorScheme="brand"
-                  fileName="payable.xlsx"
+                  fileName="payable"
                 />
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
@@ -122,6 +146,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                 <GotoPreviousPage />
                 <GotoNextPage />
                 <GotoLastPage />
+                <SelectPageSize dataCount={dataCount} onPageSizeChange={onPageSizeChange} />
               </TablePagination>
             </TableFooter>
           </TableContextProvider>

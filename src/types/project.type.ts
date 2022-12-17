@@ -104,6 +104,7 @@ export type Project = {
   payVariance?: number | null
   collectionDate?: string | null
   documents: any[] | null
+  vendorWODueDate?: string
 }
 
 export type ProjectExtraAttributesType = {
