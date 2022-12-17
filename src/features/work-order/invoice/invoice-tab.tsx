@@ -297,16 +297,16 @@ export const InvoiceTab = ({
           <Table variant="simple" size="md">
             <Thead>
               <Tr>
-                <Td fontWeight={500} fontSize={'14px'}>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
                   {t('item')}
                 </Td>
-                <Td fontWeight={500} fontSize={'14px'}>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
                   {t('description')}
                 </Td>
-                <Td fontWeight={500} fontSize={'14px'}>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
                   {t('type')}
                 </Td>
-                <Td fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>
               </Tr>
@@ -334,16 +334,28 @@ export const InvoiceTab = ({
                   <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
                     <Box>
                       <HStack w={300} height="60px" justifyContent="space-between">
-                        <Text>{t('subTotal')}:</Text>
-                        <Text data-testid={'subTotal'}>{currencyFormatter(workOrder.subTotal)}</Text>
+                        <Text fontWeight={500} color={'gray.900'}>
+                          {t('subTotal')}:
+                        </Text>
+                        <Text fontWeight={500} color={'gray.900'} data-testid={'subTotal'}>
+                          {currencyFormatter(workOrder.subTotal)}
+                        </Text>
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
-                        <Text>{t('totalAmountPaid')}:</Text>
-                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(workOrder.totalAmountPaid)}</Text>
+                        <Text fontWeight={500} color={'gray.900'}>
+                          {t('totalAmountPaid')}:
+                        </Text>
+                        <Text fontWeight={500} color={'gray.900'} data-testid={'totalAmountPaid'}>
+                          {currencyFormatter(workOrder.totalAmountPaid)}
+                        </Text>
                       </HStack>
                       <HStack w={300} height="60px" justifyContent="space-between">
-                        <Text>{t('balanceDue')}</Text>
-                        <Text data-testid={'balanceDue'}>{currencyFormatter(workOrder.finalInvoiceAmount)}</Text>
+                        <Text fontWeight={500} color={'gray.900'}>
+                          {t('balanceDue')}
+                        </Text>
+                        <Text fontWeight={500} color={'gray.900'} data-testid={'balanceDue'}>
+                          {currencyFormatter(workOrder.finalInvoiceAmount)}
+                        </Text>
                       </HStack>
                     </Box>
                   </VStack>
@@ -413,7 +425,7 @@ export const InvoiceTab = ({
               </Button>
             </>
           ) : (
-            <Button onClick={onClose} colorScheme="darkPrimary">
+            <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">
               {t('cancel')}
             </Button>
           )}
