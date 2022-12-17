@@ -57,12 +57,11 @@ export const Layout: React.FC = props => {
                           style={{
                             borderTop: '1px solid #EDF2F7',
                             borderBottom: '1px solid #EDF2F7',
-                            paddingLeft: '8px',
+                            paddingLeft: '26px',
                             marginBottom: '21px',
                             marginTop: '28px',
                           }}
                         >
-                          <BiChevronDown color="#718096" style={{ width: '24px', height: '24px' }} />
                           <Text
                             color="gray.500"
                             as="span"
