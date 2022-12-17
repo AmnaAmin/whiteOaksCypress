@@ -51,13 +51,13 @@ const CalenderCard = props => {
   return (
     <Flex>
       <Box pr={4}>
-        <BiCalendar size={23} color="#718096" />
+        <BiCalendar size={23} color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
-        <Text data-testid={props.testId} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text color="gray.600" data-testid={props.testId} fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date || 'mm/dd/yyyy'}
         </Text>
       </Box>
@@ -69,12 +69,12 @@ const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
         <Text
           data-testid={props.testId}
-          color="gray.500"
+          color="gray.600"
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}

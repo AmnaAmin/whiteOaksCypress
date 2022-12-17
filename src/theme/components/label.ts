@@ -11,13 +11,13 @@ const label = {
         fontStyle: 'normal',
         fontWeight: 500,
         lineHeight: '20px',
-        color: 'gray.600',
+        color: 'gray.700',
       },
       'light-label': {
         fontStyle: 'normal',
         fontWeight: 400,
         lineHeight: '20px',
-        color: 'gray.500',
+        color: 'gray.600',
       },
     },
     sizes: {

@@ -43,15 +43,15 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
   return (
     <Flex>
       <Box pr={4}>
-        <Icon as={icons} fontSize="23px" color="#718096" />
+        <Icon as={icons} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
           {title}
         </Text>
         <Text
           data-testid={title}
-          color="gray.500"
+          color="gray.600"
           lineHeight="20px"
           fontSize="14px"
           fontStyle="normal"
@@ -285,21 +285,33 @@ export const InvoiceTab = ({
           />
         </Grid>
 
-        <Divider border="1px solid gray" mb="16px" color="gray.200" w="99.8%" />
+        <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
-        <Box h="calc(100% - 135px)" overflow="auto" border="1px solid #E2E8F0">
+        <Box
+          h="calc(100% - 135px)"
+          overflow="auto"
+          borderRadius={7}
+          borderBottom="1px solid #CBD5E0"
+          border="1px solid #CBD5E0"
+        >
           <Table variant="simple" size="md">
             <Thead>
               <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('type')}</Td>
-                <Td w={300} pr={12} textAlign={'end'}>
+                <Td fontWeight={500} fontSize={'14px'}>
+                  {t('item')}
+                </Td>
+                <Td fontWeight={500} fontSize={'14px'}>
+                  {t('description')}
+                </Td>
+                <Td fontWeight={500} fontSize={'14px'}>
+                  {t('type')}
+                </Td>
+                <Td fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>
               </Tr>
             </Thead>
-            <Tbody>
+            <Tbody outline={'1px solid #CBD5E0'}>
               {items.map((item, index) => {
                 return (
                   <Tr key={index} h="72px" data-testid={'invoice-items'}>
@@ -401,7 +413,7 @@ export const InvoiceTab = ({
               </Button>
             </>
           ) : (
-            <Button onClick={onClose} colorScheme="brand">
+            <Button onClick={onClose} colorScheme="darkPrimary">
               {t('cancel')}
             </Button>
           )}
