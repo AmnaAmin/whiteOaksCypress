@@ -103,7 +103,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
 
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
-        <ModalContent h="737px" bg="#F2F3F4" rounded="none">
+        <ModalContent h="620px" bg="#F2F3F4" rounded="none">
           <ModalHeader
             bg="#FFFFFF"
             borderBottom="1px solid #E2E8F0"
