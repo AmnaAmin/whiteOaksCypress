@@ -45,7 +45,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   const { email } = useUserProfile() as Account
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [paginationInitialized, setPaginationInitialized] = useState(false);
+  const [paginationInitialized, setPaginationInitialized] = useState(false)
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
@@ -69,7 +69,11 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { tableColumns, settingColumns, isFetched: tablePreferenceFetched } = useTableColumnSettings(
+  const {
+    tableColumns,
+    settingColumns,
+    isFetched: tablePreferenceFetched,
+  } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.project,
     {
@@ -79,23 +83,20 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     resetFilters,
   )
 
-  const {
-    paginationRecord,
-    columnsWithoutPaginationRecords,
-  } = useMemo(() => {
-    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
-    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
-    
+  const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
+    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
     return {
-      paginationRecord: paginationCol ? {...paginationCol, field: paginationCol?.field || 0} : null,
+      paginationRecord: paginationCol ? { ...paginationCol, field: paginationCol?.field || 0 } : null,
       columnsWithoutPaginationRecords,
     }
   }, [settingColumns])
 
   useEffect(() => {
-    if(!paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord) {
-      setPaginationInitialized(true);
-      setPagination((prevState) => ({ ...prevState, pageSize: 25}))
+    if (!paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord) {
+      setPaginationInitialized(true)
+      setPagination(prevState => ({ ...prevState, pageSize: 25 }))
     }
   }, [settingColumns, tablePreferenceFetched])
 
@@ -114,11 +115,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }
 
   const onPageSizeChange = pageSize => {
-    if(paginationRecord) {
-      postGridColumn([
-        ...columnsWithoutPaginationRecords,
-        {...paginationRecord, field: pageSize}
-      ] as any)
+    if (paginationRecord) {
+      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationRecord, field: pageSize }] as any)
     } else {
       const paginationSettings = generateSettingColumn({
         field: pageSize,

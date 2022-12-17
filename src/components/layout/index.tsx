@@ -9,7 +9,6 @@ import { useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
-import { BiChevronDown } from 'react-icons/bi'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
@@ -18,15 +17,15 @@ export const Layout: React.FC = props => {
 
   return (
     <Box width="100%">
-      <Box position="fixed" top="0" left="0" right="0" zIndex="sticky">
+      <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{ color: '#A1A6B1' }}>
         <Header toggleMenu={toggle} />
       </Box>
 
-      <Container maxW="full" pt="65px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
+      <Container maxW="full" pt="50px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
         <IdleTimeOutModal />
         <Flex
           position="fixed"
-          top="48px"
+          top="51px"
           bottom="0"
           left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
           transition="left 0.5s ease-in-out"
@@ -44,7 +43,7 @@ export const Layout: React.FC = props => {
             <Box fontSize="sm" lineHeight="short">
               <Sidebar>
                 <Stack align="start" spacing={'2px'}>
-                  <FormLabel ml={6} color="#A1A6B1" size="sm">
+                  <FormLabel ml={6} color="#A1A6B1" size="sm" letterSpacing="1px">
                     {t(`${SIDE_NAV}.menu`)}
                   </FormLabel>
                   {menu?.map(item => (
@@ -55,18 +54,22 @@ export const Layout: React.FC = props => {
                           h="43px"
                           w="201px"
                           style={{
-                            borderTop: '1px solid #EDF2F7',
-                            borderBottom: '1px solid #EDF2F7',
-                            paddingLeft: '8px',
+                            borderTop: '1px solid rgb(237, 242, 247, 0.25)',
+                            borderBottom: '1px solid rgb(237, 242, 247, 0.25)',
+                            paddingLeft: '26px',
                             marginBottom: '21px',
                             marginTop: '28px',
                           }}
                         >
-                          <BiChevronDown color="#718096" style={{ width: '24px', height: '24px' }} />
                           <Text
-                            color="gray.500"
                             as="span"
-                            style={{ fontWeight: 600, fontSize: '14px', lineHeight: '28px' }}
+                            style={{
+                              fontWeight: 6500,
+                              fontSize: '13px',
+                              lineHeight: '28px',
+                              color: '#A1A6B1',
+                              letterSpacing: '1px',
+                            }}
                           >
                             {t(`${SIDE_NAV}.administration`)}
                           </Text>
@@ -117,7 +120,8 @@ export const Layout: React.FC = props => {
           }}
           transition={isOpen ? '0.5s' : '1s'}
           height="calc(100vh - 65px)"
-          p="1rem"
+          py="1rem"
+          pl="8px"
           w="(calc(100% - var(--sidebar-width)"
         >
           {props.children}

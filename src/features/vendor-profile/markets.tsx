@@ -39,7 +39,7 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
 
   return (
     <>
-      <Box h="502px" overflow="auto">
+      <Box h="584px" overflow="auto">
         <Flex maxW="800px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (
@@ -70,7 +70,7 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
       </Box>
       <Flex
         mt={2}
-        borderTop="2px solid #E2E8F0"
+        borderTop="2px solid #CBD5E0"
         alignItems="center"
         height="72px"
         pt="8px"
@@ -78,7 +78,7 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
@@ -87,7 +87,7 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
           disabled={!validateMarket(tradeCheckboxes)}
           type="submit"
           variant="solid"
-          colorScheme="brand"
+          colorScheme="darkPrimary"
           data-testid="saveMarkets"
         >
           {t('save')}

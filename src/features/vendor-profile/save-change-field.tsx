@@ -4,7 +4,7 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 
 export const SaveChangedFieldAlert = () => {
   return (
-    <HStack pt="25px">
+    <HStack py="25px">
       <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />
       <Text fontStyle="italic" color="#F56565" fontSize="12px">
         {t(`${VENDORPROFILE}.changeFieldMessage`)}
