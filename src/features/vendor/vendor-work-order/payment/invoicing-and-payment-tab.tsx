@@ -37,7 +37,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('paymentTermDate')}
               InputElem={
                 invoiceAndPaymentData.paymentTermDate &&
@@ -52,7 +52,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiFile />}
+              Icon={BiFile}
               label={t('payDateVariance')}
               InputElem={
                 invoiceAndPaymentData.workOrderPayDateVariance ? (
@@ -66,7 +66,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiFile />}
+              Icon={BiFile}
               label={t('paymentTerm')}
               InputElem={
                 invoiceAndPaymentData?.paymentTerm ? (
@@ -81,7 +81,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('paid')}
               InputElem={
                 invoiceAndPaymentData?.datePaid ? (
@@ -98,7 +98,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('LWDate')}
               InputElem={
                 invoiceAndPaymentData.dateLeanWaiverSubmitted &&
@@ -114,7 +114,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('permitDate')}
               InputElem={
                 invoiceAndPaymentData?.datePermitsPulled ? (
@@ -129,7 +129,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('paymentProcessed')}
               InputElem={
                 invoiceAndPaymentData?.datePaymentProcessed ? (
@@ -144,7 +144,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('invoiceSubmitted')}
               InputElem={
                 invoiceAndPaymentData.dateInvoiceSubmitted &&
@@ -162,7 +162,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('expectedPay')}
               InputElem={
                 invoiceAndPaymentData.expectedPaymentDate &&
@@ -220,7 +220,7 @@ const InvoicingAndPaymentTab = ({
       </ModalBody>
       <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">
-          <Button colorScheme="brand" onClick={onClose}>
+          <Button colorScheme="darkPrimary" onClick={onClose}>
             {t('cancel')}
           </Button>
         </Flex>

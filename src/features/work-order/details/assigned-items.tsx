@@ -164,9 +164,9 @@ const AssignedItems = (props: AssignedItemType) => {
   return (
     <Box>
       <>
-        <Stack direction="row" justifyContent="space-between">
+        <Stack mb={'20px'} direction="row" justifyContent="space-between">
           <HStack alignItems="center" ml={1} mb={2}>
-            <Text fontWeight={500} color="gray.600">
+            <Text fontWeight={500} color="gray.700" fontSize={'18px'}>
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
@@ -205,7 +205,7 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
           <HStack spacing="16px" alignItems="center">
             {showPriceCheckBox && (
-              <Checkbox data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
+              <Checkbox variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
@@ -214,6 +214,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 <Checkbox
                   data-testid="showMarkAllIsVerified"
                   size="md"
+                  variant={'outLinePrimary'}
                   disabled={!verificationEnabled}
                   isChecked={markAllVerified}
                   onChange={e => {
@@ -271,6 +272,7 @@ const AssignedItems = (props: AssignedItemType) => {
               handleOnDragStart={handleOnDragStart}
               isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
+              isHideFilters={true}
             />
           </TableContextProvider>
         </Box>

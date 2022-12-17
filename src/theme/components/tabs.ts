@@ -20,7 +20,7 @@ const tabsVariants = {
               borderTopWidth: '3px',
               bg: 'white',
               borderBottom: '1px solid #CBD5E0',
-              color: '#4A5568',
+              color: '#345EA6',
               fontWeight: 500,
               fontSize: '14px',
             },
