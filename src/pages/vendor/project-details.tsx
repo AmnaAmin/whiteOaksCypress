@@ -16,6 +16,7 @@ import { useProject } from 'api/projects'
 import { Project } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
+import { Card } from 'components/card/card'
 
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -41,10 +42,11 @@ const ProjectDetails: React.FC = props => {
     <>
       <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
-
-        <Stack spacing={5}>
+        <Stack
+        //  spacing={5} minH={tabIndex === 0 ? '78%' : '97%'} bg="white" rounded="6px"
+        >
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
-            <TabList h={'50px'} alignItems="end">
+            <TabList h={'50px'} alignItems="end" border="none">
               <Flex h={'40px'}>
                 <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
 
@@ -54,15 +56,20 @@ const ProjectDetails: React.FC = props => {
 
                 <Tab>{t('alerts')}</Tab>
               </Flex>
-
-              <Box w="100%" h="50px" display="flex" justifyContent="end" position="relative">
+            </TabList>
+            <Card rounded="0px" roundedBottomLeft="6px" roundedBottomRight="6px">
+              <Box w="100%" display="flex" justifyContent="end" position="relative" top="-6px">
                 {tabIndex === 2 && (
-                  <Button onClick={onDocumentModalOpen} colorScheme="brand" leftIcon={<BiUpload fontSize="16px" />}>
+                  <Button
+                    onClick={onDocumentModalOpen}
+                    colorScheme="darkPrimary"
+                    leftIcon={<BiUpload fontSize="16px" />}
+                  >
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button colorScheme="brand" onClick={onAlertModalOpen}>
+                  <Button colorScheme="darkPrimary" onClick={onAlertModalOpen}>
                     <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
                       {t('resolveAll')}
                     </Text>
@@ -72,7 +79,7 @@ const ProjectDetails: React.FC = props => {
                   <Button
                     data-testid="new-transaction-button"
                     onClick={onTransactionModalOpen}
-                    colorScheme="brand"
+                    colorScheme="darkPrimary"
                     leftIcon={<BiAddToQueue />}
                     isDisabled={isNewTransactionAllow}
                   >
@@ -80,16 +87,14 @@ const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
               </Box>
-            </TabList>
 
-            <TabPanels h="100%">
-              <TabPanel p="0px" h="0px">
-                <Box h="100%">
-                  <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px" h="0px">
-                <Box h="100%" w="100%">
+              <TabPanels h="100%">
+                <TabPanel p="0px">
+                  <Box h="100%">
+                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
+                  </Box>
+                </TabPanel>
+                <TabPanel p="0px">
                   <WorkOrdersTable
                     projectData={projectData as Project}
                     onTabChange={n => {
@@ -97,15 +102,11 @@ const ProjectDetails: React.FC = props => {
                     }}
                     ref={tabsContainerRef}
                   />
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px" h="0px">
-                <Box h="100%" w="100%">
+                </TabPanel>
+                <TabPanel p="0px">
                   <VendorDocumentsTable ref={tabsContainerRef} />
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px" h="0px">
-                <Box h="100%" w="100%">
+                </TabPanel>
+                <TabPanel p="0px">
                   <TriggeredAlertsTable
                     onRowClick={(e, row) => {
                       selectedAlertRow(row.values)
@@ -113,9 +114,9 @@ const ProjectDetails: React.FC = props => {
                     }}
                     ref={tabsContainerRef}
                   />
-                </Box>
-              </TabPanel>
-            </TabPanels>
+                </TabPanel>
+              </TabPanels>
+            </Card>
           </Tabs>
         </Stack>
       </Stack>
