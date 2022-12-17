@@ -5,6 +5,7 @@ import Status from 'features/common/status'
 import { useTranslation } from 'react-i18next'
 import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { boxShadow } from 'theme/common-style'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
@@ -35,7 +36,7 @@ export const TransactionInfoCard: React.FC<{
       bg="white"
       borderRadius="4px"
       rounded={6}
-      boxShadow=" 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+      style={boxShadow}
     >
       <InfoStructureCard title={t('projectID')} isLoading={isLoading}>
         <Text color="gray.500">{projectData?.id}</Text>

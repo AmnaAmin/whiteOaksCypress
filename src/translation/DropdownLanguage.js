@@ -1,15 +1,23 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FaAngleDown } from 'react-icons/fa'
-import { Menu, MenuButton, MenuItem, MenuList, Box, Stack } from '@chakra-ui/react'
+import { Menu, MenuButton, MenuItem, MenuList, Stack, Center } from '@chakra-ui/react'
 import Flags from 'country-flag-icons/react/3x2'
 import { useSaveLanguage, useAccountDetails } from 'api/vendor-details'
+import { HiChevronDown } from 'react-icons/hi'
 
 const languageStyle = {
   paddingRight: '5px',
   fontWeight: 500,
   fontSize: '16px',
   color: '#4A5568',
+  _focus: { background: 'blue.50' },
+}
+
+const selectedLanguageStyle = {
+  paddingRight: '5px',
+  fontWeight: 400,
+  fontSize: '14px',
+  color: 'white',
   _focus: { background: 'blue.50' },
 }
 
@@ -45,10 +53,10 @@ const DropdownLanguage = () => {
   }
 
   return (
-    <Menu placement="bottom">
+    <Menu placement="bottom" color="white">
       <MenuButton
         p="1"
-        _hover={{ bg: 'blue.50', rounded: '6px' }}
+        _hover={{ bg: '#14213D', rounded: '6px' }}
         onChange={handleLangChange}
         variant="text"
         bgSize="auto"
@@ -56,7 +64,7 @@ const DropdownLanguage = () => {
       >
         <Stack direction="row" alignItems="center" spacing={-1}>
           {!account?.langKey || account?.langKey === 'en' ? (
-            <Box sx={languageStyle} display="inline-flex">
+            <Center sx={selectedLanguageStyle}>
               <Flags.US
                 title="United States of America"
                 className="..."
@@ -68,9 +76,9 @@ const DropdownLanguage = () => {
                 }}
               />
               English
-            </Box>
+            </Center>
           ) : (
-            <Box sx={languageStyle} display="inline-flex">
+            <Center sx={selectedLanguageStyle}>
               <Flags.ES
                 title="Espanol"
                 className="..."
@@ -82,9 +90,9 @@ const DropdownLanguage = () => {
                 }}
               />
               Espanol
-            </Box>
+            </Center>
           )}
-          <FaAngleDown display="inline-flex" color="#4A5568" />
+          <HiChevronDown display="inline-flex" color="white" fontSize="20px" />
         </Stack>
       </MenuButton>
 
