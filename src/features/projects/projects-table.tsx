@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useGetAllProjects, useProjects, useWeekDayProjectsDue } from 'api/projects'
@@ -11,7 +11,6 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
-  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
@@ -22,9 +21,6 @@ import { PaginationState, SortingState } from '@tanstack/react-table'
 import { PROJECT_COLUMNS } from 'constants/projects.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
-import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
-import { Account } from 'types/account.types'
-import { useUserProfile } from 'utils/redux-common-selectors'
 
 type ProjectProps = {
   selectedCard: string
@@ -42,8 +38,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resetFilters,
 }) => {
   const navigate = useNavigate()
-  const { email } = useUserProfile() as Account
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
 
@@ -78,47 +73,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     resetFilters,
   )
 
-  useEffect(() => {
-    if (settingColumns) {
-      const paginationColIndex = settingColumns?.length - 1
-      const paginationRecord = settingColumns[paginationColIndex];
-      const newPageSize = paginationRecord?.field || 0;
-
-      if(paginationRecord.contentKey === 'pagination' && paginationRecord?.field) {
-        setPagination({ pageIndex: pagination.pageIndex, pageSize: Number(newPageSize) })
-      }
-    }
-  }, [settingColumns?.length])
-
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
 
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.id}`)
-  }
-
-  const onPageSizeChange = pageSize => {
-    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination');
-    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination');
-
-    if(paginationCol) {
-      postGridColumn([
-        ...columnsWithoutPaginationRecords,
-        {...paginationCol, field: pageSize}
-      ] as any)
-    } else {
-      const paginationSettings = generateSettingColumn({
-        field: pageSize,
-        contentKey: 'pagination' as string,
-        order: columns.length,
-        userId: email,
-        type: TableNames.project,
-        hide: true,
-      })
-      settingColumns.push(paginationSettings)
-      postGridColumn(settingColumns as any)
-    }
   }
 
   return (
@@ -145,7 +105,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               fileName="projects"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns?.filter(col => col.contentKey !== 'pagination')} />}
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
@@ -153,7 +113,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
             <GotoPreviousPage />
             <GotoNextPage />
             <GotoLastPage />
-            <SelectPageSize dataCount={dataCount} onPageSizeChange={onPageSizeChange} />
           </TablePagination>
         </TableFooter>
       </TableContextProvider>
