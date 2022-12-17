@@ -26,7 +26,7 @@ import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 
 // const Notification = React.lazy(() => import("./notification"));
 
-const UserInfo: React.FC = () => {
+const UserInfo: React.FC<{ show: boolean }> = ({ show }) => {
   const { data } = useAuth()
   const account = data?.user
   const userName = `${account?.firstName} ${account?.lastName}`
@@ -44,6 +44,9 @@ const UserInfo: React.FC = () => {
           {account?.userTypeLabel}
         </Text>
       </VStack>
+      <Box position="relative" bottom=" 8.5px" px="4px" color="white" fontSize="20px">
+        {show ? <HiChevronDown /> : <HiChevronUp />}
+      </Box>
     </HStack>
   )
 }
@@ -53,7 +56,7 @@ type HeaderProps = {
 }
 
 const hoverEffect = {
-  _focus: { background: 'blue.50' },
+  _focus: { background: '#F7FAFC' },
 }
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
@@ -107,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-          <HStack spacing={4} _hover={{ bg: '#14213D', rounded: '6px' }} pl="1">
+          <HStack spacing={4} _hover={{ bg: '#14213D' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
@@ -116,13 +119,13 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   setShow(!show)
                 }}
               >
-                <UserInfo />
+                <UserInfo show={show} />
               </MenuButton>
-              <MenuList minWidth="279px">
-                <MenuItem sx={hoverEffect}>
+              <MenuList minWidth="230px" position="relative" left={12} roundedTop={0}>
+                <MenuItem sx={hoverEffect} h="48px">
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem sx={hoverEffect} h="48px">
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
                 <MenuItem
@@ -134,13 +137,14 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   target="_blank"
                   href="https://docs.woaharvest.com/"
                   _hover={{ textDecorationLine: 'none' }}
+                  h="48px"
                 >
                   {t('help')}
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem sx={hoverEffect} h="48px">
                   <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem sx={hoverEffect} h="48px">
                   <Box
                     onClick={logout}
                     fontSize="14px"
@@ -154,9 +158,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   </Box>
                 </MenuItem>
               </MenuList>
-              <Box position="relative" bottom=" 8.5px" px="4px" color="white" fontSize="20px">
-                {show ? <HiChevronDown /> : <HiChevronUp />}
-              </Box>
             </Menu>
           </HStack>
         </HStack>
