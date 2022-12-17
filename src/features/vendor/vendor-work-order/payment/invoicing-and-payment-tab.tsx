@@ -220,7 +220,7 @@ const InvoicingAndPaymentTab = ({
       </ModalBody>
       <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">
-          <Button colorScheme="darkPrimary" onClick={onClose}>
+          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
             {t('cancel')}
           </Button>
         </Flex>

@@ -22,7 +22,7 @@ import jsPdf from 'jspdf'
 import { head } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { BiCaretDown, BiCaretUp, BiDownload, BiEditAlt, BiSpreadsheet, BiTrash, BiUpload } from 'react-icons/bi'
+import { BiAddToQueue, BiCaretDown, BiCaretUp, BiDownload, BiSpreadsheet, BiTrash, BiUpload } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import { createForm, GetHelpText } from 'utils/lien-waiver'
 import { useLWFieldsStatusDecision, useUpdateWorkOrderMutation } from 'api/work-order'
@@ -257,7 +257,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Flex>
             <Box>
               <VStack alignItems="start">
-                <HStack spacing="3">
+                <HStack spacing="4">
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('nameofClaimant')}
@@ -271,7 +271,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   />
                 </HStack>
 
-                <HStack pt={'20px'} spacing="3">
+                <HStack pt={'20px'} spacing="4">
                   <InputView
                     controlStyle={{ w: '16em' }}
                     label={t('makerOfCheck')}
@@ -284,7 +284,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   />
                 </HStack>
                 {isVendor ? (
-                  <HStack pt={'20px'} alignItems={'flex-start'} spacing="3">
+                  <HStack pt={'20px'} alignItems={'flex-start'} spacing="4">
                     <FormInput
                       errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
                       label={t('claimantsTitle')}
@@ -301,7 +301,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       name={`claimantTitle`}
                     />
                     <FormControl isInvalid={!claimantsSignature} width={'16em'}>
-                      <FormLabel fontWeight={500} fontSize="14px" color="gray.600">
+                      <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
                         {t('claimantsSignature')}
                       </FormLabel>
                       <Button
@@ -351,7 +351,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                             disabled={isFieldsDisabled}
                             data-testid="openSignature"
                           >
-                            <BiEditAlt color="#A0AEC0" />
+                            <BiAddToQueue color="#A0AEC0" />
                           </IconButton>
                           {claimantsSignature && (
                             <IconButton
@@ -389,7 +389,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       elementStyle={{
                         bg: 'white',
                         borderWidth: '0 0 1px 0',
-                        borderColor: 'gray.100',
+                        borderColor: 'gray.200',
                         rounded: '0',
                         paddingLeft: 0,
                       }}
@@ -542,7 +542,7 @@ const HelpText = ({ children }) => {
   return (
     <>
       {!isReadMore ? (
-        <Link onClick={toggleReadMore} style={{ color: '#4A5568' }}>
+        <Link onClick={toggleReadMore} style={{ color: 'gray.700' }}>
           <Flex fontStyle="normal" fontWeight={500} fontSize="14px">
             <Box>{t('readMore')}</Box>
             <Box ml="3px" mt="3px">
@@ -552,7 +552,7 @@ const HelpText = ({ children }) => {
         </Link>
       ) : (
         <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: '#4A5568' }}>
+          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: 'gray.700' }}>
             <Box>{t('readLess')}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />

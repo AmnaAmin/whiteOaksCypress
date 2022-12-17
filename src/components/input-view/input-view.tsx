@@ -26,30 +26,33 @@ const InputView = ({ Icon: Icons, label, InputElem, showDivider = true, controlS
   return (
     <Box {...controlStyle}>
       <Stack>
-        <HStack>
+        <HStack lineHeight={'23px'}>
           {Icons && (
-            <Box color={'#4A5568'}>
-              <Icon fontSize={22} as={Icons} />
+            <Box h={'40px'} pb="6px" color={'#4A5568'}>
+              <Icon fontSize={20} as={Icons} />
             </Box>
           )}
-          <Heading color="gray.600" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
-            <Text color={'#2D3748'}>{label}</Text>
-          </Heading>
+
+          <Box>
+            <Heading color="gray.700" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
+              <Text>{label}</Text>
+            </Heading>
+            <Text
+              minH="22px"
+              fontSize="14px"
+              fontStyle="normal"
+              fontWeight={400}
+              color="gray.600"
+              {...controlStyle}
+              isTruncated
+            >
+              {InputElem}
+            </Text>
+          </Box>
         </HStack>
-        <Text
-          minH="22px"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={400}
-          color="gray.600"
-          {...controlStyle}
-          isTruncated
-        >
-          {InputElem}
-        </Text>
       </Stack>
 
-      {showDivider && <Divider orientation="horizontal" pt={2} />}
+      {showDivider && <Divider borderColor={'#E2E8F0'} orientation="horizontal" pt={2} />}
     </Box>
   )
 }
