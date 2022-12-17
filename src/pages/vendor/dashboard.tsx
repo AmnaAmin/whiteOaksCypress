@@ -49,7 +49,6 @@ const Dashboard: React.FC = () => {
         }}
         justifyContent="stretch"
         w="100%"
-        pb="10px"
       >
         <Card p={0} rounded="13px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
@@ -65,7 +64,7 @@ const Dashboard: React.FC = () => {
           pl={3}
           rounded="13px"
           flex={1}
-          ml={{ base: 0, xl: '15px' }}
+          ml={{ base: 0, xl: '11px' }}
           mt={{ base: '30px', xl: 0 }}
           bg="#FDFDFF"
           style={boxShadow}
