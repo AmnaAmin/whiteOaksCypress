@@ -125,6 +125,9 @@ export const useReceivableTableColumns = (control, register, setValue) => {
 
           const onChange = { ...register(`id.${row.index}`) }.onChange
 
+          
+          
+
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
@@ -133,6 +136,9 @@ export const useReceivableTableColumns = (control, register, setValue) => {
                 onChange={e => {
                   onChange(e)
                   setValue(`selected.${row.index}`, e.target.checked ? row.original : null)
+                  
+                  row.toggleSelected();
+                  
                 }}
                 isChecked={!!formValues?.id?.[row.index]}
               />

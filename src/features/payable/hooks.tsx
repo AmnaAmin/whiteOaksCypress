@@ -121,9 +121,23 @@ export const usePayableColumns = (control, register) => {
           const { row } = cellInfo
           const projectId = row.original.id
 
+          const onChange = {...register(`id.${projectId}`)}.onChange;
+
+          console.log( formValues?.id?.[projectId] ); 
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
-              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[projectId]} />
+              <Checkbox 
+                value={projectId} 
+                {...register(`id.${projectId}`)} 
+                isChecked={!!formValues?.id?.[projectId]} 
+                onChange={e => {
+
+                  onChange(e);
+
+                  row.toggleSelected();
+                  
+                }}
+              />
             </Flex>
           )
         },
