@@ -80,7 +80,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   }
   const downloadDocument = (link, text) => {
     return (
-      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+      <a href={link} download style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}>
         <Flex ml={1}>
           <BiDownload fontSize="sm" />
           <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
@@ -108,29 +108,30 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   return (
     <Box>
-      <Button
-        variant="outline"
-        colorScheme="brand"
-        data-testid="addLicense"
-        onClick={() =>
-          append({
-            licenseType: '',
-            licenseNumber: '',
-            expiryDate: startDate,
-            expirationFile: null,
-          })
-        }
-        leftIcon={<BiAddToQueue />}
-      >
-        {t('addLicense')}
-      </Button>
-      <VStack align="start" h="470px" spacing="15px" overflow="auto">
+      <VStack align="start" h="584px" spacing="15px" overflow="auto">
+        <Button
+          ml={'45px'}
+          variant="outline"
+          colorScheme="darkPrimary"
+          data-testid="addLicense"
+          onClick={() =>
+            append({
+              licenseType: '',
+              licenseNumber: '',
+              expiryDate: startDate,
+              expirationFile: null,
+            })
+          }
+          leftIcon={<BiAddToQueue />}
+        >
+          {t('addLicense')}
+        </Button>
         {licenseFields.map((license, index) => {
           const isLicenseChanged = checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index])
 
           return (
             <HStack key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
-              <Box w="2em" color="barColor.100" fontSize="15px">
+              <Box w="2em" color="#345EA6" fontSize="15px">
                 <Center>
                   <Icon
                     as={MdOutlineCancel}
@@ -155,7 +156,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 controlStyle={{ maxW: '215px' }}
                 elementStyle={{
                   bg: 'white',
-                  borderLeft: '2px solid #4E87F8',
+                  borderLeft: '2px solid #345EA6',
                 }}
                 testId={`licenseType-` + index}
               />
@@ -187,7 +188,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               />
               <VStack>
                 <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
-                  <FormLabel variant="strong-label" size="md">
+                  <FormLabel variant="strong-label" size="md" color="#2D3748">
                     File Upload
                   </FormLabel>
                   <Controller
@@ -242,19 +243,20 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         id="footer"
         w="100%"
         height="72px"
+        mt={2}
         pt="8px"
         alignItems="center"
         justifyContent="end"
-        borderTop="2px solid #E2E8F0"
+        borderTop="2px solid #CBD5E0"
       >
         {watchChangeFields && (
-          <Button variant="outline" colorScheme="brand" onClick={() => resetFields()} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
 
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
@@ -262,7 +264,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
           disabled={disableLicenseNext}
           type="submit"
           variant="solid"
-          colorScheme="brand"
+          colorScheme="darkPrimary"
           data-testid="saveLicenses"
         >
           {vendor?.id ? t('save') : t('next')}

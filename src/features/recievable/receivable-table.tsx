@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import AccountReceivableModal from 'features/recievable/account-receivable-modal'
 import { usePaginatedAccountReceivables, useGetAllAccountReceivables } from 'api/account-receivable'
@@ -8,7 +8,7 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
 import Table from 'components/table-refactored/table'
 import { ExportButton } from 'components/table-refactored/export-button'
-import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
+import { generateSettingColumn } from 'components/table-refactored/make-data'
 
 import TableColumnSettings from 'components/table/table-column-settings'
 import {
@@ -49,6 +49,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const [selectedProjectStatus, setSelectedProjectStatus] = useState<string>()
+  const [paginationInitialized, setPaginationInitialized] = useState(false)
   const { email } = useUserProfile() as Account
 
   const {
@@ -84,25 +85,54 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
-  const { tableColumns, settingColumns } = useTableColumnSettings(receivableColumns, TableNames.receivable)
+  const {
+    tableColumns,
+    settingColumns,
+    isFetched: tablePreferenceFetched,
+  } = useTableColumnSettings(receivableColumns, TableNames.receivable)
+
+  const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
+    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
+    return {
+      paginationRecord: paginationCol ? { ...paginationCol, field: paginationCol?.field || 0 } : null,
+      columnsWithoutPaginationRecords,
+    }
+  }, [settingColumns])
+
+  useEffect(() => {
+    const paginationToBeDefaulted =
+      !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord
+    const paginationsMismatchFound =
+      !paginationInitialized &&
+      pagination &&
+      paginationRecord &&
+      (paginationRecord.field as Number) !== pagination.pageSize
+
+    if (paginationToBeDefaulted || paginationsMismatchFound) {
+      setPaginationInitialized(true)
+      setPagination(prevState => ({
+        ...prevState,
+        pageSize: paginationToBeDefaulted ? 25 : Number(paginationRecord?.field) || 25,
+      }))
+    }
+  }, [pagination, settingColumns, tablePreferenceFetched])
 
   const onSave = columns => {
     postGridColumn(columns)
   }
 
   const onPageSizeChange = pageSize => {
-    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
-    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
-
-    if (paginationCol) {
-      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationCol, field: pageSize }] as any)
+    if (paginationRecord) {
+      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationRecord, field: pageSize }] as any)
     } else {
       const paginationSettings = generateSettingColumn({
         field: pageSize,
         contentKey: 'pagination' as string,
-        order: columns.length,
+        order: columnsWithoutPaginationRecords.length,
         userId: email,
-        type: TableNames.project,
+        type: TableNames.receivable,
         hide: true,
       })
       settingColumns.push(paginationSettings)
