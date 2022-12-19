@@ -22,7 +22,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
-import { useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
+import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'features/project-details/transactions/transaction.constants'
@@ -39,6 +39,7 @@ import {
 } from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -111,6 +112,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   const { refundCheckbox } = useFieldShowHideDecision(control)
   const { isApproved } = useFieldDisabledEnabledDecision(control, changeOrder)
+  const { isAdmin } = useUserRolesSelector()
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
@@ -120,6 +122,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     !!selectedTransactionId &&
     transaction?.length > 0
   const { formattedAmount: totalAmount } = useTotalAmount(control)
+  const isAdminEnabled = isAdmin && isManualTransaction(changeOrder?.transactionType)
 
   const toggleAllCheckboxes = useCallback(
     event => {
@@ -462,8 +465,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         size="sm"
                         autoComplete="off"
                         placeholder="Add Description here"
-                        readOnly={isApproved}
-                        variant={isApproved ? 'unstyled' : 'required-field'}
+                        readOnly={isApproved && !isAdminEnabled}
+                        variant={isApproved && !isAdminEnabled ? 'unstyled' : 'required-field'}
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
                         })}
@@ -483,7 +486,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              {!isApproved ? (
+                              {!isApproved || isAdminEnabled ? (
                                 <NumberFormat
                                   data-testid={`transaction-amount-${index}`}
                                   customInput={Input}
