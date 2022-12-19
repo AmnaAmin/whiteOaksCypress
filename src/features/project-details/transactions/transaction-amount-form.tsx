@@ -216,8 +216,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               colorScheme="darkPrimary"
               disabled={isMaterialsLoading}
               onClick={addRow}
-              color="#345EA6"
-              leftIcon={<BiAddToQueue color="#345EA6"/>}
+              color="darkPrimary.300"
+              leftIcon={<BiAddToQueue color="darkPrimary.300" />}
             >
               {t(`${TRANSACTION}.addNewRow`)}
             </Button>
@@ -230,16 +230,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               _hover={{
                 _disabled: {
                   bg: '#EBF8FF',
-                  color: '#345EA6',
+                  color: 'darkPrimary.300',
                   opacity: 0.5,
                 },
               }}
               _disabled={{
                 bg: '#EBF8FF',
-                color: '#345EA6',
+                color: 'darkPrimary.300',
                 opacity: 0.5,
               }}
-              leftIcon={<RiDeleteBinLine color="#345EA6" />}
+              leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
               onClick={onDeleteConfirmationModalOpen}
               isDisabled={!someChecked}
             >
@@ -277,12 +277,20 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           )}
           {values?.lienWaiverDocument?.s3Url && (
             <>
-              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: '#345EA6' }}>
+              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: 'darkPrimary.300' }}>
                 <Flex>
-                  <Box mt="3px">
+                  <Box mt="3px" color="darkPrimary.300">
                     <BiDownload fontSize="sm" />
                   </Box>
-                  <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal" maxW="110px" isTruncated>
+                  <Text
+                    ml="5px"
+                    fontSize="14px"
+                    fontWeight={500}
+                    fontStyle="normal"
+                    color="darkPrimary.300"
+                    maxW="110px"
+                    isTruncated
+                  >
                     {t(`${TRANSACTION}.lienWaiver`)}
                   </Text>
                 </Flex>
@@ -294,10 +302,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
           {values.attachment && values.attachment.s3Url && (
             <>
-              <a href={values?.attachment?.s3Url} download style={{color:"#345EA6" }}>
+              <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
                 <Flex>
-                  <Box mt="3px">
-                    <BiDownload fontSize="sm"/>
+                  <Box mt="3px" color='darkPrimary.300'>
+                    <BiDownload fontSize="sm" />
                   </Box>
                   <Text
                     ml="5px"
@@ -306,7 +314,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     fontStyle="normal"
                     maxW="110px"
                     isTruncated
-                    color="#345EA6"
+                    color="darkPrimary.300"
                     title={values?.attachment?.fileType}
                   >
                     {values?.attachment?.fileType}
@@ -348,11 +356,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     }
                   }
                 }}
-                leftIcon={<BiFile color='#345EA6'/>}
+                leftIcon={<BiFile color="darkPrimary.300" />}
                 variant="outline"
                 size="sm"
                 colorScheme="darkPrimary"
-                color="#345EA6"
+                color="darkPrimary.300"
                 isDisabled={isApproved || !values?.transactionType?.value}
               >
                 {t(`${TRANSACTION}.attachment`)}
@@ -376,7 +384,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           py="3"
           fontSize="14px"
           color="gray.600"
-          bg="#F2F3F4"
+          bg="bgGlobal.50"
           gap="1rem 4rem"
           borderWidth="0 0 1px 0"
           borderStyle="solid"

@@ -20,7 +20,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, p
         <ModalHeader>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
 
-        <ModalBody bg="#F2F3F4" p={2}>
+        <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
             <TransactionForm onClose={onClose} projectId={projectId} projectStatus={projectStatus} />
           </Card>
