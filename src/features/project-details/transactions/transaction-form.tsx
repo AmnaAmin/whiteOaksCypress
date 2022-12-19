@@ -42,6 +42,7 @@ import {
 } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
+  isManualTransaction,
   useAgainstOptions,
   useCalculatePayDateVariance,
   useFieldDisabledEnabledDecision,
@@ -193,6 +194,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaidBackDateField,
     isShowMarkAsField,
   } = useFieldShowHideDecision(control, transaction)
+  const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
     control,
@@ -758,7 +760,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         ) : (
           <Button
             onClick={onModalClose}
-            variant={!isApproved ? 'outline' : 'solid'}
+            variant={!isApproved || isAdminEnabled ? 'outline' : 'solid'}
             colorScheme="brand"
             data-testid="close-transaction-form"
           >
@@ -783,7 +785,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          !isApproved && (
+          (!isApproved || isAdminEnabled) && (
             <>
               <Button
                 type="submit"

@@ -43,15 +43,15 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
   return (
     <Flex>
       <Box pr={4}>
-        <Icon as={icons} fontSize="23px" color="#718096" />
+        <Icon as={icons} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
           {title}
         </Text>
         <Text
           data-testid={title}
-          color="gray.500"
+          color="gray.600"
           lineHeight="20px"
           fontSize="14px"
           fontStyle="normal"
@@ -162,6 +162,7 @@ export const InvoiceTab = ({
     if (onSave) {
       onSave({
         status: STATUS_CODE.DECLINED,
+        declineDate : new Date(),
         lienWaiverAccepted: false,
       })
     }
@@ -285,24 +286,36 @@ export const InvoiceTab = ({
           />
         </Grid>
 
-        <Divider border="1px solid gray" mb="16px" color="gray.200" w="99.8%" />
+        <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
-        <Box h="calc(100% - 135px)" overflow="auto" border="1px solid #E2E8F0">
-          <Table variant="simple" size="md">
+        <Box
+          h="calc(100% - 135px)"
+          overflow="auto"
+          borderRadius={7}
+          borderBottom="1px solid #CBD5E0"
+          border="1px solid #CBD5E0"
+        >
+          <Table variant="simple" size="sm">
             <Thead>
-              <Tr>
-                <Td>{t('item')}</Td>
-                <Td>{t('description')}</Td>
-                <Td>{t('type')}</Td>
-                <Td w={300} pr={12} textAlign={'end'}>
+              <Tr h={'40px'} bg={'#ECEDEE !important'}>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
+                  {t('item')}
+                </Td>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
+                  {t('description')}
+                </Td>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
+                  {t('type')}
+                </Td>
+                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>
               </Tr>
             </Thead>
-            <Tbody>
+            <Tbody outline={'1px solid #CBD5E0'}>
               {items.map((item, index) => {
                 return (
-                  <Tr key={index} h="72px" data-testid={'invoice-items'}>
+                  <Tr h="40px !important" key={index} data-testid={'invoice-items'}>
                     <Td maxWidth={300} w={300}>
                       {item.id}
                     </Td>
@@ -321,17 +334,29 @@ export const InvoiceTab = ({
                 <Td pr={12} borderLeft="1px solid #EDF2F7">
                   <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
                     <Box>
-                      <HStack w={300} height="60px" justifyContent="space-between">
-                        <Text>{t('subTotal')}:</Text>
-                        <Text data-testid={'subTotal'}>{currencyFormatter(workOrder.subTotal)}</Text>
+                      <HStack w={300} height="35px" justifyContent="space-between">
+                        <Text fontWeight={500} color={'gray.800'}>
+                          {t('subTotal')}:
+                        </Text>
+                        <Text fontWeight={500} color={'gray.800'} data-testid={'subTotal'}>
+                          {currencyFormatter(workOrder.subTotal)}
+                        </Text>
                       </HStack>
-                      <HStack w={300} height="60px" justifyContent="space-between">
-                        <Text>{t('totalAmountPaid')}:</Text>
-                        <Text data-testid={'totalAmountPaid'}>{currencyFormatter(workOrder.totalAmountPaid)}</Text>
+                      <HStack w={300} height="35px" justifyContent="space-between">
+                        <Text fontWeight={500} color={'gray.800'}>
+                          {t('totalAmountPaid')}:
+                        </Text>
+                        <Text fontWeight={500} color={'gray.800'} data-testid={'totalAmountPaid'}>
+                          {currencyFormatter(workOrder.totalAmountPaid)}
+                        </Text>
                       </HStack>
-                      <HStack w={300} height="60px" justifyContent="space-between">
-                        <Text>{t('balanceDue')}</Text>
-                        <Text data-testid={'balanceDue'}>{currencyFormatter(workOrder.finalInvoiceAmount)}</Text>
+                      <HStack w={300} height="35px" justifyContent="space-between">
+                        <Text fontWeight={500} color={'gray.800'}>
+                          {t('balanceDue')}
+                        </Text>
+                        <Text fontWeight={500} color={'gray.800'} data-testid={'balanceDue'}>
+                          {currencyFormatter(workOrder.finalInvoiceAmount)}
+                        </Text>
                       </HStack>
                     </Box>
                   </VStack>
@@ -346,7 +371,7 @@ export const InvoiceTab = ({
           {navigateToProjectDetails && (
             <Button
               variant="outline"
-              colorScheme="brand"
+              colorScheme="darkPriamry"
               size="md"
               onClick={navigateToProjectDetails}
               leftIcon={<BiSpreadsheet />}
@@ -359,7 +384,7 @@ export const InvoiceTab = ({
           ) && recentInvoice ? (
             <Button
               variant="outline"
-              colorScheme="brand"
+              colorScheme="darkPrimary"
               size="md"
               data-testid="seeInvoice"
               onClick={() => downloadFile(recentInvoice?.s3Url)}
@@ -377,7 +402,7 @@ export const InvoiceTab = ({
                   workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
                 )
               }
-              colorScheme="brand"
+              colorScheme="darkPrimary"
               size="md"
               leftIcon={<BiSpreadsheet />}
               onClick={onGenerateInvoiceOpen}
@@ -392,16 +417,16 @@ export const InvoiceTab = ({
               <Button
                 disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
                 onClick={() => rejectInvoice()}
-                colorScheme="brand"
+                colorScheme="darkPrimary"
               >
                 {t('save')}
               </Button>
-              <Button onClick={onClose} colorScheme="brand" variant="outline">
+              <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
                 {t('cancel')}
               </Button>
             </>
           ) : (
-            <Button onClick={onClose} colorScheme="brand">
+            <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">
               {t('cancel')}
             </Button>
           )}

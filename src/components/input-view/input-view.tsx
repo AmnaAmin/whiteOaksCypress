@@ -1,35 +1,58 @@
 import React from 'react'
-import { Box, Divider, Heading, InputProps, Stack, Text, FormControl, FormLabel, Input, Flex } from '@chakra-ui/react'
+import {
+  Box,
+  Divider,
+  Heading,
+  InputProps,
+  Stack,
+  Text,
+  FormControl,
+  FormLabel,
+  Input,
+  Flex,
+  HStack,
+  Icon,
+} from '@chakra-ui/react'
 
 interface InputViewProps {
   label: string
-  Icon?: JSX.Element
+  Icon?: React.ElementType
   InputElem?: JSX.Element | string
   showDivider?: boolean
   controlStyle?: any
 }
 
-const InputView = ({ label, InputElem, showDivider = true, controlStyle = {} }: InputViewProps) => {
+const InputView = ({ Icon: Icons, label, InputElem, showDivider = true, controlStyle = {} }: InputViewProps) => {
   return (
     <Box {...controlStyle}>
       <Stack>
-        <Heading color="gray.600" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
-          {label}
-        </Heading>
-        <Text
-          minH="22px"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={400}
-          color="gray.500"
-          {...controlStyle}
-          isTruncated
-        >
-          {InputElem}
-        </Text>
+        <HStack lineHeight={'23px'}>
+          {Icons && (
+            <Box h={'40px'} pb="6px" color={'#4A5568'}>
+              <Icon fontSize={20} as={Icons} />
+            </Box>
+          )}
+
+          <Box>
+            <Heading color="gray.700" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
+              <Text>{label}</Text>
+            </Heading>
+            <Text
+              minH="22px"
+              fontSize="14px"
+              fontStyle="normal"
+              fontWeight={400}
+              color="gray.600"
+              {...controlStyle}
+              isTruncated
+            >
+              {InputElem}
+            </Text>
+          </Box>
+        </HStack>
       </Stack>
 
-      {showDivider && <Divider orientation="horizontal" pt={2} />}
+      {showDivider && <Divider borderColor={'#E2E8F0'} orientation="horizontal" pt={2} />}
     </Box>
   )
 }

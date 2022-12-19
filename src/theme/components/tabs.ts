@@ -13,14 +13,16 @@ const tabsVariants = {
             bg: '#EBF8FF',
             borderColor: '#CBD5E0',
             fontWeight: 500,
+            fontSize: '14px',
             color: '#4A5568',
             _selected: {
               borderTopColor: `${props.colorScheme}.300`,
               borderTopWidth: '3px',
               bg: 'white',
-              borderBottom: '1px solid #CBD5E0',
-              color: '#4A5568',
+              // borderBottom: '1px solid #CBD5E0',
+              color: '#345EA6',
               fontWeight: 500,
+              fontSize: '14px',
             },
             _disabled: {
               cursor: 'not-allowed',

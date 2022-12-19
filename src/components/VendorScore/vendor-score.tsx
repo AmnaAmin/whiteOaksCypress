@@ -63,11 +63,12 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   return (
     <Box>
       <ExpirationAlertMessage insurance={defaultData} license={vendorEntity?.licenseDocuments} />
-      <Box
+      <Flex
         justifyContent="space-evenly"
         display="grid"
         gridTemplateColumns={{ base: '1fr', lg: '2fr', xl: '1fr 2fr' }}
         alignItems="center"
+        gridGap="11px"
       >
         <Card h={156} rounded="6px">
           <Flex h="99%" w="100%">
@@ -133,10 +134,9 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
 
         <Flex
           pt={{ base: '15px', xl: '0' }}
-          pl={{ base: '0px', xl: '15px' }}
           display="grid"
           gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
-          gridGap="15px"
+          gridGap="11px"
         >
           <SimpleSlider
             heading={t('insuranceExpiration')}
@@ -156,7 +156,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
           />
         </Flex>
-      </Box>
+      </Flex>
     </Box>
   )
 }
