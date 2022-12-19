@@ -267,7 +267,7 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: 'gray.50',
+                          bg: '#F3F8FF',
                         }}
                         backgroundColor={ row.getIsSelected() ? "gray.50": "" }
                       >
@@ -360,7 +360,7 @@ const DragDropEnabledRows = ({
                       backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                       boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
                       _hover={{
-                        bg: 'gray.50',
+                        bg: '#F3F8FF',
                       }}
                     >
                       {row.getVisibleCells().map(cell => {
