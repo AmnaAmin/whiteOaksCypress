@@ -130,7 +130,6 @@ export const usePayableColumns = (control, register) => {
                 {...register(`id.${projectId}`)} 
                 isChecked={!!formValues?.id?.[projectId]} 
                 onChange={e => {
-
                   onChange(e);
 
                   row.toggleSelected();
