@@ -10,7 +10,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { ExportButton } from 'components/table-refactored/export-button'
 import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
 
 type TransactionProps = {
@@ -59,7 +59,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 colorScheme="darkBlue"
                 fileName="transactions"
               />
-
+            <CustomDivider />
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
           </TableFooter>
