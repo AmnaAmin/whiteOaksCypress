@@ -42,11 +42,11 @@ const InfoCard: React.FC<{
   return (
     <Flex>
       <Flex direction="column">
-        <Heading color="gray.600" fontWeight={500} fontSize="14px" whiteSpace="nowrap" mb="2">
+        <Heading color="gray.700" fontWeight={500} fontSize="14px" whiteSpace="nowrap" mb="2">
           {title}
         </Heading>
         <Text
-          color="gray.500"
+          color="gray.600"
           fontWeight="400"
           fontSize="14px"
           isTruncated
@@ -73,7 +73,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="16px" fontWeight={500} color="gray.600">
+        <ModalHeader bg="gray.50" borderBottom="1px solid #eee" fontSize="16px" fontWeight={500} color="gray.00">
           {transaction?.name}
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
@@ -152,7 +152,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
           </Box>
         </ModalBody>
         <ModalFooter display="flex" alignItems="center">
-          <Button onClick={onClose} colorScheme="brand">
+          <Button onClick={onClose} colorScheme="darkPrimary">
             {t(`${TRANSACTION}.close`)}
           </Button>
         </ModalFooter>
