@@ -78,7 +78,7 @@ export const WorkOrderDetails = ({
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
-        <ModalContent rounded={[0]} borderTop="2px solid #4E87F8">
+        <ModalContent rounded={[0]} borderTop="2px solid #345EA6">
           <ModalHeader borderBottom={'1px solid gray.300'} h="64px" py={4} display="flex" alignItems="center">
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
@@ -118,7 +118,7 @@ export const WorkOrderDetails = ({
                 <Tab data-testid="payments">{t('payments')}</Tab>
                 <Tab data-testid="notes">{t('notes')}</Tab>
               </TabList>
-              <Card mb={3} p={0} roundedTop={0}>
+              <Card mb={3} py={0} roundedTop={0} roundedRight={12}>
                 <TabPanels>
                   <TabPanel p={0}>
                     <WorkOrderDetailTab

@@ -43,7 +43,6 @@ export const CustomCheckBox = props => {
       maxW="125px"
       h="34px"
       rounded="8px"
-      bg={state.isChecked ? 'green.50' : '#F2F3F4'}
       cursor={!state.isDisabled ? 'pointer' : 'default'}
       {...htmlProps}
     >
@@ -51,8 +50,8 @@ export const CustomCheckBox = props => {
       <HStack
         ml="2"
         justifyContent="center"
-        border={state.isChecked ? '1px solid #2AB450' : '1px solid #A0AEC0'}
-        rounded="full"
+        border={state.isChecked ? '2px solid #48BB78' : '2px solid #E2E8F0'}
+        rounded="2px"
         w={4}
         id={props.id}
         h={4}
@@ -64,7 +63,7 @@ export const CustomCheckBox = props => {
           } else return
         }}
       >
-        {state.isChecked && <Icon as={CheckIcon} boxSize="2" color={state.isChecked ? '#2AB450' : '#A0AEC0'} />}
+        {state.isChecked && <Icon as={CheckIcon} boxSize="3" color={state.isChecked ? '#48BB78' : '#A0AEC0'} />}
       </HStack>
       <Text mr="2" color={state.isChecked ? '#2AB450' : '#A0AEC0'} {...getLabelProps()}>
         {props.text}
@@ -105,6 +104,7 @@ const AssignedItems = (props: AssignedItemType) => {
   const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
 
   const values = getValues()
+
   const lineItems = useWatch({ name: 'assignedItems', control })
   const watchUploadWO = watch('uploadWO')
   const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
@@ -241,6 +241,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 data-testid="showMarkAllIsComplete"
                 disabled={!statusEnabled}
                 isChecked={markAllCompleted}
+                variant={'outLinePrimary'}
                 onChange={e => {
                   assignedItems.forEach((item, index) => {
                     setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
@@ -255,7 +256,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 variant="outline"
                 data-testid="downloadPdf"
                 onClick={downloadPdf}
-                colorScheme="brand"
+                colorScheme="darkPrimary"
                 disabled={assignedItems?.length < 1}
                 leftIcon={<Icon as={BiDownload} boxSize={4} />}
               >

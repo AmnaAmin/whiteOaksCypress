@@ -143,7 +143,7 @@ export const Table: React.FC<TableProps> = ({
       position="relative"
       zIndex={0}
       border="1px solid #CBD5E0"
-      bg='white'
+      bg="white"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -174,8 +174,8 @@ export const Table: React.FC<TableProps> = ({
                     <Flex alignItems="center">
                       <Text
                         fontSize="14px"
-                        color="gray.600"
-                        fontWeight={500}
+                        color="gray.700"
+                        fontWeight={600}
                         fontStyle="normal"
                         textTransform="none"
                         isTruncated
@@ -348,6 +348,7 @@ const DragDropEnabledRows = ({
                 {(provided, snapshot) => (
                   <>
                     <Tr
+                      h={'40px'}
                       key={row.id}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -366,6 +367,8 @@ const DragDropEnabledRows = ({
 
                         return (
                           <Td
+                            py={0}
+                            pr={'50px'}
                             key={cell.id}
                             isTruncated
                             title={cell.getContext()?.getValue() as string}

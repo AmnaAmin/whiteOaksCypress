@@ -20,7 +20,7 @@ export const inputFocusStateStyle = {
 export const inputBorderLeftStyle: InputProps = {
   borderLeftWidth: '2.5px',
   borderLeftStyle: 'solid',
-  borderLeftColor: 'brand.300',
+  borderLeftColor: '#345EA6',
   _hover: {
     borderLeftColor: 'brand.500',
   },
