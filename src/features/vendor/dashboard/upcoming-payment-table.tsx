@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react'
 import { ColumnDef, PaginationState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { ExportButton } from 'components/table-refactored/export-button'
 import {
   GotoFirstPage,
@@ -116,6 +116,7 @@ export const UpcomingPaymentTable = () => {
               colorScheme="darkBlue"
               fileName="upcoming-payment"
             />
+            <CustomDivider />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
           <TablePagination>

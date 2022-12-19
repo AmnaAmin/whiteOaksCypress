@@ -116,7 +116,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
-              <FormLabel variant="strong-label" size="md" color="gray.700">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('W9DocumentDate')}
               </FormLabel>
               <FormDatePicker
@@ -138,7 +138,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </Flex>
           <HStack>
             <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
-              <FormLabel variant="strong-label" size="md" color="gray.700">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('fileUpload')}
               </FormLabel>
               <Controller
@@ -176,7 +176,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md" color="gray.700">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('agreementSignedDate')}
               </FormLabel>
               <FormDatePicker
@@ -196,7 +196,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             </Box>
             <HStack>
               <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
-                <FormLabel variant="strong-label" size="md" color="gray.700">
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -254,7 +254,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 w="200px"
                 isTruncated
                 title={t('autoInsuranceExpDate')}
-                color="gray.700"
+                color="#2D3748"
               >
                 {t('autoInsuranceExpDate')}
               </FormLabel>
@@ -275,7 +275,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             </Box>
             <HStack>
               <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
-                <FormLabel variant="strong-label" size="md" color="gray.700">
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -319,7 +319,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md" color="gray.700">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('COIGLExpDate')}
               </FormLabel>
               <FormDatePicker
@@ -338,7 +338,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               />
             </Box>
             <HStack w="100%" pr="20px">
-              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="gray.700">
+              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -381,7 +381,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md" color="gray.700">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('COIWCExpDate')}
               </FormLabel>
               <FormDatePicker
@@ -401,7 +401,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             </Box>
             <HStack w="100%" pr="20px">
               <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
-                <FormLabel variant="strong-label" size="md" color="gray.700">
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller

@@ -143,7 +143,7 @@ export const Table: React.FC<TableProps> = ({
       position="relative"
       zIndex={0}
       border="1px solid #CBD5E0"
-      bg='white'
+      bg="white"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -174,7 +174,7 @@ export const Table: React.FC<TableProps> = ({
                     <Flex alignItems="center">
                       <Text
                         fontSize="14px"
-                        color="gray.600"
+                        color="gray.700"
                         fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
@@ -267,8 +267,9 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: 'gray.50',
+                          bg: '#F3F8FF',
                         }}
+                        backgroundColor={ row.getIsSelected() ? "gray.50": "" }
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
@@ -348,6 +349,7 @@ const DragDropEnabledRows = ({
                 {(provided, snapshot) => (
                   <>
                     <Tr
+                      h={'40px !important'}
                       key={row.id}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -358,7 +360,7 @@ const DragDropEnabledRows = ({
                       backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                       boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
                       _hover={{
-                        bg: 'gray.50',
+                        bg: '#F3F8FF',
                       }}
                     >
                       {row.getVisibleCells().map(cell => {
@@ -366,6 +368,8 @@ const DragDropEnabledRows = ({
 
                         return (
                           <Td
+                            py={0}
+                            pr={'50px'}
                             key={cell.id}
                             isTruncated
                             title={cell.getContext()?.getValue() as string}

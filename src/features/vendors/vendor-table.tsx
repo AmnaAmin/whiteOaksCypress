@@ -72,10 +72,16 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'Total Capacity',
     accessorKey: 'capacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.capacity?.toString()
+    },
   },
   {
     header: 'Available Capacity',
     accessorKey: 'availableCapacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.availableCapacity?.toString()
+    },
   },
   {
     header: 'Construction Trade',
