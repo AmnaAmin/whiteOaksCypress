@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { t } = useTranslation()
 
   return (
-    <Box py="8px" px={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
+    <Box py="8px" pl={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
@@ -121,7 +121,14 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               >
                 <UserInfo show={show} />
               </MenuButton>
-              <MenuList minWidth="230px" position="relative" left={12} roundedTop={0} pb={0}>
+              <MenuList
+                boxShadow=" 0px 4px 6px 1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                minWidth="230px"
+                position="relative"
+                left={12}
+                roundedTop={0}
+                py={0}
+              >
                 <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
