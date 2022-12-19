@@ -30,7 +30,8 @@ enum UserTypes {
 
 export const useUserRolesSelector = (): UserRoles => {
   const { data } = useAuth()
-  const { userType } = data?.user as Account
+
+  const { userType } = (data?.user as Account) ?? ''
 
   return {
     isAdmin: userType === UserTypes.admin,
