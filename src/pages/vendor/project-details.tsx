@@ -17,6 +17,7 @@ import { Project } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
 import { Card } from 'components/card/card'
+import { boxShadow } from 'theme/common-style'
 
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -57,7 +58,7 @@ const ProjectDetails: React.FC = props => {
                 <Tab>{t('alerts')}</Tab>
               </Flex>
             </TabList>
-            <Card rounded="0px" roundedBottomLeft="6px" roundedBottomRight="6px">
+            <Card rounded="0px" roundedBottomLeft="6px" roundedBottomRight="6px" style={boxShadow}>
               <Box w="100%" display="flex" justifyContent="end" position="relative" top="-6px">
                 {tabIndex === 2 && (
                   <Button
