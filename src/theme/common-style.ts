@@ -22,7 +22,7 @@ export const inputBorderLeftStyle: InputProps = {
   borderLeftStyle: 'solid',
   borderLeftColor: '#345EA6',
   _hover: {
-    borderLeftColor: 'brand.500',
+    borderLeftColor: 'brand.300',
   },
 }
 

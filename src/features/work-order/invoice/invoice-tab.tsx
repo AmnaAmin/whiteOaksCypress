@@ -162,6 +162,7 @@ export const InvoiceTab = ({
     if (onSave) {
       onSave({
         status: STATUS_CODE.DECLINED,
+        declineDate : new Date(),
         lienWaiverAccepted: false,
       })
     }

@@ -74,8 +74,12 @@ export const theme = extendTheme({
       900: '#00091f',
     },
     darkPrimary: {
+      50: '#e1eeff',
+      100: '#b2cdff',
+      200: '#83acfb',
       300: '#345EA6',
       400: '#22375B',
+      500: '#022c7c',
     },
     barColor: {
       50: '#4E87F8',
@@ -127,6 +131,19 @@ export const theme = extendTheme({
     },
     darkBlue: {
       800: '#22375B',
+    },
+
+    PrimaryCheckBox: {
+      50: '#345EA6',
+      100: '#345EA6',
+      200: '#345EA6',
+      300: '#345EA6',
+      400: '#345EA6',
+      500: '#345EA6',
+      600: '#345EA6',
+      700: '#345EA6',
+      800: '#345EA6',
+      900: '#345EA6',
     },
   },
   components: {

@@ -155,7 +155,7 @@ i18n.use(initReactI18next).init({
         alerts: 'Alerts',
         upload: 'Upload',
         uploadDocument: 'Upload Document',
-        contactName: 'Contact Name:',
+        contactName: 'Contact Name',
         projectID: 'Project ID',
         WoID: 'WO ID',
         contactNo: 'Contact No',
