@@ -47,7 +47,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   return (
     <>
-      <Box h="500px" overflow={'auto'} roundedTop={6}>
+      <Box h="calc(100vh - 300px)" overflow={'auto'} roundedTop={6}>
         <TableContextProvider data={transactions} columns={tableColumns}>
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">

@@ -27,6 +27,7 @@ export const theme = extendTheme({
     // body: `Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`,
     // heading: `Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`,
   },
+
   gray: {
     400: '#A0AEC0',
     500: '#718096',
@@ -133,7 +134,6 @@ export const theme = extendTheme({
     darkBlue: {
       800: '#22375B',
     },
-
     PrimaryCheckBox: {
       50: '#345EA6',
       100: '#345EA6',
@@ -145,6 +145,9 @@ export const theme = extendTheme({
       700: '#345EA6',
       800: '#345EA6',
       900: '#345EA6',
+    },
+    bgGlobal: {
+      50: '#F2F3F4',
     },
   },
   components: {
