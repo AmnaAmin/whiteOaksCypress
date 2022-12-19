@@ -19,7 +19,6 @@ import {
   FormLabel,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { AiOutlinePlus } from 'react-icons/ai'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
 import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
@@ -28,7 +27,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'features/project-details/transactions/transaction.constants'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { BiDownload, BiFile } from 'react-icons/bi'
+import { BiAddToQueue, BiDownload, BiFile } from 'react-icons/bi'
 import numeral from 'numeral'
 import { TRANSACTION } from './transactions.i18n'
 import {
@@ -214,34 +213,33 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               data-testid="add-new-row-button"
               variant="outline"
               size="sm"
-              borderColor="#4E87F8"
-              color="#4E87F8"
+              colorScheme="darkPrimary"
               disabled={isMaterialsLoading}
               onClick={addRow}
-              leftIcon={<AiOutlinePlus color="#4E87F8" />}
+              color="#345EA6"
+              leftIcon={<BiAddToQueue color="#345EA6"/>}
             >
-              {t(`${TRANSACTION}.newRow`)}
+              {t(`${TRANSACTION}.addNewRow`)}
             </Button>
             <Button
               data-testid="delete-row-button"
               variant="outline"
               size="sm"
               ml="10px"
-              borderColor="#4E87F8"
-              color="#4E87F8"
+              colorScheme="darkPrimary"
               _hover={{
                 _disabled: {
                   bg: '#EBF8FF',
-                  color: '#4E87F8',
+                  color: '#345EA6',
                   opacity: 0.5,
                 },
               }}
               _disabled={{
                 bg: '#EBF8FF',
-                color: '#4E87F8',
+                color: '#345EA6',
                 opacity: 0.5,
               }}
-              leftIcon={<RiDeleteBinLine color="#4E87F8" />}
+              leftIcon={<RiDeleteBinLine color="#345EA6" />}
               onClick={onDeleteConfirmationModalOpen}
               isDisabled={!someChecked}
             >
@@ -279,7 +277,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           )}
           {values?.lienWaiverDocument?.s3Url && (
             <>
-              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: '#4E87F8' }}>
+              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: '#345EA6' }}>
                 <Flex>
                   <Box mt="3px">
                     <BiDownload fontSize="sm" />
@@ -296,10 +294,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
           {values.attachment && values.attachment.s3Url && (
             <>
-              <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
+              <a href={values?.attachment?.s3Url} download style={{color:"#345EA6" }}>
                 <Flex>
                   <Box mt="3px">
-                    <BiDownload fontSize="sm" />
+                    <BiDownload fontSize="sm"/>
                   </Box>
                   <Text
                     ml="5px"
@@ -308,6 +306,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     fontStyle="normal"
                     maxW="110px"
                     isTruncated
+                    color="#345EA6"
                     title={values?.attachment?.fileType}
                   >
                     {values?.attachment?.fileType}
@@ -349,10 +348,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     }
                   }
                 }}
-                leftIcon={<BiFile />}
+                leftIcon={<BiFile color='#345EA6'/>}
                 variant="outline"
                 size="sm"
-                colorScheme="brand"
+                colorScheme="darkPrimary"
+                color="#345EA6"
                 isDisabled={isApproved || !values?.transactionType?.value}
               >
                 {t(`${TRANSACTION}.attachment`)}
@@ -368,7 +368,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         flex="1"
         pos="relative"
         flexDirection="column"
-        roundedTop={6}
+        rounded={6}
       >
         <Grid
           gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
@@ -376,7 +376,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           py="3"
           fontSize="14px"
           color="gray.600"
-          bg="gray.50"
+          bg="#F2F3F4"
           gap="1rem 4rem"
           borderWidth="0 0 1px 0"
           borderStyle="solid"
@@ -542,6 +542,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             borderStyle="solid"
             borderColor="gray.200"
             bg="white"
+            rounded={6}
           >
             {isShowCheckboxes && <GridItem />}
             <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
