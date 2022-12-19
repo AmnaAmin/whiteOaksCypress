@@ -112,7 +112,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
 
   return (
     <>
-      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px" pt="20px">
+      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
@@ -160,11 +160,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      {documents.w9DocumentUrl && (
-                        <Box overflow="hidden" top={16}>
-                          {downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
-                        </Box>
-                      )}
+                      <Box overflow="hidden" top={16} h="18px">
+                        {documents.w9DocumentUrl &&
+                          downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
+                      </Box>
                     </VStack>
                   )
                 }}
@@ -223,11 +222,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.agreementUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.agreementUrl &&
+                            downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
@@ -238,8 +236,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </HStack>
         </Box>
 
-        <HStack w="100%" pb={5} pt={3}>
-          <FormLabel m={0} variant="strong-label" size="lg">
+        <HStack w="100%" pb={5} pt={1}>
+          <FormLabel m={0} variant="strong-label" fontSize="18px" color="#2D3748">
             {t('insurance')}
           </FormLabel>
 
@@ -302,11 +300,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.insuranceUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.insuranceUrl &&
+                            downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
@@ -364,11 +361,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.coiGLExpUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.coiGLExpUrl &&
+                            downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
@@ -426,11 +422,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.coiWcExpUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.coiWcExpUrl &&
+                            downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
