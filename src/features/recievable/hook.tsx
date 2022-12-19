@@ -122,11 +122,8 @@ export const useReceivableTableColumns = (control, register, setValue) => {
         accessorKey: 'checkbox',
         cell: cellInfo => {
           const { row } = cellInfo
-
+          
           const onChange = { ...register(`id.${row.index}`) }.onChange
-
-          
-          
 
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
