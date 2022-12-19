@@ -269,6 +269,7 @@ export const Table: React.FC<TableProps> = ({
                         _hover={{
                           bg: '#F3F8FF',
                         }}
+                        backgroundColor={ row.getIsSelected() ? "gray.50": "" }
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
