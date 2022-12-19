@@ -281,7 +281,7 @@ export const parseWODetailValuesToPayload = formValues => {
 
   return {
     cancel: formValues?.cancel?.value,
-    ...(formValues?.cancel.value === 35 && { status: 35 }),
+    ...(formValues?.cancel.value === 35 && { status: 35, cancelledDate: new Date() }),
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
