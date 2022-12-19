@@ -121,11 +121,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               >
                 <UserInfo show={show} />
               </MenuButton>
-              <MenuList minWidth="230px" position="relative" left={12} roundedTop={0}>
-                <MenuItem sx={hoverEffect} h="48px">
+              <MenuList minWidth="230px" position="relative" left={12} roundedTop={0} pb={0}>
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect} h="48px">
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
                 <MenuItem
@@ -138,10 +138,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   href="https://docs.woaharvest.com/"
                   _hover={{ textDecorationLine: 'none' }}
                   h="48px"
+                  borderBottom="1px solid #E2E8F0"
                 >
                   {t('help')}
                 </MenuItem>
-                <MenuItem sx={hoverEffect} h="48px">
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
                 <MenuItem sx={hoverEffect} h="48px">

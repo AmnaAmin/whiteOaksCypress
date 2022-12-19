@@ -188,7 +188,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               />
               <VStack>
                 <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
-                  <FormLabel variant="strong-label" size="md" color="gray.700">
+                  <FormLabel variant="strong-label" size="md" color="#2D3748">
                     File Upload
                   </FormLabel>
                   <Controller
