@@ -70,7 +70,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
         {Icon && <Icon fontSize="18px" color="#718096" />}
       </Box>
       <FormControl>
-        <FormLabel htmlFor={name} color="gray.600" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
+        <FormLabel htmlFor={name} color="gray.700" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">
           {label}
         </FormLabel>
         <Text
@@ -89,7 +89,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
             data-testid={testId}
             variant="unstyled"
             disabled
-            color="gray.500"
+            color="gray.600"
             fontSize="14px"
             isTruncated
           />
