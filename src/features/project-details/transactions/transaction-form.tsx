@@ -205,7 +205,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction)
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
