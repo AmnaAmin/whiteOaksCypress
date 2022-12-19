@@ -289,6 +289,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
                       label={t('claimantsTitle')}
                       placeholder=""
+                      variant="required-field"
                       register={register}
                       controlStyle={{ w: '16em' }}
                       disabled={isFieldsDisabled}
@@ -311,8 +312,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                         borderRadius="6px"
                         bg="white"
                         height={'40px'}
-                        borderLeftWidth={'2px'}
-                        borderLeftColor="CustomPrimaryColor.50"
+                        borderLeftWidth={'2.5px'}
+                        borderLeftColor="#345EA6"
                         alignItems="center"
                         px={4}
                         ml={0}
