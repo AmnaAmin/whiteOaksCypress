@@ -333,7 +333,7 @@ export const InvoiceTab = ({
                 <Td pr={12} borderLeft="1px solid #EDF2F7">
                   <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
                     <Box>
-                      <HStack w={300} height="33px" justifyContent="space-between">
+                      <HStack w={300} height="35px" justifyContent="space-between">
                         <Text fontWeight={500} color={'gray.800'}>
                           {t('subTotal')}:
                         </Text>
@@ -341,7 +341,7 @@ export const InvoiceTab = ({
                           {currencyFormatter(workOrder.subTotal)}
                         </Text>
                       </HStack>
-                      <HStack w={300} height="60px" justifyContent="space-between">
+                      <HStack w={300} height="35px" justifyContent="space-between">
                         <Text fontWeight={500} color={'gray.800'}>
                           {t('totalAmountPaid')}:
                         </Text>
@@ -349,7 +349,7 @@ export const InvoiceTab = ({
                           {currencyFormatter(workOrder.totalAmountPaid)}
                         </Text>
                       </HStack>
-                      <HStack w={300} height="60px" justifyContent="space-between">
+                      <HStack w={300} height="35px" justifyContent="space-between">
                         <Text fontWeight={500} color={'gray.800'}>
                           {t('balanceDue')}
                         </Text>

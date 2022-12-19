@@ -348,7 +348,7 @@ const DragDropEnabledRows = ({
                 {(provided, snapshot) => (
                   <>
                     <Tr
-                      h={'40px'}
+                      h={'40px !important'}
                       key={row.id}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
