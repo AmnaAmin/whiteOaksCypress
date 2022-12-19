@@ -121,7 +121,7 @@ export const usePayableColumns = (control, register) => {
           const { row } = cellInfo
           const projectId = row.original.id
 
-          const onChange = {...register(`id.${projectId}`)}.onChange;
+          const onChange = {...register(`id.${projectId}`)}?.onChange;
 
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
