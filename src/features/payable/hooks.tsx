@@ -132,7 +132,6 @@ export const usePayableColumns = (control, register) => {
                 onChange={e => {
                   onChange(e);
                   row.toggleSelected();
-                  
                 }}
               />
             </Flex>
