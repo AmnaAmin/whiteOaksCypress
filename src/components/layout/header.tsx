@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   HStack,
+  Image,
   Link,
   Menu,
   MenuButton,
@@ -18,7 +19,6 @@ import React, { useState } from 'react'
 import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
-import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
 import { useTranslation } from 'react-i18next'
@@ -76,7 +76,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             onClick={toggleMenu}
             display={{ base: 'inline', lg: 'none' }}
           />
-          <LogoIcon />
+
+          <Image src="./WO-Logo.png" />
         </Flex>
 
         <HStack spacing="5" px="1">
