@@ -93,12 +93,22 @@ export const useFieldRequiredDecision = (control: Control<FormValues, any>, tran
   }
 }
 
+export const isManualTransaction = transactionType =>
+  [
+    TransactionTypeValues.changeOrder,
+    TransactionTypeValues.material,
+    TransactionTypeValues.draw,
+    TransactionTypeValues.factoring,
+    TransactionTypeValues.lateFee,
+    TransactionTypeValues.payment,
+  ].includes(transactionType)
+
 export const useFieldDisabledEnabledDecision = (
   control: Control<FormValues, any>,
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  // const { isAdmin } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
   const isUpdateForm = !!transaction || isMaterialsLoading
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -108,7 +118,8 @@ export const useFieldDisabledEnabledDecision = (
     isUpdateForm,
     isApproved: isStatusApproved,
     isPaidDateDisabled: !transaction || isStatusApproved,
-    isStatusDisabled: isStatusApproved || isMaterialsLoading,
+    isStatusDisabled:
+      (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
   }
 }
 
