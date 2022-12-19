@@ -136,7 +136,6 @@ export const useReceivableTableColumns = (control, register, setValue) => {
                 onChange={e => {
                   onChange(e)
                   setValue(`selected.${row.index}`, e.target.checked ? row.original : null)
-                  
                   row.toggleSelected();
                 }}
                 isChecked={!!formValues?.id?.[row.index]}
