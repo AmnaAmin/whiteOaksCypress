@@ -123,7 +123,6 @@ export const usePayableColumns = (control, register) => {
 
           const onChange = {...register(`id.${projectId}`)}.onChange;
 
-          console.log( formValues?.id?.[projectId] ); 
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox 
