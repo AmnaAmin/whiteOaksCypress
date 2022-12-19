@@ -1,18 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useVendor } from 'api/pc-projects'
+import { useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, PaginationState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
-import { ExportCustomButton } from 'components/table-refactored/export-button'
+import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+// import { useGetAllWorkOrders, useWorkOrders } from 'api/projects'
+
+const VENDOR_TABLE_QUERY_KEYS = {
+  statusLabel: 'statusLabel.contains',
+  companyName: 'companyName.contains',
+  region: 'region.contains',
+  ownerName: 'ownerName.contains',
+  createdDate: 'createdDate.equals',
+  coiglExpirationDate: 'coiglExpirationDate.equals',
+  coiWcExpirationDate: 'coiWcExpirationDate.equals',
+  einNumber: 'einNumber.contains',
+  capacity: 'capacity.equals',
+  availableCapacity: 'availableCapacity.equals',
+  skills: 'skills.contains',
+  market: 'market.contains',
+}
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
@@ -91,18 +116,43 @@ type ProjectProps = {
   selectedCard: string
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
-  const { vendors, isLoading } = useVendor()
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
 
-  const [filterVendors, setFilterVendors] = useState(vendors)
+  const { columnFilters, setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: VENDOR_TABLE_QUERY_KEYS,
+    pagination,
+    setPagination,
+  })
 
   useEffect(() => {
-    setFilterVendors(
-      vendors?.filter(
-        vendor => !selectedCard || vendor.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
-      ),
-    )
-  }, [selectedCard, vendors])
+    if (selectedCard) {
+      setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+    } else {
+      setFilteredUrl(null)
+    }
+  }, [selectedCard])
+
+  const { vendors, isLoading, dataCount, totalPages } = useVendor(
+    filteredUrl + '&' + queryStringWithPagination,
+    pagination.pageSize,
+  )
+
+  // const [filterVendors, setFilterVendors] = useState(vendors)
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
+
+  // const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
+  //   filteredUrl + '&' + queryStringWithoutPagination,
+  // )
+
+  // useEffect(() => {
+  //   setFilterVendors(
+  //     vendors?.filter(
+  //       vendor => !selectedCard || vendor.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
+  //     ),
+  //   )
+  // }, [selectedCard, vendors])
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
   const { tableColumns, settingColumns } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
@@ -123,18 +173,35 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       )}
 
       <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6}>
-        <TableContextProvider data={filterVendors} columns={tableColumns}>
+        <TableContextProvider
+          data={vendors}
+          columns={tableColumns}
+          totalPages={totalPages}
+          pagination={pagination}
+          setPagination={setPagination}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+        >
           <Table
             onRowClick={row => setSelectedVendor(row)}
             isLoading={isLoading}
-            isEmpty={!isLoading && !filterVendors?.length}
+            // isEmpty={!isLoading && !filterVendors?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportCustomButton columns={tableColumns} data={filterVendors} colorScheme="brand" fileName="vendors" />
+              <ExportButton columns={tableColumns} colorScheme="brand" fileName="vendors" />
+              <CustomDivider />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
+
+            <TablePagination>
+              <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
+              <GotoFirstPage />
+              <GotoPreviousPage />
+              <GotoNextPage />
+              <GotoLastPage />
+            </TablePagination>
           </TableFooter>
         </TableContextProvider>
       </Box>

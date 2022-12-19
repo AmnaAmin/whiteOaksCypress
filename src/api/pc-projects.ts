@@ -3,12 +3,13 @@ import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
 import { useQueryClient } from 'react-query'
-import orderBy from 'lodash/orderBy'
+// import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
 import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
 import { PROJECTS_QUERY_KEY } from './projects'
+import { usePaginationQuery } from 'api'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -405,21 +406,80 @@ export const useClients = () => {
   }
 }
 
+// const VENDOR_QUERY_KEY = 'vendor'
+// export const useVendor = () => {
+//   const client = useClient()
+
+//   const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
+//     const response = await client(`view-vendors`, {})
+
+//     return orderBy(response?.data || [], ['id'], ['desc'])
+//   })
+
+//   return {
+//     vendors: data,
+//     ...rest,
+//   }
+// }
+
+export const VENDORS_SELECTED_CARD_MAP_URL = {
+  active: 'status.equals=34',
+  inActive: 'status.equals=36',
+  doNotUse: 'status.equals=114',
+  expired: 'status.equals=110',
+}
+
 const VENDOR_QUERY_KEY = 'vendor'
-export const useVendor = () => {
-  const client = useClient()
+type vendors = Array<any>
 
-  const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
-    const response = await client(`view-vendors`, {})
+const getVendorsQueryString = (filterQueryString: string) => {
+  let queryString = filterQueryString
+  if (filterQueryString?.search('&sort=workOrderExpectedCompletionDate') < 0) {
+    queryString = queryString + `&sort=expectedPaymentDate,asc`
+  }
+  return queryString
+}
 
-    return orderBy(response?.data || [], ['id'], ['desc'])
-  })
+export const useVendor = (queryString: string, pageSize: number) => {
+  const apiQueryString = getVendorsQueryString(queryString)
+
+  const { data, ...rest } = usePaginationQuery<vendors>(
+    [VENDOR_QUERY_KEY, apiQueryString],
+    `view-vendors?${apiQueryString}&status.notEquals=35`,
+    pageSize,
+  )
 
   return {
-    vendors: data,
+    vendors: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
     ...rest,
   }
 }
+
+export const ALL_VENDORS_QUERY_KEY = 'all_vendors'
+export const useGetAllVendors = (filterQueryString: string) => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ALL_VENDORS_QUERY_KEY,
+    async () => {
+      const response = await client(`view-vendors?${filterQueryString}&status.notEquals=35`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    allProjects: data,
+    ...rest,
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const useGanttChart = (projectId?: string): any => {
   const client = useClient()
