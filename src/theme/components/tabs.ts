@@ -19,7 +19,7 @@ const tabsVariants = {
               borderTopColor: `${props.colorScheme}.300`,
               borderTopWidth: '3px',
               bg: 'white',
-              borderBottom: '1px solid #CBD5E0',
+              // borderBottom: '1px solid #CBD5E0',
               color: '#345EA6',
               fontWeight: 500,
               fontSize: '14px',

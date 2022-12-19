@@ -202,10 +202,10 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             p="0px"
           >
             <HStack spacing="16px" mr="13px" my="16px">
-              <Button variant="ghost" colorScheme="brand" onClick={onClose} border="1px solid">
+              <Button variant="ghost" colorScheme="darkPrimary" onClick={onClose} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
-              <Button colorScheme="brand" onClick={saveModal}>
+              <Button colorScheme="darkPrimary" onClick={saveModal} size="md">
                 {t('save')}
               </Button>
             </HStack>
