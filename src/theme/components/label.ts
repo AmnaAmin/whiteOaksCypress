@@ -10,7 +10,7 @@ const label = {
       'strong-label': {
         fontStyle: 'normal',
         fontWeight: 500,
-        lineHeight: '20px',
+        lineHeight: '28px',
         color: 'gray.700',
       },
       'light-label': {

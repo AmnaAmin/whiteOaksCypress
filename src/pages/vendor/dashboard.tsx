@@ -92,12 +92,13 @@ const Dashboard: React.FC = () => {
       </Flex>
       <Card w="100%" style={boxShadow}>
         <Box mt={3} ml={1}>
-          <FormLabel variant="strong-lable" fontSize={'18px'} lineHeight={'28px'}>
+          <FormLabel fontSize={'18px'} lineHeight={'28px'} color="gray.700" fontWeight={500}>
             {t(`${DASHBOARD}.upcomingPayment`)}
           </FormLabel>
           <UpcomingPaymentTable />
         </Box>
       </Card>
+      <Box></Box>
     </VStack>
   )
 }
