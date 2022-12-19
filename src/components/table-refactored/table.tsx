@@ -175,7 +175,7 @@ export const Table: React.FC<TableProps> = ({
                       <Text
                         fontSize="14px"
                         color="gray.700"
-                        fontWeight={600}
+                        fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
                         isTruncated

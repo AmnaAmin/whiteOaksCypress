@@ -262,6 +262,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     variant="link"
                     _focus={{ outline: 'none' }}
                     isChecked={!!value}
+                    colorScheme='darkPrimary'
                     isDisabled={isApproved || isMaterialsLoading}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
