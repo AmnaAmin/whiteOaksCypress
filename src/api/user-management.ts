@@ -156,6 +156,7 @@ export const userMangtPayload = (user: any) => {
     newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
     vendorId: user.vendorId?.value || '',
+    managerRoleId: user.managerRoleId?.value || '',
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
     parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
     markets: user.markets?.filter(market => market.checked) || [],

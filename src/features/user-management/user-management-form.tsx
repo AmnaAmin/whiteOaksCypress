@@ -138,9 +138,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (showRegions && !validateRegions(formValues?.regions))
 
   const managerRoleOptions = useMemo(() => {
-    if(showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61);
+    // filter for market FPM
+    if(fpmRole?.value === 221 && showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61 && role.value !== 59);
+    // filter for regular FPM
+    if(showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61)
+    // filter for area FPM
     if(showStates) return fpmManagerRoleOptions.filter(role => role.value === 60);
-    return availableManagers;
+    return fpmManagerRoleOptions;
   }, [fpmManagerRoleOptions]);
 
   const selectedLocations = useMemo(() => {
@@ -151,19 +155,19 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     if(showMarkets && formValues?.markets && formValues.markets?.length > 0){
       locations = formValues.markets.filter(market => market.checked).map(m => m.market.id).toString() || ''
     }
-    else {
-      locations = availableManagers;
-    }
     return locations;
   }, [formValues]);
   
-  const {options: filteredAvailableManagerOptions} = useFilteredAvailabelManager(
+  const {options: availableManagerOptions} = useFilteredAvailabelManager(
     formValues?.managerRoleId,
     selectedLocations
   );
-  
-  console.log('formValues - ', formValues);
-  console.log('filteredAvailableManagerOptions - ', filteredAvailableManagerOptions)
+
+  const managerOptions = useMemo(() => {
+    if(availableManagerOptions?.length > 0 ) return availableManagerOptions;
+    if(availableManagers?.length > 0) return availableManagers
+    return [];
+  }, [availableManagerOptions])
   // Clear any input field which is being conditionally rendered when user
   // changes account type
   const handleChangeAccountType = () => {
@@ -197,6 +201,10 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       'regions',
       formValues.regions?.map(region => ({ ...region, checked: false })),
     )
+  }
+
+  const clearSelectedManager = () => {
+    setValue('parentFieldProjectManagerId', undefined)
   }
 
   const onSubmit = useCallback(
@@ -376,6 +384,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         onChange={event => {
                           const checked = event.target.checked
                           onChange({ ...market, checked })
+                          clearSelectedManager()
                         }}
                       >
                         {value.market?.metropolitanServiceArea}
@@ -424,7 +433,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                             }
                             return { ...s, checked: false }
                           }))
-
+                          clearSelectedManager()
                         }}
                       >
                         {value.state?.label}
@@ -469,6 +478,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         onChange={event => {
                           const checked = event.target.checked
                           onChange({ ...region, checked })
+                          clearSelectedManager()
                         }}
                       >
                         {value.region?.value}
@@ -495,10 +505,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 render={({ field: {onChange, ...rest} }) => (
                   <ReactSelect
                     {...rest}
-                    selectProps={{ isBorderLeft: true }}
+                    selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
                     options={managerRoleOptions}
                     onChange={(param) => {
                       onChange(param);
+                      clearSelectedManager();
                     }}
                   />
                 )}
@@ -511,7 +522,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <Controller
                 control={control}
                 name="parentFieldProjectManagerId"
-                render={({ field }) => <ReactSelect {...field} options={managerRoleOptions} />}
+                render={({ field }) => (
+                  <ReactSelect
+                    {...field}
+                    options={managerOptions}
+                  />
+                )}
               />
             </FormControl>
 
