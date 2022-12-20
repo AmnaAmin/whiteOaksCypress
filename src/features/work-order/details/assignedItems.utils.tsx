@@ -74,6 +74,10 @@ export type SWOProject = {
 export type selectedCell = { id: string; value: string }
 
 export const getRemovedItems = (formValues, workOrderAssignedItems) => {
+  if (formValues?.cancel?.value === 35) {
+    return formValues.assignedItems
+  }
+
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
   const deletedItems = [...workOrderAssignedItems?.filter(items => !formAssignedItemsIds?.includes(items.id))]
@@ -81,6 +85,10 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 }
 
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
+  /* check if work order is being cancelled we should unassign all line items */
+  if (formValues?.cancel?.value === 35) {
+    return formValues.assignedItems
+  }
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
   const unAssignedItems = [
@@ -606,7 +614,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text('Property Address:', startx, 55)
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.streetAddress ?? '', startx, 60)
-    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+    doc.text(projectData?.city + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
 
     doc.setFont(summaryFont, 'bold')
     const centerTextX = 75
