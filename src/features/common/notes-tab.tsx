@@ -149,12 +149,12 @@ export const NotesTab = (props: NotesProps) => {
             </HStack>
             <HStack padding={5} spacing="16px" w="100%" justifyContent="end">
               {onClose && (
-                <Button variant="outline" colorScheme="brand" onClick={onClose}>
+                <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
                   {t('cancel')}
                 </Button>
               )}
               {!hideSave && (
-                <Button type="submit" colorScheme="brand" isDisabled={!message || !!isNotesLoading}>
+                <Button type="submit" colorScheme="darkPrimary" isDisabled={!message || !!isNotesLoading}>
                   {t('submit')}
                 </Button>
               )}

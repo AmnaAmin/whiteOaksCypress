@@ -10,7 +10,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { ExportButton } from 'components/table-refactored/export-button'
 import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
 
 type TransactionProps = {
@@ -47,7 +47,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   return (
     <>
-      <Box h="500px" overflow={'auto'} roundedTop={6}>
+        <Box overflow={'auto'} w="100%" h="calc(100vh - 300px)" position="relative" roundedTopRight={6}>
         <TableContextProvider data={transactions} columns={tableColumns}>
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
@@ -56,10 +56,10 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 columns={tableColumns}
                 refetch={refetch}
                 isLoading={isLoading}
-                colorScheme="brand"
-                fileName="transactions.csv"
+                colorScheme="darkBlue"
+                fileName="transactions"
               />
-
+            <CustomDivider />
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
           </TableFooter>

@@ -23,6 +23,7 @@ export const PROJECT_TYPE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.createdDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: `${PROJECT_TYPE}.modifiedBy`,
@@ -34,6 +35,7 @@ export const PROJECT_TYPE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.lastModifiedDate)
     },
+    meta: { format: 'date' },
   },
 ]
 

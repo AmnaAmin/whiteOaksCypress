@@ -29,7 +29,7 @@ export const Payable = () => {
     selectedDay,
     // setSelectedDay
   ] = useState<string>('')
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
 
   // const clearAll = () => {

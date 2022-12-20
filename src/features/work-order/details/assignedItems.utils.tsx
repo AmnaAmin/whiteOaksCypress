@@ -556,7 +556,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           size="sm"
           data-testid={testId}
           onClick={() => inputRef?.current?.click()}
-          colorScheme="brand"
+          colorScheme="darkPrimary"
           variant="outline"
           leftIcon={<BiUpload color="#4E87F8" />}
           display="flex"
@@ -892,27 +892,7 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-      {
-        header: `${WORK_ORDER}.location`,
-        accessorKey: 'location',
-        cell: ({ row }) => {
-          const index = row?.index
-          return (
-            <Box>
-              <EditableField
-                index={index}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                fieldName="location"
-                fieldArray="assignedItems"
-                formControl={formControl}
-                inputType="text"
-                allowEdit={allowEdit}
-              />
-            </Box>
-          )
-        },
-      },
+
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
@@ -955,6 +935,27 @@ export const useGetLineItemsColumn = ({
           )
         },
         size: 200,
+      },
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
       },
       {
         header: () => {
@@ -1145,20 +1146,20 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
-        header: `${WORK_ORDER}.status`,
+        header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
         enableSorting: false,
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
-            <HStack justifyContent={'center'} h="50px">
+            <HStack justifyContent={'center'} h="28px">
               <Controller
                 control={control}
                 name={`assignedItems.${index}.isCompleted`}
                 render={({ field, fieldState }) => (
                   <CustomCheckBox
                     testid={`isCompleted-` + index}
-                    text="Completed"
+                    // text="Completed"
                     isChecked={field.value}
                     disabled={!statusEnabled}
                     onChange={e => {

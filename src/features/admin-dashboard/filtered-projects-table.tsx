@@ -83,7 +83,7 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
               refetch={refetch}
               isLoading={isExportDataLoading}
               colorScheme="brand"
-              fileName="projects.xlsx"
+              fileName="projects"
             />
             <CustomDivider />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}

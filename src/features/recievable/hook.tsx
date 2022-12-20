@@ -122,7 +122,7 @@ export const useReceivableTableColumns = (control, register, setValue) => {
         accessorKey: 'checkbox',
         cell: cellInfo => {
           const { row } = cellInfo
-
+          
           const onChange = { ...register(`id.${row.index}`) }.onChange
 
           return (
@@ -133,6 +133,7 @@ export const useReceivableTableColumns = (control, register, setValue) => {
                 onChange={e => {
                   onChange(e)
                   setValue(`selected.${row.index}`, e.target.checked ? row.original : null)
+                  row.toggleSelected();
                 }}
                 isChecked={!!formValues?.id?.[row.index]}
               />

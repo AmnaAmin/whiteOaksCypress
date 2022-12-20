@@ -10,19 +10,19 @@ const tabsVariants = {
           tab: {
             roundedTopEnd: '6px',
             roundedTopStart: '6px',
-            _hover: {
-              bg: `${props.colorScheme}.50`,
-            },
-            color: 'gray.500',
+            bg: '#EBF8FF',
+            borderColor: '#CBD5E0',
+            fontWeight: 500,
+            fontSize: '14px',
+            color: '#4A5568',
             _selected: {
-              borderBottomColor: `${props.colorScheme}.300`,
-              bg: `${props.colorScheme}.300`,
-              color: 'white',
-              fontWeight: 600,
-              _hover: {
-                borderBottomColor: `${props.colorScheme}.500`,
-                bg: `#2A61CE`,
-              },
+              borderTopColor: `${props.colorScheme}.300`,
+              borderTopWidth: '3px',
+              bg: 'white',
+              // borderBottom: '1px solid #CBD5E0',
+              color: '#345EA6',
+              fontWeight: 500,
+              fontSize: '14px',
             },
             _disabled: {
               cursor: 'not-allowed',

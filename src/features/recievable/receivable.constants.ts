@@ -29,6 +29,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.expectedPaymentDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'balance',
@@ -36,6 +37,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return numeral(cellInfo.amount).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'finalInvoice',
@@ -43,6 +45,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return numeral(cellInfo.finalInvoice).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'markets',
@@ -54,6 +57,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.woaInvoiceDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'poNo',

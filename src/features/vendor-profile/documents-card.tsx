@@ -86,7 +86,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   }
   const downloadDocument = (link, text, testid?) => {
     return (
-      <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#4E87F8' }}>
+      <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}>
         <Flex ml={1}>
           <BiDownload fontSize="sm" />
           <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
@@ -112,11 +112,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
 
   return (
     <>
-      <Box h="502px" overflow="auto">
+      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
         <HStack spacing="16px" alignItems="flex-start">
           <Flex w="215px">
             <Box>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('W9DocumentDate')}
               </FormLabel>
               <FormDatePicker
@@ -138,7 +138,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </Flex>
           <HStack>
             <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('fileUpload')}
               </FormLabel>
               <Controller
@@ -160,23 +160,22 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      {documents.w9DocumentUrl && (
-                        <Box overflow="hidden" top={16}>
-                          {downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
-                        </Box>
-                      )}
+                      <Box overflow="hidden" top={16} h="18px">
+                        {documents.w9DocumentUrl &&
+                          downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
+                      </Box>
                     </VStack>
                   )
                 }}
               />
             </FormControl>
-            {(!isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
+            {(isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
           </HStack>
         </HStack>
-        <Box mt="30px">
+        <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('agreementSignedDate')}
               </FormLabel>
               <FormDatePicker
@@ -196,7 +195,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             </Box>
             <HStack>
               <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
-                <FormLabel variant="strong-label" size="md">
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -223,32 +222,38 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.agreementUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.agreementUrl &&
+                            downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(!isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
+              {(isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
 
-        <HStack mt="30px">
-          <FormLabel m={0} variant="strong-label" size="lg">
+        <HStack w="100%" pb={5} pt={1}>
+          <FormLabel m={0} variant="strong-label" fontSize="18px" color="#2D3748">
             {t('insurance')}
           </FormLabel>
 
           <Divider borderColor="gray.300" />
         </HStack>
-        <Box mt="30px">
+        <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md" w="200px" isTruncated title={t('autoInsuranceExpDate')}>
+              <FormLabel
+                variant="strong-label"
+                size="md"
+                w="200px"
+                isTruncated
+                title={t('autoInsuranceExpDate')}
+                color="#2D3748"
+              >
                 {t('autoInsuranceExpDate')}
               </FormLabel>
               <FormDatePicker
@@ -268,7 +273,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             </Box>
             <HStack>
               <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
-                <FormLabel variant="strong-label" size="md">
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -295,24 +300,23 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.insuranceUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.insuranceUrl &&
+                            downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(!isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
+              {(isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
-        <Box mt="30px">
+        <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('COIGLExpDate')}
               </FormLabel>
               <FormDatePicker
@@ -331,7 +335,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               />
             </Box>
             <HStack w="100%" pr="20px">
-              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message}>
+              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
@@ -357,24 +361,23 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.coiGLExpUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.coiGLExpUrl &&
+                            downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(!isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
+              {(isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
-        <Box mt="30px">
+        <Box>
           <HStack alignItems="flex-start" spacing="16px">
             <Box>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('COIWCExpDate')}
               </FormLabel>
               <FormDatePicker
@@ -394,7 +397,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             </Box>
             <HStack w="100%" pr="20px">
               <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
-                <FormLabel variant="strong-label" size="md">
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -419,21 +422,20 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.coiWcExpUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.coiWcExpUrl &&
+                            downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(!isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
+              {(isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
             </HStack>
           </HStack>
         </Box>
-      </Box>
+      </VStack>
 
       <Flex
         id="footer"
@@ -441,21 +443,21 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         height="72px"
         pt="8px"
         w="100%"
-        borderTop="2px solid #E2E8F0"
+        borderTop="2px solid #CBD5E0"
         alignItems="center"
         justifyContent="end"
       >
         {isAllFiledWatch && (
-          <Button variant="outline" colorScheme="brand" onClick={() => resetFields()} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="darkPrimary">
           {vendor?.id ? t('save') : t('next')}
         </Button>
       </Flex>

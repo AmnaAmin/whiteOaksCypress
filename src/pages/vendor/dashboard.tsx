@@ -15,6 +15,7 @@ import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
 import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
+import { boxShadow } from 'theme/common-style'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -31,7 +32,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <VStack w="100%" zIndex={2} spacing="14px">
+    <VStack w="100%" zIndex={2} spacing="11px">
       <Box w={{ base: '100%' }}>
         <VendorScore vendorId={vendorId} />
       </Box>
@@ -48,11 +49,10 @@ const Dashboard: React.FC = () => {
         }}
         justifyContent="stretch"
         w="100%"
-        pb="10px"
       >
-        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF">
+        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
-            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
+            <Text color="gray.700" fontStyle="Poppins" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
             </Text>
           </Flex>
@@ -64,15 +64,16 @@ const Dashboard: React.FC = () => {
           pl={3}
           rounded="13px"
           flex={1}
-          ml={{ base: 0, xl: '15px' }}
+          ml={{ base: 0, xl: '11px' }}
           mt={{ base: '30px', xl: 0 }}
           bg="#FDFDFF"
+          style={boxShadow}
         >
           <Flex mb="20px">
             <Text
               mt="25px"
               ml="25px"
-              color="gray.600"
+              color="gray.700"
               fontStyle="normal"
               fontWeight={500}
               fontSize="18px"
@@ -81,7 +82,7 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px">
+            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'} rounded={6}>
               <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
@@ -89,14 +90,15 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
-
-      <Box width="100%" pb="5">
-        <FormLabel variant="strong-lable" size={'lg'}>
-          {t(`${DASHBOARD}.upcomingPayment`)}
-        </FormLabel>
-
-        <UpcomingPaymentTable />
-      </Box>
+      <Card w="100%" style={boxShadow}>
+        <Box mt={3} ml={1}>
+          <FormLabel fontSize={'18px'} lineHeight={'28px'} color="gray.700" fontWeight={500}>
+            {t(`${DASHBOARD}.upcomingPayment`)}
+          </FormLabel>
+          <UpcomingPaymentTable />
+        </Box>
+      </Card>
+      <Box></Box>
     </VStack>
   )
 }
