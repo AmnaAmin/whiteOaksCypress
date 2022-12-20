@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   Box,
   HStack,
@@ -66,6 +66,13 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   })
 
   const formValues = watch()
+
+  const selectedValue = licenseFields.map((e, index) => formValues?.licenses?.[index])
+  console.log('selectedValue', selectedValue)
+
+  const selectedLicenseType = useMemo(() => {
+    return licenseFields.map(value => value.licenseType)
+  }, [formValues])
 
   const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
@@ -155,7 +162,11 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
-                  options={licenseTypes}
+                  // options={licenseTypes}
+                  options={licenseTypes.filter(
+                    (sl, index) =>
+                      !selectedLicenseType.includes(sl) && sl !== formValues?.licenses?.[index]?.licenseType,
+                  )}
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{
