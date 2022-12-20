@@ -232,7 +232,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             {!isVendor && <Tab>{t('Projects')}</Tab>}
           </TabList>
 
-          <Card pb="8px" pt="18px" px="18px">
+          <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
             <TabPanels mt="31px">
               <TabPanel p="0px">
                 {tabIndex === 0 ? (
