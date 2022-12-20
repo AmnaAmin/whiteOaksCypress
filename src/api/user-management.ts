@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react'
-import { BONUS, DURATION } from 'features/user-management/user-management-form'
+import { BONUS, DURATION } from 'features/user-management/constants'
 import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -264,6 +264,32 @@ export const useAllManagers = () => {
     ...rest,
   }
 }
+
+export const useFilteredAvailabelManager = (managerRoleId, marketIds?: string) => {
+  const managerRoleIdQueryKey = managerRoleId?.value === 60 ? 'fpmStateId' : 'marketIds';
+  const client = useClient()
+  const { data, ...rest } = useQuery(
+      ['useFilteredAvailableManager', managerRoleId, marketIds], async () => {
+      const response = await client(`users/upstream/${managerRoleId?.value}?${managerRoleIdQueryKey}=${marketIds}`, {})
+        return response?.data
+      },
+      {
+        enabled: !!(managerRoleId && marketIds)
+      }
+    )
+    const options =
+      data?.map(res => ({
+        value: res?.id,
+        label: `${res?.firstName} ${res?.lastName}`,
+      })) || []
+  
+    return {
+      data,
+      options,
+      ...rest,
+    }
+  }
+
 
 const parseUserFormData = ({
   userInfo,
