@@ -614,7 +614,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text('Property Address:', startx, 55)
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.streetAddress ?? '', startx, 60)
-    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+    doc.text(projectData?.city + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
 
     doc.setFont(summaryFont, 'bold')
     const centerTextX = 75
