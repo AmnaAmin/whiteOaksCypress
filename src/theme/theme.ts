@@ -41,7 +41,7 @@ export const theme = extendTheme({
       200: '#E2E8F0',
       500: '#718096',
       600: '#4A5568',
-      700: '2D3748',
+      700: '#2D3748',
       800: '#1A202C',
     },
     lightGray: {

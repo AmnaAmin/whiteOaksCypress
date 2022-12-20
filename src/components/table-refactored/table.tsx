@@ -174,7 +174,7 @@ export const Table: React.FC<TableProps> = ({
                     <Flex alignItems="center">
                       <Text
                         fontSize="14px"
-                        color="gray.700"
+                        color="gray.600"
                         fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
