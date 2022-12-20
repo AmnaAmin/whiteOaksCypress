@@ -74,7 +74,7 @@ export type SWOProject = {
 export type selectedCell = { id: string; value: string }
 
 export const getRemovedItems = (formValues, workOrderAssignedItems) => {
-  if (formValues?.cancel.value === 35) {
+  if (formValues?.cancel?.value === 35) {
     return formValues.assignedItems
   }
 
@@ -86,7 +86,7 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
   /* check if work order is being cancelled we should unassign all line items */
-  if (formValues?.cancel.value === 35) {
+  if (formValues?.cancel?.value === 35) {
     return formValues.assignedItems
   }
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
