@@ -202,7 +202,7 @@ export const Table: React.FC<TableProps> = ({
             </Tr>
           ))}
 
-          {/** Header Filter Input Field for each column */}
+          {/** Header Filter Input Field for each column **/}
           {!isHideFilters &&
             getHeaderGroups().map(headerGroup => {
               return (
