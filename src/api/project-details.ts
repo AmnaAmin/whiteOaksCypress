@@ -19,6 +19,7 @@ import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
+import { AuditLogType } from 'types/common.types'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -466,4 +467,14 @@ export const parseProjectDetailsPayloadFromFormData = async (
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
   }
+}
+
+export const useProjectAuditLogs = () => {
+  const client = useClient()
+
+  return useQuery<AuditLogType[]>('audit-logs', async () => {
+    const response = await client(`audit-trail`, {})
+
+    return response?.data
+  })
 }

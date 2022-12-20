@@ -1,15 +1,16 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { useProjectWorkOrders } from 'api/projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { AUDIT_LOGS_COLUMNS } from './audit-logs.constants'
+import { useProjectAuditLogs } from 'api/project-details'
 
 export const AuditLogsTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
-  const { data: auditLogs, isFetching } = useProjectWorkOrders(projectId)
+  const { data: auditLogs, isFetching } = useProjectAuditLogs()
   const onRowClick = row => {}
+console.log('audit/...' , auditLogs)
 
   return (
     <Box>
