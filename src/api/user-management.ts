@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react'
-import { BONUS, DURATION } from 'features/user-management/user-management-form'
+import { BONUS, DURATION } from 'features/user-management/constants'
 import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -144,18 +144,16 @@ export const useDeleteUserDetails = () => {
 
 export const userMangtPayload = (user: any) => {
   const getFpmStateId = () => {
-    return (
-      user.accountType?.label === 'Field Project Manager' &&
-      user.fieldProjectManagerRoleId.value === 59 //Area Manager
-    )
-    ? user.states?.find(state => state.checked === true)?.state?.id
-    : ''
+    return user.accountType?.label === 'Field Project Manager' && user.fieldProjectManagerRoleId.value === 59 //Area Manager
+      ? user.states?.find(state => state.checked === true)?.state?.id
+      : ''
   }
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
     vendorId: user.vendorId?.value || '',
+    managerRoleId: user.managerRoleId?.value || '',
     fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
     parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
     markets: user.markets?.filter(market => market.checked) || [],
@@ -252,6 +250,32 @@ export const useAllManagers = () => {
     return response?.data
   })
 
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: `${res?.firstName} ${res?.lastName}`,
+    })) || []
+
+  return {
+    data,
+    options,
+    ...rest,
+  }
+}
+
+export const useFilteredAvailabelManager = (managerRoleId, marketIds?: string) => {
+  const managerRoleIdQueryKey = managerRoleId?.value === 60 ? 'fpmStateId' : 'marketIds'
+  const client = useClient()
+  const { data, ...rest } = useQuery(
+    ['useFilteredAvailableManager', managerRoleId, marketIds],
+    async () => {
+      const response = await client(`users/upstream/${managerRoleId?.value}?${managerRoleIdQueryKey}=${marketIds}`, {})
+      return response?.data
+    },
+    {
+      enabled: !!(managerRoleId && marketIds),
+    },
+  )
   const options =
     data?.map(res => ({
       value: res?.id,

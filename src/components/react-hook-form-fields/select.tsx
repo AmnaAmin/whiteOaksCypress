@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormErrorMessage, FormControl, FormLabel, InputGroup, Box, Select } from '@chakra-ui/react'
 import { Controller, Control } from 'react-hook-form'
+import { inputBorderLeftStyle } from 'theme/common-style'
 // import Select from '../form/react-select' (unable to apply custom styles to react-select component)
 
 type SelectProps = {
@@ -41,6 +42,7 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
               bg={props.bg}
               disabled={props.disable}
               _disabled={{ bg: '#EDF2F7' }}
+              {...inputBorderLeftStyle}
             >
               <option value={''}>Select..</option>
               {props.options.map((option, index) => {
