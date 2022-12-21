@@ -19,7 +19,7 @@ const Projects = () => {
     <>
       <VStack spacing="14px" w="100%">
         <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
-        <Box w="100%">
+        <Box w="100%" border='1px solid #CBD5E0' borderRadius='6px'>
           <ProjectsTable selectedCard={selectedCard as string} />
         </Box>
       </VStack>

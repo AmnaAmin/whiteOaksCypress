@@ -6,9 +6,9 @@ export const TableFooter: React.FC<StackProps> = ({ children, ...rest }) => {
       justifyContent="space-between"
       bg="white"
       borderTop="1px solid #CBD5E0"
-      borderBottom="1px solid #CBD5E0"
-      borderRight="1px solid #CBD5E0"
-      borderBottomRadius={'4px'}
+      // borderBottom="1px solid #CBD5E0"
+      // borderRight="1px solid #CBD5E0"
+      borderBottomRadius={'6px'}
       {...rest}
     >
       {children}
@@ -20,9 +20,9 @@ export const ButtonsWrapper: React.FC<StackProps> = ({ children, ...rest }) => {
   return (
     <HStack
       spacing="0"
-      borderLeft="1px solid #CBD5E0"
+      // borderLeft="1px solid #CBD5E0"
       borderRight="1px solid #CBD5E0"
-      borderBottomRadius={'4px'}
+      borderBottomRadius={'6px'}
       {...rest}
     >
       {children}
