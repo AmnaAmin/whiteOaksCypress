@@ -110,13 +110,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     })
   }
 
-  const getSelectOptions = useCallback(() => {
+  const getSelectOptions = useCallback(
     index => {
       return licenseTypes.filter(sl => {
         return !selectedLicenseType.includes(sl.value) || sl.value === `${formValues?.licenses?.[index]?.licenseType}`
       })
-    }
-  }, [])
+    },
+    [selectedLicenseType, formValues],
+  )
 
   return (
     <Box>
@@ -167,6 +168,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
+                  // options={licenseTypes}
                   options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{ maxW: '215px' }}
