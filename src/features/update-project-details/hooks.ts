@@ -153,7 +153,8 @@ export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) 
     isInvoiceAndPaymentFormErrors:
       !!errors.invoiceAttachment?.message || !!errors.paymentTerms || !!errors.invoiceBackDate,
     isProjectManagementFormErrors:
-      !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate,
+      !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate || !!errors.type,
+    isContactsFormErrors: !!errors.projectCoordinator || !!errors.fieldProjectManager || !!errors.client,
   }
 }
 
