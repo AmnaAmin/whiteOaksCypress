@@ -142,7 +142,7 @@ export const Table: React.FC<TableProps> = ({
       rounded="md"
       position="relative"
       zIndex={0}
-      border="1px solid #CBD5E0"
+      // border="1px solid #CBD5E0"
       bg="white"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
@@ -174,7 +174,7 @@ export const Table: React.FC<TableProps> = ({
                     <Flex alignItems="center">
                       <Text
                         fontSize="14px"
-                        color="gray.600"
+                        color="gray.700"
                         fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
@@ -206,7 +206,7 @@ export const Table: React.FC<TableProps> = ({
           {!isHideFilters &&
             getHeaderGroups().map(headerGroup => {
               return (
-                <Tr key={`th_${headerGroup.id}`}>
+                <Tr key={`th_${headerGroup.id}`} position="relative">
                   {headerGroup.headers.map(header => {
                     return (
                       <Th
@@ -220,9 +220,18 @@ export const Table: React.FC<TableProps> = ({
                         {...getColumnMaxMinWidths(header.column)}
                       >
                         {header.column.getCanFilter() ? (
-                          <div>
+                          <Box
+                            _after={{
+                              content: '""',
+                              bottom: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
+                          >
                             <Filter column={header.column} table={tableInstance} />
-                          </div>
+                          </Box>
                         ) : null}
                       </Th>
                     )
@@ -269,7 +278,7 @@ export const Table: React.FC<TableProps> = ({
                         _hover={{
                           bg: '#F3F8FF',
                         }}
-                        backgroundColor={ row.getIsSelected() ? "gray.50": "" }
+                        backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
