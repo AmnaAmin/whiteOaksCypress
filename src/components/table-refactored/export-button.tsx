@@ -50,8 +50,8 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
     <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading}>
       {children ?? (
         <HStack spacing={1}>
-          <Icon as={BiExport} fontSize={'18px'} mb="1px"  color='darkPrimary.400'/>
-          <Text color='darkPrimary.400'>{t('projects.export')}</Text>
+          <Icon as={BiExport} fontSize={'18px'} mb="1px"  color='darkPrimary.400' fontWeight={500}/>
+          <Text color='darkPrimary.400' fontWeight={500}>{t('projects.export')}</Text>
         </HStack>
       )}
     </Button>
