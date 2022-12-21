@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   Box,
   HStack,
@@ -67,6 +67,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   const formValues = watch()
 
+  const selectedLicenseType = useMemo(() => {
+    return formValues?.licenses?.map(value => value.licenseType) ?? []
+  }, [formValues])
+
   const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -105,6 +109,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
       ]
     })
   }
+
+  const getSelectOptions = useCallback(() => {
+    index => {
+      return licenseTypes.filter(sl => {
+        return !selectedLicenseType.includes(sl.value) || sl.value === `${formValues?.licenses?.[index]?.licenseType}`
+      })
+    }
+  }, [])
 
   return (
     <Box>
@@ -155,7 +167,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
-                  options={licenseTypes}
+                  options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{
