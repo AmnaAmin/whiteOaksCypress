@@ -91,9 +91,7 @@ const ProjectDetails: React.FC = props => {
 
               <TabPanels h="100%">
                 <TabPanel p="0px">
-                  <Box h="100%">
                     <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
-                  </Box>
                 </TabPanel>
                 <TabPanel p="0px">
                   <WorkOrdersTable
