@@ -24,10 +24,10 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
     const entityList = vendors[key] || []
     return {
       name: monthsShort[key],
-      Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
-      Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
-      Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
-      Canceled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+      Active: entityList.countActive,
+      Completed: entityList.countCompleted,
+      Paid: entityList.countPaid,
+      Canceled: entityList.countCancelled,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
@@ -59,9 +59,10 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3"
-          //stroke="#EFF3F9"
-           />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            //stroke="#EFF3F9"
+          />
           <XAxis
             dataKey="name"
             axisLine={false}
