@@ -66,11 +66,15 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
     if (cardsvalues?.drawLimit === 2) return 'NTE 70%'
     if (cardsvalues?.drawLimit === 4) return 'NTE 90%'
   }
-  const idd = workOrder?.awardPlanId
+  const awardPlanId = workOrder?.awardPlanId
 
   const calculatePercentage = per => {
     const percentage = (subTotal / 100) * per
     return subTotal - percentage
+  }
+
+  const calFactorFeePercentage = per => {
+    return (subTotal / 100) * per
   }
 
   const calNteMax = p => {
@@ -106,8 +110,8 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
 
   useEffect(() => {
     if (!selectedCard) {
-      if (cardsvalues?.id === idd) {
-        onSelectedCard(idd)
+      if (cardsvalues?.id === awardPlanId) {
+        onSelectedCard(awardPlanId)
       }
     }
   }, [selectedCard])
@@ -128,7 +132,7 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
           alignItems="center"
           transition="0.3s all"
           cursor={'pointer'}
-          pointerEvents={idd ? 'none' : undefined}
+          pointerEvents={awardPlanId ? 'none' : undefined}
           justifyContent="space-between"
           border="1px solid transparent"
           //   borderTop="4px solid transparent"
@@ -181,7 +185,7 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
             </Text>
             <HStack>
               <Text fontWeight="400" fontSize="14px" color="gray.600">
-                {`$${cardsvalues?.factoringFee}.00`}
+                {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
               </Text>
               <Text fontWeight="400" fontSize="12px" color="blue.400">
                 {`${cardsvalues?.factoringFee}%`}

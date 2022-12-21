@@ -12,6 +12,7 @@ import {
   TransactionStatusValues,
   TransactionType,
   TransactionTypeValues,
+  WorkOrderAwardStats,
 } from 'types/transaction.type'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -290,6 +291,25 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
       : [CHANGE_ORDER_DEFAULT_OPTION],
     ...rest,
   }
+}
+
+export const useWorkOrderAwardStats = (workOrderId?: string) => {
+  const client = useClient()
+  const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
+
+  const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
+    ['changeOrders', workOrderId],
+    async () => {
+      const response = await client(`/projects/${workOrderId}/workOrderPlanStat`, {})
+
+      return response?.data
+    },
+    {
+      enabled,
+    },
+  )
+
+  return { awardPlansStats, ...rest }
 }
 
 export const getFileContents = async (document: any, documentType: number) => {

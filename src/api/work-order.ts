@@ -135,6 +135,7 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
       return e.orderNo
     }),
     workOrder: workOrder?.subTotal,
+    displayAwardPlan: workOrder?.displayAwardPlan,
     ...rest,
   }
 }

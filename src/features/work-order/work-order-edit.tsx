@@ -72,6 +72,7 @@ const WorkOrderDetails = ({
   const {
     workOrderAssignedItems,
     workOrder: workOrderSubTotal,
+    displayAwardPlan,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
@@ -114,6 +115,7 @@ const WorkOrderDetails = ({
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrder.projectId}`)
   }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -150,7 +152,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" mx="32px">
                   <Tab>{t('workOrderDetails')}</Tab>
-                  <Tab>{t('projectAward')}</Tab>
+                  {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
                   <Tab>{t('payments')}</Tab>
@@ -217,15 +219,17 @@ const WorkOrderDetails = ({
                       isLoadingLineItems={isLoadingLineItems}
                     />
                   </TabPanel>
-                  <TabPanel p={0}>
-                    <ProjectAwardTab
-                      workOrder={workOrder}
-                      onSave={onSave}
-                      onClose={onClose}
-                      workOrderSubTotal={workOrderSubTotal}
-                      projectAwardData={projectAwardData}
-                    />
-                  </TabPanel>
+                  {displayAwardPlan && (
+                    <TabPanel p={0}>
+                      <ProjectAwardTab
+                        workOrder={workOrder}
+                        onSave={onSave}
+                        onClose={onClose}
+                        workOrderSubTotal={workOrderSubTotal}
+                        projectAwardData={projectAwardData}
+                      />
+                    </TabPanel>
+                  )}
                   <TabPanel p={0}>
                     {isDocumentsLoading ? (
                       <BlankSlate />

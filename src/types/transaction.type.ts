@@ -53,6 +53,19 @@ export type ProjectWorkOrder = {
   workOrderStartDate: string
 }
 
+export type WorkOrderAwardStats = {
+  statusLabel: string
+  workOrderId: number
+  drawConsume: number
+  drawRemaining: null | number
+  materialConsume: number
+  materialRemaining: null | number
+  drawAmountConsume: number
+  materialAmountConsume: number
+  totalAmountConsume: number
+  totalAmountRemaining: null | number
+}
+
 export type TransactionType = {
   approvedBy: string
   approvedDate: string | null
