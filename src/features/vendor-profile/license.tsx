@@ -112,8 +112,11 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   const getSelectOptions = useCallback(
     index => {
-      return licenseTypes.filter(sl => {
-        return !selectedLicenseType.includes(sl.value) || sl.value === `${formValues?.licenses?.[index]?.licenseType}`
+      return licenseTypes.filter(selectedLicense => {
+        return (
+          !selectedLicenseType.includes(selectedLicense.value) ||
+          selectedLicense.value === `${formValues?.licenses?.[index]?.licenseType}`
+        )
       })
     },
     [selectedLicenseType, formValues],
@@ -162,13 +165,12 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={license?.expirationFile ? 'none' : ''}
+                  disable={license?.expirationFile ? 'none' : '' || !!license.licenseType}
                   bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
-                  // options={licenseTypes}
                   options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{ maxW: '215px' }}
@@ -206,7 +208,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 />
                 <VStack>
                   <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
-                    <FormLabel variant="strong-label" size="md" color="#2D3748">
+                    <FormLabel size="md" color="#2D3748">
                       File Upload
                     </FormLabel>
                     <Controller
