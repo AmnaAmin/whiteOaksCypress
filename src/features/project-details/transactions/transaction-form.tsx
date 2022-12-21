@@ -48,6 +48,7 @@ import {
   useFieldDisabledEnabledDecision,
   useFieldRequiredDecision,
   useFieldShowHideDecision,
+  useIsAwardSelect,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
   useSelectedWorkOrder,
@@ -59,7 +60,7 @@ import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
+import { DrawLienWaiver, LienWaiverAlert, ProjectAwardAlert } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
@@ -151,6 +152,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     workOrdersKeyValues,
     isLoading: isAgainstLoading,
   } = useProjectWorkOrders(projectId, !!selectedTransactionId)
+
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
@@ -203,6 +205,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
+  const { check } = useIsAwardSelect(control)
+
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
   const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus)
@@ -304,6 +308,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {isLienWaiverRequired && <LienWaiverAlert />}
+      {check === false ? <ProjectAwardAlert /> : null}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -793,7 +798,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="brand"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading}
+                disabled={isFormSubmitLoading || isMaterialsLoading || !check}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

@@ -144,6 +144,7 @@ export type ProjectColumnType = {
 
 export type ProjectWorkOrderType = {
   id: number
+  displayAwardPlan: boolean
   lienWaiverAccepted: boolean
   workOrderCompletionDateVariance: string
   workOrderPayDateVariance?: string

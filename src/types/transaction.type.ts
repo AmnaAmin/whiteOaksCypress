@@ -1,6 +1,7 @@
 import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
+  assignAwardPlan: boolean
   businessEmailAddress: string
   businessPhoneNumber: string
   capacity: number
@@ -110,6 +111,7 @@ export enum TransactionStatusValues {
 export type SelectOption = {
   label: string
   value: any
+  awardStatus?: any
 }
 
 export type TransactionFormValues = {

@@ -200,6 +200,7 @@ i18n.use(initReactI18next).init({
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
+        projectAward: 'Project Award',
         companyName: 'Company Name',
         ownerName: 'Primary Contact',
         clientApprovedAmount: 'Client Approved Amount',
@@ -239,6 +240,7 @@ i18n.use(initReactI18next).init({
         addSignature: 'Add Signature',
         typeName: 'Type Your Name Here',
         LWrequired: 'Lien Waiver is required for Draw Transaction.',
+        AwardRq: 'You need to select award plan.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -758,6 +760,7 @@ i18n.use(initReactI18next).init({
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
+        projectAward: 'Premio Proyecto',
         companyName: 'Nombre de empresa',
         ownerName: 'Contacto Primario',
         clientApprovedAmount: 'Monto aprobado por el cliente',

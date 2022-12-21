@@ -127,6 +127,7 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
+
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
   const { isAdmin } = useUserRolesSelector()

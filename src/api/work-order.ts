@@ -134,6 +134,7 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
     workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
       return e.orderNo
     }),
+    workOrder: workOrder?.subTotal,
     ...rest,
   }
 }
@@ -219,6 +220,12 @@ export const parsePaymentValuesToPayload = formValues => {
     datePaid: dateISOFormat(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
     partialPaymentDate: dateISOFormat(formValues?.paymentDate),
+  }
+}
+
+export const parseProjectAwardValuesToPayload = id => {
+  return {
+    awardPlanId: id,
   }
 }
 

@@ -47,6 +47,18 @@ export const LienWaiverAlert = () => {
   )
 }
 
+export const ProjectAwardAlert = () => {
+  const { t } = useTranslation()
+
+  return (
+    <Alert status="info" variant="custom" size="sm">
+      <AlertIcon />
+      <AlertDescription>{t('AwardRq')}</AlertDescription>
+      <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+    </Alert>
+  )
+}
+
 export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const { t } = useTranslation()
   const [openSignature, setOpenSignature] = useState(false)
