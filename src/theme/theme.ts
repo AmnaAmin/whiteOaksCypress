@@ -31,6 +31,7 @@ export const theme = extendTheme({
   gray: {
     400: '#A0AEC0',
     500: '#718096',
+    700: '#2D3748',
   },
   blue: {
     500: '#3182CE',
