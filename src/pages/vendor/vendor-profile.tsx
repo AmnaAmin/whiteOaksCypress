@@ -331,7 +331,7 @@ const VendorProfilePage: React.FC<Props> = props => {
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   return (
-    <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+    <Stack w={{ base: '971px', xl: '100%' }} spacing={0}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (
