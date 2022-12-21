@@ -167,7 +167,7 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
             <Text fontWeight="600" fontSize="16px" color="#4E87F8">
               {currencyFormatter(calculatePercentage(cardsvalues?.factoringFee))}
             </Text>
-            <Divider border="1px solid" borderColor="gray.300" />
+            <Divider borderColor="transparent" />
             <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
               {cardsvalues?.materialLimit}
             </Text>
@@ -175,7 +175,7 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
               {cardsvalues?.drawLimit}
             </Text>
             <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-              {drawAmount}
+              {drawAmount()}
             </Text>
             <Text fontWeight="400" fontSize="14px" color="gray.600">
               {cardsvalues?.payTerm}
