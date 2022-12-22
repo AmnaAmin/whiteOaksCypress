@@ -434,8 +434,8 @@ type vendors = Array<any>
 
 const getVendorsQueryString = (filterQueryString: string) => {
   let queryString = filterQueryString
-  if (filterQueryString?.search('&sort=workOrderExpectedCompletionDate') < 0) {
-    queryString = queryString + `&sort=expectedPaymentDate,asc`
+  if (filterQueryString?.search('&sort=coiWcExpirationDate.equals') < 0) {
+    queryString = queryString + `&sort=createdDate,asc`
   }
   return queryString
 }

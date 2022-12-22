@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
+import { useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, PaginationState } from '@tanstack/react-table'
@@ -22,7 +22,6 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-// import { useGetAllWorkOrders, useWorkOrders } from 'api/projects'
 
 const VENDOR_TABLE_QUERY_KEYS = {
   statusLabel: 'statusLabel.contains',
@@ -119,11 +118,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
 
-  const { columnFilters, setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: VENDOR_TABLE_QUERY_KEYS,
-    pagination,
-    setPagination,
-  })
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: VENDOR_TABLE_QUERY_KEYS,
+      pagination,
+      setPagination,
+    })
 
   useEffect(() => {
     if (selectedCard) {
@@ -142,9 +142,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   // const [filterVendors, setFilterVendors] = useState(vendors)
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
 
-  // const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
-  //   filteredUrl + '&' + queryStringWithoutPagination,
-  // )
+  const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(queryStringWithoutPagination)
 
   // useEffect(() => {
   //   setFilterVendors(
@@ -189,7 +187,13 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportButton columns={tableColumns} colorScheme="brand" fileName="vendors" />
+              <ExportButton
+                columns={tableColumns}
+                colorScheme="brand"
+                fileName="vendors"
+                refetch={refetch}
+                isLoading={isExportDataLoading}
+              />
               <CustomDivider />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
