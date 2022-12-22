@@ -16,7 +16,7 @@ type SelectProps = {
   controlStyle?: any
   elementStyle?: any
   testId?: string
-  disable?: string | boolean
+  disable?: boolean
   bg?: string
 }
 
