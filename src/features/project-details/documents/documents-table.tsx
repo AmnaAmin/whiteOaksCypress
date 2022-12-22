@@ -35,7 +35,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
         <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
-            <ExportCustomButton columns={tableColumns} data={documents} colorScheme="darkBlue" fileName="documents" />
+            <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
 
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
           </ButtonsWrapper>
