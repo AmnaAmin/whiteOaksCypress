@@ -30,7 +30,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
         <ModalBody h={'calc(100vh - 300px)'} p="25px" overflow={'auto'}>
           <Flex mb={10} w="100%" alignContent="space-between" pos="relative">
             <Box flex="4" minW="59em">
-              <FormLabel>Select any one performance:</FormLabel>
+              <FormLabel color={'#4A5568'} fontWeight={600}>
+                Select any one performance:
+              </FormLabel>
             </Box>
           </Flex>
           <HStack>
@@ -48,11 +50,13 @@ export const ProjectAwardTab: React.FC<any> = props => {
               )
             })}
           </HStack>
-          <Box mt={3} flex="4" minW="59em">
-            <FormLabel>*Factoring fees to be deducted from initial scope total. </FormLabel>
-          </Box>
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+          <Box flex="4" minW="59em">
+            <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
+              *Factoring fees to be deducted from initial scope total.{' '}
+            </FormLabel>
+          </Box>
           <HStack spacing="16px" justifyContent="end">
             <Button onClick={props?.onClose} variant="outline" colorScheme="brand">
               {t('cancel')}
