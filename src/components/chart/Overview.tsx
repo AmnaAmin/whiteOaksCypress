@@ -22,12 +22,14 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const vendors = values(vendorEntity).reduce((a, v) => ({ ...a, ...v }), {})
   const vendorData = months.map(key => {
     const entityList = vendors[key] || []
+    console.log('count-paid', entityList.countPaid);
+    
     return {
       name: monthsShort[key],
-      Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
-      Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
-      Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
-      Canceled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+     Active: entityList.find(e => e)?.countActive,
+      Completed: entityList.find(e => e)?.countCompleted,
+      Paid:entityList.find(e =>e)?.countPaid,
+      Canceled: entityList.find(e =>e)?.countCancelled,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
@@ -59,9 +61,10 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3"
-          //stroke="#EFF3F9"
-           />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            //stroke="#EFF3F9"
+          />
           <XAxis
             dataKey="name"
             axisLine={false}

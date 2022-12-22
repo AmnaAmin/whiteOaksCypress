@@ -103,6 +103,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
     manualPagination: manualPagination,
+    manualSorting: !!setSorting,
     pageCount: totalPages ?? -1,
     ...(setPagination && { onPaginationChange: setPagination }),
     onSortingChange: setSorting ?? setSortingState,
