@@ -220,10 +220,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isValidForAwardPlan &&
     (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
 
-  const remainingAmtMsg = transType?.label === 'Material' || transType?.label === 'Draw'
+  const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
   const methodForPayment = e => {
-    if (e >= selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && remainingAmtMsg) {
+    if (e >= selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw) {
       setRemainingAmt(true)
     } else {
       setRemainingAmt(false)
@@ -352,7 +352,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {isLienWaiverRequired && <LienWaiverAlert />}
-      {!check && isValidForAwardPlan ? <ProjectAwardAlert /> : null}
+      {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
       {showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
       {showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaing" />}
       {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaing" />}
