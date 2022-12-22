@@ -13,7 +13,7 @@ import {
   Button,
   Divider,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
 // import { Button } from 'components/button/button'
@@ -32,6 +32,7 @@ import {
   useTransaction,
   useTransactionStatusOptions,
   useTransactionTypes,
+  useWorkOrderAwardStats,
   useWorkOrderChangeOrders,
 } from 'api/transactions'
 import {
@@ -49,6 +50,7 @@ import {
   useFieldDisabledEnabledDecision,
   useFieldRequiredDecision,
   useFieldShowHideDecision,
+  useIsAwardSelect,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
   useSelectedWorkOrder,
@@ -60,7 +62,12 @@ import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
+import {
+  DrawLienWaiver,
+  LienWaiverAlert,
+  ProjectAwardAlert,
+  ProjectTransacrtionRemaingALert,
+} from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
@@ -141,6 +148,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
+  const [remainingAmt, setRemainingAmt] = useState(false)
+
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
 
@@ -151,9 +160,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     workOrdersKeyValues,
     isLoading: isAgainstLoading,
   } = useProjectWorkOrders(projectId, !!selectedTransactionId)
+
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
+
+  const { awardPlansStats } = useWorkOrderAwardStats(projectId)
+
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
 
@@ -183,6 +196,39 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     reset, //  isTruncated title={label}
   } = formReturn
 
+  const against = useWatch({ name: 'against', control })
+  const transType = useWatch({ name: 'transactionType', control })
+  const workOrderId = against?.value
+
+  const selectedWorkOrderStats = useMemo(() => {
+    return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
+  }, [workOrderId])
+
+  const { check, isValidForAwardPlan } = useIsAwardSelect(control)
+
+  const showDrawRemainingMsg =
+    transType?.label === 'Draw' &&
+    isValidForAwardPlan &&
+    (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
+
+  const showMaterialRemainingMsg =
+    transType?.label === 'Material' &&
+    isValidForAwardPlan &&
+    (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
+
+  const methodForPayment = e => {
+    if (e && selectedWorkOrderStats?.totalAmountRemaining) {
+      if (e <= selectedWorkOrderStats?.totalAmountRemaining && isValidForAwardPlan) {
+        setRemainingAmt(false)
+      } else {
+        setRemainingAmt(true)
+      }
+    }
+  }
+
+  // console.log(remainingAmt, 'isValidForAwardPlan -', isValidForAwardPlan)
+  console.log(check)
+
   const {
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
@@ -203,6 +249,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
+
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
   const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction)
@@ -304,6 +351,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {isLienWaiverRequired && <LienWaiverAlert />}
+      {!check && isValidForAwardPlan ? <ProjectAwardAlert /> : null}
+      {showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
+      {showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaing" />}
+      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaing" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -735,6 +786,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
               <TransactionAmountForm
                 formReturn={formReturn}
+                onSetTotalRemainingAmount={methodForPayment}
                 transaction={transaction}
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
@@ -774,8 +826,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
+
+            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
             colorScheme="darkPrimary"
-            isDisabled={amount === 0}
             onClick={event => {
               event.stopPropagation()
               setTimeout(() => {
@@ -794,7 +847,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading}
+                disabled={
+                  isFormSubmitLoading ||
+                  isMaterialsLoading ||
+                  (!check && isValidForAwardPlan) ||
+                  showDrawRemainingMsg ||
+                  showMaterialRemainingMsg ||
+                  remainingAmt
+                }
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
