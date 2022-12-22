@@ -135,6 +135,7 @@ export type TransactionFormProps = {
   selectedTransactionId?: number
   projectId: string
   projectStatus: string
+  heading?: string
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -142,6 +143,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   selectedTransactionId,
   projectId,
   projectStatus,
+  heading,
 }) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
@@ -207,11 +209,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
 
   const showDrawRemainingMsg =
+    !heading &&
     transType?.label === 'Draw' &&
     isValidForAwardPlan &&
     (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
 
   const showMaterialRemainingMsg =
+    !heading &&
     transType?.label === 'Material' &&
     isValidForAwardPlan &&
     (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
@@ -226,9 +230,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }
 
-  // console.log(remainingAmt, 'isValidForAwardPlan -', isValidForAwardPlan)
-  console.log(check)
-
   const {
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
@@ -236,9 +237,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowExpectedCompletionDateField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
-    isShowPaymentRecievedDateField,
     isShowPaidBackDateField,
     isShowMarkAsField,
+    isShowPaymentRecievedDateField,
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
@@ -826,7 +827,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-
             isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
             colorScheme="darkPrimary"
             onClick={event => {
