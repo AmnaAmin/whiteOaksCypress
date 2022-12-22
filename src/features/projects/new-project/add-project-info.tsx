@@ -233,7 +233,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </Button>
         <Button
           disabled={isProjectInformationNextButtonDisabled}
-          colorScheme="CustomPrimaryColor"
+          colorScheme="brand"
           size="md"
           ml="3"
           onClick={props.setNextTab}
