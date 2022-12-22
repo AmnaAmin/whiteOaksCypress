@@ -204,23 +204,30 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId])
 
+  const { check, isValidForAwardPlan } = useIsAwardSelect(control)
+
   const showDrawRemainingMsg =
     transType?.label === 'Draw' &&
+    isValidForAwardPlan &&
     (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
 
   const showMaterialRemainingMsg =
     transType?.label === 'Material' &&
+    isValidForAwardPlan &&
     (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
 
   const methodForPayment = e => {
     if (e && selectedWorkOrderStats?.totalAmountRemaining) {
-      if (e <= selectedWorkOrderStats?.totalAmountRemaining) {
+      if (e <= selectedWorkOrderStats?.totalAmountRemaining && isValidForAwardPlan) {
         setRemainingAmt(false)
       } else {
         setRemainingAmt(true)
       }
     }
   }
+
+  // console.log(remainingAmt, 'isValidForAwardPlan -', isValidForAwardPlan)
+  console.log(check)
 
   const {
     isShowChangeOrderSelectField,
@@ -242,7 +249,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
-  const { check } = useIsAwardSelect(control)
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
@@ -345,7 +351,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {isLienWaiverRequired && <LienWaiverAlert />}
-      {check === false ? <ProjectAwardAlert /> : null}
+      {!check && isValidForAwardPlan ? <ProjectAwardAlert /> : null}
       {showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
       {showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaing" />}
       {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaing" />}
@@ -842,7 +848,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 disabled={
                   isFormSubmitLoading ||
                   isMaterialsLoading ||
-                  !check ||
+                  (!check && isValidForAwardPlan) ||
                   showDrawRemainingMsg ||
                   showMaterialRemainingMsg ||
                   remainingAmt

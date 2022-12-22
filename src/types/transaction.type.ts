@@ -1,6 +1,7 @@
 import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
+  validForAwardPlan: boolean
   assignAwardPlan: boolean
   businessEmailAddress: string
   businessPhoneNumber: string
@@ -125,6 +126,7 @@ export type SelectOption = {
   label: string
   value: any
   awardStatus?: any
+  isValidForAwardPlan?: any
 }
 
 export type TransactionFormValues = {

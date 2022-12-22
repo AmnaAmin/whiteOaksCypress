@@ -142,8 +142,9 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
 export const useIsAwardSelect = (control: Control<FormValues, any>) => {
   const against = useWatch({ name: 'against', control })
   const check = against?.awardStatus
+  const isValidForAwardPlan = against?.isValidForAwardPlan
 
-  return { check }
+  return { check, isValidForAwardPlan }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {

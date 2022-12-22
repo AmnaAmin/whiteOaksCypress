@@ -190,6 +190,7 @@ const AGAINST_DEFAULT_OPTION = {
   label: 'Project SOW',
   value: AGAINST_DEFAULT_VALUE,
   awardStatus: null,
+  isValidForAwardPlan: null,
 }
 
 export const createAgainstLabel = (companyName: string, skillName: string) => {
@@ -220,6 +221,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
           label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
           awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
+          isValidForAwardPlan: workOrder?.validForAwardPlan,
         })),
     [workOrders],
   )
