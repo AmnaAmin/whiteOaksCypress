@@ -83,7 +83,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 225px)" border='1px solid #CBD5E0' borderBottomRadius='6px'>
+      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
         <TableContextProvider data={clients} columns={columns}>
           <Table
             onRowClick={row => {

@@ -22,14 +22,13 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const vendors = values(vendorEntity).reduce((a, v) => ({ ...a, ...v }), {})
   const vendorData = months.map(key => {
     const entityList = vendors[key] || []
-    console.log('count-paid', entityList.countPaid);
-    
+
     return {
       name: monthsShort[key],
-     Active: entityList.find(e => e)?.countActive,
+      Active: entityList.find(e => e)?.countActive,
       Completed: entityList.find(e => e)?.countCompleted,
-      Paid:entityList.find(e =>e)?.countPaid,
-      Canceled: entityList.find(e =>e)?.countCancelled,
+      Paid: entityList.find(e => e)?.countPaid,
+      Canceled: entityList.find(e => e)?.countCancelled,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
