@@ -144,7 +144,7 @@ export const WorkOrderDetails = ({
                         workOrder={workOrder}
                         onSave={null}
                         onClose={onClose}
-                        workOrderSubTotal={awardPlanScopeAmount}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
                         projectAwardData={projectAwardData}
                       />
                     </TabPanel>
