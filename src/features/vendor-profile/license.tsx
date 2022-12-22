@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   Box,
   HStack,
@@ -67,6 +67,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   const formValues = watch()
 
+  const selectedLicenseType = useMemo(() => {
+    return formValues?.licenses?.map(value => value.licenseType) ?? []
+  }, [formValues])
+
   const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -105,6 +109,18 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
       ]
     })
   }
+
+  const getSelectOptions = useCallback(
+    index => {
+      return licenseTypes.filter(selectedLicense => {
+        return (
+          !selectedLicenseType.includes(selectedLicense.value) ||
+          selectedLicense.value === `${formValues?.licenses?.[index]?.licenseType}`
+        )
+      })
+    },
+    [selectedLicenseType, formValues],
+  )
 
   return (
     <Box>
@@ -149,13 +165,13 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={license?.expirationFile ? 'none' : ''}
+                  disable={!!license.licenseType}
                   bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
-                  options={licenseTypes}
+                  options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{

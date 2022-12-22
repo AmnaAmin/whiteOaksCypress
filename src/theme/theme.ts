@@ -136,7 +136,10 @@ export const theme = extendTheme({
       900: '#4E87F8',
     },
     darkBlue: {
-      800: '#22375B',
+      50: '#e1eeff',
+      100: '#b2cdff',
+      200: '#83acfb',
+      300: '#22375B',
     },
     PrimaryCheckBox: {
       50: '#345EA6',
