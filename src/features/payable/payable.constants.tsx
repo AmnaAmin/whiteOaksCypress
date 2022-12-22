@@ -9,7 +9,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   propertyAddress: 'propertyAddress.contains',
   vendorAddress: 'vendorAddress.contains',
   paymentTerm: 'paymentTerm.equals',
-  paymentType: 'paymentType.equals',
+  paymentType: 'paymentType.contains',
   expectedPaymentDate: 'expectedPaymentDate.equals',
   finalInvoiceAmount: 'finalInvoiceAmount.greaterThanOrEqual',
   marketName: 'marketName.contains',
