@@ -47,11 +47,11 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   }
 
   return (
-    <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading}>
+    <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="brand">
       {children ?? (
         <HStack spacing={1}>
-          <Icon as={BiExport} fontSize={'18px'} mb="1px"  color='darkPrimary.400'/>
-          <Text color='darkPrimary.400'>{t('projects.export')}</Text>
+          <Icon as={BiExport} fontSize={'18px'} mb="1px" />
+          <Text>{t('projects.export')}</Text>
         </HStack>
       )}
     </Button>
@@ -77,7 +77,7 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
   const { t } = useTranslation()
 
   return (
-    <Button variant="ghost" onClick={handleExport} {...rest}>
+    <Button variant="ghost" colorScheme="brand" onClick={handleExport} {...rest}>
       {children ?? (
         <Flex justifyContent="center">
           <BiExport fontSize={'18px'} />

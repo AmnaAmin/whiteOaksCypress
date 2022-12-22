@@ -88,7 +88,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
   return (
     <>
       <Button
-        colorScheme="darkPrimary.400"
+        colorScheme="brand"
         variant="ghost"
         m={0}
         onClick={onOpen}
@@ -96,8 +96,8 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
         disabled={disabled}
       >
         <HStack spacing={1}>
-          <Icon as={MdOutlineSettings} fontSize="18px" color="darkPrimary.400" />
-          <Text color="darkPrimary.400"> {t('settings')}</Text>
+          <Icon as={MdOutlineSettings} fontSize="18px" />
+          <Text> {t('settings')}</Text>
         </HStack>
       </Button>
 
