@@ -223,7 +223,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
   const methodForPayment = e => {
-    if (e >= selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw) {
+    if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw) {
       setRemainingAmt(true)
     } else {
       setRemainingAmt(false)
@@ -850,7 +850,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 disabled={
                   isFormSubmitLoading ||
                   isMaterialsLoading ||
-                  (!check && isValidForAwardPlan) ||
+                  (!check && isValidForAwardPlan && materialAndDraw) ||
                   showDrawRemainingMsg ||
                   showMaterialRemainingMsg ||
                   remainingAmt
