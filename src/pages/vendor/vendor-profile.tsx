@@ -232,7 +232,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             {!isVendor && <Tab>{t('Projects')}</Tab>}
           </TabList>
 
-          <Card pb="8px" pt="18px" px="18px">
+          <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
             <TabPanels mt="31px">
               <TabPanel p="0px">
                 {tabIndex === 0 ? (
@@ -331,7 +331,7 @@ const VendorProfilePage: React.FC<Props> = props => {
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   return (
-    <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+    <Stack w={{ base: '971px', xl: '100%' }} spacing={0}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (

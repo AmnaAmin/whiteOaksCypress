@@ -27,7 +27,7 @@ import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 
 const textStyle = {
-  color: 'gray.700',
+  color: '#2D3748',
   fontSize: '14px',
   fontWeight: 500,
   lineHeight: '24px',
@@ -53,7 +53,7 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
       <HStack alignItems="start">
         {icon && <Icon as={icon} boxSize={7} color="gray.600" mr={3} />}
         <VStack spacing={1} alignItems="start">
-          <Text color="gray.700" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
+          <Text color="#2D3748" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
             {title}
           </Text>
           <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal">

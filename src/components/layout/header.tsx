@@ -18,11 +18,11 @@ import React, { useState } from 'react'
 import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
-import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
+import LogoIcon from 'icons/header-logo'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { t } = useTranslation()
 
   return (
-    <Box py="8px" px={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
+    <Box py="8px" pl={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
@@ -76,6 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             onClick={toggleMenu}
             display={{ base: 'inline', lg: 'none' }}
           />
+
           <LogoIcon />
         </Flex>
 
@@ -121,11 +122,18 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               >
                 <UserInfo show={show} />
               </MenuButton>
-              <MenuList minWidth="230px" position="relative" left={12} roundedTop={0}>
-                <MenuItem sx={hoverEffect} h="48px">
+              <MenuList
+                boxShadow=" 0px 4px 6px 1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                minWidth="230px"
+                position="relative"
+                left={12}
+                roundedTop={0}
+                py={0}
+              >
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect} h="48px">
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
                 <MenuItem
@@ -138,10 +146,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   href="https://docs.woaharvest.com/"
                   _hover={{ textDecorationLine: 'none' }}
                   h="48px"
+                  borderBottom="1px solid #E2E8F0"
                 >
                   {t('help')}
                 </MenuItem>
-                <MenuItem sx={hoverEffect} h="48px">
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
                 <MenuItem sx={hoverEffect} h="48px">

@@ -268,28 +268,31 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
-  const assignedItems = [
-    ...formValues?.assignedItems?.map((a, index) => {
-      const isNewSmartLineItem = !a.smartLineItemId
-      if (a.document) {
-        delete a?.document?.fileObject
-        delete a?.document?.documentTypelabel
-      }
-      const assignedItem = {
-        ...a,
-        document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
-        id: isNewSmartLineItem ? '' : a.id,
-        smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
-        orderNo: index,
-      }
-      delete assignedItem.uploadedDoc
-      return assignedItem
-    }),
-  ]
+  const cancelWorkOrder = formValues?.cancel.value === 35
+  const assignedItems = !cancelWorkOrder
+    ? [
+        ...formValues?.assignedItems?.map((a, index) => {
+          const isNewSmartLineItem = !a.smartLineItemId
+          if (a.document) {
+            delete a?.document?.fileObject
+            delete a?.document?.documentTypelabel
+          }
+          const assignedItem = {
+            ...a,
+            document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
+            id: isNewSmartLineItem ? '' : a.id,
+            smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
+            orderNo: index,
+          }
+          delete assignedItem.uploadedDoc
+          return assignedItem
+        }),
+      ]
+    : []
 
   return {
     cancel: formValues?.cancel?.value,
-    ...(formValues?.cancel.value === 35 && { status: 35, cancelledDate: new Date() }),
+    ...(cancelWorkOrder && { status: 35, cancelledDate: new Date() }),
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,

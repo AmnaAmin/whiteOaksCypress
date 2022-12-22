@@ -72,10 +72,16 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'Total Capacity',
     accessorKey: 'capacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.capacity?.toString()
+    },
   },
   {
     header: 'Available Capacity',
     accessorKey: 'availableCapacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.availableCapacity?.toString()
+    },
   },
   {
     header: 'Construction Trade',
@@ -122,7 +128,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6}>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={filterVendors} columns={tableColumns}>
           <Table
             onRowClick={row => setSelectedVendor(row)}

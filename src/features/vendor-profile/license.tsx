@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   Box,
   HStack,
@@ -67,6 +67,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   const formValues = watch()
 
+  const selectedLicenseType = useMemo(() => {
+    return formValues?.licenses?.map(value => value.licenseType) ?? []
+  }, [formValues])
+
   const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -106,6 +110,18 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     })
   }
 
+  const getSelectOptions = useCallback(
+    index => {
+      return licenseTypes.filter(selectedLicense => {
+        return (
+          !selectedLicenseType.includes(selectedLicense.value) ||
+          selectedLicense.value === `${formValues?.licenses?.[index]?.licenseType}`
+        )
+      })
+    },
+    [selectedLicenseType, formValues],
+  )
+
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
@@ -126,118 +142,123 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         >
           {t('addLicense')}
         </Button>
-        {licenseFields.map((license, index) => {
-          const isLicenseChanged = checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index])
+        {licenseFields
+          .map((license, index) => {
+            const isLicenseChanged = checkIsLicenseChanged(
+              formValues?.licenses?.[index],
+              vendor?.licenseDocuments[index],
+            )
 
-          return (
-            <HStack key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
-              <Box w="2em" color="#345EA6" fontSize="15px">
-                <Center>
-                  <Icon
-                    as={MdOutlineCancel}
-                    onClick={() => removeLicense(index)}
-                    data-testid={`removeLicense-` + index}
-                    cursor="pointer"
-                    boxSize={5}
-                    mt="6px"
-                  />
-                </Center>
-              </Box>
+            return (
+              <HStack key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
+                <Box w="2em" color="#345EA6" fontSize="15px">
+                  <Center>
+                    <Icon
+                      as={MdOutlineCancel}
+                      onClick={() => removeLicense(index)}
+                      data-testid={`removeLicense-` + index}
+                      cursor="pointer"
+                      boxSize={5}
+                      mt="6px"
+                    />
+                  </Center>
+                </Box>
 
-              <FormSelect
-                disable={license?.expirationFile ? 'none' : ''}
-                bg={license?.expirationFile ? 'gray.50' : 'white'}
-                errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
-                label={t('licenseType')}
-                name={`licenses.${index}.licenseType`}
-                control={control}
-                options={licenseTypes}
-                rules={{ required: isActive && 'This is required field' }}
-                controlStyle={{ maxW: '215px' }}
-                elementStyle={{
-                  bg: 'white',
-                  borderLeft: '2px solid #345EA6',
-                }}
-                testId={`licenseType-` + index}
-              />
-              <FormInput
-                errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
-                label={t('licenseNumber')}
-                placeholder="License Number"
-                register={register}
-                controlStyle={{ maxW: '215px' }}
-                elementStyle={{
-                  bg: 'white',
-                }}
-                rules={{ required: isActive && 'This is required field' }}
-                name={`licenses.${index}.licenseNumber`}
-                testId={`licenseNumber-` + index}
-                variant="required-field"
-              />
-              <FormDatePicker
-                isRequired={true}
-                placeholder="mm/dd/yy"
-                errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
-                label={t('expiryDate')}
-                name={`licenses.${index}.expiryDate`}
-                control={control}
-                rules={{ required: isActive && 'This is required field' }}
-                style={{ maxW: '215px', h: '92px' }}
-                defaultValue={startDate}
-                testId={`expiryDate-` + index}
-              />
-              <VStack>
-                <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
-                  <FormLabel variant="strong-label" size="md" color="gray.700">
-                    File Upload
-                  </FormLabel>
-                  <Controller
-                    name={`licenses.${index}.expirationFile`}
-                    control={control}
-                    rules={
-                      vendor?.licenseDocuments[index]?.s3Url ? {} : { required: isActive && 'This is required field' }
-                    }
-                    render={({ field, fieldState }) => {
-                      return (
-                        <VStack alignItems="baseline">
-                          <Box>
-                            <ChooseFileField
-                              testId={`expirationFile-` + index}
-                              name={field.name}
-                              value={field.value?.name ? field.value?.name : t('chooseFile')}
-                              isError={!!fieldState.error?.message}
-                              onChange={(file: any) => {
-                                onFileChange(file)
-                                field.onChange(file)
-                              }}
-                              onClear={() => setValue(field.name, null)}
-                            ></ChooseFileField>
-                            <FormErrorMessage bottom="5px" pos="absolute">
-                              {fieldState.error?.message}
-                            </FormErrorMessage>
-                          </Box>
-                          {vendor?.licenseDocuments[index] && (
-                            <Box overflow="hidden" pos="absolute" top={16}>
-                              {downloadDocument(
-                                vendor?.licenseDocuments[index]?.s3Url,
-                                vendor?.licenseDocuments[index]?.fileType ?? 'doc.png',
-                              )}
+                <FormSelect
+                  disable={!!license.licenseType}
+                  bg={license?.expirationFile ? 'gray.50' : 'white'}
+                  errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
+                  label={t('licenseType')}
+                  name={`licenses.${index}.licenseType`}
+                  control={control}
+                  options={getSelectOptions(index)}
+                  rules={{ required: isActive && 'This is required field' }}
+                  controlStyle={{ maxW: '215px' }}
+                  elementStyle={{
+                    bg: 'white',
+                    borderLeft: '2px solid #345EA6',
+                  }}
+                  testId={`licenseType-` + index}
+                />
+                <FormInput
+                  errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
+                  label={t('licenseNumber')}
+                  placeholder=""
+                  register={register}
+                  controlStyle={{ maxW: '215px' }}
+                  elementStyle={{
+                    bg: 'white',
+                  }}
+                  rules={{ required: isActive && 'This is required field' }}
+                  name={`licenses.${index}.licenseNumber`}
+                  testId={`licenseNumber-` + index}
+                  variant="required-field"
+                />
+                <FormDatePicker
+                  isRequired={true}
+                  placeholder="mm/dd/yy"
+                  errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
+                  label={t('expiryDate')}
+                  name={`licenses.${index}.expiryDate`}
+                  control={control}
+                  rules={{ required: isActive && 'This is required field' }}
+                  style={{ maxW: '215px', h: '92px' }}
+                  defaultValue={startDate}
+                  testId={`expiryDate-` + index}
+                />
+                <VStack>
+                  <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
+                    <FormLabel size="md" color="#2D3748">
+                      File Upload
+                    </FormLabel>
+                    <Controller
+                      name={`licenses.${index}.expirationFile`}
+                      control={control}
+                      rules={
+                        vendor?.licenseDocuments[index]?.s3Url ? {} : { required: isActive && 'This is required field' }
+                      }
+                      render={({ field, fieldState }) => {
+                        return (
+                          <VStack alignItems="baseline">
+                            <Box>
+                              <ChooseFileField
+                                testId={`expirationFile-` + index}
+                                name={field.name}
+                                value={field.value?.name ? field.value?.name : t('chooseFile')}
+                                isError={!!fieldState.error?.message}
+                                onChange={(file: any) => {
+                                  onFileChange(file)
+                                  field.onChange(file)
+                                }}
+                                onClear={() => setValue(field.name, null)}
+                              ></ChooseFileField>
+                              <FormErrorMessage bottom="5px" pos="absolute">
+                                {fieldState.error?.message}
+                              </FormErrorMessage>
                             </Box>
-                          )}
-                        </VStack>
-                      )
-                    }}
-                  />
-                </FormControl>
-              </VStack>
-              {isLicenseChanged ? (
-                <>
-                  <SaveChangedFieldAlert />
-                </>
-              ) : null}
-            </HStack>
-          )
-        })}
+                            {vendor?.licenseDocuments[index] && (
+                              <Box overflow="hidden" pos="absolute" top={16}>
+                                {downloadDocument(
+                                  vendor?.licenseDocuments[index]?.s3Url,
+                                  vendor?.licenseDocuments[index]?.fileType ?? 'doc.png',
+                                )}
+                              </Box>
+                            )}
+                          </VStack>
+                        )
+                      }}
+                    />
+                  </FormControl>
+                </VStack>
+                {isLicenseChanged ? (
+                  <>
+                    <SaveChangedFieldAlert />
+                  </>
+                ) : null}
+              </HStack>
+            )
+          })
+          .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
       </VStack>
       <Flex
         id="footer"

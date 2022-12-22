@@ -23,12 +23,15 @@ export const theme = extendTheme({
   fonts: {
     ...chakraTheme.fonts,
     body: 'Poppins',
+    heading: 'Poppins',
     // body: `Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`,
     // heading: `Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"`,
   },
+
   gray: {
     400: '#A0AEC0',
     500: '#718096',
+    700: '#2D3748',
   },
   blue: {
     500: '#3182CE',
@@ -37,9 +40,10 @@ export const theme = extendTheme({
   colors: {
     gray: {
       200: '#E2E8F0',
+      300: '#CBD5E0',
       500: '#718096',
       600: '#4A5568',
-      700: '2D3748',
+      700: '#2D3748',
       800: '#1A202C',
     },
     lightGray: {
@@ -132,7 +136,6 @@ export const theme = extendTheme({
     darkBlue: {
       800: '#22375B',
     },
-
     PrimaryCheckBox: {
       50: '#345EA6',
       100: '#345EA6',
@@ -144,6 +147,9 @@ export const theme = extendTheme({
       700: '#345EA6',
       800: '#345EA6',
       900: '#345EA6',
+    },
+    bgGlobal: {
+      50: '#F2F3F4',
     },
   },
   components: {

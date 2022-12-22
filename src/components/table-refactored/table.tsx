@@ -142,7 +142,7 @@ export const Table: React.FC<TableProps> = ({
       rounded="md"
       position="relative"
       zIndex={0}
-      border="1px solid #CBD5E0"
+      // border="1px solid #CBD5E0"
       bg="white"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
@@ -175,7 +175,7 @@ export const Table: React.FC<TableProps> = ({
                       <Text
                         fontSize="14px"
                         color="gray.700"
-                        fontWeight={600}
+                        fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
                         isTruncated
@@ -202,11 +202,11 @@ export const Table: React.FC<TableProps> = ({
             </Tr>
           ))}
 
-          {/** Header Filter Input Field for each column */}
+          {/** Header Filter Input Field for each column **/}
           {!isHideFilters &&
             getHeaderGroups().map(headerGroup => {
               return (
-                <Tr key={`th_${headerGroup.id}`}>
+                <Tr key={`th_${headerGroup.id}`} position="relative">
                   {headerGroup.headers.map(header => {
                     return (
                       <Th
@@ -220,9 +220,18 @@ export const Table: React.FC<TableProps> = ({
                         {...getColumnMaxMinWidths(header.column)}
                       >
                         {header.column.getCanFilter() ? (
-                          <div>
+                          <Box
+                            _after={{
+                              content: '""',
+                              bottom: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
+                          >
                             <Filter column={header.column} table={tableInstance} />
-                          </div>
+                          </Box>
                         ) : null}
                       </Th>
                     )
@@ -267,8 +276,9 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: 'gray.50',
+                          bg: '#F3F8FF',
                         }}
+                        backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
@@ -359,7 +369,7 @@ const DragDropEnabledRows = ({
                       backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                       boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
                       _hover={{
-                        bg: 'gray.50',
+                        bg: '#F3F8FF',
                       }}
                     >
                       {row.getVisibleCells().map(cell => {

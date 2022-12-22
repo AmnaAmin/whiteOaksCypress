@@ -50,7 +50,7 @@ const Dashboard: React.FC = () => {
         justifyContent="stretch"
         w="100%"
       >
-        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF" style={boxShadow}>
+        <Card p={0} borderRadius="6px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
             <Text color="gray.700" fontStyle="Poppins" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
         <Card
           p={0}
           pl={3}
-          rounded="13px"
+          borderRadius="6px"
           flex={1}
           ml={{ base: 0, xl: '11px' }}
           mt={{ base: '30px', xl: 0 }}
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'} rounded={6}>
+            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'}>
               <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
@@ -90,14 +90,15 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
-      <Card w="100%" style={boxShadow}>
+      <Card w="100%" style={boxShadow} borderRadius={'6px'}>
         <Box mt={3} ml={1}>
-          <FormLabel variant="strong-lable" fontSize={'18px'} lineHeight={'28px'}>
+          <FormLabel fontSize={'18px'} lineHeight={'28px'} color="gray.700" fontWeight={500}>
             {t(`${DASHBOARD}.upcomingPayment`)}
           </FormLabel>
           <UpcomingPaymentTable />
         </Box>
       </Card>
+      <Box></Box>
     </VStack>
   )
 }
