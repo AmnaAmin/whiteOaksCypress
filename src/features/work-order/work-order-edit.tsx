@@ -102,6 +102,8 @@ const WorkOrderDetails = ({
     updateWorkOrder(payload, {
       onSuccess: res => {
         if (res?.data) {
+          onClose()
+
           const workOrder = res?.data
           if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
             onClose()
