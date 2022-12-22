@@ -22,7 +22,6 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const vendors = values(vendorEntity).reduce((a, v) => ({ ...a, ...v }), {})
   const vendorData = months.map(key => {
     const entityList = vendors[key] || []
-    console.log('count-paid', entityList.countPaid)
 
     return {
       name: monthsShort[key],
