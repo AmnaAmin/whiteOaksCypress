@@ -9,6 +9,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   propertyAddress: 'propertyAddress.contains',
   vendorAddress: 'vendorAddress.contains',
   paymentTerm: 'paymentTerm.equals',
+  paymentType: 'paymentType.contains',
   expectedPaymentDate: 'expectedPaymentDate.equals',
   finalInvoiceAmount: 'finalInvoiceAmount.greaterThanOrEqual',
   marketName: 'marketName.contains',
@@ -39,6 +40,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'paymentTerms',
     accessorKey: 'paymentTerm',
+  },
+  {
+    header: 'paymentType',
+    accessorKey: 'paymentType',
   },
   {
     header: 'expectedPayDate',

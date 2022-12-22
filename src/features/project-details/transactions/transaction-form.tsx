@@ -226,9 +226,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }
 
-  // console.log(remainingAmt, 'isValidForAwardPlan -', isValidForAwardPlan)
-  console.log(check)
-
   const {
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
@@ -826,7 +823,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-
             isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
             colorScheme="darkPrimary"
             onClick={event => {
