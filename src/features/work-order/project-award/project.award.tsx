@@ -52,7 +52,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
           </HStack>
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-          <Box flex="4" minW="59em">
+          <Box w={'100%'}>
             <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
               *Factoring fees to be deducted from initial scope total.{' '}
             </FormLabel>
