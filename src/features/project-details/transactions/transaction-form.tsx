@@ -220,13 +220,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isValidForAwardPlan &&
     (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
 
+  const remainingAmtMsg = transType?.label === 'Material' || transType?.label === 'Draw'
+
   const methodForPayment = e => {
-    if (e && selectedWorkOrderStats?.totalAmountRemaining) {
-      if (e <= selectedWorkOrderStats?.totalAmountRemaining && isValidForAwardPlan) {
-        setRemainingAmt(false)
-      } else {
-        setRemainingAmt(true)
-      }
+    if (e >= selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && remainingAmtMsg) {
+      setRemainingAmt(true)
+    } else {
+      setRemainingAmt(false)
     }
   }
 
