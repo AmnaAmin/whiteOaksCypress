@@ -41,6 +41,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.originalAmount).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('originalAmount', financialOveriewTableData)
 
@@ -53,6 +54,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.newAmount).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('newAmount', financialOveriewTableData)
 
@@ -65,6 +67,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.workOrderOriginalAmount).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('workOrderOriginalAmount', financialOveriewTableData)
 
@@ -89,6 +92,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.changeOrder).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('changeOrder', financialOveriewTableData)
 
@@ -107,12 +111,41 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
       //     return numeral(total).format('$0,0.00')
       //   },
       // },
+
+      {
+        header: `${TRANSACTION}.lateFee`,
+        accessorKey: 'lateFee',
+        accessorFn(row) {
+          return numeral(row.lateFee).format('$0,0.00')
+        },
+        meta: { format: 'currency' },
+        footer: props => {
+          const total = getTotalOfKey('lateFee', financialOveriewTableData)
+
+          return numeral(total).format('$0,0.00')
+        },
+      },
+
+      {
+        header: `${TRANSACTION}.factoring`,
+        accessorKey: 'factoring',
+        accessorFn(row) {
+          return numeral(row.factoring).format('$0,0.00')
+        },
+        meta: { format: 'currency' },
+        footer: props => {
+          const total = getTotalOfKey('factoring', financialOveriewTableData)
+
+          return numeral(total).format('$0,0.00')
+        },
+      },
       {
         header: `${TRANSACTION}.finalVendorWOs`,
         accessorKey: 'workOrderNewAmount',
         accessorFn(row) {
           return numeral(row.workOrderNewAmount).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('workOrderNewAmount', financialOveriewTableData)
 
@@ -125,6 +158,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.draw).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('draw', financialOveriewTableData)
 
@@ -137,6 +171,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.material).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('material', financialOveriewTableData)
 
@@ -168,6 +203,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.accountPayable).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('accountPayable', financialOveriewTableData)
 
@@ -180,6 +216,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
         accessorFn(row) {
           return numeral(row.profit).format('$0,0.00')
         },
+        meta: { format: 'currency' },
         footer: props => {
           const total = getTotalOfKey('profit', financialOveriewTableData)
 

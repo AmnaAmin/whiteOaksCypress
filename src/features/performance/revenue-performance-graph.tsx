@@ -6,8 +6,8 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
-import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label } from 'recharts'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -15,34 +15,49 @@ type GraphData = {
   username: string
   month: any
   Revenue: any
+  Profit: any
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
-  const barColors = [
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
+  const labels = [
+    { key: 'Profit', color: '#949AC2' },
+    { key: 'Revenue', color: '#68B8EF' },
   ]
 
-  let { Revenue, Profit, Bonus } = vendorData[0]
-  const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === 0)
+  const [barProps, setBarProps] = useState(
+    labels.reduce(
+      (a, { key }) => {
+        a[key] = false
+        return a
+      },
+      { hover: null },
+    ),
+  )
+
+  const selectBar = useCallback(
+    e => {
+      setBarProps({
+        ...barProps,
+        [e.dataKey]: !barProps[e.dataKey],
+        hover: null,
+      })
+    },
+    [barProps],
+  )
+
+  let {
+    Revenue = undefined,
+    Profit = undefined,
+    Bonus = undefined,
+  } = vendorData?.length > 0
+    ? vendorData[0]
+    : {
+        Revenue: undefined,
+        Profit: undefined,
+        Bonus: undefined,
+      }
+
+  const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
 
   return (
     <div>
@@ -63,7 +78,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             axisLine={false}
             tickMargin={30}
             angle={-45}
-            interval={Math.floor(vendorData.length / 60)}
+            interval={Math.floor(vendorData?.length / 60)}
             tick={
               ['This Month', 'Last Month'].includes(monthCheck?.label)
                 ? {
@@ -131,7 +146,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             }}
             tickFormatter={value => `$${value}`}
             label={{
-              value: 'Revenue',
+              value: '',
               angle: -90,
               position: 'left',
               textAnchor: 'middle',
@@ -146,11 +161,35 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: 'transparent' }}
           />
-          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
-            {vendorData?.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
-            ))}
-          </Bar>
+          <Bar
+            barSize={50}
+            dataKey="Revenue"
+            fill="#68B8EF"
+            radius={[5, 5, 0, 0]}
+            hide={barProps['Revenue'] === true}
+          />
+          <Bar barSize={50} dataKey="Profit" fill="#949AC2" radius={[5, 5, 0, 0]} hide={barProps['Profit'] === true} />
+          <Legend
+            onClick={selectBar}
+            wrapperStyle={{
+              lineHeight: '31px',
+              position: 'relative',
+              bottom: '50px',
+              left: '40px',
+            }}
+            iconType="circle"
+            iconSize={10}
+            align="center"
+            formatter={value => {
+              return (
+                <Box display="inline-flex" marginInlineEnd="30px">
+                  <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
+                    {value}
+                  </Box>
+                </Box>
+              )
+            }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -170,13 +209,13 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   const data = useMemo(
     () =>
       flatten(
-        months.map((month, monthIndex) => {
-          const monthExistsInChart = chartData !== undefined && Object.keys(chartData)?.find(months => months === month)
+        months?.map((month, monthIndex) => {
+          const monthExistsInChart = Object?.keys(chartData)?.find(months => months === month)
           let nameMonthData
 
           if (monthExistsInChart) {
             nameMonthData = chartData?.[month]
-            const graphs = Object.keys(nameMonthData).map((nameKey, index) => {
+            const graphs = Object?.keys(nameMonthData)?.map((nameKey, index) => {
               const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
               return {
                 username: `${firstName} ${lastName}`,
@@ -184,11 +223,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 userId: Number(last(userId)),
                 quarter: getQuarterByMonth(monthIndex),
                 Revenue: nameMonthData[nameKey]?.revenue,
+                Profit: nameMonthData[nameKey]?.profit,
               }
             })
-            let newgraphs = graphs.map((n, i) => ({
+            let newgraphs = graphs?.map((n, i) => ({
               ...n,
-              centerMonth: Math.floor(graphs.length / 2) === i ? n.month : undefined,
+              centerMonth: Math.floor(graphs?.length / 2) === i ? n?.month : undefined,
             }))
             return newgraphs
           }
@@ -209,7 +249,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   )
 
   useEffect(() => {
-    const finalGraphData = data?.filter(a => a.month === currentMonth)
+    const finalGraphData = data?.filter(a => a?.month === currentMonth)
     setGraphData(finalGraphData)
   }, [data])
 
@@ -259,12 +299,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
       selectedQuater = getLastQuarterByDate()
     }
 
-    selectedFpm = selectedFpm.map(n => n.value)
+    selectedFpm = selectedFpm?.map(n => n?.value)
     const finalGraphData = data?.filter(
       a =>
-        (!selectedMonth || a.month === selectedMonth) &&
-        (!selectedQuater || a.quarter === selectedQuater) &&
-        (!selectedFpm.length || selectedFpm.includes(a.userId)),
+        (!selectedMonth || a?.month === selectedMonth) &&
+        (!selectedQuater || a?.quarter === selectedQuater) &&
+        (!selectedFpm?.length || selectedFpm?.includes(a?.userId)),
     )
     setGraphData(finalGraphData)
   }
@@ -305,10 +345,10 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                     options={fieldProjectManagerOptions}
                     onChange={onFpmOptionChange}
                     defaultValue={fpmOption}
-                    isOptionDisabled={() => fpmOption.length >= 5}
+                    isOptionDisabled={() => fpmOption?.length >= 5}
                     isClearable={false}
-                    multiValueRemove={fpmOption.length === 1 ? { display: 'none' } : ''}
-                    filterOptions={fpmOption.length === 1}
+                    multiValueRemove={fpmOption?.length === 1 ? { display: 'none' } : ''}
+                    filterOptions={fpmOption?.length === 1}
                     variant="light-label"
                     size="md"
                     isMulti

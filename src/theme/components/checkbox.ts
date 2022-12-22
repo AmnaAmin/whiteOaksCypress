@@ -33,6 +33,60 @@ const checkbox = {
           },
         }
       },
+      outLinePrimary: props => {
+        return {
+          label: {
+            color: 'gray.600',
+
+            fontWeight: '500',
+
+            _hover: {
+              color: 'gray.800',
+            },
+          },
+
+          control: {
+            _checked: {
+              borderColor: '#345EA6',
+              color: '#345EA6',
+              bg: `transparent`,
+
+              _hover: {
+                borderColor: `#345EA6`,
+                color: '#345EA6',
+                bg: `transparent`,
+              },
+            },
+          },
+        }
+      },
+      outLineGreen: props => {
+        return {
+          label: {
+            color: 'gray.600',
+
+            fontWeight: '500',
+
+            _hover: {
+              color: 'gray.800',
+            },
+          },
+
+          control: {
+            _checked: {
+              borderColor: 'green.400',
+              color: 'green.400',
+              bg: `transparent`,
+
+              _hover: {
+                borderColor: `green.400`,
+                color: 'green.400',
+                bg: `transparent`,
+              },
+            },
+          },
+        }
+      },
       normal: props => {
         return {
           label: {

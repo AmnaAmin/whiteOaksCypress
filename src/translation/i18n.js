@@ -13,6 +13,10 @@ import { fpmCards } from 'features/fpm/fpmCards.i18n'
 import { clients } from 'features/clients/clients.i18n'
 import { accounts } from 'pages/accounts.i18n'
 import { sideNav } from '../components/layout/sideNav.i18n'
+import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
+import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
+import { projectType } from '../features/project-type/project-type.i18n'
+import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -33,6 +37,10 @@ i18n.use(initReactI18next).init({
         ...clients.en.translation,
         ...accounts.en.translation,
         ...sideNav.en.translation,
+        ...dashboard.en.translation,
+        ...adminDashboard.en.translation,
+        ...projectType.en.translation,
+        ...vendorProfile.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -59,6 +67,7 @@ i18n.use(initReactI18next).init({
         overview: 'Overview',
         WOpaid: 'WO Paid',
         paid: 'Paid',
+        active: 'Active',
         paidSmall: 'Paid',
         January: 'January',
         Februray: 'Februray',
@@ -74,6 +83,13 @@ i18n.use(initReactI18next).init({
         December: 'December',
         export: 'Export',
         setting: 'Setting',
+        electrical: 'Electrical',
+        plumbing: 'Plumbing',
+        generalContractor: 'General Contractor',
+        roofing: 'Roofing',
+        architecture: 'Architecture',
+        mechanical: 'Mechanical',
+        noDataDisplayed: 'No data returned for this view.',
 
         // PROJECTS
         projectsHeading: 'Projects',
@@ -139,11 +155,12 @@ i18n.use(initReactI18next).init({
         alerts: 'Alerts',
         upload: 'Upload',
         uploadDocument: 'Upload Document',
-        contactName: 'Contact Name:',
+        contactName: 'Contact Name',
         projectID: 'Project ID',
+        WoID: 'WO ID',
         contactNo: 'Contact No',
         WODueDate: 'WO Due Date',
-        DueDateWO: 'Due Date WO',
+        dueDateWO: 'Due Date WO',
         trade: 'Trade',
         auditLogs: 'Audit Logs',
         totalAmount: 'Total Amount',
@@ -245,6 +262,7 @@ i18n.use(initReactI18next).init({
         generateLW: 'Generate LW',
         dateInvoiceSubmitted: 'Date Invoice Submitted',
         paymentTermDate: 'Payment Term Date',
+        paymentDate: 'Payment Date',
         datePaymentProcessed: 'Date Payment Processed',
         expectedPayDate: 'Expected Pay Date',
         paymentTerms: 'Payment Terms',
@@ -347,6 +365,11 @@ i18n.use(initReactI18next).init({
         cancel: 'Cancel',
         insurances: 'Insurances',
         insurance: 'Insurance',
+        W9Document: 'W9 Document',
+        agreementSign: 'Agreement Sign',
+        generalLiability: 'General Liability',
+        workerComp: 'Worker Comp',
+
         // Vendor-profile-license
         license: 'License',
         addLicense: 'Add License',
@@ -411,7 +434,7 @@ i18n.use(initReactI18next).init({
         invoiceBackDate: 'Invoice Back Date',
 
         // work order details
-        cancelWorkOrder: 'cancel Work Order',
+        cancelWorkOrder: 'Cancel Work Order',
         vendorName: 'Vendor Name',
         vendorType: 'Vendor Type',
         phoneNo: 'Phone No',
@@ -512,6 +535,10 @@ i18n.use(initReactI18next).init({
         ...clients.es.translation,
         ...accounts.es.translation,
         ...sideNav.es.translation,
+        ...dashboard.es.translation,
+        ...adminDashboard.es.translation,
+        ...projectType.es.translation,
+        ...vendorProfile.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -596,6 +623,7 @@ i18n.use(initReactI18next).init({
         overview: 'INFORMACIÓN GENERAL',
         WOpaid: 'WO Pagado',
         paid: 'Pagado',
+        active: 'Activa',
         paidSmall: 'Pagado',
         January: 'Enero',
         Februray: 'Febrero',
@@ -611,6 +639,13 @@ i18n.use(initReactI18next).init({
         December: 'Diciembre',
         export: 'Exportar',
         setting: 'Ajuste',
+        electrical: 'Eléctrico',
+        plumbing: 'Plomería',
+        generalContractor: 'Contratista general',
+        roofing: 'Techumbre',
+        architecture: 'Arquitectura',
+        mechanical: 'Mecánico',
+        noDataDisplayed: 'No se han devuelto datos para esta vista.',
 
         // PROJECTS
         projectsHeading: 'Proyectos',
@@ -685,9 +720,10 @@ i18n.use(initReactI18next).init({
         uploadDocument: 'Subir documento',
         contactName: 'Nombre de Contacto',
         projectID: 'Projecto ID',
+        WoID: 'WO ID',
         contactNo: 'Número de Contacto',
         WODueDate: 'Fecha de vencimiento de OT',
-        DueDateWO: 'Fecha de vencimiento OT',
+        dueDateWO: 'Fecha de vencimiento OT',
         trade: 'Comercio',
         auditLogs: 'Registros de auditoría',
         totalAmount: 'Cantidad Total',
@@ -784,6 +820,7 @@ i18n.use(initReactI18next).init({
         generateLW: 'Generar LW',
         dateInvoiceSubmitted: 'Fecha de Envío de la Factura',
         paymentTermDate: 'Plazo de Pago Fecha',
+        paymentDate: 'Fecha de pago',
         datePaymentProcessed: 'Fecha de Procesamiento del Pago',
         expectedPayDate: 'Fecha de Pago Esperada',
         check: 'Controlar',
@@ -884,7 +921,11 @@ i18n.use(initReactI18next).init({
         back: 'Espalda',
         cancel: 'Cancelar',
         insurances: 'Seguros',
-        insurance: 'seguro',
+        insurance: 'Seguro',
+        W9Document: 'Documento W9',
+        agreementSign: 'Signo de acuerdo',
+        generalLiability: 'Responsabilidad general',
+        workerComp: 'Compensación al trabajador',
 
         // Vendor-profile-license
         license: 'Licencia',
@@ -913,12 +954,14 @@ i18n.use(initReactI18next).init({
         language: 'Idioma',
         profilePicture: 'Foto de perfil',
         changePicture: 'Cambia tu foto de perfil',
+
         // Password Page
         password: 'Clave',
         currentPassword: 'Contraseña actual',
         newPassword: 'Nueva contraseña',
         newPasswordConfirmation: 'Nueva confirmación de contraseña',
         passwordStrength: 'Seguridad de la contraseña',
+
         // Support Page
         createTicket: 'Crear un boleto',
         issueType: 'Tipo de problema',
@@ -929,6 +972,7 @@ i18n.use(initReactI18next).init({
         createTicketTitle: 'Crear Ticket',
         createTicketSuccessMessage: 'Ticket creado con éxito.',
         createTicketErrorMessage: 'Crear ticket api causa algún error.',
+
         // Header
         help: 'Ayudar',
         support: 'Apoyo',

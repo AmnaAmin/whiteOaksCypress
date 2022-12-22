@@ -1,16 +1,21 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, Text } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, Text, Tooltip } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
 import { useTranslation } from 'react-i18next'
 import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { boxShadow } from 'theme/common-style'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
   return (
-    <Center flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="14px" fontWeight={500} color="gray.500">
-        <Text color="gray.600">{title}</Text>
+    <Center flexDir="column" borderRight="1px solid #CBD5E0" px={5} flex={rest.flex || 1} {...rest}>
+      <Box fontSize="14px" fontWeight={400} fontFamily="poppins">
+        <Tooltip label={title} color="gray.700" placement="top">
+          <Text color="gray.700" noOfLines={1}>
+            {title}
+          </Text>
+        </Tooltip>
         {isLoading ? <BlankSlate size="sm" /> : children}
       </Box>
     </Center>
@@ -24,16 +29,9 @@ export const TransactionInfoCard: React.FC<{
   const { t } = useTranslation()
 
   return (
-    <Flex
-      py={6}
-      h={{ base: 'unset', xl: '97px' }}
-      w="100%"
-      bg="white"
-      borderRadius="4px"
-      box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-    >
+    <Flex py={6} h="74px" w="100%" bg="white" borderRadius="6px" style={boxShadow}>
       <InfoStructureCard title={t('projectID')} isLoading={isLoading}>
-        <Text>{projectData?.id}</Text>
+        <Text color="gray.500">{projectData?.id}</Text>
       </InfoStructureCard>
 
       <InfoStructureCard isLoading={isLoading} title={t('WOstatus')}>
@@ -41,21 +39,26 @@ export const TransactionInfoCard: React.FC<{
           {projectData?.vendorWOStatusValue ? (
             <Status value={projectData?.vendorWOStatusValue} id={projectData?.vendorWOStatusValue} />
           ) : (
-            <Text>--</Text>
+            <Text color="gray.500">--</Text>
           )}
         </Box>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('WODueDate')}>
-        <Text>{dateFormat(projectData?.clientDueDate as string)}</Text>
+        <Text color="gray.500">
+          {projectData?.vendorWODueDate ? dateFormat(projectData?.vendorWODueDate as string) : 'mm/dd/yyyy'}
+        </Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('contactName')}>
-        <Text>{projectData?.projectManager}</Text>
+        <Text color="gray.500">{projectData?.projectManager}</Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('contactNo')}>
-        <Text>{projectData?.projectManagerPhoneNumber}</Text>
+        <Text color="gray.500">{projectData?.projectManagerPhoneNumber}</Text>
       </InfoStructureCard>
       <InfoStructureCard isLoading={isLoading} title={t('address')} flex={2} border="none">
-        {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.region}/${projectData?.zipCode}`}
+        <Text
+          color="gray.500"
+          noOfLines={1}
+        >{`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}</Text>
       </InfoStructureCard>
     </Flex>
   )

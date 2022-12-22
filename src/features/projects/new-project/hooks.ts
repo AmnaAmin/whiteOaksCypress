@@ -1,5 +1,6 @@
 import { Control, useWatch } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
+import { isValidAndNonEmpty } from 'utils'
 
 export const useProjectInformationNextButtonDisabled = (control: Control<ProjectFormValues>, errors): boolean => {
   const formValues = useWatch({ control })
@@ -8,7 +9,7 @@ export const useProjectInformationNextButtonDisabled = (control: Control<Project
     !formValues?.projectType ||
     !formValues?.clientStartDate ||
     !formValues?.clientDueDate ||
-    !formValues?.sowOriginalContractAmount ||
+    !isValidAndNonEmpty(formValues?.sowOriginalContractAmount) ||
     !formValues?.documents ||
     !!errors.documents
   )

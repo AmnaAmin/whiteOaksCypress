@@ -219,6 +219,8 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
   rowHeight,
   onRowClick,
 }) => {
+  const { t } = useTranslation()
+
   // Note: this hack for firefox to set the table body height
   var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
   const RenderRow = React.useCallback(
@@ -237,7 +239,7 @@ export const TBody: React.FC<TableInstance & { TableRow?: React.ElementType } & 
     return (
       <Box p={5} width={'calc(100vw - var(--sidebar-width))'}>
         <Center>
-          <FormLabel variant="light-label">{'No data returned for this view.'} </FormLabel>
+          <FormLabel variant="light-label">{t('noDataDisplayed')} </FormLabel>
         </Center>
       </Box>
     )

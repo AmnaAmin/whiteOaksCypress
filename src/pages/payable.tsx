@@ -14,7 +14,7 @@ import { useBatchProcessingMutation, useCheckBatch } from 'api/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
 import { OverPaymentTransactionsTable } from 'features/project-details/transactions/overpayment-transactions-table'
 import { usePayableColumns } from '../features/payable/hooks'
-import { PaginationState } from '@tanstack/react-table'
+import { PaginationState, SortingState } from '@tanstack/react-table'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { DevTool } from '@hookform/devtools'
@@ -29,15 +29,16 @@ export const Payable = () => {
     selectedDay,
     // setSelectedDay
   ] = useState<string>('')
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [sorting, setSorting] = useState<SortingState>([])
+
   // const clearAll = () => {
   //   setSelectedCard('')
   //   setSelectedDay('')
   // }
 
   const { handleSubmit, register, reset, control } = useForm()
-  
+
   const payableColumns = usePayableColumns(control, register)
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
@@ -45,6 +46,7 @@ export const Payable = () => {
     setPagination,
     selectedCard,
     selectedDay,
+    sorting,
   })
 
   const { mutate: batchCall } = useBatchProcessingMutation()
@@ -124,6 +126,8 @@ export const Payable = () => {
           <PayableTable
             payableColumns={payableColumns}
             pagination={pagination}
+            sorting={sorting}
+            setSorting={setSorting}
             setPagination={setPagination}
             setColumnFilters={setColumnFilters}
             queryStringWithPagination={queryStringWithPagination}

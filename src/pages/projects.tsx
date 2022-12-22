@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useFPMUsers } from 'api/pc-projects'
+import { useStickyState } from 'utils/hooks'
 
 const formatGroupLabel = props => (
   <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
@@ -35,11 +36,18 @@ export const Projects = () => {
   } = useDisclosure()
   const { isFPM } = useUserRolesSelector()
   const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
-  const [selectedCard, setSelectedCard] = useState<string>('')
-  const [selectedDay, setSelectedDay] = useState<string>('')
+
+  const [resetAllFilters, setResetAllFilters] = useState(false)
+  const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard');
+  const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay');
+
   const { t } = useTranslation()
 
   const clearAll = () => {
+    setResetAllFilters(true);
+    setTimeout(() => {
+      setResetAllFilters(false)
+    }, 700)
     setSelectedCard('')
     setSelectedDay('')
   }
@@ -48,7 +56,13 @@ export const Projects = () => {
     <>
       <VStack alignItems="start" h="calc(100vh - 160px)">
         <Box w="100%">
-          <ProjectFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} selectedFPM={selectedFPM} />
+          <ProjectFilters onSelectCard={(selection) => {
+              setSelectedDay(null)
+              setSelectedCard(selection)
+            }}
+            selectedCard={selectedCard}
+            selectedFPM={selectedFPM}
+          />
         </Box>
         <Flex w="100%" py="16px" alignItems={'center'}>
           {/* <Flex alignItems="center" pl={2}> */}
@@ -62,7 +76,10 @@ export const Projects = () => {
           <WeekDayFilters
             selectedFPM={selectedFPM}
             clear={clearAll}
-            onSelectDay={setSelectedDay}
+            onSelectDay={(selection) => {
+              setSelectedCard(null)
+              setSelectedDay(selection)
+            }}
             selectedDay={selectedDay}
           />
           {/* </Flex> */}
@@ -92,6 +109,7 @@ export const Projects = () => {
             selectedDay={selectedDay as string}
             userIds={userIds}
             selectedFPM={selectedFPM}
+            resetFilters={resetAllFilters}
           />
         </Box>
       </VStack>

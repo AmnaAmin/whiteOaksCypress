@@ -17,6 +17,7 @@ import { useClient } from 'utils/auth-context'
 import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
+import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 
 export const useGetOverpayment = (projectId: number | null) => {
@@ -146,6 +147,7 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries(['overpayment', project?.data?.id])
         queryClient.invalidateQueries([PROJECT_EXTRA_ATTRIBUTES, project?.data?.id])
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
+        queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
 
         toast({
           title: 'Project Details Updated',
@@ -234,6 +236,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       }
 
       // if project status is Invoiced and remaining payment is not zero then
+      // also if there is pending draw transaction, then client paid will be disabled
       // project status Paid should be disabled
       if (
         sowNewAmount - partialPayment > 0 &&
@@ -242,7 +245,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       ) {
         return {
           ...selectOption,
-          label: `${selectOption.label} (Remaining Payment must be $0`,
+          label: `${selectOption.label} (Remaining Payment must be $0)`,
           disabled: true,
         }
       }
@@ -317,12 +320,13 @@ export const parseFormValuesFromAPIData = ({
     woNumber: project.woNumber,
     poNumber: project.poNumber,
     projectName: project.name,
-    woaStartDate: getLocalTimeZoneDate(project.woaStartDate as string),
+    woaStartDate: project.woaStartDate as string,
     woaCompletionDate: getLocalTimeZoneDate(project.woaCompletionDate as string),
-    clientStartDate: getLocalTimeZoneDate(project.clientStartDate as string),
-    clientDueDate: getLocalTimeZoneDate(project.clientDueDate as string),
-    clientWalkthroughDate: getLocalTimeZoneDate(project.clientWalkthroughDate as string),
-    clientSignOffDate: getLocalTimeZoneDate(project.clientSignoffDate as string),
+    clientStartDate: project.clientStartDate as string,
+    clientDueDate: project.clientDueDate as string,
+    clientWalkthroughDate: project.clientWalkthroughDate as string,
+    clientSignOffDate: project.clientSignoffDate as string,
+    overrideProjectStatus: '',
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -334,7 +338,7 @@ export const parseFormValuesFromAPIData = ({
     invoiceLink: project.invoiceLink,
     paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, project.paymentTerm),
     woaInvoiceDate: getLocalTimeZoneDate(project.woaInvoiceDate as string),
-    woaExpectedPayDate: getLocalTimeZoneDate(project.expectedPaymentDate as string),
+    woaExpectedPayDate: project.expectedPaymentDate as string,
     overPayment: overPayment?.sum,
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
     payment: '',
@@ -410,6 +414,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
+    overrideProjectStatus: formValues.overrideProjectStatus?.value,
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

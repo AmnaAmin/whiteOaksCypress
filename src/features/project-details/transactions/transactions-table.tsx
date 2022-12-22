@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { useTransactionsV1} from 'api/transactions'
+import { useTransactionsV1 } from 'api/transactions'
 import { useParams } from 'react-router'
 import UpdateTransactionModal from './update-transaction-modal'
 import { TransactionDetailsModal } from './transaction-details-modal'
@@ -10,10 +10,14 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { ExportButton } from 'components/table-refactored/export-button'
 import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
 
-export const TransactionsTable = React.forwardRef((props, ref) => {
+type TransactionProps = {
+  projectStatus: string
+}
+
+export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
@@ -33,7 +37,6 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
     row => {
       setSelectedTransactionName(row.name)
       setSelectedTransactionId(row.id)
-
       onEditModalOpen()
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
@@ -44,7 +47,14 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Box h="500px" overflow={'auto'}>
+      <Box
+        overflow={'auto'}
+        w="100%"
+        h="calc(100vh - 300px)"
+        position="relative"
+        borderRadius="6px"
+        border="1px solid #CBD5E0"
+      >
         <TableContextProvider data={transactions} columns={tableColumns}>
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
@@ -53,10 +63,10 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
                 columns={tableColumns}
                 refetch={refetch}
                 isLoading={isLoading}
-                colorScheme="brand"
-                fileName="transactions.csv"
+                colorScheme="darkPrimary.400"
+                fileName="transactions"
               />
-
+              <CustomDivider />
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
           </TableFooter>
@@ -69,6 +79,7 @@ export const TransactionsTable = React.forwardRef((props, ref) => {
         heading={selectedTransactionName as string}
         selectedTransactionId={selectedTransactionId as number}
         projectId={projectId as string}
+        projectStatus={props?.projectStatus as string}
       />
       <TransactionDetailsModal
         isOpen={isOpenTransactionDetailsModal}

@@ -8,7 +8,7 @@ import { t } from 'i18next'
 import { compact } from 'lodash'
 import { useEffect, useState } from 'react'
 import { useBatchProcessingMutation, useCheckBatch } from 'api/account-receivable'
-import { PaginationState } from '@tanstack/react-table'
+import { PaginationState, SortingState } from '@tanstack/react-table'
 import { useForm } from 'react-hook-form'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useReceivableTableColumns } from 'features/recievable/hook'
@@ -29,13 +29,15 @@ export const Receivable = () => {
 
   const { handleSubmit, register, reset, control, setValue } = useForm()
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [sorting, setSorting] = useState<SortingState>([])
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: RECEIVABLE_TABLE_QUERY_KEYS,
     pagination,
     setPagination,
     selectedCard,
     selectedDay,
+    sorting,
   })
 
   const { mutate: batchCall } = useBatchProcessingMutation()
@@ -120,6 +122,8 @@ export const Receivable = () => {
               setPagination={setPagination}
               setColumnFilters={setColumnFilters}
               pagination={pagination}
+              sorting={sorting}
+              setSorting={setSorting}
               queryStringWithPagination={queryStringWithPagination}
               queryStringWithoutPagination={queryStringWithoutPagination}
             />

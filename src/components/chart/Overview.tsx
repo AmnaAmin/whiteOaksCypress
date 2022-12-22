@@ -22,12 +22,13 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const vendors = values(vendorEntity).reduce((a, v) => ({ ...a, ...v }), {})
   const vendorData = months.map(key => {
     const entityList = vendors[key] || []
+
     return {
       name: monthsShort[key],
-      Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
-      Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
-      Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
-      Canceled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+      Active: entityList.find(e => e)?.countActive,
+      Completed: entityList.find(e => e)?.countCompleted,
+      Paid: entityList.find(e => e)?.countPaid,
+      Canceled: entityList.find(e => e)?.countCancelled,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
@@ -59,16 +60,19 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             bottom: 0,
           }}
         >
-          <CartesianGrid stroke="#EFF3F9" />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            //stroke="#EFF3F9"
+          />
           <XAxis
             dataKey="name"
             axisLine={false}
             tickLine={false}
             tick={{
-              fill: '#4A5568',
+              fill: '#718096',
               fontSize: '12px',
               fontWeight: 400,
-              fontStyle: 'normal',
+              fontStyle: 'Poppins',
             }}
             tickMargin={20}
           />
@@ -80,20 +84,19 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             tickCount={3}
             axisLine={false}
             tick={{
+              fill: '#718096',
               fontSize: '12px',
-              fontStyle: 'normal',
               fontWeight: 400,
-              fill: '#4A5568',
+              fontStyle: 'Poppins',
             }}
           />
 
-          {/* <Tooltip contentStyle={{ borderRadius: '6px' }} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} /> */}
           <Tooltip content={<OverViewCustomTooltip />} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
 
-          <Bar dataKey="Active" fill="#68B8EF" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Completed" fill="#FB8832" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Paid" fill="#949AC2" radius={[10, 10, 0, 0]} />
-          <Bar dataKey="Canceled" fill="#F7685B" radius={[10, 10, 0, 0]} />
+          <Bar dataKey="Active" fill="#DEC5FF" radius={[5, 5, 0, 0]} />
+          <Bar dataKey="Completed" fill="#84ADEF" radius={[5, 5, 0, 0]} />
+          <Bar dataKey="Paid" fill="#FDC077" radius={[5, 5, 0, 0]} />
+          <Bar dataKey="Canceled" fill="#84DCC6" radius={[5, 5, 0, 0]} />
           <Legend
             wrapperStyle={{
               lineHeight: '31px',
@@ -107,7 +110,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             formatter={value => {
               return (
                 <Box display="inline-flex" marginInlineEnd="30px" data-testid={'legend-' + value}>
-                  <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
+                  <Box as="span" color="gray.500" fontSize="12px" fontStyle="Poppins" fontWeight={400}>
                     {value}
                   </Box>
                 </Box>

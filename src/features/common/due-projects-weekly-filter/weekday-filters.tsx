@@ -1,6 +1,7 @@
-import { Stack } from '@chakra-ui/react'
+import { Button, Stack } from '@chakra-ui/react'
 import { WeekdayCard } from 'features/common/due-projects-weekly-filter/weekday-filter-card'
 import { useWeekDayProjectsDue } from 'api/projects'
+import { t } from 'i18next'
 
 const useWeekdayCardJson = days => {
   return [
@@ -95,12 +96,10 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
           )
         })}
 
-        {/* Hiding All and Clear Filter for now */}
-
         {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
-        {/* <Button variant="ghost" colorScheme="brand" onClick={clear}>
+        <Button variant="ghost" colorScheme="brand" onClick={clear}>
           {t('clearFilter')}
-        </Button> */}
+        </Button>
       </Stack>
     </>
   )

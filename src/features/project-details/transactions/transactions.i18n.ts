@@ -26,6 +26,11 @@ export const transaction = {
         paidDate: 'Paid Date',
         payDateVariance: 'Pay Date Variance',
         invoicedDate: 'Invoiced Date',
+        scanningMessage: 'Scanning Attachment. This may take few seconds...',
+        woPaymentDate: 'Payment Date',
+        confirmationTitle: 'Are you sure?',
+        confirmationMessageMaterialAttachment:
+          'Do you really want to upload a new attachment? Current line item(s) will be replaced with the scanned items from the new receipt, as you Save the transaction.',
 
         // Transaction Modal
         addNewRow: 'Add New Row',
@@ -55,6 +60,7 @@ export const transaction = {
         dateOfSignature: 'Date of signature',
         readMore: 'Read More',
         readLess: 'Read Less',
+        refund: 'Refund',
 
         // Project WO Overview Table
         vendor: 'Vendor',
@@ -72,6 +78,8 @@ export const transaction = {
         balance: 'Balance',
         profit: 'Profit',
         profitPercentage: 'Profit %',
+        factoring: 'Factoring',
+        lateFee: 'Late Fee',
 
         // Financial Overview Table
         client: 'Client',
@@ -123,6 +131,11 @@ export const transaction = {
         invoicedDate: 'Fecha Facturada',
         paidDate: 'Fecha de Pago',
         payDateVariance: 'Variación de La Fecha de Pago',
+        scanningMessage: 'Adjunto de escaneo. Esto puede tardar unos segundos...',
+        woPaymentDate: 'Fecha de pago',
+        confirmationTitle: 'Estas segura?',
+        confirmationMessageMaterialAttachment:
+          'Realmente desea cargar un nuevo archivo adjunto? Los elementos de línea actuales se reemplazarán con los elementos escaneados del nuevo recibo, a medida que guarde la transacción.',
 
         // Transaction Modal
 
@@ -155,6 +168,7 @@ export const transaction = {
         dateOfSignature: 'Fecha de la firma',
         readMore: 'Lee mas',
         readLess: 'Leer menos',
+        refund: 'Reembolso',
 
         // Project WO Overview Table
         vendor: 'Vendedor',
@@ -172,6 +186,8 @@ export const transaction = {
         balance: 'Balance',
         profit: 'Lucro',
         profitPercentage: 'Lucros %',
+        factoring: 'Factorización',
+        lateFee: 'Cargo por demora',
 
         // Financial Overview Table
         client: 'Cliente',

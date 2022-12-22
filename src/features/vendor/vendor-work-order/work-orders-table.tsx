@@ -53,7 +53,14 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
         </Center>
       )}
       {workOrders && (
-        <Box overflow={'auto'} w="100%" h="calc(100vh - 300px)" position="relative">
+        <Box
+          overflow={'auto'}
+          w="100%"
+          h="calc(100vh - 300px)"
+          position="relative"
+          border="1px solid #CBD5E0"
+          borderRadius="6px"
+        >
           <TableContextProvider data={workOrdersNotCancelled} columns={WORK_ORDER_TABLE_COLUMNS}>
             <Table
               isLoading={isLoading}

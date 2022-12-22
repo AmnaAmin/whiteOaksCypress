@@ -85,6 +85,15 @@ export type VendorProfile = Override<
   }
 >
 
+export type VendorProjectType = {
+  projectId: string | number
+  projectType: string | null | undefined
+  status: string | null | undefined
+  streetAddress: string | null | undefined
+  workOrderExpectedCompletionDate: string | null | undefined
+  childChangeOrders: [any]
+}
+
 export type VendorProfilePayload = {
   id: number
   companyName: string

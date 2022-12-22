@@ -1,7 +1,7 @@
 import { usePaidWOAmountByYearAndMonth } from 'api/vendor-dashboard'
 import { round } from 'lodash'
 import React from 'react'
-import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Label } from 'recharts'
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Label, CartesianGrid } from 'recharts'
 import { monthsShort } from 'utils/date-time-utils'
 
 type FilterChart = {
@@ -26,6 +26,9 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
     count: value?.count,
   }))
 
+  // If the graph has no data we are showing a message on the graph.
+  const emptyGraphData = data?.filter(value => value?.count)?.length === 0
+
   return (
     <ResponsiveContainer width={width} height={height}>
       <BarChart
@@ -46,6 +49,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             <stop offset="1" stopColor="#FF8B00" />
           </linearGradient>
         </defs>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis
           dataKey="label"
           tickFormatter={tick => {
@@ -54,14 +58,15 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
           axisLine={{ stroke: '#EBEBEB' }}
           tickLine={false}
           tick={{
-            fill: ' #4A5568',
+            fill: '#718096',
             fontSize: '12px',
             fontWeight: 400,
-            fontStyle: 'normal',
+            fontStyle: 'Poppins',
           }}
           tickMargin={15}
+          color='#718096'
         >
-          {data?.length === 0 && (
+          {emptyGraphData && (
             <Label
               value="There is currently no data available for the month selected"
               offset={180}
@@ -79,18 +84,18 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
           tickCount={5}
           dx={-15}
           tick={{
-            fill: '#4A5568',
+            fill: '#718096',
             fontWeight: 400,
             fontSize: '12px',
-            fontStyle: 'normal',
+            fontStyle: 'Poppins',
           }}
           tickFormatter={tick => {
             return ` ${'$' + round(tick / 1000, 2) + 'k'} `
           }}
         />
-        {data?.length && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
+        {!emptyGraphData && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
 
-        <Bar dataKey="count" fill="url(#colorUv)" radius={[5, 5, 0, 0]} />
+        <Bar dataKey="count" fill="#68D391" radius={[5, 5, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

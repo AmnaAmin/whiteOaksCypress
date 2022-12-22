@@ -33,8 +33,8 @@ export const ManageProject: React.FC<{
   }
 
   return (
-    <Flex flexDir="column" minH="420px">
-      <Box flex="1">
+    <Box>
+      <Box px="6" minH="300px">
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl>
@@ -150,7 +150,7 @@ export const ManageProject: React.FC<{
               <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} />
             </FormControl>
           </GridItem>
-          <GridItem mb={145}>
+          <GridItem>
             <FormControl>
               <FormLabel size="md" htmlFor="superEmail">
                 {t(`${NEW_PROJECT}.superEmail`)}
@@ -160,7 +160,7 @@ export const ManageProject: React.FC<{
           </GridItem>
         </Grid>
       </Box>
-      <Flex justifyContent="end" borderTop="1px solid #E2E8F0" pt="5">
+      <Flex justifyContent="end" borderTop="1px solid #E2E8F0" pt="5" px="6">
         <Button onClick={props.onClose} variant="outline" size="md" colorScheme="brand">
           {t(`${NEW_PROJECT}.cancel`)}
         </Button>
@@ -175,6 +175,6 @@ export const ManageProject: React.FC<{
           {t(`${NEW_PROJECT}.save`)}
         </Button>
       </Flex>
-    </Flex>
+    </Box>
   )
 }

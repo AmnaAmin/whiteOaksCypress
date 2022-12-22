@@ -15,12 +15,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BiBriefcase, BiCreditCardFront, BiMapPin, BiTrip, BiUser } from 'react-icons/bi'
 import { HiOutlineLocationMarker, HiOutlineMap } from 'react-icons/hi'
-import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import { parseAPIDataToFormData } from 'api/vendor-details'
+import { VendorProfile } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { useTranslation } from 'react-i18next'
@@ -28,7 +27,7 @@ import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 
 const textStyle = {
-  color: '#4A5568',
+  color: '#2D3748',
   fontSize: '14px',
   fontWeight: 500,
   lineHeight: '24px',
@@ -52,9 +51,9 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
   return (
     <Box>
       <HStack alignItems="start">
-        {icon && <Icon as={icon} boxSize={7} color="#718096" mr={3} />}
+        {icon && <Icon as={icon} boxSize={7} color="gray.600" mr={3} />}
         <VStack spacing={1} alignItems="start">
-          <Text color="#4A5568" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
+          <Text color="#2D3748" fontWeight={500} fontSize="14px" lineHeight="20px" fontStyle="normal">
             {title}
           </Text>
           <Text data-testid={testid} color="#718096" fontSize="14px" fontWeight={400} fontStyle="normal">
@@ -141,13 +140,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
     register,
     control,
     formState: { errors },
-    reset,
-  } = useFormContext<VendorProfileDetailsFormData>()
-
-  useEffect(() => {
-    if (!vendorProfileData) return
-    reset(parseAPIDataToFormData(vendorProfileData))
-  }, [reset, vendorProfileData])
+  } = useFormContext()
 
   return (
     <>
@@ -156,7 +149,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
       ) : (
         <Box data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
-            <VStack alignItems="start" spacing="32px">
+            <VStack alignItems="start" spacing="32px" h="353px">
               <Box>
                 <Stack spacing={4} direction={['row']}>
                   <FormControl w="215px" isInvalid={!!errors.ownerName}>
@@ -298,15 +291,15 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
               alignItems="center"
               justifyContent="end"
               borderTop="2px solid"
-              borderTopColor="#E2E8F0"
+              borderTopColor="#CBD5E0"
             >
               {onClose && (
-                <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+                <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
                   Cancel
                 </Button>
               )}
 
-              <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="brand">
+              <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="darkPrimary">
                 {t('save')}
               </Button>
             </Flex>

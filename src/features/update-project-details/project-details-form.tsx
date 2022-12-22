@@ -56,7 +56,8 @@ const ProjectDetailsTab = (props: tabProps) => {
     control,
     formState: { errors, isSubmitting },
   } = formReturn
-  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors } = useSubFormErrors(errors)
+  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors } =
+    useSubFormErrors(errors)
 
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
@@ -108,7 +109,9 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
               {t(`project.projectDetails.invoicingPayment`)}
             </TabCustom>
-            <TabCustom>{t(`project.projectDetails.contacts`)}</TabCustom>
+            <TabCustom isError={isContactsFormErrors && tabIndex !== 2}>
+              {t(`project.projectDetails.contacts`)}
+            </TabCustom>
             <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>
             <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
           </TabList>

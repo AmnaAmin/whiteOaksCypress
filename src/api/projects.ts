@@ -6,11 +6,11 @@ import { orderBy } from 'lodash'
 import { usePaginationQuery } from 'api/index'
 
 export const PROJECTS_QUERY_KEY = 'projects'
-export const useProjects = (filterQueryString?: string, page?: number, size?: number) => {
+export const useProjects = (filterQueryString?: string, page?: number, size: number = 0) => {
   const queryKey = [PROJECTS_QUERY_KEY, filterQueryString]
   const endpoint = `v1/projects?${filterQueryString || ''}`
 
-  const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10)
+  const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10, { enabled: size > 0 })
 
   return {
     projects: data?.data,
@@ -149,11 +149,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (final, curr) => {
       return {
         vendorAccountPayable: final.vendorAccountPayable + (curr.accountPayable || 0),
-        projectTotalCost:
-          final.projectTotalCost +
-          (curr.workOrderOriginalAmount || 0) +
-          (curr.changeOrder || 0) +
-          (curr.adjustment || 0),
+        projectTotalCost: final.projectTotalCost + (curr.workOrderNewAmount || 0),
         materialCost: final.materialCost + curr.material,
         vendorPayment: final.vendorPayment + curr.vendorPayment,
       }
@@ -183,6 +179,64 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,
+    ...rest,
+  }
+}
+
+export const SELECTED_CARD_MAP_URL = {
+  active: 'status.equals=34',
+  completed: 'status.equals=36',
+  pastDue: 'status.equals=114',
+  invoiced: 'status.equals=110',
+  declined: 'status.equals=111',
+}
+
+export const VENDOR_WORK_ORDER_QUERY_KEY = 'workorder_projects'
+type VendorWorkOrder = Array<any>
+
+const getVendorWorkOrderQueryString = (filterQueryString: string) => {
+  let queryString = filterQueryString
+  if (filterQueryString?.search('&sort=workOrderExpectedCompletionDate') < 0) {
+    queryString = queryString + `&sort=expectedPaymentDate,asc`
+  }
+  return queryString
+}
+
+export const useWorkOrders = (queryString: string, pageSize: number) => {
+  const apiQueryString = getVendorWorkOrderQueryString(queryString)
+
+  const { data, ...rest } = usePaginationQuery<VendorWorkOrder>(
+    [VENDOR_WORK_ORDER_QUERY_KEY, apiQueryString],
+    `vendor/workorders?${apiQueryString}&status.notEquals=35`,
+    pageSize,
+  )
+
+  return {
+    workOrderData: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+export const ALL_WORK_ORDER_QUERY_KEY = 'all_workOrders'
+export const useGetAllWorkOrders = (filterQueryString: string) => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ALL_PROJECTS_QUERY_KEY,
+    async () => {
+      const response = await client(`vendor/workorders?${filterQueryString}&status.notEquals=35`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    allProjects: data,
     ...rest,
   }
 }

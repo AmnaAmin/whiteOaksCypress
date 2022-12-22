@@ -14,7 +14,8 @@ export const ProjectSchedule: React.FC<{
       py={0}
       gap={4}
       w="100%"
-      h={{ base: 'unset', xl: '500px' }}
+      minH={'270px'}
+      h={{ base: 'unset', xl: 'auto' }}
       bg="white"
       borderRadius="4px"
       box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"

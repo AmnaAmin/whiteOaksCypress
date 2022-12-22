@@ -91,6 +91,8 @@ export enum TransactionTypeValues {
   payment = 49,
   woPaid = 62,
   overpayment = 113,
+  lateFee = 1014,
+  factoring = 1013,
 }
 
 export enum TransactionMarkAsValues {
@@ -155,6 +157,8 @@ export interface FormValues {
   payDateVariance: string
   paymentRecievedDate: string | null
   refundMaterial: boolean | null
+  refundLateFee?: boolean | null
+  refundFactoring?: boolean | null
   lienWaiver?: LienWaiverFormValues
 }
 
@@ -241,4 +245,11 @@ export type ChangeOrderType = {
   lineItems: Array<LineItem> | null
   paymentReceived: string | null
   documents: Document[]
+}
+
+export type TransactionsWithRefundType = {
+  isVisible?: boolean
+  id: 'refund-material' | 'refund-late-fee' | 'refund-factoring'
+  name: 'refundMaterial' | 'refundLateFee' | 'refundFactoring'
+  label: 'Refund material' | 'Refund late fee' | 'Refund factoring'
 }

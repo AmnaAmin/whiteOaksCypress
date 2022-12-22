@@ -65,6 +65,10 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'createdDate',
     accessorKey: 'createdDate',
     id: 'createdDate',
+    accessorFn(cellInfo) {
+      return dateFormat(cellInfo.createdDate)
+    },
+    meta: { format: 'date' },
     cell(cellInfo) {
       return (
         <Flex>

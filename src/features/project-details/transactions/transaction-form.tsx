@@ -11,6 +11,7 @@ import {
   Box,
   HStack,
   Button,
+  Divider,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -42,6 +43,7 @@ import {
 } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
+  isManualTransaction,
   useAgainstOptions,
   useCalculatePayDateVariance,
   useFieldDisabledEnabledDecision,
@@ -77,10 +79,9 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 
   return (
     <Grid
-      // templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
       templateColumns="repeat(4, 1fr)"
       gap={'1rem 20px'}
-      borderBottom="2px solid"
+      borderBottom="1px solid #E2E8F0"
       borderColor="gray.200"
       py="5"
     >
@@ -126,12 +127,18 @@ export type TransactionFormProps = {
   onClose: () => void
   selectedTransactionId?: number
   projectId: string
+  projectStatus: string
 }
 
-export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selectedTransactionId, projectId }) => {
+export const TransactionForm: React.FC<TransactionFormProps> = ({
+  onClose,
+  selectedTransactionId,
+  projectId,
+  projectStatus,
+}) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-
+  const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   // const [document, setDocument] = useState<File | null>(null)
@@ -171,6 +178,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     formState: { errors },
     setValue,
     getValues,
+    watch,
     control,
     reset, //  isTruncated title={label}
   } = formReturn
@@ -186,18 +194,20 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     isShowPaidBackDateField,
     isShowMarkAsField,
   } = useFieldShowHideDecision(control, transaction)
+  const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
     control,
     transaction,
+    isMaterialsLoading,
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction)
   const payDateVariance = useCalculatePayDateVariance(control)
-
+  const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   const onAgainstOptionSelect = (option: SelectOption) => {
@@ -250,8 +260,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
   )
 
   // Disable selection of future payment received date for all users expect Admin
-  const futureDateDisable =  !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
- 
+  const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
@@ -275,14 +285,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
     function updateAgainstOption() {
       if (transaction) return
 
-      if (againstOptions.length === 1 && transactionType) {
+      if (againstOptions.length === 1 && watchTransactionType) {
         setValue('against', againstOptions?.[0])
         resetExpectedCompletionDateFields(againstOptions?.[0])
       } else if (againstOptions.length > 1) {
         setValue('against', null)
       }
     },
-    [againstOptions, transactionType, transaction],
+    [watchTransactionType, transaction],
   )
 
   const onModalClose = () => {
@@ -311,7 +321,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
               <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
-                    <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
+                    <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="transactionType">
                       {t(`${TRANSACTION}.transactionType`)}
                     </FormLabel>
                     <Controller
@@ -345,7 +355,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
 
                 <GridItem>
                   <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
-                    <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                    <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                       {t(`${TRANSACTION}.against`)}
                     </FormLabel>
                     <Controller
@@ -374,7 +384,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 {isShowWorkOrderSelectField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.workOrder} data-testid="work-order-select">
-                      <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
+                      <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.workOrder`)}
                       </FormLabel>
                       <Controller
@@ -404,7 +414,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 {isShowChangeOrderSelectField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
-                      <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
+                      <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="changeOrder">
                         {t(`${TRANSACTION}.changeOrder`)}
                       </FormLabel>
                       <Controller
@@ -434,7 +444,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="expectedCompletionDate"
                         whiteSpace="nowrap"
                       >
@@ -461,7 +471,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="newExpectedCompletionDate"
                         whiteSpace="nowrap"
                       >
@@ -487,7 +497,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                   <>
                     <GridItem>
                       <FormControl isInvalid={!!errors.paymentTerm} data-testid="payment-term-select">
-                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.600" fontWeight={500}>
+                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.700" fontWeight={500}>
                           {t(`${TRANSACTION}.paymentTerm`)}
                         </FormLabel>
                         <Controller
@@ -518,7 +528,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
-                          color="gray.600"
+                          color="gray.700"
                           htmlFor="invoicedDate"
                           whiteSpace="nowrap"
                         >
@@ -545,7 +555,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
-                          color="gray.600"
+                          color="gray.700"
                           htmlFor="paidDate"
                           whiteSpace="nowrap"
                         >
@@ -573,7 +583,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
-                          color="gray.600"
+                          color="gray.700"
                           htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
@@ -602,11 +612,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
-                        {t(`${TRANSACTION}.paymentReceivedDate`)}
+                        {watchTransactionType?.value === TransactionTypeValues.woPaid
+                          ? t(`${TRANSACTION}.woPaymentDate`)
+                          : t(`${TRANSACTION}.paymentReceivedDate`)}
                       </FormLabel>
                       <Input
                         data-testid="payment-received-date"
@@ -629,7 +641,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 {isShowMarkAsField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.markAs} data-testid="mark-as-select-field">
-                      <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="markAs">
+                      <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
                         {t(`${TRANSACTION}.markAs`)}
                       </FormLabel>
                       <Controller
@@ -663,7 +675,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="paidBackDate"
                         whiteSpace="nowrap"
                       >
@@ -687,7 +699,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 {isShowStatusField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
-                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.status`)}
                       </FormLabel>
                       <Controller
@@ -721,7 +733,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
                 )}
               </Grid>
 
-              <TransactionAmountForm formReturn={formReturn} transaction={transaction} />
+              <TransactionAmountForm
+                formReturn={formReturn}
+                transaction={transaction}
+                isMaterialsLoading={isMaterialsLoading}
+                setMaterialsLoading={setMaterialsLoading}
+                selectedTransactionId={selectedTransactionId}
+              />
             </Flex>
           ) : (
             <Box flex={1}>
@@ -734,16 +752,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
         <DevTool control={control} />
       </FormProvider>
 
+      <Divider mt={3}></Divider>
       <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
         {isShowLienWaiver ? (
-          <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="brand">
+          <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="darkPrimary">
             {t(`${TRANSACTION}.back`)}
           </Button>
         ) : (
           <Button
             onClick={onModalClose}
-            variant={!isApproved ? 'outline' : 'solid'}
-            colorScheme="brand"
+            variant={!isApproved || isAdminEnabled ? 'outline' : 'solid'}
+            colorScheme="darkPrimary"
             data-testid="close-transaction-form"
           >
             {t(`${TRANSACTION}.cancel`)}
@@ -755,7 +774,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            colorScheme="brand"
+            colorScheme="darkPrimary"
             isDisabled={amount === 0}
             onClick={event => {
               event.stopPropagation()
@@ -767,15 +786,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onClose, selec
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          !isApproved && (
+          (!isApproved || isAdminEnabled) && (
             <>
               <Button
                 type="submit"
                 form="newTransactionForm"
                 data-testid="save-transaction"
-                colorScheme="brand"
+                colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading}
+                disabled={isFormSubmitLoading || isMaterialsLoading}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

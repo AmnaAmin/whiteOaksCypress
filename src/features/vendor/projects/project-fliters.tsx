@@ -1,5 +1,5 @@
 import { Box, Center } from '@chakra-ui/react'
-import { BiFile, BiCalendar, BiDetail, BiMessageSquareX, BiCheckCircle } from 'react-icons/bi'
+import { BiFile, BiDetail, BiMessageSquareX, BiCheckCircle, BiCalendarExclamation } from 'react-icons/bi'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVendorCards } from 'api/vendor-dashboard'
@@ -7,7 +7,7 @@ import { ProjectCard } from '../../common/project-card'
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
-    <Center bg={bg} rounded="50%" w={{ base: '40px', md: '48px' }} h={{ base: '40px', md: '48px' }}>
+    <Center bg={bg} rounded="50%" w={{ base: '40px', md: '44px' }} h={{ base: '40px', md: '44px' }}>
       <Icon fill="#4A5568" style={{ width: '20px', height: '20px' }} />
     </Center>
   )
@@ -27,9 +27,9 @@ const useVendorCardJson = cards => {
       {
         id: 'pastDue',
         title: t('pastDue'),
-        value: 'past due',
+        value: 'pastDue',
         number: cards?.find(c => c.label === 'pastDue')?.count,
-        IconElement: <IconElement Icon={BiCalendar} bg="#E8F0FF" />,
+        IconElement: <IconElement Icon={BiCalendarExclamation} bg="#E8F0FF" />,
       },
       {
         id: 'completed',
@@ -72,7 +72,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
           sm: 'repeat(auto-fit, minmax(125px,1fr))',
           md: 'repeat(auto-fit, minmax(205px,1fr))',
         }}
-        gridGap="14px"
+        gridGap="11px"
       >
         {cards.map(card => {
           return (
@@ -83,6 +83,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
               selectedCard={selectedCard}
               isLoading={isLoading}
               disabled={card.number === 0}
+              title={card.title}
             />
           )
         })}

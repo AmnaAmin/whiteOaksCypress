@@ -25,12 +25,21 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(row) {
         return numeral(row.revenue).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Profit',
       accessorKey: 'profit',
       accessorFn(row) {
         return numeral(row.profit).format('$0,0.00')
+      },
+      meta: { format: 'currency' },
+    },
+    {
+      header: 'Margin %',
+      accessorKey: 'marginPercentage',
+      accessorFn(row) {
+        return numeral(row.marginPercentage / 100).format('0.00%')
       },
     },
     {
@@ -39,6 +48,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(row) {
         return numeral(row.target).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Badge',
@@ -54,6 +64,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorFn(cellInfo) {
         return numeral(cellInfo.disqualifiedRevenue).format('$0,0.00')
       },
+      meta: { format: 'currency' },
     },
     {
       header: 'Email',
@@ -73,8 +84,8 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
           isOpen={isOpen}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 320px)">
-        <TableContextProvider data={performance || []} columns={PERFORMANCE_COLUMNS}>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" border="1px solid #CBD5E0" borderTopRadius="6px">
+        <TableContextProvider data={performance} columns={PERFORMANCE_COLUMNS}>
           <Table
             onRowClick={row => {
               setSelectedUser(row)

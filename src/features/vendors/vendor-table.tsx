@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { useVendor } from 'api/pc-projects'
 import Status from 'features/common/status'
-import Vendor from 'features/vendors/selected-vendor-modal'
-import { ProjectWorkOrderType } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -13,6 +11,8 @@ import { ExportCustomButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
+import { Vendor as VendorType } from 'types/vendor.types'
+import Vendor from './selected-vendor-modal'
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
@@ -47,6 +47,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.createdDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'COI-GL Expiration Date',
@@ -54,6 +55,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.coiglExpirationDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'COI-WC Expiration Date',
@@ -61,6 +63,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.coiWcExpirationDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'EIN/SSN',
@@ -69,10 +72,16 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'Total Capacity',
     accessorKey: 'capacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.capacity?.toString()
+    },
   },
   {
     header: 'Available Capacity',
     accessorKey: 'availableCapacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.availableCapacity?.toString()
+    },
   },
   {
     header: 'Construction Trade',
@@ -99,7 +108,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       ),
     )
   }, [selectedCard, vendors])
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+  const [selectedVendor, setSelectedVendor] = useState<VendorType>()
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
   const { tableColumns, settingColumns } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
@@ -110,30 +119,25 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
 
   return (
     <Box overflow="auto">
-      {selectedWorkOrder && (
+      {selectedVendor && (
         <Vendor
-          vendorDetails={selectedWorkOrder as ProjectWorkOrderType}
+          vendorDetails={selectedVendor as VendorType}
           onClose={() => {
-            setSelectedWorkOrder(undefined)
+            setSelectedVendor(undefined)
           }}
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 320px)">
+      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={filterVendors} columns={tableColumns}>
           <Table
-            onRowClick={row => setSelectedWorkOrder(row)}
+            onRowClick={row => setSelectedVendor(row)}
             isLoading={isLoading}
             isEmpty={!isLoading && !filterVendors?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportCustomButton
-                columns={tableColumns}
-                data={filterVendors}
-                colorScheme="brand"
-                fileName="vendors.csv"
-              />
+              <ExportCustomButton columns={tableColumns} data={filterVendors} colorScheme="brand" fileName="vendors" />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
