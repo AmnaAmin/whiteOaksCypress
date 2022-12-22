@@ -8,7 +8,7 @@ import { ProjectAwardCard, TextCard } from './project-award-card'
 // import { ProjectAwardCard, TextCard } from './project-award-card'
 
 export const ProjectAwardTab: React.FC<any> = props => {
-  const subTotal = props?.workOrderSubTotal
+  const awardPlanScopeAmount = props?.awardPlanScopeAmount
 
   const [selectedCard, setSelectedCard] = useState(null)
 
@@ -40,7 +40,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
                 <ProjectAwardCard
                   workOrder={props?.workOrder}
                   {...card}
-                  subTotal={subTotal}
+                  awardPlanScopeAmount={awardPlanScopeAmount}
                   selectedCard={selectedCard}
                   onSelectedCard={setSelectedCard}
                   cardsvalues={card}

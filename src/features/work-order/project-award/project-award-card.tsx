@@ -57,7 +57,14 @@ export const TextCard = () => {
 //   disabled?: boolean
 // }
 
-export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelectedCard, id, subTotal }) => {
+export const ProjectAwardCard = ({
+  workOrder,
+  cardsvalues,
+  selectedCard,
+  onSelectedCard,
+  id,
+  awardPlanScopeAmount,
+}) => {
   const [checkIcon, setCheckIcon] = useState(false)
 
   const drawAmount = () => {
@@ -69,12 +76,12 @@ export const ProjectAwardCard = ({ workOrder, cardsvalues, selectedCard, onSelec
   const awardPlanId = workOrder?.awardPlanId
 
   const calculatePercentage = per => {
-    const percentage = (subTotal / 100) * per
-    return subTotal - percentage
+    const percentage = (awardPlanScopeAmount / 100) * per
+    return awardPlanScopeAmount - percentage
   }
 
   const calFactorFeePercentage = per => {
-    return (subTotal / 100) * per
+    return (awardPlanScopeAmount / 100) * per
   }
 
   const calNteMax = p => {
