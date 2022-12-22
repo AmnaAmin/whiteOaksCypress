@@ -60,10 +60,13 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       projectId: string | number
     }>()
     const [paginationInitialized, setPaginationInitialized] = useState(false)
-    const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
-      queryStringWithPagination,
-      pagination.pageSize,
-    )
+    const {
+      workOrders,
+      isLoading,
+      totalPages,
+      dataCount,
+      refetch: refetchPayables,
+    } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
     const { email } = useUserProfile() as Account
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
@@ -163,7 +166,11 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
         {isOpenTransactionModal && (
           <UpdateTransactionModal
             isOpen={isOpenTransactionModal}
-            onClose={onCloseTransactionModal}
+            onClose={() => {
+              setSelectedTransaction(undefined)
+              refetchPayables()
+              onCloseTransactionModal()
+            }}
             heading={selectedTransaction?.transactionName}
             selectedTransactionId={selectedTransaction?.transactionId as number}
             projectId={`${selectedTransaction?.projectId}`}
