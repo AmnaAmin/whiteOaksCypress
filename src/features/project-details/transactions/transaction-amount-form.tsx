@@ -45,10 +45,12 @@ type TransactionAmountFormProps = {
   transaction?: ChangeOrderType
   isMaterialsLoading?: boolean
   setMaterialsLoading?: (value) => void
+  onSetTotalRemainingAmount?: any
   selectedTransactionId?: string | number | undefined
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
+  onSetTotalRemainingAmount,
   formReturn,
   transaction: changeOrder,
   isMaterialsLoading,
@@ -507,6 +509,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     }
                                   }}
                                   onChange={e => {
+                                    onSetTotalRemainingAmount(Math.abs(e?.target?.value))
+
                                     const inputValue = e.currentTarget.value
                                     inputValue !== ''
                                       ? field.onChange(
