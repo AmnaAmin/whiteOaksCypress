@@ -17,7 +17,6 @@ import { useStates } from 'api/pc-projects'
 import {
   FPMManagerTypes,
   useActiveAccountTypes,
-  useAllManagers,
   useCreateUserMutation,
   useDeleteUserDetails,
   useFilteredAvailabelManager,
@@ -77,7 +76,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: accountTypeOptions } = useActiveAccountTypes()
-  const { options: availableManagers } = useAllManagers()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const {
     register,
@@ -98,7 +96,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   useUserDetails({ form, userInfo })
 
   const formValues = watch()
-  console.log(formValues)
+
   const accountType: any = formValues?.accountType
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
