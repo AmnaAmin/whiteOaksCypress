@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, Spacer, VStack, Text, FormLabel } from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, FormLabel, useMediaQuery } from '@chakra-ui/react'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
@@ -18,7 +18,10 @@ import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 import { boxShadow } from 'theme/common-style'
 
 const Dashboard: React.FC = () => {
+
   const { vendorId } = useUserProfile() as Account
+
+  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
 
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   // const { onToggle } = useDisclosure()
@@ -56,6 +59,7 @@ const Dashboard: React.FC = () => {
               {t('WOstatus')}
             </Text>
           </Flex>
+          { isMobile ? <br /> : null }
           <Overview vendorId={vendorId} />
         </Card>
 

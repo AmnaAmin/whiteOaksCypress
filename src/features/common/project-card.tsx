@@ -12,6 +12,7 @@ type ProjectCardProps = {
   onSelectCard: (string) => void
   isLoading: boolean
   disabled?: boolean
+  styles?: any
 }
 
 export const ProjectCard = ({
@@ -23,9 +24,17 @@ export const ProjectCard = ({
   number,
   isLoading,
   IconElement,
+  styles
+
 }: ProjectCardProps) => {
+
+  console.log(styles);
+
   return (
-    <Box as="label" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)">
+
+    
+
+    <Box as="label" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)" {...styles}>
       <Flex
         boxShadow=" 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
         minH="63px"
