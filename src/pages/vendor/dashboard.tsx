@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, Spacer, VStack, Text, FormLabel, useMediaQuery, Center, Heading } from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, FormLabel, useMediaQuery, Heading } from '@chakra-ui/react'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
