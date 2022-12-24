@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, Spacer, VStack, Text, FormLabel, useMediaQuery } from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, FormLabel, useMediaQuery, Center, Heading } from '@chakra-ui/react'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
@@ -22,6 +22,7 @@ const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
 
   const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+  const [isLessThanOrEq320] = useMediaQuery( "(max-width: 320px)" );
 
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   // const { onToggle } = useDisclosure()
@@ -32,6 +33,19 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate()
   const onCardClick = params => {
     navigate('/projects', { state: params })
+  }
+
+  if ( isLessThanOrEq320 ) {
+    return (
+      <Box mt="50%">
+        <Heading as='h3' size='sm'>
+          Sorry !
+        </Heading>
+        <Text fontSize='sm'>
+          Your resolution is reached at a limit, please switch to a better resolution or change your device orientation from vertical to horizontal
+        </Text>
+      </Box>
+    );
   }
 
   return (

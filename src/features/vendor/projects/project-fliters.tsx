@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useVendorCards } from 'api/vendor-dashboard'
 import { ProjectCard } from '../../common/project-card'
 
-import styled from '@emotion/styled';
-
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
     <Center bg={bg} rounded="50%" w={{ base: '40px', md: '44px' }} h={{ base: '40px', md: '44px' }}>
@@ -80,10 +78,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
       >
         {cards.map( (card, idx) => {
           
-          
-          const isLast = (idx+1 == cards.length) && isMobile;
-
-          console.log( isLast );
+          const isLast = (idx+1 === cards.length) && isMobile;
 
           let customStyle = (isLast ? { 
             gridColumn: "span 2"
