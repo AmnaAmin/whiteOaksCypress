@@ -144,12 +144,9 @@ export const useDeleteUserDetails = () => {
 
 export const userMangtPayload = (user: any) => {
   const getFpmStateId = () => {
-    return (
-      user.accountType?.label === 'Field Project Manager' &&
-      user.fieldProjectManagerRoleId.value === 59 //Area Manager
-    )
-    ? user.states?.find(state => state.checked === true)?.state?.id
-    : ''
+    return user.accountType?.label === 'Field Project Manager' && user.fieldProjectManagerRoleId.value === 59 //Area Manager
+      ? user.states?.find(state => state.checked === true)?.state?.id
+      : ''
   }
   const userObj = {
     ...user,
@@ -267,30 +264,30 @@ export const useAllManagers = () => {
 }
 
 export const useFilteredAvailabelManager = (managerRoleId, marketIds?: string) => {
-  const managerRoleIdQueryKey = managerRoleId?.value === 60 ? 'fpmStateId' : 'marketIds';
+  const managerRoleIdQueryKey = managerRoleId?.value === 60 ? 'fpmStateId' : 'marketIds'
   const client = useClient()
   const { data, ...rest } = useQuery(
-      ['useFilteredAvailableManager', managerRoleId, marketIds], async () => {
+    ['useFilteredAvailableManager', managerRoleId, marketIds],
+    async () => {
       const response = await client(`users/upstream/${managerRoleId?.value}?${managerRoleIdQueryKey}=${marketIds}`, {})
-        return response?.data
-      },
-      {
-        enabled: !!(managerRoleId && marketIds)
-      }
-    )
-    const options =
-      data?.map(res => ({
-        value: res?.id,
-        label: `${res?.firstName} ${res?.lastName}`,
-      })) || []
-  
-    return {
-      data,
-      options,
-      ...rest,
-    }
-  }
+      return response?.data
+    },
+    {
+      enabled: !!(managerRoleId && marketIds),
+    },
+  )
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: `${res?.firstName} ${res?.lastName}`,
+    })) || []
 
+  return {
+    data,
+    options,
+    ...rest,
+  }
+}
 
 const parseUserFormData = ({
   userInfo,

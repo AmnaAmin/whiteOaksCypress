@@ -32,6 +32,8 @@ import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
 import { useFetchWorkOrder } from 'api/work-order'
 import { Card } from 'components/card/card'
+import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
+import { useProjectAward } from 'api/project-award'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -54,12 +56,15 @@ export const WorkOrderDetails = ({
   })
   const {
     workOrderAssignedItems,
+    displayAwardPlan,
+    workOrder: awardPlanScopeAmount,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
   const [isUpdating, setIsUpdating] = useState()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
+  const { projectAwardData } = useProjectAward()
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -113,6 +118,7 @@ export const WorkOrderDetails = ({
             >
               <TabList pt="12px">
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                 <Tab data-testid="invoice">{t('invoice')}</Tab>
                 <Tab data-testid="payments">{t('payments')}</Tab>
@@ -132,6 +138,17 @@ export const WorkOrderDetails = ({
                       isLoadingLineItems={isLoadingLineItems}
                     />
                   </TabPanel>
+                  {displayAwardPlan && (
+                    <TabPanel p={0}>
+                      <ProjectAwardTab
+                        workOrder={workOrder}
+                        onSave={null}
+                        onClose={onClose}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
+                        projectAwardData={projectAwardData}
+                      />
+                    </TabPanel>
+                  )}
                   <TabPanel p={0}>
                     {isLoading ? (
                       <BlankSlate />
