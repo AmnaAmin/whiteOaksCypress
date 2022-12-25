@@ -1,4 +1,4 @@
-import { Box, Center } from '@chakra-ui/react'
+import { Box, Center, useMediaQuery } from '@chakra-ui/react'
 import { BiFile, BiDetail, BiMessageSquareX, BiCheckCircle, BiCalendarExclamation } from 'react-icons/bi'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -61,6 +61,8 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values, isLoading } = useVendorCards()
   const cards = useVendorCardJson(values)
 
+  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+
   return (
     <>
       <Box
@@ -68,13 +70,20 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
         w="100%"
         display="grid"
         gridTemplateColumns={{
-          base: 'repeat(auto-fit, minmax(105px,1fr))',
+          base: 'repeat(2, minmax(105px,1fr))',
           sm: 'repeat(auto-fit, minmax(125px,1fr))',
           md: 'repeat(auto-fit, minmax(205px,1fr))',
         }}
         gridGap="11px"
       >
-        {cards.map(card => {
+        {cards.map( (card, idx) => {
+          
+          const isLast = (idx+1 === cards.length) && isMobile;
+
+          let customStyle = (isLast ? { 
+            gridColumn: "span 2"
+           } : {}); 
+          
           return (
             <ProjectCard
               key={card.id}
@@ -84,6 +93,7 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
               isLoading={isLoading}
               disabled={card.number === 0}
               title={card.title}
+              styles={customStyle}
             />
           )
         })}
