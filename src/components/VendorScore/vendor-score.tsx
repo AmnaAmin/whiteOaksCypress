@@ -70,7 +70,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
         alignItems="center"
         gridGap="11px"
       >
-        <Card h={156} rounded="6px">
+        <Card h={156} rounded="6px" marginTop={ { base: "30px", sm: "30px", md: 0, xl: 0, lg: 0 } }>
           <Flex h="99%" w="100%">
             <HStack w="100%" spacing="0">
               <VStack spacing="3px" alignItems="start" w="100%">
@@ -94,7 +94,11 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                     </CircularProgressLabel>
                   </CircularProgress>
                   <HStack>
-                    <Box mb="20px" ml="30px">
+                    <Box 
+                      mb="20px"
+                      ml={ { base: 0, sm: 0, md: "30px", xl: "30px", lg: "30px" }} 
+                      position={ { base: "relative", md: "static", lg: "static", xl: "static" } } 
+                      left={{ base: "15px", md: 0, lg: 0, xl: 0 }}>
                       {isLoading ? (
                         <BlankSlate width="200px" h="20px" />
                       ) : (
