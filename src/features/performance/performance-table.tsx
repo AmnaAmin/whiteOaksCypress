@@ -84,7 +84,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
           isOpen={isOpen}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 320px)" border='1px solid #CBD5E0' borderTopRadius='6px'>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" border="1px solid #CBD5E0" borderTopRadius="6px">
         <TableContextProvider data={performance} columns={PERFORMANCE_COLUMNS}>
           <Table
             onRowClick={row => {
