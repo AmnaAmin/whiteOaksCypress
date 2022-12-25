@@ -40,7 +40,7 @@ import { UserForm } from 'types/user.types'
 import { parseMarketFormValuesToAPIPayload } from 'utils/markets'
 import { PasswordField } from './password-field'
 import { USER_MANAGEMENT } from './user-management.i8n'
-import {BONUS, DURATION} from './constants';
+import { BONUS, DURATION } from './constants'
 
 type UserManagement = {
   onClose: () => void
@@ -106,7 +106,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
-      //TODO - Add enums instead of using actual numerical values
+    //TODO - Add enums instead of using actual numerical values
     if ([61, 221].includes(fpmRole?.value)) {
       return true
     }
@@ -139,34 +139,40 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const managerRoleOptions = useMemo(() => {
     // filter for market FPM
-    if(fpmRole?.value === 221 && showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61 && role.value !== 59);
+    if (fpmRole?.value === 221 && showMarkets)
+      return fpmManagerRoleOptions.filter(role => role.value !== 61 && role.value !== 59)
     // filter for regular FPM
-    if(showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61)
+    if (showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61)
     // filter for area FPM
-    if(showStates) return fpmManagerRoleOptions.filter(role => role.value === 60);
-    return fpmManagerRoleOptions;
-  }, [fpmManagerRoleOptions]);
+    if (showStates) return fpmManagerRoleOptions.filter(role => role.value === 60)
+    return fpmManagerRoleOptions
+  }, [fpmManagerRoleOptions])
 
   const selectedLocations = useMemo(() => {
-    let locations = '';
-    if(showStates) {
-      locations = formValues?.states?.filter(state => state.checked).map(s => s.state.id).toString() || '';
+    let locations = ''
+    if (showStates) {
+      locations =
+        formValues?.states
+          ?.filter(state => state.checked)
+          .map(s => s.state.id)
+          .toString() || ''
     }
-    if(showMarkets && formValues?.markets && formValues.markets?.length > 0){
-      locations = formValues.markets.filter(market => market.checked).map(m => m.market.id).toString() || ''
+    if (showMarkets && formValues?.markets && formValues.markets?.length > 0) {
+      locations =
+        formValues.markets
+          .filter(market => market.checked)
+          .map(m => m.market.id)
+          .toString() || ''
     }
-    return locations;
-  }, [formValues]);
-  
-  const {options: availableManagerOptions} = useFilteredAvailabelManager(
-    formValues?.managerRoleId,
-    selectedLocations
-  );
+    return locations
+  }, [formValues])
+
+  const { options: availableManagerOptions } = useFilteredAvailabelManager(formValues?.managerRoleId, selectedLocations)
 
   const managerOptions = useMemo(() => {
-    if(availableManagerOptions?.length > 0 ) return availableManagerOptions;
-    if(availableManagers?.length > 0) return availableManagers
-    return [];
+    if (availableManagerOptions?.length > 0) return availableManagerOptions
+    if (availableManagers?.length > 0) return availableManagers
+    return []
   }, [availableManagerOptions])
   // Clear any input field which is being conditionally rendered when user
   // changes account type
@@ -427,12 +433,15 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         key={value.state.id}
                         isChecked={state?.checked}
                         onChange={event => {
-                          setValue('states', formValues?.states?.map((s) => {
-                            if(s.state.id === value.state.id) {
-                              return { ...s, checked: event.target.checked }
-                            }
-                            return { ...s, checked: false }
-                          }))
+                          setValue(
+                            'states',
+                            formValues?.states?.map(s => {
+                              if (s.state.id === value.state.id) {
+                                return { ...s, checked: event.target.checked }
+                              }
+                              return { ...s, checked: false }
+                            }),
+                          )
                           clearSelectedManager()
                         }}
                       >
@@ -495,21 +504,21 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       {isFPM ? (
         <>
           <HStack mt="30px" spacing={15}>
-          <FormControl w="215px">
+            <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.managerRole`)}
+                {t(`${USER_MANAGEMENT}.modal.managerRole`)}
               </FormLabel>
               <Controller
                 control={control}
                 name="managerRoleId"
-                render={({ field: {onChange, ...rest} }) => (
+                render={({ field: { onChange, ...rest } }) => (
                   <ReactSelect
                     {...rest}
                     selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
                     options={managerRoleOptions}
-                    onChange={(param) => {
-                      onChange(param);
-                      clearSelectedManager();
+                    onChange={param => {
+                      onChange(param)
+                      clearSelectedManager()
                     }}
                   />
                 )}
@@ -522,12 +531,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <Controller
                 control={control}
                 name="parentFieldProjectManagerId"
-                render={({ field }) => (
-                  <ReactSelect
-                    {...field}
-                    options={managerOptions}
-                  />
-                )}
+                render={({ field }) => <ReactSelect {...field} options={managerOptions} />}
               />
             </FormControl>
 

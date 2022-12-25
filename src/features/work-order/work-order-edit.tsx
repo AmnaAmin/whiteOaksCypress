@@ -34,6 +34,8 @@ import { useDocuments, useVendorAddress } from 'api/vendor-projects'
 import { useTransactionsV1 } from 'api/transactions'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
 import { useFetchProjectId } from './details/assignedItems.utils'
+import { ProjectAwardTab } from './project-award/project.award'
+import { useProjectAward } from 'api/project-award'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -52,6 +54,9 @@ const WorkOrderDetails = ({
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
+
+  const { projectAwardData } = useProjectAward()
+
   const { swoProject } = useFetchProjectId(projId)
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
@@ -66,6 +71,8 @@ const WorkOrderDetails = ({
   })
   const {
     workOrderAssignedItems,
+    workOrder: awardPlanScopeAmount,
+    displayAwardPlan,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
@@ -95,6 +102,8 @@ const WorkOrderDetails = ({
     updateWorkOrder(payload, {
       onSuccess: res => {
         if (res?.data) {
+          onClose()
+
           const workOrder = res?.data
           if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
             onClose()
@@ -108,6 +117,7 @@ const WorkOrderDetails = ({
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrder.projectId}`)
   }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -144,6 +154,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" mx="32px">
                   <Tab>{t('workOrderDetails')}</Tab>
+                  {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
                   <Tab>{t('payments')}</Tab>
@@ -210,6 +221,17 @@ const WorkOrderDetails = ({
                       isLoadingLineItems={isLoadingLineItems}
                     />
                   </TabPanel>
+                  {displayAwardPlan && (
+                    <TabPanel p={0}>
+                      <ProjectAwardTab
+                        workOrder={workOrder}
+                        onSave={onSave}
+                        onClose={onClose}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
+                        projectAwardData={projectAwardData}
+                      />
+                    </TabPanel>
+                  )}
                   <TabPanel p={0}>
                     {isDocumentsLoading ? (
                       <BlankSlate />
