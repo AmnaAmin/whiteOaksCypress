@@ -58,7 +58,8 @@ export const WorkOrderDetails = ({
   const {
     workOrderAssignedItems,
     displayAwardPlan,
-    workOrder: awardPlanScopeAmount,
+    awardPlanScopeAmount,
+    workOrderDetails,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
@@ -154,7 +155,7 @@ export const WorkOrderDetails = ({
                   {displayAwardPlan && (
                     <TabPanel p={0}>
                       <ProjectAwardTab
-                        workOrder={workOrder}
+                        workOrder={workOrderDetails}
                         onSave={null}
                         onClose={onClose}
                         awardPlanScopeAmount={awardPlanScopeAmount}

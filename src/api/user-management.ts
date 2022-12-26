@@ -7,10 +7,19 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { isDefined } from 'utils'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
+import { UserTypes } from 'utils/redux-common-selectors'
+import { UserTypes as UserTypeLabel } from 'types/account.types'
 import { parseRegionsAPIDataToFormValues } from 'utils/regions'
 import { parseStatesAPIDataToFormValues } from 'utils/states'
 import { useMarkets, useRegions, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
+
+export enum FPMManagerTypes {
+  Area = 59,
+  Regular = 61,
+  Market = 221,
+  Regional = 60,
+}
 
 export const useUserManagement = () => {
   const client = useClient()
@@ -144,7 +153,8 @@ export const useDeleteUserDetails = () => {
 
 export const userMangtPayload = (user: any) => {
   const getFpmStateId = () => {
-    return user.accountType?.label === 'Field Project Manager' && user.fieldProjectManagerRoleId.value === 59 //Area Manager
+    return user.accountType?.label === 'Field Project Manager' &&
+      user.fieldProjectManagerRoleId.value === FPMManagerTypes.Area //Area Manager
       ? user.states?.find(state => state.checked === true)?.state?.id
       : ''
   }
@@ -162,7 +172,7 @@ export const userMangtPayload = (user: any) => {
     fpmStateId: getFpmStateId(),
     userType: user.accountType?.value,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
-    newBonus: user.newBonus?.value || '',
+    newBonus: user.newBonus?.label ? user.newBonus?.value : '',
   }
   delete userObj.states
   delete userObj.state
@@ -235,7 +245,8 @@ export const useFPMManagerRoles = () => {
       value: res?.id,
       label: res?.value,
     })) || []
-
+  options.push({ value: UserTypes.directorOfConstruction, label: UserTypeLabel.doc })
+  options.push({ value: UserTypes.operations, label: UserTypeLabel.operations })
   return {
     data,
     options,
@@ -263,8 +274,15 @@ export const useAllManagers = () => {
   }
 }
 
-export const useFilteredAvailabelManager = (managerRoleId, marketIds?: string) => {
-  const managerRoleIdQueryKey = managerRoleId?.value === 60 ? 'fpmStateId' : 'marketIds'
+export const useFilteredAvailabelManager = (fieldProjectManagerRoleId, managerRoleId, marketIds?: string) => {
+  var managerRoleIdQueryKey = ''
+  if ([FPMManagerTypes.Market, FPMManagerTypes.Regular].includes(Number(fieldProjectManagerRoleId?.value))) {
+    managerRoleIdQueryKey = 'marketIds'
+  } else if (Number(fieldProjectManagerRoleId?.value) === FPMManagerTypes.Area) {
+    managerRoleIdQueryKey = 'fpmStateId'
+  } else {
+    managerRoleIdQueryKey = 'region'
+  }
   const client = useClient()
   const { data, ...rest } = useQuery(
     ['useFilteredAvailableManager', managerRoleId, marketIds],
@@ -273,7 +291,7 @@ export const useFilteredAvailabelManager = (managerRoleId, marketIds?: string) =
       return response?.data
     },
     {
-      enabled: !!(managerRoleId && marketIds),
+      enabled: !!(fieldProjectManagerRoleId && managerRoleId && marketIds),
     },
   )
   const options =
@@ -316,6 +334,7 @@ const parseUserFormData = ({
     fieldProjectManagerRoleId: fpmManagerRoleOptions?.find(
       fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId,
     ),
+    managerRoleId: fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.managerRoleId),
     parentFieldProjectManagerId: availableManagers?.find(
       manager => manager.value === userInfo?.parentFieldProjectManagerId,
     ),
